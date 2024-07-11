@@ -63,10 +63,6 @@ dependencies {
     // Coroutines
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.android)
-    // Apollo Android GraphQL client
-    implementation(libs.apollo3.apollo.runtime)
-    implementation(libs.apollo3.apollo.coroutines.support)
-
     // Dagger and Hilt for dependency injection
     implementation("com.google.dagger:hilt-android:2.51.1")
     implementation(libs.androidx.junit.ktx)
