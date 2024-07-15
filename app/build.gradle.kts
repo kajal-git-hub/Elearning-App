@@ -86,6 +86,13 @@ dependencies {
     //Glide
     implementation(libs.glide)
     kapt("com.github.bumptech.glide:compiler:4.15.1")
+
+    //gif
+    implementation("pl.droidsonroids.gif:android-gif-drawable:1.2.19")
+
+    //viewpager2
+    implementation("androidx.viewpager2:viewpager2:1.1.0")
+
 }
 
 kapt {

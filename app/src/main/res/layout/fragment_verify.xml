@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.fragment.VerifyOTPFragment">
+
+    <ImageView
+        android:id="@+id/etArrow_left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="22dp"
+        android:src="@drawable/arrow_left"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/etInfoCircle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="8dp"
+        android:src="@drawable/info_circle"
+        app:layout_constraintBottom_toBottomOf="@+id/etHelpText"
+        app:layout_constraintEnd_toStartOf="@+id/etHelpText"
+        app:layout_constraintTop_toTopOf="@+id/etHelpText" />
+
+    <TextView
+        android:id="@+id/etHelpText"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:layout_marginTop="22dp"
+        android:layout_marginEnd="16dp"
+        android:fontFamily="@font/nunito"
+        android:lineHeight="19.6sp"
+        android:text="Help?"
+        android:textColor="#3E3EF7"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/etVerifyText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="56dp"
+        android:fontFamily="@font/nunito"
+        android:lineHeight="39.2sp"
+        android:text="Verify Number"
+        android:textColor="#2B2829"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/etArrow_left"
+        app:layout_constraintTop_toBottomOf="@+id/etArrow_left" />
+
+    <TextView
+        android:id="@+id/etVerificationCodeText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:fontFamily="@font/nunito"
+        android:lineHeight="24sp"
+        android:text="An verification code has been sent to your \nmail ID 98716293987"
+        android:textColor="#726C6C"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="@+id/etVerifyText"
+        app:layout_constraintTop_toBottomOf="@+id/etVerifyText" />
+
+
+    <LinearLayout
+        android:id="@+id/etOtpBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="16dp"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/etVerificationCodeText">
+
+        <EditText
+            android:id="@+id/otp_box_1"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_marginEnd="12dp"
+            android:background="@drawable/otp_edit_text_background"
+            android:gravity="center"
+            android:inputType="number"
+            android:maxLength="1"
+            android:padding="10dp"
+            android:textSize="18sp" />
+
+        <EditText
+            android:id="@+id/otp_box_2"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_marginEnd="12dp"
+            android:background="@drawable/otp_edit_text_background"
+            android:gravity="center"
+            android:inputType="number"
+            android:maxLength="1"
+            android:padding="10dp"
+            android:textSize="18sp" />
+
+        <EditText
+            android:id="@+id/otp_box_3"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_marginEnd="12dp"
+            android:background="@drawable/otp_edit_text_background"
+            android:gravity="center"
+            android:inputType="number"
+            android:maxLength="1"
+            android:padding="10dp"
+            android:textSize="18sp" />
+
+        <EditText
+            android:id="@+id/otp_box_4"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:background="@drawable/otp_edit_text_background"
+            android:gravity="center"
+            android:inputType="number"
+            android:maxLength="1"
+            android:padding="10dp"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/etEnterOtpText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:fontFamily="@font/nunito"
+        android:lineHeight="21sp"
+        android:text="Enter the OTP to continue"
+        android:textColor="#726C6C"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="@+id/etOtpBox"
+        app:layout_constraintTop_toBottomOf="@+id/etOtpBox" />
+
+    <TextView
+        android:id="@+id/etWaitText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="4dp"
+        android:fontFamily="@font/nunito"
+        android:lineHeight="19.6sp"
+        android:text="Wait"
+        android:textColor="#357F2F"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/etEnterOtpText"
+        app:layout_constraintEnd_toStartOf="@+id/etTimeText"
+        app:layout_constraintTop_toTopOf="@+id/etEnterOtpText" />
+
+    <TextView
+        android:id="@+id/etTimeText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:fontFamily="@font/nunito"
+        android:lineHeight="19.6sp"
+        android:text="10s"
+        android:textColor="#357F2F"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/etEnterOtpText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/etEnterOtpText" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnVerify"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="24dp"
+        android:backgroundTint="#B5B3B3"
+        android:text="Submit"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp"
+        app:cornerRadius="8dp"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
