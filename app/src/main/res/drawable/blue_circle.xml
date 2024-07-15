@@ -1,0 +1,24 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Blue circle shape -->
+    <item android:gravity="center">
+        <shape android:shape="oval">
+            <solid android:color="#3E3EF7"/>
+            <size android:width="14dp" android:height="14dp" />
+        </shape>
+    </item>
+    <item android:gravity="center">
+        <vector
+            android:width="14dp"
+            android:height="14dp"
+            android:viewportWidth="24"
+            android:viewportHeight="24">
+            <path
+                android:fillColor="#FFFFFF"
+                android:pathData="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7 19.59 5.58z"
+                android:scaleX="0.4"
+                android:scaleY="0.4"
+                android:translateX="2"
+                android:translateY="2"/>
+        </vector>
+    </item>
+</layer-list>

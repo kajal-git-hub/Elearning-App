@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <View
+        android:id="@+id/background_circle"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_margin="8dp"
+        android:background="@drawable/blue_circle"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/checkmark_icon"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@drawable/ic_checkmark"
+        app:layout_constraintBottom_toBottomOf="@+id/background_circle"
+        app:layout_constraintEnd_toEndOf="@+id/background_circle"
+        app:layout_constraintStart_toStartOf="@+id/background_circle"
+        app:layout_constraintTop_toTopOf="@+id/background_circle"
+        />
+</androidx.constraintlayout.widget.ConstraintLayout>

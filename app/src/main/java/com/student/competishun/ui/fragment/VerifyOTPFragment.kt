@@ -132,7 +132,7 @@ class VerifyOTPFragment : Fragment() {
     private fun navigateToNextScreen() {
 //        val intent = Intent(context, OnBoardingActivity::class.java)
 //        startActivity(intent)
-        findNavController().navigate(R.id.action_verifyOTPFragment_to_onBoardingActivity)
+        findNavController().navigate(R.id.action_verifyOTPFragment_to_onBoardingFragment)
 
     }
 

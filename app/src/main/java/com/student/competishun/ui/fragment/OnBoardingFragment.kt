@@ -7,18 +7,24 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.EditText
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.student.competishun.R
+import com.student.competishun.databinding.FragmentOnBoardingBinding
+import com.student.competishun.databinding.FragmentVerifyBinding
 import com.student.competishun.ui.adapter.ExampleAdapter
 
 class OnBoardingFragment : Fragment() {
 
-    private var layoutResId: Int? = null
+    private var _binding: FragmentOnBoardingBinding? = null
+    private val binding get() = _binding!!
+
 
     private var etEnterHereText: EditText? = null
     private var etEnterCityText: EditText? = null
@@ -26,22 +32,10 @@ class OnBoardingFragment : Fragment() {
     private var btnGetSubmit1:Button?=null
     private var recyclerview: RecyclerView? = null
 
-    companion object {
-        private const val ARG_LAYOUT_RES_ID = "onboarding"
-
-        fun newInstance(layoutResId: Int): OnBoardingFragment {
-            val fragment = OnBoardingFragment()
-            val args = Bundle()
-            args.putInt(ARG_LAYOUT_RES_ID, layoutResId)
-            fragment.arguments = args
-            return fragment
-        }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            layoutResId = it.getInt(ARG_LAYOUT_RES_ID)
         }
     }
 
@@ -49,7 +43,8 @@ class OnBoardingFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return layoutResId?.let { inflater.inflate(it, container, false) }
+        _binding = FragmentOnBoardingBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -61,6 +56,10 @@ class OnBoardingFragment : Fragment() {
         btnGetSubmit1 = view.findViewById(R.id.btnGetSubmit1)
 
         recyclerview = view.findViewById(R.id.examRecyclerview)
+
+        val constraintLayout: ConstraintLayout = view.findViewById(R.id.clAnimConstraint)
+        val slideInAnimation = AnimationUtils.loadAnimation(this@OnBoardingFragment.context, R.anim.slide_in_bottom)
+        constraintLayout.startAnimation(slideInAnimation)
 
 
         setupRecyclerView()
@@ -78,10 +77,10 @@ class OnBoardingFragment : Fragment() {
 
     private fun setupRecyclerView() {
         val recyclerview = recyclerview
-        val layoutManager = GridLayoutManager(this@OnBoardingFragment.context, 2)
+        val layoutManager = GridLayoutManager(this@OnBoardingFragment.context, 1)
         recyclerview?.layoutManager = layoutManager
 
-        val dataList = listOf("IIT-JEE", "NEET", "Board", "UCET", "UCET", "Others")
+        val dataList = listOf("Friends/Family", "Social Media", "Advertisment", "Other")
         val adapter = ExampleAdapter(dataList)
         recyclerview?.adapter = adapter
     }

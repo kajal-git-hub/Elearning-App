@@ -19,8 +19,8 @@
         android:name="com.student.competishun.ui.fragment.VerifyOTPFragment"
         tools:layout="@layout/fragment_verify">
         <action
-            android:id="@+id/action_verifyOTPFragment_to_onBoardingActivity"
-            app:destination="@+id/onBoardingActivity" />
+            android:id="@+id/action_verifyOTPFragment_to_onBoardingFragment"
+            app:destination="@+id/onboardingFragment" />
     </fragment>
 
     <fragment
