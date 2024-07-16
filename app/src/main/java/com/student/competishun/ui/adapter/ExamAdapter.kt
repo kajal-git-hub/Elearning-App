@@ -1,39 +1,112 @@
 package com.student.competishun.ui.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.student.competishun.databinding.GetstartedItemlayout2Binding
+import com.student.competishun.databinding.GetstartedItemlayoutBinding
 
-class ExampleAdapter(private val dataList: List<String>) :
-    RecyclerView.Adapter<ExampleAdapter.ViewHolder>() {
+class ExampleAdapter(
+    private var dataList: List<String>,
+    private var currentStep: Int,
+    private var spanCount: Int
+
+) :
+    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var selectedPosition = -1
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = GetstartedItemlayout2Binding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ViewHolder(binding)
+    companion object {
+        private const val VIEW_TYPE_STEP_0 = 0
+        private const val VIEW_TYPE_STEP_1 = 1
+        private const val VIEW_TYPE_STEP_OTHER = 2
+    }
+    override fun getItemViewType(position: Int): Int {
+        return when (currentStep) {
+            0 -> VIEW_TYPE_STEP_0
+            1 -> VIEW_TYPE_STEP_1
+            else -> VIEW_TYPE_STEP_OTHER
+        }
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(dataList[position], position == selectedPosition)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return when (viewType) {
+            VIEW_TYPE_STEP_0 -> {
+                val binding = GetstartedItemlayoutBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                Step0ViewHolder(binding)
+            }
+            VIEW_TYPE_STEP_1 -> {
+                val binding = GetstartedItemlayoutBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                Step1ViewHolder(binding)
+            }
+
+            else -> {
+                val binding = GetstartedItemlayout2Binding.inflate(LayoutInflater.from(parent.context), parent, false)
+                Step2ViewHolder(binding)
+            }
+        }
+    }
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        when (holder) {
+            is Step0ViewHolder -> holder.bind(dataList[position], position == selectedPosition)
+            is Step1ViewHolder -> holder.bind(dataList[position], position == selectedPosition)
+            is Step2ViewHolder -> holder.bind(dataList[position], position == selectedPosition)
+
+        }
     }
 
     override fun getItemCount(): Int {
         return dataList.size
     }
 
-    inner class ViewHolder(private val binding: GetstartedItemlayout2Binding) :
+    fun updateData(newData: List<String>,newStep: Int,newSpanCount: Int) {
+        dataList = newData
+        currentStep = newStep
+        spanCount = newSpanCount
+        notifyDataSetChanged()
+    }
+
+    inner class Step0ViewHolder(private val binding: GetstartedItemlayoutBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: String, isSelected: Boolean) {
-            binding.radioButton.text = item // Set text for the RadioButton
-            binding.radioButton.isChecked = isSelected // Set checked state based on isSelected
+            binding.radioButton.text = item
+            binding.radioButton.isChecked = isSelected
 
             binding.radioButton.setOnClickListener {
-                selectedPosition = adapterPosition // Update the selected position
-                notifyDataSetChanged() // Notify the adapter to refresh the views
+                selectedPosition = adapterPosition
+                notifyDataSetChanged()
             }
         }
     }
+
+    inner class Step1ViewHolder(private val binding: GetstartedItemlayoutBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+
+        fun bind(item: String, isSelected: Boolean) {
+            binding.radioButton.text = item
+            binding.radioButton.isChecked = isSelected
+
+            binding.radioButton.setOnClickListener {
+                selectedPosition = adapterPosition
+                notifyDataSetChanged()
+            }
+        }
+    }
+    inner class Step2ViewHolder(private val binding: GetstartedItemlayout2Binding) :
+        RecyclerView.ViewHolder(binding.root) {
+
+        fun bind(item: String, isSelected: Boolean) {
+            binding.radioButton.text = item
+            binding.radioButton.isChecked = isSelected
+
+            binding.radioButton.setOnClickListener {
+                selectedPosition = adapterPosition
+                notifyDataSetChanged()
+            }
+        }
+    }
+
 }

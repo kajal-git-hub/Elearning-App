@@ -20,6 +20,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.student.competishun.R
 import com.student.competishun.databinding.FragmentVerifyBinding
+import com.student.competishun.ui.adapter.ExampleAdapter
 
 class VerifyOTPFragment : Fragment() {
 
@@ -100,7 +101,6 @@ class VerifyOTPFragment : Fragment() {
 
         val spannableString = SpannableString(fullText)
 
-        // Set the color
         spannableString.setSpan(
             ForegroundColorSpan(Color.parseColor("#3E3EF7")),
             start,
@@ -108,7 +108,6 @@ class VerifyOTPFragment : Fragment() {
             Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
         )
 
-        // Make the phone number clickable
         spannableString.setSpan(
             object : ClickableSpan() {
                 override fun onClick(widget: View) {
@@ -130,8 +129,6 @@ class VerifyOTPFragment : Fragment() {
     }
 
     private fun navigateToNextScreen() {
-//        val intent = Intent(context, OnBoardingActivity::class.java)
-//        startActivity(intent)
         findNavController().navigate(R.id.action_verifyOTPFragment_to_onBoardingFragment)
 
     }

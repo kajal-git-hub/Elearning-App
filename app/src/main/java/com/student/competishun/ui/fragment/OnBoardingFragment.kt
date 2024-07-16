@@ -8,35 +8,30 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
-import android.widget.Button
-import android.widget.EditText
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.student.competishun.R
 import com.student.competishun.databinding.FragmentOnBoardingBinding
-import com.student.competishun.databinding.FragmentVerifyBinding
 import com.student.competishun.ui.adapter.ExampleAdapter
 
 class OnBoardingFragment : Fragment() {
 
     private var _binding: FragmentOnBoardingBinding? = null
     private val binding get() = _binding!!
+    private var currentStep = 0
 
+    private val dataSets = listOf(
+        listOf("ITT-JEE", "NEET", "Board", "UCET", "8th to 10th", "Others"),
+        listOf("2025", "2026", "2027", "2028"),
+        listOf("Friends/Family", "Social Media", "Advertisement", "Other"),
+    )
+    private val spanCount = listOf(2, 2, 1)
 
-    private var etEnterHereText: EditText? = null
-    private var etEnterCityText: EditText? = null
-    private var btnGetSubmit2: Button? = null
-    private var btnGetSubmit1:Button?=null
-    private var recyclerview: RecyclerView? = null
-
+    private lateinit var adapter: ExampleAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-        }
     }
 
     override fun onCreateView(
@@ -50,39 +45,59 @@ class OnBoardingFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        etEnterHereText = view.findViewById(R.id.etEnterHereText)
-        etEnterCityText = view.findViewById(R.id.etEnterCityText)
-        btnGetSubmit2 = view.findViewById(R.id.btnGetSubmit2)
-        btnGetSubmit1 = view.findViewById(R.id.btnGetSubmit1)
+        binding.etNameConstraint.visibility = View.VISIBLE
+        binding.clExamConstraint.visibility = View.GONE
 
-        recyclerview = view.findViewById(R.id.examRecyclerview)
+        adapter = ExampleAdapter(dataSets[currentStep],currentStep,spanCount[currentStep])
+        binding.examRecyclerview.layoutManager =
+            GridLayoutManager(this@OnBoardingFragment.context, spanCount[currentStep])
+        binding.examRecyclerview.adapter = adapter
 
-        val constraintLayout: ConstraintLayout = view.findViewById(R.id.clAnimConstraint)
-        val slideInAnimation = AnimationUtils.loadAnimation(this@OnBoardingFragment.context, R.anim.slide_in_bottom)
-        constraintLayout.startAnimation(slideInAnimation)
+        val slideInAnimation =
+            AnimationUtils.loadAnimation(this@OnBoardingFragment.context, R.anim.slide_in_bottom)
+        binding.clAnimConstraint.startAnimation(slideInAnimation)
 
-
-        setupRecyclerView()
         setUpTextWatchers()
         updateButtonBackground()
 
-        btnGetSubmit2?.setOnClickListener {
+        binding.btnGetSubmit2.setOnClickListener {
             Log.d("OnBoardingFragment", "Button clicked")
+            when (currentStep) {
+                0 -> {
+                    binding.clExamConstraint.visibility = View.VISIBLE
+                    binding.etNameConstraint.visibility = View.GONE
+                    updateRecyclerViewData()
+                }
+
+                1 -> {
+                    binding.clExamConstraint.visibility = View.VISIBLE
+                    binding.etNameConstraint.visibility = View.GONE
+                    updateRecyclerViewData()
+                }
+
+                2 -> {
+                    binding.clExamConstraint.visibility = View.VISIBLE
+                    binding.etNameConstraint.visibility = View.GONE
+                    updateRecyclerViewData()
+                }
+
+            }
+            currentStep++
+            binding.clAnimConstraint.startAnimation(slideInAnimation)
         }
-        btnGetSubmit1?.setOnClickListener {
+
+        binding.btnGetSubmit1.setOnClickListener {
             findNavController().navigate(R.id.action_OnBoardingFragment_to_loginFragment)
         }
-
     }
 
-    private fun setupRecyclerView() {
-        val recyclerview = recyclerview
-        val layoutManager = GridLayoutManager(this@OnBoardingFragment.context, 1)
-        recyclerview?.layoutManager = layoutManager
 
-        val dataList = listOf("Friends/Family", "Social Media", "Advertisment", "Other")
-        val adapter = ExampleAdapter(dataList)
-        recyclerview?.adapter = adapter
+    private fun updateRecyclerViewData() {
+        if (currentStep < dataSets.size) {
+            val newSpanCount = if (currentStep < spanCount.size) spanCount[currentStep] else 1
+            adapter.updateData(dataSets[currentStep], currentStep, newSpanCount)
+            binding.examRecyclerview.layoutManager = GridLayoutManager(this@OnBoardingFragment.context, newSpanCount)
+        }
     }
 
     private fun setUpTextWatchers() {
@@ -96,27 +111,25 @@ class OnBoardingFragment : Fragment() {
             }
         }
 
-        etEnterHereText?.addTextChangedListener(textWatcher)
-        etEnterCityText?.addTextChangedListener(textWatcher)
+        binding.etEnterHereText.addTextChangedListener(textWatcher)
+        binding.etEnterCityText.addTextChangedListener(textWatcher)
     }
 
     private fun updateButtonBackground() {
-        val text1 = etEnterHereText?.text.toString().trim()
-        val text2 = etEnterCityText?.text.toString().trim()
+        val text1 = binding.etEnterHereText.text.toString().trim()
+        val text2 = binding.etEnterCityText.text.toString().trim()
 
         Log.d("OnBoardingFragment", "etEnterHereText: $text1, etEnterCityText: $text2")
 
         if (text1.isNotEmpty() && text2.isNotEmpty()) {
-            btnGetSubmit2?.setBackgroundResource(R.drawable.second_getstarteddone)
+            binding.btnGetSubmit2.setBackgroundResource(R.drawable.second_getstarteddone)
         } else {
-            btnGetSubmit2?.setBackgroundResource(R.drawable.second_getstarted)
+            binding.btnGetSubmit2.setBackgroundResource(R.drawable.second_getstarted)
         }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        etEnterHereText = null
-        etEnterCityText = null
-        btnGetSubmit2 = null
+        _binding = null
     }
 }
