@@ -25,7 +25,6 @@ import kotlinx.coroutines.supervisorScope
 class MainActivity : AppCompatActivity() {
 
     private val viewModel: GetOtpViewModel by viewModels()
-    private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     val countryCode = "+91"
     val mobileNo = "7667022303"
     private val mainVM: MainVM by viewModels()
@@ -89,16 +88,19 @@ class MainActivity : AppCompatActivity() {
 //                }
 //            }
 //        }
-        viewModel.getOtp(countryCode,mobileNo)
-        viewModel.otpResult.observe(this, Observer { result ->
-            if (result == true){
-                Log.e("otpGot",result.toString())
-            }else{
-                Log.e("otp not running",result.toString())
+                viewModel.getOtp(countryCode, mobileNo)
+                viewModel.otpResult.observe(this@MainActivity, Observer { result ->
+                    if (result == true) {
+                        Log.e("otpGot", result.toString())
+                    } else {
+                        Log.e("otp not running", result.toString())
+                    }
+                })
             }
-        })
-    }
 
+
+        }
+    }
     override fun onSupportNavigateUp(): Boolean {
         return navController.navigateUp() || super.onSupportNavigateUp()
     }

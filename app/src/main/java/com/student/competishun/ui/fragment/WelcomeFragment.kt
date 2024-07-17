@@ -18,14 +18,14 @@ class WelcomeFragment : Fragment() {
     // Example data sets
     private val data1 = WelcomeModel(
         R.drawable.doubt_image,
-        resources.getString(R.string.evaluate_txt),
+        resources.getString(R.string.hello_blank_fragment),
         "Description for test series 1",
         R.drawable.doubt_icon
     )
 
     private val data2 = WelcomeModel(
         R.drawable.testseries_image,
-        resources.getString(R.string.evaluate_txt),
+        resources.getString(R.string.hello_blank_fragment),
         "Description for test series 1",
         R.drawable.testseries_icon
     )
@@ -70,7 +70,6 @@ class WelcomeFragment : Fragment() {
         binding.etTitleText.text = data.title
         binding.etTitleDescription.text = data.description
         binding.etCenterImage.setImageResource(data.image)
-        binding.etCenterImage.setImageResource(data.skipImage)
     }
 
     override fun onDestroyView() {
