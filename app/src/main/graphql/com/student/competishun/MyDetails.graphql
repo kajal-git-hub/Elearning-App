@@ -1,0 +1,11 @@
+query MyDetails {
+    getMyDetails {
+        countryCode
+        userInformation {
+            city
+        }
+        mobileNumber
+    }
+}
+
+
