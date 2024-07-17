@@ -1,0 +1,7 @@
+query User{
+    pokemon_v2_pokemon(limit: 20) {
+        id
+        name
+        pokemon_species_id
+    }
+}

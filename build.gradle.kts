@@ -2,5 +2,7 @@
 plugins {
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.jetbrains.kotlin.android) apply false
-    id("com.google.dagger.hilt.android") version "2.42" apply false
+    alias(libs.plugins.apollo.graph.ql) apply false
+    alias(libs.plugins.ksp) apply false
+    alias(libs.plugins.hilt) apply false
 }
