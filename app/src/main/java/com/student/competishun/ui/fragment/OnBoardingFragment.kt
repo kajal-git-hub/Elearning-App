@@ -26,6 +26,18 @@ class OnBoardingFragment : Fragment() {
         listOf("2025", "2026", "2027", "2028"),
         listOf("Friends/Family", "Social Media", "Advertisement", "Other"),
     )
+    private val pageTexts= listOf(
+        "2",
+        "3",
+        "4"
+    )
+
+    private val stepTexts = listOf(
+        "Which exam are you \npreparing for? Please select",
+        "What is your target year?",
+        "How do you know about \nCompetishun?"
+    )
+
     private val spanCount = listOf(2, 2, 1)
 
     private lateinit var adapter: ExampleAdapter
@@ -60,6 +72,7 @@ class OnBoardingFragment : Fragment() {
         setUpTextWatchers()
         updateButtonBackground()
 
+
         binding.btnGetSubmit2.setOnClickListener {
             Log.d("OnBoardingFragment", "Button clicked")
             when (currentStep) {
@@ -67,18 +80,24 @@ class OnBoardingFragment : Fragment() {
                     binding.clExamConstraint.visibility = View.VISIBLE
                     binding.etNameConstraint.visibility = View.GONE
                     updateRecyclerViewData()
+                    updateStepText()
+                    updatePageText()
                 }
 
                 1 -> {
                     binding.clExamConstraint.visibility = View.VISIBLE
                     binding.etNameConstraint.visibility = View.GONE
                     updateRecyclerViewData()
+                    updateStepText()
+                    updatePageText()
                 }
 
                 2 -> {
                     binding.clExamConstraint.visibility = View.VISIBLE
                     binding.etNameConstraint.visibility = View.GONE
                     updateRecyclerViewData()
+                    updateStepText()
+                    updatePageText()
                 }
 
             }
@@ -88,6 +107,16 @@ class OnBoardingFragment : Fragment() {
 
         binding.btnGetSubmit1.setOnClickListener {
             findNavController().navigate(R.id.action_OnBoardingFragment_to_loginFragment)
+        }
+    }
+    private fun updateStepText() {
+        if (currentStep < stepTexts.size) {
+            binding.etStartedText.text = stepTexts[currentStep]
+        }
+    }
+    private fun updatePageText() {
+        if(currentStep<pageTexts.size){
+            binding.etText.text = pageTexts[currentStep]
         }
     }
 

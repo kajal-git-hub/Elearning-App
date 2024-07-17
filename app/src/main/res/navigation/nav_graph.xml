@@ -32,10 +32,7 @@
             app:destination="@+id/loginFragment" />
     </fragment>
 
-    <activity
-        android:id="@+id/onBoardingActivity"
-        android:name="com.student.competishun.ui.activity.OnBoardingActivity"
-        tools:layout="@layout/activity_on_boarding"/>
+
 
 
 </navigation>
