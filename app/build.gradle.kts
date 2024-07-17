@@ -19,7 +19,12 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     apollo {
-        useVersion2Compat()
+       // useVersion2Compat()
+        service("service") {
+            packageName.set("com.student.competishun")
+            schemaFile.set(file("src/main/graphql/com/student/competishun/schema.graphqls"))
+            generateKotlinModels.set(true)
+        }
     }
     buildTypes {
         release {
@@ -59,5 +64,9 @@ dependencies {
     //Graph ql
     implementation(libs.apollo.runtime)
     implementation(libs.apollo.api)
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation(libs.androidx.lifecycle.runtime.ktx)
 }
+
 
