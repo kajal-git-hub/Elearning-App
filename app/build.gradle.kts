@@ -1,24 +1,26 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
-    kotlin("kapt")
-    id("com.google.dagger.hilt.android") version "2.42" apply false
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.hilt)
+    alias(libs.plugins.apollo.graph.ql)
 }
 
 android {
     namespace = "com.student.competishun"
     compileSdk = 34
-
     defaultConfig {
         applicationId = "com.student.competishun"
-        minSdk = 24
+        minSdk = 21
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
-
+    apollo {
+        useVersion2Compat()
+    }
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -35,63 +37,26 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
-    buildFeatures{
+    buildFeatures {
         viewBinding = true
-        dataBinding = true
     }
 }
-
 dependencies {
-     // Core libraries
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
-
-    // Networking
-    implementation(libs.retrofit)
-    implementation(libs.converter.gson)
-
-    // Lifecycle components
-    implementation(libs.androidx.lifecycle.viewmodel.ktx)
-    implementation(libs.androidx.lifecycle.livedata.ktx)
-
-    // UI components
-    implementation(libs.androidx.recyclerview)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
-
-    // Coroutines
-    implementation(libs.kotlinx.coroutines.core)
-    implementation(libs.kotlinx.coroutines.android)
-    // Apollo Android GraphQL client
-    implementation(libs.apollo3.apollo.runtime)
-    implementation(libs.apollo3.apollo.coroutines.support)
-
-    // Dagger and Hilt for dependency injection
-    implementation("com.google.dagger:hilt-android:2.51.1")
-    implementation(libs.androidx.junit.ktx)
-    annotationProcessor("com.google.dagger:hilt-compiler:2.51.1")
-
-    // For instrumentation tests
-    androidTestImplementation("com.google.dagger:hilt-android-testing:2.51.1")
-    androidTestAnnotationProcessor("com.google.dagger:hilt-compiler:2.51.1")
-
-    // For local unit tests
-    testImplementation("com.google.dagger:hilt-android-testing:2.51.1")
-    testAnnotationProcessor("com.google.dagger:hilt-compiler:2.51.1")
-
-    // logging interceptor
-    implementation(libs.logging.interceptor)
-
-    // Navigation
-    implementation(libs.androidx.navigation.fragment.ktx) // or the latest version
-    implementation(libs.androidx.navigation.ui.ktx)
-
-    //Glide
-    implementation(libs.glide)
-    kapt("com.github.bumptech.glide:compiler:4.15.1")
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
+    //Gson
+    implementation(libs.convertor.gson)
+    //hilt
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.kapt)
+    //Graph ql
+    implementation(libs.apollo.runtime)
+    implementation(libs.apollo.api)
 }
 
-kapt {
-    correctErrorTypes = true
-}
