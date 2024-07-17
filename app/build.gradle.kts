@@ -73,4 +73,7 @@ dependencies {
 
     //viewpager2
     implementation("androidx.viewpager2:viewpager2:1.1.0")
+
+    //splashscreen
+    implementation(libs.androidx.core.splashscreen)
 }

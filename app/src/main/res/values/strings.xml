@@ -2,4 +2,26 @@
     <string name="app_name">Competishun</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+    //Title
+    <String name="series_txt">Comprehensive <font color='#FF7A28'>Test</font> \nSeries
+    </String>
+    <String name="doubt_txt">Instant <font color='#FF7A28'>Doubt</font> Resolution
+    </String>
+    <string name="evaluate_txt">Evaluate Your <font color='#FF7A28'>\nPerformance</font></string>
+
+
+    //Description
+    <String name="DTestSeries_txt">Elevate your prep with realistic tests; practice and receive
+        detailed solutions and feedback.
+    </String>
+    <String name="DDoubt_txt">Got a tough question? Get quick answers from \nexperts and peers
+        anytime, anywhere
+    </String>
+    <String name="DEvaluate_txt">Monitor progress with detailed reports, track \nresults, and focus
+        on improvement areas
+    </String>
+
+
 </resources>

@@ -98,8 +98,11 @@ class OnBoardingFragment : Fragment() {
                     updateRecyclerViewData()
                     updateStepText()
                     updatePageText()
+                    binding.btnGetSubmit2.text = "Done"
+                    binding.btnGetSubmit2.setOnClickListener {
+                        // on hold
+                    }
                 }
-
             }
             currentStep++
             binding.clAnimConstraint.startAnimation(slideInAnimation)

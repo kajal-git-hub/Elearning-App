@@ -6,4 +6,13 @@
     </style>
 
     <style name="Theme.Competishun" parent="Base.Theme.Competishun" />
+
+    <style name="Theme.CustomSplashScreen" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/splash_blue</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/com_image</item>
+        <item name="windowSplashScreenAnimationDuration">300</item>
+
+
+    </style>
+
 </resources>
