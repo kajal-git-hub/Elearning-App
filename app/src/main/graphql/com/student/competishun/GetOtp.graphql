@@ -1,0 +1,3 @@
+mutation GetOtp($getOtpInput: GetOtpInput!) {
+    getOtp(getOtpInput: $getOtpInput)
+}

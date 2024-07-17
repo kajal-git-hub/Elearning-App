@@ -1,4 +1,4 @@
 package com.student.competishun.data.api
 
 
-const val BASE_URL = "https://beta.pokeapi.co/graphql/v1beta"
+const val BASE_URL = "https://dev-ant.antino.ca/cm-gatekeeper/graphql"
