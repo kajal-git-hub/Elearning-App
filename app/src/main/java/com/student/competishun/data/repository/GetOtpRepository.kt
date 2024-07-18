@@ -11,7 +11,7 @@ import javax.inject.Singleton
 class GetOtpRepository @Inject constructor(private val apolloClient: ApolloClient) {
 
     suspend fun getOtp(countryCode: String, mobileNumber: String): Boolean? {
-        val getOtpInput = GetOtpInput(countryCode, mobileNumber)
+        val getOtpInput = GetOtpInput(countryCode = countryCode, mobileNumber = mobileNumber)
         val mutation = GetOtpMutation(getOtpInput)
         return try {
             val response = apolloClient.mutation(mutation).execute()

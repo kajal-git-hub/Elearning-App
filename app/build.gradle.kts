@@ -19,7 +19,7 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     apollo {
-       // useVersion2Compat()
+        // useVersion2Compat()
         service("service") {
             packageName.set("com.student.competishun")
             schemaFile.set(file("src/main/graphql/com/student/competishun/schema.graphqls"))
@@ -42,7 +42,7 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
-    buildFeatures{
+    buildFeatures {
         viewBinding = true
         dataBinding = true
     }
@@ -56,11 +56,14 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
     //Gson
     implementation(libs.convertor.gson)
+
     //hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.kapt)
+
     //Graph ql
     implementation(libs.apollo.runtime)
     implementation(libs.apollo.api)
@@ -68,20 +71,11 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
 
-
-//
     // Navigation
-    implementation("androidx.navigation:navigation-fragment-ktx:2.7.7")
-    implementation("androidx.navigation:navigation-ui-ktx:2.7.7")
-
+    implementation(libs.androidx.navigation.fragment.ktx)
+    implementation(libs.androidx.navigation.ui.ktx)
 
     //gif
-    implementation("pl.droidsonroids.gif:android-gif-drawable:1.2.19")
+    implementation(libs.android.gif.drawable)
 
-
-    //viewpager2
-    implementation("androidx.viewpager2:viewpager2:1.1.0")
-
-    //splashscreen
-    implementation(libs.androidx.core.splashscreen)
 }

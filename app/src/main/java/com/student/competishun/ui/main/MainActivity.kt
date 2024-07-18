@@ -1,11 +1,12 @@
 package com.student.competishun.ui.main
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.Observer
@@ -34,44 +35,42 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        setContentView(R.layout.splash_screen)
 
-        // Enable edge-to-edge display
-        enableEdgeToEdge()
 
-        // Install splash screen
-        installSplashScreen()
+        Handler(Looper.getMainLooper()).postDelayed({
+            setContentView(R.layout.welcome_screen)
 
-        // Set window insets listener for handling system bars
-        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
+            Handler(Looper.getMainLooper()).postDelayed({
+                setContentView(binding.root)
 
-        // Find NavHostFragment and NavController
-        val navHostFragment =
-            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-        navController = navHostFragment.navController
+                enableEdgeToEdge()
 
-        // Hide the action bar title
-        supportActionBar?.setDisplayShowTitleEnabled(false)
-
-        // Observe loader state using lifecycleScope
-        lifecycleScope.launch {
-            supervisorScope {
-                launch {
-                    // Optional: Add any concurrent tasks if needed
+                ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
+                    val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+                    v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+                    insets
                 }
-                launch {
-                    mainVM.loader.collect { isLoading ->
-                        if (isLoading) {
-                            // Handle loading state
-                        } else {
-                            // Handle when loading is complete
+
+                val navHostFragment =
+                    supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+                navController = navHostFragment.navController
+
+
+                lifecycleScope.launch {
+                    supervisorScope {
+                        launch {
+                            // Optional
                         }
-                    }
-                }
+                        launch {
+                            mainVM.loader.collect { isLoading ->
+                                if (isLoading) {
+                                    // Handle loading state
+                                } else {
+                                    // Handle when loading is complete
+                                }
+                            }
+                        }
 //        lifecycleScope.launch {
 //            supervisorScope {
 //                launch {
@@ -88,18 +87,24 @@ class MainActivity : AppCompatActivity() {
 //                }
 //            }
 //        }
-                viewModel.getOtp(countryCode, mobileNo)
-                viewModel.otpResult.observe(this@MainActivity, Observer { result ->
-                    if (result == true) {
-                        Log.e("otpGot", result.toString())
-                    } else {
-                        Log.e("otp not running", result.toString())
+                        viewModel.getOtp(countryCode, mobileNo)
+                        viewModel.otpResult.observe(this@MainActivity, Observer { result ->
+                            if (result == true) {
+                                Log.e("otpGot", result.toString())
+                            } else {
+                                Log.e("otp not running", result.toString())
+                            }
+                        })
                     }
-                })
-            }
 
 
-        }
+                }
+
+
+            }, 2000)
+
+        },2000)
+
     }
     override fun onSupportNavigateUp(): Boolean {
         return navController.navigateUp() || super.onSupportNavigateUp()

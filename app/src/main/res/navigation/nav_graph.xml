@@ -2,7 +2,7 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    app:startDestination="@id/loginFragment"
+    app:startDestination="@id/onWelcomeFragment"
     android:id="@+id/nav_graph">
 
     <fragment
@@ -29,6 +29,15 @@
         tools:layout="@layout/fragment_on_boarding">
         <action
             android:id="@+id/action_OnBoardingFragment_to_loginFragment"
+            app:destination="@+id/loginFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/onWelcomeFragment"
+        android:name="com.student.competishun.ui.fragment.WelcomeFragment"
+        tools:layout="@layout/fragment_welcome">
+        <action
+            android:id="@+id/action_onWelcomeFragment_to_loginFragment"
             app:destination="@+id/loginFragment" />
     </fragment>
 
