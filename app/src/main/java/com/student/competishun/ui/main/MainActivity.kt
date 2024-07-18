@@ -11,11 +11,19 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.student.competishun.R
 import com.student.competishun.databinding.ActivityMainBinding
+import com.student.competishun.ui.viewmodel.GetOtpViewModel
+import com.student.competishun.ui.viewmodel.MainVM
+import com.student.competishun.ui.viewmodel.VerifyOtpViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
+    private val getOtpViewModel: GetOtpViewModel by viewModels()
+    private val verifyOtpViewModel: VerifyOtpViewModel by viewModels()
+    val countryCode = "+91"
+    val mobileNo = "7667022303"
+    private val mainVM: MainVM by viewModels()
     private lateinit var navController: NavController
     private lateinit var binding: ActivityMainBinding
 
@@ -41,6 +49,64 @@ class MainActivity : AppCompatActivity() {
                 val navHostFragment =
                     supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
                 navController = navHostFragment.navController
+
+
+                lifecycleScope.launch {
+                    supervisorScope {
+                        launch {
+                            // Optional
+                        }
+                        launch {
+                            mainVM.loader.collect { isLoading ->
+                                if (isLoading) {
+                                    // Handle loading state
+                                } else {
+                                    // Handle when loading is complete
+                                }
+                            }
+                        }
+//        lifecycleScope.launch {
+//            supervisorScope {
+//                launch {
+//
+//                }
+//                launch {
+//                    mainVM.loader.collect{
+//                        if(it){
+//
+//                        }else{
+//
+//                        }
+//                    }
+//                }
+//            }
+//        }
+                        getOtpViewModel.getOtp(countryCode, mobileNo)
+                        getOtpViewModel.otpResult.observe(this@MainActivity, Observer { result ->
+                            if (result == true) {
+                                Log.e("otpGot", result.toString())
+                            } else {
+                                Log.e("otp not running", result.toString())
+                            }
+                        })
+
+                    }
+                    verifyOtpViewModel.verifyOtp(countryCode, mobileNo, 1111)
+                    //Observe result from VerifyOtpViewModel
+                    verifyOtpViewModel.verifyOtpResult.observe(this@MainActivity, Observer { result ->
+                        if (result != null) {
+                            val user = result.user
+                            val refreshToken = result.refreshToken
+                            val accessToken = result.accessToken
+                            Log.e("Success in Verify", "$user $refreshToken $accessToken")
+                        } else {
+                            Log.e("Failure in Verify", "Check")
+                        }
+                    })
+
+
+                }
+
 
             }, 2000)
         }, 2000)

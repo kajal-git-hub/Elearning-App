@@ -1,0 +1,51 @@
+package com.student.competishun.data.repository
+
+import android.util.Log
+import com.apollographql.apollo3.ApolloClient
+import com.apollographql.apollo3.exception.ApolloException
+import com.student.competishun.VerifyOtpMutation
+import com.student.competishun.data.model.User
+import com.student.competishun.data.model.UserInformation
+import com.student.competishun.data.model.VerifyOtpResponse
+import com.student.competishun.type.VerifyOtpInput
+import javax.inject.Inject
+import javax.inject.Singleton
+
+
+@Singleton
+class VerifyOtpRepository @Inject constructor(private val apolloClient: ApolloClient) {
+
+    suspend fun verifyOtp(verifyOtpInput: VerifyOtpInput): VerifyOtpResponse? {
+        val mutation = VerifyOtpMutation(verifyOtpInput)
+
+        return try {
+            val response = apolloClient.mutate(mutation).execute()
+
+            if (response.hasErrors()) {
+                // Handle errors if needed
+                response.errors?.forEach {
+                    Log.e("GraphQL Error", it.message)
+                }
+                return null
+            }
+
+            response.data?.verifyOtp?.let { result ->
+                VerifyOtpResponse(
+                    user = result.user?.let { user ->
+                        User(
+                            mobileNumber = user.mobileNumber,
+                            fullName = user.fullName,
+                            countryCode = user.countryCode,
+                        )
+                    },
+                    refreshToken = result.refreshToken,
+                    accessToken = result.accessToken
+                )
+            }
+        } catch (e: ApolloException) {
+            // Handle ApolloException
+            Log.e("ApolloException", e.message ?: "Unknown error")
+            null
+        }
+    }
+}
