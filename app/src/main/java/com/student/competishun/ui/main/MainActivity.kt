@@ -3,10 +3,14 @@ package com.student.competishun.ui.main
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.student.competishun.R
@@ -15,6 +19,8 @@ import com.student.competishun.ui.viewmodel.GetOtpViewModel
 import com.student.competishun.ui.viewmodel.MainVM
 import com.student.competishun.ui.viewmodel.VerifyOtpViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.supervisorScope
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -65,34 +71,8 @@ class MainActivity : AppCompatActivity() {
                                 }
                             }
                         }
-//        lifecycleScope.launch {
-//            supervisorScope {
-//                launch {
-//
-//                }
-//                launch {
-//                    mainVM.loader.collect{
-//                        if(it){
-//
-//                        }else{
-//
-//                        }
-//                    }
-//                }
-//            }
-//        }
-                        getOtpViewModel.getOtp(countryCode, mobileNo)
-                        getOtpViewModel.otpResult.observe(this@MainActivity, Observer { result ->
-                            if (result == true) {
-                                Log.e("otpGot", result.toString())
-                            } else {
-                                Log.e("otp not running", result.toString())
-                            }
-                        })
-
                     }
                     verifyOtpViewModel.verifyOtp(countryCode, mobileNo, 1111)
-                    //Observe result from VerifyOtpViewModel
                     verifyOtpViewModel.verifyOtpResult.observe(this@MainActivity, Observer { result ->
                         if (result != null) {
                             val user = result.user
