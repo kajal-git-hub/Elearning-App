@@ -101,7 +101,7 @@ class MainActivity : AppCompatActivity() {
                     }
                     verifyOtpViewModel.verifyOtp(countryCode, mobileNo, 1111)
                     //Observe result from VerifyOtpViewModel
-                    verifyOtpViewModel.verifyOtpResult.observe(this, Observer { result ->
+                    verifyOtpViewModel.verifyOtpResult.observe(this@MainActivity, Observer { result ->
                         if (result != null) {
                             val user = result.user
                             val refreshToken = result.refreshToken
