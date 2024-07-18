@@ -3,16 +3,17 @@ package com.student.competishun.ui.fragment
 import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
-import android.text.Spannable
 import android.text.SpannableString
 import android.text.TextWatcher
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
+import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.Toast
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -20,12 +21,13 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.student.competishun.R
 import com.student.competishun.databinding.FragmentVerifyBinding
-import com.student.competishun.ui.adapter.ExampleAdapter
 
 class VerifyOTPFragment : Fragment() {
 
     private var _binding: FragmentVerifyBinding? = null
     private val binding get() = _binding!!
+
+    private var mobileNumber: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,6 +37,16 @@ class VerifyOTPFragment : Fragment() {
         return binding.root
     }
 
+//    override fun onResume() {
+//        super.onResume()
+//        navigateBack()
+//    }
+
+//    private fun navigateBack() {
+//        findNavController().navigate(R.id.action_verifyOTPFragment_to_loginFragment)
+//    }
+
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -43,6 +55,14 @@ class VerifyOTPFragment : Fragment() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        binding.etArrowLeft.setOnClickListener {
+            findNavController().navigate(R.id.action_verifyOTPFragment_to_loginFragment)
+        }
+
+        mobileNumber = arguments?.getString("mobileNumber")
+
+        Log.d("VerifyOTPFragment", "Mobile number: $mobileNumber")
 
         setupOtpInputs()
         setupVerificationCodeText()
@@ -58,13 +78,7 @@ class VerifyOTPFragment : Fragment() {
 
         otpBoxes.forEachIndexed { index, editText ->
             editText.addTextChangedListener(object : TextWatcher {
-                override fun beforeTextChanged(
-                    s: CharSequence?,
-                    start: Int,
-                    count: Int,
-                    after: Int
-                ) {
-                }
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 
@@ -77,7 +91,9 @@ class VerifyOTPFragment : Fragment() {
 
                     if (otpBoxes.all { it.text.length == 1 }) {
                         binding.btnVerify.setBackgroundColor(Color.parseColor("#3E3EF7"))
-                        navigateToNextScreen()
+                        binding.btnVerify.setOnClickListener {
+                            navigateToNextScreen()
+                        }
                     }
                 }
             })
@@ -93,44 +109,46 @@ class VerifyOTPFragment : Fragment() {
     }
 
     private fun setupVerificationCodeText() {
-        val fullText = "An verification code has been sent to your \nmail ID 98716293987"
-        val phoneNumber = "98716293987"
+        mobileNumber?.let { phoneNumber ->
+            val fullText = "An verification code has been sent to your \nmail ID $phoneNumber"
+            val start = fullText.indexOf(phoneNumber)
 
-        val start = fullText.indexOf(phoneNumber)
-        val end = start + phoneNumber.length
+            if (start != -1) {
+                val end = start + phoneNumber.length
+                val spannableString = SpannableString(fullText)
 
-        val spannableString = SpannableString(fullText)
+                spannableString.setSpan(
+                    ForegroundColorSpan(Color.parseColor("#3E3EF7")),
+                    start,
+                    end,
+                    SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
 
-        spannableString.setSpan(
-            ForegroundColorSpan(Color.parseColor("#3E3EF7")),
-            start,
-            end,
-            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
+                spannableString.setSpan(
+                    object : ClickableSpan() {
+                        override fun onClick(widget: View) {
+                            Toast.makeText(
+                                requireContext(),
+                                "Phone number clicked",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    },
+                    start,
+                    end,
+                    SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
 
-        spannableString.setSpan(
-            object : ClickableSpan() {
-                override fun onClick(widget: View) {
-                    Toast.makeText(requireContext(), "Phone number clicked", Toast.LENGTH_SHORT)
-                        .show()
-                }
-                override fun updateDrawState(ds: android.text.TextPaint) {
-                    super.updateDrawState(ds)
-                    ds.isUnderlineText = false
-                }
-            },
-            start,
-            end,
-            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
-
-        binding.etVerificationCodeText.text = spannableString
-        binding.etVerificationCodeText.movementMethod = LinkMovementMethod.getInstance()
+                binding.etVerificationCodeText.text = spannableString
+                binding.etVerificationCodeText.movementMethod = LinkMovementMethod.getInstance()
+            } else {
+                Log.d("VerifyOTPFragment", "Phone number not found in text: $phoneNumber")
+            }
+        }
     }
 
     private fun navigateToNextScreen() {
         findNavController().navigate(R.id.action_verifyOTPFragment_to_onBoardingFragment)
-
     }
 
     override fun onDestroyView() {
