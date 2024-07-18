@@ -3,4 +3,9 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="splash_blue">#01009A</color>"
+    <color name="recycler_bg">#C6C6F7</color>
+    <color name="PrimaryColor">#3E3EF7</color>
+    <color name="recycler_txt">#433E3F</color>
+
+
 </resources>

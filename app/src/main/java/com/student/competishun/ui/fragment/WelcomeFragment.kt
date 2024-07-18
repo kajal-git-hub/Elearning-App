@@ -14,26 +14,11 @@ class WelcomeFragment : Fragment() {
     private var _binding: FragmentWelcomeBinding? = null
     private val binding get() = _binding!!
 
-    private val data1 = WelcomeModel(
-        R.drawable.doubt_image,
-        R.string.instant_doubt_resolution.toString(),
-        R.string.doubt_description.toString(),
-        R.drawable.doubt_icon
-    )
 
-    private val data2 = WelcomeModel(
-        R.drawable.testseries_image,
-        R.string.comprehensive_test_series.toString(),
-        R.string.test_description.toString(),
-        R.drawable.testseries_icon
-    )
+    private lateinit var data1: WelcomeModel
+    private lateinit var data2: WelcomeModel
+    private lateinit var data3: WelcomeModel
 
-    private val data3 = WelcomeModel(
-        R.drawable.evaluate_image,
-        R.string.evaluate_your_performances.toString(),
-        R.string.evaluate_description.toString(),
-        R.drawable.evaluate_icon
-    )
 
     private var currentDataIndex = 0  // Track which data set is currently displayed
 
@@ -47,6 +32,28 @@ class WelcomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
+        data1 = WelcomeModel(
+            R.drawable.doubt_image,
+            resources.getString(R.string.instant_doubt_resolution),
+            resources.getString(R.string.doubt_description),
+            R.drawable.doubt_icon
+        )
+
+         data2 = WelcomeModel(
+            R.drawable.testseries_image,
+            resources.getString(R.string.comprehensive_test_series),
+            resources.getString(R.string.test_description),
+            R.drawable.testseries_icon
+        )
+
+         data3 = WelcomeModel(
+            R.drawable.evaluate_image,
+            resources.getString(R.string.evaluate_your_performances),
+            resources.getString(R.string.evaluate_description),
+            R.drawable.evaluate_icon
+        )
 
         binding.etSkipText.setOnClickListener {
             navigateToLoginFragment()

@@ -22,7 +22,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
 
-
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
@@ -38,7 +37,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(R.layout.splash_screen)
-
 
         Handler(Looper.getMainLooper()).postDelayed({
             setContentView(R.layout.welcome_screen)
@@ -73,34 +71,8 @@ class MainActivity : AppCompatActivity() {
                                 }
                             }
                         }
-//        lifecycleScope.launch {
-//            supervisorScope {
-//                launch {
-//
-//                }
-//                launch {
-//                    mainVM.loader.collect{
-//                        if(it){
-//
-//                        }else{
-//
-//                        }
-//                    }
-//                }
-//            }
-//        }
-                        getOtpViewModel.getOtp(countryCode, mobileNo)
-                        getOtpViewModel.otpResult.observe(this@MainActivity, Observer { result ->
-                            if (result == true) {
-                                Log.e("otpGot", result.toString())
-                            } else {
-                                Log.e("otp not running", result.toString())
-                            }
-                        })
-
                     }
                     verifyOtpViewModel.verifyOtp(countryCode, mobileNo, 1111)
-                    //Observe result from VerifyOtpViewModel
                     verifyOtpViewModel.verifyOtpResult.observe(this@MainActivity, Observer { result ->
                         if (result != null) {
                             val user = result.user
@@ -117,10 +89,9 @@ class MainActivity : AppCompatActivity() {
 
 
             }, 2000)
-
-        },2000)
-
+        }, 2000)
     }
+
     override fun onSupportNavigateUp(): Boolean {
         return navController.navigateUp() || super.onSupportNavigateUp()
     }

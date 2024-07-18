@@ -2,8 +2,8 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    app:startDestination="@id/onWelcomeFragment"
-    android:id="@+id/nav_graph">
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/onWelcomeFragment">
 
     <fragment
         android:id="@+id/loginFragment"
@@ -11,7 +11,11 @@
         tools:layout="@layout/fragment_login">
         <action
             android:id="@+id/action_loginFragment_to_verifyOTPFragment"
-            app:destination="@+id/verifyOTPFragment" />
+            app:destination="@+id/verifyOTPFragment">
+            <argument
+                android:name="mobileNumber"
+                app:argType="string" />
+        </action>
     </fragment>
 
     <fragment
@@ -21,6 +25,9 @@
         <action
             android:id="@+id/action_verifyOTPFragment_to_onBoardingFragment"
             app:destination="@+id/onboardingFragment" />
+        <action
+            android:id="@+id/action_verifyOTPFragment_to_loginFragment"
+            app:destination="@+id/loginFragment" />
     </fragment>
 
     <fragment
@@ -40,8 +47,6 @@
             android:id="@+id/action_onWelcomeFragment_to_loginFragment"
             app:destination="@+id/loginFragment" />
     </fragment>
-
-
 
 
 </navigation>
