@@ -15,4 +15,9 @@
     <string name="full_name">Full Name</string>
     <string name="enter_here">Enter here</string>
     <string name="city">City</string>
+    <string name="terms_conditions"><![CDATA[Terms & Conditions]]></string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="by_signing_up_you_agree_to_our_and">By signing up, you agree to our %1$s \nand %2$s</string>
+    <string name="terms_conditions_clicked"><![CDATA[Terms & Conditions Clicked]]></string>
+    <string name="privacy_policy_clicked">Privacy Policy Clicked</string>
 </resources>

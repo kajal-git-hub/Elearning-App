@@ -187,6 +187,8 @@
                         tools:itemCount="4"
                         tools:listitem="@layout/getstarted_itemlayout2" />
 
+                    
+
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>

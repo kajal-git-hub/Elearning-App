@@ -6,23 +6,27 @@ import android.text.Editable
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.TextWatcher
+import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.student.competishun.R
 import com.student.competishun.databinding.FragmentLoginBinding
+import com.student.competishun.ui.viewmodel.GetOtpViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class LoginFragment : Fragment() {
 
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
+    private val otpViewModel: GetOtpViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,12 +40,34 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
+        setupUI()
+        setupObservers()
+
+        binding.btnVerify.setOnClickListener {
+            val countryCode = binding.etCountryCode.text.toString()
+            val mobileNo = binding.etEnterMob.text.toString()
+
+            if (mobileNo.length == 10) {
+                // Proceed to fetch OTP or navigate depending on your logic
+                otpViewModel.getOtp(countryCode, mobileNo)
+
+                // Navigate to VerifyOTPFragment and pass mobileNo via arguments
+                val bundle = Bundle().apply {
+                    putString("mobileNumber", mobileNo)
+                }
+                findNavController().navigate(R.id.action_loginFragment_to_verifyOTPFragment, bundle)
+            } else if (mobileNo.length > 10) {
+                Toast.makeText(requireContext(), "Mobile number should be 10 digits", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(requireContext(), "Enter a valid mobile number", Toast.LENGTH_SHORT).show()
+            }
         }
 
+
+
+    }
+
+    private fun setupUI() {
         val phoneInputLayout = binding.phoneInputLayout
         val etEnterMob = binding.etEnterMob
 
@@ -66,19 +92,18 @@ class LoginFragment : Fragment() {
 
             override fun afterTextChanged(s: Editable?) {}
         })
-        binding.btnVerify.setOnClickListener {
-            findNavController().navigate(R.id.action_loginFragment_to_verifyOTPFragment)
-        }
 
-        val termsText = "Terms & Conditions"
-        val privacyText = "Privacy Policy"
-        val fullText = "By signing up, you agree to our $termsText \nand $privacyText"
+        val termsText = getString(R.string.terms_conditions)
+        val privacyText = getString(R.string.privacy_policy)
+        val fullText =
+            getString(R.string.by_signing_up_you_agree_to_our_and, termsText, privacyText)
 
         val spannableString = SpannableString(fullText)
 
         val termsClickableSpan = object : ClickableSpan() {
             override fun onClick(widget: View) {
-                Toast.makeText(requireContext(), "Terms & Conditions Clicked", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(),
+                    getString(R.string.terms_conditions_clicked), Toast.LENGTH_SHORT).show()
             }
 
             override fun updateDrawState(ds: android.text.TextPaint) {
@@ -89,7 +114,8 @@ class LoginFragment : Fragment() {
 
         val privacyClickableSpan = object : ClickableSpan() {
             override fun onClick(widget: View) {
-                Toast.makeText(requireContext(), "Privacy Policy Clicked", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(),
+                    getString(R.string.privacy_policy_clicked), Toast.LENGTH_SHORT).show()
             }
 
             override fun updateDrawState(ds: android.text.TextPaint) {
@@ -124,7 +150,18 @@ class LoginFragment : Fragment() {
         )
 
         binding.tvTermsPrivacy.text = spannableString
-        binding.tvTermsPrivacy.movementMethod = android.text.method.LinkMovementMethod.getInstance()
+        binding.tvTermsPrivacy.movementMethod = LinkMovementMethod.getInstance()
+    }
+
+    private fun setupObservers() {
+        otpViewModel.otpResult.observe(viewLifecycleOwner) { result ->
+            if (result == true) {
+                findNavController().navigate(R.id.action_loginFragment_to_verifyOTPFragment)
+            } else {
+                Toast.makeText(requireContext(), "OTP Verification Failed", Toast.LENGTH_SHORT)
+                    .show()
+            }
+        }
     }
 
     override fun onDestroyView() {

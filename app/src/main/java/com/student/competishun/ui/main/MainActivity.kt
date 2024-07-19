@@ -73,56 +73,28 @@ class MainActivity : AppCompatActivity() {
                                 }
                             }
                         }
-//        lifecycleScope.launch {
-//            supervisorScope {
-//                launch {
-//
-//                }
-//                launch {
-//                    mainVM.loader.collect{
-//                        if(it){
-//
-//                        }else{
-//
-//                        }
-//                    }
-//                }
-//            }
-//        }
-                        getOtpViewModel.getOtp(countryCode, mobileNo)
-                        getOtpViewModel.otpResult.observe(this@MainActivity, Observer { result ->
-                            if (result == true) {
-                                Log.e("otpGot", result.toString())
-                            } else {
-                                Log.e("otp not running", result.toString())
-                            }
-                        })
-
-                        verifyOtpViewModel.verifyOtp(countryCode, mobileNo, 1111)
-                        //Observe result from VerifyOtpViewModel
-                        Log.e("asdsasdfk","cafas;ofj;o")
-                        verifyOtpViewModel.verifyOtpResult.observe(this@MainActivity, Observer { result ->
-                            if (result != null) {
-                                val user = result.user
-                                val refreshToken = result.refreshToken
-                                val accessToken = result.accessToken
-                                Log.e("Success in Verify", "$user $refreshToken $accessToken")
-                            } else {
-                                Log.e("Failure in Verify", "Check")
-                            }
-                        })
+                    }
+                    verifyOtpViewModel.verifyOtp(countryCode, mobileNo, 1111)
+                    verifyOtpViewModel.verifyOtpResult.observe(this@MainActivity, Observer { result ->
+                        if (result != null) {
+                            val user = result.user
+                            val refreshToken = result.refreshToken
+                            val accessToken = result.accessToken
+                            Log.e("Success in Verify", "$user $refreshToken $accessToken")
+                        } else {
+                            Log.e("Failure in Verify", "Check")
+                        }
+                    })
 
                     }
 
 
-                }
 
 
             }, 2000)
-
-        },2000)
-
+        }, 2000)
     }
+
     override fun onSupportNavigateUp(): Boolean {
         return navController.navigateUp() || super.onSupportNavigateUp()
     }
