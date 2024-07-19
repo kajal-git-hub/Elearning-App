@@ -36,6 +36,8 @@ class VerifyOtpRepository @Inject constructor(private val apolloClient: ApolloCl
                             mobileNumber = user.mobileNumber,
                             fullName = user.fullName,
                             countryCode = user.countryCode,
+                            id = "",
+                            userInformation = UserInformation(0,"","","","")
                         )
                     },
                     refreshToken = result.refreshToken,

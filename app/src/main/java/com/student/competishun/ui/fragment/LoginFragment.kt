@@ -28,6 +28,7 @@ class LoginFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        retainInstance = true
         _binding = FragmentLoginBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -49,6 +50,7 @@ class LoginFragment : Fragment() {
                 phoneInputLayout.setBackgroundResource(R.drawable.rounded_homeeditext_clicked)
             }
         }
+
 
         etEnterMob.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}

@@ -1,0 +1,16 @@
+mutation UpdateUser($updateUserInput: UpdateUserInput!) {
+    updateUser(updateUserInput: $updateUserInput) {
+        id
+        mobileNumber
+        fullName
+        countryCode
+        userInformation {
+            id
+            preparingFor
+            targetYear
+            city
+            reference
+        }
+
+    }
+}

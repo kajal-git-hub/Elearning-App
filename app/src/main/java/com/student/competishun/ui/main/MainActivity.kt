@@ -98,19 +98,21 @@ class MainActivity : AppCompatActivity() {
                             }
                         })
 
+                        verifyOtpViewModel.verifyOtp(countryCode, mobileNo, 1111)
+                        //Observe result from VerifyOtpViewModel
+                        Log.e("asdsasdfk","cafas;ofj;o")
+                        verifyOtpViewModel.verifyOtpResult.observe(this@MainActivity, Observer { result ->
+                            if (result != null) {
+                                val user = result.user
+                                val refreshToken = result.refreshToken
+                                val accessToken = result.accessToken
+                                Log.e("Success in Verify", "$user $refreshToken $accessToken")
+                            } else {
+                                Log.e("Failure in Verify", "Check")
+                            }
+                        })
+
                     }
-                    verifyOtpViewModel.verifyOtp(countryCode, mobileNo, 1111)
-                    //Observe result from VerifyOtpViewModel
-                    verifyOtpViewModel.verifyOtpResult.observe(this@MainActivity, Observer { result ->
-                        if (result != null) {
-                            val user = result.user
-                            val refreshToken = result.refreshToken
-                            val accessToken = result.accessToken
-                            Log.e("Success in Verify", "$user $refreshToken $accessToken")
-                        } else {
-                            Log.e("Failure in Verify", "Check")
-                        }
-                    })
 
 
                 }

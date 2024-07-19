@@ -15,14 +15,21 @@ import javax.inject.Inject
 class VerifyOtpViewModel @Inject constructor(
     private val verifyOtpRepository: VerifyOtpRepository
 ) : ViewModel() {
+    private var accessToken: String? = null
+
+    fun getAccessToken(): String? {
+        return accessToken
+    }
 
     private val _verifyOtpResult = MutableLiveData<VerifyOtpResponse?>()
     val verifyOtpResult: LiveData<VerifyOtpResponse?> = _verifyOtpResult
 
-    fun verifyOtp(countryCode: String, mobileNumber: String, otp: Int) {
+    fun verifyOtp(countryCode: String, mobileNumber: String, otp: Int){
         viewModelScope.launch {
             val verifyOtpInput = VerifyOtpInput(countryCode, mobileNumber, otp)
             _verifyOtpResult.value = verifyOtpRepository.verifyOtp(verifyOtpInput)
+            accessToken = _verifyOtpResult.value?.accessToken
+
         }
     }
 }
