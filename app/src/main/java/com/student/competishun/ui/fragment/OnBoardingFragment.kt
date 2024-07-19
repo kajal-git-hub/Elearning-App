@@ -28,6 +28,8 @@ class OnBoardingFragment : Fragment() {
     private var _binding: FragmentOnBoardingBinding? = null
     private val binding get() = _binding!!
     private var currentStep = 0
+    var city = ""
+    var name = ""
     private val updateUserViewModel: UpdateUserViewModel by viewModels()
 
     private val dataSets = listOf(
@@ -71,21 +73,22 @@ class OnBoardingFragment : Fragment() {
 
         adapter = ExampleAdapter(dataSets[currentStep],currentStep,spanCount[currentStep])
 
+        val city = binding.etEnterCityText.text.toString().trim()
+        val name = binding.etEnterHereText.text.toString().trim()
         val updateUserInput = UpdateUserInput(
-            city = Optional.Present("Noida"),
-            fullName = Optional.Present("Full Name"),
-            preparingFor = Optional.Present("Exam"),
-            reference = Optional.Present("Reference"),
+            city = Optional.Present(city),
+            fullName = Optional.Present(name),
+            preparingFor = Optional.Present("IIT-JEE"),
+            reference = Optional.Present("Advertisement"),
             targetYear = Optional.Present(2024)
         )
         updateUserViewModel.updateUser(updateUserInput)
         updateUserViewModel.updateUserResult.observe(viewLifecycleOwner, Observer { result ->
             if (result != null && result.user != null) {
-                // Handle successful response
                 val user = result.user
                 Log.e("gettingUserUpdate",result.user.fullName.toString())
             } else {
-                Log.e("gettingUserUpdatefail",result.toString())
+                Log.e("gettingUserUpdate fail",result.toString())
                 Toast.makeText(context, "Update failed", Toast.LENGTH_SHORT).show()
             }
         })
@@ -100,7 +103,7 @@ class OnBoardingFragment : Fragment() {
 
         setUpTextWatchers()
         updateButtonBackground()
-
+        Log.d("updated text", "$city $name")
 
         binding.btnGetSubmit2.setOnClickListener {
             Log.d("OnBoardingFragment", "Button clicked")
@@ -187,7 +190,10 @@ class OnBoardingFragment : Fragment() {
         } else {
             binding.btnGetSubmit2.setBackgroundResource(R.drawable.second_getstarted)
         }
+         city  = text2
+         name = text1
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

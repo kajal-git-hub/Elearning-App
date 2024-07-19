@@ -8,6 +8,7 @@ import com.student.competishun.data.model.UpdateUserResponse
 import com.student.competishun.data.model.UserInformation
 import com.student.competishun.type.UpdateUserInput
 import com.student.competishun.data.model.User
+import com.apollographql.apollo3.api.http.HttpHeader
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -15,11 +16,13 @@ import javax.inject.Singleton
 class UpdateUserRepository @Inject constructor(private val apolloClient: ApolloClient) {
 
     private val TAG = "UpdateUserRepository"
-    suspend fun updateUser(updateUserInput: UpdateUserInput): UpdateUserResponse? {
+    suspend fun updateUser(updateUserInput: UpdateUserInput, accessToken: String): UpdateUserResponse? {
         val mutation = UpdateUserMutation(updateUserInput)
-
+        val headers = listOf(HttpHeader("Authorization", "Bearer $accessToken"))
         return try {
-            val response = apolloClient.mutate(mutation).execute()
+            val response = apolloClient.mutate(mutation)
+                .httpHeaders(headers)
+                .execute()
 
             if (response.hasErrors()) {
                 // Handle errors if needed

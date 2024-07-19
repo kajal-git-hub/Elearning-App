@@ -93,7 +93,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/nunito"
-                    android:lineHeight="@dimen/_28dp"
+                    android:lineHeight="28dp"
                     android:text="@string/let_s_get_started"
                     android:textColor="#2B2829"
                     android:textSize="20sp"
@@ -143,7 +143,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
                         android:fontFamily="@font/nunito"
-                        android:text="City"
+                        android:text="@string/city"
                         android:textSize="14sp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/etEnterHereText" />

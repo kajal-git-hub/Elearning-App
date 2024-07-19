@@ -11,4 +11,8 @@
     <string name="doubt_description">Got a tough question? Get quick answers from \nexperts and peers anytime, anywhere</string>
     <string name="test_description">Elevate your prep with realistic tests; practice and receive\ndetailed solutions and feedback.</string>
     <string name="evaluate_description">Monitor progress with detailed reports, track \nresults, and focus on improvement areas</string>
+    <string name="let_s_get_started">Let’s Get Started with Your \nName!</string>
+    <string name="full_name">Full Name</string>
+    <string name="enter_here">Enter here</string>
+    <string name="city">City</string>
 </resources>
