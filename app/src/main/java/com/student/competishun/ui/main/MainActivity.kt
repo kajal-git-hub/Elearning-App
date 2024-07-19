@@ -22,6 +22,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
 
+
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
@@ -33,6 +34,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(R.layout.splash_screen)
+
 
         Handler(Looper.getMainLooper()).postDelayed({
             setContentView(R.layout.welcome_screen)
@@ -80,8 +82,9 @@ class MainActivity : AppCompatActivity() {
 //                        }
 //                    })
 
+                    }
 
-                }
+
 
 
             }, 2000)

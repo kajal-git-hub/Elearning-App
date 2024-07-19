@@ -36,6 +36,7 @@ class LoginFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        retainInstance = true
         _binding = FragmentLoginBinding.inflate(inflater, container, false)
         return binding.root
     }

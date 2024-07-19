@@ -8,18 +8,29 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import com.apollographql.apollo3.api.Optional
 import com.student.competishun.R
+import com.student.competishun.type.UpdateUserInput
 import com.student.competishun.databinding.FragmentOnBoardingBinding
 import com.student.competishun.ui.adapter.ExampleAdapter
+import com.student.competishun.ui.viewmodel.UpdateUserViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class OnBoardingFragment : Fragment() {
 
     private var _binding: FragmentOnBoardingBinding? = null
     private val binding get() = _binding!!
     private var currentStep = 0
+    var city = ""
+    var name = ""
+    private val updateUserViewModel: UpdateUserViewModel by viewModels()
 
     private val dataSets = listOf(
         listOf("ITT-JEE", "NEET", "Board", "UCET", "8th to 10th", "Others"),
@@ -61,6 +72,27 @@ class OnBoardingFragment : Fragment() {
         binding.clExamConstraint.visibility = View.GONE
 
         adapter = ExampleAdapter(dataSets[currentStep],currentStep,spanCount[currentStep])
+
+        val city = binding.etEnterCityText.text.toString().trim()
+        val name = binding.etEnterHereText.text.toString().trim()
+        val updateUserInput = UpdateUserInput(
+            city = Optional.Present(city),
+            fullName = Optional.Present(name),
+            preparingFor = Optional.Present("IIT-JEE"),
+            reference = Optional.Present("Advertisement"),
+            targetYear = Optional.Present(2024)
+        )
+        updateUserViewModel.updateUser(updateUserInput)
+        updateUserViewModel.updateUserResult.observe(viewLifecycleOwner, Observer { result ->
+            if (result != null && result.user != null) {
+                val user = result.user
+                Log.e("gettingUserUpdate",result.user.fullName.toString())
+            } else {
+                Log.e("gettingUserUpdate fail",result.toString())
+                Toast.makeText(context, "Update failed", Toast.LENGTH_SHORT).show()
+            }
+        })
+
         binding.examRecyclerview.layoutManager =
             GridLayoutManager(this@OnBoardingFragment.context, spanCount[currentStep])
         binding.examRecyclerview.adapter = adapter
@@ -71,7 +103,7 @@ class OnBoardingFragment : Fragment() {
 
         setUpTextWatchers()
         updateButtonBackground()
-
+        Log.d("updated text", "$city $name")
 
         binding.btnGetSubmit2.setOnClickListener {
             Log.d("OnBoardingFragment", "Button clicked")
@@ -158,7 +190,10 @@ class OnBoardingFragment : Fragment() {
         } else {
             binding.btnGetSubmit2.setBackgroundResource(R.drawable.second_getstarted)
         }
+         city  = text2
+         name = text1
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
