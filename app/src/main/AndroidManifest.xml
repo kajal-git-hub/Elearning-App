@@ -4,7 +4,6 @@
     package="com.student.competishun">
     <uses-permission android:name="android.permission.INTERNET" />
 
-
     <application
         android:name=".AppController"
         android:allowBackup="true"
@@ -17,9 +16,12 @@
         android:theme="@style/Theme.Competishun"
         tools:targetApi="31">
         <activity
+            android:name=".ui.main.HomeActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.main.MainActivity"
-            android:screenOrientation="fullSensor"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="fullSensor">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
