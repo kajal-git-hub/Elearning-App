@@ -38,6 +38,7 @@
                 android:id="@+id/etCircleLogoContainer"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
+                android:layout_marginTop="5dp"
                 android:background="@drawable/getstarted_icon"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -46,7 +47,8 @@
                     android:id="@+id/etCircleLogo"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:layout_gravity="center" />
+                    android:layout_gravity="center"
+                    android:src="@drawable/circle_with_image" />
             </FrameLayout>
 
             <!--            <ImageView-->
@@ -187,9 +189,36 @@
                         tools:itemCount="4"
                         tools:listitem="@layout/getstarted_itemlayout2" />
 
-                    
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/examRecyclerview">
+
+                        <EditText
+                            android:id="@+id/etContent"
+                            android:layout_width="match_parent"
+                            android:layout_height="74dp"
+                            android:layout_marginTop="12dp"
+                            android:background="@drawable/edit_text_background"
+                            android:hint="Enter here"
+                            android:maxLines="100"
+                            android:textColor="#898384" />
+
+                        <TextView
+                            android:id="@+id/tvWordCounter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="end|bottom"
+                            android:layout_marginBottom="12dp"
+                            android:gravity="center"
+                            android:paddingEnd="10dp"
+                            android:text="0/100" />
+                    </FrameLayout>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
+
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -203,14 +232,15 @@
             android:layout_marginBottom="14dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
+
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnGetSubmit1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
                 android:background="@drawable/firstbutton_getstarted"
-                android:text="Back"
                 android:gravity="center"
+                android:text="Back"
                 android:textColor="#3E3EF7"
                 app:backgroundTint="@null"
                 app:cornerRadius="8dp"
@@ -222,8 +252,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="20dp"
-                android:gravity="center"
                 android:background="@drawable/second_getstarted"
+                android:gravity="center"
                 android:text="Next"
                 android:textColor="@color/white"
                 app:backgroundTint="@null"

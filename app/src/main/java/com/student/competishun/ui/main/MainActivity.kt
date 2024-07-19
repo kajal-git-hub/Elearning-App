@@ -25,10 +25,6 @@ import kotlinx.coroutines.supervisorScope
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
-    private val getOtpViewModel: GetOtpViewModel by viewModels()
-    private val verifyOtpViewModel: VerifyOtpViewModel by viewModels()
-    val countryCode = "+91"
-    val mobileNo = "7667022303"
     private val mainVM: MainVM by viewModels()
     private lateinit var navController: NavController
     private lateinit var binding: ActivityMainBinding
@@ -72,17 +68,17 @@ class MainActivity : AppCompatActivity() {
                             }
                         }
                     }
-                    verifyOtpViewModel.verifyOtp(countryCode, mobileNo, 1111)
-                    verifyOtpViewModel.verifyOtpResult.observe(this@MainActivity, Observer { result ->
-                        if (result != null) {
-                            val user = result.user
-                            val refreshToken = result.refreshToken
-                            val accessToken = result.accessToken
-                            Log.e("Success in Verify", "$user $refreshToken $accessToken")
-                        } else {
-                            Log.e("Failure in Verify", "Check")
-                        }
-                    })
+//                    verifyOtpViewModel.verifyOtp(countryCode, mobileNo, 1111)
+//                    verifyOtpViewModel.verifyOtpResult.observe(this@MainActivity, Observer { result ->
+//                        if (result != null) {
+//                            val user = result.user
+//                            val refreshToken = result.refreshToken
+//                            val accessToken = result.accessToken
+//                            Log.e("Success in Verify", "$user $refreshToken $accessToken")
+//                        } else {
+//                            Log.e("Failure in Verify", "Check")
+//                        }
+//                    })
 
 
                 }

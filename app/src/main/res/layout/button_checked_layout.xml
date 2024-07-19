@@ -7,8 +7,8 @@
 
     <View
         android:id="@+id/background_circle"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
         android:layout_margin="8dp"
         android:background="@drawable/blue_circle"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -18,8 +18,8 @@
 
     <ImageView
         android:id="@+id/checkmark_icon"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="0.5dp"
+        android:layout_height="0dp"
         android:src="@drawable/ic_checkmark"
         app:layout_constraintBottom_toBottomOf="@+id/background_circle"
         app:layout_constraintEnd_toEndOf="@+id/background_circle"

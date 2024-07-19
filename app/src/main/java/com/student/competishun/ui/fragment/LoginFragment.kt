@@ -28,6 +28,10 @@ class LoginFragment : Fragment() {
     private val binding get() = _binding!!
     private val otpViewModel: GetOtpViewModel by viewModels()
 
+
+    private var countryCode :String? =null
+    private var mobileNo :String? =null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -43,121 +47,113 @@ class LoginFragment : Fragment() {
         setupObservers()
 
         binding.btnVerify.setOnClickListener {
-            val countryCode = binding.etCountryCode.text.toString()
-            val mobileNo = binding.etEnterMob.text.toString()
-
-            if (mobileNo.length == 10) {
-                // Proceed to fetch OTP or navigate depending on your logic
-                otpViewModel.getOtp(countryCode, mobileNo)
-
-                // Navigate to VerifyOTPFragment and pass mobileNo via arguments
-                val bundle = Bundle().apply {
-                    putString("mobileNumber", mobileNo)
-                }
-                findNavController().navigate(R.id.action_loginFragment_to_verifyOTPFragment, bundle)
-            } else if (mobileNo.length > 10) {
-                Toast.makeText(requireContext(), "Mobile number should be 10 digits", Toast.LENGTH_SHORT).show()
-            } else {
-                Toast.makeText(requireContext(), "Enter a valid mobile number", Toast.LENGTH_SHORT).show()
-            }
+            handleVerifyButtonClick()
         }
-
-
-
     }
 
     private fun setupUI() {
-        val phoneInputLayout = binding.phoneInputLayout
-        val etEnterMob = binding.etEnterMob
+        setupPhoneInput()
+        setupTermsAndPrivacyText()
+    }
 
-        etEnterMob.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus) {
-                phoneInputLayout.setBackgroundResource(R.drawable.rounded_homeeditext_clicked)
+    private fun setupPhoneInput() {
+        binding.etEnterMob.apply {
+            setOnFocusChangeListener { _, hasFocus ->
+                binding.phoneInputLayout.setBackgroundResource(
+                    if (hasFocus) R.drawable.rounded_homeeditext_clicked else R.drawable.rounded_homeditext_unclicked
+                )
             }
-        }
 
-        etEnterMob.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                val length = s?.length ?: 0
-                if (length == 10) {
-                    binding.btnVerify.setBackgroundColor(Color.parseColor("#3E3EF7"))
-                } else {
-                    binding.btnVerify.setBackgroundColor(Color.parseColor("#B5B3B3"))
+            addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    updateVerifyButtonState(s?.length == 10)
                 }
-            }
+                override fun afterTextChanged(s: Editable?) {}
+            })
+        }
+    }
 
-            override fun afterTextChanged(s: Editable?) {}
-        })
+    private fun updateVerifyButtonState(isEnabled: Boolean) {
+        binding.btnVerify.setBackgroundColor(
+            if (isEnabled) Color.parseColor("#3E3EF7") else Color.parseColor("#B5B3B3")
+        )
+    }
 
+    private fun setupTermsAndPrivacyText() {
         val termsText = getString(R.string.terms_conditions)
         val privacyText = getString(R.string.privacy_policy)
-        val fullText =
-            getString(R.string.by_signing_up_you_agree_to_our_and, termsText, privacyText)
-
+        val fullText = getString(R.string.by_signing_up_you_agree_to_our_and, termsText, privacyText)
         val spannableString = SpannableString(fullText)
 
-        val termsClickableSpan = object : ClickableSpan() {
-            override fun onClick(widget: View) {
-                Toast.makeText(requireContext(),
-                    getString(R.string.terms_conditions_clicked), Toast.LENGTH_SHORT).show()
-            }
-
-            override fun updateDrawState(ds: android.text.TextPaint) {
-                super.updateDrawState(ds)
-                ds.isUnderlineText = false
-            }
+        spannableString.apply {
+            setClickableSpan(termsText, termsClickableSpan)
+            setClickableSpan(privacyText, privacyClickableSpan)
         }
 
-        val privacyClickableSpan = object : ClickableSpan() {
-            override fun onClick(widget: View) {
-                Toast.makeText(requireContext(),
-                    getString(R.string.privacy_policy_clicked), Toast.LENGTH_SHORT).show()
-            }
-
-            override fun updateDrawState(ds: android.text.TextPaint) {
-                super.updateDrawState(ds)
-                ds.isUnderlineText = false
-            }
+        binding.tvTermsPrivacy.apply {
+            text = spannableString
+            movementMethod = LinkMovementMethod.getInstance()
         }
+    }
 
-        spannableString.setSpan(
-            termsClickableSpan,
-            fullText.indexOf(termsText),
-            fullText.indexOf(termsText) + termsText.length,
-            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
-        spannableString.setSpan(
-            ForegroundColorSpan(Color.parseColor("#3E3EF7")),
-            fullText.indexOf(termsText),
-            fullText.indexOf(termsText) + termsText.length,
-            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
-        spannableString.setSpan(
-            privacyClickableSpan,
-            fullText.indexOf(privacyText),
-            fullText.indexOf(privacyText) + privacyText.length,
-            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
-        spannableString.setSpan(
-            ForegroundColorSpan(Color.parseColor("#3E3EF7")),
-            fullText.indexOf(privacyText),
-            fullText.indexOf(privacyText) + privacyText.length,
-            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
+    private fun SpannableString.setClickableSpan(text: String, clickableSpan: ClickableSpan) {
+        val start = indexOf(text)
+        val end = start + text.length
+        setSpan(clickableSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        setSpan(ForegroundColorSpan(Color.parseColor("#3E3EF7")), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+    }
 
-        binding.tvTermsPrivacy.text = spannableString
-        binding.tvTermsPrivacy.movementMethod = LinkMovementMethod.getInstance()
+    private val termsClickableSpan = object : ClickableSpan() {
+        override fun onClick(widget: View) {
+            Toast.makeText(requireContext(), getString(R.string.terms_conditions_clicked), Toast.LENGTH_SHORT).show()
+        }
+        override fun updateDrawState(ds: android.text.TextPaint) {
+            ds.isUnderlineText = false
+        }
+    }
+
+    private val privacyClickableSpan = object : ClickableSpan() {
+        override fun onClick(widget: View) {
+            Toast.makeText(requireContext(), getString(R.string.privacy_policy_clicked), Toast.LENGTH_SHORT).show()
+        }
+        override fun updateDrawState(ds: android.text.TextPaint) {
+            ds.isUnderlineText = false
+        }
+    }
+
+    private fun handleVerifyButtonClick() {
+         countryCode = binding.etCountryCode.text.toString()
+         mobileNo = binding.etEnterMob.text.toString()
+
+        when {
+            mobileNo!!.length == 10 -> {
+                otpViewModel.getOtp(countryCode!!, mobileNo!!)
+                navigateToVerifyOtpFragment(countryCode!!, mobileNo!!)
+            }
+            mobileNo!!.length > 10 -> showToast("Mobile number should be 10 digits")
+            else -> showToast("Enter a valid mobile number")
+        }
+    }
+
+    private fun navigateToVerifyOtpFragment(countryCode: String, mobileNo: String) {
+        val bundle = Bundle().apply {
+            putString("mobileNumber", mobileNo)
+            putString("countryCode", countryCode)
+        }
+        findNavController().navigate(R.id.action_loginFragment_to_verifyOTPFragment, bundle)
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
 
     private fun setupObservers() {
         otpViewModel.otpResult.observe(viewLifecycleOwner) { result ->
             if (result == true) {
-                findNavController().navigate(R.id.action_loginFragment_to_verifyOTPFragment)
+                navigateToVerifyOtpFragment(countryCode = countryCode.toString(), mobileNo = mobileNo.toString())
             } else {
-                Toast.makeText(requireContext(), "OTP Verification Failed", Toast.LENGTH_SHORT)
-                    .show()
+                showToast("OTP Verification Failed")
             }
         }
     }
