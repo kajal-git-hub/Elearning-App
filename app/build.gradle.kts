@@ -78,4 +78,7 @@ dependencies {
     //gif
     implementation(libs.android.gif.drawable)
 
+    //dotindicator
+    implementation (libs.dotsindicator.v50)
+
 }

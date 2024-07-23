@@ -20,7 +20,8 @@ graphql ="3.7.3"
 apolloapi ="3.7.3"
 apolloruntime ="3.7.3"
 navigationFragmentKtx = "2.7.7"
-
+dotsindicator = "4.2"
+dotsindicatorVersion = "5.0"
 
 [libraries]
 android-gif-drawable = { module = "pl.droidsonroids.gif:android-gif-drawable", version.ref = "androidGifDrawable" }
@@ -31,6 +32,8 @@ androidx-navigation-fragment-ktx = { module = "androidx.navigation:navigation-fr
 androidx-navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigationFragmentKtx" }
 apollo-coroutines-support = { module = "com.apollographql.apollo:apollo-coroutines-support", version.ref = "apolloCoroutinesSupport" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
+dotsindicator = { module = "com.tbuonomo:dotsindicator", version.ref = "dotsindicator" }
+dotsindicator-v50 = { module = "com.tbuonomo:dotsindicator", version.ref = "dotsindicatorVersion" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }

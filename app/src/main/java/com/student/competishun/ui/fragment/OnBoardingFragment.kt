@@ -33,7 +33,7 @@ class OnBoardingFragment : Fragment() {
     private val updateUserViewModel: UpdateUserViewModel by viewModels()
 
     private val dataSets = listOf(
-        listOf("ITT-JEE", "NEET", "Board", "UCET", "8th to 10th", "Others"),
+        listOf("IIT-JEE", "NEET-UG", "Board", "UCET", "8th to 10th", "Others"),
         listOf("2025", "2026", "2027", "2028"),
         listOf("Friends/Family", "Social Media", "Advertisement", "Other"),
     )

@@ -7,5 +7,32 @@
 
     <style name="Theme.Competishun" parent="Base.Theme.Competishun" />
 
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/splash_blue</item>
+        <item name="colorPrimaryDark">@color/orange</item>
+        <item name="colorAccent">@color/recycler_txt</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay"
+        parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay"
+        parent="ThemeOverlay.AppCompat.Light" />
+
+    <!-- Custom TabLayout Style -->
+    <style name="CustomTabLayout" parent="Widget.Design.TabLayout">
+        <item name="tabSelectedTextColor">@color/white</item>
+        <item name="tabTextColor">@color/tab_unselected_text_color</item>
+        <item name="tabIndicatorColor">@color/tab_indicator_color</item>
+        <item name="tabIndicatorHeight">4dp</item>
+        <item name="tabBackground">@drawable/tab_background</item>
+    </style>
+
 
 </resources>
