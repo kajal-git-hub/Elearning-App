@@ -3,6 +3,7 @@ package com.student.competishun.ui.fragment
 import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
+import android.text.InputFilter
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.TextWatcher
@@ -28,15 +29,13 @@ class LoginFragment : Fragment() {
     private val binding get() = _binding!!
     private val otpViewModel: GetOtpViewModel by viewModels()
 
-
-    private var countryCode :String? =null
-    private var mobileNo :String? =null
+    private var countryCode: String? = null
+    private var mobileNo: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        retainInstance = true
         _binding = FragmentLoginBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -59,6 +58,8 @@ class LoginFragment : Fragment() {
 
     private fun setupPhoneInput() {
         binding.etEnterMob.apply {
+            filters = arrayOf(InputFilter.LengthFilter(10))
+
             setOnFocusChangeListener { _, hasFocus ->
                 binding.phoneInputLayout.setBackgroundResource(
                     if (hasFocus) R.drawable.rounded_homeeditext_clicked else R.drawable.rounded_homeditext_unclicked
@@ -101,8 +102,10 @@ class LoginFragment : Fragment() {
     private fun SpannableString.setClickableSpan(text: String, clickableSpan: ClickableSpan) {
         val start = indexOf(text)
         val end = start + text.length
-        setSpan(clickableSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-        setSpan(ForegroundColorSpan(Color.parseColor("#3E3EF7")), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        if (start >= 0) {
+            setSpan(clickableSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            setSpan(ForegroundColorSpan(Color.parseColor("#3E3EF7")), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        }
     }
 
     private val termsClickableSpan = object : ClickableSpan() {
@@ -124,15 +127,15 @@ class LoginFragment : Fragment() {
     }
 
     private fun handleVerifyButtonClick() {
-         countryCode = binding.etCountryCode.text.toString()
-         mobileNo = binding.etEnterMob.text.toString()
+        val countryCode = binding.etCountryCode.text?.toString()
+        val mobileNo = binding.etEnterMob.text?.toString()
 
         when {
-            mobileNo!!.length == 10 -> {
-                otpViewModel.getOtp(countryCode!!, mobileNo!!)
-                navigateToVerifyOtpFragment(countryCode!!, mobileNo!!)
+            mobileNo.isNullOrEmpty() -> showToast("Enter a valid mobile number")
+            mobileNo.length == 10 -> {
+                otpViewModel.getOtp(countryCode.orEmpty(), mobileNo)
+                navigateToVerifyOtpFragment(countryCode.orEmpty(), mobileNo)
             }
-            mobileNo!!.length > 10 -> showToast("Mobile number should be 10 digits")
             else -> showToast("Enter a valid mobile number")
         }
     }
@@ -152,7 +155,7 @@ class LoginFragment : Fragment() {
     private fun setupObservers() {
         otpViewModel.otpResult.observe(viewLifecycleOwner) { result ->
             if (result == true) {
-                navigateToVerifyOtpFragment(countryCode = countryCode.toString(), mobileNo = mobileNo.toString())
+                navigateToVerifyOtpFragment(countryCode.orEmpty(), mobileNo.orEmpty())
             } else {
                 showToast("OTP Verification Failed")
             }

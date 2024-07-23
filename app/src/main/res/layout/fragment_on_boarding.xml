@@ -34,31 +34,18 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <FrameLayout
-                android:id="@+id/etCircleLogoContainer"
+
+            <ImageView
+                android:id="@+id/etCircleLogo"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
+                android:layout_marginStart="5dp"
                 android:layout_marginTop="5dp"
                 android:background="@drawable/getstarted_icon"
+                android:src="@drawable/circle_with_image"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toTopOf="parent" />
 
-                <ImageView
-                    android:id="@+id/etCircleLogo"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/circle_with_image" />
-            </FrameLayout>
-
-            <!--            <ImageView-->
-            <!--                android:id="@+id/etOne_four"-->
-            <!--                android:layout_width="wrap_content"-->
-            <!--                android:layout_height="wrap_content"-->
-            <!--                android:src="@drawable/one_four"-->
-            <!--                app:layout_constraintBottom_toBottomOf="@id/etCircleLogoContainer"-->
-            <!--                app:layout_constraintEnd_toEndOf="parent"-->
-            <!--                app:layout_constraintTop_toTopOf="@id/etCircleLogoContainer" />-->
 
             <TextView
                 android:id="@+id/et_text"
@@ -67,7 +54,7 @@
                 android:text="1"
                 android:textColor="#2B2829"
                 android:textSize="16dp"
-                app:layout_constraintBottom_toBottomOf="@+id/etCircleLogoContainer"
+                app:layout_constraintBottom_toBottomOf="@+id/etCircleLogo"
                 app:layout_constraintEnd_toStartOf="@+id/et_text2" />
 
             <TextView
@@ -78,9 +65,9 @@
                 android:text="/4"
                 android:textColor="#9F9C9C"
                 android:textSize="12dp"
-                app:layout_constraintBottom_toBottomOf="@+id/etCircleLogoContainer"
+                app:layout_constraintBottom_toBottomOf="@+id/etCircleLogo"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/etCircleLogoContainer" />
+                app:layout_constraintTop_toTopOf="@+id/etCircleLogo" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/clAnimConstraint"
@@ -88,7 +75,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/etCircleLogoContainer">
+                app:layout_constraintTop_toBottomOf="@id/etCircleLogo">
 
                 <TextView
                     android:id="@+id/etStartedText"
@@ -189,33 +176,43 @@
                         tools:itemCount="4"
                         tools:listitem="@layout/getstarted_itemlayout2" />
 
-                    <FrameLayout
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/etContentBox"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintEnd_toEndOf="parent"
+                        android:layout_height="74dp"
+                        android:background="@drawable/edit_text_background"
+                        android:visibility="visible"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/examRecyclerview">
 
                         <EditText
                             android:id="@+id/etContent"
                             android:layout_width="match_parent"
-                            android:layout_height="74dp"
-                            android:layout_marginTop="12dp"
-                            android:background="@drawable/edit_text_background"
+                            android:layout_height="wrap_content"
+                            android:background="@null"
                             android:hint="Enter here"
+                            android:inputType="text"
                             android:maxLines="100"
-                            android:textColor="#898384" />
+                            android:padding="10dp"
+                            android:textColor="#898384"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
 
                         <TextView
                             android:id="@+id/tvWordCounter"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="end|bottom"
-                            android:layout_marginBottom="12dp"
+                            android:layout_marginEnd="10dp"
                             android:gravity="center"
-                            android:paddingEnd="10dp"
-                            android:text="0/100" />
-                    </FrameLayout>
+                            android:text="0/100"
+                            android:textColor="#898384"
+                            app:layout_constraintBottom_toBottomOf="@+id/etContentBox"
+                            app:layout_constraintEnd_toEndOf="@+id/etContentBox"
+                            app:layout_constraintTop_toBottomOf="@+id/etContent" />
+
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -1,5 +1,6 @@
 package com.student.competishun.ui.main
 
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -32,6 +33,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(R.layout.splash_screen)
 
@@ -46,7 +48,12 @@ class MainActivity : AppCompatActivity() {
 
                 ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
                     val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-                    v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+                    v.setPadding(
+                        systemBars.left,
+                        systemBars.top,
+                        systemBars.right,
+                        systemBars.bottom
+                    )
                     insets
                 }
 
@@ -70,21 +77,8 @@ class MainActivity : AppCompatActivity() {
                             }
                         }
                     }
-//                    verifyOtpViewModel.verifyOtp(countryCode, mobileNo, 1111)
-//                    verifyOtpViewModel.verifyOtpResult.observe(this@MainActivity, Observer { result ->
-//                        if (result != null) {
-//                            val user = result.user
-//                            val refreshToken = result.refreshToken
-//                            val accessToken = result.accessToken
-//                            Log.e("Success in Verify", "$user $refreshToken $accessToken")
-//                        } else {
-//                            Log.e("Failure in Verify", "Check")
-//                        }
-//                    })
 
-                    }
-
-
+                }
 
 
             }, 2000)
