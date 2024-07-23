@@ -13,21 +13,27 @@ import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.student.competishun.R
 import com.student.competishun.databinding.FragmentVerifyBinding
+import com.student.competishun.ui.viewmodel.VerifyOtpViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class VerifyOTPFragment : Fragment() {
 
     private var _binding: FragmentVerifyBinding? = null
     private val binding get() = _binding!!
+    private val verifyOtpViewModel: VerifyOtpViewModel by viewModels()
 
     private var mobileNumber: String? = null
+    private var countryCode: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,16 +42,6 @@ class VerifyOTPFragment : Fragment() {
         _binding = FragmentVerifyBinding.inflate(inflater, container, false)
         return binding.root
     }
-
-//    override fun onResume() {
-//        super.onResume()
-//        navigateBack()
-//    }
-
-//    private fun navigateBack() {
-//        findNavController().navigate(R.id.action_verifyOTPFragment_to_loginFragment)
-//    }
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -59,13 +55,31 @@ class VerifyOTPFragment : Fragment() {
         binding.etArrowLeft.setOnClickListener {
             findNavController().navigate(R.id.action_verifyOTPFragment_to_loginFragment)
         }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                findNavController().navigate(R.id.action_verifyOTPFragment_to_loginFragment)
+            }
+        })
 
         mobileNumber = arguments?.getString("mobileNumber")
+        countryCode = arguments?.getString("countryCode")
 
-        Log.d("VerifyOTPFragment", "Mobile number: $mobileNumber")
+        Log.d("VerifyOTPFragment", "Mobile number: $mobileNumber, Country code: $countryCode")
 
         setupOtpInputs()
         setupVerificationCodeText()
+
+        countryCode?.let { code ->
+            mobileNumber?.let { number ->
+                verifyOtpViewModel.verifyOtp(code, number, 1111)
+            }
+        }
+
+        verifyOtpViewModel.verifyOtpResult.observe(viewLifecycleOwner) { result ->
+            result?.let {
+                Log.e("Success in Verify", "${it.user} ${it.refreshToken} ${it.accessToken}")
+            } ?: Log.e("Failure in Verify", "Check")
+        }
     }
 
     private fun setupOtpInputs() {
@@ -91,9 +105,7 @@ class VerifyOTPFragment : Fragment() {
 
                     if (otpBoxes.all { it.text.length == 1 }) {
                         binding.btnVerify.setBackgroundColor(Color.parseColor("#3E3EF7"))
-                        binding.btnVerify.setOnClickListener {
-                            navigateToNextScreen()
-                        }
+                        binding.btnVerify.setOnClickListener { navigateToNextScreen() }
                     }
                 }
             })
@@ -110,7 +122,7 @@ class VerifyOTPFragment : Fragment() {
 
     private fun setupVerificationCodeText() {
         mobileNumber?.let { phoneNumber ->
-            val fullText = "An verification code has been sent to your \nmail ID $phoneNumber"
+            val fullText = "A verification code has been sent to your \nmail ID $phoneNumber"
             val start = fullText.indexOf(phoneNumber)
 
             if (start != -1) {
