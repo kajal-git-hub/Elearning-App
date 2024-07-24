@@ -29,7 +29,7 @@ class CoursesFragment : Fragment() {
         val tabViewPager = view.findViewById<ViewPager>(R.id.tab_viewpager)
         val tabTabLayout = view.findViewById<TabLayout>(R.id.tab_tablayout)
 
-        tabToolbar.title = "Full - Year Courses"
+        tabToolbar.title = ""
         setupViewPager(tabViewPager)
         tabTabLayout.setupWithViewPager(tabViewPager)
         tabTabLayout.getTabAt(0)?.select()
