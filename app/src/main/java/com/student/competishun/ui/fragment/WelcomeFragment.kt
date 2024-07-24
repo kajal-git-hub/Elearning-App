@@ -23,7 +23,7 @@ class WelcomeFragment : Fragment() {
     private lateinit var data2: WelcomeModel
     private lateinit var data3: WelcomeModel
 
-    private var currentDataIndex = 0  // Track which data set is currently displayed
+    private var currentDataIndex = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,7 +36,6 @@ class WelcomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Initialize WelcomeModel instances with styled text
         data1 = WelcomeModel(
             R.drawable.doubt_image,
             createStyledText(getString(R.string.instant_doubt_resolution), "Doubt"),
@@ -62,10 +61,8 @@ class WelcomeFragment : Fragment() {
             navigateToLoginFragment()
         }
 
-        // Set initial data
         updateData(data1)
 
-        // Handle click on imImageButton
         binding.imImageButton.setOnClickListener {
             when (currentDataIndex) {
                 0 -> {
@@ -83,7 +80,6 @@ class WelcomeFragment : Fragment() {
         }
     }
 
-    // Function to create styled text using Spannable
     private fun createStyledText(fullText: String, highlightText: String): SpannableString {
         val spannableString = SpannableString(fullText)
         val startIndex = fullText.indexOf(highlightText)
@@ -103,7 +99,6 @@ class WelcomeFragment : Fragment() {
         return spannableString
     }
 
-    // Function to update views with new data
     private fun updateData(data: WelcomeModel) {
         Log.d("WelcomeFragment", "Updating data: ${data.title}")
         binding.etTitleText.text = data.title
@@ -112,7 +107,6 @@ class WelcomeFragment : Fragment() {
         binding.imImageButton.setImageResource(data.skipImage)
     }
 
-    // Function to navigate to the login fragment
     private fun navigateToLoginFragment() {
         findNavController().navigate(R.id.action_onWelcomeFragment_to_loginFragment)
     }
