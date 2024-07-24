@@ -23,4 +23,6 @@
     <string name="screenType">ScreenType</string>
     <string name="home">Home</string>
     <string name="submit">call\n\n</string>
+    <string name="Error">#E25B53</string>
+    <string name="verify_btn_default">#B5B3B3</string>
 </resources>

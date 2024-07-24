@@ -62,12 +62,18 @@ class OnBoardingFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        restoreState()
         setupInitialStep()
         setupRecyclerView()
         setupTextWatchers()
         setupButtonClickListeners()
         startSlideInAnimation()
         observeViewModel()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        saveState()
     }
 
     private fun setupInitialStep() {
@@ -117,6 +123,23 @@ class OnBoardingFragment : Fragment() {
             handleBackButtonClick()
         }
     }
+    private fun saveState(){
+        val sharedPreferences = requireContext().getSharedPreferences("MyPrefs", 0)
+        val editor = sharedPreferences.edit()
+        editor.putInt("currentStep", currentStep)
+        editor.putString("name", name)
+        editor.putString("city", city)
+        editor.putStringSet("selectedItems", list.toSet())
+        editor.apply()
+    }
+    private fun restoreState() {
+        val sharedPreferences = requireContext().getSharedPreferences("OnBoardingPrefs", 0)
+        currentStep = sharedPreferences.getInt("currentStep", 0)
+        name = sharedPreferences.getString("name", "") ?: ""
+        city = sharedPreferences.getString("city", "") ?: ""
+        list = sharedPreferences.getStringSet("selectedItems", emptySet())?.toMutableList() ?: mutableListOf()
+    }
+
 
     private fun handleBackButtonClick() {
         Log.d("currentStep", currentStep.toString())
@@ -127,10 +150,13 @@ class OnBoardingFragment : Fragment() {
             1->{
                 showExamSelection()
             }
-            else -> {
+            -1->{
                 setupInitialStep()
                 binding.etStartedText.text = resources.getString(R.string.let_s_get_started)
                 binding.etText.text = "1"
+            }
+            else -> {
+                findNavController().navigate(R.id.action_OnBoardingFragment_to_loginFragment)
             }
         }
         startSlideInAnimation()
@@ -162,6 +188,7 @@ class OnBoardingFragment : Fragment() {
         }
         startSlideInAnimation()
         updateButtonBackground()
+        saveState()
     }
 
     private fun isCurrentStepValid(): Boolean {
