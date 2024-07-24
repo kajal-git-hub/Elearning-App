@@ -13,7 +13,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="22dp"
         android:src="@drawable/arrow_left"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -32,7 +31,6 @@
         android:id="@+id/etHelpText"
         android:layout_width="wrap_content"
         android:layout_height="20dp"
-        android:layout_marginTop="22dp"
         android:layout_marginEnd="16dp"
         android:fontFamily="@font/nunito"
         android:lineHeight="19.6sp"
@@ -176,7 +174,6 @@
         android:layout_height="55dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="24dp"
         android:backgroundTint="#B5B3B3"
         android:text="Submit"
         android:textColor="#FFFFFF"

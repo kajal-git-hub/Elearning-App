@@ -1,6 +1,8 @@
 package com.student.competishun.ui.fragment
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -73,6 +75,7 @@ class OnBoardingFragment : Fragment() {
         binding.clExamConstraint.visibility = View.GONE
         name = binding.etEnterHereText.text.toString().trim()
         city = binding.etEnterCityText.text.toString().trim()
+        updateButtonBackground()
     }
 
     private fun setupRecyclerView() {
@@ -83,7 +86,8 @@ class OnBoardingFragment : Fragment() {
             onItemSelected = { selectedItem ->
                 Log.d("Adapter", "Selected item: $selectedItem")
                 list.add(selectedItem)
-                Log.d("List",list.toString())
+                Log.d("List", list.toString())
+                updateButtonBackground()
             }
         )
 
@@ -119,8 +123,12 @@ class OnBoardingFragment : Fragment() {
             0 -> {
                 setupInitialStep()
             }
-            else -> {
+            1->{
                 showExamSelection()
+                currentStep--
+            }
+            else -> {
+                setupInitialStep()
             }
         }
         startSlideInAnimation()
@@ -128,12 +136,17 @@ class OnBoardingFragment : Fragment() {
 
     private fun handleNextButtonClick() {
         Log.d("handleNextButtonClick", currentStep.toString())
+        if (!isCurrentStepValid()) {
+            Toast.makeText(context, "Please Select the option", Toast.LENGTH_SHORT).show()
+            return
+        }
         when (currentStep) {
             0 -> {
                 showExamSelection()
                 currentStep++
             }
             1 -> {
+
                 showExamSelection()
                 currentStep++
             }
@@ -146,6 +159,24 @@ class OnBoardingFragment : Fragment() {
             }
         }
         startSlideInAnimation()
+        updateButtonBackground()
+    }
+
+    private fun isCurrentStepValid(): Boolean {
+        return when (currentStep) {
+            0 -> {
+                name = binding.etEnterHereText.text.toString().trim()
+                city = binding.etEnterCityText.text.toString().trim()
+                name.isNotEmpty() && city.isNotEmpty()
+            }
+            1 -> {
+                list.size >= 1
+            }
+            2 -> {
+                list.size >= 2
+            }
+            else -> true
+        }
     }
 
     private fun showExamSelection() {
@@ -183,9 +214,21 @@ class OnBoardingFragment : Fragment() {
     }
 
     private fun updateButtonBackground() {
-        name = binding.etEnterHereText.text.toString().trim()
-        city = binding.etEnterCityText.text.toString().trim()
-        val isButtonEnabled = name.isNotEmpty() && city.isNotEmpty()
+        val isButtonEnabled = when (currentStep) {
+            0 -> {
+                val currentName = binding.etEnterHereText.text.toString().trim()
+                val currentCity = binding.etEnterCityText.text.toString().trim()
+                currentName.isNotEmpty() && currentCity.isNotEmpty()
+            }
+            1 -> {
+                list.size >= 1
+            }
+            2 -> {
+                list.size >= 2
+            }
+            else -> true
+        }
+
         binding.btnGetSubmit2.setBackgroundResource(
             if (isButtonEnabled) R.drawable.second_getstarteddone
             else R.drawable.second_getstarted
@@ -196,8 +239,8 @@ class OnBoardingFragment : Fragment() {
         updateUserViewModel.updateUserResult.observe(viewLifecycleOwner, Observer { result ->
             result?.user?.let { user ->
                 Log.e("gettingUserUpdate", user.fullName.toString())
-                findNavController().navigate(R.id.action_OnBoardingFragment_to_HomeActivity)
-
+                // Removed immediate navigation here
+                Toast.makeText(context, "User update successful", Toast.LENGTH_SHORT).show()
             } ?: run {
                 Log.e("gettingUserUpdate fail", result.toString())
                 Toast.makeText(context, "Update failed", Toast.LENGTH_SHORT).show()
@@ -205,35 +248,15 @@ class OnBoardingFragment : Fragment() {
         })
     }
 
-
     private fun handleSubmitButtonClick() {
-        val selectedItem = adapter.getSelectedItem()
-
-        Log.d("handleSubmitButtonClick", "Selected item: $selectedItem")
-
-        if (city.isBlank()) {
-            Toast.makeText(context, "Please enter your city", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        if (name.isBlank()) {
-            Toast.makeText(context, "Please enter your name", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        if (list.size < 3) {
-            Toast.makeText(context, "Please select all required options", Toast.LENGTH_SHORT).show()
+        if (!isCurrentStepValid()) {
+            Toast.makeText(context, "Please complete all selections", Toast.LENGTH_SHORT).show()
             return
         }
 
         val preparingFor = list.getOrNull(0)
         val targetYear = list.getOrNull(1)?.toIntOrNull()
         val reference = list.getOrNull(2)
-
-        if (preparingFor.isNullOrBlank() || targetYear == null || reference.isNullOrBlank()) {
-            Toast.makeText(context, "Please complete all selections", Toast.LENGTH_SHORT).show()
-            return
-        }
 
         val updateUserInput = UpdateUserInput(
             city = Optional.Present(city),
@@ -246,8 +269,15 @@ class OnBoardingFragment : Fragment() {
         list.clear()
         Log.d("updateUserInput", updateUserInput.toString())
         updateUserViewModel.updateUser(updateUserInput)
-    }
 
+        binding.root.removeAllViews()
+        val processingView = layoutInflater.inflate(R.layout.loader_screen, binding.root, false)
+        binding.root.addView(processingView)
+
+        Handler(Looper.getMainLooper()).postDelayed({
+            findNavController().navigate(R.id.action_OnBoardingFragment_to_HomeActivity)
+        }, 5000)
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
