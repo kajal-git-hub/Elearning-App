@@ -21,9 +21,8 @@
         android:background="@color/white"
         app:tabTextColor="#5A5555"
         app:tabRippleColor="@null"
-        app:tabIndicatorColor="@color/orange"
-        app:tabIndicatorHeight="1dp"
-        app:tabIndicatorFullWidth="true"
+        app:tabIndicatorColor="@color/white"
+        app:tabIndicatorHeight="48dp"
         app:tabSelectedTextColor="@color/orange">
 
         <com.google.android.material.tabs.TabItem

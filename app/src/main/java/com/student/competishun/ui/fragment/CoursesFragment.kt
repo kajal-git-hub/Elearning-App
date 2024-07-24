@@ -38,7 +38,7 @@ class CoursesFragment : Fragment() {
     private fun setupViewPager(viewPager: ViewPager) {
         val adapter = ViewPagerAdapter(childFragmentManager)
         adapter.addFragment(CourseFragment(), "IIT-JEE")
-        adapter.addFragment(SignupFragment(), "NEET-UG")
+        adapter.addFragment(NEETFragment(), "NEET-UG")
         viewPager.adapter = adapter
     }
 }

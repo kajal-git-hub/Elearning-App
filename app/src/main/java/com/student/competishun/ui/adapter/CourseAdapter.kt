@@ -21,7 +21,6 @@ class CourseAdapter(private val items: List<TabItem>) :
     override fun onBindViewHolder(holder: CourseAdapter.TabItemViewHolder, position: Int) {
         val item = items[position]
 
-        // Bind data to your views here
         holder.binding.tvRecommendedCourseName.text = "Prakhar Integrated (Fast \nLane-2) 2024-25"
         holder.binding.tvTag1.text = "12th Class"
     }
