@@ -78,6 +78,7 @@ class OnBoardingFragment : Fragment() {
         updateButtonBackground()
     }
 
+
     private fun setupRecyclerView() {
         adapter = ExampleAdapter(
             dataSets[currentStep],
@@ -112,7 +113,7 @@ class OnBoardingFragment : Fragment() {
             handleNextButtonClick()
         }
         binding.btnGetSubmit1.setOnClickListener {
-            currentStep = (currentStep - 1).coerceAtLeast(0)
+            currentStep -= 1
             handleBackButtonClick()
         }
     }
@@ -121,14 +122,15 @@ class OnBoardingFragment : Fragment() {
         Log.d("currentStep", currentStep.toString())
         when (currentStep) {
             0 -> {
-                setupInitialStep()
+                showExamSelection()
             }
             1->{
                 showExamSelection()
-                currentStep--
             }
             else -> {
                 setupInitialStep()
+                binding.etStartedText.text = resources.getString(R.string.let_s_get_started)
+                binding.etText.text = "1"
             }
         }
         startSlideInAnimation()
