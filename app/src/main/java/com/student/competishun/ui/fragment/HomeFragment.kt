@@ -8,32 +8,26 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.appcompat.app.ActionBarDrawerToggle
-import android.widget.ImageView
-import android.widget.LinearLayout
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.NavController
-import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.appbar.MaterialToolbar
 import com.student.competishun.R
 import com.student.competishun.data.model.Testimonial
 import com.student.competishun.databinding.FragmentHomeBinding
+import com.student.competishun.ui.adapter.PlayerlistAdapter
 import com.student.competishun.ui.adapter.TestimonialsAdapter
 
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
-    private lateinit var viewPager: ViewPager2
     private lateinit var recyclerView: RecyclerView
-    private lateinit var adapter: TestimonialsAdapter
-    private lateinit var dotsIndicator: WormDotsIndicator
-    private lateinit var navController: NavController
-    private lateinit var testimonials: List<Testimonial>
-    private lateinit var recyclerView: RecyclerView
+    private lateinit var videoplayerlist: RecyclerView
     private lateinit var dotsIndicator: LinearLayout
     private lateinit var adapter: TestimonialsAdapter
     private lateinit var testimonials: List<Testimonial>
@@ -84,9 +78,6 @@ class HomeFragment : Fragment() {
                 updateDotsIndicator()
             }
         })
-        val adapter = TestimonialsAdapter(testimonials)
-        viewPager.adapter = adapter
-        dotsIndicator.attachTo(viewPager)
         setupClickListeners(view)
 
     }
@@ -109,6 +100,12 @@ class HomeFragment : Fragment() {
                 Log.d("HomeFragment", logMessage)
                 findNavController().navigate(R.id.action_homeFragment_to_coursesFragment,bundle)
             }
+        }
+
+        val clFYCourse = view.findViewById<ConstraintLayout>(R.id.clFYCourse)
+        clFYCourse.setOnClickListener {
+            Log.d("HomeFragment", "clFYCourse clicked")
+            findNavController().navigate(R.id.action_homeFragment_to_coursesFragment)
         }
 
         val clExploreCourse = view.findViewById<ConstraintLayout>(R.id.clExploreCourceButton)
