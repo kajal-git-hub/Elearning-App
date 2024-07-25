@@ -56,28 +56,26 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-
     //Gson
     implementation(libs.convertor.gson)
-
     //hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.kapt)
-
     //Graph ql
     implementation(libs.apollo.runtime)
     implementation(libs.apollo.api)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
-
     // Navigation
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
-
+    //exoplayer
+    implementation(libs.androidx.media3.exoplayer)
+    implementation(libs.androidx.media3.exoplayer.dash)
+    implementation(libs.androidx.media3.ui)
     //gif
     implementation(libs.android.gif.drawable)
-
     //dotindicator
     implementation (libs.dotsindicator.v50)
 

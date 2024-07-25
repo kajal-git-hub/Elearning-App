@@ -14,11 +14,24 @@
         <action
             android:id="@+id/action_homeFragment_to_coursesFragment"
             app:destination="@+id/coursesFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_mediaFragment"
+            app:destination="@+id/mediaFragment" />
     </fragment>
     <fragment
         android:id="@+id/coursesFragment"
         android:name="com.student.competishun.ui.fragment.CoursesFragment"
         android:label="fragment_courses"
         tools:layout="@layout/fragment_courses" />
+    <fragment
+        android:id="@+id/mediaFragment"
+        android:name="com.student.competishun.ui.fragment.MediaPlayerFragment"
+        android:label="fragment_media"
+        tools:layout="@layout/fragment_media_player">
+        <argument
+            android:name="url"
+            app:argType="string"
+            android:defaultValue="" />
+    </fragment>
 
 </navigation>

@@ -7,9 +7,13 @@ import android.view.LayoutInflater
 import android.view.View
 import androidx.navigation.fragment.findNavController
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.LinearLayout
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.student.competishun.R
 import com.student.competishun.data.model.Testimonial
@@ -21,8 +25,11 @@ import com.tbuonomo.viewpagerdotsindicator.WormDotsIndicator
 class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private lateinit var viewPager: ViewPager2
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var adapter: TestimonialsAdapter
     private lateinit var dotsIndicator: WormDotsIndicator
     private lateinit var navController: NavController
+    private lateinit var testimonials: List<Testimonial>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,13 +56,32 @@ class HomeFragment : Fragment() {
         val adapter = TestimonialsAdapter(testimonials)
         viewPager.adapter = adapter
         dotsIndicator.attachTo(viewPager)
+        setupClickListeners(view)
 
-        val clFYCourse = view.findViewById<ConstraintLayout>(R.id.clFYCourse)
-        clFYCourse.setOnClickListener {
-            Log.d("HomeFragment", "clFYCourse clicked")
-            findNavController().navigate(R.id.action_homeFragment_to_coursesFragment)
+    }
+
+    private fun setupClickListeners(view: View) {
+        val clickableLayouts = listOf(
+            R.id.clFYCourse to getString(R.string.full_year_courses),
+            R.id.clTestSeries to getString(R.string.test_series),
+            R.id.clRevisionCourses to getString(R.string.revision_courses),
+            R.id.clCrashCourses to getString(R.string.crash_courses),
+            R.id.clDistanceLearning to getString(R.string.distance_learning),
+            R.id.clDigitalBook to getString(R.string.digital_book),
+        )
+
+        clickableLayouts.forEach { (id, logMessage) ->
+            view.findViewById<ConstraintLayout>(id).setOnClickListener {
+                val bundle = Bundle().apply {
+                    putString("clicked_view", logMessage)
+                }
+                Log.d("HomeFragment", logMessage)
+                findNavController().navigate(R.id.action_homeFragment_to_coursesFragment,bundle)
+            }
         }
     }
+
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import com.google.android.material.appbar.MaterialToolbar
 
 class CoursesFragment : Fragment() {
@@ -30,7 +31,17 @@ class CoursesFragment : Fragment() {
         val tabTabLayout = view.findViewById<TabLayout>(R.id.tab_tablayout)
 
         tabToolbar.title = ""
+        val clickedViewMessage = arguments?.getString("clicked_view")
+        // Use the data as needed
+        clickedViewMessage?.let {
+            val tittle = view.findViewById<TextView>(R.id.tittle_tb)
+            tittle.text = it
+            // Log.d("CoursesFragment", "Received message: $it")
+        }
         setupViewPager(tabViewPager)
+        tabToolbar.setNavigationOnClickListener {
+            requireActivity().onBackPressed()
+        }
         tabTabLayout.setupWithViewPager(tabViewPager)
         tabTabLayout.getTabAt(0)?.select()
     }
