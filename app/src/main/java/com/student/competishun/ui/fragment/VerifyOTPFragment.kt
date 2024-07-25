@@ -2,6 +2,7 @@ package com.student.competishun.ui.fragment
 
 import android.graphics.Color
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.text.Editable
 import android.text.SpannableString
 import android.text.TextWatcher
@@ -13,6 +14,7 @@ import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.core.view.ViewCompat
@@ -35,6 +37,9 @@ class VerifyOTPFragment : Fragment() {
     private var mobileNumber: String? = null
     private var countryCode: String? = null
 
+    private lateinit var otpBoxes: List<EditText>
+    private lateinit var countDownTimer: CountDownTimer
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -55,6 +60,7 @@ class VerifyOTPFragment : Fragment() {
         binding.etArrowLeft.setOnClickListener {
             findNavController().navigate(R.id.action_verifyOTPFragment_to_loginFragment)
         }
+
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 findNavController().navigate(R.id.action_verifyOTPFragment_to_loginFragment)
@@ -68,22 +74,49 @@ class VerifyOTPFragment : Fragment() {
 
         setupOtpInputs()
         setupVerificationCodeText()
-
-        countryCode?.let { code ->
-            mobileNumber?.let { number ->
-                verifyOtpViewModel.verifyOtp(code, number, 1111)
-            }
-        }
+        startTimer()
 
         verifyOtpViewModel.verifyOtpResult.observe(viewLifecycleOwner) { result ->
-            result?.let {
-                Log.e("Success in Verify", "${it.user} ${it.refreshToken} ${it.accessToken}")
-            } ?: Log.e("Failure in Verify", "Check")
+            if (result != null) {
+                Log.e("Success in Verify", "${result.user} ${result.refreshToken} ${result.accessToken}")
+                changeOtpBoxesBackground(R.drawable.otp_edit_text_background)
+                binding.etEnterOtpText.text = "Enter the OTP to continue"
+                binding.etEnterOtpText.setTextColor(Color.parseColor("#726C6C"))
+                binding.btnVerify.setOnClickListener {
+                    findNavController().navigate(R.id.action_verifyOTPFragment_to_onBoardingFragment)
+                }
+            } else {
+                Toast.makeText(requireContext(), "Invalid OTP", Toast.LENGTH_SHORT).show()
+                changeOtpBoxesBackground(R.drawable.opt_edit_text_bg_incorrect)
+                binding.etEnterOtpText.text = "Incorrect OTP"
+                binding.btnVerify.setBackgroundColor(Color.parseColor(getString(R.string.verify_btn_default)))
+                binding.etEnterOtpText.setTextColor(Color.parseColor(getString(R.string.Error)))
+            }
         }
     }
 
+    private fun startTimer() {
+        countDownTimer = object : CountDownTimer(30000, 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+                val secondsRemaining = millisUntilFinished / 1000
+                binding.etTimeText.text = "${secondsRemaining}s"
+            }
+
+            override fun onFinish() {
+                binding.etEnterOtpText.text = "Didn’t receive any OTP?"
+                binding.etWaitText.visibility = View.GONE
+                binding.etTimeText.visibility = View.GONE
+                binding.etResendText.visibility = View.VISIBLE
+                binding.etResendText.setOnClickListener {
+                    // Handle resend OTP action
+                }
+            }
+        }
+        countDownTimer.start()
+    }
+
     private fun setupOtpInputs() {
-        val otpBoxes = listOf(
+        otpBoxes = listOf(
             binding.otpBox1,
             binding.otpBox2,
             binding.otpBox3,
@@ -103,9 +136,14 @@ class VerifyOTPFragment : Fragment() {
                         otpBoxes[index - 1].requestFocus()
                     }
 
+                    if (index == otpBoxes.size - 1 && otpBoxes.all { it.text.length == 1 }) {
+                        checkOtpAndNavigate()
+                    }
+
                     if (otpBoxes.all { it.text.length == 1 }) {
                         binding.btnVerify.setBackgroundColor(Color.parseColor("#3E3EF7"))
-                        binding.btnVerify.setOnClickListener { navigateToNextScreen() }
+                    } else {
+                        binding.btnVerify.setBackgroundColor(Color.parseColor("#DADADA"))
                     }
                 }
             })
@@ -117,6 +155,28 @@ class VerifyOTPFragment : Fragment() {
                 }
                 false
             }
+        }
+
+        binding.btnVerify.setOnClickListener {
+            if (otpBoxes.all { it.text.length == 1 }) {
+                checkOtpAndNavigate()
+            }
+        }
+    }
+
+    private fun checkOtpAndNavigate() {
+        val otp = otpBoxes.joinToString("") { it.text.toString() }
+
+        if (otp.isNotEmpty() && countryCode != null && mobileNumber != null) {
+            verifyOtpViewModel.verifyOtp(countryCode!!, mobileNumber!!, otp.toInt())
+        } else {
+            Toast.makeText(requireContext(), "Please enter a valid OTP", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun changeOtpBoxesBackground(backgroundResource: Int) {
+        otpBoxes.forEach {
+            it.setBackgroundResource(backgroundResource)
         }
     }
 
@@ -145,6 +205,9 @@ class VerifyOTPFragment : Fragment() {
                                 Toast.LENGTH_SHORT
                             ).show()
                         }
+                        override fun updateDrawState(ds: android.text.TextPaint) {
+                            ds.isUnderlineText = false
+                        }
                     },
                     start,
                     end,
@@ -159,12 +222,9 @@ class VerifyOTPFragment : Fragment() {
         }
     }
 
-    private fun navigateToNextScreen() {
-        findNavController().navigate(R.id.action_verifyOTPFragment_to_onBoardingFragment)
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        countDownTimer.cancel()
     }
 }

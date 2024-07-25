@@ -37,12 +37,10 @@
 
             <ImageView
                 android:id="@+id/etCircleLogo"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginStart="5dp"
-                android:layout_marginTop="5dp"
-                android:background="@drawable/getstarted_icon"
-                android:src="@drawable/circle_with_image"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:backgroundTint="@color/blue"
+                android:src="@drawable/circleimage"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -61,7 +59,7 @@
                 android:id="@id/et_text2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="19dp"
                 android:text="/4"
                 android:textColor="#9F9C9C"
                 android:textSize="12dp"
@@ -95,7 +93,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="22dp"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/etStartedText">
 
@@ -161,7 +159,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="22dp"
-                    android:visibility="visible"
+                    android:visibility="gone"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/etStartedText">
 
@@ -174,7 +172,7 @@
                         app:layout_constraintTop_toTopOf="parent"
                         app:spanCount="1"
                         tools:itemCount="4"
-                        tools:listitem="@layout/getstarted_itemlayout2" />
+                        tools:listitem="@layout/getstarted_itemlayout" />
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/etContentBox"

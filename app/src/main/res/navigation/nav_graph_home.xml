@@ -15,6 +15,9 @@
             android:id="@+id/action_homeFragment_to_coursesFragment"
             app:destination="@+id/coursesFragment" />
         <action
+            android:id="@+id/action_homeFragment_to_exploreFragment"
+            app:destination="@id/exploreFragment" />
+        <action
             android:id="@+id/action_homeFragment_to_mediaFragment"
             app:destination="@+id/mediaFragment" />
     </fragment>
@@ -33,5 +36,10 @@
             app:argType="string"
             android:defaultValue="" />
     </fragment>
+    <fragment
+        android:id="@+id/exploreFragment"
+        android:name="com.student.competishun.ui.fragment.explorefragment.ExploreFragment"
+        android:label="fragment_explore"
+        tools:layout="@layout/fragment_explore" />
 
 </navigation>

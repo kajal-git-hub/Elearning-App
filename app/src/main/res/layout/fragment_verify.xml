@@ -168,6 +168,21 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/etEnterOtpText" />
 
+    <TextView
+        android:id="@+id/etResendText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:fontFamily="@font/nunito"
+        android:lineHeight="19.6sp"
+        android:visibility="gone"
+        android:text="Resend"
+        android:textColor="#3E3EF7"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/etEnterOtpText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/etEnterOtpText" />
+
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnVerify"
         android:layout_width="match_parent"

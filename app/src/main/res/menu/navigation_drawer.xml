@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single" >
+        <item
+            android:id="@+id/download"
+            android:icon="@drawable/download"
+            android:title="@string/title_download"/>
+
+        <item
+            android:id="@+id/bookmark"
+            android:icon="@drawable/bookmark"
+            android:title="@string/title_bookmark"/>
+
+        <item
+            android:id="@+id/aboutUs"
+            android:icon="@drawable/aboutus"
+            android:title="@string/title_aboutUs"/>
+
+        <item
+            android:id="@+id/iwish"
+            android:icon="@drawable/iwish"
+            android:title="@string/title_iWish"/>
+
+        <item
+            android:id="@+id/tvTermsPrivacy"
+            android:icon="@drawable/termsandcondition"
+            android:title="@string/title_termsCondition"/>
+
+        <item
+            android:id="@+id/tvdisclaimer"
+            android:icon="@drawable/disclaimer"
+            android:title="@string/title_disclaimer"/>
+        <item
+            android:id="@+id/tvRate"
+            android:icon="@drawable/rateapp"
+            android:title="@string/title_rate"/>
+    </group>
+</menu>

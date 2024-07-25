@@ -67,10 +67,18 @@ class LoginFragment : Fragment() {
             }
 
             addTextChangedListener(object : TextWatcher {
-                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
+                }
+
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                     updateVerifyButtonState(s?.length == 10)
                 }
+
                 override fun afterTextChanged(s: Editable?) {}
             })
         }
@@ -85,7 +93,8 @@ class LoginFragment : Fragment() {
     private fun setupTermsAndPrivacyText() {
         val termsText = getString(R.string.terms_conditions)
         val privacyText = getString(R.string.privacy_policy)
-        val fullText = getString(R.string.by_signing_up_you_agree_to_our_and, termsText, privacyText)
+        val fullText =
+            getString(R.string.by_signing_up_you_agree_to_our_and, termsText, privacyText)
         val spannableString = SpannableString(fullText)
 
         spannableString.apply {
@@ -104,14 +113,24 @@ class LoginFragment : Fragment() {
         val end = start + text.length
         if (start >= 0) {
             setSpan(clickableSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-            setSpan(ForegroundColorSpan(Color.parseColor("#3E3EF7")), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            setSpan(
+                ForegroundColorSpan(Color.parseColor("#3E3EF7")),
+                start,
+                end,
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
         }
     }
 
     private val termsClickableSpan = object : ClickableSpan() {
         override fun onClick(widget: View) {
-            Toast.makeText(requireContext(), getString(R.string.terms_conditions_clicked), Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                requireContext(),
+                getString(R.string.terms_conditions_clicked),
+                Toast.LENGTH_SHORT
+            ).show()
         }
+
         override fun updateDrawState(ds: android.text.TextPaint) {
             ds.isUnderlineText = false
         }
@@ -119,8 +138,13 @@ class LoginFragment : Fragment() {
 
     private val privacyClickableSpan = object : ClickableSpan() {
         override fun onClick(widget: View) {
-            Toast.makeText(requireContext(), getString(R.string.privacy_policy_clicked), Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                requireContext(),
+                getString(R.string.privacy_policy_clicked),
+                Toast.LENGTH_SHORT
+            ).show()
         }
+
         override fun updateDrawState(ds: android.text.TextPaint) {
             ds.isUnderlineText = false
         }
@@ -136,6 +160,7 @@ class LoginFragment : Fragment() {
                 otpViewModel.getOtp(countryCode.orEmpty(), mobileNo)
                 navigateToVerifyOtpFragment(countryCode.orEmpty(), mobileNo)
             }
+
             else -> showToast("Enter a valid mobile number")
         }
     }

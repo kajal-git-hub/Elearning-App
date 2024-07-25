@@ -1,349 +1,356 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/drwaer_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#DFF2FB"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
 
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/topAppBar"
+    <androidx.constraintlayout.widget.ConstraintLayout
+
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:elevation="4dp"
-        android:background="@color/white"
-        app:navigationIcon="@drawable/frame_370000069"
-        app:menu="@menu/top_app_bar_menu"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        android:layout_height="match_parent"
+        android:background="#DFF2FB"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@id/topAppBar"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/topAppBar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/clCourseBanner"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginHorizontal="16dp"
-                app:layout_constraintTop_toTopOf="parent">
+            android:layout_height="?attr/actionBarSize"
+            android:elevation="4dp"
+            android:background="@color/white"
+            app:navigationIcon="@drawable/frame_370000069"
+            app:menu="@menu/top_app_bar_menu"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
-                <androidx.cardview.widget.CardView
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toBottomOf="@id/topAppBar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/clCourseBanner"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:cardCornerRadius="20dp"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent">
-                    <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_marginTop="16dp"
+                    android:layout_marginHorizontal="16dp"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <androidx.cardview.widget.CardView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/promo_banner">
-
-                        <com.google.android.material.textview.MaterialTextView
-                            android:layout_width="wrap_content"
+                        app:cardCornerRadius="20dp"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent">
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:id="@+id/tvFY_Course"
-                            android:textSize="14sp"
-                            android:text="Full-Year Courses"
-                            android:layout_marginTop="24dp"
-                            android:layout_marginStart="16dp"
-                            android:fontFamily="@font/nunito"
-                            android:textColor="@color/white"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"/>
+                            android:background="@drawable/promo_banner">
 
-                        <com.google.android.material.textview.MaterialTextView
-                            android:id="@+id/tvBatchName"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:text="Pratham Star \nBatches - IIT JEE"
-                            android:textColor="@color/white"
-                            android:textStyle="bold"
-                            android:fontFamily="@font/nunito"
-                            android:layout_marginTop="12dp"
-                            android:layout_marginStart="16dp"
-                            android:textSize="20sp"
-                            app:layout_constraintTop_toBottomOf="@id/tvFY_Course"
-                            app:layout_constraintStart_toStartOf="parent"/>
+                            <com.google.android.material.textview.MaterialTextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/tvFY_Course"
+                                android:textSize="14sp"
+                                android:text="Full-Year Courses"
+                                android:layout_marginTop="24dp"
+                                android:layout_marginStart="16dp"
+                                android:fontFamily="@font/nunito"
+                                android:textColor="@color/white"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"/>
 
-                        <com.google.android.material.textview.MaterialTextView
-                            android:id="@+id/tvBatchStartDate"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="New batch: Dec 6, 2022"
-                            android:textColor="@color/white"
-                            android:textStyle="bold"
-                            android:fontFamily="@font/nunito"
-                            android:drawablePadding="6dp"
-                            android:drawableStart="@drawable/group"
-                            android:layout_marginTop="10dp"
-                            android:layout_marginStart="16dp"
-                            android:textSize="14sp"
-                            app:layout_constraintTop_toBottomOf="@id/tvBatchName"
-                            app:layout_constraintStart_toStartOf="parent"/>
+                            <com.google.android.material.textview.MaterialTextView
+                                android:id="@+id/tvBatchName"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:text="Pratham Star \nBatches - IIT JEE"
+                                android:textColor="@color/white"
+                                android:textStyle="bold"
+                                android:fontFamily="@font/nunito"
+                                android:layout_marginTop="12dp"
+                                android:layout_marginStart="16dp"
+                                android:textSize="20sp"
+                                app:layout_constraintTop_toBottomOf="@id/tvFY_Course"
+                                app:layout_constraintStart_toStartOf="parent"/>
 
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/image_course_banner"
-                            android:layout_marginTop="53dp"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintBottom_toBottomOf="parent"/>
+                            <com.google.android.material.textview.MaterialTextView
+                                android:id="@+id/tvBatchStartDate"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="New batch: Dec 6, 2022"
+                                android:textColor="@color/white"
+                                android:textStyle="bold"
+                                android:fontFamily="@font/nunito"
+                                android:drawablePadding="6dp"
+                                android:drawableStart="@drawable/group"
+                                android:layout_marginTop="10dp"
+                                android:layout_marginStart="16dp"
+                                android:textSize="14sp"
+                                app:layout_constraintTop_toBottomOf="@id/tvBatchName"
+                                app:layout_constraintStart_toStartOf="parent"/>
 
-                        <androidx.cardview.widget.CardView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            app:cardCornerRadius="8dp"
-                            android:layout_marginTop="24dp"
-                            android:layout_marginStart="16dp"
-                            android:backgroundTint="#FFFFFF"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/tvBatchStartDate">
-                            <androidx.constraintlayout.widget.ConstraintLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent">
-                                <com.google.android.material.textview.MaterialTextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Explore"
-                                    android:textColor="#3C45CD"
-                                    android:textSize="16sp"
-                                    android:layout_marginHorizontal="16dp"
-                                    android:layout_marginVertical="8dp"
-                                    android:fontFamily="@font/nunito"
-                                    android:drawablePadding="10dp"
-                                    android:drawableEnd="@drawable/arrow_right"
-                                    app:layout_constraintStart_toStartOf="parent"
-                                    app:layout_constraintEnd_toEndOf="parent"
-                                    app:layout_constraintTop_toTopOf="parent"
-                                    app:layout_constraintBottom_toBottomOf="parent"/>
-                            </androidx.constraintlayout.widget.ConstraintLayout>
-                        </androidx.cardview.widget.CardView>
-                    </androidx.constraintlayout.widget.ConstraintLayout>
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/image_course_banner"
+                                android:layout_marginTop="53dp"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"/>
 
-                </androidx.cardview.widget.CardView>
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                            <androidx.cardview.widget.CardView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                app:cardCornerRadius="8dp"
+                                android:layout_marginTop="24dp"
+                                android:layout_marginStart="16dp"
+                                android:backgroundTint="#FFFFFF"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@id/tvBatchStartDate">
+                                <androidx.constraintlayout.widget.ConstraintLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent">
+                                    <com.google.android.material.textview.MaterialTextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Explore"
+                                        android:textColor="#3C45CD"
+                                        android:textSize="16sp"
+                                        android:layout_marginHorizontal="16dp"
+                                        android:layout_marginVertical="8dp"
+                                        android:fontFamily="@font/nunito"
+                                        android:drawablePadding="10dp"
+                                        android:drawableEnd="@drawable/arrow_right"
+                                        app:layout_constraintStart_toStartOf="parent"
+                                        app:layout_constraintEnd_toEndOf="parent"
+                                        app:layout_constraintTop_toTopOf="parent"
+                                        app:layout_constraintBottom_toBottomOf="parent"/>
+                                </androidx.constraintlayout.widget.ConstraintLayout>
+                            </androidx.cardview.widget.CardView>
+                        </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/clOurCourses"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
-                android:layout_marginTop="28dp"
-                app:layout_constraintTop_toBottomOf="@+id/clCourseBanner"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:background="#DFF2FB">
+                    </androidx.cardview.widget.CardView>
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/tvOurCourse"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/clOurCourses"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Our Courses"
-                    android:fontFamily="@font/nunito"
-                    android:textStyle="bold"
-                    android:textSize="18sp"
-                    android:textColor="#2B2829"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"/>
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/clFYCourse"
-                    android:layout_width="160dp"
-                    android:layout_height="108dp"
-                    android:layout_marginTop="16dp"
-                    android:clickable="true"
-                    android:focusableInTouchMode="true"
-                    android:contextClickable="true"
-                    android:background="@drawable/frame_1707480071"
-                    android:focusable="true"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="28dp"
+                    app:layout_constraintTop_toBottomOf="@+id/clCourseBanner"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tvOurCourse">
+                    app:layout_constraintEnd_toEndOf="parent">
 
                     <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/tvFYCourse"
-                        android:layout_width="wrap_content"
+                        android:id="@+id/tvOurCourse"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Full - Year \nCourses"
-                        android:textColor="#0A0A0B"
-                        android:textSize="14sp"
-                        app:fontFamily="@font/nunito"
-                        android:layout_marginTop="32dp"
-                        android:layout_marginStart="16dp"
-                        app:layout_constraintBottom_toBottomOf="parent"
+                        android:text="Our Courses"
+                        android:fontFamily="@font/nunito"
+                        android:textStyle="bold"
+                        android:textSize="18sp"
+                        android:textColor="#2B2829"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintStart_toStartOf="parent"/>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/clFYCourse"
+                        android:layout_width="160dp"
+                        android:layout_height="108dp"
+                        android:layout_marginTop="16dp"
+                        android:clickable="true"
+                        android:focusableInTouchMode="true"
+                        android:contextClickable="true"
+                        android:background="@drawable/frame_1707480071"
+                        android:focusable="true"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tvOurCourse">
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/tvFYCourse"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Full - Year \nCourses"
+                            android:textColor="#0A0A0B"
+                            android:textSize="14sp"
+                            app:fontFamily="@font/nunito"
+                            android:layout_marginTop="32dp"
+                            android:layout_marginStart="16dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"/>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/clTestSeries"
+                        android:layout_width="160dp"
+                        android:layout_height="108dp"
+                        android:layout_marginTop="16dp"
+                        android:background="@drawable/frame_1707480073"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tvOurCourse">
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/tvTestSeries"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Test \nSeries"
+                            android:textColor="#0A0A0B"
+                            android:textSize="14sp"
+                            app:fontFamily="@font/nunito"
+                            android:layout_marginTop="32dp"
+                            android:layout_marginStart="16dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"/>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/clRevisionCourses"
+                        android:layout_width="160dp"
+                        android:layout_height="108dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/frame_1707480073__1_"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/clFYCourse">
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/tvRevisionCourses"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Revision \nCourses"
+                            android:textColor="#0A0A0B"
+                            android:textSize="14sp"
+                            app:fontFamily="@font/nunito"
+                            android:layout_marginTop="32dp"
+                            android:layout_marginStart="16dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"/>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/clCrashCourses"
+                        android:layout_width="160dp"
+                        android:layout_height="108dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/frame_1707480074"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/clTestSeries">
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/tvCrashCourses"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Crash \nCourses"
+                            android:textColor="#0A0A0B"
+                            android:textSize="14sp"
+                            app:fontFamily="@font/nunito"
+                            android:layout_marginTop="32dp"
+                            android:layout_marginStart="16dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"/>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/clDistanceLearning"
+                        android:layout_width="160dp"
+                        android:layout_height="108dp"
+                        android:layout_marginTop="16dp"
+                        android:background="@drawable/frame_1707480075"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/clRevisionCourses">
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/tvDistanceLearning"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Distance \nLearning"
+                            android:textColor="#0A0A0B"
+                            android:textSize="14sp"
+                            app:fontFamily="@font/nunito"
+                            android:layout_marginTop="32dp"
+                            android:layout_marginStart="16dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"/>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/clDigitalBook"
+                        android:layout_width="160dp"
+                        android:layout_height="108dp"
+                        android:layout_marginTop="16dp"
+                        android:background="@drawable/frame_1707480076"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/clCrashCourses">
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/tvDigitalBook"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Digital \nBook"
+                            android:textColor="#0A0A0B"
+                            android:textSize="14sp"
+                            app:fontFamily="@font/nunito"
+                            android:layout_marginTop="32dp"
+                            android:layout_marginStart="16dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"/>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/clTestSeries"
-                    android:layout_width="160dp"
-                    android:layout_height="108dp"
-                    android:layout_marginTop="16dp"
-                    android:background="@drawable/frame_1707480073"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tvOurCourse">
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/tvTestSeries"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Test \nSeries"
-                        android:textColor="#0A0A0B"
-                        android:textSize="14sp"
-                        app:fontFamily="@font/nunito"
-                        android:layout_marginTop="32dp"
-                        android:layout_marginStart="16dp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"/>
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/clRevisionCourses"
-                    android:layout_width="160dp"
-                    android:layout_height="108dp"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/frame_1707480073__1_"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/clFYCourse">
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/tvRevisionCourses"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Revision \nCourses"
-                        android:textColor="#0A0A0B"
-                        android:textSize="14sp"
-                        app:fontFamily="@font/nunito"
-                        android:layout_marginTop="32dp"
-                        android:layout_marginStart="16dp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"/>
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/clCrashCourses"
-                    android:layout_width="160dp"
-                    android:layout_height="108dp"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/frame_1707480074"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/clTestSeries">
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/tvCrashCourses"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Crash \nCourses"
-                        android:textColor="#0A0A0B"
-                        android:textSize="14sp"
-                        app:fontFamily="@font/nunito"
-                        android:layout_marginTop="32dp"
-                        android:layout_marginStart="16dp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"/>
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/clDistanceLearning"
-                    android:layout_width="160dp"
-                    android:layout_height="108dp"
-                    android:layout_marginTop="16dp"
-                    android:background="@drawable/frame_1707480075"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/clRevisionCourses">
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/tvDistanceLearning"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Distance \nLearning"
-                        android:textColor="#0A0A0B"
-                        android:textSize="14sp"
-                        app:fontFamily="@font/nunito"
-                        android:layout_marginTop="32dp"
-                        android:layout_marginStart="16dp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"/>
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/clDigitalBook"
-                    android:layout_width="160dp"
-                    android:layout_height="108dp"
-                    android:layout_marginTop="16dp"
-                    android:background="@drawable/frame_1707480076"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/clCrashCourses">
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/tvDigitalBook"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Digital \nBook"
-                        android:textColor="#0A0A0B"
-                        android:textSize="14sp"
-                        app:fontFamily="@font/nunito"
-                        android:layout_marginTop="32dp"
-                        android:layout_marginStart="16dp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"/>
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/clRecommendedCourses"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="28dp"
-                android:layout_marginHorizontal="16dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/clOurCourses">
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/tvRecommended"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/clRecommendedCourses"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Recommended"
-                    android:fontFamily="@font/nunito"
-                    android:textStyle="bold"
-                    android:textSize="18sp"
-                    android:textColor="#2B2829"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"/>
+                    android:layout_marginTop="28dp"
+                    android:layout_marginHorizontal="16dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/clOurCourses">
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/tvViewAll"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="View All"
-                    android:fontFamily="@font/nunito"
-                    android:textSize="18sp"
-                    android:textColor="#3E3EF7"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"/>
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tvRecommended"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Recommended"
+                        android:fontFamily="@font/nunito"
+                        android:textStyle="bold"
+                        android:textSize="18sp"
+                        android:textColor="#2B2829"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"/>
 
-                <androidx.constraintlayout.widget.ConstraintLayout
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tvViewAll"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="View All"
+                        android:fontFamily="@font/nunito"
+                        android:textSize="18sp"
+                        android:textColor="#3E3EF7"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"/>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="15dp"
@@ -557,6 +564,7 @@
                         </androidx.constraintlayout.widget.ConstraintLayout>
 
                         <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/clExploreCourceButton"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="16dp"
@@ -607,236 +615,523 @@
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/clFreeResources"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
-                android:layout_marginTop="44dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/clRecommendedCourses">
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/tvFreeResources"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Free Resources"
-                    android:fontFamily="@font/nunito"
-                    android:textStyle="bold"
-                    android:textSize="18sp"
-                    android:textColor="#2B2829"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"/>
-                
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/clYLectures"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:background="@drawable/card_bg"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tvFreeResources">
-
-                    <ImageView
-                        android:id="@+id/YLecturesIcon"
-                        android:layout_width="35dp"
-                        android:layout_height="35dp"
-                        android:layout_marginVertical="12dp"
-                        android:layout_marginStart="12dp"
-                        android:src="@drawable/video_chat_1310413_1"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"/>
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/tvYLectures"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Youtube \nLectures"
-                        android:textColor="#0A0A0B"
-                        android:textSize="14sp"
-                        app:fontFamily="@font/nunito"
-                        android:layout_marginStart="12dp"
-                        android:layout_marginEnd="52dp"
-                        android:layout_marginVertical="12dp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintStart_toEndOf="@id/YLecturesIcon"/>
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/clStudyMaterial"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:background="@drawable/card_bg"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tvFreeResources">
-
-                    <ImageView
-                        android:id="@+id/studyMaterialIcon"
-                        android:layout_width="35dp"
-                        android:layout_height="35dp"
-                        android:layout_marginVertical="12dp"
-                        android:layout_marginStart="12dp"
-                        android:src="@drawable/group__1_"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"/>
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/tvStudyMaterial"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Study \nMaterial"
-                        android:textColor="#0A0A0B"
-                        android:textSize="14sp"
-                        app:fontFamily="@font/nunito"
-                        android:layout_marginStart="12dp"
-                        android:layout_marginEnd="52dp"
-                        android:layout_marginVertical="12dp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintStart_toEndOf="@id/studyMaterialIcon"/>
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/clOTSeries"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:background="@drawable/card_bg"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/clYLectures">
-
-                    <ImageView
-                        android:id="@+id/OTSeriesIcon"
-                        android:layout_width="35dp"
-                        android:layout_height="35dp"
-                        android:layout_marginVertical="12dp"
-                        android:layout_marginStart="12dp"
-                        android:src="@drawable/notes_4012439_1"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"/>
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/tvOTSeries"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Open Test \nSeries"
-                        android:textColor="#0A0A0B"
-                        android:textSize="14sp"
-                        app:fontFamily="@font/nunito"
-                        android:layout_marginStart="12dp"
-                        android:layout_marginEnd="42dp"
-                        android:layout_marginVertical="12dp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintStart_toEndOf="@id/OTSeriesIcon"/>
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/clPYP"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:background="@drawable/card_bg"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/clStudyMaterial">
-
-                    <ImageView
-                        android:id="@+id/PYPIcon"
-                        android:layout_width="35dp"
-                        android:layout_height="35dp"
-                        android:layout_marginVertical="12dp"
-                        android:layout_marginStart="12dp"
-                        android:src="@drawable/video_chat_1310413_1"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"/>
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/tvPYP"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Previous Year \nPapers"
-                        android:textColor="#0A0A0B"
-                        android:textSize="14sp"
-                        app:fontFamily="@font/nunito"
-                        android:layout_marginStart="12dp"
-                        android:layout_marginEnd="12dp"
-                        android:layout_marginVertical="12dp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintStart_toEndOf="@id/PYPIcon"/>
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/clTestimonials"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
-                android:layout_marginTop="24dp"
-                app:layout_constraintTop_toBottomOf="@id/clFreeResources"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent">
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/tvTestimonials"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Testimonials"
-                    android:fontFamily="@font/nunito"
-                    android:textStyle="bold"
-                    android:textSize="18sp"
-                    android:textColor="#2B2829"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"/>
-
-                <androidx.viewpager2.widget.ViewPager2
-                    android:id="@+id/viewPagerTestimonials"
+                    android:id="@+id/clFreeResources"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:layout_constraintTop_toBottomOf="@id/tvTestimonials"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    android:layout_marginTop="16dp"/>
-
-                <com.tbuonomo.viewpagerdotsindicator.WormDotsIndicator
-                    android:id="@+id/worm_dots_indicator"
-                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:dotsColor="#3C45CD"
-                    app:dotsStrokeColor="#CCCBCB"
-                    app:dotsCornerRadius="8dp"
-                    app:dotsSize="16dp"
-                    app:dotsSpacing="4dp"
-                    app:dotsStrokeWidth="2dp"
-                    app:layout_constraintTop_toBottomOf="@id/viewPagerTestimonials"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="44dp"
                     app:layout_constraintStart_toStartOf="parent"
-                    android:layout_marginTop="8dp"/>
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/clRecommendedCourses">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tvFreeResources"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Free Resources"
+                        android:fontFamily="@font/nunito"
+                        android:textStyle="bold"
+                        android:textSize="18sp"
+                        android:textColor="#2B2829"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"/>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/clYLectures"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:background="@drawable/card_bg"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tvFreeResources">
+
+                        <ImageView
+                            android:id="@+id/YLecturesIcon"
+                            android:layout_width="35dp"
+                            android:layout_height="35dp"
+                            android:layout_marginVertical="12dp"
+                            android:layout_marginStart="12dp"
+                            android:src="@drawable/video_chat_1310413_1"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"/>
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/tvYLectures"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Youtube \nLectures"
+                            android:textColor="#0A0A0B"
+                            android:textSize="14sp"
+                            app:fontFamily="@font/nunito"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginEnd="52dp"
+                            android:layout_marginVertical="12dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintStart_toEndOf="@id/YLecturesIcon"/>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/clStudyMaterial"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:background="@drawable/card_bg"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tvFreeResources">
+
+                        <ImageView
+                            android:id="@+id/studyMaterialIcon"
+                            android:layout_width="35dp"
+                            android:layout_height="35dp"
+                            android:layout_marginVertical="12dp"
+                            android:layout_marginStart="12dp"
+                            android:src="@drawable/group__1_"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"/>
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/tvStudyMaterial"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Study \nMaterial"
+                            android:textColor="#0A0A0B"
+                            android:textSize="14sp"
+                            app:fontFamily="@font/nunito"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginEnd="52dp"
+                            android:layout_marginVertical="12dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintStart_toEndOf="@id/studyMaterialIcon"/>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/clOTSeries"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:background="@drawable/card_bg"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/clYLectures">
+
+                        <ImageView
+                            android:id="@+id/OTSeriesIcon"
+                            android:layout_width="35dp"
+                            android:layout_height="35dp"
+                            android:layout_marginVertical="12dp"
+                            android:layout_marginStart="12dp"
+                            android:src="@drawable/notes_4012439_1"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"/>
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/tvOTSeries"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Open Test \nSeries"
+                            android:textColor="#0A0A0B"
+                            android:textSize="14sp"
+                            app:fontFamily="@font/nunito"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginEnd="42dp"
+                            android:layout_marginVertical="12dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintStart_toEndOf="@id/OTSeriesIcon"/>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/clPYP"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:background="@drawable/card_bg"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/clStudyMaterial">
+
+                        <ImageView
+                            android:id="@+id/PYPIcon"
+                            android:layout_width="35dp"
+                            android:layout_height="35dp"
+                            android:layout_marginVertical="12dp"
+                            android:layout_marginStart="12dp"
+                            android:src="@drawable/video_chat_1310413_1"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"/>
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/tvPYP"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Previous Year \nPapers"
+                            android:textColor="#0A0A0B"
+                            android:textSize="14sp"
+                            app:fontFamily="@font/nunito"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginEnd="12dp"
+                            android:layout_marginVertical="12dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintStart_toEndOf="@id/PYPIcon"/>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/clTestimonials"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="24dp"
+                    app:layout_constraintTop_toBottomOf="@id/clFreeResources"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tvTestimonials"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Testimonials"
+                        android:fontFamily="@font/nunito"
+                        android:textStyle="bold"
+                        android:textSize="18sp"
+                        android:textColor="#2B2829"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"/>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerViewTestimonials"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        app:layout_constraintTop_toBottomOf="@id/tvTestimonials"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        android:orientation="horizontal" />
+
+                    <LinearLayout
+                        android:id="@+id/llDotsIndicator"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="8dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        android:layout_marginBottom="24dp"
+                        app:layout_constraintTop_toBottomOf="@id/recyclerViewTestimonials"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent">
+                    </LinearLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/clWhyCompetishun"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="24dp"
+                    app:layout_constraintTop_toBottomOf="@id/clTestimonials"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tvWhyCompetishun"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Why Choose Competishun?"
+                        android:fontFamily="@font/nunito"
+                        android:textStyle="bold"
+                        android:textSize="18sp"
+                        android:textColor="#2B2829"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"/>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvWhyCompetishun"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        app:layout_constraintTop_toBottomOf="@id/tvWhyCompetishun"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        android:orientation="horizontal" />
+
+                    <LinearLayout
+                        android:id="@+id/llDotsIndicatorWhyCompetishun"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="24dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/rvWhyCompetishun"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent">
+                    </LinearLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/clSucceed"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="24dp"
+                    app:layout_constraintTop_toBottomOf="@id/clWhyCompetishun"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent">
+
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tvSucceed"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Succeed"
+                        android:fontFamily="@font/nunito"
+                        android:textStyle="bold"
+                        android:textSize="24sp"
+                        android:textColor="#5A5555"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"/>
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tvIn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="In"
+                        android:fontFamily="@font/nunito"
+                        android:textStyle="bold"
+                        android:textSize="24sp"
+                        android:textColor="#5A5555"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tvSucceed"/>
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tvExam"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Exam"
+                        android:fontFamily="@font/nunito"
+                        android:textStyle="bold"
+                        android:drawableEnd="@drawable/vector_24"
+                        android:drawablePadding="8dp"
+                        android:layout_marginStart="3dp"
+                        android:textSize="24sp"
+                        android:textColor="#3E3EF7"
+                        app:layout_constraintStart_toEndOf="@+id/tvIn"
+                        app:layout_constraintTop_toBottomOf="@id/tvSucceed"/>
+
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/clBatchImage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="32dp"
+                        android:layout_marginBottom="24dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tvExam"
+                        app:layout_constraintStart_toStartOf="parent">
+
+                        <ImageView
+                            android:id="@+id/leafImageLeft"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:src="@drawable/group_1171276773"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"/>
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/tvtext500"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="500 +"
+                            android:fontFamily="@font/nunito"
+                            android:textStyle="bold"
+                            android:textSize="24sp"
+                            android:textColor="#2B2829"
+                            android:layout_marginStart="50dp"
+                            app:layout_constraintStart_toStartOf="@id/leafImageLeft"
+                            app:layout_constraintTop_toTopOf="parent"/>
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/tvJEEMains"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="JEE\nMains"
+                            android:fontFamily="@font/nunito"
+                            android:textStyle="bold"
+                            android:textAlignment="center"
+                            android:textSize="14sp"
+                            android:textColor="#898384"
+                            app:layout_constraintStart_toEndOf="@id/leafImageLeft"
+                            app:layout_constraintEnd_toStartOf="@id/leafImageRight"
+                            app:layout_constraintTop_toBottomOf="@id/tvtext500"/>
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/tvBatchYear"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="2024"
+                            android:fontFamily="@font/nunito"
+                            android:background="@drawable/year_bg"
+                            android:textStyle="bold"
+                            android:textAlignment="center"
+                            android:layout_marginTop="5dp"
+                            android:paddingHorizontal="8dp"
+                            android:textSize="14sp"
+                            android:textColor="#5757F7"
+                            app:layout_constraintStart_toEndOf="@id/leafImageLeft"
+                            app:layout_constraintEnd_toStartOf="@id/leafImageRight"
+                            app:layout_constraintTop_toBottomOf="@id/tvJEEMains"/>
+
+                        <ImageView
+                            android:id="@+id/leafImageRight"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginStart="62dp"
+                            android:src="@drawable/group_1171276772"
+                            app:layout_constraintStart_toStartOf="@id/tvtext500"
+                            app:layout_constraintTop_toTopOf="parent"/>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/clBatchImageRight"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="32dp"
+                        android:layout_marginBottom="24dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tvExam"
+                        app:layout_constraintEnd_toEndOf="parent">
+
+                        <ImageView
+                            android:id="@+id/leafImageLeftRight"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:src="@drawable/group_1171276773"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"/>
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/tvtext500Right"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="500 +"
+                            android:fontFamily="@font/nunito"
+                            android:textStyle="bold"
+                            android:textSize="24sp"
+                            android:textColor="#2B2829"
+                            android:layout_marginStart="50dp"
+                            app:layout_constraintStart_toStartOf="@id/leafImageLeftRight"
+                            app:layout_constraintTop_toTopOf="parent"/>
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/tvJEEMainsRight"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="JEE\nMains"
+                            android:fontFamily="@font/nunito"
+                            android:textStyle="bold"
+                            android:textAlignment="center"
+                            android:textSize="14sp"
+                            android:textColor="#898384"
+                            app:layout_constraintStart_toEndOf="@id/leafImageLeftRight"
+                            app:layout_constraintEnd_toStartOf="@id/leafImageRightRight"
+                            app:layout_constraintTop_toBottomOf="@id/tvtext500Right"/>
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/tvBatchYearRight"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="2024"
+                            android:fontFamily="@font/nunito"
+                            android:background="@drawable/year_bg"
+                            android:textStyle="bold"
+                            android:textAlignment="center"
+                            android:layout_marginTop="5dp"
+                            android:paddingHorizontal="8dp"
+                            android:textSize="14sp"
+                            android:textColor="#5757F7"
+                            app:layout_constraintStart_toEndOf="@id/leafImageLeftRight"
+                            app:layout_constraintEnd_toStartOf="@id/leafImageRightRight"
+                            app:layout_constraintTop_toBottomOf="@id/tvJEEMainsRight"/>
+
+                        <ImageView
+                            android:id="@+id/leafImageRightRight"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginStart="62dp"
+                            android:src="@drawable/group_1171276772"
+                            app:layout_constraintStart_toStartOf="@id/tvtext500Right"
+                            app:layout_constraintTop_toTopOf="parent"/>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/clSucceed"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="25dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/clTestimonials"/>
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.core.widget.NestedScrollView>
 
-    </androidx.core.widget.NestedScrollView>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottomNav"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            app:itemActiveIndicatorStyle="@null"
+            app:itemIconSize="30dp"
+            app:itemIconTint="@drawable/bottom_back"
+            app:itemTextColor="@drawable/bottom_back"
+            app:labelVisibilityMode="labeled"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:menu="@menu/bottom_nav" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.google.android.material.navigation.NavigationView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:visibility="visible"
+        app:itemTextAppearance="@style/NavDrawerTextAppearance"
+        android:backgroundTint="@color/white"
+        app:menu="@menu/navigation_drawer"
+        app:headerLayout="@layout/navgation_header"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:itemIconPadding="30dp"/>
+
+
+</androidx.drawerlayout.widget.DrawerLayout>
+
+
+
