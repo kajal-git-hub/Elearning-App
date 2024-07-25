@@ -25,4 +25,18 @@
     <string name="submit">call\n\n</string>
     <string name="Error">#E25B53</string>
     <string name="verify_btn_default">#B5B3B3</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    //navigation drawer
+    <string name="title_download">Downloads</string>
+    <string name="title_bookmark">Bookmarks</string>
+    <string name="title_aboutUs">About us</string>
+    <string name="title_iWish">I wish</string>
+    <string name="title_termsCondition">Terms and Conditions</string>
+    <string name="title_privacy">Privacy Policy</string>
+    <string name="title_disclaimer">Disclaimer</string>
+    <string name="title_rate">Rate this App</string>
+
+
 </resources>

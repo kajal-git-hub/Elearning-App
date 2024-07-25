@@ -172,7 +172,7 @@
                         app:layout_constraintTop_toTopOf="parent"
                         app:spanCount="1"
                         tools:itemCount="4"
-                        tools:listitem="@layout/getstarted_itemlayout2" />
+                        tools:listitem="@layout/getstarted_itemlayout" />
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/etContentBox"

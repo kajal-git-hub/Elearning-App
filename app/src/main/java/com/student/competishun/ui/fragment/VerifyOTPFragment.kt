@@ -2,6 +2,7 @@ package com.student.competishun.ui.fragment
 
 import android.graphics.Color
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.text.Editable
 import android.text.SpannableString
 import android.text.TextWatcher
@@ -37,6 +38,7 @@ class VerifyOTPFragment : Fragment() {
     private var countryCode: String? = null
 
     private lateinit var otpBoxes: List<EditText>
+    private lateinit var countDownTimer: CountDownTimer
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -72,6 +74,7 @@ class VerifyOTPFragment : Fragment() {
 
         setupOtpInputs()
         setupVerificationCodeText()
+        startTimer()
 
         verifyOtpViewModel.verifyOtpResult.observe(viewLifecycleOwner) { result ->
             if (result != null) {
@@ -90,6 +93,26 @@ class VerifyOTPFragment : Fragment() {
                 binding.etEnterOtpText.setTextColor(Color.parseColor(getString(R.string.Error)))
             }
         }
+    }
+
+    private fun startTimer() {
+        countDownTimer = object : CountDownTimer(30000, 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+                val secondsRemaining = millisUntilFinished / 1000
+                binding.etTimeText.text = "${secondsRemaining}s"
+            }
+
+            override fun onFinish() {
+                binding.etEnterOtpText.text = "Didn’t receive any OTP?"
+                binding.etWaitText.visibility = View.GONE
+                binding.etTimeText.visibility = View.GONE
+                binding.etResendText.visibility = View.VISIBLE
+                binding.etResendText.setOnClickListener {
+                    // Handle resend OTP action
+                }
+            }
+        }
+        countDownTimer.start()
     }
 
     private fun setupOtpInputs() {
@@ -182,6 +205,9 @@ class VerifyOTPFragment : Fragment() {
                                 Toast.LENGTH_SHORT
                             ).show()
                         }
+                        override fun updateDrawState(ds: android.text.TextPaint) {
+                            ds.isUnderlineText = false
+                        }
                     },
                     start,
                     end,
@@ -199,5 +225,6 @@ class VerifyOTPFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        countDownTimer.cancel()
     }
 }

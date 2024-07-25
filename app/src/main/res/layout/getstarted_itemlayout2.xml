@@ -15,6 +15,7 @@
         style="@style/Widget.AppCompat.CompoundButton.CheckBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:buttonTint="@null"
         android:button="@drawable/radio_button_selector"
         android:fontFamily="@font/nunito"
         android:lineHeight="24sp"
