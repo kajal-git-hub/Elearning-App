@@ -8,8 +8,11 @@ import androidx.fragment.app.Fragment
 import androidx.core.widget.NestedScrollView
 import com.google.android.material.tabs.TabLayout
 import com.student.competishun.R
+import com.student.competishun.databinding.FragmentExploreBinding
 
 class ExploreFragment : Fragment() {
+
+    private lateinit var binding:FragmentExploreBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,6 +35,7 @@ class ExploreFragment : Fragment() {
         tabLayout.addTab(tabLayout.newTab().setText("Features"))
         tabLayout.addTab(tabLayout.newTab().setText("Planner"))
         tabLayout.addTab(tabLayout.newTab().setText("Teachers"))
+        binding.backIv.setOnClickListener{ requireActivity().onBackPressed()}
 
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {

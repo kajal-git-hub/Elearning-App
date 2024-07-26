@@ -10,6 +10,7 @@ import android.text.TextWatcher
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -154,14 +155,16 @@ class LoginFragment : Fragment() {
         val countryCode = binding.etCountryCode.text?.toString()
         val mobileNo = binding.etEnterMob.text?.toString()
 
-        when {
-            mobileNo.isNullOrEmpty() -> showToast("Enter a valid mobile number")
-            mobileNo.length == 10 -> {
-                otpViewModel.getOtp(countryCode.orEmpty(), mobileNo)
-                navigateToVerifyOtpFragment(countryCode.orEmpty(), mobileNo)
-            }
+        if (countryCode != null) {
+            when {
+                mobileNo.isNullOrEmpty() -> showToast("Enter a valid mobile number")
+                mobileNo.length == 10 && mobileNo.isNotEmpty() -> {
+                    otpViewModel.getOtp(countryCode, mobileNo)
+                    navigateToVerifyOtpFragment(countryCode, mobileNo)
+                }
 
-            else -> showToast("Enter a valid mobile number")
+                else -> showToast("Enter a valid mobile number")
+            }
         }
     }
 
@@ -179,10 +182,10 @@ class LoginFragment : Fragment() {
 
     private fun setupObservers() {
         otpViewModel.otpResult.observe(viewLifecycleOwner) { result ->
-            if (result == true) {
-                navigateToVerifyOtpFragment(countryCode.orEmpty(), mobileNo.orEmpty())
+            if (result == true ) {
+                countryCode?.let { mobileNo?.let { it1 -> navigateToVerifyOtpFragment(it, it1) } }
             } else {
-                showToast("OTP Verification Failed")
+                showToast(result.toString())
             }
         }
     }

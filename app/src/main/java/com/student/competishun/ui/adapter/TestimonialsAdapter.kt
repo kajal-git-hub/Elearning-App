@@ -1,9 +1,13 @@
 package com.student.competishun.ui.adapter
 
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.navigation.NavController
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.student.competishun.R
 import com.student.competishun.data.model.Testimonial
@@ -21,14 +25,28 @@ class TestimonialsAdapter(private val testimonials: List<Testimonial>) : Recycle
         holder.tvname.text = testimonial.name
         holder.tvclass.text = testimonial.currentClass
         holder.tvtarget.text = testimonial.target
+
+        holder.tvComment.setOnClickListener {
+
+            val url = "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"
+            goToPlayerPage(holder.itemView.findNavController(), url)
+        }
+
     }
+
+        private fun goToPlayerPage(navController: NavController, url: String) {
+            val bundle = Bundle().apply {
+                putString("url", url)
+            }
+            navController.navigate(R.id.action_homeFragment_to_mediaFragment,bundle)
+        }
 
     override fun getItemCount(): Int {
         return testimonials.size
     }
 
     class TestimonialViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val tvComment: TextView = itemView.findViewById(R.id.tvComment)
+        var tvComment: TextView = itemView.findViewById(R.id.tvComment)
         val tvname:TextView=itemView.findViewById(R.id.userName)
         val tvclass:TextView=itemView.findViewById(R.id.userClass)
         val tvtarget:TextView=itemView.findViewById(R.id.userTarget)

@@ -23,6 +23,14 @@
     <string name="screenType">ScreenType</string>
     <string name="home">Home</string>
     <string name="submit">call\n\n</string>
+    <string name="full_year_courses">Full - Year Courses</string>
+    <string name="test_series">Test Series</string>
+    <string name="revision_courses">Revision Courses</string>
+    <string name="crash_courses">Crash Courses</string>
+    <string name="distance_learning">Distance Learning</string>
+    <string name="digital_book">Digital Book</string>
+    <string name="why_choose_competishun">Why Choose Competishun?</string>
+    <string name="testimonials">Testimonials</string>
     <string name="Error">#E25B53</string>
     <string name="verify_btn_default">#B5B3B3</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>

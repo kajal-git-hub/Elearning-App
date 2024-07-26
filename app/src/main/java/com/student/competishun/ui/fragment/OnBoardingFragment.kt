@@ -272,6 +272,8 @@ class OnBoardingFragment : Fragment() {
     private fun observeViewModel() {
         updateUserViewModel.updateUserResult.observe(viewLifecycleOwner, Observer { result ->
             result?.user?.let { user ->
+                Log.e("updateUserResponse",result.toString())
+                // Removed immediate navigation here
                 Log.e("gettingUserUpdate", user.fullName.toString())
                 Toast.makeText(context, "User update successful", Toast.LENGTH_SHORT).show()
             } ?: run {
