@@ -62,7 +62,6 @@ class OnBoardingFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        restoreState()
         setupInitialStep()
         setupRecyclerView()
         setupTextWatchers()
@@ -74,6 +73,11 @@ class OnBoardingFragment : Fragment() {
     override fun onPause() {
         super.onPause()
         saveState()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        restoreState()
     }
 
     private fun setupInitialStep() {
@@ -138,6 +142,7 @@ class OnBoardingFragment : Fragment() {
         name = sharedPreferences.getString("name", "") ?: ""
         city = sharedPreferences.getString("city", "") ?: ""
         list = sharedPreferences.getStringSet("selectedItems", emptySet())?.toMutableList() ?: mutableListOf()
+        Log.d("restoredData", "currentStep: $currentStep, name: $name, city: $city, list: $list")
     }
 
 
@@ -268,7 +273,6 @@ class OnBoardingFragment : Fragment() {
         updateUserViewModel.updateUserResult.observe(viewLifecycleOwner, Observer { result ->
             result?.user?.let { user ->
                 Log.e("gettingUserUpdate", user.fullName.toString())
-                // Removed immediate navigation here
                 Toast.makeText(context, "User update successful", Toast.LENGTH_SHORT).show()
             } ?: run {
                 Log.e("gettingUserUpdate fail", result.toString())

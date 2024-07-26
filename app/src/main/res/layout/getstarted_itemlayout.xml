@@ -12,11 +12,12 @@
     android:paddingBottom="12dp">
 
     <com.google.android.material.radiobutton.MaterialRadioButton
-        style="@style/Widget.AppCompat.CompoundButton.CheckBox"
+        style="@style/Widget.Material3.CompoundButton.RadioButton"
         android:id="@+id/radio_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:button="@drawable/circular_checkbox"
+        android:background="@color/transparent"
+        android:button="@drawable/radio_button_selector"
         android:fontFamily="@font/nunito"
         android:lineHeight="24sp"
         android:text="IIT-JEE"

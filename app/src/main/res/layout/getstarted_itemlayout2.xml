@@ -12,10 +12,9 @@
 
     <com.google.android.material.radiobutton.MaterialRadioButton
         android:id="@+id/radio_button"
-        style="@style/Widget.AppCompat.CompoundButton.CheckBox"
+        style="@style/Widget.AppCompat.CompoundButton.RadioButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:buttonTint="@null"
         android:button="@drawable/radio_button_selector"
         android:fontFamily="@font/nunito"
         android:lineHeight="24sp"
