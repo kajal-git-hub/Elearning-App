@@ -23,6 +23,7 @@ media3Exoplayer = "1.3.1"
 navigationFragmentKtx = "2.7.7"
 dotsindicator = "4.2"
 dotsindicatorVersion = "5.0"
+zoomlayoutVersion = "1.9.0"
 
 [libraries]
 android-gif-drawable = { module = "pl.droidsonroids.gif:android-gif-drawable", version.ref = "androidGifDrawable" }
@@ -50,6 +51,7 @@ hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref
 hilt-kapt = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt" }
 apollo-runtime = { group = "com.apollographql.apollo3", name = "apollo-runtime", version.ref = "apolloruntime" }
 apollo-api = { group = "com.apollographql.apollo3", name = "apollo-api", version.ref = "apolloapi" }
+otaliastudios-zoomlayout = { module = "com.otaliastudios:zoomlayout", version.ref = "zoomlayoutVersion" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

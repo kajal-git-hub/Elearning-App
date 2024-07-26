@@ -12,25 +12,27 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.NavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.appbar.MaterialToolbar
 import com.student.competishun.R
 import com.student.competishun.data.model.Testimonial
+import com.student.competishun.data.model.WhyCompetishun
 import com.student.competishun.databinding.FragmentHomeBinding
-import com.student.competishun.ui.adapter.PlayerlistAdapter
 import com.student.competishun.ui.adapter.TestimonialsAdapter
+import com.student.competishun.ui.adapter.WhyCompetishunAdapter
 
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private lateinit var recyclerView: RecyclerView
-    private lateinit var videoplayerlist: RecyclerView
-    private lateinit var dotsIndicator: LinearLayout
+    private lateinit var rvWhyCompetishun: RecyclerView
+    private lateinit var dotsIndicatorTestimonials: LinearLayout
+    private lateinit var dotsIndicatorWhyCompetishun: LinearLayout
     private lateinit var adapter: TestimonialsAdapter
+    private lateinit var adapterWhyCompetishun: WhyCompetishunAdapter
     private lateinit var testimonials: List<Testimonial>
+    private lateinit var listWhyCompetishun: List<WhyCompetishun>
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var toggle: ActionBarDrawerToggle
 
@@ -56,8 +58,16 @@ class HomeFragment : Fragment() {
         toggle.syncState()
 
         recyclerView = view.findViewById(R.id.recyclerViewTestimonials)
-        dotsIndicator = view.findViewById(R.id.llDotsIndicator)
+        rvWhyCompetishun=view.findViewById(R.id.rvWhyCompetishun)
+        dotsIndicatorTestimonials = view.findViewById(R.id.llDotsIndicator)
 
+
+        listWhyCompetishun = listOf(
+            WhyCompetishun("Competishun","IIT - JEE Cracked","NEET Cracked","https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"),
+            WhyCompetishun("Competishun","IIT - JEE Cracked","NEET Cracked","https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"),
+            WhyCompetishun("Competishun","IIT - JEE Cracked","NEET Cracked","https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4"),
+            WhyCompetishun("Competishun","IIT - JEE Cracked","NEET Cracked","https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4")
+        )
         testimonials = listOf(
             Testimonial("The classes are very good. Teachers explain topics very well. Must buy course for all aspiring students.", "Aman Sharma", "Class: 12th", "IIT JEE"),
             Testimonial("The classes are very good. Teachers explain topics very well. Must buy course for all aspiring students.", "Aman Sharma", "Class: 12th", "IIT JEE"),
@@ -67,12 +77,22 @@ class HomeFragment : Fragment() {
         )
 
         adapter = TestimonialsAdapter(testimonials)
+        adapterWhyCompetishun = WhyCompetishunAdapter(listWhyCompetishun)
         recyclerView.adapter = adapter
+        rvWhyCompetishun.adapter= adapterWhyCompetishun
         recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        rvWhyCompetishun.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 
         setupDotsIndicator()
 
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                updateDotsIndicator()
+            }
+        })
+
+        rvWhyCompetishun.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 updateDotsIndicator()
@@ -117,7 +137,7 @@ class HomeFragment : Fragment() {
 
 
     private fun setupDotsIndicator() {
-        dotsIndicator.removeAllViews()
+        dotsIndicatorTestimonials.removeAllViews()
         for (i in testimonials.indices) {
             val dot = ImageView(requireContext())
             dot.setImageResource(R.drawable.dot_inactive) // Your inactive dot drawable
@@ -127,7 +147,7 @@ class HomeFragment : Fragment() {
             )
             params.setMargins(4, 0, 4, 0)
             dot.layoutParams = params
-            dotsIndicator.addView(dot)
+            dotsIndicatorTestimonials.addView(dot)
         }
         updateDotsIndicator()
     }
@@ -136,8 +156,8 @@ class HomeFragment : Fragment() {
         val layoutManager = recyclerView.layoutManager as LinearLayoutManager
         val position = layoutManager.findFirstVisibleItemPosition()
 
-        for (i in 0 until dotsIndicator.childCount) {
-            val dot = dotsIndicator.getChildAt(i) as ImageView
+        for (i in 0 until dotsIndicatorTestimonials.childCount) {
+            val dot = dotsIndicatorTestimonials.getChildAt(i) as ImageView
             dot.setImageResource(
                 if (i == position) R.drawable.doc_active // Your active dot drawable
                 else R.drawable.dot_inactive // Your inactive dot drawable

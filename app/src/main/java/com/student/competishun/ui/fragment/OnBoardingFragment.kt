@@ -267,7 +267,7 @@ class OnBoardingFragment : Fragment() {
     private fun observeViewModel() {
         updateUserViewModel.updateUserResult.observe(viewLifecycleOwner, Observer { result ->
             result?.user?.let { user ->
-                Log.e("gettingUserUpdate", user.fullName.toString())
+                Log.e("updateUserResponse",result.toString())
                 // Removed immediate navigation here
                 Toast.makeText(context, "User update successful", Toast.LENGTH_SHORT).show()
             } ?: run {
@@ -299,13 +299,6 @@ class OnBoardingFragment : Fragment() {
         Log.d("updateUserInput", updateUserInput.toString())
         updateUserViewModel.updateUser(updateUserInput)
 
-        binding.root.removeAllViews()
-        val processingView = layoutInflater.inflate(R.layout.loader_screen, binding.root, false)
-        binding.root.addView(processingView)
-
-        Handler(Looper.getMainLooper()).postDelayed({
-            findNavController().navigate(R.id.action_OnBoardingFragment_to_HomeActivity)
-        }, 5000)
     }
 
     override fun onDestroyView() {

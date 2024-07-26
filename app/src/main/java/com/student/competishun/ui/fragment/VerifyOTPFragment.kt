@@ -86,6 +86,8 @@ class VerifyOTPFragment : Fragment() {
                     findNavController().navigate(R.id.action_verifyOTPFragment_to_onBoardingFragment)
                 }
             } else {
+                    Log.e("FailureBefid", "${result} $mobileNumber")
+
                 Toast.makeText(requireContext(), "Invalid OTP", Toast.LENGTH_SHORT).show()
                 changeOtpBoxesBackground(R.drawable.opt_edit_text_bg_incorrect)
                 binding.etEnterOtpText.text = "Incorrect OTP"
