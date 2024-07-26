@@ -270,17 +270,17 @@ class OnBoardingFragment : Fragment() {
     }
 
     private fun observeViewModel() {
-        updateUserViewModel.updateUserResult.observe(viewLifecycleOwner, Observer { result ->
-            result?.user?.let { user ->
-                Log.e("updateUserResponse",result.toString())
-                // Removed immediate navigation here
-                Log.e("gettingUserUpdate", user.fullName.toString())
+        updateUserViewModel.updateUserResult.observe(viewLifecycleOwner) { result ->
+            result?.let { user ->
+                Log.e("updateUserResponse", result.toString())
+                Log.e("gettingUserUpdate", user.user?.fullName.toString())
                 Toast.makeText(context, "User update successful", Toast.LENGTH_SHORT).show()
+                navigateToLoaderScreen()
             } ?: run {
                 Log.e("gettingUserUpdate fail", result.toString())
                 Toast.makeText(context, "Update failed", Toast.LENGTH_SHORT).show()
             }
-        })
+        }
     }
 
     private fun handleSubmitButtonClick() {
@@ -305,6 +305,9 @@ class OnBoardingFragment : Fragment() {
         Log.d("updateUserInput", updateUserInput.toString())
         updateUserViewModel.updateUser(updateUserInput)
 
+    }
+
+    private fun navigateToLoaderScreen() {
         binding.root.removeAllViews()
         val processingView = layoutInflater.inflate(R.layout.loader_screen, binding.root, false)
         binding.root.addView(processingView)
