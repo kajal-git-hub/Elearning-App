@@ -11,6 +11,8 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -21,7 +23,10 @@ import com.student.competishun.data.model.WhyCompetishun
 import com.student.competishun.databinding.FragmentHomeBinding
 import com.student.competishun.ui.adapter.TestimonialsAdapter
 import com.student.competishun.ui.adapter.WhyCompetishunAdapter
+import com.student.competishun.ui.viewmodel.CoursesViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
@@ -35,6 +40,7 @@ class HomeFragment : Fragment() {
     private lateinit var listWhyCompetishun: List<WhyCompetishun>
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var toggle: ActionBarDrawerToggle
+    private val coursesViewModel: CoursesViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -61,7 +67,15 @@ class HomeFragment : Fragment() {
         rvWhyCompetishun=view.findViewById(R.id.rvWhyCompetishun)
         dotsIndicatorTestimonials = view.findViewById(R.id.llDotsIndicator)
 
+        coursesViewModel.courses.observe(viewLifecycleOwner, Observer { courses ->
+            _binding?.tvBatchName?.text = courses?.firstOrNull()?.name
+            Log.e("Coursesres",courses.toString())
+            // Update UI with courses data
+            // For example: binding.textView.text = courses?.firstOrNull()?.name ?: "No courses"
+        })
 
+        // Fetch courses when the view is created
+        coursesViewModel.fetchCourses()
         listWhyCompetishun = listOf(
             WhyCompetishun("Competishun","IIT - JEE Cracked","NEET Cracked","https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"),
             WhyCompetishun("Competishun","IIT - JEE Cracked","NEET Cracked","https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"),
