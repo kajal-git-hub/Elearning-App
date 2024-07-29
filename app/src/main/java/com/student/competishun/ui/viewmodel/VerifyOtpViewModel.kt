@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.student.competishun.data.model.VerifyOtpResponse
 import com.student.competishun.data.repository.VerifyOtpRepository
-import com.student.competishun.type.VerifyOtpInput
+import com.student.competishun.gatekeeper.type.VerifyOtpInput
 import com.student.competishun.utils.SharedPreferencesManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch

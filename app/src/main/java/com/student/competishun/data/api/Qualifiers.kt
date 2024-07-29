@@ -8,5 +8,5 @@ import javax.inject.Qualifier
 annotation class Gatekeeper
 
 @Qualifier
-@Retention(AnnotationRetention.BINARY)
+@Retention(AnnotationRetention.SOURCE)
 annotation class Curator

@@ -22,9 +22,16 @@ android {
         // useVersion2Compat()
 
         service("gatekeeper") {
-            packageName.set("com.student.competishun")
-            schemaFile.set(file("src/main/graphql/com/student/competishun/gatekeeper/schema.graphqls"))
+            packageName.set("com.student.competishun.gatekeeper")
+            schemaFile.set(file("src/main/graphql/com/student/competishun/gatekeeper/schema-gatekeeper.graphqls"))
             sourceFolder.set("com/student/competishun/gatekeeper")
+            generateKotlinModels.set(true)
+        }
+        service("curator") {
+            packageName.set("com.student.competishun.curator")
+            schemaFile.set(file("src/main/graphql/com/student/competishun/curator/schema-curator.graphqls"))
+            sourceFolder.set("com/student/competishun/curator")
+            generateKotlinModels.set(true)
         }
 
     }
