@@ -10,21 +10,22 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.student.competishun.R
+import com.student.competishun.databinding.ActivityHomeBinding
 
 class HomeActivity : AppCompatActivity() {
 
     private lateinit var navController: NavController
+    private lateinit var binding: ActivityHomeBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_home)
+        binding = ActivityHomeBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-//        navController = findNavController(R.id.fragmentNavigation)
-//        if (intent!=null && intent.hasExtra(getString(R.string.screenType))){
-//            if (intent.extras?.getString(getString(R.string.screenType))==getString(R.string.home)){
-//                navController.navigate(R.id.homeFragment)
-//            }
-//        }
+        binding.igContactImage.setOnClickListener {
+            binding.igContactImage.setImageResource(R.drawable.fab_icon)
+        }
+
 
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragmentNavigation) as NavHostFragment
         navController = navHostFragment.navController

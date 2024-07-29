@@ -354,6 +354,7 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/ctRecommendedCourse"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="15dp"
@@ -519,7 +520,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
+                            android:layout_marginBottom="16dp"
                             android:background="@drawable/frame_1353"
+                            app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@id/tvQuizTests">
 
@@ -566,34 +569,6 @@
                                 app:layout_constraintTop_toTopOf="parent" />
                         </androidx.constraintlayout.widget.ConstraintLayout>
 
-                        <androidx.constraintlayout.widget.ConstraintLayout
-                            android:id="@+id/clExploreCourceButton"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="16dp"
-                            android:layout_marginTop="24dp"
-                            android:layout_marginBottom="16dp"
-                            android:background="@drawable/button_bg"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/clPriceDetails">
-
-                            <com.google.android.material.textview.MaterialTextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginHorizontal="32dp"
-                                android:layout_marginVertical="10dp"
-                                android:text="Explore"
-                                android:textColor="#3E3EF7"
-                                android:textSize="16sp"
-                                android:textStyle="bold"
-                                app:fontFamily="@font/nunito"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent" />
-
-                        </androidx.constraintlayout.widget.ConstraintLayout>
 
                         <androidx.constraintlayout.widget.ConstraintLayout
                             android:layout_width="wrap_content"
@@ -684,8 +659,8 @@
                         android:id="@+id/clStudyMaterial"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
                         android:layout_marginStart="@dimen/_10dp"
+                        android:layout_marginTop="16dp"
                         android:background="@drawable/card_bg"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/clYLectures"
@@ -761,8 +736,8 @@
                         android:id="@+id/clPYP"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
                         android:layout_marginStart="@dimen/_10dp"
+                        android:layout_marginTop="12dp"
                         android:background="@drawable/card_bg"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/clOTSeries"
@@ -964,7 +939,7 @@
                             android:id="@+id/tvtext500"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="40dp"
+                            android:layout_marginStart="45dp"
                             android:fontFamily="@font/nunito"
                             android:text="500+"
                             android:textColor="#2B2829"
@@ -977,21 +952,21 @@
                             android:id="@+id/tvJEEMains"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="50dp"
+                            android:layout_marginStart="8dp"
                             android:fontFamily="@font/nunito"
                             android:text="JEE\nMains"
                             android:textAlignment="center"
                             android:textColor="#898384"
                             android:textSize="14sp"
                             android:textStyle="bold"
-                            app:layout_constraintStart_toStartOf="@+id/leafImageLeft"
+                            app:layout_constraintStart_toStartOf="@+id/tvtext500"
                             app:layout_constraintTop_toBottomOf="@id/tvtext500" />
 
                         <com.google.android.material.textview.MaterialTextView
                             android:id="@+id/tvBatchYear"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="5dp"
+                            android:layout_marginTop="10dp"
                             android:background="@drawable/year_bg"
                             android:fontFamily="@font/nunito"
                             android:paddingHorizontal="8dp"
@@ -1000,6 +975,8 @@
                             android:textColor="#5757F7"
                             android:textSize="14sp"
                             android:textStyle="bold"
+                            app:layout_constraintEnd_toEndOf="@+id/tvJEEMains"
+                            app:layout_constraintStart_toEndOf="@+id/leafImageLeft"
                             app:layout_constraintStart_toStartOf="@+id/tvJEEMains"
                             app:layout_constraintTop_toBottomOf="@id/tvJEEMains" />
 
@@ -1010,6 +987,7 @@
                             android:layout_marginStart="42dp"
                             android:layout_marginTop="10dp"
                             android:src="@drawable/group_1171276772"
+                            app:layout_constraintStart_toEndOf="@+id/tvtext500"
                             app:layout_constraintStart_toStartOf="@id/tvtext500"
                             app:layout_constraintTop_toTopOf="parent" />
 
@@ -1066,7 +1044,7 @@
                             android:id="@+id/tvBatchYearRight"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="5dp"
+                            android:layout_marginTop="10dp"
                             android:background="@drawable/year_bg"
                             android:fontFamily="@font/nunito"
                             android:paddingHorizontal="8dp"
@@ -1075,8 +1053,8 @@
                             android:textColor="#5757F7"
                             android:textSize="14sp"
                             android:textStyle="bold"
-                            app:layout_constraintEnd_toStartOf="@id/leafImageRightRight"
-                            app:layout_constraintStart_toEndOf="@id/leafImageLeftRight"
+                            app:layout_constraintEnd_toEndOf="@+id/tvJEEMainsRight"
+                            app:layout_constraintStart_toStartOf="@+id/tvJEEMainsRight"
                             app:layout_constraintTop_toBottomOf="@id/tvJEEMainsRight" />
 
                         <ImageView
