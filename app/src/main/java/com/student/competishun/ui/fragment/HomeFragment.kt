@@ -23,6 +23,7 @@ import com.student.competishun.data.model.WhyCompetishun
 import com.student.competishun.databinding.FragmentHomeBinding
 import com.student.competishun.ui.adapter.TestimonialsAdapter
 import com.student.competishun.ui.adapter.WhyCompetishunAdapter
+import com.student.competishun.utils.HelperFunctions
 import com.student.competishun.ui.viewmodel.CoursesViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -42,6 +43,9 @@ class HomeFragment : Fragment() {
     private lateinit var toggle: ActionBarDrawerToggle
     private val coursesViewModel: CoursesViewModel by viewModels()
 
+    private lateinit var helperFunctions: HelperFunctions
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -51,6 +55,10 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
+
+        helperFunctions = HelperFunctions()
 
         drawerLayout = view.findViewById(R.id.drwaer_layout)
         val toolbar: MaterialToolbar = view.findViewById(R.id.topAppBar)
@@ -66,6 +74,7 @@ class HomeFragment : Fragment() {
         recyclerView = view.findViewById(R.id.recyclerViewTestimonials)
         rvWhyCompetishun=view.findViewById(R.id.rvWhyCompetishun)
         dotsIndicatorTestimonials = view.findViewById(R.id.llDotsIndicator)
+        dotsIndicatorWhyCompetishun = view.findViewById(R.id.llDotsIndicatorWhyCompetishun)
 
         coursesViewModel.courses.observe(viewLifecycleOwner, Observer { courses ->
             _binding?.tvBatchName?.text = courses?.firstOrNull()?.name
@@ -97,19 +106,20 @@ class HomeFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         rvWhyCompetishun.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 
-        setupDotsIndicator()
+        helperFunctions.setupDotsIndicator(requireContext(),testimonials.size, dotsIndicatorTestimonials)
+        helperFunctions.setupDotsIndicator(requireContext(),listWhyCompetishun.size, dotsIndicatorWhyCompetishun)
 
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                updateDotsIndicator()
+                helperFunctions.updateDotsIndicator(recyclerView,dotsIndicatorTestimonials)
             }
         })
 
         rvWhyCompetishun.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                updateDotsIndicator()
+                helperFunctions.updateDotsIndicator(recyclerView,dotsIndicatorWhyCompetishun)
             }
         })
         setupClickListeners(view)
@@ -142,42 +152,13 @@ class HomeFragment : Fragment() {
             findNavController().navigate(R.id.action_homeFragment_to_coursesFragment)
         }
 
-        val clExploreCourse = view.findViewById<ConstraintLayout>(R.id.clExploreCourceButton)
+        val clExploreCourse = view.findViewById<ConstraintLayout>(R.id.ctRecommendedCourse)
         clExploreCourse.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_exploreFragment)
         }
     }
 
 
-
-    private fun setupDotsIndicator() {
-        dotsIndicatorTestimonials.removeAllViews()
-        for (i in testimonials.indices) {
-            val dot = ImageView(requireContext())
-            dot.setImageResource(R.drawable.dot_inactive) // Your inactive dot drawable
-            val params = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            )
-            params.setMargins(4, 0, 4, 0)
-            dot.layoutParams = params
-            dotsIndicatorTestimonials.addView(dot)
-        }
-        updateDotsIndicator()
-    }
-
-    private fun updateDotsIndicator() {
-        val layoutManager = recyclerView.layoutManager as LinearLayoutManager
-        val position = layoutManager.findFirstVisibleItemPosition()
-
-        for (i in 0 until dotsIndicatorTestimonials.childCount) {
-            val dot = dotsIndicatorTestimonials.getChildAt(i) as ImageView
-            dot.setImageResource(
-                if (i == position) R.drawable.doc_active // Your active dot drawable
-                else R.drawable.dot_inactive // Your inactive dot drawable
-            )
-        }
-    }
 
     override fun onDestroyView() {
         super.onDestroyView()

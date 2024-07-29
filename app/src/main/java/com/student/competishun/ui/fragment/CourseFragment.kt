@@ -73,7 +73,6 @@ class CourseFragment : Fragment() {
                 originalPrice = "₹60,000",
                 discountPrice = "₹48,000"
             )
-            // Add more TabItem objects here
         )
 
         val combinedTabItems = tabItems1 + tabItems2 + tabItems3

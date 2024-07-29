@@ -150,7 +150,7 @@ class OnBoardingFragment : Fragment() {
         Log.d("currentStep", currentStep.toString())
         when (currentStep) {
             0 -> {
-                showExamSelection()
+                showExamSelection(currentStep)
             }
             1->{
                 showExamSelection()
@@ -213,12 +213,22 @@ class OnBoardingFragment : Fragment() {
         }
     }
 
-    private fun showExamSelection() {
-        binding.clExamConstraint.visibility = View.VISIBLE
-        binding.etNameConstraint.visibility = View.GONE
-        updateRecyclerViewData()
-        updateStepText()
-        updatePageText()
+    private fun showExamSelection(currentStep: Int = this.currentStep) {
+        if(currentStep==0){
+            binding.etContentBox.visibility = View.VISIBLE
+            binding.clExamConstraint.visibility = View.VISIBLE
+            binding.etNameConstraint.visibility = View.GONE
+            updateRecyclerViewData()
+            updateStepText()
+            updatePageText()
+        }else{
+            binding.etContentBox.visibility = View.GONE
+            binding.clExamConstraint.visibility = View.VISIBLE
+            binding.etNameConstraint.visibility = View.GONE
+            updateRecyclerViewData()
+            updateStepText()
+            updatePageText()
+        }
     }
 
     private fun startSlideInAnimation() {
