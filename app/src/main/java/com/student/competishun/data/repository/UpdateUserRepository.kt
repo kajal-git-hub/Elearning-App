@@ -9,11 +9,12 @@ import com.student.competishun.data.model.UserInformation
 import com.student.competishun.type.UpdateUserInput
 import com.student.competishun.data.model.User
 import com.apollographql.apollo3.api.http.HttpHeader
+import com.student.competishun.data.api.Curator
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class UpdateUserRepository @Inject constructor(private val apolloClient: ApolloClient) {
+class UpdateUserRepository @Inject constructor(@Curator private val apolloClient: ApolloClient) {
 
     private val TAG = "UpdateUserRepository"
     suspend fun updateUser(updateUserInput: UpdateUserInput, accessToken: String): UpdateUserResponse? {

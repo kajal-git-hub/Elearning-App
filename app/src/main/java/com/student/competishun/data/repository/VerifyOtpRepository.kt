@@ -4,6 +4,7 @@ import android.util.Log
 import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.exception.ApolloException
 import com.student.competishun.VerifyOtpMutation
+import com.student.competishun.data.api.Gatekeeper
 import com.student.competishun.data.model.User
 import com.student.competishun.data.model.UserInformation
 import com.student.competishun.data.model.VerifyOtpResponse
@@ -13,7 +14,7 @@ import javax.inject.Singleton
 
 
 @Singleton
-class VerifyOtpRepository @Inject constructor(private val apolloClient: ApolloClient) {
+class VerifyOtpRepository @Inject constructor(@Gatekeeper private val apolloClient: ApolloClient) {
 
     suspend fun verifyOtp(verifyOtpInput: VerifyOtpInput): VerifyOtpResponse? {
         val mutation = VerifyOtpMutation(verifyOtpInput)

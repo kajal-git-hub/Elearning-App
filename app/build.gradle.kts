@@ -20,11 +20,13 @@ android {
     }
     apollo {
         // useVersion2Compat()
-        service("service") {
+
+        service("gatekeeper") {
             packageName.set("com.student.competishun")
-            schemaFile.set(file("src/main/graphql/com/student/competishun/schema.graphqls"))
-            generateKotlinModels.set(true)
+            schemaFile.set(file("src/main/graphql/com/student/competishun/gatekeeper/schema.graphqls"))
+            sourceFolder.set("com/student/competishun/gatekeeper")
         }
+
     }
     buildTypes {
         release {
