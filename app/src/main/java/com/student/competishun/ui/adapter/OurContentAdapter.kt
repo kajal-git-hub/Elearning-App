@@ -12,7 +12,16 @@ import com.student.competishun.data.model.OtherContentItem
 import com.student.competishun.data.model.OurContentFirstItem
 import com.student.competishun.data.model.OurContentItem
 
-class OurContentAdapter(private val items: List<OurContentItem>,private val isItemSize: ObservableField<Boolean>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class OurContentAdapter(
+    private val items: List<OurContentItem>,
+    private val isItemSize: ObservableField<Boolean>,
+    private var listener: OnItemClickListener
+
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+    interface OnItemClickListener {
+        fun onFirstItemClick()
+    }
 
     companion object {
         private const val VIEW_TYPE_FIRST_ITEM = 0
@@ -29,28 +38,32 @@ class OurContentAdapter(private val items: List<OurContentItem>,private val isIt
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             VIEW_TYPE_FIRST_ITEM -> {
-                val view = LayoutInflater.from(parent.context).inflate(R.layout.our_content_firstitem, parent, false)
+                val view = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.our_content_firstitem, parent, false)
                 FirstItemViewHolder(view)
             }
+
             VIEW_TYPE_OTHER_ITEM -> {
-                val view = LayoutInflater.from(parent.context).inflate(R.layout.our_content_item, parent, false)
+                val view = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.our_content_item, parent, false)
                 OtherItemViewHolder(view)
             }
+
             else -> throw IllegalArgumentException("Invalid view type")
         }
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (val item = items[position]) {
-            is OurContentItem.FirstItem -> (holder as FirstItemViewHolder).bind(item.item)
+            is OurContentItem.FirstItem -> (holder as FirstItemViewHolder).bind(item.item,listener)
             is OurContentItem.OtherItem -> (holder as OtherItemViewHolder).bind(item.item)
         }
     }
 
     override fun getItemCount(): Int {
-        if(isItemSize.get() == true){
+        if (isItemSize.get() == true) {
             return 3
-        }else{
+        } else {
             return items.size
         }
     }
@@ -61,10 +74,14 @@ class OurContentAdapter(private val items: List<OurContentItem>,private val isIt
         private val iconImageView: ImageView = itemView.findViewById(R.id.iconImageView)
         private val freeBadgeImageView: ImageView = itemView.findViewById(R.id.freeBadgeImageView)
 
-        fun bind(item: OurContentFirstItem) {
+        fun bind(item: OurContentFirstItem,listener: OnItemClickListener) {
             titleTextView.text = item.title
             iconImageView.setImageResource(item.iconResId)
             freeBadgeImageView.setImageResource(item.isFree)
+
+            itemView.setOnClickListener {
+                listener.onFirstItemClick()
+            }
         }
     }
 

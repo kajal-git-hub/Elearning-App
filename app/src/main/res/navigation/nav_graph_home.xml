@@ -42,8 +42,10 @@
         tools:layout="@layout/fragment_explore" >
         <action
             android:id="@+id/action_exploreFragment_to_allFaqFragment"
-            app:destination="@id/allFaqFragment">
-        </action>
+            app:destination="@id/allFaqFragment"/>
+        <action
+            android:id="@+id/action_exploreFragment_to_demoFreeFragment"
+            app:destination="@+id/demoFreeFragment"/>
     </fragment>
     <fragment
         android:id="@+id/allFaqFragment"
@@ -52,5 +54,19 @@
         tools:layout="@layout/fragment_all_faq">
 
     </fragment>
+
+    <fragment
+        android:id="@+id/callingFragment"
+        android:name="com.student.competishun.ui.fragment.CallingSupport"
+        tools:layout="@layout/fragment_calling_support">
+    </fragment>
+
+    <fragment
+        android:id="@+id/demoFreeFragment"
+        android:name="com.student.competishun.ui.fragment.AllDemoResourcesFree"
+        tools:layout="@layout/fragment_all_demo_resources_free">
+    </fragment>
+
+
 
 </navigation>

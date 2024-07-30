@@ -26,6 +26,7 @@ class HomeActivity : AppCompatActivity() {
 
         binding.igContactImage.setOnClickListener {
             binding.igContactImage.setImageResource(R.drawable.fab_icon)
+            findNavController(R.id.fragmentNavigation).navigate(R.id.callingFragment)
         }
 
 

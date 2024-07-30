@@ -30,7 +30,7 @@ import com.student.competishun.ui.adapter.OurContentAdapter
 import com.student.competishun.ui.adapter.TeacherAdapter
 import com.student.competishun.utils.HelperFunctions
 
-class ExploreFragment : Fragment() {
+class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener {
 
     private var _binding: FragmentExploreBinding? = null
     private val binding get() = _binding!!
@@ -44,8 +44,6 @@ class ExploreFragment : Fragment() {
 
     private lateinit var helperFunctions: HelperFunctions
 
-
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
@@ -56,23 +54,29 @@ class ExploreFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        helperFunctions  = HelperFunctions()
-
-        binding.tvReadMore.setOnClickListener {
-            if(binding.tvCourseDescription.maxLines == 2){
-                binding.tvCourseDescription.maxLines = Integer.MAX_VALUE
-                binding.tvCourseDescription.ellipsize = null
-                binding.tvReadMore.text = "Read Less"
-                binding.tvReadMore.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.arrow_up_explore,0)
-            }else{
-                binding.tvCourseDescription.maxLines = 2
-                binding.tvCourseDescription.ellipsize = android.text.TextUtils.TruncateAt.END
-                binding.tvReadMore.text = "Read More"
-                binding.tvReadMore.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.arrow_down,0)
-            }
+        binding.igInstallmentUp.setOnClickListener {
 
         }
 
+        helperFunctions = HelperFunctions()
+
+        binding.tvReadMore.setOnClickListener {
+            if (binding.tvCourseDescription.maxLines == 2) {
+                binding.tvCourseDescription.maxLines = Integer.MAX_VALUE
+                binding.tvCourseDescription.ellipsize = null
+                binding.tvReadMore.text = "Read Less"
+                binding.tvReadMore.setCompoundDrawablesWithIntrinsicBounds(
+                    0, 0, R.drawable.arrow_up_explore, 0
+                )
+            } else {
+                binding.tvCourseDescription.maxLines = 2
+                binding.tvCourseDescription.ellipsize = android.text.TextUtils.TruncateAt.END
+                binding.tvReadMore.text = "Read More"
+                binding.tvReadMore.setCompoundDrawablesWithIntrinsicBounds(
+                    0, 0, R.drawable.arrow_down, 0
+                )
+            }
+        }
 
         val items = mutableListOf(
             OurContentItem.FirstItem(
@@ -111,10 +115,10 @@ class ExploreFragment : Fragment() {
                 )
             ),
         )
-        val ourContentAdapter = OurContentAdapter(items, isItemSize)
+
+        val ourContentAdapter = OurContentAdapter(items, isItemSize, this)
         binding.rvOurContent.apply {
-            layoutManager =
-                LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
             adapter = ourContentAdapter
         }
 
@@ -130,9 +134,6 @@ class ExploreFragment : Fragment() {
             }
             ourContentAdapter.notifyDataSetChanged()
         }
-
-
-
 
         val teacherItems = listOf(
             TeacherItem(R.drawable.teacher_bg, "Alok Srivastav", "Mathematics"),
@@ -168,7 +169,6 @@ class ExploreFragment : Fragment() {
         )
         limitedFaqItems = faqItems.take(4)
 
-
         val faqAdapter = FAQAdapter(limitedFaqItems)
 
         binding.rvFaq.apply {
@@ -179,7 +179,6 @@ class ExploreFragment : Fragment() {
         binding.clFAQViewAllText.findViewById<TextView>(R.id.etfaqViewAll).setOnClickListener {
             navigateToFaqFragment()
         }
-
 
         val tabLayout = binding.tabTablayout
         val nestedScrollView = binding.nestedScrollView
@@ -262,27 +261,31 @@ class ExploreFragment : Fragment() {
 
         binding.rvRelatedCourses.adapter = CourseAdapter(combinedTabItems)
 
-        helperFunctions.setupDotsIndicator(requireContext(),combinedTabItems.size,binding.llDotsRelatedCourse)
-        helperFunctions.setupDotsIndicator(requireContext(),teacherItems.size,binding.llDotsIndicatorteachers)
-        helperFunctions.setupDotsIndicator(requireContext(),courseFItems.size,binding.llDotsIndicatorFeatures)
+        helperFunctions.setupDotsIndicator(requireContext(), combinedTabItems.size, binding.llDotsRelatedCourse)
+        helperFunctions.setupDotsIndicator(requireContext(), teacherItems.size, binding.llDotsIndicatorteachers)
+        helperFunctions.setupDotsIndicator(requireContext(), courseFItems.size, binding.llDotsIndicatorFeatures)
         binding.rvRelatedCourses.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                helperFunctions.updateDotsIndicator(recyclerView,binding.llDotsRelatedCourse)
+                helperFunctions.updateDotsIndicator(recyclerView, binding.llDotsRelatedCourse)
             }
         })
         binding.rvMeetTeachers.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                helperFunctions.updateDotsIndicator(recyclerView,binding.llDotsIndicatorteachers)
+                helperFunctions.updateDotsIndicator(recyclerView, binding.llDotsIndicatorteachers)
             }
         })
         binding.rvCourseFeatures.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                helperFunctions.updateDotsIndicator(recyclerView,binding.llDotsIndicatorFeatures)
+                helperFunctions.updateDotsIndicator(recyclerView, binding.llDotsIndicatorFeatures)
             }
         })
+    }
+
+    override fun onFirstItemClick() {
+        findNavController().navigate(R.id.action_exploreFragment_to_demoFreeFragment)
     }
 
     private fun navigateToFaqFragment() {
@@ -291,8 +294,6 @@ class ExploreFragment : Fragment() {
         }
         findNavController().navigate(R.id.action_exploreFragment_to_allFaqFragment, bundle)
     }
-
-
 
     override fun onDestroyView() {
         super.onDestroyView()
