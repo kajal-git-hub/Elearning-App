@@ -3,11 +3,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/clFYCourse"
-    android:layout_width="160dp"
-    android:layout_height="108dp"
-    android:layout_marginTop="16dp"
+    android:layout_width="@dimen/_160dp"
+    android:layout_height="@dimen/_108dp"
+    android:layout_marginTop="@dimen/_16dp"
     android:clickable="true"
-    android:layout_marginEnd="20dp"
+    android:layout_marginEnd="@dimen/_20dp"
     android:focusableInTouchMode="true"
     android:contextClickable="true"
     android:background="@drawable/frame_1707480071"
@@ -17,16 +17,19 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/tvCourseName"
-        android:layout_width="wrap_content"
+        android:layout_width="@dimen/_85dp"
         android:layout_height="wrap_content"
-        android:text="Full - Year \nCourses"
-        android:textColor="#0A0A0B"
-        android:textSize="14sp"
+        android:text="@string/full_year_courses"
+        android:textColor="@color/_0a0a0b"
+        android:ellipsize="end"
+        android:textSize="@dimen/_14sp"
+        android:maxLines="2"
         app:fontFamily="@font/nunito"
-        android:layout_marginTop="32dp"
-        android:layout_marginStart="16dp"
+        android:layout_marginTop="@dimen/_32dp"
+        android:layout_marginStart="@dimen/_16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf=""
         app:layout_constraintStart_toStartOf="parent"/>
 
     <ImageView
@@ -35,8 +38,8 @@
         android:layout_height="wrap_content"
         android:src="@drawable/courseimages_bg"
         app:layout_constraintStart_toEndOf="@+id/tvCourseName"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/clFYCourse"
+        app:layout_constraintEnd_toEndOf="@+id/clFYCourse"
         />
 </androidx.constraintlayout.widget.ConstraintLayout>
 
