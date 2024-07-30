@@ -143,7 +143,7 @@
                     android:textStyle="bold"
                     android:textColor="#5A5555"
                     android:padding="6dp"
-                    android:background="@drawable/card_bg"
+                    android:background="@drawable/tag_bg"
                     android:layout_marginTop="12dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tvCourseName"/>
@@ -159,7 +159,7 @@
                     android:textColor="#5A5555"
                     app:fontFamily="@font/nunito"
                     android:padding="6dp"
-                    android:background="@drawable/card_bg"
+                    android:background="@drawable/tag_bg"
                     android:layout_marginTop="12dp"
                     app:layout_constraintStart_toEndOf="@id/tvTag1"
                     app:layout_constraintTop_toBottomOf="@id/tvCourseName"/>
@@ -175,7 +175,7 @@
                     android:textStyle="bold"
                     android:textColor="#5A5555"
                     android:padding="6dp"
-                    android:background="@drawable/card_bg"
+                    android:background="@drawable/tag_bg"
                     android:layout_marginTop="12dp"
                     app:layout_constraintStart_toEndOf="@id/tvTag2"
                     app:layout_constraintTop_toBottomOf="@id/tvCourseName"/>
@@ -483,7 +483,6 @@
                     android:layout_height="wrap_content"
                     android:text="For 12th studying &amp; passed students. All class 11th &amp; 12th JEE syllabus is We’ve best teachers that helps you learn topics in excel in exams."
                     android:textColor="#726C6C"
-                    android:textStyle="bold"
                     android:lineHeight="21sp"
                     app:fontFamily="@font/nunito"
                     android:textSize="14sp"
@@ -626,7 +625,7 @@
                         android:fontFamily="@font/nunito"
                         android:text="View All"
                         android:textColor="#3E3EF7"
-                        android:textSize="18sp"
+                        android:textSize="16sp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
@@ -684,7 +683,7 @@
                     android:fontFamily="@font/nunito"
                     android:text="View All"
                     android:textColor="#3E3EF7"
-                    android:textSize="18sp"
+                    android:textSize="16sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -762,6 +761,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"/>
 
             <ImageView
+                android:id="@+id/ig_Installment_up"
                 android:layout_width="20dp"
                 android:layout_height="18dp"
                 android:layout_marginEnd="8dp"

@@ -23,4 +23,8 @@
     <dimen name="_32dp">32dp</dimen>
     <dimen name="_24dp">24dp</dimen>
     <dimen name="_25dp">25dp</dimen>
+    <dimen name="_160dp">160dp</dimen>
+    <dimen name="_108dp">108dp</dimen>
+    <dimen name="_85dp">85dp</dimen>
+    <dimen name="_30dp">30dp</dimen>
 </resources>

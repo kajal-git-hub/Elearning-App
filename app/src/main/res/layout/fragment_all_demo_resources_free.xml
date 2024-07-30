@@ -1,0 +1,67 @@
+<!-- res/layout/fragment_all_faq.xml -->
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <!-- Declare any data binding variables here -->
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/allFaqFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!-- Top Bar -->
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="0dp"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/white"
+            android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/ig_demo_back_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:src="@drawable/arrow_left" />
+
+            <TextView
+                android:id="@+id/tvDemoTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:fontFamily="@font/nunito"
+                android:text="Demo Resources"
+                android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+                android:textSize="18sp" />
+
+            <ImageView
+                android:id="@+id/ig_freeImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginEnd="16dp"
+                android:src="@drawable/frame_1707480952" />
+
+
+        </androidx.appcompat.widget.Toolbar>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvAllDemoFree"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbar"
+            tools:itemCount="4"
+            tools:listitem="@layout/all_demo_free_item" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -77,7 +77,7 @@ class ExampleAdapter(
     inner class Step0ViewHolder(private val binding: GetstartedItemlayoutBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: String, isSelected: Boolean) {
             binding.radioButton.text = item
-            val textColorResId = if (isSelected) R.color.PrimaryColor else R.color.recycler_txt
+            val textColorResId = if (isSelected) R.color.blue_3E3EF7 else R.color.recycler_txt
             binding.radioButton.setTextColor(ContextCompat.getColor(binding.root.context, textColorResId))
             binding.root.setBackgroundResource(if (isSelected) R.drawable.getstarted_itembg_selected else R.drawable.getstarted_itembg_unselected)
             binding.radioButton.isChecked = isSelected
@@ -94,7 +94,7 @@ class ExampleAdapter(
     inner class Step1ViewHolder(private val binding: GetstartedItemlayoutBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: String, isSelected: Boolean) {
             binding.radioButton.text = item
-            val textColorResId = if (isSelected) R.color.PrimaryColor else R.color.recycler_txt
+            val textColorResId = if (isSelected) R.color.blue_3E3EF7 else R.color.recycler_txt
             binding.radioButton.setTextColor(ContextCompat.getColor(binding.root.context, textColorResId))
             binding.root.setBackgroundResource(if (isSelected) R.drawable.getstarted_itembg_selected else R.drawable.getstarted_itembg_unselected)
             binding.radioButton.isChecked = isSelected
@@ -111,7 +111,7 @@ class ExampleAdapter(
     inner class Step2ViewHolder(private val binding: GetstartedItemlayout2Binding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: String, isSelected: Boolean) {
             binding.radioButton.text = item
-            val textColorResId = if (isSelected) R.color.PrimaryColor else R.color.recycler_txt
+            val textColorResId = if (isSelected) R.color.blue_3E3EF7 else R.color.recycler_txt
             binding.radioButton.setTextColor(ContextCompat.getColor(binding.root.context, textColorResId))
             binding.root.setBackgroundResource(if (isSelected) R.drawable.getstarted_itembg_selected else R.drawable.getstarted_itembg_unselected)
             binding.radioButton.isChecked = isSelected
