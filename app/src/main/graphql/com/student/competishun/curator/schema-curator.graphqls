@@ -29,6 +29,8 @@ type Course {
 
   category_id: String
 
+  category_name: String
+
   complementary_course: String
 
   course_end_date: DateTime
@@ -341,6 +343,42 @@ enum ExamType {
   NEET
 }
 
+input FindAllCourseInput {
+  academic_year: String
+
+  course_status: String
+
+  course_type: String
+
+  created_by: String
+
+  exam_type: String
+
+  is_recommended: Boolean
+
+  limit: Int = 10
+
+  offset: Int = 0
+
+  sortOrder: String
+
+  target_year: Float
+}
+
+input FindAllCourseInputStudent {
+  category_name: String
+
+  exam_type: String
+
+  is_recommended: Boolean
+
+  limit: Int = 10
+
+  offset: Int = 0
+
+  sortOrder: String
+}
+
 type Mutation {
   createBanner(createBannerInput: CreateBannerInput!, mobile_banner: [Upload], web_banner: [Upload]): Banner!
 
@@ -390,21 +428,23 @@ enum OtherRequirements {
 }
 
 type Query {
-  course(id: String!): Course!
+  getAllBanners: [Banner!]!
 
-  courseCategories: [CourseCategory!]!
+  getAllCourse(filters: FindAllCourseInput!): [Course!]!
 
-  courseCategory(id: String!): CourseCategory!
+  getAllCourseCategories: [CourseCategory!]!
 
-  courseFolder(id: String!): CourseFolder!
+  getAllCourseForStudent(filters: FindAllCourseInputStudent!): [Course!]!
 
-  courseFolders: [CourseFolder!]!
+  getAllFolders: [CourseFolder!]!
 
-  courses: [Course!]!
+  getCourseById(id: String!): Course!
 
-  findAllBanners: [Banner!]!
+  getCourseCategoryById(id: String!): CourseCategory!
 
-  findbannerById(id: String!): Banner!
+  getFolderById(id: String!): CourseFolder!
+
+  getbannerById(id: String!): Banner!
 }
 
 input UpdateBannerInput {
