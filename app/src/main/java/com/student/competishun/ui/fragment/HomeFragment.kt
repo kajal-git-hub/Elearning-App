@@ -23,6 +23,7 @@ import com.student.competishun.data.model.WhyCompetishun
 import com.student.competishun.databinding.FragmentHomeBinding
 import com.student.competishun.ui.adapter.TestimonialsAdapter
 import com.student.competishun.ui.adapter.WhyCompetishunAdapter
+import com.student.competishun.ui.viewmodel.CoursesCategoryViewModel
 import com.student.competishun.utils.HelperFunctions
 import com.student.competishun.ui.viewmodel.CoursesViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -42,6 +43,7 @@ class HomeFragment : Fragment() {
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var toggle: ActionBarDrawerToggle
     private val coursesViewModel: CoursesViewModel by viewModels()
+    private val coursesCategoryViewModel: CoursesCategoryViewModel by viewModels()
 
     private lateinit var helperFunctions: HelperFunctions
 
@@ -75,6 +77,14 @@ class HomeFragment : Fragment() {
         rvWhyCompetishun=view.findViewById(R.id.rvWhyCompetishun)
         dotsIndicatorTestimonials = view.findViewById(R.id.llDotsIndicator)
         dotsIndicatorWhyCompetishun = view.findViewById(R.id.llDotsIndicatorWhyCompetishun)
+
+        coursesCategoryViewModel.coursesCategory.observe(viewLifecycleOwner, Observer { category ->
+            _binding?.tvBatchName?.text = category?.firstOrNull()?.name
+            Log.e("coursesCategoryw",category.toString())
+            // Update UI with courses data
+            // For example: binding.textView.text = courses?.firstOrNull()?.name ?: "No courses"
+        })
+        coursesCategoryViewModel.fetchCoursesCategory()
 
         coursesViewModel.courses.observe(viewLifecycleOwner, Observer { courses ->
             _binding?.tvBatchName?.text = courses?.firstOrNull()?.name
