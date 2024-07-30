@@ -29,7 +29,6 @@
         android:layout_marginStart="@dimen/_16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf=""
         app:layout_constraintStart_toStartOf="parent"/>
 
     <ImageView
@@ -37,6 +36,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/courseimages_bg"
+        android:paddingEnd="@dimen/_8dp"
         app:layout_constraintStart_toEndOf="@+id/tvCourseName"
         app:layout_constraintBottom_toBottomOf="@+id/clFYCourse"
         app:layout_constraintEnd_toEndOf="@+id/clFYCourse"
