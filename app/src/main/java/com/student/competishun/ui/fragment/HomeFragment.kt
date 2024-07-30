@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.navigation.NavigationView
 import com.student.competishun.R
+import com.student.competishun.curator.GetAllCourseCategoriesQuery
 import com.student.competishun.data.model.OurCoursesItem
 import com.student.competishun.data.model.Testimonial
 import com.student.competishun.data.model.WhyCompetishun
@@ -52,7 +53,8 @@ class HomeFragment : Fragment() {
     private lateinit var rvOurCourses: RecyclerView
     private lateinit var dotsIndicatorOurCourses: LinearLayout
     private lateinit var adapterOurCourses: OurCoursesAdapter
-    private lateinit var listOurCoursesItem: List<OurCoursesItem>
+    private  var listOurCoursesItem: List<GetAllCourseCategoriesQuery.GetAllCourseCategory>? = null
+
 
     private lateinit var helperFunctions: HelperFunctions
 
@@ -70,30 +72,26 @@ class HomeFragment : Fragment() {
         rvOurCourses = view.findViewById(R.id.rvOurCourses)
         dotsIndicatorOurCourses = view.findViewById(R.id.llDotsIndicatorOurCourses)
         dotsIndicatorOurCourses = view.findViewById(R.id.llDotsIndicatorOurCourses)
-        listOurCoursesItem = listOf(
-            OurCoursesItem("Full-Year \nCourses"),
-            OurCoursesItem("Test \nSeries"),
-            OurCoursesItem("Revision \nCourses"),
-            OurCoursesItem("Crash \nCourses"),
-            OurCoursesItem("Distance \nLearning"),
-            OurCoursesItem("Digital \nBooks"),
-            OurCoursesItem("Full-Year \nCourses"),
-            OurCoursesItem("Test \nSeries"),
-            OurCoursesItem("Revision \nCourses"),
-            OurCoursesItem("Crash \nCourses"),
-            OurCoursesItem("Distance \nLearning"),
-            OurCoursesItem("Digital \nBooks"),
-            OurCoursesItem("Full-Year \nCourses"),
-            OurCoursesItem("Test \nSeries"),
-            OurCoursesItem("Revision \nCourses"),
-            OurCoursesItem("Crash \nCourses"),
-            OurCoursesItem("Distance \nLearning"),
-            OurCoursesItem("Digital \nBooks")
-        )
-        adapterOurCourses = OurCoursesAdapter(listOurCoursesItem)
-        rvOurCourses.adapter = adapterOurCourses
-        rvOurCourses.layoutManager = GridLayoutManager(context, 3, GridLayoutManager.HORIZONTAL, false)
-        setupDotsIndicator(listOurCoursesItem.size, dotsIndicatorOurCourses, 3)
+//        listOurCoursesItem = listOf(
+//            OurCoursesItem("Full-Year \nCourses"),
+//            OurCoursesItem("Test \nSeries"),
+//            OurCoursesItem("Revision \nCourses"),
+//            OurCoursesItem("Crash \nCourses"),
+//            OurCoursesItem("Distance \nLearning"),
+//            OurCoursesItem("Digital \nBooks"),
+//            OurCoursesItem("Full-Year \nCourses"),
+//            OurCoursesItem("Test \nSeries"),
+//            OurCoursesItem("Revision \nCourses"),
+//            OurCoursesItem("Crash \nCourses"),
+//            OurCoursesItem("Distance \nLearning"),
+//            OurCoursesItem("Digital \nBooks"),
+//            OurCoursesItem("Full-Year \nCourses"),
+//            OurCoursesItem("Test \nSeries"),
+//            OurCoursesItem("Revision \nCourses"),
+//            OurCoursesItem("Crash \nCourses"),
+//            OurCoursesItem("Distance \nLearning"),
+//            OurCoursesItem("Digital \nBooks")
+//        )
 
         rvOurCourses.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -123,6 +121,15 @@ class HomeFragment : Fragment() {
 
         coursesCategoryViewModel.coursesCategory.observe(viewLifecycleOwner, Observer { category ->
             _binding?.tvBatchName?.text = category?.firstOrNull()?.name
+            if (category != null) {
+                Log.e("coursesCategor null",category.toString())
+
+                listOurCoursesItem = category
+                adapterOurCourses = OurCoursesAdapter(listOurCoursesItem!!)
+                rvOurCourses.adapter = adapterOurCourses
+                rvOurCourses.layoutManager = GridLayoutManager(context, 3, GridLayoutManager.HORIZONTAL, false)
+                setupDotsIndicator(listOurCoursesItem!!.size, dotsIndicatorOurCourses, 3)
+            }
             Log.e("coursesCategoryw",category.toString())
             // Update UI with courses data
             // For example: binding.textView.text = courses?.firstOrNull()?.name ?: "No courses"

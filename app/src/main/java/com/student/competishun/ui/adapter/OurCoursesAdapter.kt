@@ -7,9 +7,10 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.student.competishun.R
+import com.student.competishun.curator.GetAllCourseCategoriesQuery
 import com.student.competishun.data.model.OurCoursesItem
 
-class OurCoursesAdapter(private val listOurCoursesItem: List<OurCoursesItem>): RecyclerView.Adapter<OurCoursesAdapter.OurCourseViewHolder>() {
+class OurCoursesAdapter(private val listOurCoursesItem: List<GetAllCourseCategoriesQuery.GetAllCourseCategory>): RecyclerView.Adapter<OurCoursesAdapter.OurCourseViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OurCourseViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.our_courses_item, parent, false)
@@ -18,7 +19,7 @@ class OurCoursesAdapter(private val listOurCoursesItem: List<OurCoursesItem>): R
 
     override fun onBindViewHolder(holder: OurCourseViewHolder, position: Int) {
         val itemOurCourse = listOurCoursesItem[position]
-        holder.tvCourseName.text = itemOurCourse.courseName
+        holder.tvCourseName.text = itemOurCourse.name
     }
 
     override fun getItemCount(): Int {
