@@ -32,10 +32,11 @@ import com.student.competishun.ui.adapter.WhyCompetishunAdapter
 import com.student.competishun.ui.viewmodel.CoursesCategoryViewModel
 import com.student.competishun.utils.HelperFunctions
 import com.student.competishun.ui.viewmodel.CoursesViewModel
+import com.student.competishun.utils.OnCourseItemClickListener
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(), OnCourseItemClickListener {
 
     private var _binding: FragmentHomeBinding? = null
     private lateinit var recyclerView: RecyclerView
@@ -122,10 +123,10 @@ class HomeFragment : Fragment() {
         coursesCategoryViewModel.coursesCategory.observe(viewLifecycleOwner, Observer { category ->
             _binding?.tvBatchName?.text = category?.firstOrNull()?.name
             if (category != null) {
-                Log.e("coursesCategor null",category.toString())
+                Log.e("coursesCategor not",category.toString())
 
                 listOurCoursesItem = category
-                adapterOurCourses = OurCoursesAdapter(listOurCoursesItem!!)
+                adapterOurCourses = OurCoursesAdapter(listOurCoursesItem!!,this)
                 rvOurCourses.adapter = adapterOurCourses
                 rvOurCourses.layoutManager = GridLayoutManager(context, 3, GridLayoutManager.HORIZONTAL, false)
                 setupDotsIndicator(listOurCoursesItem!!.size, dotsIndicatorOurCourses, 3)
@@ -282,5 +283,13 @@ class HomeFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onCourseItemClick(course: GetAllCourseCategoriesQuery.GetAllCourseCategory) {
+        val bundle = Bundle().apply {
+            putString("course_name", course.name)
+            // Add other course details to the bundle if needed
+        }
+        findNavController().navigate(R.id.action_homeFragment_to_coursesFragment, bundle)
     }
 }
