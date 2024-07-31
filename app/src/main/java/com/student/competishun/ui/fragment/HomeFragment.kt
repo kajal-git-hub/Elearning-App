@@ -18,20 +18,20 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.apollographql.apollo3.api.Optional
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.navigation.NavigationView
 import com.student.competishun.R
 import com.student.competishun.curator.GetAllCourseCategoriesQuery
-import com.student.competishun.data.model.OurCoursesItem
+import com.student.competishun.curator.type.FindAllCourseInput
 import com.student.competishun.data.model.Testimonial
 import com.student.competishun.data.model.WhyCompetishun
 import com.student.competishun.databinding.FragmentHomeBinding
 import com.student.competishun.ui.adapter.OurCoursesAdapter
 import com.student.competishun.ui.adapter.TestimonialsAdapter
 import com.student.competishun.ui.adapter.WhyCompetishunAdapter
-import com.student.competishun.ui.viewmodel.CoursesCategoryViewModel
-import com.student.competishun.utils.HelperFunctions
 import com.student.competishun.ui.viewmodel.CoursesViewModel
+import com.student.competishun.utils.HelperFunctions
 import com.student.competishun.utils.OnCourseItemClickListener
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -50,7 +50,6 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var toggle: ActionBarDrawerToggle
     private val coursesViewModel: CoursesViewModel by viewModels()
-    private val coursesCategoryViewModel: CoursesCategoryViewModel by viewModels()
     private lateinit var rvOurCourses: RecyclerView
     private lateinit var dotsIndicatorOurCourses: LinearLayout
     private lateinit var adapterOurCourses: OurCoursesAdapter
@@ -120,7 +119,7 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
         dotsIndicatorTestimonials = view.findViewById(R.id.llDotsIndicator)
         dotsIndicatorWhyCompetishun = view.findViewById(R.id.llDotsIndicatorWhyCompetishun)
 
-        coursesCategoryViewModel.coursesCategory.observe(viewLifecycleOwner, Observer { category ->
+        coursesViewModel.coursesCategory.observe(viewLifecycleOwner, Observer { category ->
             _binding?.tvBatchName?.text = category?.firstOrNull()?.name
             if (category != null) {
                 Log.e("coursesCategor not",category.toString())
@@ -135,17 +134,23 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
             // Update UI with courses data
             // For example: binding.textView.text = courses?.firstOrNull()?.name ?: "No courses"
         })
-        coursesCategoryViewModel.fetchCoursesCategory()
+        coursesViewModel.fetchCoursesCategory()
 
         coursesViewModel.courses.observe(viewLifecycleOwner, Observer { courses ->
             _binding?.tvBatchName?.text = courses?.firstOrNull()?.name
-            Log.e("Coursesres",courses.toString())
+            Log.e("Courses list ",courses.toString())
             // Update UI with courses data
-            // For example: binding.textView.text = courses?.firstOrNull()?.name ?: "No courses"
         })
 
         // Fetch courses when the view is created
-        coursesViewModel.fetchCourses()
+        val filters = FindAllCourseInput(
+            exam_type = Optional.Absent,
+            is_recommended = Optional.present(true)
+        )
+
+
+
+        coursesViewModel.fetchCourses(filters)
         listWhyCompetishun = listOf(
             WhyCompetishun("Competishun","IIT - JEE Cracked","NEET Cracked","https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"),
             WhyCompetishun("Competishun","IIT - JEE Cracked","NEET Cracked","https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"),

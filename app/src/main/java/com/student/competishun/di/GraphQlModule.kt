@@ -2,10 +2,16 @@ package com.student.competishun.di
 
 import android.content.Context
 import com.apollographql.apollo3.ApolloClient
+import com.apollographql.apollo3.api.http.HttpRequest
+import com.apollographql.apollo3.api.http.HttpResponse
+import com.apollographql.apollo3.network.http.HttpInterceptor
+import com.apollographql.apollo3.network.http.HttpInterceptorChain
+import com.apollographql.apollo3.network.http.LoggingInterceptor
 import com.student.competishun.data.api.BASE_URL_CURATOR
 import com.student.competishun.data.api.BASE_URL_GATEKEEPER
 import com.student.competishun.data.api.Curator
 import com.student.competishun.data.api.Gatekeeper
+import com.student.competishun.utils.CustomLoggingInterceptor
 import com.student.competishun.utils.SharedPreferencesManager
 import dagger.Module
 import dagger.Provides
@@ -18,13 +24,22 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object GraphQlModule {
 
-
     @Provides
     @Singleton
     @Gatekeeper
-    fun provideApolloClient():ApolloClient{
+    fun provideApolloClient(sharedPreferencesManager: SharedPreferencesManager):ApolloClient{
         return ApolloClient.Builder()
             .serverUrl(BASE_URL_GATEKEEPER)
+            .addHttpInterceptor(object : HttpInterceptor {
+                override suspend fun intercept(request: HttpRequest, chain: HttpInterceptorChain): HttpResponse {
+
+                    val accessToken = sharedPreferencesManager.accessToken
+                    val modifiedRequest = request.newBuilder()
+                        .addHeader("Authorization", "Bearer $accessToken")
+                        .build()
+                    return chain.proceed(modifiedRequest)
+                }
+            })
             .build()
     }
 
@@ -32,9 +47,12 @@ object GraphQlModule {
     @Provides
     @Singleton
     @Curator
-    fun provideApolloClientCurator(): ApolloClient {
+    fun provideApolloClientCurator(
+        customLoggingInterceptor: CustomLoggingInterceptor
+    ): ApolloClient {
         return ApolloClient.Builder()
             .serverUrl(BASE_URL_CURATOR)
+            .addHttpInterceptor(customLoggingInterceptor)
             .build()
     }
 
@@ -44,4 +62,9 @@ object GraphQlModule {
         return SharedPreferencesManager(context)
     }
 
+    @Provides
+    @Singleton
+    fun provideCustomLoggingInterceptor(): CustomLoggingInterceptor {
+        return CustomLoggingInterceptor()
+    }
 }

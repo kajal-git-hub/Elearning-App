@@ -19,6 +19,8 @@ class GetCoursesCategoryRepository @Inject constructor(@Curator private val apol
     suspend fun getCourses(): List<GetAllCourseCategoriesQuery.GetAllCourseCategory>? {
         return try {
             val response = apolloClient.query(GetAllCourseCategoriesQuery()).execute()
+            Log.d(TAG, "Response: $response")
+
             if (response.hasErrors()) {
                 response.errors?.forEach {
                     Log.e("$TAG Error", it.message)
@@ -26,8 +28,14 @@ class GetCoursesCategoryRepository @Inject constructor(@Curator private val apol
                 return null
             }
             response.data?.getAllCourseCategories
-        } catch (e: ApolloException) {
-            Log.e(TAG, e.message ?: "Unknown error")
+        } catch (e: ApolloException)
+        {
+            Log.e(TAG, "ApolloException: ${e.message}")
+            e.printStackTrace()  // Log the full stack trace
+            null
+        } catch (e: Exception) {
+            Log.e(TAG, "Exception: ${e.message}")
+            e.printStackTrace()  // Log the full stack trace
             null
         }
     }
