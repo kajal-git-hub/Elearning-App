@@ -12,6 +12,7 @@ import com.student.competishun.data.api.BASE_URL_GATEKEEPER
 import com.student.competishun.data.api.Curator
 import com.student.competishun.data.api.Gatekeeper
 import com.student.competishun.utils.CustomLoggingInterceptor
+import com.student.competishun.utils.HelperFunctions
 import com.student.competishun.utils.SharedPreferencesManager
 import dagger.Module
 import dagger.Provides
@@ -66,5 +67,10 @@ object GraphQlModule {
     @Singleton
     fun provideCustomLoggingInterceptor(): CustomLoggingInterceptor {
         return CustomLoggingInterceptor()
+    }
+
+    @Provides
+    fun provideHelperFunctions(): HelperFunctions {
+        return HelperFunctions()
     }
 }

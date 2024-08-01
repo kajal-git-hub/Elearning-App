@@ -14,6 +14,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -26,10 +27,12 @@ import com.student.competishun.curator.GetAllCourseCategoriesQuery
 import com.student.competishun.curator.type.FindAllCourseInput
 import com.student.competishun.data.model.Testimonial
 import com.student.competishun.data.model.WhyCompetishun
+import com.student.competishun.databinding.FragmentCoursesBinding
 import com.student.competishun.databinding.FragmentHomeBinding
 import com.student.competishun.ui.adapter.OurCoursesAdapter
 import com.student.competishun.ui.adapter.TestimonialsAdapter
 import com.student.competishun.ui.adapter.WhyCompetishunAdapter
+import com.student.competishun.ui.viewmodel.CoursesCategoryViewModel
 import com.student.competishun.ui.viewmodel.CoursesViewModel
 import com.student.competishun.utils.HelperFunctions
 import com.student.competishun.utils.OnCourseItemClickListener
@@ -39,6 +42,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class HomeFragment : Fragment(), OnCourseItemClickListener {
 
     private var _binding: FragmentHomeBinding? = null
+    private val binding get() = _binding!!
     private lateinit var recyclerView: RecyclerView
     private lateinit var rvWhyCompetishun: RecyclerView
     private lateinit var dotsIndicatorTestimonials: LinearLayout
@@ -50,6 +54,7 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var toggle: ActionBarDrawerToggle
     private val coursesViewModel: CoursesViewModel by viewModels()
+    private val coursesCategoryViewModel: CoursesCategoryViewModel by viewModels()
     private lateinit var rvOurCourses: RecyclerView
     private lateinit var dotsIndicatorOurCourses: LinearLayout
     private lateinit var adapterOurCourses: OurCoursesAdapter
@@ -63,7 +68,12 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_home, container, false)
+        _binding = FragmentHomeBinding.inflate(inflater, container, false).apply {
+            this.coursesViewModel = this@HomeFragment.coursesViewModel
+            this.coursesCategoryViewModel = this@HomeFragment.coursesCategoryViewModel
+            lifecycleOwner = viewLifecycleOwner
+        }
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -72,26 +82,6 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
         rvOurCourses = view.findViewById(R.id.rvOurCourses)
         dotsIndicatorOurCourses = view.findViewById(R.id.llDotsIndicatorOurCourses)
         dotsIndicatorOurCourses = view.findViewById(R.id.llDotsIndicatorOurCourses)
-//        listOurCoursesItem = listOf(
-//            OurCoursesItem("Full-Year \nCourses"),
-//            OurCoursesItem("Test \nSeries"),
-//            OurCoursesItem("Revision \nCourses"),
-//            OurCoursesItem("Crash \nCourses"),
-//            OurCoursesItem("Distance \nLearning"),
-//            OurCoursesItem("Digital \nBooks"),
-//            OurCoursesItem("Full-Year \nCourses"),
-//            OurCoursesItem("Test \nSeries"),
-//            OurCoursesItem("Revision \nCourses"),
-//            OurCoursesItem("Crash \nCourses"),
-//            OurCoursesItem("Distance \nLearning"),
-//            OurCoursesItem("Digital \nBooks"),
-//            OurCoursesItem("Full-Year \nCourses"),
-//            OurCoursesItem("Test \nSeries"),
-//            OurCoursesItem("Revision \nCourses"),
-//            OurCoursesItem("Crash \nCourses"),
-//            OurCoursesItem("Distance \nLearning"),
-//            OurCoursesItem("Digital \nBooks")
-//        )
 
         rvOurCourses.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -119,30 +109,25 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
         dotsIndicatorTestimonials = view.findViewById(R.id.llDotsIndicator)
         dotsIndicatorWhyCompetishun = view.findViewById(R.id.llDotsIndicatorWhyCompetishun)
 
-        coursesViewModel.coursesCategory.observe(viewLifecycleOwner, Observer { category ->
-            _binding?.tvBatchName?.text = category?.firstOrNull()?.name
-            if (category != null) {
-                Log.e("coursesCategor not",category.toString())
+        _binding?.progressBar?.visibility = View.VISIBLE
+        _binding?.rvOurCourses?.visibility = View.GONE
 
+        coursesCategoryViewModel.coursesCategory.observe(viewLifecycleOwner, Observer { category ->
+            _binding?.progressBar?.visibility = View.GONE
+
+            if (!category.isNullOrEmpty()) {
+                Log.e("coursesCategor not",category.toString())
+                _binding?.rvOurCourses?.visibility = View.VISIBLE
                 listOurCoursesItem = category
                 adapterOurCourses = OurCoursesAdapter(listOurCoursesItem!!,this)
                 rvOurCourses.adapter = adapterOurCourses
                 rvOurCourses.layoutManager = GridLayoutManager(context, 3, GridLayoutManager.HORIZONTAL, false)
                 setupDotsIndicator(listOurCoursesItem!!.size, dotsIndicatorOurCourses, 3)
             }
-            Log.e("coursesCategoryw",category.toString())
             // Update UI with courses data
             // For example: binding.textView.text = courses?.firstOrNull()?.name ?: "No courses"
         })
-        coursesViewModel.fetchCoursesCategory()
-
-        coursesViewModel.courses.observe(viewLifecycleOwner, Observer { courses ->
-            _binding?.tvBatchName?.text = courses?.firstOrNull()?.name
-            Log.e("Courses list ",courses.toString())
-            // Update UI with courses data
-        })
-
-        // Fetch courses when the view is created
+        coursesCategoryViewModel.fetchCoursesCategory()
         val filters = FindAllCourseInput(
             exam_type = Optional.Absent,
             is_recommended = Optional.present(true)
@@ -151,6 +136,14 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
 
 
         coursesViewModel.fetchCourses(filters)
+
+        coursesViewModel.courses.observe(viewLifecycleOwner, Observer { courses ->
+            _binding?.tvBatchName?.text = courses?.firstOrNull()?.name
+            binding.dicountPrice.text = "₹"+ coursesViewModel.getDiscountDetails(coursesViewModel.courses.value!!.firstOrNull()?.price?.toInt()!!, coursesViewModel.courses.value!!.get(0).discount!!.toInt()).second.toString()
+            binding.discountPerc.text = coursesViewModel.getDiscountDetails(coursesViewModel.courses.value!!.firstOrNull()?.price!!.toInt(), coursesViewModel.courses.value!!.get(0).discount!!.toInt()).first.toString() + "% OFF"
+        })
+
+        // Fetch courses when the view is created
         listWhyCompetishun = listOf(
             WhyCompetishun("Competishun","IIT - JEE Cracked","NEET Cracked","https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"),
             WhyCompetishun("Competishun","IIT - JEE Cracked","NEET Cracked","https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"),

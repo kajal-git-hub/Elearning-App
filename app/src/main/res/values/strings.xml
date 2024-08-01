@@ -6,7 +6,7 @@
     <string name="instant_doubt_resolution">Instant Doubt Resolution</string>
     <string name="comprehensive_test_series">Comprehensive Test \nSeries</string>
     <string name="evaluate_your_performances">Evaluate Your \nPerformance</string>
-
+    <string name="no_date_available">No date available</string>
     <!-- Description -->
     <string name="doubt_description">Got a tough question? Get quick answers from \nexperts and peers anytime, anywhere</string>
     <string name="test_description">Elevate your prep with realistic tests; practice and \nreceive detailed solutions and feedback.</string>
