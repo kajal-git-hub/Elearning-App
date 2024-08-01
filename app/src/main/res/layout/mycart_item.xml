@@ -1,0 +1,73 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/cartitem_bg"
+    android:layout_marginHorizontal="@dimen/_16sp"
+    android:layout_marginTop="12dp"
+    android:padding="16dp">
+
+    <ImageView
+        android:id="@+id/imgProfile"
+        android:layout_width="86dp"
+        android:layout_height="65dp"
+        android:layout_marginEnd="8dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/frame_1707480855"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_cart_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_16sp"
+        app:layout_constraintStart_toEndOf="@+id/imgProfile"
+        app:layout_constraintTop_toTopOf="@+id/imgProfile">
+
+        <TextView
+            android:id="@+id/et_cartNameText"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/_2b2829"
+            android:lineHeight="19.6sp"
+            android:textSize="14sp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:text="Prakhar Integrated (Fast Lane-2) 2024-25"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ImageView
+        android:id="@+id/ig_deleteIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/frame_1707480886"
+        app:layout_constraintTop_toTopOf="@id/cl_cart_item"
+        app:layout_constraintStart_toEndOf="@+id/cl_cart_item"
+        />
+
+    <TextView
+        android:id="@+id/et_cartViewDetails"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="View Details"
+        android:textColor="@color/blue"
+        android:layout_marginTop="@dimen/_12sp"
+        app:layout_constraintTop_toBottomOf="@+id/cl_cart_item"
+        app:layout_constraintStart_toStartOf="@+id/cl_cart_item"/>
+
+    <ImageView
+        android:id="@+id/ig_forwardDetails"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@+id/et_cartViewDetails"
+        app:layout_constraintTop_toTopOf="@+id/et_cartViewDetails"
+        android:layout_marginTop="1dp"
+        android:layout_marginStart="4sp"
+        app:layout_constraintBottom_toBottomOf="@+id/et_cartViewDetails"
+        android:src="@drawable/cart_arrow_right"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

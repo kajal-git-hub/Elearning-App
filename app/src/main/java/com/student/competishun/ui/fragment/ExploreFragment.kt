@@ -4,11 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.core.widget.NestedScrollView
 import androidx.databinding.ObservableField
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -46,7 +43,7 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentExploreBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -54,8 +51,13 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.igInstallmentUp.setOnClickListener {
+        binding.clBuynow.setOnClickListener {
+            findNavController().navigate(R.id.action_exploreFragment_to_myCartFragment)
+        }
 
+        binding.clInstallmentOptionView.setOnClickListener {
+            val bottomSheet = InstallmentDetailsBottomSheet()
+            bottomSheet.show(parentFragmentManager, "InstallmentDetailsBottomSheet")
         }
 
         helperFunctions = HelperFunctions()

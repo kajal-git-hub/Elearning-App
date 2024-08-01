@@ -14,6 +14,10 @@ import androidx.navigation.fragment.NavHostFragment
 import com.student.competishun.R
 import com.student.competishun.databinding.ActivityHomeBinding
 import com.student.competishun.ui.fragment.AllDemoResourcesFree
+import com.student.competishun.ui.fragment.AllFaqFragment
+import com.student.competishun.ui.fragment.MyCartFragment
+import com.student.competishun.ui.fragment.PaymentFragment
+import com.student.competishun.ui.fragment.PaymentLoaderFragment
 
 class HomeActivity : AppCompatActivity() {
 
@@ -49,15 +53,24 @@ class HomeActivity : AppCompatActivity() {
             insets
         }
 
-        supportFragmentManager.registerFragmentLifecycleCallbacks(object : FragmentManager.FragmentLifecycleCallbacks() {
+        supportFragmentManager.registerFragmentLifecycleCallbacks(object :
+            FragmentManager.FragmentLifecycleCallbacks() {
             override fun onFragmentResumed(fm: FragmentManager, f: Fragment) {
                 super.onFragmentResumed(fm, f)
-                binding.igContactImage.visibility = if (shouldHideContactImage(f)) View.GONE else View.VISIBLE
+                binding.igContactImage.visibility =
+                    if (shouldHideContactImage(f)) View.GONE else View.VISIBLE
             }
         }, true)
     }
 
     private fun shouldHideContactImage(fragment: Fragment): Boolean {
-        return fragment is AllDemoResourcesFree
+        val fragmentsToHide = listOf(
+            AllDemoResourcesFree::class.java,
+            MyCartFragment::class.java ,
+            AllFaqFragment::class.java,
+            PaymentFragment::class.java,
+            PaymentLoaderFragment::class.java
+        )
+        return fragmentsToHide.any { it.isInstance(fragment) }
     }
 }

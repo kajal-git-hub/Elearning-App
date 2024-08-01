@@ -213,8 +213,7 @@ class HomeFragment : Fragment() {
 
     private fun updateDotsIndicator(recyclerView: RecyclerView?, dotsIndicator: LinearLayout, spanCount: Int = 1) {
         recyclerView?.let {
-            val layoutManager = it.layoutManager
-            val visiblePageIndex = when (layoutManager) {
+            val visiblePageIndex = when (val layoutManager = it.layoutManager) {
                 is LinearLayoutManager -> {
                     val totalScrollX = layoutManager.findFirstVisibleItemPosition()
                     val totalWidth = layoutManager.itemCount

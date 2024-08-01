@@ -83,7 +83,7 @@ class MediaPlayerFragment : Fragment() {
 
     private inner class DoubleTapGestureListener : GestureDetector.SimpleOnGestureListener() {
         override fun onDoubleTap(e: MotionEvent): Boolean {
-            val x = e?.x ?: 0f
+            val x = e.x
             val width = binding.playerView.width
 
             if (x < width / 2) {

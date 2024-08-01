@@ -695,8 +695,6 @@
                     tools:itemCount="2"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintTop_toBottomOf="@id/tvRelated"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
                     android:orientation="horizontal" />
 
                 <LinearLayout
@@ -751,7 +749,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
-                android:textSize="14sp"
+                android:textSize="12sp"
                 android:textColor="#2B2829"
                 android:drawablePadding="10dp"
                 android:text="Installment option available, view details..."
@@ -764,7 +762,7 @@
                 android:id="@+id/ig_Installment_up"
                 android:layout_width="20dp"
                 android:layout_height="18dp"
-                android:layout_marginEnd="8dp"
+                android:layout_marginEnd="12dp"
                 android:src="@drawable/arrow_up"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -822,6 +820,7 @@
                 app:layout_constraintTop_toBottomOf="@id/orgPricexp"/>
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_buynow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
