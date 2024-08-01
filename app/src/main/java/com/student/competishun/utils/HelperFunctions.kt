@@ -6,6 +6,9 @@ import android.widget.LinearLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.student.competishun.R
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class HelperFunctions {
     fun setupDotsIndicator(context: Context, itemCount: Int, dotsIndicator: LinearLayout) {
@@ -41,5 +44,23 @@ class HelperFunctions {
                 )
             }
         }
+    }
+
+    fun formatCourseDate(date: String?):String {
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
+        val outputFormat = SimpleDateFormat("dd MMM, yy", Locale.getDefault())
+        return try {
+            val date = inputFormat.parse(date)
+            outputFormat.format(date ?: return "No date available")
+        } catch (e: Exception) {
+            e.printStackTrace()
+            "No date available"
+        }
+    }
+
+    fun calculateDiscountDetails(originalPrice: Int, discountPrice: Int): Pair<Int, Int> {
+        val discountPercentage = ((discountPrice.toDouble() / originalPrice.toDouble()) * 100).toInt()
+        val realPriceAfterDiscount = originalPrice - discountPrice
+        return Pair(discountPercentage, realPriceAfterDiscount)
     }
 }

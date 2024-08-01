@@ -1,0 +1,6 @@
+query getAllCourseCategories{
+    getAllCourseCategories {
+        id
+        name
+    }
+}

@@ -10,6 +10,8 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.core.widget.NestedScrollView
 import androidx.databinding.ObservableField
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -28,13 +30,16 @@ import com.student.competishun.ui.adapter.CourseFeaturesAdapter
 import com.student.competishun.ui.adapter.FAQAdapter
 import com.student.competishun.ui.adapter.OurContentAdapter
 import com.student.competishun.ui.adapter.TeacherAdapter
+import com.student.competishun.ui.viewmodel.CoursesViewModel
+import com.student.competishun.ui.viewmodel.GetCourseByIDViewModel
 import com.student.competishun.utils.HelperFunctions
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener {
 
-    private var _binding: FragmentExploreBinding? = null
-    private val binding get() = _binding!!
-
+    private lateinit var binding: FragmentExploreBinding
+    private val getCourseByIDViewModel: GetCourseByIDViewModel by viewModels()
     private lateinit var combinedTabItems: List<TabItem>
     private lateinit var limitedFaqItems: List<FAQItem>
     private lateinit var faqItems: List<FAQItem>
@@ -47,7 +52,11 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentExploreBinding.inflate(inflater, container, false)
+        binding = FragmentExploreBinding.inflate(inflater, container, false).apply {
+            this.courseByIDViewModel = this@ExploreFragment.getCourseByIDViewModel
+            lifecycleOwner = viewLifecycleOwner
+
+        }
         return binding.root
     }
 
@@ -121,6 +130,12 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener {
             layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
             adapter = ourContentAdapter
         }
+        val courseId = "250bceb2-45e4-488e-aa02-c9521555b424"
+        getCourseByIDViewModel.fetchCourseById(courseId)
+
+        getCourseByIDViewModel.courseByID.observe(viewLifecycleOwner, Observer { courses ->
+
+        })
 
         binding.tvOurContentSeeMore.setOnClickListener {
             if (showMoreOrLess.get() == "View More") {
@@ -297,6 +312,5 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
     }
 }

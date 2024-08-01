@@ -1,5 +1,6 @@
-query Courses {
-    courses {
+
+query getAllCourses($filters: FindAllCourseInput!) {
+    getAllCourse(filters: $filters) {
         name
         video_thumbnail
         target_year

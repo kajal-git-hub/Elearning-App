@@ -14,20 +14,28 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.apollographql.apollo3.api.Optional
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.navigation.NavigationView
 import com.student.competishun.R
-import com.student.competishun.data.model.OurCoursesItem
+import com.student.competishun.curator.GetAllCourseCategoriesQuery
+import com.student.competishun.curator.type.FindAllCourseInput
 import com.student.competishun.data.model.Testimonial
 import com.student.competishun.data.model.WhyCompetishun
+import com.student.competishun.databinding.FragmentCoursesBinding
 import com.student.competishun.databinding.FragmentHomeBinding
 import com.student.competishun.ui.adapter.OurCoursesAdapter
 import com.student.competishun.ui.adapter.TestimonialsAdapter
 import com.student.competishun.ui.adapter.WhyCompetishunAdapter
+import com.student.competishun.ui.viewmodel.CoursesCategoryViewModel
+import com.student.competishun.ui.viewmodel.CoursesViewModel
 import com.student.competishun.utils.HelperFunctions
 import com.student.competishun.ui.viewmodel.CoursesViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -36,6 +44,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
+    private val binding get() = _binding!!
     private lateinit var recyclerView: RecyclerView
     private lateinit var rvWhyCompetishun: RecyclerView
     private lateinit var dotsIndicatorTestimonials: LinearLayout
@@ -46,11 +55,13 @@ class HomeFragment : Fragment() {
     private lateinit var listWhyCompetishun: List<WhyCompetishun>
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var toggle: ActionBarDrawerToggle
+    private val coursesViewModel: CoursesViewModel by viewModels()
+    private val coursesCategoryViewModel: CoursesCategoryViewModel by viewModels()
     private lateinit var rvOurCourses: RecyclerView
     private lateinit var dotsIndicatorOurCourses: LinearLayout
     private lateinit var adapterOurCourses: OurCoursesAdapter
-    private lateinit var listOurCoursesItem: List<OurCoursesItem>
-    private val coursesViewModel: CoursesViewModel by viewModels()
+    private  var listOurCoursesItem: List<GetAllCourseCategoriesQuery.GetAllCourseCategory>? = null
+
 
     private lateinit var helperFunctions: HelperFunctions
 
@@ -59,7 +70,12 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_home, container, false)
+        _binding = FragmentHomeBinding.inflate(inflater, container, false).apply {
+            this.coursesViewModel = this@HomeFragment.coursesViewModel
+            this.coursesCategoryViewModel = this@HomeFragment.coursesCategoryViewModel
+            lifecycleOwner = viewLifecycleOwner
+        }
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -68,30 +84,6 @@ class HomeFragment : Fragment() {
         rvOurCourses = view.findViewById(R.id.rvOurCourses)
         dotsIndicatorOurCourses = view.findViewById(R.id.llDotsIndicatorOurCourses)
         dotsIndicatorOurCourses = view.findViewById(R.id.llDotsIndicatorOurCourses)
-        listOurCoursesItem = listOf(
-            OurCoursesItem("Full-Year \nCourses"),
-            OurCoursesItem("Test \nSeries"),
-            OurCoursesItem("Revision \nCourses"),
-            OurCoursesItem("Crash \nCourses"),
-            OurCoursesItem("Distance \nLearning"),
-            OurCoursesItem("Digital \nBooks"),
-            OurCoursesItem("Full-Year \nCourses"),
-            OurCoursesItem("Test \nSeries"),
-            OurCoursesItem("Revision \nCourses"),
-            OurCoursesItem("Crash \nCourses"),
-            OurCoursesItem("Distance \nLearning"),
-            OurCoursesItem("Digital \nBooks"),
-            OurCoursesItem("Full-Year \nCourses"),
-            OurCoursesItem("Test \nSeries"),
-            OurCoursesItem("Revision \nCourses"),
-            OurCoursesItem("Crash \nCourses"),
-            OurCoursesItem("Distance \nLearning"),
-            OurCoursesItem("Digital \nBooks")
-        )
-        adapterOurCourses = OurCoursesAdapter(listOurCoursesItem)
-        rvOurCourses.adapter = adapterOurCourses
-        rvOurCourses.layoutManager = GridLayoutManager(context, 3, GridLayoutManager.HORIZONTAL, false)
-        setupDotsIndicator(listOurCoursesItem.size, dotsIndicatorOurCourses, 3)
 
         rvOurCourses.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -128,6 +120,41 @@ class HomeFragment : Fragment() {
 
         // Fetch courses when the view is created
         coursesViewModel.fetchCourses()
+        _binding?.progressBar?.visibility = View.VISIBLE
+        _binding?.rvOurCourses?.visibility = View.GONE
+
+        coursesCategoryViewModel.coursesCategory.observe(viewLifecycleOwner, Observer { category ->
+            _binding?.progressBar?.visibility = View.GONE
+
+            if (!category.isNullOrEmpty()) {
+                Log.e("coursesCategor not",category.toString())
+                _binding?.rvOurCourses?.visibility = View.VISIBLE
+                listOurCoursesItem = category
+                adapterOurCourses = OurCoursesAdapter(listOurCoursesItem!!,this)
+                rvOurCourses.adapter = adapterOurCourses
+                rvOurCourses.layoutManager = GridLayoutManager(context, 3, GridLayoutManager.HORIZONTAL, false)
+                setupDotsIndicator(listOurCoursesItem!!.size, dotsIndicatorOurCourses, 3)
+            }
+            // Update UI with courses data
+            // For example: binding.textView.text = courses?.firstOrNull()?.name ?: "No courses"
+        })
+        coursesCategoryViewModel.fetchCoursesCategory()
+        val filters = FindAllCourseInput(
+            exam_type = Optional.Absent,
+            is_recommended = Optional.present(true)
+        )
+
+
+
+        coursesViewModel.fetchCourses(filters)
+
+        coursesViewModel.courses.observe(viewLifecycleOwner, Observer { courses ->
+            _binding?.tvBatchName?.text = courses?.firstOrNull()?.name
+            binding.dicountPrice.text = "₹"+ coursesViewModel.getDiscountDetails(coursesViewModel.courses.value!!.firstOrNull()?.price?.toInt()!!, coursesViewModel.courses.value!!.get(0).discount!!.toInt()).second.toString()
+            binding.discountPerc.text = coursesViewModel.getDiscountDetails(coursesViewModel.courses.value!!.firstOrNull()?.price!!.toInt(), coursesViewModel.courses.value!!.get(0).discount!!.toInt()).first.toString() + "% OFF"
+        })
+
+        // Fetch courses when the view is created
         listWhyCompetishun = listOf(
             WhyCompetishun("Competishun","IIT - JEE Cracked","NEET Cracked","https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"),
             WhyCompetishun("Competishun","IIT - JEE Cracked","NEET Cracked","https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"),
@@ -265,5 +292,13 @@ class HomeFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onCourseItemClick(course: GetAllCourseCategoriesQuery.GetAllCourseCategory) {
+        val bundle = Bundle().apply {
+            putString("course_name", course.name)
+            // Add other course details to the bundle if needed
+        }
+        findNavController().navigate(R.id.action_homeFragment_to_coursesFragment, bundle)
     }
 }
