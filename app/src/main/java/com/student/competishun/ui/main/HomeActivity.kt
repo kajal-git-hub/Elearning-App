@@ -13,11 +13,11 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.student.competishun.R
 import com.student.competishun.databinding.ActivityHomeBinding
+import com.student.competishun.ui.fragment.AllDemoResourcesFree
 import com.student.competishun.ui.fragment.AllFaqFragment
 import com.student.competishun.ui.fragment.MyCartFragment
 import com.student.competishun.ui.fragment.PaymentFragment
 import com.student.competishun.ui.fragment.PaymentLoaderFragment
-import com.student.competishun.ui.fragment.AllDemoResourcesFree
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -54,6 +54,7 @@ class HomeActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
         supportFragmentManager.registerFragmentLifecycleCallbacks(object :
             FragmentManager.FragmentLifecycleCallbacks() {
             override fun onFragmentResumed(fm: FragmentManager, f: Fragment) {
@@ -63,7 +64,6 @@ class HomeActivity : AppCompatActivity() {
             }
         }, true)
     }
-
 
     private fun shouldHideContactImage(fragment: Fragment): Boolean {
         val fragmentsToHide = listOf(
