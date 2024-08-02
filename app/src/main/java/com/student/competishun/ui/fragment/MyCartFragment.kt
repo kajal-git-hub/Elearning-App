@@ -8,13 +8,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.addCallback
-import androidx.lifecycle.findViewTreeLifecycleOwner
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.tabs.TabLayout
 import com.student.competishun.R
 import com.student.competishun.data.model.CartItem
 import com.student.competishun.databinding.FragmentMyCartBinding
-import com.student.competishun.databinding.FragmentOnBoardingBinding
 import com.student.competishun.ui.adapter.MyCartAdapter
 
 class MyCartFragment : Fragment() {
@@ -39,8 +38,8 @@ class MyCartFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentMyCartBinding.inflate(inflater,container,false)
-        return  binding.root
+        _binding = FragmentMyCartBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -50,20 +49,47 @@ class MyCartFragment : Fragment() {
             navigateToLoaderScreen()
         }
 
+        binding.CartTabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                when (tab?.position) {
+                    0 -> {
+                        binding.clPriceDetails.visibility = View.VISIBLE
+                        binding.clPriceInstallmentDetails.visibility = View.GONE
+                    }
+                    1 -> {
+                        binding.clPriceDetails.visibility = View.GONE
+                        binding.clPriceInstallmentDetails.visibility = View.VISIBLE
+                    }
+                }
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+                // Handle tab unselected
+            }
+
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+                // Handle tab reselected
+            }
+        })
+
+        binding.clPriceDetails.visibility = View.VISIBLE
+        binding.clPriceInstallmentDetails.visibility = View.GONE
+
 
         binding.igToolbarBackButton.setOnClickListener {
             requireActivity().onBackPressed()
         }
+
         val cartItems = listOf(
-        CartItem(R.drawable.frame_1707480855, "Prakhar Integrated (Fast Lane-2) 2024-25",R.drawable.frame_1707480886,"View Details",R.drawable.cart_arrow_right ),
-            CartItem(R.drawable.frame_1707480855, "Prakhar Integrated (Fast Lane-2) 2024-25",R.drawable.frame_1707480886,"View Details",R.drawable.cart_arrow_right ),
+            CartItem(R.drawable.frame_1707480855, "Prakhar Integrated (Fast Lane-2) 2024-25", R.drawable.frame_1707480886, "View Details", R.drawable.cart_arrow_right),
+            CartItem(R.drawable.frame_1707480855, "Prakhar Integrated (Fast Lane-2) 2024-25", R.drawable.frame_1707480886, "View Details", R.drawable.cart_arrow_right)
         )
+
         val cartAdapter = MyCartAdapter(cartItems)
         binding.rvAllCart.apply {
             layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
             adapter = cartAdapter
         }
-
     }
 
     private fun navigateToLoaderScreen() {
@@ -80,5 +106,4 @@ class MyCartFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-
 }

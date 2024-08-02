@@ -10,6 +10,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/allFaqFragment"
         android:layout_width="match_parent"
+        android:background="#F6F6FF"
         android:layout_height="match_parent">
 
         <!-- Top Bar -->

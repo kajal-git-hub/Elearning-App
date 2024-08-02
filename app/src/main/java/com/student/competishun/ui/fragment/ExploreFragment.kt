@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.databinding.ObservableField
 import androidx.navigation.fragment.findNavController
@@ -45,7 +46,17 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentExploreBinding.inflate(inflater, container, false)
+
+        requireActivity().onBackPressedDispatcher.addCallback(this) {
+            handleBackPressed()
+        }
         return binding.root
+
+
+    }
+
+    private fun handleBackPressed() {
+        findNavController().navigate(R.id.homeFragment)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
