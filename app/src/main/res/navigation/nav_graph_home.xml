@@ -46,6 +46,15 @@
         <action
             android:id="@+id/action_exploreFragment_to_demoFreeFragment"
             app:destination="@+id/demoFreeFragment"/>
+        <action
+            android:id="@+id/action_exploreFragment_to_installmentFragment"
+            app:destination="@+id/installmentFragment"/>
+        <action
+            android:id="@+id/action_exploreFragment_to_myCartFragment"
+            app:destination="@+id/myCartFragment"/>
+        <action
+            android:id="@+id/action_exploreFragment_to_paymentFragment"
+            app:destination="@+id/paymentFragment"/>
     </fragment>
     <fragment
         android:id="@+id/allFaqFragment"
@@ -56,15 +65,44 @@
     </fragment>
 
     <fragment
-        android:id="@+id/callingFragment"
-        android:name="com.student.competishun.ui.fragment.CallingSupport"
-        tools:layout="@layout/fragment_calling_support">
-    </fragment>
-
-    <fragment
         android:id="@+id/demoFreeFragment"
         android:name="com.student.competishun.ui.fragment.AllDemoResourcesFree"
         tools:layout="@layout/fragment_all_demo_resources_free">
+    </fragment>
+
+    <fragment
+        android:id="@+id/installmentFragment"
+        android:name="com.student.competishun.ui.fragment.InstallmentDetailsBottomSheet"
+        tools:layout="@layout/bottom_sheet_installment_details">
+    </fragment>
+
+    <fragment
+        android:id="@+id/myCartFragment"
+        android:name="com.student.competishun.ui.fragment.MyCartFragment"
+        tools:layout="@layout/fragment_my_cart">
+
+        <action
+            android:id="@+id/action_mycartFragment_to_paymentFragment"
+            app:destination="@+id/paymentFragment"/>
+        <action
+            android:id="@+id/action_mycartFragment_to_paymentLoaderFragment"
+            app:destination="@+id/paymentLoaderFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/paymentFragment"
+        android:name="com.student.competishun.ui.fragment.PaymentFragment"
+        tools:layout="@layout/fragment_payment">
+    </fragment>
+
+    <fragment
+        android:id="@+id/paymentLoaderFragment"
+        android:name="com.student.competishun.ui.fragment.PaymentLoaderFragment"
+        tools:layout="@layout/fragment_payment_loader">
+
+        <action
+            android:id="@+id/action_paymentLoaderFragment_to_paymentFragment"
+            app:destination="@+id/paymentFragment"/>
     </fragment>
 
 

@@ -22,10 +22,10 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/clock"
+            android:layout_width="102dp"
+            android:layout_height="102dp"
             android:layout_marginBottom="30dp"
+            android:src="@drawable/loaderscreen"
             app:layout_constraintBottom_toBottomOf="@+id/upperConstraint"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -63,6 +63,7 @@
             android:fontFamily="@font/nunito"
             android:lineHeight="24sp"
             android:text="We're getting your personalized course \nrecommendations ready. This will just \n \t \t \t \t \t \t \t \t \t \t take a moment!"
+            android:textColor="#5A5555"
             android:textSize="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -70,7 +71,6 @@
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,664 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <!-- Declare any data binding variables here -->
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/allFaqFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#F6F6FF">
+
+        <!-- Top Bar -->
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/MyCartToolbar"
+            android:layout_width="0dp"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/white"
+            android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/ig_toolbar_back_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:src="@drawable/arrow_left" />
+
+            <TextView
+                android:id="@+id/tvToolbarTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:fontFamily="@font/nunito"
+                android:text="My Cart"
+                android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+                android:textSize="18sp" />
+
+            <!-- FrameLayout to hold the cart icon and badge -->
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginEnd="16dp">
+
+                <ImageView
+                    android:id="@+id/ig_shoppingCartImage"
+                    android:layout_width="20dp"
+                    android:layout_height="25dp"
+                    android:src="@drawable/shopping_cart" />
+
+                <!-- Badge for cart item count -->
+                <TextView
+                    android:id="@+id/cart_badge"
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:layout_gravity="end|right"
+                    android:layout_marginEnd="-1dp"
+                    android:background="@drawable/circle_shape"
+                    android:gravity="center"
+                    android:text="1"
+                    android:textColor="@android:color/white"
+                    android:textSize="12sp" />
+            </FrameLayout>
+
+        </androidx.appcompat.widget.Toolbar>
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_emptyCart"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="56dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/MyCartToolbar"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <pl.droidsonroids.gif.GifImageView
+                android:id="@+id/ig_emptyCircle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/empty_circle"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/et_JourneySuccess"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Start Your Journey to Success!"
+                android:textColor="@color/_2b2829"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/ig_emptyCircle" />
+
+            <TextView
+                android:id="@+id/et_JourneyPotential"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="9dp"
+                android:gravity="center"
+                android:text="Unlock your potential with our expert-led \ncourses and comprehensive study resources."
+                android:textColor="@color/_2b2829"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="@+id/et_JourneySuccess"
+                app:layout_constraintStart_toStartOf="@+id/et_JourneySuccess"
+                app:layout_constraintTop_toBottomOf="@+id/et_JourneySuccess" />
+
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="176dp"
+                android:layout_height="48dp"
+                android:layout_marginTop="32dp"
+                android:backgroundTint="@color/blue"
+                android:text="Explore Courses"
+                app:cornerRadius="8dp"
+                app:layout_constraintEnd_toEndOf="@+id/et_JourneySuccess"
+                app:layout_constraintStart_toStartOf="@+id/et_JourneySuccess"
+                app:layout_constraintTop_toBottomOf="@+id/et_JourneyPotential" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:visibility="visible"
+            app:layout_constraintBottom_toTopOf="@+id/cl_proccedToPay"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/MyCartToolbar">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/clrv_Container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:id="@+id/tvCartText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_16sp"
+                        android:layout_marginTop="@dimen/_16sp"
+                        android:text="Items in cart"
+                        android:textColor="@color/_2b2829"
+                        android:textSize="@dimen/_16sp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/tvCartCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="6dp"
+                        android:layout_marginTop="@dimen/_16sp"
+                        android:text="(1)"
+                        android:textColor="@color/_2b2829"
+                        android:textSize="@dimen/_16sp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toEndOf="@+id/tvCartText"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvAllCart"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tvCartCount"
+                        tools:itemCount="2"
+                        tools:listitem="@layout/mycart_item" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/clPaymentSummary"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_16sp"
+                    android:background="#F6F6FF"
+                    android:padding="@dimen/_16sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/clrv_Container">
+
+                    <!-- Payment Summary Title -->
+                    <TextView
+                        android:id="@+id/tvPaymentSummary"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Payment Summary"
+                        android:textColor="@color/_2b2829"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <!-- Tab Layout Container -->
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/tabLayoutContainer"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:background="@drawable/tablayout_bg"
+                        android:backgroundTint="@color/white"
+                        android:padding="5dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tvPaymentSummary">
+
+                        <!-- Tab Layout -->
+                        <com.google.android.material.tabs.TabLayout
+                            android:id="@+id/CartTabLayout"
+                            android:layout_width="0dp"
+                            android:layout_height="40dp"
+                            android:backgroundTint="@color/white"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:tabBackground="@drawable/carttab_background_selector"
+                            app:tabIndicatorHeight="0dp"
+                            app:tabSelectedTextColor="#E67F00"
+                            app:tabTextColor="#5A5555">
+
+                            <com.google.android.material.tabs.TabItem
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Pay One-Time" />
+
+                            <com.google.android.material.tabs.TabItem
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Pay In Installments" />
+                        </com.google.android.material.tabs.TabLayout>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <!-- Pricing Details Container -->
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/cl_priceDetails"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:background="@drawable/pricedetails_bg"
+                        android:padding="12dp"
+                        android:visibility="gone"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tabLayoutContainer">
+
+                        <!-- Course Price -->
+                        <TextView
+                            android:id="@+id/tvCoursePriceLabel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Course Price"
+                            android:textColor="@color/_726c6c"
+                            android:textSize="14sp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/tvCoursePrice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="₹44,939"
+                            android:textColor="@color/_2b2829"
+                            android:textSize="14sp"
+                            app:layout_constraintBottom_toBottomOf="@id/tvCoursePriceLabel"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="@id/tvCoursePriceLabel" />
+
+                        <!-- Discount -->
+                        <TextView
+                            android:id="@+id/tvDiscountLabel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="Discount (11%)"
+                            android:textColor="@color/_726c6c"
+                            android:textSize="14sp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/tvCoursePriceLabel" />
+
+                        <TextView
+                            android:id="@+id/tvDiscount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="- ₹14,900"
+                            android:textColor="@color/_357f2f"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            app:layout_constraintBottom_toBottomOf="@id/tvDiscountLabel"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="@id/tvDiscountLabel" />
+
+                        <!-- Delivery Charge -->
+                        <TextView
+                            android:id="@+id/tvDeliveryChargeLabel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="Delivery Charge"
+                            android:textColor="@color/_726c6c"
+                            android:textSize="14sp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/tvDiscountLabel" />
+
+                        <TextView
+                            android:id="@+id/tvDeliveryCharge"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="₹0"
+                            android:textColor="@color/_2b2829"
+                            android:textSize="14sp"
+                            app:layout_constraintBottom_toBottomOf="@id/tvDeliveryChargeLabel"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="@id/tvDeliveryChargeLabel" />
+
+                        <!-- Divider Line -->
+                        <View
+                            android:id="@+id/divider"
+                            android:layout_width="0dp"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="16dp"
+                            android:background="#E3E8EF"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/tvDeliveryCharge" />
+
+                        <!-- Total Amount -->
+                        <TextView
+                            android:id="@+id/tvTotalAmountLabel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:text="Total Amount"
+                            android:textColor="@color/_2b2829"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/divider" />
+
+                        <TextView
+                            android:id="@+id/tvTotalAmount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="₹30,039"
+                            android:textColor="@color/_2b2829"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            app:layout_constraintBottom_toBottomOf="@id/tvTotalAmountLabel"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="@id/tvTotalAmountLabel" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/cl_priceInstallmentDetails"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:background="@drawable/pricedetails_bg"
+                        android:padding="12dp"
+                        android:visibility="visible"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tabLayoutContainer">
+
+                        <!-- Course Price -->
+                        <TextView
+                            android:id="@+id/tvInstCoursePriceLabel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Course Price"
+                            android:textColor="@color/_726c6c"
+                            android:textSize="14sp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/tvInstCoursePrice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="₹44,939"
+                            android:textColor="@color/_2b2829"
+                            android:textSize="14sp"
+                            app:layout_constraintBottom_toBottomOf="@id/tvInstCoursePriceLabel"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="@id/tvInstCoursePriceLabel" />
+
+                        <TextView
+                            android:id="@+id/tvInstallmentLabel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="1st Installment"
+                            android:textColor="@color/_726c6c"
+                            android:textSize="14sp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/tvInstCoursePriceLabel" />
+
+                        <TextView
+                            android:id="@+id/tvInstallmentPrice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="₹16,500"
+                            android:textColor="@color/_2b2829"
+                            android:textSize="14sp"
+                            app:layout_constraintBottom_toBottomOf="@id/tvInstallmentLabel"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="@id/tvInstallmentLabel" />
+
+                        <TextView
+                            android:id="@+id/tvInstallmentLabel2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="2nd Installment"
+                            android:textColor="@color/_726c6c"
+                            android:textSize="14sp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/tvInstallmentLabel" />
+
+
+                        <TextView
+                            android:id="@+id/tvInstallmentPrice2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="₹13,500"
+                            android:textColor="@color/_2b2829"
+                            android:textSize="14sp"
+                            app:layout_constraintBottom_toBottomOf="@id/tvInstallmentLabel2"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="@id/tvInstallmentLabel2" />
+
+                        <TextView
+                            android:id="@+id/tvInstallmentCharge"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="Installment Charge"
+                            android:textColor="@color/_726c6c"
+                            android:textSize="14sp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/tvInstallmentLabel2" />
+
+                        <TextView
+                            android:id="@+id/tvInstallmentChargePrice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="₹2,500"
+                            android:textColor="@color/_2b2829"
+                            android:textSize="14sp"
+                            app:layout_constraintBottom_toBottomOf="@id/tvInstallmentCharge"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="@id/tvInstallmentCharge" />
+
+                        <!-- Discount -->
+                        <TextView
+                            android:id="@+id/tvInstDiscountLabel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="Discount (11%)"
+                            android:textColor="@color/_726c6c"
+                            android:textSize="14sp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/tvInstallmentCharge" />
+
+                        <TextView
+                            android:id="@+id/tvInstDiscount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="- ₹14,900"
+                            android:textColor="@color/_357f2f"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            app:layout_constraintBottom_toBottomOf="@id/tvInstDiscountLabel"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="@id/tvInstDiscountLabel" />
+
+                        <!-- Delivery Charge -->
+                        <TextView
+                            android:id="@+id/tvInstDeliveryChargeLabel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="Delivery Charge"
+                            android:textColor="@color/_726c6c"
+                            android:textSize="14sp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/tvInstDiscountLabel" />
+
+                        <TextView
+                            android:id="@+id/tvInstDeliveryCharge"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="₹0"
+                            android:textColor="@color/_2b2829"
+                            android:textSize="14sp"
+                            app:layout_constraintBottom_toBottomOf="@id/tvInstDeliveryChargeLabel"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="@id/tvInstDeliveryChargeLabel" />
+
+                        <!-- Divider Line -->
+                        <View
+                            android:id="@+id/Instdivider"
+                            android:layout_width="0dp"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="16dp"
+                            android:background="#E3E8EF"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/tvInstDeliveryCharge" />
+
+                        <!-- Total Amount -->
+                        <TextView
+                            android:id="@+id/tvInstTotalAmountLabel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:text="Total Amount"
+                            android:textColor="@color/_2b2829"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/Instdivider" />
+
+                        <TextView
+                            android:id="@+id/tvInstTotalAmount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="₹32,000"
+                            android:textColor="@color/_2b2829"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            app:layout_constraintBottom_toBottomOf="@id/tvInstTotalAmountLabel"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="@id/tvInstTotalAmountLabel" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/clPaymentSummary" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        </androidx.core.widget.NestedScrollView>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="38dp"
+            android:background="@drawable/frame_1707480729"
+            app:layout_constraintBottom_toTopOf="@+id/cl_proccedToPay"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <ImageView
+                android:id="@+id/ig_moneyImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_16dp"
+                android:src="@drawable/money_3"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/et_installmentbelowDetails"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_8dp"
+                android:text="2nd Installment On:"
+                android:textColor="@color/_2b2829"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/ig_moneyImage"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:text="31 Jul, 2024"
+                android:textColor="#357F2F"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/et_installmentbelowDetails"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_proccedToPay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:padding="16dp"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <TextView
+                android:id="@+id/tv_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="₹29,900"
+                android:textColor="#FF7A28"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <!-- One-Time Payment TextView -->
+            <TextView
+                android:id="@+id/tv_one_time_payment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="One-Time Payment"
+                android:textColor="#898384"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@id/tv_price"
+                app:layout_constraintTop_toBottomOf="@id/tv_price" />
+
+            <!-- Proceed to Pay Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_proceed_to_pay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/blue_3E3EF7"
+                android:text="Proceed to Pay"
+                android:textColor="@color/white"
+                app:cornerRadius="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

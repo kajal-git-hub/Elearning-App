@@ -33,7 +33,7 @@ class CourseFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(context)
 
         val tabItems1 = listOf(
-            com.student.competishun.data.model.TabItem(
+            TabItem(
                 discount = "11% OFF",
                 courseName = "Prakhar Integrated (Fast Lane-2) 2024-25",
                 tags = listOf("12th Class", "Full-Year", "Target 2025"),
@@ -48,7 +48,7 @@ class CourseFragment : Fragment() {
         )
 
         val tabItems2 = listOf(
-            com.student.competishun.data.model.TabItem(
+            TabItem(
                 discount = "15% OFF",
                 courseName = "Medical Entrance Prep 2024-25",
                 tags = listOf("12th Class", "Full-Year", "Target 2025"),

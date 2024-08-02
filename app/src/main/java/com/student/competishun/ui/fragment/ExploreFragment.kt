@@ -4,9 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.core.widget.NestedScrollView
 import androidx.databinding.ObservableField
@@ -55,16 +54,27 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener {
         binding = FragmentExploreBinding.inflate(inflater, container, false).apply {
             this.courseByIDViewModel = this@ExploreFragment.getCourseByIDViewModel
             lifecycleOwner = viewLifecycleOwner
+            requireActivity().onBackPressedDispatcher.addCallback(this){
+                handleBackPressed()
+            }
 
         }
         return binding.root
     }
-
+    private fun handleBackPressed() {
+        findNavController().navigate(R.id.homeFragment)
+    }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.clBuynow.setOnClickListener {
+            findNavController().navigate(R.id.action_exploreFragment_to_myCartFragment)
+        }
         binding.igInstallmentUp.setOnClickListener {
 
+        binding.clInstallmentOptionView.setOnClickListener {
+            val bottomSheet = InstallmentDetailsBottomSheet()
+            bottomSheet.show(parentFragmentManager, "InstallmentDetailsBottomSheet")
         }
 
         helperFunctions = HelperFunctions()
