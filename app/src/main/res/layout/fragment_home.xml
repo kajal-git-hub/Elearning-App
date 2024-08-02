@@ -457,7 +457,8 @@
                                 android:layout_marginVertical="12dp"
                                 android:layout_marginStart="@dimen/_16dp"
                                 android:layout_marginEnd="16dp"
-                                android:text="39090"
+                                android:text="@{ !coursesViewModel.courses.isEmpty() ? `₹` + coursesViewModel
+                                .courses.getDiscountDetails(coursesViewModel.c) : `N/A`}"
                                 android:textColor="#FF7A28"
                                 android:textSize="20sp"
                                 android:textStyle="bold"

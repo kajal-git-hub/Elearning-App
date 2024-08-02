@@ -5,9 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.student.competishun.curator.GetAllCourseCategoriesQuery
-import com.student.competishun.curator.GetAllCoursesQuery
-import com.student.competishun.curator.type.FindAllCourseInput
-import com.student.competishun.data.repository.CoursesRepository
 import com.student.competishun.data.repository.GetCoursesCategoryRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch

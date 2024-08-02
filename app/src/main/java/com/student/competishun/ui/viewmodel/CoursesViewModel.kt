@@ -5,11 +5,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.student.competishun.curator.GetAllCourseCategoriesQuery
-import com.student.competishun.curator.GetAllCoursesQuery
+import com.student.competishun.curator.GetAllCourseQuery
 import com.student.competishun.curator.type.FindAllCourseInput
 import com.student.competishun.data.repository.CoursesRepository
-import com.student.competishun.data.repository.GetCoursesCategoryRepository
 import com.student.competishun.utils.HelperFunctions
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -22,15 +20,19 @@ class CoursesViewModel @Inject constructor(
 ) : ViewModel() {
 
     // Initialize here
-    private val _courses = MutableLiveData<List<GetAllCoursesQuery.GetAllCourse>?>()
-    val courses: LiveData<List<GetAllCoursesQuery.GetAllCourse>?> = _courses
+    private val _courses = MutableLiveData<List<GetAllCourseQuery.Course>?>()
+    val courses: LiveData<List<GetAllCourseQuery.Course>?> = _courses
     init {
-        this.helperFunctions = helperFunctions // Initialize here
+        this.helperFunctions = helperFunctions
     }
+    private val _courseCount = MutableLiveData<Double?>()
+    val courseCount: LiveData<Double?> = _courseCount
 
     fun fetchCourses(filters: FindAllCourseInput) {
         viewModelScope.launch {
-            _courses.value = coursesRepository.getCourses(filters)
+            val response = coursesRepository.getCourses(filters)
+            _courses.value = response?.courses
+            _courseCount.value = response?.count
         }
     }
 

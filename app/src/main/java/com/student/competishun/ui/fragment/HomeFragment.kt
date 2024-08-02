@@ -139,8 +139,8 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
 
         coursesViewModel.courses.observe(viewLifecycleOwner, Observer { courses ->
             _binding?.tvBatchName?.text = courses?.firstOrNull()?.name
-            binding.dicountPrice.text = "₹"+ coursesViewModel.getDiscountDetails(coursesViewModel.courses.value!!.firstOrNull()?.price?.toInt()!!, coursesViewModel.courses.value!!.get(0).discount!!.toInt()).second.toString()
-            binding.discountPerc.text = coursesViewModel.getDiscountDetails(coursesViewModel.courses.value!!.firstOrNull()?.price!!.toInt(), coursesViewModel.courses.value!!.get(0).discount!!.toInt()).first.toString() + "% OFF"
+           _binding?.dicountPrice?.text = "₹"+ coursesViewModel.getDiscountDetails(coursesViewModel.courses.value!!.firstOrNull()?.price?.toInt()!!, coursesViewModel.courses.value!!.get(0).discount!!.toInt()).second.toString()
+            _binding?.discountPerc?.text = coursesViewModel.getDiscountDetails(coursesViewModel.courses.value!!.firstOrNull()?.price!!.toInt(), coursesViewModel.courses.value!!.get(0).discount!!.toInt()).first.toString() + "% OFF"
         })
 
         // Fetch courses when the view is created

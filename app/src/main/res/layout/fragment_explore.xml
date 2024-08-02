@@ -209,7 +209,7 @@
                     android:maxLines="2"
                     android:ellipsize="end"
                     android:layout_marginTop="20dp"
-                    android:text="@{courseByIDViewModel.courseByID != null ? courseByIDViewModel.courseByID.name : ` `}"
+                    android:text="@{courseByIDViewModel.courseByID != null ? courseByIDViewModel.courseByID.description : ` `}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/view2"/>
