@@ -20,14 +20,13 @@
     <TextView
         android:id="@+id/etHelpText"
         android:layout_width="wrap_content"
-        android:layout_height="20dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="22dp"
         android:layout_marginRight="18dp"
         android:fontFamily="@font/nunito"
-        android:lineHeight="19.6sp"
         android:text="Help?"
         android:textColor="#3E3EF7"
-        android:textSize="14sp"
+        android:textSize="@dimen/_15sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
