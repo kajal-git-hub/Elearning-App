@@ -10,6 +10,7 @@ query GetCourseById($getCourseByIdId: String!) {
         course_validity_end_date
         course_tags
         course_type
+        description
         banners {
             mobile_banner_image_name
             redirect_link

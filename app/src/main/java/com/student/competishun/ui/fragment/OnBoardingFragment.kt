@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -36,7 +37,7 @@ class OnBoardingFragment : Fragment() {
     private val updateUserViewModel: UpdateUserViewModel by viewModels()
 
     private val dataSets = listOf(
-        listOf("IIT-JEE", "NEET", "Board", "UCET", "8th to 10th", "Others"),
+        listOf("IIT-JEE", "NEET", "Board", "UCET", "Others"),
         listOf("2025", "2026", "2027", "2028"),
         listOf("Friends/Family", "Social Media", "Advertisement", "Other")
     )
@@ -65,9 +66,12 @@ class OnBoardingFragment : Fragment() {
         setupInitialStep()
         setupRecyclerView()
         setupTextWatchers()
-        setupButtonClickListeners()
+
+            setupButtonClickListeners()
+
         startSlideInAnimation()
         observeViewModel()
+        handleBackPress()
     }
 
     override fun onPause() {
@@ -118,13 +122,18 @@ class OnBoardingFragment : Fragment() {
         binding.etEnterCityText.addTextChangedListener(textWatcher)
     }
 
+
     private fun setupButtonClickListeners() {
         binding.btnGetSubmit2.setOnClickListener {
             handleNextButtonClick()
         }
-        binding.btnGetSubmit1.setOnClickListener {
-            currentStep -= 1
+        if (currentStep == 0){
+            binding.btnback.isEnabled = false
+            binding.btnback.backgroundTintMode = null
+            binding.btnback.backgroundTintList = null
+        binding.btnback.setOnClickListener {
             handleBackButtonClick()
+        }
         }
     }
     private fun saveState(){
@@ -147,10 +156,15 @@ class OnBoardingFragment : Fragment() {
 
 
     private fun handleBackButtonClick() {
+        if (currentStep != 0) {
+            currentStep -= 1
+        }
         Log.d("currentStep", currentStep.toString())
         when (currentStep) {
             0 -> {
                 showExamSelection(currentStep)
+                binding.btnback.isEnabled = false
+                binding.btnback.backgroundTintMode = null
             }
             1->{
                 showExamSelection()
@@ -177,6 +191,8 @@ class OnBoardingFragment : Fragment() {
             0 -> {
                 showExamSelection()
                 currentStep++
+
+
             }
             1 -> {
 
@@ -218,6 +234,8 @@ class OnBoardingFragment : Fragment() {
             binding.etContentBox.visibility = View.VISIBLE
             binding.clExamConstraint.visibility = View.VISIBLE
             binding.etNameConstraint.visibility = View.GONE
+            binding.btnback.isEnabled = false
+            binding.btnback.backgroundTintMode = null
             updateRecyclerViewData()
             updateStepText()
             updatePageText()
@@ -277,6 +295,7 @@ class OnBoardingFragment : Fragment() {
             if (isButtonEnabled) R.drawable.second_getstarteddone
             else R.drawable.second_getstarted
         )
+
     }
 
     private fun observeViewModel() {
@@ -325,6 +344,19 @@ class OnBoardingFragment : Fragment() {
         Handler(Looper.getMainLooper()).postDelayed({
             findNavController().navigate(R.id.action_OnBoardingFragment_to_HomeActivity)
         }, 5000)
+    }
+
+    private fun handleBackPress() {
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (currentStep == 0 && (name.isEmpty() && city.isEmpty())) {
+                    Toast.makeText(context, "Please fill your details before proceeding.", Toast.LENGTH_SHORT).show()
+                } else {
+                    currentStep -= 1
+                    handleBackButtonClick()
+                }
+            }
+        })
     }
 
     override fun onDestroyView() {

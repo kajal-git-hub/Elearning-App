@@ -1,3 +1,9 @@
+type AllCoursesResponseDto {
+  count: Float!
+
+  courses: [Course!]!
+}
+
 type Banner {
   course_id: String!
 
@@ -20,6 +26,14 @@ type Banner {
   web_banner_image_name: String
 }
 
+enum Class {
+  ELEVENTH
+
+  TWELFTH
+
+  TWELFTH_PLUS
+}
+
 type Course {
   academic_year: String
 
@@ -32,6 +46,8 @@ type Course {
   category_name: String
 
   complementary_course: String
+
+  course_class: Class
 
   course_end_date: DateTime
 
@@ -164,6 +180,10 @@ type CourseFolderContent {
   updatedAt: DateTime!
 }
 
+type CourseLectureCount {
+  lecture_count: Float!
+}
+
 enum CourseStatus {
   COMING_SOON
 
@@ -218,6 +238,8 @@ input CreateCourseInput {
   category_id: ID
 
   complementary_course: ID
+
+  course_class: Class
 
   course_end_date: DateTime
 
@@ -278,6 +300,8 @@ input CreateCoursePublishInput {
   category_id: ID!
 
   complementary_course: ID
+
+  course_class: Class!
 
   course_end_date: DateTime
 
@@ -344,15 +368,15 @@ enum ExamType {
 }
 
 input FindAllCourseInput {
-  academic_year: String
+  academic_year: [String!]
 
-  course_status: String
+  course_status: [CourseStatus!]
 
-  course_type: String
+  course_type: [CourseType!]
 
-  created_by: String
+  created_by: [String!]
 
-  exam_type: String
+  exam_type: [ExamType!]
 
   is_recommended: Boolean
 
@@ -362,7 +386,7 @@ input FindAllCourseInput {
 
   sortOrder: String
 
-  target_year: Float
+  target_year: [Int!]
 }
 
 input FindAllCourseInputStudent {
@@ -430,11 +454,13 @@ enum OtherRequirements {
 type Query {
   getAllBanners: [Banner!]!
 
-  getAllCourse(filters: FindAllCourseInput!): [Course!]!
+  getAllCourse(filters: FindAllCourseInput): AllCoursesResponseDto!
 
   getAllCourseCategories: [CourseCategory!]!
 
-  getAllCourseForStudent(filters: FindAllCourseInputStudent!): [Course!]!
+  getAllCourseForStudent(filters: FindAllCourseInputStudent!): AllCoursesResponseDto!
+
+  getAllCourseLecturesCount(id: String!): CourseLectureCount!
 
   getAllFolders: [CourseFolder!]!
 
@@ -475,6 +501,8 @@ input UpdateCourseInput {
   category_id: ID
 
   complementary_course: ID
+
+  course_class: Class
 
   course_end_date: DateTime
 
