@@ -19,7 +19,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.apollographql.apollo3.api.Optional
 import com.student.competishun.R
 import com.student.competishun.databinding.FragmentOnBoardingBinding
-import com.student.competishun.type.UpdateUserInput
+import com.student.competishun.gatekeeper.type.UpdateUserInput
 import com.student.competishun.ui.adapter.ExampleAdapter
 import com.student.competishun.ui.viewmodel.UpdateUserViewModel
 import dagger.hilt.android.AndroidEntryPoint

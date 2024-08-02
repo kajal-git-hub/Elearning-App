@@ -2,7 +2,10 @@ package com.student.competishun.di
 
 import android.content.Context
 import com.apollographql.apollo3.ApolloClient
-import com.student.competishun.data.api.BASE_URL
+import com.student.competishun.data.api.BASE_URL_CURATOR
+import com.student.competishun.data.api.BASE_URL_GATEKEEPER
+import com.student.competishun.data.api.Curator
+import com.student.competishun.data.api.Gatekeeper
 import com.student.competishun.utils.SharedPreferencesManager
 import dagger.Module
 import dagger.Provides
@@ -15,15 +18,23 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object GraphQlModule {
 
-    @Provides
-    @Singleton
-    fun provideBaseUrl() = BASE_URL
 
     @Provides
     @Singleton
-    fun provideApolloClient(baseUrl:String):ApolloClient{
+    @Gatekeeper
+    fun provideApolloClient():ApolloClient{
         return ApolloClient.Builder()
-            .serverUrl(baseUrl)
+            .serverUrl(BASE_URL_GATEKEEPER)
+            .build()
+    }
+
+
+    @Provides
+    @Singleton
+    @Curator
+    fun provideApolloClientCurator(): ApolloClient {
+        return ApolloClient.Builder()
+            .serverUrl(BASE_URL_CURATOR)
             .build()
     }
 

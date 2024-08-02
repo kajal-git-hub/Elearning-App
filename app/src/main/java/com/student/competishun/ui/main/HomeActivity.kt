@@ -18,7 +18,9 @@ import com.student.competishun.ui.fragment.AllFaqFragment
 import com.student.competishun.ui.fragment.MyCartFragment
 import com.student.competishun.ui.fragment.PaymentFragment
 import com.student.competishun.ui.fragment.PaymentLoaderFragment
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class HomeActivity : AppCompatActivity() {
 
     private lateinit var navController: NavController

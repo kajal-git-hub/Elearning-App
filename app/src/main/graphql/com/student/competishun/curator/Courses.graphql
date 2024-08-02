@@ -1,0 +1,27 @@
+query Courses {
+    courses {
+        name
+        video_thumbnail
+        target_year
+        status
+        price
+        id
+        exam_type
+        discount
+        banners {
+            mobile_banner_image_name
+            mobile_banner_image
+            id
+            course_id
+            redirect_link
+        }
+        with_installment_price
+        description
+        course_tags
+        course_type
+        course_validity_end_date
+        course_validity_start_date
+        banner_image
+        academic_year
+    }
+}

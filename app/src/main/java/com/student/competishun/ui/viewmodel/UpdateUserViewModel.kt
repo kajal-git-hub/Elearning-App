@@ -24,7 +24,7 @@ class UpdateUserViewModel @Inject constructor(
     private val _updateUserResult = MutableLiveData<UpdateUserResponse?>()
     val updateUserResult: LiveData<UpdateUserResponse?> = _updateUserResult
 
-    fun updateUser(updateUserInput: com.student.competishun.type.UpdateUserInput) {
+    fun updateUser(updateUserInput: com.student.competishun.gatekeeper.type.UpdateUserInput) {
         val accessToken = sharedPreferencesManager.accessToken
         if (accessToken != null) {
             viewModelScope.launch {
