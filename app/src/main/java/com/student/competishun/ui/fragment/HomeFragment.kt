@@ -12,6 +12,8 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -24,7 +26,6 @@ import com.student.competishun.curator.GetAllCourseCategoriesQuery
 import com.student.competishun.curator.type.FindAllCourseInput
 import com.student.competishun.data.model.Testimonial
 import com.student.competishun.data.model.WhyCompetishun
-import com.student.competishun.databinding.FragmentCoursesBinding
 import com.student.competishun.databinding.FragmentHomeBinding
 import com.student.competishun.ui.adapter.OurCoursesAdapter
 import com.student.competishun.ui.adapter.TestimonialsAdapter
