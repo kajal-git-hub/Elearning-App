@@ -14,9 +14,6 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -37,11 +34,11 @@ import com.student.competishun.ui.adapter.WhyCompetishunAdapter
 import com.student.competishun.ui.viewmodel.CoursesCategoryViewModel
 import com.student.competishun.ui.viewmodel.CoursesViewModel
 import com.student.competishun.utils.HelperFunctions
-import com.student.competishun.ui.viewmodel.CoursesViewModel
+import com.student.competishun.utils.OnCourseItemClickListener
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(), OnCourseItemClickListener {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
@@ -119,7 +116,6 @@ class HomeFragment : Fragment() {
         })
 
         // Fetch courses when the view is created
-        coursesViewModel.fetchCourses()
         _binding?.progressBar?.visibility = View.VISIBLE
         _binding?.rvOurCourses?.visibility = View.GONE
 
