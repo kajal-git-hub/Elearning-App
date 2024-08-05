@@ -86,7 +86,7 @@ class VerifyOTPFragment : Fragment() {
                     findNavController().navigate(R.id.action_verifyOTPFragment_to_onBoardingFragment)
                 }
             } else {
-                    Log.e("FailureBefid", "${result} $mobileNumber")
+                Log.e("FailureBefid", "${result} $mobileNumber")
 
                 Toast.makeText(requireContext(), "Invalid OTP", Toast.LENGTH_SHORT).show()
                 changeOtpBoxesBackground(R.drawable.opt_edit_text_bg_incorrect)
@@ -109,13 +109,20 @@ class VerifyOTPFragment : Fragment() {
                 binding.etWaitText.visibility = View.GONE
                 binding.etTimeText.visibility = View.GONE
                 binding.etResendText.visibility = View.VISIBLE
+
                 binding.etResendText.setOnClickListener {
                     // Handle resend OTP action
+                    binding.etEnterOtpText.text = "Enter the OTP to continue"
+                    binding.etWaitText.visibility = View.VISIBLE
+                    binding.etTimeText.visibility = View.VISIBLE
+                    binding.etResendText.visibility = View.GONE
+                    startTimer()  // Restart the timer
                 }
             }
         }
         countDownTimer.start()
     }
+
 
     private fun setupOtpInputs() {
         otpBoxes = listOf(
@@ -134,12 +141,6 @@ class VerifyOTPFragment : Fragment() {
                 override fun afterTextChanged(s: Editable?) {
                     if (s?.length == 1 && index < otpBoxes.size - 1) {
                         otpBoxes[index + 1].requestFocus()
-                    } else if (s?.length == 0 && index > 0) {
-                        otpBoxes[index - 1].requestFocus()
-                    }
-
-                    if (index == otpBoxes.size - 1 && otpBoxes.all { it.text.length == 1 }) {
-                        checkOtpAndNavigate()
                     }
 
                     if (otpBoxes.all { it.text.length == 1 }) {
