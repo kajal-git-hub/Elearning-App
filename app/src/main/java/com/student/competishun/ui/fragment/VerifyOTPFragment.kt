@@ -24,7 +24,9 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.student.competishun.R
 import com.student.competishun.databinding.FragmentVerifyBinding
+import com.student.competishun.ui.main.MainActivity
 import com.student.competishun.ui.viewmodel.VerifyOtpViewModel
+import com.student.competishun.utils.SharedPreferencesManager
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -36,7 +38,7 @@ class VerifyOTPFragment : Fragment() {
 
     private var mobileNumber: String? = null
     private var countryCode: String? = null
-
+    private lateinit var sharedPreferencesManager: SharedPreferencesManager
     private lateinit var otpBoxes: List<EditText>
     private lateinit var countDownTimer: CountDownTimer
 
@@ -45,6 +47,7 @@ class VerifyOTPFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentVerifyBinding.inflate(inflater, container, false)
+        sharedPreferencesManager = (requireActivity() as MainActivity).sharedPreferencesManager
         return binding.root
     }
 
@@ -67,11 +70,13 @@ class VerifyOTPFragment : Fragment() {
             }
         })
 
-        mobileNumber = arguments?.getString("mobileNumber")
+        Log.d("shared numbve", sharedPreferencesManager.mobileNo.toString())
+        if (!sharedPreferencesManager.mobileNo.isNullOrEmpty())  mobileNumber = sharedPreferencesManager.mobileNo
+           // arguments?.getString("mobileNumber")
         countryCode = arguments?.getString("countryCode")
 
         Log.d("VerifyOTPFragment", "Mobile number: $mobileNumber, Country code: $countryCode")
-
+        //sharedPreferencesManager.mobileNo = mobileNumber
         setupOtpInputs()
         setupVerificationCodeText()
         startTimer()

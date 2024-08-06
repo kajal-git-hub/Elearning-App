@@ -21,6 +21,7 @@
         </action>
     </fragment>
 
+
     <fragment
         android:id="@+id/verifyOTPFragment"
         android:name="com.student.competishun.ui.fragment.VerifyOTPFragment"
@@ -41,6 +42,9 @@
             android:id="@+id/action_OnBoardingFragment_to_loginFragment"
             app:destination="@+id/loginFragment" />
         <action
+            android:id="@+id/action_OnBoardingFragment_to_prepForFragment"
+            app:destination="@+id/PrepForFragment" />
+        <action
             android:id="@+id/action_OnBoardingFragment_to_HomeActivity"
             app:destination="@+id/homeActivity" />
     </fragment>
@@ -52,12 +56,46 @@
         <action
             android:id="@+id/action_onWelcomeFragment_to_loginFragment"
             app:destination="@+id/loginFragment" />
+        <action
+            android:id="@+id/action_onWelcomeFragment_to_prepForFragment"
+            app:destination="@+id/prepForFragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/PrepForFragment"
+        android:name="com.student.competishun.ui.fragment.PrepForFragment"
+        tools:layout="@layout/fragment_prep_for">
+        <action
+            android:id="@+id/action_PrepForFragment_to_TargetFragment"
+            app:destination="@+id/TargetFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/TargetFragment"
+        android:name="com.student.competishun.ui.fragment.TargetFragment"
+        tools:layout="@layout/fragment_target">
+        <action
+            android:id="@+id/action_TargetFragment_to_reference"
+            app:destination="@+id/ReferenceFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/ReferenceFragment"
+        android:name="com.student.competishun.ui.fragment.ReferenceFragment"
+        tools:layout="@layout/fragment_reference">
+        <action
+            android:id="@+id/action_ReferenceFragment_to_HomeActivity"
+            app:destination="@+id/homeActivity" />
+    </fragment>
+
 
     <activity
         android:id="@+id/homeActivity"
         android:name="com.student.competishun.ui.main.HomeActivity"
-        tools:layout="@layout/activity_home"/>
+        tools:layout="@layout/activity_home" />
+
+    <activity
+        android:id="@+id/mainActivity"
+        android:name="com.student.competishun.ui.main.MainActivity"
+        tools:layout="@layout/activity_main"></activity>
 
 
 </navigation>

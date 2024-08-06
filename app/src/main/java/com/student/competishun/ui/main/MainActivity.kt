@@ -13,30 +13,61 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import com.student.competishun.R
+import com.student.competishun.data.model.UpdateUserInput
 import com.student.competishun.databinding.ActivityMainBinding
-import com.student.competishun.ui.viewmodel.GetOtpViewModel
 import com.student.competishun.ui.viewmodel.MainVM
-import com.student.competishun.ui.viewmodel.VerifyOtpViewModel
 import com.student.competishun.utils.SharedPreferencesManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
+import com.apollographql.apollo3.api.Optional
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private val mainVM: MainVM by viewModels()
-    private lateinit var navController: NavController
     private lateinit var binding: ActivityMainBinding
-    private lateinit var sharedPreferencesManager: SharedPreferencesManager
+    lateinit var sharedPreferencesManager: SharedPreferencesManager
+    lateinit var userInput: UpdateUserInput
+    private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
-        // Set the initial content view to the splash screen
+        // Initialize SharedPreferencesManager
+        sharedPreferencesManager = SharedPreferencesManager(this)
+        userInput = UpdateUserInput()
+        // Check if the access token is available
+        Log.e("accessToken", sharedPreferencesManager.accessToken.toString())
+        if (sharedPreferencesManager.accessToken != null) {
+            showSplashAndWelcomeScreens()
+        } else {
+            showSplashAndWelcomeScreens()
+        }
+
+        lifecycleScope.launch {
+            supervisorScope {
+                launch {
+                    // Optional coroutine for additional tasks
+                }
+                launch {
+                    mainVM.loader.collect { isLoading ->
+                        if (isLoading) {
+                            // Handle loading state
+                        } else {
+                            // Handle when loading is complete
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun showSplashAndWelcomeScreens() {
         setContentView(R.layout.splash_screen)
 
         Handler(Looper.getMainLooper()).postDelayed({
@@ -47,14 +78,6 @@ class MainActivity : AppCompatActivity() {
                 // Switch to the main layout after a delay
                 binding = ActivityMainBinding.inflate(layoutInflater)
                 setContentView(binding.root)
-
-                // Initialize SharedPreferencesManager after setting the content view
-                sharedPreferencesManager = SharedPreferencesManager(this)
-
-                // Check if the access token is available
-                checkToken()
-
-                // Setup edge-to-edge display
                 enableEdgeToEdge()
 
                 ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
@@ -67,52 +90,60 @@ class MainActivity : AppCompatActivity() {
                     )
                     insets
                 }
-
-                // Initialize navigation components
-                val navHostFragment =
-                    supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-                navController = navHostFragment.navController
-
-                lifecycleScope.launch {
-                    supervisorScope {
-                        launch {
-                            // Optional coroutine for additional tasks
-                        }
-                        launch {
-                            mainVM.loader.collect { isLoading ->
-                                if (isLoading) {
-                                    // Handle loading state
-                                } else {
-                                    // Handle when loading is complete
-                                }
-                            }
-                        }
-                    }
-                }
-
+                setupNavigation()
+                getUserInfo()
             }, 2000)
         }, 2000)
     }
 
-    private fun checkToken() {
-        val token = sharedPreferencesManager.accessToken
-        val number = sharedPreferencesManager.updateUserInput
-        Log.e("checktoken",token.toString())
-        Log.e("number  ${number?.fullName}", number?.city.toString())
-        if (token != null) {
-            // Token is available, navigate to the main screen
-            navigateToMainScreen()
+    private fun getUserInfo() {
+        Log.e("saved pref", sharedPreferencesManager.preparingFor.toString())
+        if (!sharedPreferencesManager.name.isNullOrEmpty() && !sharedPreferencesManager.city.isNullOrEmpty()) {
+            navigateToPreparationFragment()
+        }
+        if (!sharedPreferencesManager.preparingFor.isNullOrEmpty()){
+            Log.e("saved pref", sharedPreferencesManager.preparingFor.toString() + userInput.fullName)
+            navigateToTargetFragment()
+        }
+        if (!sharedPreferencesManager.reference.isNullOrEmpty()){
+            Log.e("saved pref", sharedPreferencesManager.preparingFor.toString() + userInput.fullName)
+            navigateToRefFragment()
+        }
+
+        Log.e("saved name", sharedPreferencesManager.name.toString() + userInput.fullName)
+    }
+
+    private fun navigateToPreparationFragment() {
+        // Ensure the NavController is properly initialized
+        if (::navController.isInitialized) {
+            navController.navigate(R.id.PrepForFragment)
         } else {
-            // Token is not available, navigate to login or other appropriate screen
-//            startActivity(Intent(this, LoginActivity::class.java))
-//            finish()
+            Log.e("MainActivity", "NavController is not initialized")
         }
     }
 
-    private fun navigateToMainScreen() {
-        // Navigate to the main activity
-        startActivity(Intent(this, HomeActivity::class.java))
-        finish() // Close the splash activity
+    private fun navigateToTargetFragment() {
+        // Ensure the NavController is properly initialized
+        if (::navController.isInitialized) {
+            navController.navigate(R.id.TargetFragment)
+        } else {
+            Log.e("MainActivity", "NavController is not initialized")
+        }
+    }
+    private fun navigateToRefFragment() {
+        // Ensure the NavController is properly initialized
+        if (::navController.isInitialized) {
+            navController.navigate(R.id.ReferenceFragment)
+        } else {
+            Log.e("MainActivity", "NavController is not initialized")
+        }
+    }
+
+    private fun setupNavigation() {
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as? NavHostFragment
+        navController = navHostFragment?.navController ?: throw IllegalStateException("NavController not found")
+
+        Log.d("MainActivity", "NavController: $navController")
     }
 
     override fun onSupportNavigateUp(): Boolean {

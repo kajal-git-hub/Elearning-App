@@ -1,10 +1,12 @@
 package com.student.competishun.ui.fragment
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.core.widget.NestedScrollView
@@ -142,9 +144,24 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener {
                 adapter = ourContentAdapter
             }
             val courseId = "250bceb2-45e4-488e-aa02-c9521555b424"
-            getCourseByIDViewModel.fetchCourseById(courseId)
 
+            getCourseByIDViewModel.fetchCourseById(courseId)
+//            getCourseByIDViewModel.loading.observe(viewLifecycleOwner, Observer { isLoading ->
+//                binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+//            })
+//            getCourseByIDViewModel.error.observe(viewLifecycleOwner, Observer { error ->
+//                if (error != null) {
+//                    Toast.makeText(requireContext(), error, Toast.LENGTH_LONG).show()
+//                }
+//            })
+            binding.progressBar.visibility = View.VISIBLE
             getCourseByIDViewModel.courseByID.observe(viewLifecycleOwner, Observer { courses ->
+                Log.e("listcourses not",courses.toString())
+                binding.progressBar.visibility = View.GONE
+                if (courses != null){
+                    Log.e("listcourses",courses.toString())
+                    binding.tvCourseName.text = courses.name
+                }
 
             })
 

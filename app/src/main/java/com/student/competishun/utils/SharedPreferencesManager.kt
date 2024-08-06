@@ -19,6 +19,12 @@ class SharedPreferencesManager(context: Context) {
         private const val KEY_ACCESS_TOKEN = "accessToken"
         private const val KEY_REFRESH_TOKEN = "refreshToken"
         private const val KEY_UPDATE_USER_INPUT = "updateUserInput"
+        private const val KEY_MOBILE_NO = "mobileNo"
+        private const val KEY_NAME = "name"
+        private const val KEY_CITY = "city"
+        private const val KEY_PREPARATION_FOR = "preparingFor"
+        private const val KEY_TARGET_YEAR = "targetYear"
+        private const val KEY_REFERENCE = "reference"
 
     }
 
@@ -30,10 +36,52 @@ class SharedPreferencesManager(context: Context) {
             Log.e("sharedPreferences token", accessToken.toString())
         }
 
+    var mobileNo: String?
+        get() = sharedPreferences.getString(KEY_MOBILE_NO, null)
+        set(value) {
+            sharedPreferences.edit().putString(KEY_MOBILE_NO, value).apply()
+
+            Log.e("sharedPrefnumber sa", mobileNo.toString())
+        }
+    var name: String?
+        get() = sharedPreferences.getString(KEY_NAME, null)
+        set(value){
+            sharedPreferences.edit().putString(KEY_NAME, value).apply()
+            Log.e("sharedPrefname sa", name.toString())
+        }
+    var city:String?
+        get() = sharedPreferences.getString(KEY_CITY, null)
+        set(value){
+            sharedPreferences.edit().putString(KEY_CITY, value).apply()
+            Log.e("sharedPrefcity sa", city.toString() )
+        }
+    var preparingFor:String?
+        get() = sharedPreferences.getString(KEY_PREPARATION_FOR, null)
+        set(value){
+            sharedPreferences.edit().putString(KEY_PREPARATION_FOR, value).apply()
+            Log.e("sharedPrefpreparing sa", preparingFor.toString() )
+        }
+    var targetYear: Int?
+        get() = sharedPreferences.getInt(KEY_TARGET_YEAR, 0)
+        set(value){
+            if (value != null) {
+                sharedPreferences.edit().putInt(KEY_TARGET_YEAR, value).apply()
+            }
+            Log.e("sharedPreftarget sa", targetYear.toString() )
+        }
+
+    var reference: String?
+        get() = sharedPreferences.getString(KEY_REFERENCE, null)
+        set(value){
+            sharedPreferences.edit().putString(KEY_REFERENCE, value).apply()
+            Log.e("sharedPrefreference sa", reference.toString() )
+        }
+
     var refreshToken: String?
         get() = sharedPreferences.getString(KEY_REFRESH_TOKEN, null)
         set(value) {
             sharedPreferences.edit().putString(KEY_REFRESH_TOKEN, value).apply()
+            Log.e("sharedPrefrefre tok", refreshToken.toString())
         }
     var updateUserInput: UpdateUserInput?
         get() {
@@ -43,6 +91,7 @@ class SharedPreferencesManager(context: Context) {
         set(value) {
             val json = gson.toJson(value)
             sharedPreferences.edit().putString(KEY_UPDATE_USER_INPUT, json).apply()
+            Log.e("sharedPref UserInput", accessToken.toString())
         }
     fun clearAccessToken() {
         sharedPreferences.edit().remove(KEY_ACCESS_TOKEN).apply()
