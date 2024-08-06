@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.student.competishun.R
+import com.student.competishun.data.model.PrepForItem
 import com.student.competishun.databinding.GetstartedItemlayout2Binding
 import com.student.competishun.databinding.GetstartedItemlayoutBinding
 

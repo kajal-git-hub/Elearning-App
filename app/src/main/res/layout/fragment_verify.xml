@@ -62,7 +62,7 @@
         android:layout_marginTop="18dp"
         android:fontFamily="@font/nunito"
         android:lineHeight="24sp"
-        android:text="An verification code has been sent to your \nmail ID 98716293987"
+        android:text="An verification code has been sent to your \nphone no. 98716293987"
         android:textColor="#726C6C"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="@+id/etVerifyText"

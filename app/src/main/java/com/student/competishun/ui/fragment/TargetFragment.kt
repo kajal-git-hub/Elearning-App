@@ -1,29 +1,26 @@
 package com.student.competishun.ui.fragment
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.Toast
-import androidx.fragment.app.viewModels
+import androidx.activity.addCallback
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.student.competishun.R
-import com.student.competishun.databinding.FragmentHomeBinding
-import com.student.competishun.databinding.FragmentOnBoardingBinding
 import com.student.competishun.databinding.FragmentTargetBinding
 import com.student.competishun.ui.adapter.ExampleAdapter
-import com.student.competishun.ui.viewmodel.UpdateUserViewModel
 
 class TargetFragment : Fragment() {
     private var _binding: FragmentTargetBinding? = null
     private val binding get() = _binding!!
 
 
-    private var list = mutableListOf<String>()
-    private val updateUserViewModel: UpdateUserViewModel by viewModels()
+    private var currentStep = 1
+    private var isItemSelected = false
 
     private val dataSets = listOf(
         listOf("IIT-JEE", "NEET", "Board", "UCET", "Others"),
@@ -50,104 +47,82 @@ class TargetFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentTargetBinding.inflate(inflater, container, false)
+
+        requireActivity().onBackPressedDispatcher.addCallback(this) {
+            handleBackPressed()
+        }
         return binding.root
 
-        private fun setupRecyclerView() {
-            adapter = ExampleAdapter(
-                dataSets[currentStep],
-                currentStep,
-                spanCount[currentStep],
-                onItemSelected = { selectedItem ->
-                    Log.d("Adapter", "Selected item: $selectedItem")
-                    list.add(selectedItem)
-                    Log.d("List", list.toString())
-                }
-            )
-
-            binding.examRecyclerview.layoutManager = GridLayoutManager(context, spanCount[currentStep])
-            binding.examRecyclerview.adapter = adapter
-        }
-
-
-        //    private fun showExamSelection(currentStep: Int = this.currentStep) {
-//        if (currentStep == 0) {
-//            binding.etContentBox.visibility = View.VISIBLE
-//            binding.clExamConstraint.visibility = View.VISIBLE
-//            binding.etNameConstraint.visibility = View.GONE
-//            binding.btnback.isEnabled = false
-//            binding.btnback.backgroundTintMode = null
-//            updateRecyclerViewData()
-//            updateStepText()
-//            updatePageText()
-//        } else {
-//            binding.etContentBox.visibility = View.GONE
-//            binding.clExamConstraint.visibility = View.VISIBLE
-//            binding.etNameConstraint.visibility = View.GONE
-//            updateRecyclerViewData()
-//            updateStepText()
-//            updatePageText()
-//        }
-//    }
 
 
     }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.TargetBack.setOnClickListener {
+            findNavController().navigateUp()
+        }
+
+        binding.TargetNext.setOnClickListener {
+            if (isItemSelected) {
+                findNavController().navigate(R.id.action_TargetFragment_to_reference)
+            } else {
+                Toast.makeText(context, "Please select an option", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        binding.etStartedText.text = stepTexts[currentStep]
+        binding.etText.text = pageTexts[currentStep]
+
+        val exampleAdapter = ExampleAdapter(
+            dataList = dataSets[currentStep],
+            currentStep = currentStep,
+            spanCount = spanCount[currentStep]
+        ) { selectedItem ->
+            isItemSelected = true
+            binding.TargetNext.setBackgroundResource(R.drawable.second_getstarteddone)
+        }
+
+        binding.targetRecyclerview.apply {
+            layoutManager = GridLayoutManager(context, spanCount[currentStep])
+            adapter = exampleAdapter
+        }
+
+        startSlideInAnimation()
+
+        updateButtonBackground()
+    }
+
+    private fun updateButtonBackground() {
+        if (isItemSelected) {
+            binding.TargetNext.setBackgroundResource(R.drawable.second_getstarteddone)
+        } else {
+            binding.TargetNext.setBackgroundResource(R.drawable.second_getstarted)
+        }
+    }
+
+    private fun startSlideInAnimation() {
+        val slideInAnimation = AnimationUtils.loadAnimation(context, R.anim.slide_in_bottom)
+        binding.clAnimConstraint.startAnimation(slideInAnimation)
+
+    }
+
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
-
-}
-
-
-
-private fun startSlideInAnimation() {
-    val slideInAnimation = AnimationUtils.loadAnimation(context, R.anim.slide_in_bottom)
-    binding.clAnimConstraint.startAnimation(slideInAnimation)
-}
-
-private fun updateStepText() {
-    if (currentStep < stepTexts.size) {
-        binding.etStartedText.text = stepTexts[currentStep]
+    private fun handleBackPressed() {
+        findNavController().navigateUp()
     }
-}
 
-private fun updatePageText() {
-    if (currentStep < pageTexts.size) {
-        binding.etText.text = pageTexts[currentStep]
-    }
-}
-
-private fun updateRecyclerViewData() {
-    Log.d("currentStep", currentStep.toString())
-    if (currentStep < dataSets.size) {
-        val newSpanCount = spanCount.getOrNull(currentStep) ?: 1
-        adapter.updateData(dataSets[currentStep], currentStep, newSpanCount)
-        binding.examRecyclerview.layoutManager = GridLayoutManager(context, newSpanCount)
-    }
 }
 
 
-private fun observeViewModel() {
-    updateUserViewModel.updateUserResult.observe(viewLifecycleOwner) { result ->
-        result?.let { user ->
-            Log.e("updateUserResponse", result.toString())
-            Log.e("gettingUserUpdate", user.user?.fullName.toString())
-            Toast.makeText(context, "User update successful", Toast.LENGTH_SHORT).show()
-            navigateToLoaderScreen()
-        } ?: run {
-            Log.e("gettingUserUpdate fail", result.toString())
-            Toast.makeText(context, "Update failed", Toast.LENGTH_SHORT).show()
-        }
-    }
-}
 
 
-private fun navigateToLoaderScreen() {
-    binding.root.removeAllViews()
-    val processingView = layoutInflater.inflate(R.layout.loader_screen, binding.root, false)
-    binding.root.addView(processingView)
-//
-//        Handler(Looper.getMainLooper()).postDelayed({
-//            findNavController().navigate(R.id.action_OnBoardingFragment_to_HomeActivity)
-//        }, 5000)
-}
+
+
+
+
+

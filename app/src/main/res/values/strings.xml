@@ -45,6 +45,7 @@
     <string name="title_privacy">Privacy Policy</string>
     <string name="title_disclaimer">Disclaimer</string>
     <string name="title_rate">Rate this App</string>
+    <string name="privacy_policytext">Privacy Policy</string>
 
 
 </resources>

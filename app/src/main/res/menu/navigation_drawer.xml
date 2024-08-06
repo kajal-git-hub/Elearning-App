@@ -30,6 +30,11 @@
             android:title="@string/title_termsCondition"/>
 
         <item
+            android:id="@+id/privacyPolicy"
+            android:icon="@drawable/privacy"
+            android:title="@string/privacy_policytext"/>
+
+        <item
             android:id="@+id/tvdisclaimer"
             android:icon="@drawable/disclaimer"
             android:title="@string/title_disclaimer"/>

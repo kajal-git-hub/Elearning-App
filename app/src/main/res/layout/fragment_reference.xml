@@ -164,7 +164,7 @@
                     app:layout_constraintTop_toBottomOf="@id/etStartedText">
 
                     <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/examRecyclerview"
+                        android:id="@+id/refRecyclerview"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
@@ -178,12 +178,12 @@
                         android:id="@+id/etContentBox"
                         android:layout_width="match_parent"
                         android:layout_height="74dp"
-                        android:background="@drawable/getstarted_itembg_unselected"
-                        android:visibility="visible"
-                        android:layout_marginTop="8dp"
                         android:layout_marginHorizontal="6dp"
+                        android:layout_marginTop="8dp"
+                        android:background="@drawable/getstarted_itembg_unselected"
+                        android:visibility="gone"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/examRecyclerview">
+                        app:layout_constraintTop_toBottomOf="@+id/refRecyclerview">
 
                         <EditText
                             android:id="@+id/etContent"
@@ -230,7 +230,7 @@
             app:layout_constraintEnd_toEndOf="parent">
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnback"
+                android:id="@+id/RefBack"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
@@ -241,10 +241,10 @@
                 app:backgroundTint="@null"
                 app:cornerRadius="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/btnGetSubmit2" />
+                app:layout_constraintEnd_toStartOf="@id/RefNext" />
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnGetSubmit2"
+                android:id="@+id/RefNext"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/second_getstarted"

@@ -83,7 +83,7 @@
     <activity
         android:id="@+id/homeActivity"
         android:name="com.student.competishun.ui.main.HomeActivity"
-        tools:layout="@layout/activity_home"/>
+        tools:layout="@layout/activity_home" />
 
 
 </navigation>

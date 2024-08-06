@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.student.competishun.R
 import com.student.competishun.data.model.FAQItem
@@ -28,13 +29,14 @@ class FAQAdapter(private var faqList: List<FAQItem>) :
         private val questionText: TextView = itemView.findViewById(R.id.questionText)
         private val additionalText: TextView = itemView.findViewById(R.id.additionalText)
         private val plusIcon: ImageView = itemView.findViewById(R.id.plusIcon)
+        private val faq: ConstraintLayout = itemView.findViewById(R.id.cl_faq)
 
         fun bind(faqItem: FAQItem) {
             questionText.text = faqItem.question
             additionalText.visibility = if (faqItem.isExpanded) View.VISIBLE else View.GONE
             plusIcon.setImageResource(if (faqItem.isExpanded) R.drawable.minus else R.drawable.add)
 
-            plusIcon.setOnClickListener {
+            faq.setOnClickListener {
                 faqItem.isExpanded = !faqItem.isExpanded
                 notifyItemChanged(adapterPosition)
             }
