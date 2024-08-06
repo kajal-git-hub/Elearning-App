@@ -108,8 +108,14 @@ class MainActivity : AppCompatActivity() {
         if (!sharedPreferencesManager.reference.isNullOrEmpty()){
             Log.e("saved pref", sharedPreferencesManager.preparingFor.toString() + userInput.fullName)
             navigateToRefFragment()
+
         }
 
+        if (!sharedPreferencesManager.reference.isNullOrEmpty() && !sharedPreferencesManager.city.isNullOrEmpty() &&!sharedPreferencesManager.preparingFor.isNullOrEmpty() && !sharedPreferencesManager.name.isNullOrEmpty() && sharedPreferencesManager.targetYear == 0){
+            Log.e("saved pref", sharedPreferencesManager.preparingFor.toString() + userInput.fullName)
+            navigateToHomeScreen()
+
+        }
         Log.e("saved name", sharedPreferencesManager.name.toString() + userInput.fullName)
     }
 
@@ -145,6 +151,12 @@ class MainActivity : AppCompatActivity() {
 
         Log.d("MainActivity", "NavController: $navController")
     }
+    private fun navigateToHomeScreen() {
+        // Navigate to the main activity
+        startActivity(Intent(this, HomeActivity::class.java))
+        finish() // Close the splash activity
+    }
+
 
     override fun onSupportNavigateUp(): Boolean {
         return navController.navigateUp() || super.onSupportNavigateUp()
