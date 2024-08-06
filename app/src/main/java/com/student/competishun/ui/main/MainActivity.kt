@@ -13,7 +13,6 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import com.student.competishun.R
 import com.student.competishun.data.model.UpdateUserInput
@@ -41,30 +40,9 @@ class MainActivity : AppCompatActivity() {
         // Initialize SharedPreferencesManager
         sharedPreferencesManager = SharedPreferencesManager(this)
         userInput = UpdateUserInput()
-        // Check if the access token is available
-        Log.e("accessToken", sharedPreferencesManager.accessToken.toString())
-        if (sharedPreferencesManager.accessToken != null) {
-            showSplashAndWelcomeScreens()
-        } else {
-            showSplashAndWelcomeScreens()
-        }
 
-        lifecycleScope.launch {
-            supervisorScope {
-                launch {
-                    // Optional coroutine for additional tasks
-                }
-                launch {
-                    mainVM.loader.collect { isLoading ->
-                        if (isLoading) {
-                            // Handle loading state
-                        } else {
-                            // Handle when loading is complete
-                        }
-                    }
-                }
-            }
-        }
+        // Show splash and welcome screens
+        showSplashAndWelcomeScreens()
     }
 
     private fun showSplashAndWelcomeScreens() {
@@ -90,6 +68,7 @@ class MainActivity : AppCompatActivity() {
                     )
                     insets
                 }
+
                 setupNavigation()
                 getUserInfo()
             }, 2000)
@@ -97,73 +76,52 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getUserInfo() {
-        Log.e("saved pref", sharedPreferencesManager.preparingFor.toString())
-        if (!sharedPreferencesManager.name.isNullOrEmpty() && !sharedPreferencesManager.city.isNullOrEmpty()) {
-            navigateToPreparationFragment()
+        // Check user data and navigate accordingly
+        when {
+            !sharedPreferencesManager.reference.isNullOrEmpty() -> {
+                Log.e("saved ref", sharedPreferencesManager.reference.toString() + userInput.fullName)
+                startActivity(Intent(this, HomeActivity::class.java))
+                finish()
+            }
+            !sharedPreferencesManager.preparingFor.isNullOrEmpty() -> {
+                Log.e("saved prepare", sharedPreferencesManager.preparingFor.toString() + userInput.fullName)
+                navigateToTargetFragment()
+            }
+            sharedPreferencesManager.targetYear != 0 -> {
+                Log.e("saved target", sharedPreferencesManager.targetYear.toString())
+                navigateToRefFragment()
+            }
+            !sharedPreferencesManager.name.isNullOrEmpty() && !sharedPreferencesManager.city.isNullOrEmpty() -> {
+                navigateToPreparationFragment()
+            }
+            else -> {
+               // navigateToWelcomeFragment()
+            }
         }
-        if (!sharedPreferencesManager.preparingFor.isNullOrEmpty()){
-            Log.e("saved prepare", sharedPreferencesManager.preparingFor.toString() + userInput.fullName)
-            navigateToTargetFragment()
-        }
-        if (sharedPreferencesManager.targetYear != 0){
-            Log.e("saved target", sharedPreferencesManager.preparingFor.toString() + userInput.fullName)
-            navigateToRefFragment()
-        }
-        if (!sharedPreferencesManager.reference.isNullOrEmpty()){
-            Log.e("saved ref", sharedPreferencesManager.reference.toString() + userInput.fullName)
-            startActivity(Intent(this, HomeActivity::class.java))
-            finish()
-        }
-        Log.e("saved name", sharedPreferencesManager.name.toString() + userInput.fullName)
     }
 
     private fun navigateToPreparationFragment() {
-        // Ensure the NavController is properly initialized
-        if (::navController.isInitialized) {
-            navController.navigate(R.id.PrepForFragment)
-        } else {
-            Log.e("MainActivity", "NavController is not initialized")
-        }
+        navController.navigate(R.id.PrepForFragment)
     }
 
     private fun navigateToTargetFragment() {
-        // Ensure the NavController is properly initialized
-        if (::navController.isInitialized) {
-            navController.navigate(R.id.TargetFragment)
-        } else {
-            Log.e("MainActivity", "NavController is not initialized")
-        }
+        navController.navigate(R.id.TargetFragment)
     }
+
     private fun navigateToRefFragment() {
-        // Ensure the NavController is properly initialized
-        if (::navController.isInitialized) {
-            navController.navigate(R.id.ReferenceFragment)
-        } else {
-            Log.e("MainActivity", "NavController is not initialized")
-        }
+        navController.navigate(R.id.ReferenceFragment)
     }
 
     private fun navigateToWelcomeFragment() {
-        // Ensure the NavController is properly initialized
-        if (::navController.isInitialized) {
-            navController.navigate(R.id.onWelcomeFragment)
-        } else {
-            Log.e("MainActivity", "NavController is not initialized")
-        }
+        // This could be used if you need a dedicated welcome fragment
+        navController.navigate(R.id.onWelcomeFragment)
     }
 
     private fun setupNavigation() {
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as? NavHostFragment
         navController = navHostFragment?.navController ?: throw IllegalStateException("NavController not found")
-
         Log.d("MainActivity", "NavController: $navController")
     }
-    private fun navigateToHomeScreen() {
-        // Navigate to the main activity
-        startActivity(Intent(this, HomeActivity::class.java))
-        finish() // Close the splash activity
-    }
-
 
     override fun onSupportNavigateUp(): Boolean {
         return navController.navigateUp() || super.onSupportNavigateUp()
