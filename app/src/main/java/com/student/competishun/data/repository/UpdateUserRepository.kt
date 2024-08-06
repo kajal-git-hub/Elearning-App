@@ -14,48 +14,46 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class UpdateUserRepository @Inject constructor(@Gatekeeper private val apolloClient: ApolloClient) {
+class UpdateUserRepository @Inject constructor( @Gatekeeper private val apolloClient: ApolloClient) {
 
-    private val TAG = "com.student.competishun.data.repository.UpdateUserRepository"
-
-    suspend fun updateUser(updateUserInput: UpdateUserInput, accessToken: String): UpdateUserResponse? {
+    private val TAG = "UpdateUserRepository"
+    suspend fun updateUser(updateUserInput: UpdateUserInput): UpdateUserResponse? {
         val mutation = UpdateUserMutation(updateUserInput)
-        val headers = listOf(HttpHeader("Authorization", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImM5ZTEzZmVmLTlhZjItNDUwYy1iYzM0LWFjNzdhNjYwZDY4ZSIsImlhdCI6MTcyMjkyNzEzMywiZXhwIjoxNzIyOTM3OTMzfQ.OTgVQNzabmmun4qbVobpMIHPNWCH0KUtVpDn8E9lshE"))
 
         return try {
-            val response = apolloClient.mutate(mutation)
-                .httpHeaders(headers)
-                .execute()
+            val response = apolloClient.mutate(mutation).execute()
 
             if (response.hasErrors()) {
+                // Handle errors if needed
                 response.errors?.forEach {
                     Log.e("GraphQL Error", it.message)
                 }
                 return null
             }
 
-            response.data?.updateUser?.let { user ->
+            response.data?.updateUser?.let { result ->
                 UpdateUserResponse(
-                    user = User(
-                        id = user.id,
-                        mobileNumber = user.mobileNumber,
-                        fullName = user.fullName,
-                        countryCode = user.countryCode,
-                        userInformation = UserInformation(
-                            id = user.userInformation.id,
-                            preparingFor = user.userInformation.preparingFor,
-                            targetYear = user.userInformation.targetYear,
-                            city = user.userInformation.city,
-                            reference = user.userInformation.reference
+                    user = result.let { user ->
+                        User(
+                            id = user.id,
+                            mobileNumber = user.mobileNumber,
+                            fullName = user.fullName,
+                            countryCode = user.countryCode,
+                            userInformation = user.userInformation.let { info ->
+                                UserInformation(
+                                    id = info.id,
+                                    preparingFor = info.preparingFor,
+                                    targetYear = info.targetYear,
+                                    city = info.city,
+                                    reference = info.reference
+                                )
+                            }
                         )
-                    )
+                    }
                 )
-            } ?: run {
-                Log.e(TAG, "User data is null in response")
-                null
             }
         } catch (e: ApolloException) {
-            Log.e(TAG, "ApolloException: ${e.message}")
+            Log.e(TAG, e.message ?: "Unknown error")
             null
         }
     }

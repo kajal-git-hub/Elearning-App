@@ -66,37 +66,38 @@ class ReferenceFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.RefNext.text = "Done"
-        binding.RefNext.setOnClickListener {
-            updateUserViewModel.updateUser()
-            if (isItemSelected) {
 
-//                val updateUserInput = UpdateUserInput(
-//                    city = Optional.Present("noida"),
-//                    fullName = Optional.Present("kajal"),
-//                    preparingFor = Optional.Present("IIT-JEE"),
-//                    targetYear = Optional.Present(2024),
-//                    reference = Optional.Present("Social Media")
-//                )
-//                Log.e("geteal", updateUserInput.toString())
-//                updateUserViewModel.updateUser(updateUserInput)
+        binding.RefNext.setOnClickListener {
+
+            if (isItemSelected) {
+                val updateUserInput = UpdateUserInput(
+                    city = Optional.Present(sharedPreferencesManager.city),
+                    fullName = Optional.Present(sharedPreferencesManager.name),
+                    preparingFor = Optional.Present(sharedPreferencesManager.preparingFor),
+                    reference = Optional.Present(sharedPreferencesManager.reference),
+                    targetYear = Optional.Present(sharedPreferencesManager.targetYear)
+                )
+
+                updateUserViewModel.updateUser(updateUserInput)
 
             } else {
                 Toast.makeText(context, "PleaFse select an option", Toast.LENGTH_SHORT).show()
             }
         }
-        Log.d("ExampleFragment", "Update successful:1")
-        updateUserViewModel.updateUserResult.observe(viewLifecycleOwner) { result ->
-            Log.d("ExampleFragment", "Update successful2: $result")
-            if (result != null) {
-                // Handle successful update
-                Log.d("ExampleFragment", "Update successful: $result")
-                Toast.makeText(context, "User updated successfully!", Toast.LENGTH_SHORT).show()
+        updateUserViewModel.updateUserResult.observe(viewLifecycleOwner, Observer { result ->
+            if (result?.user != null) {
+                // Handle successful response
+                navigateToLoaderScreen()
+                val user = result.user
+                Log.e("gettingUserUpdate",result.user.fullName.toString())
             } else {
-                // Handle update failure
-                Log.e("ExampleFragment", "Update failed")
-                Toast.makeText(context, "User update failed. Please try again.", Toast.LENGTH_SHORT).show()
+                Log.e("gettingUserUpdatefail",result.toString())
+                Toast.makeText(context, "Update failed", Toast.LENGTH_SHORT).show()
             }
-        }
+        })
+
+        Log.d("ExampleFragment", "Update successful:1")
+
         binding.RefBack.setOnClickListener {
             findNavController().navigateUp()
         }
@@ -158,7 +159,7 @@ class ReferenceFragment : Fragment() {
         binding.root.addView(processingView)
 
         Handler(Looper.getMainLooper()).postDelayed({
-            findNavController().navigate(R.id.action_OnBoardingFragment_to_HomeActivity)
+            findNavController().navigate(R.id.homeActivity)
         }, 5000)
     }
 
