@@ -23,4 +23,12 @@
     <color name="e3e8ef">#E3E8EF</color>
 
 
+
+    <color name="PrimaryColor">#3E3EF7</color>
+    <color name="gray_progress">#CCCBCB</color>
+    <color name="gray_border">#CCCBCB</color>
+    <color name="_808080">#808080</color>
+    <color name="_333333">#333333</color>
+
+
 </resources>

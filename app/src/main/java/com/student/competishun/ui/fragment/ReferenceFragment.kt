@@ -68,7 +68,6 @@ class ReferenceFragment : Fragment() {
         binding.RefNext.text = "Done"
 
         binding.RefNext.setOnClickListener {
-
             if (isItemSelected) {
                 val updateUserInput = UpdateUserInput(
                     city = Optional.Present(sharedPreferencesManager.city),
@@ -109,7 +108,8 @@ class ReferenceFragment : Fragment() {
         val exampleAdapter = ExampleAdapter(
             dataList = dataSets[currentStep],
             currentStep = currentStep,
-            spanCount = spanCount[currentStep]
+            spanCount = spanCount[currentStep],
+            selectedItem = sharedPreferencesManager.reference
         ) { selectedItem ->
             sharedPreferencesManager.reference = selectedItem
             Log.d("selectedItem",selectedItem)
@@ -122,13 +122,10 @@ class ReferenceFragment : Fragment() {
             adapter = exampleAdapter
         }
 
-
-
         startSlideInAnimation()
 
         updateButtonBackground()
     }
-
 
     private fun updateButtonBackground() {
         if (isItemSelected) {
@@ -140,7 +137,8 @@ class ReferenceFragment : Fragment() {
 
     private fun startSlideInAnimation() {
         val slideInAnimation = AnimationUtils.loadAnimation(context, R.anim.slide_in_bottom)
-        binding.refRecyclerview.startAnimation(slideInAnimation)
+        binding.clAnimConstraint.startAnimation(slideInAnimation)
+
     }
 
     override fun onDestroyView() {

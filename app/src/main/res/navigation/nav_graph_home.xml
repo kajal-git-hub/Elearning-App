@@ -9,7 +9,7 @@
         android:id="@+id/homeFragment"
         android:name="com.student.competishun.ui.fragment.HomeFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" >
+        tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_homeFragment_to_coursesFragment"
             app:destination="@+id/coursesFragment" />
@@ -32,29 +32,29 @@
         tools:layout="@layout/fragment_media_player">
         <argument
             android:name="url"
-            app:argType="string"
-            android:defaultValue="" />
+            android:defaultValue=""
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/exploreFragment"
         android:name="com.student.competishun.ui.fragment.ExploreFragment"
         android:label="fragment_explore"
-        tools:layout="@layout/fragment_explore" >
+        tools:layout="@layout/fragment_explore">
         <action
             android:id="@+id/action_exploreFragment_to_allFaqFragment"
-            app:destination="@id/allFaqFragment"/>
+            app:destination="@id/allFaqFragment" />
         <action
             android:id="@+id/action_exploreFragment_to_demoFreeFragment"
-            app:destination="@+id/demoFreeFragment"/>
+            app:destination="@+id/demoFreeFragment" />
         <action
             android:id="@+id/action_exploreFragment_to_installmentFragment"
-            app:destination="@+id/installmentFragment"/>
+            app:destination="@+id/installmentFragment" />
         <action
             android:id="@+id/action_exploreFragment_to_myCartFragment"
-            app:destination="@+id/myCartFragment"/>
+            app:destination="@+id/myCartFragment" />
         <action
             android:id="@+id/action_exploreFragment_to_paymentFragment"
-            app:destination="@+id/paymentFragment"/>
+            app:destination="@+id/paymentFragment" />
     </fragment>
     <fragment
         android:id="@+id/allFaqFragment"
@@ -67,14 +67,12 @@
     <fragment
         android:id="@+id/demoFreeFragment"
         android:name="com.student.competishun.ui.fragment.AllDemoResourcesFree"
-        tools:layout="@layout/fragment_all_demo_resources_free">
-    </fragment>
+        tools:layout="@layout/fragment_all_demo_resources_free"></fragment>
 
     <fragment
         android:id="@+id/installmentFragment"
         android:name="com.student.competishun.ui.fragment.InstallmentDetailsBottomSheet"
-        tools:layout="@layout/bottom_sheet_installment_details">
-    </fragment>
+        tools:layout="@layout/bottom_sheet_installment_details"></fragment>
 
     <fragment
         android:id="@+id/myCartFragment"
@@ -83,16 +81,17 @@
 
         <action
             android:id="@+id/action_mycartFragment_to_paymentFragment"
-            app:destination="@+id/paymentFragment"/>
+            app:destination="@+id/paymentFragment" />
         <action
             android:id="@+id/action_mycartFragment_to_paymentLoaderFragment"
-            app:destination="@+id/paymentLoaderFragment"/>
+            app:destination="@+id/paymentLoaderFragment" />
     </fragment>
 
     <fragment
         android:id="@+id/paymentFragment"
         android:name="com.student.competishun.ui.fragment.PaymentFragment"
         tools:layout="@layout/fragment_payment">
+
     </fragment>
 
     <fragment
@@ -102,9 +101,45 @@
 
         <action
             android:id="@+id/action_paymentLoaderFragment_to_paymentFragment"
-            app:destination="@+id/paymentFragment"/>
+            app:destination="@+id/paymentFragment" />
     </fragment>
 
+    <fragment
+        android:id="@+id/PersonalDetailsFragment"
+        android:name="com.student.competishun.ui.fragment.PersonalDetailsFragment"
+        tools:layout="@layout/fragment_personal_detail">
+
+        <action
+            android:id="@+id/action_PersonalDetails_to_AdditionalDetail"
+            app:destination="@+id/AdditionalDetailsFragment" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/AdditionalDetailsFragment"
+        android:name="com.student.competishun.ui.fragment.AdditionalDetailsFragment"
+        tools:layout="@layout/fragment_additional_detail">
+
+        <action
+            android:id="@+id/action_AdditionalDetail_to_AddressDetail"
+            app:destination="@+id/AddressDetailFragment" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/AddressDetailFragment"
+        android:name="com.student.competishun.ui.fragment.AddressDetailsFragment"
+        tools:layout="@layout/fragment_address_details">
+
+        <action
+            android:id="@+id/action_AddressDetail_to_CourseEmpty"
+            app:destination="@+id/courseEmptyFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/courseEmptyFragment"
+        android:name="com.student.competishun.ui.fragment.CourseEmptyFragment"
+        tools:layout="@layout/fragment_course_empty">
+    </fragment>
 
 
 </navigation>

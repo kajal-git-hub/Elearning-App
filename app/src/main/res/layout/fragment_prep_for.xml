@@ -179,10 +179,11 @@
                         android:layout_width="match_parent"
                         android:layout_height="74dp"
                         android:background="@drawable/getstarted_itembg_unselected"
-                        android:visibility="visible"
+                        android:visibility="gone"
                         android:layout_marginTop="8dp"
                         android:layout_marginHorizontal="6dp"
                         app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/prepRecyclerview">
 
                         <EditText
@@ -191,10 +192,11 @@
                             android:layout_height="wrap_content"
                             android:background="@null"
                             android:hint="Enter here"
-                            android:inputType="text"
+                            android:inputType="textMultiLine"
                             android:maxLines="100"
                             android:padding="10dp"
                             android:textColor="#898384"
+                            app:layout_constraintBottom_toTopOf="@+id/tvWordCounter"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
 
@@ -203,6 +205,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="10dp"
+                            android:layout_marginBottom="5dp"
                             android:gravity="center"
                             android:text="0/100"
                             android:textColor="#898384"

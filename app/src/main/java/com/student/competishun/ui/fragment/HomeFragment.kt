@@ -24,10 +24,14 @@ import com.google.android.material.navigation.NavigationView
 import com.student.competishun.R
 import com.student.competishun.curator.GetAllCourseCategoriesQuery
 import com.student.competishun.curator.type.FindAllCourseInput
+import com.student.competishun.data.model.PromoBannerModel
+import com.student.competishun.data.model.RecommendedCourseDataModel
 import com.student.competishun.data.model.Testimonial
 import com.student.competishun.data.model.WhyCompetishun
 import com.student.competishun.databinding.FragmentHomeBinding
 import com.student.competishun.ui.adapter.OurCoursesAdapter
+import com.student.competishun.ui.adapter.PromoBannerAdapter
+import com.student.competishun.ui.adapter.RecommendedCoursesAdapter
 import com.student.competishun.ui.adapter.TestimonialsAdapter
 import com.student.competishun.ui.adapter.WhyCompetishunAdapter
 import com.student.competishun.ui.viewmodel.CoursesCategoryViewModel
@@ -56,8 +60,11 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
     private lateinit var rvOurCourses: RecyclerView
     private lateinit var dotsIndicatorOurCourses: LinearLayout
     private lateinit var adapterOurCourses: OurCoursesAdapter
-    private  var listOurCoursesItem: List<GetAllCourseCategoriesQuery.GetAllCourseCategory>? = null
+    private var listOurCoursesItem: List<GetAllCourseCategoriesQuery.GetAllCourseCategory>? = null
 
+    private lateinit var promoBannerList: List<PromoBannerModel>
+
+    private lateinit var recommendedCourseList: List<RecommendedCourseDataModel>
 
     private lateinit var helperFunctions: HelperFunctions
 
@@ -76,6 +83,82 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
+        recommendedCourseList = listOf(
+            RecommendedCourseDataModel(
+                discount = "11% OFF",
+                courseName = "Prakhar Integrated (Fast Lane-2) 2024-25",
+                tag1 = "12th Class",
+                tag2 = "Full-Year",
+                tag3 = "Target 2025",
+                startDate = "Starts On: 01 Jul, 24",
+                endDate = "Expiry Date: 31 Jul, 24",
+                lectureCount = "Lectures: 56",
+                quizCount = "Quiz & Tests: 120",
+                originalPrice = "₹44,939",
+                discountPrice = "₹29,900"
+            ),
+            RecommendedCourseDataModel(
+                discount = "11% OFF",
+                courseName = "Prakhar Integrated (Fast Lane-2) 2024-25",
+                tag1 = "12th Class",
+                tag2 = "Full-Year",
+                tag3 = "Target 2025",
+                startDate = "Starts On: 01 Jul, 24",
+                endDate = "Expiry Date: 31 Jul, 24",
+                lectureCount = "Lectures: 56",
+                quizCount = "Quiz & Tests: 120",
+                originalPrice = "₹44,939",
+                discountPrice = "₹29,900"
+            ),
+            RecommendedCourseDataModel(
+                discount = "11% OFF",
+                courseName = "Prakhar Integrated (Fast Lane-2) 2024-25",
+                tag1 = "12th Class",
+                tag2 = "Full-Year",
+                tag3 = "Target 2025",
+                startDate = "Starts On: 01 Jul, 24",
+                endDate = "Expiry Date: 31 Jul, 24",
+                lectureCount = "Lectures: 56",
+                quizCount = "Quiz & Tests: 120",
+                originalPrice = "₹44,939",
+                discountPrice = "₹29,900"
+            )
+        )
+
+
+        binding.rvRecommendedCourses.adapter = RecommendedCoursesAdapter(recommendedCourseList)
+        binding.rvRecommendedCourses.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+
+        setupDotsIndicator(recommendedCourseList.size, binding.llDotsIndicatorRecommendedCourses)
+
+        binding.rvRecommendedCourses.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                updateDotsIndicator(recyclerView, binding.llDotsIndicatorRecommendedCourses)
+            }
+        })
+
+        promoBannerList = listOf(
+            PromoBannerModel(R.drawable.promo_banner_home),
+            PromoBannerModel(R.drawable.promo_banner_home),
+            PromoBannerModel(R.drawable.promo_banner_home),
+        )
+        binding.rvpromobanner.adapter = PromoBannerAdapter(promoBannerList)
+        binding.rvpromobanner.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+
+        setupDotsIndicator(promoBannerList.size, binding.llDotsIndicatorPromoBanner)
+
+        binding.rvpromobanner.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                updateDotsIndicator(recyclerView, binding.llDotsIndicatorPromoBanner)
+            }
+        })
+
 
         rvOurCourses = view.findViewById(R.id.rvOurCourses)
         dotsIndicatorOurCourses = view.findViewById(R.id.llDotsIndicatorOurCourses)
@@ -103,13 +186,13 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
         toggle.syncState()
 
         recyclerView = view.findViewById(R.id.recyclerViewTestimonials)
-        rvWhyCompetishun=view.findViewById(R.id.rvWhyCompetishun)
+        rvWhyCompetishun = view.findViewById(R.id.rvWhyCompetishun)
         dotsIndicatorTestimonials = view.findViewById(R.id.llDotsIndicator)
         dotsIndicatorWhyCompetishun = view.findViewById(R.id.llDotsIndicatorWhyCompetishun)
 
         coursesViewModel.courses.observe(viewLifecycleOwner, Observer { courses ->
-            _binding?.tvBatchName?.text = courses?.firstOrNull()?.name
-            Log.e("Coursesres",courses.toString())
+//            _binding?.tvBatchName?.text = courses?.firstOrNull()?.name
+            Log.e("Coursesres", courses.toString())
             // Update UI with courses data
             // For example: binding.textView.text = courses?.firstOrNull()?.name ?: "No courses"
         })
@@ -122,12 +205,13 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
             _binding?.progressBar?.visibility = View.GONE
 
             if (!category.isNullOrEmpty()) {
-                Log.e("coursesCategor not",category.toString())
+                Log.e("coursesCategor not", category.toString())
                 _binding?.rvOurCourses?.visibility = View.VISIBLE
                 listOurCoursesItem = category
-                adapterOurCourses = OurCoursesAdapter(listOurCoursesItem!!,this)
+                adapterOurCourses = OurCoursesAdapter(listOurCoursesItem!!, this)
                 rvOurCourses.adapter = adapterOurCourses
-                rvOurCourses.layoutManager = GridLayoutManager(context, 3, GridLayoutManager.HORIZONTAL, false)
+                rvOurCourses.layoutManager =
+                    GridLayoutManager(context, 3, GridLayoutManager.HORIZONTAL, false)
                 setupDotsIndicator(listOurCoursesItem!!.size, dotsIndicatorOurCourses, 3)
             }
             // Update UI with courses data
@@ -143,48 +227,109 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
 
         coursesViewModel.fetchCourses(filters)
 
-        coursesViewModel.courses.observe(viewLifecycleOwner, Observer { courses ->
-            _binding?.tvBatchName?.text = courses?.firstOrNull()?.name
-           _binding?.dicountPrice?.text = "₹"+ coursesViewModel.getDiscountDetails(coursesViewModel.courses.value!!.firstOrNull()?.price?.toInt()!!, coursesViewModel.courses.value!!.get(0).discount!!.toInt()).second.toString()
-            _binding?.discountPerc?.text = coursesViewModel.getDiscountDetails(coursesViewModel.courses.value!!.firstOrNull()?.price!!.toInt(), coursesViewModel.courses.value!!.get(0).discount!!.toInt()).first.toString() + "% OFF"
-        })
+//        coursesViewModel.courses.observe(viewLifecycleOwner, Observer { courses ->
+////            _binding?.tvBatchName?.text = courses?.firstOrNull()?.name
+////            _binding?.dicountPrice?.text = "₹" + coursesViewModel.getDiscountDetails(
+//                coursesViewModel.courses.value!!.firstOrNull()?.price?.toInt()!!,
+//                coursesViewModel.courses.value!!.get(0).discount!!.toInt()
+//            ).second.toString()
+////            _binding?.discountPerc?.text = coursesViewModel.getDiscountDetails(
+//                coursesViewModel.courses.value!!.firstOrNull()?.price!!.toInt(),
+//                coursesViewModel.courses.value!!.get(0).discount!!.toInt()
+//            ).first.toString() + "% OFF"
+//        })
 
         // Fetch courses when the view is created
         listWhyCompetishun = listOf(
-            WhyCompetishun("Competishun","IIT - JEE Cracked","NEET Cracked","https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"),
-            WhyCompetishun("Competishun","IIT - JEE Cracked","NEET Cracked","https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"),
-            WhyCompetishun("Competishun","IIT - JEE Cracked","NEET Cracked","https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4"),
-            WhyCompetishun("Competishun","IIT - JEE Cracked","NEET Cracked","https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4")
+            WhyCompetishun(
+                "Competishun",
+                "IIT - JEE Cracked",
+                "NEET Cracked",
+                "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+            ),
+            WhyCompetishun(
+                "Competishun",
+                "IIT - JEE Cracked",
+                "NEET Cracked",
+                "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"
+            ),
+            WhyCompetishun(
+                "Competishun",
+                "IIT - JEE Cracked",
+                "NEET Cracked",
+                "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4"
+            ),
+            WhyCompetishun(
+                "Competishun",
+                "IIT - JEE Cracked",
+                "NEET Cracked",
+                "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4"
+            )
         )
         testimonials = listOf(
-            Testimonial("The classes are very good. Teachers explain topics very well. Must buy course for all aspiring students.", "Aman Sharma", "Class: 12th", "IIT JEE"),
-            Testimonial("The classes are very good. Teachers explain topics very well. Must buy course for all aspiring students.", "Aman Sharma", "Class: 12th", "IIT JEE"),
-            Testimonial("The classes are very good. Teachers explain topics very well. Must buy course for all aspiring students.", "Aman Sharma", "Class: 12th", "IIT JEE"),
-            Testimonial("The classes are very good. Teachers explain topics very well. Must buy course for all aspiring students.", "Aman Sharma", "Class: 12th", "IIT JEE"),
-            Testimonial("The classes are very good. Teachers explain topics very well. Must buy course for all aspiring students.", "Aman Sharma", "Class: 12th", "IIT JEE")
+            Testimonial(
+                "The classes are very good. Teachers explain topics very well. Must buy course for all aspiring students.",
+                "Aman Sharma",
+                "Class: 12th",
+                "IIT JEE"
+            ),
+            Testimonial(
+                "The classes are very good. Teachers explain topics very well. Must buy course for all aspiring students.",
+                "Aman Sharma",
+                "Class: 12th",
+                "IIT JEE"
+            ),
+            Testimonial(
+                "The classes are very good. Teachers explain topics very well. Must buy course for all aspiring students.",
+                "Aman Sharma",
+                "Class: 12th",
+                "IIT JEE"
+            ),
+            Testimonial(
+                "The classes are very good. Teachers explain topics very well. Must buy course for all aspiring students.",
+                "Aman Sharma",
+                "Class: 12th",
+                "IIT JEE"
+            ),
+            Testimonial(
+                "The classes are very good. Teachers explain topics very well. Must buy course for all aspiring students.",
+                "Aman Sharma",
+                "Class: 12th",
+                "IIT JEE"
+            )
         )
 
         adapter = TestimonialsAdapter(testimonials)
         adapterWhyCompetishun = WhyCompetishunAdapter(listWhyCompetishun)
         recyclerView.adapter = adapter
-        rvWhyCompetishun.adapter= adapterWhyCompetishun
-        recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        rvWhyCompetishun.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        rvWhyCompetishun.adapter = adapterWhyCompetishun
+        recyclerView.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        rvWhyCompetishun.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 
-        helperFunctions.setupDotsIndicator(requireContext(),testimonials.size, dotsIndicatorTestimonials)
-        helperFunctions.setupDotsIndicator(requireContext(),listWhyCompetishun.size, dotsIndicatorWhyCompetishun)
+        helperFunctions.setupDotsIndicator(
+            requireContext(),
+            testimonials.size,
+            dotsIndicatorTestimonials
+        )
+        helperFunctions.setupDotsIndicator(
+            requireContext(),
+            listWhyCompetishun.size,
+            dotsIndicatorWhyCompetishun
+        )
 
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                helperFunctions.updateDotsIndicator(recyclerView,dotsIndicatorTestimonials)
+                helperFunctions.updateDotsIndicator(recyclerView, dotsIndicatorTestimonials)
             }
         })
 
         rvWhyCompetishun.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                helperFunctions.updateDotsIndicator(recyclerView,dotsIndicatorWhyCompetishun)
+                helperFunctions.updateDotsIndicator(recyclerView, dotsIndicatorWhyCompetishun)
             }
         })
         setupClickListeners(view)
@@ -226,12 +371,17 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
 //            findNavController().navigate(R.id.action_homeFragment_to_coursesFragment)
 //        }
 
-        val clExploreCourse = view.findViewById<ConstraintLayout>(R.id.ctRecommendedCourse)
-        clExploreCourse.setOnClickListener {
-            findNavController().navigate(R.id.action_homeFragment_to_exploreFragment)
-        }
+//        val clExploreCourse = view.findViewById<ConstraintLayout>(R.id.ctRecommendedCourse)
+//        clExploreCourse.setOnClickListener {
+//            findNavController().navigate(R.id.action_homeFragment_to_exploreFragment)
+//        }
     }
-    private fun setupDotsIndicator(itemCount: Int, dotsIndicator: LinearLayout, spanCount: Int = 1) {
+
+    private fun setupDotsIndicator(
+        itemCount: Int,
+        dotsIndicator: LinearLayout,
+        spanCount: Int = 1
+    ) {
         val pageCount = (itemCount + spanCount - 1) / spanCount
         dotsIndicator.removeAllViews()
         for (i in 0 until pageCount) {
@@ -248,7 +398,11 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
         updateDotsIndicator(null, dotsIndicator, spanCount)
     }
 
-    private fun updateDotsIndicator(recyclerView: RecyclerView?, dotsIndicator: LinearLayout, spanCount: Int = 1) {
+    private fun updateDotsIndicator(
+        recyclerView: RecyclerView?,
+        dotsIndicator: LinearLayout,
+        spanCount: Int = 1
+    ) {
         recyclerView?.let {
             val visiblePageIndex = when (val layoutManager = it.layoutManager) {
                 is LinearLayoutManager -> {
@@ -257,12 +411,15 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
                     val visiblePage = totalScrollX * layoutManager.itemCount / totalWidth
                     visiblePage
                 }
+
                 is GridLayoutManager -> {
                     val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
                     val visiblePage = firstVisibleItemPosition / spanCount
-                    val totalPages = (layoutManager.itemCount + layoutManager.spanCount - 1) / layoutManager.spanCount
+                    val totalPages =
+                        (layoutManager.itemCount + layoutManager.spanCount - 1) / layoutManager.spanCount
                     visiblePage.coerceIn(0, totalPages - 1)
                 }
+
                 else -> 0
             }
 
@@ -279,8 +436,6 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
             }
         }
     }
-
-
 
 
     override fun onDestroyView() {

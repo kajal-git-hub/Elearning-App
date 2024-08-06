@@ -29,10 +29,10 @@ import com.apollographql.apollo3.api.Optional
 class MainActivity : AppCompatActivity() {
 
     private val mainVM: MainVM by viewModels()
+    private lateinit var navController: NavController
     private lateinit var binding: ActivityMainBinding
     lateinit var sharedPreferencesManager: SharedPreferencesManager
     lateinit var userInput: UpdateUserInput
-    private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -102,19 +102,17 @@ class MainActivity : AppCompatActivity() {
             navigateToPreparationFragment()
         }
         if (!sharedPreferencesManager.preparingFor.isNullOrEmpty()){
-            Log.e("saved pref", sharedPreferencesManager.preparingFor.toString() + userInput.fullName)
+            Log.e("saved prepare", sharedPreferencesManager.preparingFor.toString() + userInput.fullName)
             navigateToTargetFragment()
         }
-        if (!sharedPreferencesManager.reference.isNullOrEmpty()){
-            Log.e("saved pref", sharedPreferencesManager.preparingFor.toString() + userInput.fullName)
+        if (sharedPreferencesManager.targetYear != 0){
+            Log.e("saved target", sharedPreferencesManager.preparingFor.toString() + userInput.fullName)
             navigateToRefFragment()
-
         }
-
-        if (!sharedPreferencesManager.reference.isNullOrEmpty() && !sharedPreferencesManager.city.isNullOrEmpty() &&!sharedPreferencesManager.preparingFor.isNullOrEmpty() && !sharedPreferencesManager.name.isNullOrEmpty() && sharedPreferencesManager.targetYear == 0){
-            Log.e("saved pref", sharedPreferencesManager.preparingFor.toString() + userInput.fullName)
-            navigateToHomeScreen()
-
+        if (!sharedPreferencesManager.reference.isNullOrEmpty()){
+            Log.e("saved ref", sharedPreferencesManager.reference.toString() + userInput.fullName)
+            startActivity(Intent(this, HomeActivity::class.java))
+            finish()
         }
         Log.e("saved name", sharedPreferencesManager.name.toString() + userInput.fullName)
     }
@@ -140,6 +138,15 @@ class MainActivity : AppCompatActivity() {
         // Ensure the NavController is properly initialized
         if (::navController.isInitialized) {
             navController.navigate(R.id.ReferenceFragment)
+        } else {
+            Log.e("MainActivity", "NavController is not initialized")
+        }
+    }
+
+    private fun navigateToWelcomeFragment() {
+        // Ensure the NavController is properly initialized
+        if (::navController.isInitialized) {
+            navController.navigate(R.id.onWelcomeFragment)
         } else {
             Log.e("MainActivity", "NavController is not initialized")
         }

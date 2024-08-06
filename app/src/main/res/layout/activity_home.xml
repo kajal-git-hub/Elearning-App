@@ -26,10 +26,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/_16dp"
-        android:visibility="gone"
         android:layout_marginBottom="@dimen/_16dp"
         android:background="@drawable/card_bg"
         android:padding="16dp"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/ig_ContactImage"
         app:layout_constraintEnd_toEndOf="parent">
 
@@ -118,6 +118,20 @@
         android:src="@drawable/ic_call"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNav"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        app:itemActiveIndicatorStyle="@null"
+        app:itemIconSize="30dp"
+        app:itemIconTint="@drawable/bottom_back"
+        app:itemTextColor="@drawable/bottom_back"
+        app:labelVisibilityMode="labeled"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:menu="@menu/bottom_nav" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

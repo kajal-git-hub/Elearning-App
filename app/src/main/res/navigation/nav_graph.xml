@@ -21,7 +21,6 @@
         </action>
     </fragment>
 
-
     <fragment
         android:id="@+id/verifyOTPFragment"
         android:name="com.student.competishun.ui.fragment.VerifyOTPFragment"

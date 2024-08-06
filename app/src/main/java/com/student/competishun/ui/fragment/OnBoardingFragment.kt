@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.student.competishun.R
@@ -29,14 +30,20 @@ class OnBoardingFragment : Fragment() {
     ): View {
         _binding = FragmentOnBoardingBinding.inflate(inflater, container, false)
         sharedPreferencesManager = (requireActivity() as MainActivity).sharedPreferencesManager
+        requireActivity().onBackPressedDispatcher.addCallback(this) {
+            handleBackPressed()
+        }
+
         return binding.root
+    }
+
+    private fun handleBackPressed() {
+        findNavController().navigate(R.id.loginFragment)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         setupTextWatchers()
-
         binding.btnBack.setOnClickListener {
             findNavController().navigate(R.id.action_OnBoardingFragment_to_loginFragment)
         }
@@ -72,7 +79,7 @@ class OnBoardingFragment : Fragment() {
     private fun isCurrentStepValid(): Boolean {
         val name = binding.etEnterHereText.text.toString().trim()
         val city = binding.etEnterCityText.text.toString().trim()
-        Log.e("nameci",name)
+        Log.e("updateusername",name)
         sharedPreferencesManager.name = name
         sharedPreferencesManager.city = city
         moveForward = name.isNotEmpty() && city.isNotEmpty()  && name.length >= 3 && city.isNotEmpty()

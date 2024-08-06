@@ -44,7 +44,6 @@ class TargetFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            // Handle arguments if needed
         }
     }
 
@@ -58,7 +57,6 @@ class TargetFragment : Fragment() {
         requireActivity().onBackPressedDispatcher.addCallback(this) {
             handleBackPressed()
         }
-
         return binding.root
     }
 
@@ -76,14 +74,14 @@ class TargetFragment : Fragment() {
             }
         }
 
-        // Set the text for step and page
         binding.etStartedText.text = stepTexts[currentStep]
         binding.etText.text = pageTexts[currentStep]
-
+        val selectedItem = sharedPreferencesManager.targetYear.toString()
         val exampleAdapter = ExampleAdapter(
             dataList = dataSets[currentStep],
             currentStep = currentStep,
-            spanCount = spanCount[currentStep]
+            spanCount = spanCount[currentStep],
+            selectedItem = selectedItem
         ) { selectedItem ->
             Log.d("TargetFragment", "Selected item: $selectedItem")
 
@@ -99,6 +97,8 @@ class TargetFragment : Fragment() {
             layoutManager = GridLayoutManager(context, spanCount[currentStep])
             adapter = exampleAdapter
         }
+        if (selectedItem != null){isItemSelected = true
+        updateButtonBackground()}
 
         startSlideInAnimation()
         updateButtonBackground()
@@ -114,13 +114,14 @@ class TargetFragment : Fragment() {
     private fun startSlideInAnimation() {
         val slideInAnimation = AnimationUtils.loadAnimation(context, R.anim.slide_in_bottom)
         binding.targetRecyclerview.startAnimation(slideInAnimation)
+        binding.clAnimConstraint.startAnimation(slideInAnimation)
+
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
-
     private fun handleBackPressed() {
         findNavController().navigateUp()
     }

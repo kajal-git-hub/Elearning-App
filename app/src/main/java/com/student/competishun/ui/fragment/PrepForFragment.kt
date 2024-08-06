@@ -1,6 +1,8 @@
 package com.student.competishun.ui.fragment
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -77,12 +79,17 @@ class PrepForFragment : Fragment() {
         val exampleAdapter = ExampleAdapter(
             dataList = dataSets[currentStep],
             currentStep = currentStep,
-            spanCount = spanCount[currentStep]
+            spanCount = spanCount[currentStep],
+            selectedItem = sharedPreferencesManager.preparingFor
         ) { selectedItem ->
             isItemSelected = true
             Log.d("selectedItem",selectedItem)
             sharedPreferencesManager.preparingFor = selectedItem
             binding.PrepNext.setBackgroundResource(R.drawable.second_getstarteddone)
+
+            if(selectedItem=="Others"){
+                binding.etContentBox.visibility = View.VISIBLE
+            }
         }
 
         binding.prepRecyclerview.apply {
@@ -93,9 +100,29 @@ class PrepForFragment : Fragment() {
         startSlideInAnimation()
 
         updateButtonBackground()
+
+        setupWordCounter()
     }
 
-    private fun updateButtonBackground() {
+    private fun setupWordCounter() {
+        binding.etContent.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                // No action needed before text change
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val wordCount = s.toString().trim().split("\\s+".toRegex()).size
+                binding.tvWordCounter.text = "$wordCount"+"/100"
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+
+            }
+        })
+    }
+
+
+        private fun updateButtonBackground() {
         if (isItemSelected) {
             binding.PrepNext.setBackgroundResource(R.drawable.second_getstarteddone)
         } else {
@@ -106,6 +133,7 @@ class PrepForFragment : Fragment() {
     private fun startSlideInAnimation() {
         val slideInAnimation = AnimationUtils.loadAnimation(context, R.anim.slide_in_bottom)
         binding.prepRecyclerview.startAnimation(slideInAnimation)
+        binding.clAnimConstraint.startAnimation(slideInAnimation)
     }
 
     override fun onDestroyView() {
