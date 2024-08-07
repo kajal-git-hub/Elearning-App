@@ -162,7 +162,6 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
 
         rvOurCourses = view.findViewById(R.id.rvOurCourses)
         dotsIndicatorOurCourses = view.findViewById(R.id.llDotsIndicatorOurCourses)
-        dotsIndicatorOurCourses = view.findViewById(R.id.llDotsIndicatorOurCourses)
 
         rvOurCourses.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -446,6 +445,8 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
     override fun onCourseItemClick(course: GetAllCourseCategoriesQuery.GetAllCourseCategory) {
         val bundle = Bundle().apply {
             putString("course_name", course.name)
+            putString("category_id",course.id)
+            Log.e("courseane ",course.name)
             // Add other course details to the bundle if needed
         }
         findNavController().navigate(R.id.action_homeFragment_to_coursesFragment, bundle)

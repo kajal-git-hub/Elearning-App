@@ -19,12 +19,21 @@
         <action
             android:id="@+id/action_homeFragment_to_mediaFragment"
             app:destination="@+id/mediaFragment" />
+
     </fragment>
     <fragment
         android:id="@+id/coursesFragment"
         android:name="com.student.competishun.ui.fragment.CoursesFragment"
         android:label="fragment_courses"
-        tools:layout="@layout/fragment_courses" />
+        tools:layout="@layout/fragment_courses" >
+        <action
+            android:id="@+id/action_coursesFragment_to_ExploreFragment"
+            app:destination="@+id/exploreFragment">
+            <argument
+                android:name="courseId"
+                app:argType="string" />
+        </action>
+    </fragment>
     <fragment
         android:id="@+id/mediaFragment"
         android:name="com.student.competishun.ui.fragment.MediaPlayerFragment"

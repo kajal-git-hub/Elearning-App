@@ -12,3 +12,16 @@ data class TabItem(
     val originalPrice: String,
     val discountPrice: String
 )
+
+data class Course(
+    val category_name: String?,
+    val discount: String?,
+    val name: String?,
+    val tags: List<String>?,
+    val course_start_date: String?,
+    val course_validity_end_date: String?,
+    val lectures: String?,
+    val quizzes: String?,
+    val originalPrice: String?,
+    val discountPrice: String?
+)

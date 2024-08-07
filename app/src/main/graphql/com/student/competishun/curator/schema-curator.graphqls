@@ -26,6 +26,46 @@ type Banner {
   web_banner_image_name: String
 }
 
+type Cart {
+  cart_items: [CartItem!]
+
+  createdAt: DateTime!
+
+  deletedAt: DateTime!
+
+  id: ID!
+
+  updatedAt: DateTime!
+
+  user_id: ID!
+}
+
+type CartItem {
+  cart_id: ID!
+
+  createdAt: DateTime!
+
+  deletedAt: DateTime!
+
+  entity_id: ID!
+
+  entity_type: EntityType!
+
+  id: ID!
+
+  price: Int!
+
+  quantity: Int!
+
+  updatedAt: DateTime!
+}
+
+type CartResponseDto {
+  cartItem: CartItem!
+
+  course: Course!
+}
+
 enum Class {
   ELEVENTH
 
@@ -84,6 +124,8 @@ type Course {
   doubt_session: Boolean
 
   download_pdf: Boolean
+
+  entity_type: String
 
   exam_type: ExamType
 
@@ -169,6 +211,8 @@ type CourseFolderContent {
 
   deletedAt: DateTime!
 
+  description: String
+
   file_name: String
 
   file_url: String!
@@ -214,6 +258,20 @@ input CreateBannerInput {
   course_id: ID!
 
   redirect_link: String
+}
+
+input CreateCartItemDto {
+  entity_id: ID!
+
+  entity_type: EntityType!
+
+  price: Int!
+
+  quantity: Int!
+}
+
+input CreateCartItemsDto {
+  cartItems: [CreateCartItemDto!]!
 }
 
 input CreateCourseCategoryInput {
@@ -361,10 +419,24 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+enum EntityType {
+  COURSE
+
+  QUIZZ
+
+  TEST_SERIES
+}
+
 enum ExamType {
   IITJEE
 
   NEET
+}
+
+input FileWithDescriptionInput {
+  description: String
+
+  file: Upload!
 }
 
 input FindAllCourseInput {
@@ -408,6 +480,10 @@ type Mutation {
 
   createBulkCourseCategory: Boolean!
 
+  createCart(user_id: String!): Cart!
+
+  createCartItems(createCartItemsInput: CreateCartItemsDto!, user_id: String!): [CartItem!]!
+
   createCourse(banner_image: [Upload], createCourseInput: CreateCourseInput!, orientation_video: [Upload], planner_pdf: [Upload], video_thumbnail: [Upload]): Course!
 
   createCourseCategory(createCourseCategoryInput: CreateCourseCategoryInput!): CourseCategory!
@@ -424,9 +500,15 @@ type Mutation {
 
   removeBanner(id: Int!): Banner!
 
+  removeCart(id: String!): Boolean!
+
+  removeCartItem(id: ID!): Boolean!
+
   removeCourseFolder(id: String!): Boolean!
 
   updateBanner(id: String!, mobile_banner: [Upload], updateBannerInput: UpdateBannerInput!, web_banner: [Upload]): Boolean!
+
+  updateCartItems(updateCartItemsInput: UpdateCartItemsDto!, user_id: String!): Boolean!
 
   updateCourse(banner_image: [Upload], id: String!, orientation_video: [Upload], planner_pdf: [Upload], updateCourseInput: UpdateCourseInput!, video_thumbnail: [Upload]): Boolean!
 
@@ -434,7 +516,7 @@ type Mutation {
 
   updateCourseFolder(id: String!, updateCourseFolderInput: UpdateCourseFolderInput!): Boolean!
 
-  uploadFileinFolder(file: Upload!, id: String!): Boolean!
+  uploadFilesInFolder(filesWithDescriptions: [FileWithDescriptionInput!]!, id: String!): Boolean!
 }
 
 enum OtherRequirements {
@@ -452,6 +534,12 @@ enum OtherRequirements {
 }
 
 type Query {
+  findAllCartItems(user_id: String!): [CartResponseDto!]!
+
+  findCartItemById(id: ID!): CartResponseDto!
+
+  findOne(id: String!): Cart!
+
   getAllBanners: [Banner!]!
 
   getAllCourse(filters: FindAllCourseInput): AllCoursesResponseDto!
@@ -477,6 +565,20 @@ input UpdateBannerInput {
   course_id: ID
 
   redirect_link: String
+}
+
+input UpdateCartItemDto {
+  entity_id: ID!
+
+  entity_type: EntityType!
+
+  price: Int!
+
+  quantity: Int!
+}
+
+input UpdateCartItemsDto {
+  cartItems: [UpdateCartItemDto!]!
 }
 
 input UpdateCourseCategoryInput {

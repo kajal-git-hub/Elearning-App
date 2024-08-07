@@ -12,10 +12,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.fragment.app.viewModels
+import androidx.media3.common.util.Log
 import com.google.android.material.appbar.MaterialToolbar
+import com.student.competishun.curator.type.FindAllCourseInputStudent
+import com.student.competishun.ui.viewmodel.StudentCoursesViewModel
 
 class CoursesFragment : Fragment() {
-
+    private val  studentCoursesViewModel: StudentCoursesViewModel by viewModels()
+    var categoryName = ""
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -30,15 +35,22 @@ class CoursesFragment : Fragment() {
         val tabViewPager = view.findViewById<ViewPager>(R.id.tab_viewpager)
         val tabTabLayout = view.findViewById<TabLayout>(R.id.tab_tablayout)
 
-        tabToolbar.title = ""
+
         val clickedViewMessage = arguments?.getString("clicked_view")
+        categoryName = arguments?.getString("course_name").toString()
+        val categoryId = arguments?.getString("category_id")
+        tabToolbar.title = ""
+        tabToolbar.title = categoryName
+        Log.e("getcaourws $categoryId",categoryName.toString())
+        val examIIT = "IIT-JEE"
+        val examNEET = "NEET"
         // Use the data as needed
         clickedViewMessage?.let {
             val tittle = view.findViewById<TextView>(R.id.tittle_tb)
             tittle.text = it
             // Log.d("CoursesFragment", "Received message: $it")
         }
-        setupViewPager(tabViewPager)
+        setupViewPager(tabViewPager,examIIT,examNEET)
         tabToolbar.setNavigationOnClickListener {
             requireActivity().onBackPressed()
         }
@@ -46,10 +58,16 @@ class CoursesFragment : Fragment() {
         tabTabLayout.getTabAt(0)?.select()
     }
 
-    private fun setupViewPager(viewPager: ViewPager) {
+    private fun setupViewPager(viewPager: ViewPager,examIIT: String, examNEET: String) {
         val adapter = ViewPagerAdapter(childFragmentManager)
-        adapter.addFragment(CourseFragment(), "IIT-JEE")
-        adapter.addFragment(NEETFragment(), "NEET-UG")
+        val bundle = Bundle().apply {
+            putString("category_name", categoryName)  // Include other data if needed
+        }
+        val courseFragment = CourseFragment().apply { arguments = bundle }
+        val neetFragment = NEETFragment().apply { arguments = bundle }
+
+        adapter.addFragment(courseFragment, examIIT)
+        adapter.addFragment(neetFragment, examNEET)
         viewPager.adapter = adapter
     }
 }

@@ -1,0 +1,30 @@
+query AllCourseForStudent($filters: FindAllCourseInputStudent!){
+    getAllCourseForStudent(filters: $filters) {
+        courses {
+            category_id
+            category_name
+            complementary_course
+            course_class
+            academic_year
+            banner_image
+            course_start_date
+            course_primary_teachers
+            course_features
+            course_type
+            course_validity_end_date
+            discount
+            course_support_teachers
+            course_tags
+            course_validity_start_date
+            name
+            price
+            status
+            target_year
+            with_installment_price
+            planner_description
+            id
+            exam_type
+            entity_type
+        }
+    }
+}
