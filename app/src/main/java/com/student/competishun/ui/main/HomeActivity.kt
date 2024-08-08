@@ -18,10 +18,13 @@ import com.student.competishun.ui.fragment.AdditionalDetailsFragment
 import com.student.competishun.ui.fragment.AddressDetailsFragment
 import com.student.competishun.ui.fragment.AllDemoResourcesFree
 import com.student.competishun.ui.fragment.AllFaqFragment
+import com.student.competishun.ui.fragment.CourseEmptyFragment
 import com.student.competishun.ui.fragment.MyCartFragment
 import com.student.competishun.ui.fragment.PaymentFragment
 import com.student.competishun.ui.fragment.PaymentLoaderFragment
 import com.student.competishun.ui.fragment.PersonalDetailsFragment
+import com.student.competishun.ui.fragment.ResumeCourseFragment
+import com.student.competishun.ui.fragment.SubjectContentFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -116,7 +119,10 @@ class HomeActivity : AppCompatActivity() {
             PaymentLoaderFragment::class.java,
             PersonalDetailsFragment::class.java,
             AddressDetailsFragment::class.java,
-            AdditionalDetailsFragment::class.java
+            AdditionalDetailsFragment::class.java,
+            ResumeCourseFragment::class.java,
+            SubjectContentFragment::class.java,
+            CourseEmptyFragment::class.java,
         )
         return fragmentsToHide.any { it.isInstance(fragment) }
     }
@@ -130,7 +136,8 @@ class HomeActivity : AppCompatActivity() {
             PaymentLoaderFragment::class.java,
             PersonalDetailsFragment::class.java,
             AddressDetailsFragment::class.java,
-            AdditionalDetailsFragment::class.java
+            AdditionalDetailsFragment::class.java,
+            CourseEmptyFragment::class.java,
         )
         return fragmentsToHide.any { it.isInstance(fragment) }
     }

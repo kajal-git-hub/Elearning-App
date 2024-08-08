@@ -148,6 +148,21 @@
         android:id="@+id/courseEmptyFragment"
         android:name="com.student.competishun.ui.fragment.CourseEmptyFragment"
         tools:layout="@layout/fragment_course_empty">
+        <action
+            android:id="@+id/action_courseEmptyFragment_to_SubjectContentFragment"
+            app:destination="@+id/SubjectContentFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/SubjectContentFragment"
+        android:name="com.student.competishun.ui.fragment.SubjectContentFragment"
+        tools:layout="@layout/fragment_subject_content">
+    </fragment>
+
+    <fragment
+        android:id="@+id/ResumeCourseFragment"
+        android:name="com.student.competishun.ui.fragment.ResumeCourseFragment"
+        tools:layout="@layout/fragment_resume_course">
     </fragment>
 
 
