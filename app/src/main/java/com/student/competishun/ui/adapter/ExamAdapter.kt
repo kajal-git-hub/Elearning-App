@@ -14,12 +14,22 @@ class ExampleAdapter(
     private var dataList: List<String>,
     private var currentStep: Int,
     private var spanCount: Int,
+    private var selectedItem: String?,
     private val onItemSelected: (String) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var selectedPosition = -1
     private val selectedItems = mutableMapOf<Int, String>()
 
+    init {
+        // Set the selectedPosition if selectedItem is not null and matches an item in the list
+        selectedItem?.let { item ->
+            selectedPosition = dataList.indexOf(item)
+            if (selectedPosition != -1) {
+                selectedItems[currentStep] = item
+            }
+        }
+    }
     companion object {
         private const val VIEW_TYPE_STEP_0 = 0
         private const val VIEW_TYPE_STEP_1 = 1
@@ -86,8 +96,9 @@ class ExampleAdapter(
                 selectedPosition = adapterPosition
                 selectedItems[currentStep] = item
                 Log.d("item0", item)
-                onItemSelected(item)
                 notifyDataSetChanged()
+                onItemSelected(item)
+
             }
         }
     }
@@ -103,8 +114,9 @@ class ExampleAdapter(
                 selectedPosition = adapterPosition
                 selectedItems[currentStep] = item
                 Log.d("item1", item)
-                onItemSelected(item)
                 notifyDataSetChanged()
+                onItemSelected(item)
+
             }
         }
     }
@@ -120,8 +132,9 @@ class ExampleAdapter(
                 selectedPosition = adapterPosition
                 selectedItems[currentStep] = item
                 Log.d("item2", item)
-                onItemSelected(item)
                 notifyDataSetChanged()
+                onItemSelected(item)
+
             }
         }
     }

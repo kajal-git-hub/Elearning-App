@@ -1,6 +1,7 @@
 package com.student.competishun.ui.fragment
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -14,11 +15,15 @@ import com.student.competishun.R
 import com.student.competishun.databinding.FragmentTargetBinding
 import com.student.competishun.ui.adapter.ExampleAdapter
 import com.student.competishun.utils.Constants
+import com.student.competishun.ui.main.MainActivity
+import com.student.competishun.utils.SharedPreferencesManager
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class TargetFragment : Fragment() {
     private var _binding: FragmentTargetBinding? = null
     private val binding get() = _binding!!
-
+    private lateinit var sharedPreferencesManager: SharedPreferencesManager
 
     private var currentStep = 1
     private var isItemSelected = false
@@ -39,14 +44,12 @@ class TargetFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentTargetBinding.inflate(inflater, container, false)
+        sharedPreferencesManager = (requireActivity() as MainActivity).sharedPreferencesManager
 
         requireActivity().onBackPressedDispatcher.addCallback(this) {
             handleBackPressed()
         }
         return binding.root
-
-
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -65,32 +68,39 @@ class TargetFragment : Fragment() {
 
         binding.etStartedText.text = stepTexts[currentStep]
         binding.etText.text = pageTexts[currentStep]
-
+        val selectedItem = sharedPreferencesManager.targetYear.toString()
         val exampleAdapter = ExampleAdapter(
             dataList = dataSets[currentStep],
             currentStep = currentStep,
-            spanCount = spanCount[currentStep]
+            spanCount = spanCount[currentStep],
+            selectedItem = selectedItem
         ) { selectedItem ->
+            Log.d("TargetFragment", "Selected item: $selectedItem")
+
+            // Save target year to SharedPreferences
+            sharedPreferencesManager.targetYear = selectedItem.toIntOrNull()
             isItemSelected = true
-            binding.TargetNext.setBackgroundResource(R.drawable.second_getstarteddone)
+
+            // Update button background
+            updateButtonBackground()
         }
 
         binding.targetRecyclerview.apply {
             layoutManager = GridLayoutManager(context, spanCount[currentStep])
             adapter = exampleAdapter
         }
+        if (selectedItem != null){isItemSelected = true
+        updateButtonBackground()}
 
         startSlideInAnimation()
-
         updateButtonBackground()
     }
 
     private fun updateButtonBackground() {
-        if (isItemSelected) {
-            binding.TargetNext.setBackgroundResource(R.drawable.second_getstarteddone)
-        } else {
-            binding.TargetNext.setBackgroundResource(R.drawable.second_getstarted)
-        }
+        binding.TargetNext.setBackgroundResource(
+            if (isItemSelected) R.drawable.second_getstarteddone
+            else R.drawable.second_getstarted
+        )
     }
 
     private fun startSlideInAnimation() {
@@ -98,7 +108,6 @@ class TargetFragment : Fragment() {
         binding.clAnimConstraint.startAnimation(slideInAnimation)
 
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()

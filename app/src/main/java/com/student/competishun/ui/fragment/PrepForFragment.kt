@@ -10,18 +10,24 @@ import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.activity.addCallback
+import androidx.media3.common.util.Log
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.student.competishun.R
 import com.student.competishun.databinding.FragmentPrepForBinding
 import com.student.competishun.ui.adapter.ExampleAdapter
 import com.student.competishun.utils.Constants
+import com.student.competishun.ui.main.MainActivity
+import com.student.competishun.utils.SharedPreferencesManager
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class PrepForFragment : Fragment() {
     private var _binding: FragmentPrepForBinding? = null
     private val binding get() = _binding!!
 
 
+    private lateinit var sharedPreferencesManager: SharedPreferencesManager
     private var currentStep = 0
     private var isItemSelected = false
 
@@ -35,6 +41,8 @@ class PrepForFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentPrepForBinding.inflate(inflater, container, false)
+        sharedPreferencesManager = (requireActivity() as MainActivity).sharedPreferencesManager
+
         requireActivity().onBackPressedDispatcher.addCallback(this) {
             handleBackPressed()
         }
@@ -65,9 +73,12 @@ class PrepForFragment : Fragment() {
         val exampleAdapter = ExampleAdapter(
             dataList = dataSets[currentStep],
             currentStep = currentStep,
-            spanCount = spanCount[currentStep]
+            spanCount = spanCount[currentStep],
+            selectedItem = sharedPreferencesManager.preparingFor
         ) { selectedItem ->
             isItemSelected = true
+            Log.d("selectedItem",selectedItem)
+            sharedPreferencesManager.preparingFor = selectedItem
             binding.PrepNext.setBackgroundResource(R.drawable.second_getstarteddone)
 
             if(selectedItem=="Others"){

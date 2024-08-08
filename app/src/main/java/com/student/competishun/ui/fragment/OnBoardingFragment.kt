@@ -3,6 +3,7 @@ package com.student.competishun.ui.fragment
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +13,8 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.student.competishun.R
 import com.student.competishun.databinding.FragmentOnBoardingBinding
+import com.student.competishun.ui.main.MainActivity
+import com.student.competishun.utils.SharedPreferencesManager
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -20,13 +23,13 @@ class OnBoardingFragment : Fragment() {
     private var _binding: FragmentOnBoardingBinding? = null
     private val binding get() = _binding!!
     private var moveForward: Boolean = false
-
+    private lateinit var sharedPreferencesManager: SharedPreferencesManager
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentOnBoardingBinding.inflate(inflater, container, false)
-
+        sharedPreferencesManager = (requireActivity() as MainActivity).sharedPreferencesManager
         requireActivity().onBackPressedDispatcher.addCallback(this) {
             handleBackPressed()
         }
@@ -40,9 +43,7 @@ class OnBoardingFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         setupTextWatchers()
-
         binding.btnBack.setOnClickListener {
             findNavController().navigate(R.id.action_OnBoardingFragment_to_loginFragment)
         }
@@ -51,7 +52,7 @@ class OnBoardingFragment : Fragment() {
             if (isCurrentStepValid()) {
                 findNavController().navigate(R.id.action_OnBoardingFragment_to_prepForFragment)
             } else {
-                Toast.makeText(context, "Please select name and city", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Please select a name and city", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -78,7 +79,10 @@ class OnBoardingFragment : Fragment() {
     private fun isCurrentStepValid(): Boolean {
         val name = binding.etEnterHereText.text.toString().trim()
         val city = binding.etEnterCityText.text.toString().trim()
-        moveForward = name.isNotEmpty() && city.isNotEmpty()
+        Log.e("updateusername",name)
+        sharedPreferencesManager.name = name
+        sharedPreferencesManager.city = city
+        moveForward = name.isNotEmpty() && city.isNotEmpty()  && name.length >= 3 && city.isNotEmpty()
         return moveForward
     }
 

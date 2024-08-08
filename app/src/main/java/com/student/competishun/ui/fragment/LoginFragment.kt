@@ -20,7 +20,9 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.student.competishun.R
 import com.student.competishun.databinding.FragmentLoginBinding
+import com.student.competishun.ui.main.MainActivity
 import com.student.competishun.ui.viewmodel.GetOtpViewModel
+import com.student.competishun.utils.SharedPreferencesManager
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -29,7 +31,7 @@ class LoginFragment : Fragment() {
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
     private val otpViewModel: GetOtpViewModel by viewModels()
-
+    private lateinit var sharedPreferencesManager: SharedPreferencesManager
     private var countryCode: String? = null
     private var mobileNo: String? = null
 
@@ -38,6 +40,7 @@ class LoginFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentLoginBinding.inflate(inflater, container, false)
+        sharedPreferencesManager = (requireActivity() as MainActivity).sharedPreferencesManager
         return binding.root
     }
 
@@ -157,21 +160,25 @@ class LoginFragment : Fragment() {
 
         if (countryCode != null) {
             when {
-                mobileNo.isNullOrEmpty() -> showToast("Enter a valid mobile number")
-                mobileNo.length == 10 && mobileNo.isNotEmpty() -> {
+                mobileNo.isNullOrEmpty() -> showToast("Please Enter mobile number")
+                mobileNo.length != 10 -> showToast("Enter a valid 10-digit mobile number")
+                mobileNo[0] < '6' -> showToast("Mobile number should be valid")
+                else -> {
                     otpViewModel.getOtp(countryCode, mobileNo)
                     navigateToVerifyOtpFragment(countryCode, mobileNo)
                 }
-
-                else -> showToast("Enter a valid mobile number")
             }
         }
     }
+
+
 
     private fun navigateToVerifyOtpFragment(countryCode: String, mobileNo: String) {
         val bundle = Bundle().apply {
             putString("mobileNumber", mobileNo)
             putString("countryCode", countryCode)
+            sharedPreferencesManager.mobileNo = mobileNo
+            Log.d("shared numbve", sharedPreferencesManager.mobileNo.toString())
         }
         findNavController().navigate(R.id.action_loginFragment_to_verifyOTPFragment, bundle)
     }
@@ -182,8 +189,10 @@ class LoginFragment : Fragment() {
 
     private fun setupObservers() {
         otpViewModel.otpResult.observe(viewLifecycleOwner) { result ->
+
             if (result == true ) {
                 countryCode?.let { mobileNo?.let { it1 -> navigateToVerifyOtpFragment(it, it1) } }
+
             } else {
                 showToast(result.toString())
             }

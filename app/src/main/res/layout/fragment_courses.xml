@@ -22,7 +22,7 @@
             android:id="@+id/tittle_tb"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/full_year_courses"
+            android:text=""
             android:textColor="#2B2829"
             android:fontFamily="@font/nunito"
             android:textSize="@dimen/_18sp"/>

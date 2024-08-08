@@ -43,6 +43,9 @@
         <action
             android:id="@+id/action_OnBoardingFragment_to_prepForFragment"
             app:destination="@+id/PrepForFragment" />
+        <action
+            android:id="@+id/action_OnBoardingFragment_to_HomeActivity"
+            app:destination="@+id/homeActivity" />
     </fragment>
 
     <fragment
@@ -52,6 +55,9 @@
         <action
             android:id="@+id/action_onWelcomeFragment_to_loginFragment"
             app:destination="@+id/loginFragment" />
+        <action
+            android:id="@+id/action_onWelcomeFragment_to_prepForFragment"
+            app:destination="@+id/prepForFragment" />
     </fragment>
 
     <fragment
@@ -84,6 +90,11 @@
         android:id="@+id/homeActivity"
         android:name="com.student.competishun.ui.main.HomeActivity"
         tools:layout="@layout/activity_home" />
+
+    <activity
+        android:id="@+id/mainActivity"
+        android:name="com.student.competishun.ui.main.MainActivity"
+        tools:layout="@layout/activity_main"></activity>
 
 
 </navigation>
