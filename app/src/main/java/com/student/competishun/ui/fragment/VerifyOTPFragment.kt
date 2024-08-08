@@ -53,15 +53,14 @@ class VerifyOTPFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setupViews()
-        observeViewModel()
-
         mobileNumber = arguments?.getString("mobileNumber")
         countryCode = arguments?.getString("countryCode")
 
+        setupViews()
         setupOtpInputs()
         setupVerificationCodeText()
         startTimer()
+        observeViewModel()
     }
 
     private fun setupViews() {
@@ -84,21 +83,15 @@ class VerifyOTPFragment : Fragment() {
         binding.btnVerify.setOnClickListener {
             if (otpBoxes.all { it.text.length == 1 }) {
                 checkOtpAndNavigate()
+            } else {
+                Toast.makeText(requireContext(), "Please enter a valid OTP", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
     private fun observeViewModel() {
-        Log.d("shared numbve", sharedPreferencesManager.mobileNo.toString())
-        if (!sharedPreferencesManager.mobileNo.isNullOrEmpty())  mobileNumber = sharedPreferencesManager.mobileNo
-           // arguments?.getString("mobileNumber")
-        countryCode = arguments?.getString("countryCode")
-
-        Log.d("VerifyOTPFragment", "Mobile number: $mobileNumber, Country code: $countryCode")
-        //sharedPreferencesManager.mobileNo = mobileNumber
-        setupOtpInputs()
-        setupVerificationCodeText()
-        startTimer()
+        Log.d("shared number", sharedPreferencesManager.mobileNo.toString())
+        if (!sharedPreferencesManager.mobileNo.isNullOrEmpty()) mobileNumber = sharedPreferencesManager.mobileNo
 
         verifyOtpViewModel.verifyOtpResult.observe(viewLifecycleOwner) { result ->
             if (result != null) {
@@ -248,3 +241,4 @@ class VerifyOTPFragment : Fragment() {
         countDownTimer.cancel()
     }
 }
+

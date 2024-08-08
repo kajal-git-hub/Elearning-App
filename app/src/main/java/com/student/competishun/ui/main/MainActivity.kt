@@ -120,9 +120,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupNavigation() {
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as? NavHostFragment
-        navController = navHostFragment?.navController ?: throw IllegalStateException("NavController not found")
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as? NavHostFragment
+        navController =
+            navHostFragment?.navController ?: throw IllegalStateException("NavController not found")
         Log.d("MainActivity", "NavController: $navController")
+    }
     private fun checkToken() {
         val token = sharedPreferencesManager.accessToken
         val number = sharedPreferencesManager.updateUserInput
