@@ -44,6 +44,8 @@ class MainActivity : AppCompatActivity() {
             setContentView(R.layout.welcome_screen)
 
             Handler(Looper.getMainLooper()).postDelayed({
+
+
                 // Switch to the main layout after a delay
                 binding = ActivityMainBinding.inflate(layoutInflater)
                 setContentView(binding.root)
@@ -97,7 +99,7 @@ class MainActivity : AppCompatActivity() {
     private fun checkToken() {
         val token = sharedPreferencesManager.accessToken
         val number = sharedPreferencesManager.updateUserInput
-        Log.e("checktoken",token.toString())
+        Log.e("checktoken", token.toString())
         Log.e("number  ${number?.fullName}", number?.city.toString())
         if (token != null) {
             // Token is available, navigate to the main screen

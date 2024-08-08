@@ -39,8 +39,7 @@ class HomeActivity : AppCompatActivity() {
 
 
         val bottomNavigationView = binding.bottomNav
-        bottomNavigationView.selectedItemId = R.id.myCourse
-
+        bottomNavigationView.selectedItemId = R.id.home
 
         bottomNavigationView.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
@@ -61,8 +60,6 @@ class HomeActivity : AppCompatActivity() {
                 else -> false
             }
         }
-
-
 
         binding.igContactImage.setOnClickListener {
             if (isCallingSupportVisible.get() == true) {
@@ -90,12 +87,24 @@ class HomeActivity : AppCompatActivity() {
             FragmentManager.FragmentLifecycleCallbacks() {
             override fun onFragmentResumed(fm: FragmentManager, f: Fragment) {
                 super.onFragmentResumed(fm, f)
-                binding.igContactImage.visibility =
-                    if (shouldHideContactImage(f)) View.GONE else View.VISIBLE
-                binding.bottomNav.visibility =
-                    if (shouldHideBottomNav(f)) View.GONE else View.VISIBLE
+                updateUiVisibility(f)
             }
         }, true)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val currentFragment = supportFragmentManager.findFragmentById(R.id.fragmentNavigation)
+        if (currentFragment != null) {
+            updateUiVisibility(currentFragment)
+        }
+    }
+
+    private fun updateUiVisibility(fragment: Fragment) {
+        binding.igContactImage.visibility =
+            if (shouldHideContactImage(fragment)) View.GONE else View.VISIBLE
+        binding.bottomNav.visibility =
+            if (shouldHideBottomNav(fragment)) View.GONE else View.VISIBLE
     }
 
     private fun shouldHideContactImage(fragment: Fragment): Boolean {

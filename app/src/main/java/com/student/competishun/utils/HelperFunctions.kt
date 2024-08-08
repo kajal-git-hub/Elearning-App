@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.student.competishun.R
 import java.text.SimpleDateFormat
-import java.util.Date
 import java.util.Locale
 
 class HelperFunctions {
@@ -29,8 +28,14 @@ class HelperFunctions {
 
     fun updateDotsIndicator(recyclerView: RecyclerView?, dotsIndicator: LinearLayout) {
         recyclerView?.let {
-            val layoutManager = it.layoutManager as LinearLayoutManager
-            val visiblePosition = (layoutManager.findFirstVisibleItemPosition() + layoutManager.findLastVisibleItemPosition()) / 2
+            val layoutManager = it.layoutManager
+            val visiblePageIndex = when (layoutManager) {
+                is LinearLayoutManager -> {
+                    (layoutManager.findFirstVisibleItemPosition() + layoutManager.findLastVisibleItemPosition()) / 2
+                }
+
+                else -> 0
+            }
 
             for (i in 0 until dotsIndicator.childCount) {
                 val dot = dotsIndicator.getChildAt(i) as ImageView
@@ -39,14 +44,15 @@ class HelperFunctions {
                 params.setMargins(4, 0, 4, 0)
                 dot.layoutParams = params
                 dot.setImageResource(
-                    if (i == visiblePosition) R.drawable.doc_active
+                    if (i == visiblePageIndex) R.drawable.doc_active
                     else R.drawable.dot_inactive
                 )
             }
         }
     }
 
-    fun formatCourseDate(date: String?):String {
+
+    fun formatCourseDate(date: String?): String {
         val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
         val outputFormat = SimpleDateFormat("dd MMM, yy", Locale.getDefault())
         return try {
@@ -59,7 +65,8 @@ class HelperFunctions {
     }
 
     fun calculateDiscountDetails(originalPrice: Int, discountPrice: Int): Pair<Int, Int> {
-        val discountPercentage = ((discountPrice.toDouble() / originalPrice.toDouble()) * 100).toInt()
+        val discountPercentage =
+            ((discountPrice.toDouble() / originalPrice.toDouble()) * 100).toInt()
         val realPriceAfterDiscount = originalPrice - discountPrice
         return Pair(discountPercentage, realPriceAfterDiscount)
     }

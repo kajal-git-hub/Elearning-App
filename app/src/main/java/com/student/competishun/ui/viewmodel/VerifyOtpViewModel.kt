@@ -24,7 +24,11 @@ class VerifyOtpViewModel @Inject constructor(
 
     fun verifyOtp(countryCode: String, mobileNumber: String, otp: Int){
         viewModelScope.launch {
-            val verifyOtpInput = VerifyOtpInput(countryCode, mobileNumber, otp)
+            val verifyOtpInput = VerifyOtpInput(
+                countryCode = countryCode,
+                mobileNumber = mobileNumber,
+                otp = otp
+            )
              val response = verifyOtpRepository.verifyOtp(verifyOtpInput)
             _verifyOtpResult.value = response
             response?.accessToken?.let {

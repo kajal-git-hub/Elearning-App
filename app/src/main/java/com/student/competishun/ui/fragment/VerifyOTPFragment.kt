@@ -26,7 +26,6 @@ import com.student.competishun.R
 import com.student.competishun.databinding.FragmentVerifyBinding
 import com.student.competishun.ui.viewmodel.VerifyOtpViewModel
 import dagger.hilt.android.AndroidEntryPoint
-
 @AndroidEntryPoint
 class VerifyOTPFragment : Fragment() {
 
@@ -51,6 +50,18 @@ class VerifyOTPFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setupViews()
+        observeViewModel()
+
+        mobileNumber = arguments?.getString("mobileNumber")
+        countryCode = arguments?.getString("countryCode")
+
+        setupOtpInputs()
+        setupVerificationCodeText()
+        startTimer()
+    }
+
+    private fun setupViews() {
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -67,27 +78,23 @@ class VerifyOTPFragment : Fragment() {
             }
         })
 
-        mobileNumber = arguments?.getString("mobileNumber")
-        countryCode = arguments?.getString("countryCode")
+        binding.btnVerify.setOnClickListener {
+            if (otpBoxes.all { it.text.length == 1 }) {
+                checkOtpAndNavigate()
+            }
+        }
+    }
 
-        Log.d("VerifyOTPFragment", "Mobile number: $mobileNumber, Country code: $countryCode")
-
-        setupOtpInputs()
-        setupVerificationCodeText()
-        startTimer()
-
+    private fun observeViewModel() {
         verifyOtpViewModel.verifyOtpResult.observe(viewLifecycleOwner) { result ->
             if (result != null) {
                 Log.e("Success in Verify", "${result.user} ${result.refreshToken} ${result.accessToken}")
                 changeOtpBoxesBackground(R.drawable.otp_edit_text_background)
                 binding.etEnterOtpText.text = "Enter the OTP to continue"
                 binding.etEnterOtpText.setTextColor(Color.parseColor("#726C6C"))
-                binding.btnVerify.setOnClickListener {
-                    findNavController().navigate(R.id.action_verifyOTPFragment_to_onBoardingFragment)
-                }
+                navigateToHome()
             } else {
-                Log.e("FailureBefid", "${result} $mobileNumber")
-
+                Log.e("FailureBefore", "${result} $mobileNumber")
                 Toast.makeText(requireContext(), "Invalid OTP", Toast.LENGTH_SHORT).show()
                 changeOtpBoxesBackground(R.drawable.opt_edit_text_bg_incorrect)
                 binding.etEnterOtpText.text = "Incorrect OTP"
@@ -97,32 +104,24 @@ class VerifyOTPFragment : Fragment() {
         }
     }
 
-    private fun startTimer() {
-        countDownTimer = object : CountDownTimer(30000, 1000) {
-            override fun onTick(millisUntilFinished: Long) {
-                val secondsRemaining = millisUntilFinished / 1000
-                binding.etTimeText.text = "${secondsRemaining}s"
-            }
-
-            override fun onFinish() {
-                binding.etEnterOtpText.text = "Didn’t receive any OTP?"
-                binding.etWaitText.visibility = View.GONE
-                binding.etTimeText.visibility = View.GONE
-                binding.etResendText.visibility = View.VISIBLE
-
-                binding.etResendText.setOnClickListener {
-                    // Handle resend OTP action
-                    binding.etEnterOtpText.text = "Enter the OTP to continue"
-                    binding.etWaitText.visibility = View.VISIBLE
-                    binding.etTimeText.visibility = View.VISIBLE
-                    binding.etResendText.visibility = View.GONE
-                    startTimer()  // Restart the timer
-                }
-            }
-        }
-        countDownTimer.start()
+    private fun navigateToHome() {
+        findNavController().navigate(R.id.action_verifyOTPFragment_to_onBoardingFragment)
     }
 
+    private fun checkOtpAndNavigate() {
+        val otp = otpBoxes.joinToString("") { it.text.toString() }
+        if (otp.isNotEmpty() && countryCode != null && mobileNumber != null) {
+            verifyOtpViewModel.verifyOtp(countryCode!!, mobileNumber!!, otp.toInt())
+        } else {
+            Toast.makeText(requireContext(), "Please enter a valid OTP", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun changeOtpBoxesBackground(backgroundResource: Int) {
+        otpBoxes.forEach {
+            it.setBackgroundResource(backgroundResource)
+        }
+    }
 
     private fun setupOtpInputs() {
         otpBoxes = listOf(
@@ -144,9 +143,9 @@ class VerifyOTPFragment : Fragment() {
                     }
 
                     if (otpBoxes.all { it.text.length == 1 }) {
-                        binding.btnVerify.setBackgroundColor(Color.parseColor("#3E3EF7"))
+                        binding.btnVerify.setBackgroundColor(Color.parseColor(getString(R.string._3e3ef7)))
                     } else {
-                        binding.btnVerify.setBackgroundColor(Color.parseColor("#DADADA"))
+                        binding.btnVerify.setBackgroundColor(Color.parseColor(getString(R.string.dadada)))
                     }
                 }
             })
@@ -159,33 +158,11 @@ class VerifyOTPFragment : Fragment() {
                 false
             }
         }
-
-        binding.btnVerify.setOnClickListener {
-            if (otpBoxes.all { it.text.length == 1 }) {
-                checkOtpAndNavigate()
-            }
-        }
-    }
-
-    private fun checkOtpAndNavigate() {
-        val otp = otpBoxes.joinToString("") { it.text.toString() }
-
-        if (otp.isNotEmpty() && countryCode != null && mobileNumber != null) {
-            verifyOtpViewModel.verifyOtp(countryCode!!, mobileNumber!!, otp.toInt())
-        } else {
-            Toast.makeText(requireContext(), "Please enter a valid OTP", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    private fun changeOtpBoxesBackground(backgroundResource: Int) {
-        otpBoxes.forEach {
-            it.setBackgroundResource(backgroundResource)
-        }
     }
 
     private fun setupVerificationCodeText() {
         mobileNumber?.let { phoneNumber ->
-            val fullText = "A verification code has been sent to your \nmail ID $phoneNumber"
+            val fullText = "A verification code has been sent to your \nphone no. $phoneNumber"
             val start = fullText.indexOf(phoneNumber)
 
             if (start != -1) {
@@ -223,6 +200,32 @@ class VerifyOTPFragment : Fragment() {
                 Log.d("VerifyOTPFragment", "Phone number not found in text: $phoneNumber")
             }
         }
+    }
+
+    private fun startTimer() {
+        countDownTimer = object : CountDownTimer(30000, 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+                val secondsRemaining = millisUntilFinished / 1000
+                binding.etTimeText.text = "${secondsRemaining}s"
+            }
+
+            override fun onFinish() {
+                binding.etEnterOtpText.text = "Didn’t receive any OTP?"
+                binding.etWaitText.visibility = View.GONE
+                binding.etTimeText.visibility = View.GONE
+                binding.etResendText.visibility = View.VISIBLE
+
+                binding.etResendText.setOnClickListener {
+                    // Handle resend OTP action
+                    binding.etEnterOtpText.text = "Enter the OTP to continue"
+                    binding.etWaitText.visibility = View.VISIBLE
+                    binding.etTimeText.visibility = View.VISIBLE
+                    binding.etResendText.visibility = View.GONE
+                    startTimer()  // Restart the timer
+                }
+            }
+        }
+        countDownTimer.start()
     }
 
     override fun onDestroyView() {

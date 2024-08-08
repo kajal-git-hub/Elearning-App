@@ -17,6 +17,7 @@ import com.student.competishun.databinding.FragmentOnBoardingBinding
 import com.student.competishun.databinding.FragmentReferenceBinding
 import com.student.competishun.databinding.FragmentTargetBinding
 import com.student.competishun.ui.adapter.ExampleAdapter
+import com.student.competishun.utils.Constants
 
 class ReferenceFragment : Fragment() {
     private var _binding: FragmentReferenceBinding? = null
@@ -26,18 +27,9 @@ class ReferenceFragment : Fragment() {
     private var currentStep = 2
     private var isItemSelected = false
 
-    private val dataSets = listOf(
-        listOf("IIT-JEE", "NEET", "Board", "UCET", "Others"),
-        listOf("2025", "2026", "2027", "2028"),
-        listOf("Friends/Family", "Social Media", "Advertisement", "Other")
-    )
-
-    private val pageTexts = listOf("2", "3", "4")
-    private val stepTexts = listOf(
-        "Which exam are you \npreparing for? Please select",
-        "What is your target year?",
-        "How do you know about \nCompetishun?"
-    )
+    private val dataSets = Constants.DATA_SETS
+    private val pageTexts = Constants.PAGE_TEXTS
+    private val stepTexts = Constants.STEP_TEXTS
     private val spanCount = listOf(2, 2, 1)
 
 
