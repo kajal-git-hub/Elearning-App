@@ -1,0 +1,780 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F6F6FF"
+    tools:context=".ui.fragment.ResumeCourseFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/upperViewCourse"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/gradiant_bg"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/topViewCourse"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/back_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_16dp"
+                android:layout_marginTop="@dimen/_20dp"
+                android:src="@drawable/arrow_left_white"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/courseNameResumeCourse"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="@dimen/_16dp"
+                android:layout_marginEnd="@dimen/_27dp"
+                android:ellipsize="end"
+                android:fontFamily="@font/nunito"
+                android:maxLines="1"
+                android:text="Prakhar Integrated (Fast Lane-2) 2024-25"
+                android:textColor="#FFFFFF"
+                android:textSize="@dimen/_18sp"
+                app:layout_constraintEnd_toStartOf="@id/notification_icon"
+                app:layout_constraintStart_toEndOf="@id/back_icon"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/notification_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_16dp"
+                android:layout_marginTop="@dimen/_20dp"
+                android:layout_marginEnd="@dimen/_16dp"
+                android:src="@drawable/notification_bing"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/clResumeCourseIcons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_16dp"
+            android:layout_marginTop="@dimen/_16dp"
+            android:layout_marginEnd="@dimen/_16dp"
+            android:layout_marginBottom="22dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/topViewCourse">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/clResumeCourseIcon1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/ivIcon1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/icon"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tvIcon1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/nunito"
+                    android:text="Scoreboard"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="@id/ivIcon1"
+                    app:layout_constraintStart_toStartOf="@id/ivIcon1"
+                    app:layout_constraintTop_toBottomOf="@id/ivIcon1" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/clResumeCourseIcon2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/clResumeCourseIcon3"
+                app:layout_constraintStart_toEndOf="@id/clResumeCourseIcon1"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/ivIcon2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/icon__1_"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tvIcon2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/nunito"
+                    android:text="Schedule"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="@id/ivIcon2"
+                    app:layout_constraintStart_toStartOf="@id/ivIcon2"
+                    app:layout_constraintTop_toBottomOf="@id/ivIcon2" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/clResumeCourseIcon3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/clResumeCourseIcon4"
+                app:layout_constraintStart_toEndOf="@id/clResumeCourseIcon2"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/ivIcon3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/icon__2_"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tvIcon3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/nunito"
+                    android:text="Downloads"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="@id/ivIcon3"
+                    app:layout_constraintStart_toStartOf="@id/ivIcon3"
+                    app:layout_constraintTop_toBottomOf="@id/ivIcon3" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/clResumeCourseIcon4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/ivIcon4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/icon__3_"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tvIcon4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/nunito"
+                    android:text="Bookmarks"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="@id/ivIcon4"
+                    app:layout_constraintStart_toStartOf="@id/ivIcon4"
+                    app:layout_constraintTop_toBottomOf="@id/ivIcon4" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/upperViewCourse">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/clReminder"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_16dp"
+                android:layout_marginTop="@dimen/_16dp"
+                android:background="@drawable/card_bg"
+                android:visibility="visible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/ivCardReminder"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="@dimen/_20dp"
+                    android:layout_marginStart="@dimen/_16dp"
+                    android:src="@drawable/group_1272628786"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tvCardReminder"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="@dimen/_16dp"
+                    android:layout_marginStart="@dimen/_16dp"
+                    android:layout_marginEnd="12dp"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/nunito"
+                    android:maxLines="2"
+                    android:text="Hey! Here’s a reminder for Test \nat July 12, 12:00 pm"
+                    android:textColor="#2B2829"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/ivCardReminderLockIcon"
+                    app:layout_constraintStart_toEndOf="@id/ivCardReminder"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/ivCardReminderLockIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/_16dp"
+                    android:src="@drawable/frame_1707481080"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/clSubjectsAndTopics"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_16dp"
+                android:layout_marginTop="24dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/clReminder">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/clMathematics"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/card_bg"
+                    app:layout_constraintEnd_toStartOf="@id/clSM"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:id="@+id/ivMathematics"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="@dimen/_20dp"
+                        android:layout_marginStart="@dimen/_16dp"
+                        android:src="@drawable/layer_1"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tvMathematics"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_16dp"
+                        android:layout_marginTop="@dimen/_16dp"
+                        android:fontFamily="@font/nunito"
+                        android:text="Mathematics"
+                        android:textColor="#2B2829"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toEndOf="@id/ivMathematics"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tvNoOfChaptersMathematics"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_16dp"
+                        android:layout_marginTop="@dimen/_6dp"
+                        android:fontFamily="@font/nunito"
+                        android:text="36 Chapters"
+                        android:textColor="#726C6C"
+                        android:textSize="14sp"
+                        app:layout_constraintStart_toEndOf="@id/ivMathematics"
+                        app:layout_constraintTop_toBottomOf="@id/tvMathematics" />
+
+                    <ProgressBar
+                        android:id="@+id/customProgressIndicatorMathematics"
+                        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                        android:layout_width="0dp"
+                        android:layout_height="8dp"
+                        android:layout_marginTop="18dp"
+                        android:layout_marginEnd="12dp"
+                        android:layout_marginBottom="18dp"
+                        android:max="100"
+                        android:progress="30"
+                        android:progressDrawable="@drawable/progress_bar_course_reminder"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/tvPercentCompletedMathematics"
+                        app:layout_constraintStart_toStartOf="@+id/tvNoOfChaptersMathematics"
+                        app:layout_constraintTop_toBottomOf="@+id/tvNoOfChaptersMathematics" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tvPercentCompletedMathematics"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_10dp"
+                        android:layout_marginEnd="12dp"
+                        android:text="30%"
+                        android:textColor="#F2A779"
+                        android:textSize="@dimen/_12sp"
+                        android:textStyle="bold"
+                        app:fontFamily="@font/nunito"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/customProgressIndicatorMathematics"
+                        app:layout_constraintTop_toBottomOf="@id/tvNoOfChaptersMathematics" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/clPhysics"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_6dp"
+                    android:background="@drawable/card_bg"
+                    app:layout_constraintEnd_toEndOf="@id/clMathematics"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/clMathematics">
+
+                    <ImageView
+                        android:id="@+id/ivPhysics"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="@dimen/_20dp"
+                        android:layout_marginStart="@dimen/_16dp"
+                        android:src="@drawable/group__4_"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tvPhysics"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_16dp"
+                        android:layout_marginTop="@dimen/_16dp"
+                        android:fontFamily="@font/nunito"
+                        android:text="Physics"
+                        android:textColor="#2B2829"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toEndOf="@id/ivPhysics"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tvNoOfChaptersPhysics"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_16dp"
+                        android:layout_marginTop="@dimen/_6dp"
+                        android:fontFamily="@font/nunito"
+                        android:text="36 Chapters"
+                        android:textColor="#726C6C"
+                        android:textSize="14sp"
+                        app:layout_constraintStart_toEndOf="@id/ivPhysics"
+                        app:layout_constraintTop_toBottomOf="@id/tvPhysics" />
+
+                    <ProgressBar
+                        android:id="@+id/customProgressIndicatorPhysics"
+                        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                        android:layout_width="0dp"
+                        android:layout_height="8dp"
+                        android:layout_marginTop="18dp"
+                        android:layout_marginEnd="12dp"
+                        android:layout_marginBottom="18dp"
+                        android:max="100"
+                        android:progress="30"
+                        android:progressDrawable="@drawable/progress_bar_course_reminder"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/tvPercentCompletedPhysics"
+                        app:layout_constraintStart_toStartOf="@+id/tvNoOfChaptersPhysics"
+                        app:layout_constraintTop_toBottomOf="@+id/tvNoOfChaptersPhysics" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tvPercentCompletedPhysics"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_10dp"
+                        android:layout_marginEnd="12dp"
+                        android:text="30%"
+                        android:textColor="#F2A779"
+                        android:textSize="@dimen/_12sp"
+                        android:textStyle="bold"
+                        app:fontFamily="@font/nunito"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/customProgressIndicatorPhysics"
+                        app:layout_constraintTop_toBottomOf="@id/tvNoOfChaptersPhysics" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/clChemistry"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_6dp"
+                    android:background="@drawable/card_bg"
+                    app:layout_constraintEnd_toEndOf="@id/clMathematics"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/clPhysics">
+
+                    <ImageView
+                        android:id="@+id/ivChemistry"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="@dimen/_20dp"
+                        android:layout_marginStart="@dimen/_16dp"
+                        android:src="@drawable/capa_1"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tvChemistry"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_16dp"
+                        android:layout_marginTop="@dimen/_16dp"
+                        android:fontFamily="@font/nunito"
+                        android:text="Mathematics"
+                        android:textColor="#2B2829"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toEndOf="@id/ivChemistry"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tvNoOfChaptersChemistry"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_16dp"
+                        android:layout_marginTop="@dimen/_6dp"
+                        android:fontFamily="@font/nunito"
+                        android:text="36 Chapters"
+                        android:textColor="#726C6C"
+                        android:textSize="14sp"
+                        app:layout_constraintStart_toEndOf="@id/ivChemistry"
+                        app:layout_constraintTop_toBottomOf="@id/tvChemistry" />
+
+                    <ProgressBar
+                        android:id="@+id/customProgressIndicatorChemistry"
+                        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                        android:layout_width="0dp"
+                        android:layout_height="8dp"
+                        android:layout_marginTop="18dp"
+                        android:layout_marginEnd="12dp"
+                        android:layout_marginBottom="18dp"
+                        android:max="100"
+                        android:progress="30"
+                        android:progressDrawable="@drawable/progress_bar_course_reminder"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/tvPercentCompletedChemistry"
+                        app:layout_constraintStart_toStartOf="@+id/tvNoOfChaptersChemistry"
+                        app:layout_constraintTop_toBottomOf="@+id/tvNoOfChaptersChemistry" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tvPercentCompletedChemistry"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_10dp"
+                        android:layout_marginEnd="12dp"
+                        android:text="30%"
+                        android:textColor="#F2A779"
+                        android:textSize="@dimen/_12sp"
+                        android:textStyle="bold"
+                        app:fontFamily="@font/nunito"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/customProgressIndicatorChemistry"
+                        app:layout_constraintTop_toBottomOf="@id/tvNoOfChaptersChemistry" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/clSM"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="@dimen/_6dp"
+                    android:background="@drawable/card_bg"
+                    app:layout_constraintBottom_toTopOf="@id/clClassNotes"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/clMathematics"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:id="@+id/ivSM"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="@dimen/_20dp"
+                        android:layout_marginStart="@dimen/_16dp"
+                        android:src="@drawable/layer_1__1_"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tvSM"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_16dp"
+                        android:fontFamily="@font/nunito"
+                        android:text="Study Material \n(Solutions)"
+                        android:textColor="#2B2829"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="@id/ivSM"
+                        app:layout_constraintTop_toBottomOf="@id/ivSM" />
+
+                    <ProgressBar
+                        android:id="@+id/customProgressIndicatorSM"
+                        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                        android:layout_width="0dp"
+                        android:layout_height="8dp"
+                        android:layout_marginEnd="12dp"
+                        android:layout_marginBottom="18dp"
+                        android:max="100"
+                        android:progress="10"
+                        android:progressDrawable="@drawable/progress_bar_course_reminder"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/tvPercentCompletedSM"
+                        app:layout_constraintStart_toStartOf="@+id/tvSM" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tvPercentCompletedSM"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="12dp"
+                        android:layout_marginBottom="18dp"
+                        android:text="10%"
+                        android:textColor="#F2A779"
+                        android:textSize="@dimen/_12sp"
+                        android:textStyle="bold"
+                        app:fontFamily="@font/nunito"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/customProgressIndicatorSM"
+                        app:layout_constraintTop_toTopOf="@id/customProgressIndicatorSM" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/clClassNotes"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="@dimen/_6dp"
+                    android:background="@drawable/card_bg"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@id/clSM"
+                    app:layout_constraintTop_toBottomOf="@id/clSM">
+
+                    <ImageView
+                        android:id="@+id/ivClassNotes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="@dimen/_20dp"
+                        android:layout_marginStart="@dimen/_16dp"
+                        android:src="@drawable/group__5_"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tvClassNotes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_16dp"
+                        android:fontFamily="@font/nunito"
+                        android:text="Class Notes"
+                        android:textColor="#2B2829"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="@id/ivClassNotes"
+                        app:layout_constraintTop_toBottomOf="@id/ivClassNotes" />
+
+                    <ProgressBar
+                        android:id="@+id/customProgressIndicatorClassNotes"
+                        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                        android:layout_width="0dp"
+                        android:layout_height="8dp"
+                        android:layout_marginEnd="12dp"
+                        android:layout_marginBottom="18dp"
+                        android:max="100"
+                        android:progress="10"
+                        android:progressDrawable="@drawable/progress_bar_course_reminder"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/tvPercentCompletedClassNotes"
+                        app:layout_constraintStart_toStartOf="@+id/tvClassNotes" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tvPercentCompletedClassNotes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="12dp"
+                        android:layout_marginBottom="18dp"
+                        android:text="10%"
+                        android:textColor="#F2A779"
+                        android:textSize="@dimen/_12sp"
+                        android:textStyle="bold"
+                        app:fontFamily="@font/nunito"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/customProgressIndicatorClassNotes"
+                        app:layout_constraintTop_toTopOf="@id/customProgressIndicatorClassNotes" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/clHaveDoubtsBanner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="48dp"
+                android:scaleType="centerCrop"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/clSubjectsAndTopics">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="100dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/frame_1707481010"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/clRunningCourseReminder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ProgressBar
+            android:id="@+id/customProgressIndicatorRunningCourseReminder"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="8dp"
+            android:max="100"
+            android:progress="50"
+            android:progressDrawable="@drawable/progress_bar_reminder"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/IconRunningCourseReminder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="13dp"
+            android:layout_marginStart="@dimen/_16dp"
+            android:src="@drawable/layer_1"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/customProgressIndicatorRunningCourseReminder" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tvRunningCourseName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="13dp"
+            android:fontFamily="@font/nunito"
+            android:text="Binomial Theorem"
+            android:textColor="#2B2829"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@+id/IconRunningCourseReminder"
+            app:layout_constraintTop_toBottomOf="@+id/customProgressIndicatorRunningCourseReminder" />
+
+        <ImageView
+            android:id="@+id/dot"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_4dp"
+            android:src="@drawable/ellipse_17940"
+            app:layout_constraintBottom_toBottomOf="@+id/tvRunningCourseName"
+            app:layout_constraintStart_toEndOf="@+id/tvRunningCourseName"
+            app:layout_constraintTop_toTopOf="@+id/tvRunningCourseName" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tvRunningCourseStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_4dp"
+            android:fontFamily="@font/nunito"
+            android:text="RESUME"
+            android:textColor="#3E3EF7"
+            android:textSize="10sp"
+            app:layout_constraintBottom_toBottomOf="@+id/tvRunningCourseName"
+            app:layout_constraintStart_toEndOf="@+id/dot"
+            app:layout_constraintTop_toTopOf="@+id/tvRunningCourseName" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tvRunningCourseSubjectName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/nunito"
+            android:text="Maths"
+            android:textColor="#726C6C"
+            android:textSize="@dimen/_12sp"
+            app:layout_constraintStart_toStartOf="@+id/tvRunningCourseName"
+            app:layout_constraintTop_toBottomOf="@+id/tvRunningCourseName" />
+
+
+        <ImageView
+            android:id="@+id/playButtonRunningCourse"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="13dp"
+            android:layout_marginStart="@dimen/_4dp"
+            android:layout_marginEnd="@dimen/_16dp"
+            android:src="@drawable/frame_1707481080__1_"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

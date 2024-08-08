@@ -10,4 +10,19 @@
         <item name="android:fontFamily">@font/nunito</item>
         <item name="android:textStyle">bold</item>
     </style>
+
+    <style name="BottomNavTextActive" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <item name="android:textColor">#3E3EF7</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">@font/nunito</item>
+    </style>
+    <style name="BottomNavTextInActive" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <item name="android:textColor">#898384</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">@font/nunito</item>
+    </style>
+
+
 </resources>

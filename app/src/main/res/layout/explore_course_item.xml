@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/clExploreCourse"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/card_bg"
+    android:layout_marginBottom="@dimen/_16dp"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/tvViewAll"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/group_1272628768"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tvExploreCourseName"
+        android:layout_width="225dp"
+        android:layout_height="wrap_content"
+        android:textColor="#2B2829"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:textStyle="bold"
+        android:fontFamily="@font/nunito"
+        android:textSize="20sp"
+        android:text="Prakhar Integrated (Fast \nLane-2) 2024-25"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tvTag1ExploreCourse"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="12th Class"
+        android:textSize="12sp"
+        app:fontFamily="@font/nunito"
+        android:textColor="#5A5555"
+        android:padding="6dp"
+        android:background="@drawable/card_bg"
+        android:layout_marginTop="12dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvExploreCourseName"/>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tvTag2ExploreCourse"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="6dp"
+        android:text="Full-Year"
+        android:textSize="12sp"
+        android:textColor="#5A5555"
+        app:fontFamily="@font/nunito"
+        android:padding="6dp"
+        android:background="@drawable/card_bg"
+        android:layout_marginTop="12dp"
+        app:layout_constraintStart_toEndOf="@id/tvTag1ExploreCourse"
+        app:layout_constraintTop_toBottomOf="@id/tvExploreCourseName"/>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tvTag3ExploreCourse"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Target 2025"
+        app:fontFamily="@font/nunito"
+        android:textSize="12sp"
+        android:textColor="#5A5555"
+        android:padding="6dp"
+        android:background="@drawable/card_bg"
+        android:layout_marginTop="6dp"
+        app:layout_constraintStart_toStartOf="@id/tvTag1ExploreCourse"
+        app:layout_constraintTop_toBottomOf="@id/tvTag1ExploreCourse"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/profImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="@dimen/_16dp"
+        app:layout_constraintTop_toTopOf="@id/tvExploreCourseName"
+        android:background="@drawable/rectangle_1072"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/tech_image"
+            android:paddingTop="29dp"
+            android:paddingStart="11dp"
+            android:paddingEnd="7dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/progressBarExploreCourse"
+        android:layout_width="match_parent"
+        android:layout_marginHorizontal="1dp"
+        android:layout_marginBottom="1dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_bg"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/profImage">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tvOngoing"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ongoing"
+            android:textSize="@dimen/_12sp"
+            android:textColor="#5A5555"
+            app:fontFamily="@font/nunito"
+            android:layout_marginTop="11dp"
+            android:layout_marginStart="@dimen/_16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <ImageView
+            android:id="@+id/dot"
+            android:layout_width="5dp"
+            android:layout_height="5dp"
+            android:src="@drawable/ellipse_17927"
+            android:layout_marginTop="18dp"
+            android:layout_marginStart="5dp"
+            app:layout_constraintStart_toEndOf="@id/tvOngoing"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tvPercentCompleted"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="10%"
+            android:textSize="@dimen/_14sp"
+            android:textColor="#FF7A28"
+            app:fontFamily="@font/nunito"
+            android:layout_marginTop="@dimen/_10dp"
+            android:layout_marginStart="5dp"
+            app:layout_constraintStart_toEndOf="@id/dot"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <ProgressBar
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:id="@+id/customProgressIndicator"
+            android:layout_width="0dp"
+            android:layout_height="8dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="8dp"
+            android:max="100"
+            android:progress="10"
+            android:progressDrawable="@drawable/progress_bar"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvOngoing"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/targetIcon" />
+
+        <ImageView
+            android:id="@+id/targetIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/target"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintTop_toTopOf="@id/customProgressIndicator"
+            app:layout_constraintBottom_toBottomOf="@id/customProgressIndicator"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

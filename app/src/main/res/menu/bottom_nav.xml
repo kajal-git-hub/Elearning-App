@@ -11,11 +11,11 @@
         android:title="My Courses" />
     <item
         android:id="@+id/Scoreboard"
-        android:icon="@drawable/video_play"
+        android:icon="@drawable/ranking"
         android:title="Scoreboard" />
 
     <item
         android:id="@+id/Chat"
-        android:icon="@drawable/document_text"
+        android:icon="@drawable/message"
         android:title="Chat" />
 </menu>

@@ -53,6 +53,8 @@ class MainActivity : AppCompatActivity() {
             setContentView(R.layout.welcome_screen)
 
             Handler(Looper.getMainLooper()).postDelayed({
+
+
                 // Switch to the main layout after a delay
                 binding = ActivityMainBinding.inflate(layoutInflater)
                 setContentView(binding.root)
@@ -118,9 +120,31 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupNavigation() {
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as? NavHostFragment
-        navController = navHostFragment?.navController ?: throw IllegalStateException("NavController not found")
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as? NavHostFragment
+        navController =
+            navHostFragment?.navController ?: throw IllegalStateException("NavController not found")
         Log.d("MainActivity", "NavController: $navController")
+    }
+    private fun checkToken() {
+        val token = sharedPreferencesManager.accessToken
+        val number = sharedPreferencesManager.updateUserInput
+        Log.e("checktoken", token.toString())
+        Log.e("number  ${number?.fullName}", number?.city.toString())
+        if (token != null) {
+            // Token is available, navigate to the main screen
+            navigateToMainScreen()
+        } else {
+            // Token is not available, navigate to login or other appropriate screen
+//            startActivity(Intent(this, LoginActivity::class.java))
+//            finish()
+        }
+    }
+
+    private fun navigateToMainScreen() {
+        // Navigate to the main activity
+        startActivity(Intent(this, HomeActivity::class.java))
+        finish() // Close the splash activity
     }
 
     override fun onSupportNavigateUp(): Boolean {

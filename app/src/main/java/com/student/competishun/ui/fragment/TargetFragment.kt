@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.student.competishun.R
 import com.student.competishun.databinding.FragmentTargetBinding
 import com.student.competishun.ui.adapter.ExampleAdapter
+import com.student.competishun.utils.Constants
 import com.student.competishun.ui.main.MainActivity
 import com.student.competishun.utils.SharedPreferencesManager
 import dagger.hilt.android.AndroidEntryPoint
@@ -27,18 +28,9 @@ class TargetFragment : Fragment() {
     private var currentStep = 1
     private var isItemSelected = false
 
-    private val dataSets = listOf(
-        listOf("IIT-JEE", "NEET", "Board", "UCET", "Others"),
-        listOf("2025", "2026", "2027", "2028"),
-        listOf("Friends/Family", "Social Media", "Advertisement", "Other")
-    )
-
-    private val pageTexts = listOf("2", "3", "4")
-    private val stepTexts = listOf(
-        "Which exam are you \npreparing for? Please select",
-        "What is your target year?",
-        "How do you know about \nCompetishun?"
-    )
+    private val dataSets = Constants.DATA_SETS
+    private val pageTexts = Constants.PAGE_TEXTS
+    private val stepTexts = Constants.STEP_TEXTS
     private val spanCount = listOf(2, 2, 1)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -113,7 +105,6 @@ class TargetFragment : Fragment() {
 
     private fun startSlideInAnimation() {
         val slideInAnimation = AnimationUtils.loadAnimation(context, R.anim.slide_in_bottom)
-        binding.targetRecyclerview.startAnimation(slideInAnimation)
         binding.clAnimConstraint.startAnimation(slideInAnimation)
 
     }
@@ -125,4 +116,14 @@ class TargetFragment : Fragment() {
     private fun handleBackPressed() {
         findNavController().navigateUp()
     }
+
 }
+
+
+
+
+
+
+
+
+

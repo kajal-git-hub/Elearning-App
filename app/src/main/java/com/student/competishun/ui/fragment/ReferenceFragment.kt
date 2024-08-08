@@ -24,6 +24,7 @@ import com.student.competishun.ui.main.MainActivity
 import com.student.competishun.ui.viewmodel.UpdateUserViewModel
 import com.student.competishun.utils.SharedPreferencesManager
 import dagger.hilt.android.AndroidEntryPoint
+import com.student.competishun.utils.Constants
 
 
 @AndroidEntryPoint
@@ -35,18 +36,9 @@ class ReferenceFragment : Fragment() {
     private var isItemSelected = false
     private lateinit var sharedPreferencesManager: SharedPreferencesManager
 
-    private val dataSets = listOf(
-        listOf("IIT-JEE", "NEET", "Board", "UCET", "Others"),
-        listOf("2025", "2026", "2027", "2028"),
-        listOf("Friends/Family", "Social Media", "Advertisement", "Other")
-    )
-
-    private val pageTexts = listOf("2", "3", "4")
-    private val stepTexts = listOf(
-        "Which exam are you \npreparing for? Please select",
-        "What is your target year?",
-        "How do you know about \nCompetishun?"
-    )
+    private val dataSets = Constants.DATA_SETS
+    private val pageTexts = Constants.PAGE_TEXTS
+    private val stepTexts = Constants.STEP_TEXTS
     private val spanCount = listOf(2, 2, 1)
 
 

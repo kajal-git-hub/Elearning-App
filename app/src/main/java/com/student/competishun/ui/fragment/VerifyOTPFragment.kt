@@ -29,7 +29,6 @@ import com.student.competishun.ui.main.MainActivity
 import com.student.competishun.ui.viewmodel.VerifyOtpViewModel
 import com.student.competishun.utils.SharedPreferencesManager
 import dagger.hilt.android.AndroidEntryPoint
-
 @AndroidEntryPoint
 class VerifyOTPFragment : Fragment() {
 
@@ -56,6 +55,17 @@ class VerifyOTPFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        mobileNumber = arguments?.getString("mobileNumber")
+        countryCode = arguments?.getString("countryCode")
+
+        setupViews()
+        setupOtpInputs()
+        setupVerificationCodeText()
+        startTimer()
+        observeViewModel()
+    }
+
+    private fun setupViews() {
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -72,16 +82,18 @@ class VerifyOTPFragment : Fragment() {
             }
         })
 
-        Log.d("shared numbve", sharedPreferencesManager.mobileNo.toString())
-        if (!sharedPreferencesManager.mobileNo.isNullOrEmpty())  mobileNumber = sharedPreferencesManager.mobileNo
-           // arguments?.getString("mobileNumber")
-        countryCode = arguments?.getString("countryCode")
+        binding.btnVerify.setOnClickListener {
+            if (otpBoxes.all { it.text.length == 1 }) {
+                checkOtpAndNavigate()
+            } else {
+                Toast.makeText(requireContext(), "Please enter a valid OTP", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
 
-        Log.d("VerifyOTPFragment", "Mobile number: $mobileNumber, Country code: $countryCode")
-        //sharedPreferencesManager.mobileNo = mobileNumber
-        setupOtpInputs()
-        setupVerificationCodeText()
-        startTimer()
+    private fun observeViewModel() {
+        Log.d("shared number", sharedPreferencesManager.mobileNo.toString())
+        if (!sharedPreferencesManager.mobileNo.isNullOrEmpty()) mobileNumber = sharedPreferencesManager.mobileNo
 
         verifyOtpViewModel.verifyOtpResult.observe(viewLifecycleOwner) { result ->
             if (result != null) {
@@ -90,12 +102,9 @@ class VerifyOTPFragment : Fragment() {
                 changeOtpBoxesBackground(R.drawable.otp_edit_text_background)
                 binding.etEnterOtpText.text = "Enter the OTP to continue"
                 binding.etEnterOtpText.setTextColor(Color.parseColor("#726C6C"))
-                binding.btnVerify.setOnClickListener {
-                    findNavController().navigate(R.id.action_verifyOTPFragment_to_onBoardingFragment)
-                }
+                navigateToHome()
             } else {
-                Log.e("FailureBefid", "${result} $mobileNumber")
-
+                Log.e("FailureBefore", "${result} $mobileNumber")
                 Toast.makeText(requireContext(), "Invalid OTP", Toast.LENGTH_SHORT).show()
                 changeOtpBoxesBackground(R.drawable.opt_edit_text_bg_incorrect)
                 binding.etEnterOtpText.text = "Incorrect OTP"
@@ -105,32 +114,24 @@ class VerifyOTPFragment : Fragment() {
         }
     }
 
-    private fun startTimer() {
-        countDownTimer = object : CountDownTimer(30000, 1000) {
-            override fun onTick(millisUntilFinished: Long) {
-                val secondsRemaining = millisUntilFinished / 1000
-                binding.etTimeText.text = "${secondsRemaining}s"
-            }
-
-            override fun onFinish() {
-                binding.etEnterOtpText.text = "Didn’t receive any OTP?"
-                binding.etWaitText.visibility = View.GONE
-                binding.etTimeText.visibility = View.GONE
-                binding.etResendText.visibility = View.VISIBLE
-
-                binding.etResendText.setOnClickListener {
-                    // Handle resend OTP action
-                    binding.etEnterOtpText.text = "Enter the OTP to continue"
-                    binding.etWaitText.visibility = View.VISIBLE
-                    binding.etTimeText.visibility = View.VISIBLE
-                    binding.etResendText.visibility = View.GONE
-                    startTimer()  // Restart the timer
-                }
-            }
-        }
-        countDownTimer.start()
+    private fun navigateToHome() {
+        findNavController().navigate(R.id.action_verifyOTPFragment_to_onBoardingFragment)
     }
 
+    private fun checkOtpAndNavigate() {
+        val otp = otpBoxes.joinToString("") { it.text.toString() }
+        if (otp.isNotEmpty() && countryCode != null && mobileNumber != null) {
+            verifyOtpViewModel.verifyOtp(countryCode!!, mobileNumber!!, otp.toInt())
+        } else {
+            Toast.makeText(requireContext(), "Please enter a valid OTP", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun changeOtpBoxesBackground(backgroundResource: Int) {
+        otpBoxes.forEach {
+            it.setBackgroundResource(backgroundResource)
+        }
+    }
 
     private fun setupOtpInputs() {
         otpBoxes = listOf(
@@ -152,9 +153,9 @@ class VerifyOTPFragment : Fragment() {
                     }
 
                     if (otpBoxes.all { it.text.length == 1 }) {
-                        binding.btnVerify.setBackgroundColor(Color.parseColor("#3E3EF7"))
+                        binding.btnVerify.setBackgroundColor(Color.parseColor(getString(R.string._3e3ef7)))
                     } else {
-                        binding.btnVerify.setBackgroundColor(Color.parseColor("#DADADA"))
+                        binding.btnVerify.setBackgroundColor(Color.parseColor(getString(R.string.dadada)))
                     }
                 }
             })
@@ -167,33 +168,11 @@ class VerifyOTPFragment : Fragment() {
                 false
             }
         }
-
-        binding.btnVerify.setOnClickListener {
-            if (otpBoxes.all { it.text.length == 1 }) {
-                checkOtpAndNavigate()
-            }
-        }
-    }
-
-    private fun checkOtpAndNavigate() {
-        val otp = otpBoxes.joinToString("") { it.text.toString() }
-
-        if (otp.isNotEmpty() && countryCode != null && mobileNumber != null) {
-            verifyOtpViewModel.verifyOtp(countryCode!!, mobileNumber!!, otp.toInt())
-        } else {
-            Toast.makeText(requireContext(), "Please enter a valid OTP", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    private fun changeOtpBoxesBackground(backgroundResource: Int) {
-        otpBoxes.forEach {
-            it.setBackgroundResource(backgroundResource)
-        }
     }
 
     private fun setupVerificationCodeText() {
         mobileNumber?.let { phoneNumber ->
-            val fullText = "A verification code has been sent to your \nmail ID $phoneNumber"
+            val fullText = "A verification code has been sent to your \nphone no. $phoneNumber"
             val start = fullText.indexOf(phoneNumber)
 
             if (start != -1) {
@@ -233,9 +212,36 @@ class VerifyOTPFragment : Fragment() {
         }
     }
 
+    private fun startTimer() {
+        countDownTimer = object : CountDownTimer(30000, 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+                val secondsRemaining = millisUntilFinished / 1000
+                binding.etTimeText.text = "${secondsRemaining}s"
+            }
+
+            override fun onFinish() {
+                binding.etEnterOtpText.text = "Didn’t receive any OTP?"
+                binding.etWaitText.visibility = View.GONE
+                binding.etTimeText.visibility = View.GONE
+                binding.etResendText.visibility = View.VISIBLE
+
+                binding.etResendText.setOnClickListener {
+                    // Handle resend OTP action
+                    binding.etEnterOtpText.text = "Enter the OTP to continue"
+                    binding.etWaitText.visibility = View.VISIBLE
+                    binding.etTimeText.visibility = View.VISIBLE
+                    binding.etResendText.visibility = View.GONE
+                    startTimer()  // Restart the timer
+                }
+            }
+        }
+        countDownTimer.start()
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
         countDownTimer.cancel()
     }
 }
+

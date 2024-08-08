@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.apollographql.apollo3.api.Optional
 import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import com.student.competishun.R
 import com.student.competishun.curator.GetAllCourseCategoriesQuery
@@ -36,6 +37,7 @@ import com.student.competishun.ui.adapter.TestimonialsAdapter
 import com.student.competishun.ui.adapter.WhyCompetishunAdapter
 import com.student.competishun.ui.viewmodel.CoursesCategoryViewModel
 import com.student.competishun.ui.viewmodel.CoursesViewModel
+import com.student.competishun.utils.Constants
 import com.student.competishun.utils.HelperFunctions
 import com.student.competishun.utils.OnCourseItemClickListener
 import dagger.hilt.android.AndroidEntryPoint
@@ -54,6 +56,7 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
     private lateinit var testimonials: List<Testimonial>
     private lateinit var listWhyCompetishun: List<WhyCompetishun>
     private lateinit var drawerLayout: DrawerLayout
+    private lateinit var bottomNav: BottomNavigationView
     private lateinit var toggle: ActionBarDrawerToggle
     private val coursesViewModel: CoursesViewModel by viewModels()
     private val coursesCategoryViewModel: CoursesCategoryViewModel by viewModels()
@@ -67,6 +70,8 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
     private lateinit var recommendedCourseList: List<RecommendedCourseDataModel>
 
     private lateinit var helperFunctions: HelperFunctions
+
+    private lateinit var contactImage: ImageView
 
 
     override fun onCreateView(
@@ -85,55 +90,10 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
         super.onViewCreated(view, savedInstanceState)
 
 
-        recommendedCourseList = listOf(
-            RecommendedCourseDataModel(
-                discount = "11% OFF",
-                courseName = "Prakhar Integrated (Fast Lane-2) 2024-25",
-                tag1 = "12th Class",
-                tag2 = "Full-Year",
-                tag3 = "Target 2025",
-                startDate = "Starts On: 01 Jul, 24",
-                endDate = "Expiry Date: 31 Jul, 24",
-                lectureCount = "Lectures: 56",
-                quizCount = "Quiz & Tests: 120",
-                originalPrice = "₹44,939",
-                discountPrice = "₹29,900"
-            ),
-            RecommendedCourseDataModel(
-                discount = "11% OFF",
-                courseName = "Prakhar Integrated (Fast Lane-2) 2024-25",
-                tag1 = "12th Class",
-                tag2 = "Full-Year",
-                tag3 = "Target 2025",
-                startDate = "Starts On: 01 Jul, 24",
-                endDate = "Expiry Date: 31 Jul, 24",
-                lectureCount = "Lectures: 56",
-                quizCount = "Quiz & Tests: 120",
-                originalPrice = "₹44,939",
-                discountPrice = "₹29,900"
-            ),
-            RecommendedCourseDataModel(
-                discount = "11% OFF",
-                courseName = "Prakhar Integrated (Fast Lane-2) 2024-25",
-                tag1 = "12th Class",
-                tag2 = "Full-Year",
-                tag3 = "Target 2025",
-                startDate = "Starts On: 01 Jul, 24",
-                endDate = "Expiry Date: 31 Jul, 24",
-                lectureCount = "Lectures: 56",
-                quizCount = "Quiz & Tests: 120",
-                originalPrice = "₹44,939",
-                discountPrice = "₹29,900"
-            )
-        )
-
-
+        recommendedCourseList = Constants.recommendedCourseList
         binding.rvRecommendedCourses.adapter = RecommendedCoursesAdapter(recommendedCourseList)
-        binding.rvRecommendedCourses.layoutManager =
-            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-
+        binding.rvRecommendedCourses.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         setupDotsIndicator(recommendedCourseList.size, binding.llDotsIndicatorRecommendedCourses)
-
         binding.rvRecommendedCourses.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
@@ -147,11 +107,8 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
             PromoBannerModel(R.drawable.promo_banner_home),
         )
         binding.rvpromobanner.adapter = PromoBannerAdapter(promoBannerList)
-        binding.rvpromobanner.layoutManager =
-            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-
+        binding.rvpromobanner.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         setupDotsIndicator(promoBannerList.size, binding.llDotsIndicatorPromoBanner)
-
         binding.rvpromobanner.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
@@ -162,7 +119,6 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
 
         rvOurCourses = view.findViewById(R.id.rvOurCourses)
         dotsIndicatorOurCourses = view.findViewById(R.id.llDotsIndicatorOurCourses)
-
         rvOurCourses.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
@@ -174,7 +130,9 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
         helperFunctions = HelperFunctions()
 
         drawerLayout = view.findViewById(R.id.drwaer_layout)
+        bottomNav = requireActivity().findViewById(R.id.bottomNav)
         val toolbar: MaterialToolbar = view.findViewById(R.id.topAppBar)
+        contactImage = requireActivity().findViewById(R.id.ig_ContactImage)
 
         toggle = ActionBarDrawerToggle(
             activity, drawerLayout, toolbar,
@@ -183,6 +141,19 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
         )
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
+
+
+        drawerLayout.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
+            override fun onDrawerOpened(drawerView: View) {
+                bottomNav.visibility = View.GONE
+                contactImage.visibility = View.GONE
+            }
+
+            override fun onDrawerClosed(drawerView: View) {
+                bottomNav.visibility = View.VISIBLE
+                contactImage.visibility = View.VISIBLE
+            }
+        })
 
         recyclerView = view.findViewById(R.id.recyclerViewTestimonials)
         rvWhyCompetishun = view.findViewById(R.id.rvWhyCompetishun)
@@ -213,8 +184,6 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
                     GridLayoutManager(context, 3, GridLayoutManager.HORIZONTAL, false)
                 setupDotsIndicator(listOurCoursesItem!!.size, dotsIndicatorOurCourses, 3)
             }
-            // Update UI with courses data
-            // For example: binding.textView.text = courses?.firstOrNull()?.name ?: "No courses"
         })
         coursesCategoryViewModel.fetchCoursesCategory()
         val filters = FindAllCourseInput(
@@ -222,81 +191,10 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
             is_recommended = Optional.present(true)
         )
 
-
-
         coursesViewModel.fetchCourses(filters)
 
-//        coursesViewModel.courses.observe(viewLifecycleOwner, Observer { courses ->
-////            _binding?.tvBatchName?.text = courses?.firstOrNull()?.name
-////            _binding?.dicountPrice?.text = "₹" + coursesViewModel.getDiscountDetails(
-//                coursesViewModel.courses.value!!.firstOrNull()?.price?.toInt()!!,
-//                coursesViewModel.courses.value!!.get(0).discount!!.toInt()
-//            ).second.toString()
-////            _binding?.discountPerc?.text = coursesViewModel.getDiscountDetails(
-//                coursesViewModel.courses.value!!.firstOrNull()?.price!!.toInt(),
-//                coursesViewModel.courses.value!!.get(0).discount!!.toInt()
-//            ).first.toString() + "% OFF"
-//        })
-
-        // Fetch courses when the view is created
-        listWhyCompetishun = listOf(
-            WhyCompetishun(
-                "Competishun",
-                "IIT - JEE Cracked",
-                "NEET Cracked",
-                "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
-            ),
-            WhyCompetishun(
-                "Competishun",
-                "IIT - JEE Cracked",
-                "NEET Cracked",
-                "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"
-            ),
-            WhyCompetishun(
-                "Competishun",
-                "IIT - JEE Cracked",
-                "NEET Cracked",
-                "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4"
-            ),
-            WhyCompetishun(
-                "Competishun",
-                "IIT - JEE Cracked",
-                "NEET Cracked",
-                "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4"
-            )
-        )
-        testimonials = listOf(
-            Testimonial(
-                "The classes are very good. Teachers explain topics very well. Must buy course for all aspiring students.",
-                "Aman Sharma",
-                "Class: 12th",
-                "IIT JEE"
-            ),
-            Testimonial(
-                "The classes are very good. Teachers explain topics very well. Must buy course for all aspiring students.",
-                "Aman Sharma",
-                "Class: 12th",
-                "IIT JEE"
-            ),
-            Testimonial(
-                "The classes are very good. Teachers explain topics very well. Must buy course for all aspiring students.",
-                "Aman Sharma",
-                "Class: 12th",
-                "IIT JEE"
-            ),
-            Testimonial(
-                "The classes are very good. Teachers explain topics very well. Must buy course for all aspiring students.",
-                "Aman Sharma",
-                "Class: 12th",
-                "IIT JEE"
-            ),
-            Testimonial(
-                "The classes are very good. Teachers explain topics very well. Must buy course for all aspiring students.",
-                "Aman Sharma",
-                "Class: 12th",
-                "IIT JEE"
-            )
-        )
+        listWhyCompetishun = Constants.listWhyCompetishun
+        testimonials = Constants.testimonials
 
         adapter = TestimonialsAdapter(testimonials)
         adapterWhyCompetishun = WhyCompetishunAdapter(listWhyCompetishun)
@@ -436,12 +334,6 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
         }
     }
 
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
-
     override fun onCourseItemClick(course: GetAllCourseCategoriesQuery.GetAllCourseCategory) {
         val bundle = Bundle().apply {
             putString("course_name", course.name)
@@ -451,4 +343,12 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
         }
         findNavController().navigate(R.id.action_homeFragment_to_coursesFragment, bundle)
     }
+
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+        drawerLayout.removeDrawerListener(toggle)
+    }
+
 }

@@ -18,10 +18,13 @@ import com.student.competishun.ui.fragment.AdditionalDetailsFragment
 import com.student.competishun.ui.fragment.AddressDetailsFragment
 import com.student.competishun.ui.fragment.AllDemoResourcesFree
 import com.student.competishun.ui.fragment.AllFaqFragment
+import com.student.competishun.ui.fragment.CourseEmptyFragment
 import com.student.competishun.ui.fragment.MyCartFragment
 import com.student.competishun.ui.fragment.PaymentFragment
 import com.student.competishun.ui.fragment.PaymentLoaderFragment
 import com.student.competishun.ui.fragment.PersonalDetailsFragment
+import com.student.competishun.ui.fragment.ResumeCourseFragment
+import com.student.competishun.ui.fragment.SubjectContentFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -39,8 +42,7 @@ class HomeActivity : AppCompatActivity() {
 
 
         val bottomNavigationView = binding.bottomNav
-        bottomNavigationView.selectedItemId = R.id.myCourse
-
+        bottomNavigationView.selectedItemId = R.id.home
 
         bottomNavigationView.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
@@ -61,8 +63,6 @@ class HomeActivity : AppCompatActivity() {
                 else -> false
             }
         }
-
-
 
         binding.igContactImage.setOnClickListener {
             if (isCallingSupportVisible.get() == true) {
@@ -90,12 +90,24 @@ class HomeActivity : AppCompatActivity() {
             FragmentManager.FragmentLifecycleCallbacks() {
             override fun onFragmentResumed(fm: FragmentManager, f: Fragment) {
                 super.onFragmentResumed(fm, f)
-                binding.igContactImage.visibility =
-                    if (shouldHideContactImage(f)) View.GONE else View.VISIBLE
-                binding.bottomNav.visibility =
-                    if (shouldHideBottomNav(f)) View.GONE else View.VISIBLE
+                updateUiVisibility(f)
             }
         }, true)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val currentFragment = supportFragmentManager.findFragmentById(R.id.fragmentNavigation)
+        if (currentFragment != null) {
+            updateUiVisibility(currentFragment)
+        }
+    }
+
+    private fun updateUiVisibility(fragment: Fragment) {
+        binding.igContactImage.visibility =
+            if (shouldHideContactImage(fragment)) View.GONE else View.VISIBLE
+        binding.bottomNav.visibility =
+            if (shouldHideBottomNav(fragment)) View.GONE else View.VISIBLE
     }
 
     private fun shouldHideContactImage(fragment: Fragment): Boolean {
@@ -107,7 +119,10 @@ class HomeActivity : AppCompatActivity() {
             PaymentLoaderFragment::class.java,
             PersonalDetailsFragment::class.java,
             AddressDetailsFragment::class.java,
-            AdditionalDetailsFragment::class.java
+            AdditionalDetailsFragment::class.java,
+            ResumeCourseFragment::class.java,
+            SubjectContentFragment::class.java,
+            CourseEmptyFragment::class.java,
         )
         return fragmentsToHide.any { it.isInstance(fragment) }
     }
@@ -121,7 +136,8 @@ class HomeActivity : AppCompatActivity() {
             PaymentLoaderFragment::class.java,
             PersonalDetailsFragment::class.java,
             AddressDetailsFragment::class.java,
-            AdditionalDetailsFragment::class.java
+            AdditionalDetailsFragment::class.java,
+            CourseEmptyFragment::class.java,
         )
         return fragmentsToHide.any { it.isInstance(fragment) }
     }

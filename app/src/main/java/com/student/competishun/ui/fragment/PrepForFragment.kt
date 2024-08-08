@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.student.competishun.R
 import com.student.competishun.databinding.FragmentPrepForBinding
 import com.student.competishun.ui.adapter.ExampleAdapter
+import com.student.competishun.utils.Constants
 import com.student.competishun.ui.main.MainActivity
 import com.student.competishun.utils.SharedPreferencesManager
 import dagger.hilt.android.AndroidEntryPoint
@@ -24,22 +25,15 @@ import dagger.hilt.android.AndroidEntryPoint
 class PrepForFragment : Fragment() {
     private var _binding: FragmentPrepForBinding? = null
     private val binding get() = _binding!!
+
+
     private lateinit var sharedPreferencesManager: SharedPreferencesManager
     private var currentStep = 0
     private var isItemSelected = false
 
-    private val dataSets = listOf(
-        listOf("IIT-JEE", "NEET", "Board", "UCET", "Others"),
-        listOf("2025", "2026", "2027", "2028"),
-        listOf("Friends/Family", "Social Media", "Advertisement", "Other")
-    )
-
-    private val pageTexts = listOf("2", "3", "4")
-    private val stepTexts = listOf(
-        "Which exam are you \npreparing for? Please select",
-        "What is your target year?",
-        "How do you know about \nCompetishun?"
-    )
+    private val dataSets = Constants.DATA_SETS
+    private val pageTexts = Constants.PAGE_TEXTS
+    private val stepTexts = Constants.STEP_TEXTS
     private val spanCount = listOf(2, 2, 1)
 
     override fun onCreateView(
@@ -89,7 +83,11 @@ class PrepForFragment : Fragment() {
 
             if(selectedItem=="Others"){
                 binding.etContentBox.visibility = View.VISIBLE
+            }else{
+                binding.etContentBox.visibility = View.GONE
+                isItemSelected = true
             }
+            updateButtonBackground()
         }
 
         binding.prepRecyclerview.apply {
@@ -132,7 +130,6 @@ class PrepForFragment : Fragment() {
 
     private fun startSlideInAnimation() {
         val slideInAnimation = AnimationUtils.loadAnimation(context, R.anim.slide_in_bottom)
-        binding.prepRecyclerview.startAnimation(slideInAnimation)
         binding.clAnimConstraint.startAnimation(slideInAnimation)
     }
 
