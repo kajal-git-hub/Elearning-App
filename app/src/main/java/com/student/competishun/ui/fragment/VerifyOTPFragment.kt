@@ -1,5 +1,6 @@
 package com.student.competishun.ui.fragment
 
+import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -51,6 +52,7 @@ class VerifyOTPFragment : Fragment() {
         return binding.root
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -84,6 +86,7 @@ class VerifyOTPFragment : Fragment() {
         verifyOtpViewModel.verifyOtpResult.observe(viewLifecycleOwner) { result ->
             if (result != null) {
                 Log.e("Success in Verify", "${result.user} ${result.refreshToken} ${result.accessToken}")
+                sharedPreferencesManager.userId = result.user?.id
                 changeOtpBoxesBackground(R.drawable.otp_edit_text_background)
                 binding.etEnterOtpText.text = "Enter the OTP to continue"
                 binding.etEnterOtpText.setTextColor(Color.parseColor("#726C6C"))

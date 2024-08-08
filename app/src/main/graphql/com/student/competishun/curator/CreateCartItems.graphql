@@ -1,0 +1,9 @@
+mutation CreateCartItems($createCartItemsInput: CreateCartItemsDto!, $userId: String!) {
+    createCartItems(createCartItemsInput: $createCartItemsInput, user_id: $userId) {
+        cart_id
+        id
+        entity_id
+        entity_type
+        quantity
+    }
+}

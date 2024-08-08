@@ -1,0 +1,28 @@
+query FindAllCartItems($userId: String!) {
+    findAllCartItems(user_id: $userId) {
+        cartItem {
+            cart_id
+            entity_type
+            quantity
+            entity_id
+            id
+        }
+        course {
+            discount
+            price
+            name
+            id
+            banner_image
+            with_installment_price
+            category_id
+            banners {
+                mobile_banner_image
+                course_id
+                id
+                mobile_banner_image_name
+                redirect_link
+            }
+        }
+        price
+    }
+}

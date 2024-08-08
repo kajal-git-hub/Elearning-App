@@ -1,10 +1,14 @@
 query MyDetails {
     getMyDetails {
-        countryCode
-        userInformation {
-            city
-        }
+        fullName
         mobileNumber
+        userInformation {
+            id
+            reference
+            preparingFor
+            targetYear
+        }
+        countryCode
     }
 }
 
