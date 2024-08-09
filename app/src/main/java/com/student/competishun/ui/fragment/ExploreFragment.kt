@@ -54,7 +54,7 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
     private val courseViewModel: StudentCoursesViewModel by viewModels()
     private var showMoreOrLess = ObservableField("View More")
     var isItemSize = ObservableField(true)
-
+    private lateinit var courseId:String
     private lateinit var helperFunctions: HelperFunctions
 
     override fun onCreateView(
@@ -70,13 +70,31 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
 //        }
         return binding.root
     }
-
     private fun handleBackPressed() {
         findNavController().navigate(R.id.homeFragment)
     }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+         courseId = arguments?.getString("course_id").toString()
+
+        if (courseId.isEmpty()){
+            Log.e("courseEmpty",courseId.toString())
+            binding.progressBar.visibility = View.VISIBLE
+        }else {
+            Log.e("courseID",courseId.toString())
+            getCourseByIDViewModel.fetchCourseById(courseId)
+            getCourseByIDViewModel.courseByID.observe(viewLifecycleOwner, Observer { courses ->
+                Log.e("listcourses not", courses.toString())
+                binding.progressBar.visibility = View.GONE
+                if (courses != null) {
+                    Log.e("listcourses", courses.toString())
+                    binding.tvCourseName.text = courses.name
+                }
+
+            })
+        }
+        // Use the courseId as needed
+        Log.d("ExploreFragmentid", "Received course ID: $courseId")
         binding.backIv.setOnClickListener { requireActivity().onBackPressed() }
         binding.clBuynow.setOnClickListener {
             findNavController().navigate(R.id.action_exploreFragment_to_myCartFragment)
@@ -378,6 +396,9 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
     }
 
     override fun onCourseItemClicked(course: AllCourseForStudentQuery.Course) {
-        findNavController().navigate(R.id.action_coursesFragment_to_ExploreFragment)
+        val bundle = Bundle().apply {
+            putString("course_id", course.id)
+        }
+        findNavController().navigate(R.id.action_coursesFragment_to_ExploreFragment,bundle)
     }
 }

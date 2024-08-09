@@ -10,3 +10,8 @@ annotation class Gatekeeper
 @Qualifier
 @Retention(AnnotationRetention.SOURCE)
 annotation class Curator
+
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class Coinkeeper

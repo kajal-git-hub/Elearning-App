@@ -28,6 +28,7 @@ import com.student.competishun.ui.fragment.PersonalDetailsFragment
 import com.student.competishun.ui.fragment.ResumeCourseFragment
 import com.student.competishun.ui.fragment.SubjectContentFragment
 import com.student.competishun.ui.fragment.TopicTypeContentFragment
+import com.student.competishun.utils.SharedPreferencesManager
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -36,7 +37,7 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var navController: NavController
     private lateinit var binding: ActivityHomeBinding
     private var isCallingSupportVisible = ObservableField(true)
-
+    lateinit var sharedPreferencesManager: SharedPreferencesManager
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -46,7 +47,7 @@ class HomeActivity : AppCompatActivity() {
 
         val bottomNavigationView = binding.bottomNav
         bottomNavigationView.selectedItemId = R.id.home
-
+        sharedPreferencesManager = SharedPreferencesManager(this)
         bottomNavigationView.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.home -> {
@@ -119,7 +120,6 @@ class HomeActivity : AppCompatActivity() {
             MyCartFragment::class.java,
             AllFaqFragment::class.java,
             PaymentFragment::class.java,
-            ExploreFragment::class.java,
             PaymentLoaderFragment::class.java,
             PersonalDetailsFragment::class.java,
             AddressDetailsFragment::class.java,
@@ -129,6 +129,7 @@ class HomeActivity : AppCompatActivity() {
             CourseEmptyFragment::class.java,
             BottomSheetDescriptionFragment::class.java,
             TopicTypeContentFragment::class.java,
+            ExploreFragment::class.java,
         )
         return fragmentsToHide.any { it.isInstance(fragment) }
     }

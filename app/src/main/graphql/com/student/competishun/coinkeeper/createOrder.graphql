@@ -1,0 +1,10 @@
+mutation CreateOrder($createOrderInput: CreateOrderInput!) {
+    createOrder(createOrderInput: $createOrderInput) {
+        entityType
+        id
+        rzpOrderId
+        totalAmount
+        userId
+        amountPaid
+    }
+}

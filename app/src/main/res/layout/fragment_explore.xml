@@ -185,7 +185,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="6dp"
-                    android:text="@{`Target ` + (courseByIDViewModel.courseByID != null ? String.valueOf(courseByIDViewModel.courseByID.target_year) : `Target `)}"
+                    android:text="@{`Target ` + (courseByIDViewModel.courseByID != null ? String.valueOf(courseByIDViewModel.courseByID.target_year) : ` `)}"
                     app:fontFamily="@font/nunito"
                     android:textSize="12sp"
                     android:textStyle="bold"

@@ -1,14 +1,17 @@
 package com.student.competishun.di
 
 import android.content.Context
+import androidx.media3.common.util.Log
 import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.api.http.HttpRequest
 import com.apollographql.apollo3.api.http.HttpResponse
 import com.apollographql.apollo3.network.http.HttpInterceptor
 import com.apollographql.apollo3.network.http.HttpInterceptorChain
 import com.apollographql.apollo3.network.http.LoggingInterceptor
+import com.student.competishun.data.api.BASE_URL_COINKEEPER
 import com.student.competishun.data.api.BASE_URL_CURATOR
 import com.student.competishun.data.api.BASE_URL_GATEKEEPER
+import com.student.competishun.data.api.Coinkeeper
 import com.student.competishun.data.api.Curator
 import com.student.competishun.data.api.Gatekeeper
 import com.student.competishun.utils.CustomLoggingInterceptor
@@ -49,11 +52,39 @@ object GraphQlModule {
     @Singleton
     @Curator
     fun provideApolloClientCurator(
-        customLoggingInterceptor: CustomLoggingInterceptor
+        sharedPreferencesManager: SharedPreferencesManager
     ): ApolloClient {
         return ApolloClient.Builder()
             .serverUrl(BASE_URL_CURATOR)
-            .addHttpInterceptor(customLoggingInterceptor)
+            .addHttpInterceptor(object : HttpInterceptor {
+                override suspend fun intercept(request: HttpRequest, chain: HttpInterceptorChain): HttpResponse {
+
+                    val accessToken = sharedPreferencesManager.accessToken
+                    val modifiedRequest = request.newBuilder()
+                        .addHeader("Authorization", "Bearer $accessToken")
+                        .build()
+                    return chain.proceed(modifiedRequest)
+                }
+            })
+            .build()
+    }
+
+    @Provides
+    @Singleton
+    @Coinkeeper
+    fun provideClientCoinkeeper(sharedPreferencesManager: SharedPreferencesManager):ApolloClient{
+        return ApolloClient.Builder()
+            .serverUrl(BASE_URL_COINKEEPER)
+            .addHttpInterceptor(object : HttpInterceptor {
+                override suspend fun intercept(request: HttpRequest, chain: HttpInterceptorChain): HttpResponse {
+
+                    val accessToken = sharedPreferencesManager.accessToken
+                    val modifiedRequest = request.newBuilder()
+                        .addHeader("Authorization", "Bearer $accessToken")
+                        .build()
+                    return chain.proceed(modifiedRequest)
+                }
+            })
             .build()
     }
 

@@ -53,8 +53,6 @@ type CartItem {
 
   id: ID!
 
-  price: Int!
-
   quantity: Int!
 
   updatedAt: DateTime!
@@ -64,6 +62,8 @@ type CartResponseDto {
   cartItem: CartItem!
 
   course: Course!
+
+  price: Int!
 }
 
 enum Class {
@@ -264,8 +264,6 @@ input CreateCartItemDto {
   entity_id: ID!
 
   entity_type: EntityType!
-
-  price: Int!
 
   quantity: Int!
 }
@@ -496,6 +494,8 @@ type Mutation {
 
   deleteCourseCategory(id: String!): Boolean!
 
+  deleteCourseFolder(id: String!): Boolean!
+
   findFolderPath(id: String!): String!
 
   removeBanner(id: Int!): Banner!
@@ -503,8 +503,6 @@ type Mutation {
   removeCart(id: String!): Boolean!
 
   removeCartItem(id: ID!): Boolean!
-
-  removeCourseFolder(id: String!): Boolean!
 
   updateBanner(id: String!, mobile_banner: [Upload], updateBannerInput: UpdateBannerInput!, web_banner: [Upload]): Boolean!
 
@@ -568,11 +566,7 @@ input UpdateBannerInput {
 }
 
 input UpdateCartItemDto {
-  entity_id: ID!
-
-  entity_type: EntityType!
-
-  price: Int!
+  cart_item_id: ID!
 
   quantity: Int!
 }

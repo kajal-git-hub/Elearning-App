@@ -46,54 +46,7 @@ class CourseFragment : Fragment(), StudentCourseItemClickListener {
         recyclerView = view.findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(context)
 
-        val tabItems1 = listOf(
-            TabItem(
-                discount = "11% OFF",
-                courseName = "Prakhar Integrated (Fast Lane-2) 2024-25",
-                tags = listOf("12th Class", "Full-Year", "Target 2025"),
-                startDate = "Starts On: 01 Jul, 24",
-                endDate = "Expiry Date: 31 Jul, 24",
-                lectures = "Lectures: 56",
-                quizzes = "Quiz & Tests: 120",
-                originalPrice = "₹44,939",
-                discountPrice = "₹29,900"
-            )
-            // Add more TabItem objects here
-        )
-
-        val tabItems2 = listOf(
-            TabItem(
-                discount = "15% OFF",
-                courseName = "Medical Entrance Prep 2024-25",
-                tags = listOf("12th Class", "Full-Year", "Target 2025"),
-                startDate = "Starts On: 01 Aug, 24",
-                endDate = "Expiry Date: 31 Aug, 24",
-                lectures = "Lectures: 60",
-                quizzes = "Quiz & Tests: 130",
-                originalPrice = "₹50,000",
-                discountPrice = "₹42,500"
-            )
-            // Add more TabItem objects here
-        )
-
-        val tabItems3 = listOf(TabItem(
-                discount = "20% OFF",
-                courseName = "Engineering Entrance Prep 2024-25",
-                tags = listOf("12th Class", "Full-Year", "Target 2025"),
-                startDate = "Starts On: 01 Sep, 24",
-                endDate = "Expiry Date: 31 Sep, 24",
-                lectures = "Lectures: 70",
-                quizzes = "Quiz & Tests: 140",
-                originalPrice = "₹60,000",
-                discountPrice = "₹48,000"
-            )
-        )
-
-        val combinedTabItems = tabItems1 + tabItems2 + tabItems3
-
       //  recyclerView.adapter = CourseAdapter(combinedTabItems)
-
-        // Optionally set up data for the adapter
 
         return view
     }
@@ -147,7 +100,11 @@ class CourseFragment : Fragment(), StudentCourseItemClickListener {
     }
 
     override fun onCourseItemClicked(course: AllCourseForStudentQuery.Course) {
-        findNavController().navigate(R.id.action_coursesFragment_to_ExploreFragment)
+        val bundle = Bundle().apply {
+            putString("course_id", course.id)
+        }
+        Log.e("coursseID",course.id.toString())
+        findNavController().navigate(R.id.action_coursesFragment_to_ExploreFragment,bundle)
 
     }
 

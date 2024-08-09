@@ -33,6 +33,12 @@ android {
             sourceFolder.set("com/student/competishun/curator")
             generateKotlinModels.set(true)
         }
+        service("coinkeeper") {
+            packageName.set("com.student.competishun.coinkeeper")
+            schemaFile.set(file("src/main/graphql/com/student/competishun/coinkeeper/schema-coinkeeper.graphqls"))
+            sourceFolder.set("com/student/competishun/coinkeeper")
+            generateKotlinModels.set(true)
+        }
 
     }
     buildTypes {
@@ -88,5 +94,8 @@ dependencies {
     implementation(libs.android.gif.drawable)
     //dotindicator
     implementation (libs.dotsindicator.v50)
+    implementation(libs.razorpay.checkout)
+    implementation(libs.play.services.wallet)
+
 
 }

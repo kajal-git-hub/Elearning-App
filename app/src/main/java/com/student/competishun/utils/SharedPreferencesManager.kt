@@ -22,6 +22,7 @@ class SharedPreferencesManager(context: Context) {
         private const val KEY_MOBILE_NO = "mobileNo"
         private const val KEY_NAME = "name"
         private const val KEY_CITY = "city"
+        private const val KEY_USER_ID = "userId"
         private const val KEY_PREPARATION_FOR = "preparingFor"
         private const val KEY_TARGET_YEAR = "targetYear"
         private const val KEY_REFERENCE = "reference"
@@ -36,6 +37,13 @@ class SharedPreferencesManager(context: Context) {
             Log.e("sharedPreferences token", accessToken.toString())
         }
 
+    var userId: String?
+        get() = sharedPreferences.getString(KEY_USER_ID, null)
+        set(value) {
+            sharedPreferences.edit().putString(KEY_USER_ID, value).apply()
+
+            Log.e("sharedPreferences token", userId.toString())
+        }
     var mobileNo: String?
         get() = sharedPreferences.getString(KEY_MOBILE_NO, null)
         set(value) {
