@@ -9,9 +9,12 @@ import com.student.competishun.curator.CreateCartItemsMutation
 import com.student.competishun.curator.FindAllCartItemsQuery
 import com.student.competishun.curator.type.CreateCartItemDto
 import com.student.competishun.data.repository.CreateCartRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class CreateCartViewModel(private val cartRepository: CreateCartRepository) : ViewModel() {
+@HiltViewModel
+class CreateCartViewModel @Inject constructor(private val cartRepository: CreateCartRepository) : ViewModel() {
     private val _cartItemsResult = MutableLiveData<Result<CreateCartItemsMutation.Data>>()
     val cartItemsResult: LiveData<Result<CreateCartItemsMutation.Data>> = _cartItemsResult
 

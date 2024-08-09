@@ -97,6 +97,9 @@
         <action
             android:id="@+id/action_mycartFragment_to_paymentLoaderFragment"
             app:destination="@+id/paymentLoaderFragment" />
+        <action
+            android:id="@+id/action_mycartFragment_to_paymentFailedFragment"
+            app:destination="@+id/PaymentFailedFragment" />
     </fragment>
 
     <fragment
@@ -166,6 +169,11 @@
         android:id="@+id/ResumeCourseFragment"
         android:name="com.student.competishun.ui.fragment.ResumeCourseFragment"
         tools:layout="@layout/fragment_resume_course">
+    </fragment>
+    <fragment
+        android:id="@+id/PaymentFailedFragment"
+        android:name="com.student.competishun.ui.fragment.PaymentFailedFragment"
+        tools:layout="@layout/fragment_paymet_failed">
     </fragment>
 
 

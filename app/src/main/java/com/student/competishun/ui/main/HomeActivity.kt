@@ -19,12 +19,14 @@ import com.student.competishun.ui.fragment.AddressDetailsFragment
 import com.student.competishun.ui.fragment.AllDemoResourcesFree
 import com.student.competishun.ui.fragment.AllFaqFragment
 import com.student.competishun.ui.fragment.CourseEmptyFragment
+import com.student.competishun.ui.fragment.ExploreFragment
 import com.student.competishun.ui.fragment.MyCartFragment
 import com.student.competishun.ui.fragment.PaymentFragment
 import com.student.competishun.ui.fragment.PaymentLoaderFragment
 import com.student.competishun.ui.fragment.PersonalDetailsFragment
 import com.student.competishun.ui.fragment.ResumeCourseFragment
 import com.student.competishun.ui.fragment.SubjectContentFragment
+import com.student.competishun.utils.SharedPreferencesManager
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -33,7 +35,7 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var navController: NavController
     private lateinit var binding: ActivityHomeBinding
     private var isCallingSupportVisible = ObservableField(true)
-
+    lateinit var sharedPreferencesManager: SharedPreferencesManager
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -43,7 +45,7 @@ class HomeActivity : AppCompatActivity() {
 
         val bottomNavigationView = binding.bottomNav
         bottomNavigationView.selectedItemId = R.id.home
-
+        sharedPreferencesManager = SharedPreferencesManager(this)
         bottomNavigationView.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.home -> {
@@ -123,6 +125,7 @@ class HomeActivity : AppCompatActivity() {
             ResumeCourseFragment::class.java,
             SubjectContentFragment::class.java,
             CourseEmptyFragment::class.java,
+            ExploreFragment::class.java,
         )
         return fragmentsToHide.any { it.isInstance(fragment) }
     }
@@ -138,6 +141,7 @@ class HomeActivity : AppCompatActivity() {
             AddressDetailsFragment::class.java,
             AdditionalDetailsFragment::class.java,
             CourseEmptyFragment::class.java,
+            ExploreFragment::class.java,
         )
         return fragmentsToHide.any { it.isInstance(fragment) }
     }
