@@ -38,11 +38,13 @@ class CourseEmptyFragment : Fragment() {
 
         val exploreCourseList = listOf(
             ExploreCourse("Prakhar Integrated (Fast Lane-2) 2024-25", "12th class", "Full-Year", "Target 2025", "Ongoing", 10),
+            ExploreCourse("Prakhar Integrated (Fast Lane-2) 2024-25", "Revision", "Full-Year", "Target 2025", "Completed", 100),
             ExploreCourse("Prakhar Integrated (Fast Lane-2) 2024-25", "Revision", "Full-Year", "Target 2025", "Completed", 100)
+
         )
 
         val adapter = ExploreCourseAdapter(exploreCourseList) { course ->
-            findNavController().navigate(R.id.action_courseEmptyFragment_to_SubjectContentFragment)
+            findNavController().navigate(R.id.action_courseEmptyFragment_to_ResumeCourseFragment)
         }
 
         binding.rvExploreCourses.adapter = adapter

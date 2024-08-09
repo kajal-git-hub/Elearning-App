@@ -204,7 +204,9 @@
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/rvRecommendedCourses"></LinearLayout>
+                            app:layout_constraintTop_toBottomOf="@id/rvRecommendedCourses">
+
+                        </LinearLayout>
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -711,14 +713,13 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:menu="@menu/navigation_drawer">
+
             <include
                 android:id="@+id/navigation_footer"
                 layout="@layout/navigation_footer"
                 android:layout_gravity="bottom" />
 
         </com.google.android.material.navigation.NavigationView>
-
-
 
 
     </androidx.drawerlayout.widget.DrawerLayout>

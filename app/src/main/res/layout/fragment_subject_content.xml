@@ -141,6 +141,7 @@
             app:layout_constraintBottom_toBottomOf="@id/tv_topic_type"/>
 
         <ImageView
+            android:id="@+id/down_chooseTopic"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/arrow_down_black"
@@ -153,6 +154,7 @@
 
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvSubjectContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"

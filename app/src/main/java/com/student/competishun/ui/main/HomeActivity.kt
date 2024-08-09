@@ -18,13 +18,16 @@ import com.student.competishun.ui.fragment.AdditionalDetailsFragment
 import com.student.competishun.ui.fragment.AddressDetailsFragment
 import com.student.competishun.ui.fragment.AllDemoResourcesFree
 import com.student.competishun.ui.fragment.AllFaqFragment
+import com.student.competishun.ui.fragment.BottomSheetDescriptionFragment
 import com.student.competishun.ui.fragment.CourseEmptyFragment
+import com.student.competishun.ui.fragment.ExploreFragment
 import com.student.competishun.ui.fragment.MyCartFragment
 import com.student.competishun.ui.fragment.PaymentFragment
 import com.student.competishun.ui.fragment.PaymentLoaderFragment
 import com.student.competishun.ui.fragment.PersonalDetailsFragment
 import com.student.competishun.ui.fragment.ResumeCourseFragment
 import com.student.competishun.ui.fragment.SubjectContentFragment
+import com.student.competishun.ui.fragment.TopicTypeContentFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -116,6 +119,7 @@ class HomeActivity : AppCompatActivity() {
             MyCartFragment::class.java,
             AllFaqFragment::class.java,
             PaymentFragment::class.java,
+            ExploreFragment::class.java,
             PaymentLoaderFragment::class.java,
             PersonalDetailsFragment::class.java,
             AddressDetailsFragment::class.java,
@@ -123,6 +127,8 @@ class HomeActivity : AppCompatActivity() {
             ResumeCourseFragment::class.java,
             SubjectContentFragment::class.java,
             CourseEmptyFragment::class.java,
+            BottomSheetDescriptionFragment::class.java,
+            TopicTypeContentFragment::class.java,
         )
         return fragmentsToHide.any { it.isInstance(fragment) }
     }
@@ -133,11 +139,16 @@ class HomeActivity : AppCompatActivity() {
             MyCartFragment::class.java,
             AllFaqFragment::class.java,
             PaymentFragment::class.java,
+            ExploreFragment::class.java,
             PaymentLoaderFragment::class.java,
             PersonalDetailsFragment::class.java,
             AddressDetailsFragment::class.java,
             AdditionalDetailsFragment::class.java,
             CourseEmptyFragment::class.java,
+            SubjectContentFragment::class.java,
+            ResumeCourseFragment::class.java,
+            BottomSheetDescriptionFragment::class.java,
+            TopicTypeContentFragment::class.java,
         )
         return fragmentsToHide.any { it.isInstance(fragment) }
     }

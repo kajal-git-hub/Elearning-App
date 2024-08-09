@@ -1,5 +1,6 @@
 package com.student.competishun.ui.fragment
 
+import RecommendedCoursesAdapter
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -32,7 +33,6 @@ import com.student.competishun.data.model.WhyCompetishun
 import com.student.competishun.databinding.FragmentHomeBinding
 import com.student.competishun.ui.adapter.OurCoursesAdapter
 import com.student.competishun.ui.adapter.PromoBannerAdapter
-import com.student.competishun.ui.adapter.RecommendedCoursesAdapter
 import com.student.competishun.ui.adapter.TestimonialsAdapter
 import com.student.competishun.ui.adapter.WhyCompetishunAdapter
 import com.student.competishun.ui.viewmodel.CoursesCategoryViewModel
@@ -90,16 +90,6 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
         super.onViewCreated(view, savedInstanceState)
 
 
-        recommendedCourseList = Constants.recommendedCourseList
-        binding.rvRecommendedCourses.adapter = RecommendedCoursesAdapter(recommendedCourseList)
-        binding.rvRecommendedCourses.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        setupDotsIndicator(recommendedCourseList.size, binding.llDotsIndicatorRecommendedCourses)
-        binding.rvRecommendedCourses.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                updateDotsIndicator(recyclerView, binding.llDotsIndicatorRecommendedCourses)
-            }
-        })
 
         promoBannerList = listOf(
             PromoBannerModel(R.drawable.promo_banner_home),
@@ -161,13 +151,19 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
         dotsIndicatorWhyCompetishun = view.findViewById(R.id.llDotsIndicatorWhyCompetishun)
 
         coursesViewModel.courses.observe(viewLifecycleOwner, Observer { courses ->
-//            _binding?.tvBatchName?.text = courses?.firstOrNull()?.name
             Log.e("Coursesres", courses.toString())
-            // Update UI with courses data
-            // For example: binding.textView.text = courses?.firstOrNull()?.name ?: "No courses"
+            binding.rvRecommendedCourses.adapter = courses?.let { RecommendedCoursesAdapter(it) }
+            binding.rvRecommendedCourses.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            recommendedCourseList = Constants.recommendedCourseList
+            setupDotsIndicator(recommendedCourseList.size, binding.llDotsIndicatorRecommendedCourses)
+            binding.rvRecommendedCourses.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+                    updateDotsIndicator(recyclerView, binding.llDotsIndicatorRecommendedCourses)
+                }
+            })
         })
 
-        // Fetch courses when the view is created
         _binding?.progressBar?.visibility = View.VISIBLE
         _binding?.rvOurCourses?.visibility = View.GONE
 
