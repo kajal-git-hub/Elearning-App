@@ -1,0 +1,229 @@
+input CreateInstallmentPaymentInput {
+  installmentId: String!
+
+  paymentMode: String!
+}
+
+input CreateOrderInput {
+  amountPaid: Float!
+
+  entityId: String!
+
+  entityType: String!
+
+  isPaidOnce: Boolean!
+
+  paymentMode: String!
+
+  paymentType: String!
+
+  rzpOrderId: String
+
+  totalAmount: Float!
+
+  totalInstallments: Int
+
+  userId: String!
+}
+
+input CreatePaymentInput {
+  amount: Float!
+
+  currency: String
+
+  entityId: String!
+
+  entityType: String!
+
+  installmentId: String
+
+  orderId: String!
+
+  paymentMode: String!
+
+  paymentType: String!
+
+  rzpOrderId: String
+
+  status: String!
+
+  transactionId: String
+
+  userId: String!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Installment {
+  amount: Float!
+
+  createdAt: DateTime!
+
+  deletedAt: DateTime!
+
+  dueDate: DateTime!
+
+  id: ID!
+
+  installmentNumber: Float!
+
+  installmentStatus: String!
+
+  orderId: String!
+
+  paidDate: DateTime
+
+  rzpOrderId: String
+
+  status: String!
+
+  updatedAt: DateTime!
+
+  userId: String!
+}
+
+type Mutation {
+  createOrder(createOrderInput: CreateOrderInput!): Order!
+
+  createPayment(createPaymentInput: CreatePaymentInput!): Payment!
+
+  installmentPayment(createInstallmentPaymentInput: CreateInstallmentPaymentInput!): Installment!
+
+  removeOrder(id: String!): Boolean!
+
+  removePayment(id: Int!): Payment!
+
+  updateInstallment(updateInstallmentInput: UpdateInstallmentInput!): Boolean!
+
+  updatePayment(updatePaymentInput: UpdatePaymentInput!): Payment!
+}
+
+type Order {
+  amountPaid: Float!
+
+  createdAt: DateTime!
+
+  deletedAt: DateTime!
+
+  entityId: String!
+
+  entityType: String!
+
+  id: ID!
+
+  isPaidOnce: Boolean!
+
+  rzpOrderId: String
+
+  totalAmount: Float!
+
+  totalInstallments: Float
+
+  updatedAt: DateTime!
+
+  userId: String!
+}
+
+type Payment {
+  amount: Float!
+
+  createdAt: DateTime!
+
+  currency: String
+
+  deletedAt: DateTime!
+
+  entityId: String!
+
+  entityType: String!
+
+  id: ID!
+
+  installmentId: String
+
+  orderId: String!
+
+  paymentMode: String!
+
+  paymentType: String!
+
+  rzpOrderId: String
+
+  status: String!
+
+  transactionId: String
+
+  updatedAt: DateTime!
+
+  userId: String!
+}
+
+type Query {
+  findByInstallment(id: String!): Installment!
+
+  findByOrder(id: String!): [Installment!]!
+
+  orderById(id: String!): Order!
+
+  orders: [Order!]!
+
+  payment(id: Int!): Payment!
+
+  paymentsByUser(id: String!): [Payment!]!
+}
+
+input UpdateInstallmentInput {
+  amount: Float
+
+  dueDate: DateTime
+
+  id: String!
+
+  installmentNumber: Float
+
+  installmentStatus: String!
+
+  orderId: String
+
+  paidDate: DateTime!
+
+  status: String
+
+  userId: String
+}
+
+input UpdatePaymentInput {
+  amount: Float
+
+  currency: String
+
+  entityId: String
+
+  entityType: String
+
+  id: Int!
+
+  installmentId: String
+
+  orderId: String
+
+  paymentMode: String
+
+  paymentType: String
+
+  rzpOrderId: String
+
+  status: String
+
+  transactionId: String
+
+  userId: String
+}
+
+schema {
+  query: Query
+  mutation: Mutation
+}
