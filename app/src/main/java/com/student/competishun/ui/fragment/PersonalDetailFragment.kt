@@ -11,18 +11,20 @@ import androidx.navigation.fragment.findNavController
 import com.student.competishun.R
 import com.student.competishun.databinding.FragmentPersonalDetailBinding
 import com.student.competishun.ui.viewmodel.UserViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class PersonalDetailsFragment : Fragment() {
     private val userViewModel: UserViewModel by viewModels()
+    private var _binding: FragmentPersonalDetailBinding? = null
+    private val binding get() = _binding!!
 
-    private val binding by lazy {
-        FragmentPersonalDetailBinding.inflate(layoutInflater)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        _binding = FragmentPersonalDetailBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -36,16 +38,12 @@ class PersonalDetailsFragment : Fragment() {
         userViewModel.userDetails.observe(viewLifecycleOwner) { result ->
             result.onSuccess { data ->
                 val userDetails = data.getMyDetails
-//                binding.etFullName.text = userDetails.fullName
-//                mobileNumberTextView.text = userDetails.mobileNumber
-//                userInformationTextView.text = userDetails.userInformation.toString() // Customize as needed
             }.onFailure { exception ->
                 // Handle error
                 Toast.makeText(requireContext(), "Error fetching details: ${exception.message}", Toast.LENGTH_LONG).show()
             }
         }
         userViewModel.fetchUserDetails()
-        binding.etFullName
         binding.spinnerTshirtSize.setOnClickListener {
             val bottomSheet = BottomSheetTSizeFragment()
             bottomSheet.show(childFragmentManager, "BottomSheetTSizeFragment")
@@ -54,5 +52,9 @@ class PersonalDetailsFragment : Fragment() {
             findNavController().navigate(R.id.action_PersonalDetails_to_AdditionalDetail)
         }
 
+    }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

@@ -43,7 +43,7 @@ import com.student.competishun.utils.StudentCourseItemClickListener
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener ,
+class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
     StudentCourseItemClickListener {
 
     private lateinit var binding: FragmentExploreBinding
@@ -170,7 +170,27 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener ,
                     LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
                 adapter = ourContentAdapter
             }
+            val courseId = "250bceb2-45e4-488e-aa02-c9521555b424"
 
+            getCourseByIDViewModel.fetchCourseById(courseId)
+//            getCourseByIDViewModel.loading.observe(viewLifecycleOwner, Observer { isLoading ->
+//                binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+//            })
+//            getCourseByIDViewModel.error.observe(viewLifecycleOwner, Observer { error ->
+//                if (error != null) {
+//                    Toast.makeText(requireContext(), error, Toast.LENGTH_LONG).show()
+//                }
+//            })
+            binding.progressBar.visibility = View.VISIBLE
+            getCourseByIDViewModel.courseByID.observe(viewLifecycleOwner, Observer { courses ->
+                Log.e("listcourses not", courses.toString())
+                binding.progressBar.visibility = View.GONE
+                if (courses != null) {
+                    Log.e("listcourses", courses.toString())
+                    binding.tvCourseName.text = courses.name
+                }
+
+            })
 
             binding.tvOurContentSeeMore.setOnClickListener {
                 if (showMoreOrLess.get() == "View More") {
@@ -269,21 +289,21 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener ,
                 Optional.present("Complimentary Course"),
                 Optional.present("IIT-JEE"),
                 Optional.present(null),
-                Optional.present(null))
+                Optional.present(null)
+            )
             courseViewModel.fetchCourses(filters)
 
             viewLifecycleOwner.lifecycleScope.launchWhenStarted {
                 courseViewModel.courses.collect { result ->
                     result?.onSuccess { data ->
-                        Log.e("gettiStudent",data.toString())
-                        val courses = data.getAllCourseForStudent.courses.map {
-                                course ->
+                        Log.e("gettiStudent", data.toString())
+                        val courses = data.getAllCourseForStudent.courses.map { course ->
                             AllCourseForStudentQuery.Course(
                                 discount = course.discount,
                                 name = course.name,
                                 course_start_date = course.course_start_date,
                                 course_validity_end_date = course.course_validity_end_date,
-                                price =course.price,
+                                price = course.price,
                                 target_year = course.target_year,
                                 id = course.id,
                                 academic_year = course.academic_year,
@@ -305,10 +325,11 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener ,
                                 with_installment_price = course.with_installment_price
                             )
                         } ?: emptyList()
-                        binding.rvRelatedCourses.adapter = CourseAdapter(courses,this@ExploreFragment)
+                        binding.rvRelatedCourses.adapter =
+                            CourseAdapter(courses, this@ExploreFragment)
                     }?.onFailure { exception ->
                         // Handle the failure case
-                        Log.e("gettiStudentfaik",exception.toString())
+                        Log.e("gettiStudentfaik", exception.toString())
                     }
                 }
             }

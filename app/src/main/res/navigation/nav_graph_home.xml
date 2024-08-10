@@ -157,18 +157,36 @@
         <action
             android:id="@+id/action_courseEmptyFragment_to_SubjectContentFragment"
             app:destination="@+id/SubjectContentFragment"/>
+        <action
+            android:id="@+id/action_courseEmptyFragment_to_ResumeCourseFragment"
+            app:destination="@+id/ResumeCourseFragment"/>
     </fragment>
 
     <fragment
         android:id="@+id/SubjectContentFragment"
         android:name="com.student.competishun.ui.fragment.SubjectContentFragment"
         tools:layout="@layout/fragment_subject_content">
+
+        <action
+            android:id="@+id/action_subjectContentFragment_to_TopicTYPEContentFragment"
+            app:destination="@+id/TopicTYPEContentFragment"/>
+
     </fragment>
 
     <fragment
         android:id="@+id/ResumeCourseFragment"
         android:name="com.student.competishun.ui.fragment.ResumeCourseFragment"
         tools:layout="@layout/fragment_resume_course">
+        <action
+            android:id="@+id/action_resumeCourseFragment_to_subjectContentFragment"
+            app:destination="@+id/SubjectContentFragment"/>
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/TopicTYPEContentFragment"
+        android:name="com.student.competishun.ui.fragment.TopicTypeContentFragment"
+        tools:layout="@layout/fragment_topic_type_content">
     </fragment>
     <fragment
         android:id="@+id/PaymentFailedFragment"
