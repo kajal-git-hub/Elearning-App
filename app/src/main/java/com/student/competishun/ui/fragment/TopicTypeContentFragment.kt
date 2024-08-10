@@ -9,7 +9,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.student.competishun.R
 import com.student.competishun.data.model.TopicContentModel
 import com.student.competishun.databinding.FragmentTopicTypeContentBinding
+import com.student.competishun.ui.adapter.TopicContentAdapter
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class TopicTypeContentFragment : Fragment() {
 
     private var _binding: FragmentTopicTypeContentBinding? = null
@@ -46,10 +49,10 @@ class TopicTypeContentFragment : Fragment() {
                 progress = 50
             )
         )
-//
-//        val adapter = TopicContentAdapter(topicContents)
-//        binding.rvTopicContent.adapter = adapter
-//        binding.rvTopicContent.layoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
+
+        val adapter = TopicContentAdapter(topicContents)
+        binding.rvTopicContent.adapter = adapter
+        binding.rvTopicContent.layoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
 
     }
 

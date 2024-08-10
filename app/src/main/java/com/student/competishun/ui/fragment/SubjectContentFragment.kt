@@ -12,7 +12,9 @@ import com.student.competishun.data.model.SubjectContentItem
 import com.student.competishun.databinding.FragmentSubjectContentBinding
 import com.student.competishun.ui.adapter.ExploreCourseAdapter
 import com.student.competishun.ui.adapter.SubjectContentAdapter
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class SubjectContentFragment : Fragment() {
 
     private var _binding: FragmentSubjectContentBinding? = null

@@ -11,7 +11,10 @@ import com.student.competishun.R
 import com.student.competishun.data.model.ExploreCourse
 import com.student.competishun.databinding.FragmentCourseEmptyBinding
 import com.student.competishun.ui.adapter.ExploreCourseAdapter
+import dagger.hilt.android.AndroidEntryPoint
 
+
+@AndroidEntryPoint
 class CourseEmptyFragment : Fragment() {
 
     private var _binding: FragmentCourseEmptyBinding? = null

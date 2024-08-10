@@ -8,7 +8,9 @@ import android.view.ViewGroup
 import com.student.competishun.R
 import com.student.competishun.databinding.FragmentPaymentBinding
 import com.student.competishun.databinding.FragmentPaymetFailedBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class PaymentFailedFragment : Fragment() {
 
     private var _binding: FragmentPaymetFailedBinding? = null

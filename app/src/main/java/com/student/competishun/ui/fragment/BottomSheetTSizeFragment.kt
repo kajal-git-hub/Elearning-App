@@ -9,7 +9,9 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.student.competishun.data.model.TSizeModel
 import com.student.competishun.databinding.FragmentBottomSheetTSizeBinding
 import com.student.competishun.ui.adapter.TshirtSizeAdapter
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class BottomSheetTSizeFragment : BottomSheetDialogFragment() {
 
     private var _binding: FragmentBottomSheetTSizeBinding? = null
