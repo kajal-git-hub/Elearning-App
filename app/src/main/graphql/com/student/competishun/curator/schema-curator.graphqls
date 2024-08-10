@@ -203,6 +203,8 @@ type CourseFolder {
 
   parent_folder_id: String
 
+  scheduled_time: DateTime
+
   updatedAt: DateTime!
 }
 
@@ -220,6 +222,8 @@ type CourseFolderContent {
   folder_id: String
 
   id: ID!
+
+  scheduled_time: DateTime
 
   updatedAt: DateTime!
 }
@@ -286,6 +290,8 @@ input CreateCourseFolderInput {
   name: String!
 
   parent_folder_id: ID
+
+  scheduled_time: DateTime
 }
 
 input CreateCourseInput {
@@ -480,7 +486,7 @@ type Mutation {
 
   createCart(user_id: String!): Cart!
 
-  createCartItems(createCartItemsInput: CreateCartItemsDto!, user_id: String!): [CartItem!]!
+  createCartItems(createCartItemsInput: CreateCartItemsDto!): [CartItem!]!
 
   createCourse(banner_image: [Upload], createCourseInput: CreateCourseInput!, orientation_video: [Upload], planner_pdf: [Upload], video_thumbnail: [Upload]): Course!
 
@@ -506,13 +512,15 @@ type Mutation {
 
   updateBanner(id: String!, mobile_banner: [Upload], updateBannerInput: UpdateBannerInput!, web_banner: [Upload]): Boolean!
 
-  updateCartItems(updateCartItemsInput: UpdateCartItemsDto!, user_id: String!): Boolean!
+  updateCartItems(updateCartItemsInput: UpdateCartItemsDto!): Boolean!
 
   updateCourse(banner_image: [Upload], id: String!, orientation_video: [Upload], planner_pdf: [Upload], updateCourseInput: UpdateCourseInput!, video_thumbnail: [Upload]): Boolean!
 
   updateCourseCategory(id: String!, updateCourseCategoryInput: UpdateCourseCategoryInput!): Boolean!
 
   updateCourseFolder(id: String!, updateCourseFolderInput: UpdateCourseFolderInput!): Boolean!
+
+  updateCourseFolderContent(id: String!, updateFolderContent: UpdateFolderContent!): Boolean!
 
   uploadFilesInFolder(filesWithDescriptions: [FileWithDescriptionInput!]!, id: String!): Boolean!
 }
@@ -532,7 +540,7 @@ enum OtherRequirements {
 }
 
 type Query {
-  findAllCartItems(user_id: String!): [CartResponseDto!]!
+  findAllCartItems: [CartResponseDto!]!
 
   findCartItemById(id: ID!): CartResponseDto!
 
@@ -589,6 +597,8 @@ input UpdateCourseFolderInput {
   name: String
 
   parent_folder_id: ID
+
+  scheduled_time: DateTime
 }
 
 input UpdateCourseInput {
@@ -651,6 +661,14 @@ input UpdateCourseInput {
   target_year: Int
 
   with_installment_price: Int
+}
+
+input UpdateFolderContent {
+  description: String
+
+  file_name: String!
+
+  scheduled_time: DateTime
 }
 
 """

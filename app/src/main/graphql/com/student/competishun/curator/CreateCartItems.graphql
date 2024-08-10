@@ -1,5 +1,5 @@
-mutation CreateCartItems($createCartItemsInput: CreateCartItemsDto!, $userId: String!) {
-    createCartItems(createCartItemsInput: $createCartItemsInput, user_id: $userId) {
+mutation CreateCartItems($createCartItemsInput: CreateCartItemsDto!) {
+    createCartItems(createCartItemsInput: $createCartItemsInput) {
         cart_id
         id
         entity_id
