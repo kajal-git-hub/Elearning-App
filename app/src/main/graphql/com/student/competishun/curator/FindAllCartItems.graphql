@@ -1,5 +1,5 @@
-query FindAllCartItems($userId: String!) {
-    findAllCartItems(user_id: $userId) {
+query FindAllCartItems {
+    findAllCartItems {
         cartItem {
             cart_id
             entity_type

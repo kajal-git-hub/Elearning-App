@@ -62,18 +62,19 @@ class MyCartFragment : Fragment(), PaymentResultListener {
         }
         paymentsClient = Wallet.getPaymentsClient(
             requireActivity(),
+
             Wallet.WalletOptions.Builder()
                 .setEnvironment(WalletConstants.ENVIRONMENT_TEST) // or ENVIRONMENT_PRODUCTION
                 .build()
         )
-        requireActivity().onBackPressedDispatcher.addCallback(this) {
-            handleBackPressed()
-        }
+//        requireActivity().onBackPressedDispatcher.addCallback(this) {
+//            handleBackPressed()
+//        }
     }
 
-    private fun handleBackPressed() {
-        findNavController().navigate(R.id.exploreFragment)
-    }
+//    private fun handleBackPressed() {
+//        findNavController().navigate(R.id.exploreFragment)
+//    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -144,6 +145,7 @@ class MyCartFragment : Fragment(), PaymentResultListener {
                         obj.put("amount",amount)
                         obj.put("prefill.contact",contact)
                         obj.put("prefill.email", "chaitanyamunje@gmail.com")
+                        Log.e("getdatarazor",obj.toString())
                         checkout.open(requireActivity(), obj)
                     }catch (e:JSONException){
                         e.printStackTrace()
@@ -188,8 +190,8 @@ class MyCartFragment : Fragment(), PaymentResultListener {
             result.onSuccess { data ->
                 Toast.makeText(requireContext(), result.isSuccess.toString(), Toast.LENGTH_SHORT)
                     .show()
-                val cartItems = data.findAllCartItems.get(0).cartItem
-                val courses = data.findAllCartItems.get(0).course
+//                val cartItems = data.findAllCartItems.get(0).cartItem
+//                val courses = data.findAllCartItems.get(0).course
                 // Use the data to update your UI
             }.onFailure { exception ->
                 Toast.makeText(requireContext(), exception.message, Toast.LENGTH_SHORT).show()

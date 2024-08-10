@@ -14,7 +14,7 @@ class CreateCartRepository@Inject constructor(@Curator private val apolloClient:
     suspend fun createCartItems(userId: String, cartItems: List<CreateCartItemDto>): Result<CreateCartItemsMutation.Data> {
         return try {
             val input = CreateCartItemsDto(cartItems)
-            val response = apolloClient.mutation(CreateCartItemsMutation(input, userId)).execute()
+            val response = apolloClient.mutation(CreateCartItemsMutation(input)).execute()
             if (response.hasErrors()) {
                 Result.failure(Exception(response.errors?.first()?.message))
             } else {
@@ -27,7 +27,7 @@ class CreateCartRepository@Inject constructor(@Curator private val apolloClient:
 
     suspend fun findAllCartItems(userId: String): Result<FindAllCartItemsQuery.Data> {
         return try {
-            val response = apolloClient.query(FindAllCartItemsQuery(userId)).execute()
+            val response = apolloClient.query(FindAllCartItemsQuery()).execute()
             if (response.hasErrors()) {
                 Result.failure(Exception(response.errors?.first()?.message))
             } else {
