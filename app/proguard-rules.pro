@@ -1,41 +1,44 @@
 # Add project specific ProGuard rules here.
 # You can control the set of applied configuration files using the
 # proguardFiles setting in build.gradle.
-#
+
+# Keep the BuildConfig class
+-keep class com.student.competishun.BuildConfig { *; }
 # Preserve the Google Pay Wallet classes
 -keep class com.google.android.gms.wallet.** { *; }
 -keep class com.google.android.gms.common.** { *; }
 -keep class com.google.android.gms.** { *; }
+-keep class com.google.android.apps.nbu.paisa.** { *; }
+-dontwarn com.google.android.apps.nbu.paisa.**
 
 # If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
+# and specify the fully qualified class name to the JavaScript interface class:
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
 
-# Uncomment this to preserve the line number information for
-# debugging stack traces.
+# Uncomment this to preserve the line number information for debugging stack traces.
 -keepattributes SourceFile,LineNumberTable
 
-# If you keep the line number information, uncomment this to
-# hide the original source file name.
+# If you keep the line number information, uncomment this to hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
-# For more details, see
-#   http://developer.android.com/guide/developing/tools/proguard.html
+# Razorpay specific ProGuard rules
+-keepclassmembers class * {
+    @android.webkit.JavascriptInterface <methods>;
+}
 
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-#}
+-keepattributes JavascriptInterface
+-keepattributes *Annotation*
 
-# Uncomment this to preserve the line number information for
-# debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
+-dontwarn com.razorpay.**
+-keep class com.razorpay.** { *; }
 
-# If you keep the line number information, uncomment this to
-# hide the original source file name.
-#-renamesourcefileattribute SourceFile
+-optimizations !method/inlining/*
+
+-keepclasseswithmembers class * {
+  public void onPayment*(...);
+}
+
+# Add any additional rules specific to your project here
+

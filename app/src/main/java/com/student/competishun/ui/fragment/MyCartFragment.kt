@@ -133,10 +133,13 @@ class MyCartFragment : Fragment(), PaymentResultListener {
                 result.onSuccess { data ->
                     Log.d("OrderFragment", "Order created successfully: ${data.createOrder}")
                     val rzpOrderId = data.createOrder.rzpOrderId
-                    val amount = data.createOrder.totalAmount
+                    var amount = data.createOrder.totalAmount
+                    if (amount>0) {
+                        amount = Math.round(amount * 100).toInt().toDouble()
+                    }
                     val currency = "INR"
                     val checkout = Checkout()
-                    checkout.setKeyID(rzpOrderId)
+                    checkout.setKeyID("rzp_test_3fLRNvl0KpHfwK")
                     val obj =  JSONObject()
                     try {
                         obj.put("name","Competishun")
@@ -148,6 +151,7 @@ class MyCartFragment : Fragment(), PaymentResultListener {
                         Log.e("getdatarazor",obj.toString())
                         checkout.open(requireActivity(), obj)
                     }catch (e:JSONException){
+                        Log.e("payment ex",e.toString())
                         e.printStackTrace()
                     }
 
@@ -161,30 +165,7 @@ class MyCartFragment : Fragment(), PaymentResultListener {
 
         }
         // Example cart items
-        val cartItems = listOf(
-            CreateCartItemDto(
-                entity_id = "2b31e2f6-449e-422a-b8ba-c3b248132f9c",
-                entity_type = EntityType.COURSE,
-                quantity = 1
-            ),
-            CreateCartItemDto(
-                entity_id = "5f9091a8-b217-4f81-bdc3-0e07cf0a7c49",
-                entity_type = EntityType.COURSE,
-                quantity = 1
-            )
-        )
-        // Observe the result of createCartItems
-        cartViewModel.cartItemsResult.observe(viewLifecycleOwner, Observer { result ->
-            result.onSuccess { data ->
-                Toast.makeText(requireContext(), result.isSuccess.toString(), Toast.LENGTH_SHORT)
-                    .show()
-            }.onFailure { exception ->
-                Toast.makeText(requireContext(), exception.message, Toast.LENGTH_SHORT).show()
-            }
-        })
 
-        // Call the createCartItems function
-        cartViewModel.createCartItems(userId, cartItems)
         // Observe the result of findAllCartItems
         cartViewModel.findAllCartItemsResult.observe(viewLifecycleOwner, Observer { result ->
             result.onSuccess { data ->
@@ -264,19 +245,22 @@ class MyCartFragment : Fragment(), PaymentResultListener {
         findNavController().navigate(R.id.action_mycartFragment_to_paymentFailedFragment)
     }
 
+    override fun onPaymentSuccess(s: String?) {
+        Log.e("adadfa $s","success")
+        Toast.makeText(requireContext(), "kajal is successful", Toast.LENGTH_SHORT).show();
+        navigateToLoaderScreen()
+        Log.e("adadfa","success")
+    }
+
+    override fun onPaymentError(s: Int, p1: String?) {
+        Log.e("adadfa","fail")
+        Toast.makeText(requireContext(), "Payment Failed due to error : " + s, Toast.LENGTH_SHORT).show();
+        navigatePaymentFail()
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    override fun onPaymentSuccess(s: String?) {
-        navigateToLoaderScreen()
-        Toast.makeText(requireContext(), "Payment is successful : "+s, Toast.LENGTH_SHORT).show();
-    }
-
-    override fun onPaymentError(s: Int, p1: String?) {
-        Toast.makeText(requireContext(), "Payment Failed due to error : " + s, Toast.LENGTH_SHORT).show();
     }
 }
 

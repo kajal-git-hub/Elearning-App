@@ -15,7 +15,8 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
-
+        val razorpayKeyId = findProperty("RAZORPAY_KEY_ID") as String? ?: ""
+        buildConfigField("String", "RAZORPAY_KEY_ID", "\"$razorpayKeyId\"")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     apollo {
@@ -58,6 +59,7 @@ android {
         jvmTarget = "1.8"
     }
     buildFeatures {
+        buildConfig = true
         viewBinding = true
         dataBinding = true
     }
