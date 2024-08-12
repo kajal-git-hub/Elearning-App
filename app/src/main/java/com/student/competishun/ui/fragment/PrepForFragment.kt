@@ -10,7 +10,6 @@ import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.activity.addCallback
-import androidx.media3.common.util.Log
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.student.competishun.R
@@ -26,7 +25,6 @@ class PrepForFragment : Fragment() {
     private var _binding: FragmentPrepForBinding? = null
     private val binding get() = _binding!!
 
-
     private lateinit var sharedPreferencesManager: SharedPreferencesManager
     private var currentStep = 0
     private var isItemSelected = false
@@ -35,6 +33,8 @@ class PrepForFragment : Fragment() {
     private val pageTexts = Constants.PAGE_TEXTS
     private val stepTexts = Constants.STEP_TEXTS
     private val spanCount = listOf(2, 2, 1)
+
+    private var selectedItem: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,17 +46,19 @@ class PrepForFragment : Fragment() {
         requireActivity().onBackPressedDispatcher.addCallback(this) {
             handleBackPressed()
         }
+
+        selectedItem = sharedPreferencesManager.preparingFor
+
         return binding.root
-    }
-    private fun handleBackPressed() {
-        findNavController().navigate(R.id.onboardingFragment)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        restoreSelectedItem()
+
         binding.PrepBack.setOnClickListener {
-            findNavController().navigateUp()
+            findNavController().navigate(R.id.onboardingFragment)
         }
 
         binding.PrepNext.setOnClickListener {
@@ -74,16 +76,16 @@ class PrepForFragment : Fragment() {
             dataList = dataSets[currentStep],
             currentStep = currentStep,
             spanCount = spanCount[currentStep],
-            selectedItem = sharedPreferencesManager.preparingFor
+            selectedItem = selectedItem
         ) { selectedItem ->
             isItemSelected = true
-            Log.d("selectedItem",selectedItem)
+            this.selectedItem = selectedItem
             sharedPreferencesManager.preparingFor = selectedItem
             binding.PrepNext.setBackgroundResource(R.drawable.second_getstarteddone)
 
-            if(selectedItem=="Others"){
+            if (selectedItem == "Others") {
                 binding.etContentBox.visibility = View.VISIBLE
-            }else{
+            } else {
                 binding.etContentBox.visibility = View.GONE
                 isItemSelected = true
             }
@@ -96,41 +98,62 @@ class PrepForFragment : Fragment() {
         }
 
         startSlideInAnimation()
-
         updateButtonBackground()
-
         setupWordCounter()
+    }
+
+    private fun restoreSelectedItem() {
+        selectedItem = sharedPreferencesManager.preparingFor
+        if (!selectedItem.isNullOrEmpty()) {
+            isItemSelected = true
+            if (selectedItem == "Others") {
+                binding.etContentBox.visibility = View.VISIBLE
+            } else {
+                binding.etContentBox.visibility = View.GONE
+            }
+            updateButtonBackground()
+        }
     }
 
     private fun setupWordCounter() {
         binding.etContent.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                // No action needed before text change
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val wordCount = s.toString().trim().split("\\s+".toRegex()).size
-                binding.tvWordCounter.text = "$wordCount"+"/100"
+                binding.tvWordCounter.text = "$wordCount/100"
             }
 
             override fun afterTextChanged(s: Editable?) {
-
             }
         })
     }
 
-
-        private fun updateButtonBackground() {
-        if (isItemSelected) {
-            binding.PrepNext.setBackgroundResource(R.drawable.second_getstarteddone)
-        } else {
-            binding.PrepNext.setBackgroundResource(R.drawable.second_getstarted)
-        }
+    private fun updateButtonBackground() {
+        binding.PrepNext.setBackgroundResource(
+            if (isItemSelected) R.drawable.second_getstarteddone
+            else R.drawable.second_getstarted
+        )
     }
 
     private fun startSlideInAnimation() {
         val slideInAnimation = AnimationUtils.loadAnimation(context, R.anim.slide_in_bottom)
         binding.clAnimConstraint.startAnimation(slideInAnimation)
+    }
+
+    private fun handleBackPressed() {
+        findNavController().navigate(R.id.onboardingFragment)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString("selectedItem", selectedItem)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        updateButtonBackground()
     }
 
     override fun onDestroyView() {

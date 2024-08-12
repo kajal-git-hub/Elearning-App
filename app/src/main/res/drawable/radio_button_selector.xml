@@ -1,6 +1,6 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- Unchecked state -->
-    <item android:drawable="@drawable/circular_checkbox" android:state_checked="false" />
+    <item android:drawable="@drawable/property_default" android:state_checked="false" />
     <!-- Checked state -->
-    <item android:drawable="@drawable/component" android:state_checked="true" />
+    <item android:drawable="@drawable/property_selected" android:state_checked="true" />
 </selector>

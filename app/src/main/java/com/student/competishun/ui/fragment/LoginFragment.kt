@@ -1,5 +1,6 @@
 package com.student.competishun.ui.fragment
 
+import android.content.Context.MODE_PRIVATE
 import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
@@ -54,8 +55,16 @@ class LoginFragment : Fragment() {
             handleVerifyButtonClick()
         }
     }
+    private fun retrieveStoredMobileNumber() {
+        val storedMobileNumber = sharedPreferencesManager.mobileNo
+        if (!storedMobileNumber.isNullOrEmpty()) {
+            binding.etEnterMob.setText(storedMobileNumber)
+            updateVerifyButtonState(storedMobileNumber.length == 10)
+        }
+    }
 
     private fun setupUI() {
+        retrieveStoredMobileNumber()
         setupPhoneInput()
         setupTermsAndPrivacyText()
     }

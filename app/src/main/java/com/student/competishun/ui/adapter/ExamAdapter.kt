@@ -1,12 +1,10 @@
 package com.student.competishun.ui.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.student.competishun.R
-import com.student.competishun.data.model.PrepForItem
 import com.student.competishun.databinding.GetstartedItemlayout2Binding
 import com.student.competishun.databinding.GetstartedItemlayoutBinding
 
@@ -22,7 +20,6 @@ class ExampleAdapter(
     private val selectedItems = mutableMapOf<Int, String>()
 
     init {
-        // Set the selectedPosition if selectedItem is not null and matches an item in the list
         selectedItem?.let { item ->
             selectedPosition = dataList.indexOf(item)
             if (selectedPosition != -1) {
@@ -30,6 +27,7 @@ class ExampleAdapter(
             }
         }
     }
+
     companion object {
         private const val VIEW_TYPE_STEP_0 = 0
         private const val VIEW_TYPE_STEP_1 = 1
@@ -69,9 +67,7 @@ class ExampleAdapter(
         }
     }
 
-    override fun getItemCount(): Int {
-        return dataList.size
-    }
+    override fun getItemCount(): Int = dataList.size
 
     fun updateData(newData: List<String>, newStep: Int, newSpanCount: Int) {
         dataList = newData
@@ -81,8 +77,10 @@ class ExampleAdapter(
         notifyDataSetChanged()
     }
 
-    fun getSelectedItem(): String? {
-        return selectedItems[currentStep]
+    fun updateSelectedItem(selectedItem: String?) {
+        this.selectedItem = selectedItem
+        selectedPosition = selectedItem?.let { dataList.indexOf(it) } ?: -1
+        notifyDataSetChanged()
     }
 
     inner class Step0ViewHolder(private val binding: GetstartedItemlayoutBinding) : RecyclerView.ViewHolder(binding.root) {
@@ -91,14 +89,14 @@ class ExampleAdapter(
             val textColorResId = if (isSelected) R.color.blue_3E3EF7 else R.color.recycler_txt
             binding.radioButton.setTextColor(ContextCompat.getColor(binding.root.context, textColorResId))
             binding.root.setBackgroundResource(if (isSelected) R.drawable.getstarted_itembg_selected else R.drawable.getstarted_itembg_unselected)
-            binding.radioButton.isChecked = isSelected
+            val drawableResId = if (isSelected) R.drawable.property_selected else R.drawable.property_default
+            val drawable = ContextCompat.getDrawable(binding.root.context, drawableResId)
+            binding.radioButton.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
             binding.radioButton.setOnClickListener {
                 selectedPosition = adapterPosition
                 selectedItems[currentStep] = item
-                Log.d("item0", item)
                 notifyDataSetChanged()
                 onItemSelected(item)
-
             }
         }
     }
@@ -109,14 +107,14 @@ class ExampleAdapter(
             val textColorResId = if (isSelected) R.color.blue_3E3EF7 else R.color.recycler_txt
             binding.radioButton.setTextColor(ContextCompat.getColor(binding.root.context, textColorResId))
             binding.root.setBackgroundResource(if (isSelected) R.drawable.getstarted_itembg_selected else R.drawable.getstarted_itembg_unselected)
-            binding.radioButton.isChecked = isSelected
+            val drawableResId = if (isSelected) R.drawable.property_selected else R.drawable.property_default
+            val drawable = ContextCompat.getDrawable(binding.root.context, drawableResId)
+            binding.radioButton.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
             binding.radioButton.setOnClickListener {
                 selectedPosition = adapterPosition
                 selectedItems[currentStep] = item
-                Log.d("item1", item)
                 notifyDataSetChanged()
                 onItemSelected(item)
-
             }
         }
     }
@@ -127,14 +125,14 @@ class ExampleAdapter(
             val textColorResId = if (isSelected) R.color.blue_3E3EF7 else R.color.recycler_txt
             binding.radioButton.setTextColor(ContextCompat.getColor(binding.root.context, textColorResId))
             binding.root.setBackgroundResource(if (isSelected) R.drawable.getstarted_itembg_selected else R.drawable.getstarted_itembg_unselected)
-            binding.radioButton.isChecked = isSelected
+            val drawableResId = if (isSelected) R.drawable.property_selected else R.drawable.property_default
+            val drawable = ContextCompat.getDrawable(binding.root.context, drawableResId)
+            binding.radioButton.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
             binding.radioButton.setOnClickListener {
                 selectedPosition = adapterPosition
                 selectedItems[currentStep] = item
-                Log.d("item2", item)
                 notifyDataSetChanged()
                 onItemSelected(item)
-
             }
         }
     }

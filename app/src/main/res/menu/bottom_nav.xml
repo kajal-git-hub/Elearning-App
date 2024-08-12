@@ -11,7 +11,7 @@
         android:title="My Courses" />
     <item
         android:id="@+id/Scoreboard"
-        android:icon="@drawable/ranking"
+        android:icon="@drawable/ranking__1_"
         android:title="Scoreboard" />
 
     <item

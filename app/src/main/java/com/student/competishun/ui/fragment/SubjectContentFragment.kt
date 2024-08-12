@@ -38,7 +38,11 @@ class SubjectContentFragment : Fragment() {
             SubjectContentItem(5, "Calculus basics", "12 Learning Material"),
             SubjectContentItem(6, "Linear equations", "09 Learning Material"),
             SubjectContentItem(7, "Probability", "06 Learning Material"),
-            SubjectContentItem(8, "Statistics", "08 Learning Material")
+            SubjectContentItem(8, "Statistics", "08 Learning Material"),
+            SubjectContentItem(8, "Statistics", "08 Learning Material"),
+            SubjectContentItem(8, "Statistics", "08 Learning Material"),
+            SubjectContentItem(8, "Statistics", "08 Learning Material"),
+            SubjectContentItem(8, "Statistics", "08 Learning Material"),
         )
 
         binding.rvSubjectContent.adapter = SubjectContentAdapter(subjectContentList){courseitem->
