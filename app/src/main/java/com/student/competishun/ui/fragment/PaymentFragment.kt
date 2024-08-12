@@ -4,6 +4,7 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -17,6 +18,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.navigation.fragment.findNavController
 import com.student.competishun.R
 import com.student.competishun.databinding.FragmentPaymentBinding
+import com.student.competishun.ui.main.HomeActivity
 
 class PaymentFragment : Fragment() {
 
@@ -60,6 +62,10 @@ class PaymentFragment : Fragment() {
         Handler(Looper.getMainLooper()).postDelayed({
             animateLayout()
         }, 3000)
+
+        binding.clStartBottomBar.setOnClickListener{
+            startActivity(Intent(requireContext(), HomeActivity::class.java))
+        }
     }
 
     private fun animateLayout() {

@@ -4,6 +4,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.student.competishun.curator.AllCourseForStudentQuery
+import com.student.competishun.curator.type.CreateCartItemDto
+import com.student.competishun.curator.type.EntityType
 import com.student.competishun.data.model.TabItem
 import com.student.competishun.databinding.ItemCourseBinding
 import com.student.competishun.utils.HelperFunctions
@@ -44,6 +46,16 @@ class CourseAdapter(private val items: List<AllCourseForStudentQuery.Course>,
         }
         holder.binding.tvTag2.text = item.category_name?.split(" ")?.firstOrNull() ?: ""
         holder.binding.tvTag3.text = "Target "+item.target_year.toString()
+    }
+
+    fun getSelectedCartItems(selectedIds: String): List<CreateCartItemDto> {
+        return items.filter { it.id in selectedIds }.map { course ->
+            CreateCartItemDto(
+                entity_id = course.id,
+                entity_type = EntityType.COURSE,
+                quantity = 1
+            )
+        }
     }
 
 

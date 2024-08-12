@@ -1,6 +1,9 @@
 package com.student.competishun.ui.main
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.util.Log
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -12,6 +15,8 @@ import androidx.fragment.app.FragmentManager
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
+import com.razorpay.PaymentResultListener
 import com.student.competishun.R
 import com.student.competishun.databinding.ActivityHomeBinding
 import com.student.competishun.ui.fragment.AdditionalDetailsFragment
@@ -32,7 +37,7 @@ import com.student.competishun.utils.SharedPreferencesManager
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class HomeActivity : AppCompatActivity() {
+class HomeActivity : AppCompatActivity(), PaymentResultListener {
 
     private lateinit var navController: NavController
     private lateinit var binding: ActivityHomeBinding
@@ -152,5 +157,28 @@ class HomeActivity : AppCompatActivity() {
             TopicTypeContentFragment::class.java,
         )
         return fragmentsToHide.any { it.isInstance(fragment) }
+    }
+
+    override fun onPaymentSuccess(p0: String?) {
+        navigateToLoaderScreen()
+        Log.e("success kajal","success : $p0")
+    }
+
+    override fun onPaymentError(p0: Int, p1: String?) {
+        navigatePaymentFail()
+        Log.e("success kajal","fail $p1 and $p0")
+    }
+    private fun navigatePaymentFail(){
+       navController.navigate(R.id.PaymentFailedFragment)
+    }
+
+    private fun navigateToLoaderScreen() {
+       navController.navigate(R.id.paymentLoaderFragment)
+
+        Handler(Looper.getMainLooper()).postDelayed({
+            if (navController.currentDestination?.id == R.id.paymentLoaderFragment) {
+                navController.navigate(R.id.action_paymentLoaderFragment_to_paymentFragment)
+            }
+        }, 2000)
     }
 }
