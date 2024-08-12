@@ -33,11 +33,7 @@ class TargetFragment : Fragment() {
     private val stepTexts = Constants.STEP_TEXTS
     private val spanCount = listOf(2, 2, 1)
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-        }
-    }
+    private var selectedItem: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,13 +45,19 @@ class TargetFragment : Fragment() {
         requireActivity().onBackPressedDispatcher.addCallback(this) {
             handleBackPressed()
         }
+
+        selectedItem = sharedPreferencesManager.targetYear.toString()
+
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        restoreSelectedItem()
+
         binding.TargetBack.setOnClickListener {
-            findNavController().navigateUp()
+            findNavController().navigate(R.id.PrepForFragment)
         }
 
         binding.TargetNext.setOnClickListener {
@@ -68,20 +70,17 @@ class TargetFragment : Fragment() {
 
         binding.etStartedText.text = stepTexts[currentStep]
         binding.etText.text = pageTexts[currentStep]
-        val selectedItem = sharedPreferencesManager.targetYear.toString()
+
         val exampleAdapter = ExampleAdapter(
             dataList = dataSets[currentStep],
             currentStep = currentStep,
             spanCount = spanCount[currentStep],
             selectedItem = selectedItem
         ) { selectedItem ->
-            Log.d("TargetFragment", "Selected item: $selectedItem")
-
-            // Save target year to SharedPreferences
-            sharedPreferencesManager.targetYear = selectedItem.toIntOrNull()
             isItemSelected = true
-
-            // Update button background
+            this.selectedItem = selectedItem
+            sharedPreferencesManager.targetYear = selectedItem.toInt()
+            binding.TargetNext.setBackgroundResource(R.drawable.second_getstarteddone)
             updateButtonBackground()
         }
 
@@ -89,10 +88,19 @@ class TargetFragment : Fragment() {
             layoutManager = GridLayoutManager(context, spanCount[currentStep])
             adapter = exampleAdapter
         }
-        if (selectedItem != null){isItemSelected = true
-        updateButtonBackground()}
 
         startSlideInAnimation()
+        updateButtonBackground()
+    }
+
+    private fun restoreSelectedItem() {
+        selectedItem = sharedPreferencesManager.targetYear.toString()
+        Log.d("TargetFragmentPrevious", "Selected Item: $selectedItem")
+        if (selectedItem!="0") {
+            isItemSelected = true
+        } else {
+            isItemSelected = false
+        }
         updateButtonBackground()
     }
 
@@ -106,24 +114,24 @@ class TargetFragment : Fragment() {
     private fun startSlideInAnimation() {
         val slideInAnimation = AnimationUtils.loadAnimation(context, R.anim.slide_in_bottom)
         binding.clAnimConstraint.startAnimation(slideInAnimation)
+    }
 
+    private fun handleBackPressed() {
+        findNavController().navigate(R.id.PrepForFragment)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString("selectedItem", selectedItem)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        updateButtonBackground()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
-    private fun handleBackPressed() {
-        findNavController().navigateUp()
-    }
-
 }
-
-
-
-
-
-
-
-
-

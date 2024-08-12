@@ -19,7 +19,9 @@ import androidx.navigation.fragment.findNavController
 import com.student.competishun.R
 import com.student.competishun.databinding.FragmentPaymentBinding
 import com.student.competishun.ui.main.HomeActivity
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class PaymentFragment : Fragment() {
 
     private var _binding: FragmentPaymentBinding? = null

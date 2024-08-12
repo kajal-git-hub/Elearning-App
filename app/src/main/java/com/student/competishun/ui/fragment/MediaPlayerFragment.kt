@@ -19,7 +19,9 @@ import androidx.navigation.fragment.findNavController
 import com.otaliastudios.zoom.ZoomApi
 import com.otaliastudios.zoom.ZoomLayout
 import com.student.competishun.databinding.FragmentMediaPlayerBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MediaPlayerFragment : Fragment() {
 
     private lateinit var binding: FragmentMediaPlayerBinding

@@ -17,7 +17,9 @@ import androidx.media3.common.util.Log
 import com.google.android.material.appbar.MaterialToolbar
 import com.student.competishun.curator.type.FindAllCourseInputStudent
 import com.student.competishun.ui.viewmodel.StudentCoursesViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class CoursesFragment : Fragment() {
     private val  studentCoursesViewModel: StudentCoursesViewModel by viewModels()
     var categoryName = ""

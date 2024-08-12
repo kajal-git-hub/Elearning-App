@@ -41,25 +41,37 @@ class ReferenceFragment : Fragment() {
     private val stepTexts = Constants.STEP_TEXTS
     private val spanCount = listOf(2, 2, 1)
 
+    private var selectedItem: String? = null
+
+    private var SharedSelectedItem: String?=null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentReferenceBinding.inflate(inflater, container, false)
+
         sharedPreferencesManager = (requireActivity() as MainActivity).sharedPreferencesManager
+
         requireActivity().onBackPressedDispatcher.addCallback(this) {
             handleBackPressed()
         }
+
+        selectedItem = sharedPreferencesManager.reference
 
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        restoreSelectedItem()
+
         binding.RefNext.text = "Done"
 
         binding.RefNext.setOnClickListener {
+            sharedPreferencesManager.reference = SharedSelectedItem
+
             if (isItemSelected) {
                 val updateUserInput = UpdateUserInput(
                     city = Optional.Present(sharedPreferencesManager.city),
@@ -70,53 +82,68 @@ class ReferenceFragment : Fragment() {
                 )
 
                 updateUserViewModel.updateUser(updateUserInput)
-
             } else {
-                Toast.makeText(context, "PleaFse select an option", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Please select an option", Toast.LENGTH_SHORT).show()
             }
         }
+
         updateUserViewModel.updateUserResult.observe(viewLifecycleOwner, Observer { result ->
             if (result?.user != null) {
-                // Handle successful response
                 navigateToLoaderScreen()
-                val user = result.user
-                Log.e("gettingUserUpdate",result.user.fullName.toString())
+                Log.e("gettingUserUpdate", result.user.fullName.toString())
             } else {
-                Log.e("gettingUserUpdatefail",result.toString())
+                Log.e("gettingUserUpdatefail", result.toString())
                 Toast.makeText(context, "Update failed", Toast.LENGTH_SHORT).show()
             }
         })
 
-        Log.d("ExampleFragment", "Update successful:1")
-
         binding.RefBack.setOnClickListener {
-            findNavController().navigateUp()
+            findNavController().popBackStack(R.id.TargetFragment, false)
         }
-
 
         binding.etStartedText.text = stepTexts[currentStep]
         binding.etText.text = pageTexts[currentStep]
 
+        setupRecyclerView()
+
+        startSlideInAnimation()
+
+        updateButtonBackground()
+    }
+
+    private fun restoreSelectedItem() {
+        selectedItem = sharedPreferencesManager.reference
+        if (!selectedItem.isNullOrEmpty()) {
+            isItemSelected = true
+        } else {
+            isItemSelected = false
+        }
+        updateButtonBackground()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        updateButtonBackground()
+    }
+
+    private fun setupRecyclerView() {
         val exampleAdapter = ExampleAdapter(
             dataList = dataSets[currentStep],
             currentStep = currentStep,
             spanCount = spanCount[currentStep],
             selectedItem = sharedPreferencesManager.reference
         ) { selectedItem ->
-            sharedPreferencesManager.reference = selectedItem
-            Log.d("selectedItem",selectedItem)
             isItemSelected = true
+            this.selectedItem = selectedItem
+            SharedSelectedItem = selectedItem
             binding.RefNext.setBackgroundResource(R.drawable.second_getstarteddone)
+            updateButtonBackground()
         }
 
         binding.refRecyclerview.apply {
             layoutManager = GridLayoutManager(context, spanCount[currentStep])
             adapter = exampleAdapter
         }
-
-        startSlideInAnimation()
-
-        updateButtonBackground()
     }
 
     private fun updateButtonBackground() {
@@ -130,7 +157,6 @@ class ReferenceFragment : Fragment() {
     private fun startSlideInAnimation() {
         val slideInAnimation = AnimationUtils.loadAnimation(context, R.anim.slide_in_bottom)
         binding.clAnimConstraint.startAnimation(slideInAnimation)
-
     }
 
     override fun onDestroyView() {
@@ -139,9 +165,8 @@ class ReferenceFragment : Fragment() {
     }
 
     private fun handleBackPressed() {
-        findNavController().navigateUp()
+        findNavController().popBackStack(R.id.TargetFragment, false)
     }
-
 
     private fun navigateToLoaderScreen() {
         binding.root.removeAllViews()
@@ -152,6 +177,4 @@ class ReferenceFragment : Fragment() {
             findNavController().navigate(R.id.homeActivity)
         }, 5000)
     }
-
-
 }

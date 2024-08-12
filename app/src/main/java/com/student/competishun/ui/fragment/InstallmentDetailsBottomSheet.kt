@@ -10,7 +10,9 @@ import com.student.competishun.data.model.InstallmentItemModel
 import com.student.competishun.data.model.InstallmentModel
 import com.student.competishun.databinding.BottomSheetInstallmentDetailsBinding
 import com.student.competishun.ui.adapter.InstallmentAdapter
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class InstallmentDetailsBottomSheet : BottomSheetDialogFragment() {
 
     private var _binding: BottomSheetInstallmentDetailsBinding? = null

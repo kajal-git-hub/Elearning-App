@@ -79,11 +79,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun getUserInfo() {
         // Check user data and navigate accordingly
+
         when {
-            !sharedPreferencesManager.reference.isNullOrEmpty() -> {
+            sharedPreferencesManager.reference.isNullOrEmpty() -> {
                 Log.e("saved ref", sharedPreferencesManager.reference.toString() + userInput.fullName)
-                startActivity(Intent(this, HomeActivity::class.java))
-                finish()
+                navigateToRefFragment()
             }
             !sharedPreferencesManager.preparingFor.isNullOrEmpty() -> {
                 Log.e("saved prepare", sharedPreferencesManager.preparingFor.toString() + userInput.fullName)

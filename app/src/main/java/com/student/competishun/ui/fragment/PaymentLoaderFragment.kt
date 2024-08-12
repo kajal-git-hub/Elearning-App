@@ -8,7 +8,9 @@ import android.view.ViewGroup
 import androidx.activity.addCallback
 import com.student.competishun.R
 import com.student.competishun.databinding.FragmentPaymentLoaderBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class PaymentLoaderFragment : Fragment() {
     private var _binding: FragmentPaymentLoaderBinding? = null
     private val binding get() = _binding!!

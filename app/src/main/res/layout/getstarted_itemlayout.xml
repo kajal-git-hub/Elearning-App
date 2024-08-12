@@ -11,26 +11,20 @@
     android:paddingEnd="16dp"
     android:paddingBottom="12dp">
 
-    <RadioGroup
-        android:id="@+id/radio_group"
-        android:layout_width="match_parent"
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/radio_button"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:drawableStart="@drawable/property_default"
+        android:drawablePadding="12dp"
+        android:fontFamily="@font/nunito"
+        android:text="IIT-JEE"
+        android:textColor="#433E3F"
+        android:textSize="@dimen/_16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <RadioButton
-            android:id="@+id/radio_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/transparent"
-            android:button="@drawable/radio_button_selector"
-            android:fontFamily="@font/nunito"
-            android:lineHeight="24sp"
-            android:text="IIT-JEE"
-            android:textAlignment="center"
-            android:textColor="#433E3F"
-            android:textSize="16sp" />
 
-    </RadioGroup>
 </androidx.constraintlayout.widget.ConstraintLayout>

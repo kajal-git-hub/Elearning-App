@@ -26,7 +26,7 @@ object Constants {
     val DATA_SETS = listOf(
         listOf(IIT_JEE, NEET, BOARD, UCET, OTHERS),
         listOf(YEAR_2025, YEAR_2026, YEAR_2027, YEAR_2028),
-        listOf(FRIENDS_FAMILY, SOCIAL_MEDIA, ADVERTISEMENT, OTHER)
+        listOf(SOCIAL_MEDIA, ADVERTISEMENT,FRIENDS_FAMILY, OTHER)
     )
 
     // Define page texts as constants

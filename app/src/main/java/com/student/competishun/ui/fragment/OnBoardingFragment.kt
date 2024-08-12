@@ -10,10 +10,12 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.student.competishun.R
 import com.student.competishun.databinding.FragmentOnBoardingBinding
 import com.student.competishun.ui.main.MainActivity
+import com.student.competishun.ui.viewmodel.UserViewModel
 import com.student.competishun.utils.SharedPreferencesManager
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -22,14 +24,18 @@ class OnBoardingFragment : Fragment() {
 
     private var _binding: FragmentOnBoardingBinding? = null
     private val binding get() = _binding!!
-    private var moveForward: Boolean = false
     private lateinit var sharedPreferencesManager: SharedPreferencesManager
+
+    private var restoredName: String? = null
+    private var restoredCity: String? = null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentOnBoardingBinding.inflate(inflater, container, false)
         sharedPreferencesManager = (requireActivity() as MainActivity).sharedPreferencesManager
+
         requireActivity().onBackPressedDispatcher.addCallback(this) {
             handleBackPressed()
         }
@@ -43,13 +49,17 @@ class OnBoardingFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        retrieveNameCity()
         setupTextWatchers()
+
         binding.btnBack.setOnClickListener {
             findNavController().navigate(R.id.action_OnBoardingFragment_to_loginFragment)
         }
 
         binding.NextOnBoarding.setOnClickListener {
             if (isCurrentStepValid()) {
+                saveNameAndCity()
                 findNavController().navigate(R.id.action_OnBoardingFragment_to_prepForFragment)
             } else {
                 Toast.makeText(context, "Please select a name and city", Toast.LENGTH_SHORT).show()
@@ -57,37 +67,66 @@ class OnBoardingFragment : Fragment() {
         }
     }
 
+    private fun retrieveNameCity() {
+        restoredName = sharedPreferencesManager.name
+        restoredCity = sharedPreferencesManager.city
+
+        if (!restoredName.isNullOrEmpty()) {
+            binding.etEnterHereText.setText(restoredName)
+        }
+        if (!restoredCity.isNullOrEmpty()) {
+            binding.etEnterCityText.setText(restoredCity)
+        }
+        updateNextButtonState()
+    }
+
     private fun setupTextWatchers() {
         val textWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable?) {
-                val name = binding.etEnterHereText.text.toString().trim()
-                val city = binding.etEnterCityText.text.toString().trim()
-
-                if (name.isNotEmpty() && name.length >= 3 && city.isNotEmpty() && city.length >= 3) {
-                    binding.NextOnBoarding.setBackgroundResource(R.drawable.second_getstarteddone)
-                } else {
-                    binding.NextOnBoarding.setBackgroundResource(R.drawable.second_getstarted)
-                }
+                updateNextButtonState()
             }
         }
         binding.etEnterHereText.addTextChangedListener(textWatcher)
         binding.etEnterCityText.addTextChangedListener(textWatcher)
     }
 
+    private fun updateNextButtonState() {
+        val isNameValid = binding.etEnterHereText.text.toString().trim().length >= 3
+        val isCityValid = binding.etEnterCityText.text.toString().trim().length >= 3
+
+        if (isNameValid && isCityValid) {
+            binding.NextOnBoarding.setBackgroundResource(R.drawable.second_getstarteddone)
+        } else {
+            binding.NextOnBoarding.setBackgroundResource(R.drawable.second_getstarted)
+        }
+    }
+
     private fun isCurrentStepValid(): Boolean {
         val name = binding.etEnterHereText.text.toString().trim()
         val city = binding.etEnterCityText.text.toString().trim()
-        Log.e("updateusername",name)
+        return name.length >= 3 && city.length >= 3
+
+    }
+
+    private fun saveNameAndCity() {
+        val name = binding.etEnterHereText.text.toString().trim()
+        val city = binding.etEnterCityText.text.toString().trim()
+
         sharedPreferencesManager.name = name
         sharedPreferencesManager.city = city
-        moveForward = name.isNotEmpty() && city.isNotEmpty()  && name.length >= 3 && city.isNotEmpty()
-        return moveForward
+
+        Log.d("OnBoardingFragment", "Name and City saved: $name, $city")
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onResume() {
+        super.onResume()
+        updateNextButtonState()
     }
 }
