@@ -46,7 +46,7 @@ import org.json.JSONException
 import org.json.JSONObject
 
 @AndroidEntryPoint
-class MyCartFragment : Fragment(), PaymentResultListener {
+class MyCartFragment : Fragment() {
     private var _binding: FragmentMyCartBinding? = null
     private val orderViewModel: OrderViewModel by viewModels()
     private val userViewModel:UserViewModel by viewModels()
@@ -79,7 +79,7 @@ class MyCartFragment : Fragment(), PaymentResultListener {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentMyCartBinding.inflate(inflater, container, false)
 
 
@@ -110,13 +110,13 @@ class MyCartFragment : Fragment(), PaymentResultListener {
             }
         }
         userViewModel.fetchUserDetails()
-
+      val installmentPaidAmount =
         binding.btnProceedToPay.setOnClickListener {
                 // Sample input
                 val input = CreateOrderInput(
                     amountPaid = 29999.0,
                     entityId = "250bceb2-45e4-488e-aa02-c9521555b424",
-                    entityType = "COURSE",
+                    entityType = "course",
                     isPaidOnce = true,
                     paymentMode = "online",
                     paymentType = "full",
@@ -133,7 +133,7 @@ class MyCartFragment : Fragment(), PaymentResultListener {
                 result.onSuccess { data ->
                     Log.d("OrderFragment", "Order created successfully: ${data.createOrder}")
                     val rzpOrderId = data.createOrder.rzpOrderId
-                    var amount = data.createOrder.totalAmount
+                    var amount = data.createOrder.amountPaid
                     if (amount>0) {
                         amount = Math.round(amount * 100).toInt().toDouble()
                     }
@@ -141,13 +141,19 @@ class MyCartFragment : Fragment(), PaymentResultListener {
                     val checkout = Checkout()
                     checkout.setKeyID("rzp_test_3fLRNvl0KpHfwK")
                     val obj =  JSONObject()
+                    Log.e("id",data.createOrder.id)
+                    Log.e("getingorder",rzpOrderId.toString())
                     try {
                         obj.put("name","Competishun")
-                        obj.put("description","Test Payment")
                         obj.put("currency",currency)
                         obj.put("amount",amount)
-                        obj.put("prefill.contact",contact)
-                        obj.put("prefill.email", "chaitanyamunje@gmail.com")
+                        val prefill = JSONObject()
+                        prefill.put("order_id",rzpOrderId)
+                        prefill.put("email","gaurav.kumar@example.com")
+
+                        prefill.put("contact","8888888888")
+
+                        obj.put("prefill",prefill)
                         Log.e("getdatarazor",obj.toString())
                         checkout.open(requireActivity(), obj)
                     }catch (e:JSONException){
@@ -243,19 +249,6 @@ class MyCartFragment : Fragment(), PaymentResultListener {
 
     private fun navigatePaymentFail(){
         findNavController().navigate(R.id.action_mycartFragment_to_paymentFailedFragment)
-    }
-
-    override fun onPaymentSuccess(s: String?) {
-        Log.e("adadfa $s","success")
-        Toast.makeText(requireContext(), "kajal is successful", Toast.LENGTH_SHORT).show();
-        navigateToLoaderScreen()
-        Log.e("adadfa","success")
-    }
-
-    override fun onPaymentError(s: Int, p1: String?) {
-        Log.e("adadfa","fail")
-        Toast.makeText(requireContext(), "Payment Failed due to error : " + s, Toast.LENGTH_SHORT).show();
-        navigatePaymentFail()
     }
 
     override fun onDestroyView() {
