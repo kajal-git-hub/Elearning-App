@@ -112,6 +112,7 @@ class ReferenceFragment : Fragment() {
     }
 
     private fun restoreSelectedItem() {
+        Log.d("SelectedItemRestore", "Selected Item: $selectedItem")
         selectedItem = sharedPreferencesManager.reference
         if (!selectedItem.isNullOrEmpty()) {
             isItemSelected = true
@@ -136,6 +137,7 @@ class ReferenceFragment : Fragment() {
             isItemSelected = true
             this.selectedItem = selectedItem
             SharedSelectedItem = selectedItem
+            sharedPreferencesManager.reference = selectedItem // Save selected item
             binding.RefNext.setBackgroundResource(R.drawable.second_getstarteddone)
             updateButtonBackground()
         }
@@ -167,6 +169,11 @@ class ReferenceFragment : Fragment() {
     private fun handleBackPressed() {
         findNavController().popBackStack(R.id.TargetFragment, false)
     }
+
+//    override fun onSaveInstanceState(outState: Bundle) {
+//        super.onSaveInstanceState(outState)
+//        outState.putString("SharedSelectedItem", SharedSelectedItem)
+//    }
 
     private fun navigateToLoaderScreen() {
         binding.root.removeAllViews()

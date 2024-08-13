@@ -1,11 +1,12 @@
 package com.student.competishun.ui.fragment
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.student.competishun.R
@@ -14,11 +15,11 @@ import com.student.competishun.ui.viewmodel.UserViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class PersonalDetailsFragment : Fragment() {
+class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSelectedListener {
+
     private val userViewModel: UserViewModel by viewModels()
     private var _binding: FragmentPersonalDetailBinding? = null
     private val binding get() = _binding!!
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -28,31 +29,50 @@ class PersonalDetailsFragment : Fragment() {
         return binding.root
     }
 
+    override fun onTSizeSelected(size: String) {
+        binding.spinnerTshirtSize.text = size
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-
-        val bottomSheet = BottomSheetPersonalDetailsFragment()
-        bottomSheet.show(childFragmentManager, "BottomSheetPersonalDetailsFragment")
 
         userViewModel.userDetails.observe(viewLifecycleOwner) { result ->
             result.onSuccess { data ->
                 val userDetails = data.getMyDetails
             }.onFailure { exception ->
-                // Handle error
                 Toast.makeText(requireContext(), "Error fetching details: ${exception.message}", Toast.LENGTH_LONG).show()
             }
         }
         userViewModel.fetchUserDetails()
+
         binding.spinnerTshirtSize.setOnClickListener {
-            val bottomSheet = BottomSheetTSizeFragment()
+            val bottomSheet = BottomSheetTSizeFragment().apply {
+                setOnTSizeSelectedListener(this@PersonalDetailsFragment)
+            }
             bottomSheet.show(childFragmentManager, "BottomSheetTSizeFragment")
         }
-        binding.btnAddDetails.setOnClickListener {
-            findNavController().navigate(R.id.action_PersonalDetails_to_AdditionalDetail)
-        }
 
+        binding.btnAddDetails.setOnClickListener {
+            if (isFormValid()) {
+                binding.btnAddDetails.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.blue_3E3EF7))
+                findNavController().navigate(R.id.action_PersonalDetails_to_AdditionalDetail)
+            } else {
+                binding.btnAddDetails.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.gray_border))
+                Toast.makeText(requireContext(), "Please fill all fields.", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
+
+    private fun isFormValid(): Boolean {
+        val fullName = binding.etFullName.text.toString().trim()
+        val fatherName = binding.etFathersName.text.toString().trim()
+        val whatsappNumber = binding.etWhatsappNumber.text.toString().trim()
+        val tShirtSize = binding.spinnerTshirtSize.text.toString().trim()
+
+        return fullName.isNotEmpty() && fatherName.isNotEmpty() && whatsappNumber.isNotEmpty() && tShirtSize.isNotEmpty()
+    }
+
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

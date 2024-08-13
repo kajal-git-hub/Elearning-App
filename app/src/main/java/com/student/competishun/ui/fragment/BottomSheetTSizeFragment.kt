@@ -14,8 +14,13 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class BottomSheetTSizeFragment : BottomSheetDialogFragment() {
 
+    interface OnTSizeSelectedListener {
+        fun onTSizeSelected(size: String)
+    }
+
     private var _binding: FragmentBottomSheetTSizeBinding? = null
     private val binding get() = _binding!!
+    private var tSizeSelectedListener: OnTSizeSelectedListener? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,18 +41,22 @@ class BottomSheetTSizeFragment : BottomSheetDialogFragment() {
             TSizeModel("Extra - Extra Large (XXL)")
         )
 
-        val installmentAdapter = TshirtSizeAdapter(tSizeList)
-        binding.rvTSize.apply {
-            layoutManager =
-                LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-            adapter = installmentAdapter
+        val tshirtSizeAdapter = TshirtSizeAdapter(tSizeList) { selectedSize ->
+            tSizeSelectedListener?.onTSizeSelected(selectedSize)
         }
 
+        binding.rvTSize.apply {
+            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+            adapter = tshirtSizeAdapter
+        }
+    }
+
+    fun setOnTSizeSelectedListener(listener: OnTSizeSelectedListener) {
+        tSizeSelectedListener = listener
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
-
 }

@@ -214,17 +214,16 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/spinner_tshirt_size" />
 
-        <com.google.android.material.textview.MaterialTextView
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_add_details"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="55dp"
             android:layout_marginHorizontal="@dimen/_16dp"
             android:layout_marginTop="24dp"
+            app:cornerRadius="@dimen/_8dp"
             android:layout_marginBottom="10dp"
-            android:background="@drawable/rounded_button_background"
+            android:backgroundTint="#B5B3B3"
             android:fontFamily="@font/nunito"
-            android:lineHeight="21dp"
-            android:paddingVertical="@dimen/_16dp"
             android:text="Add Additional Details"
             android:textAlignment="center"
             android:textColor="#FFFFFF"
