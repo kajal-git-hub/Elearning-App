@@ -1,6 +1,9 @@
 package com.student.competishun.ui.fragment
 
+import android.graphics.Color
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,6 +24,8 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
     private var _binding: FragmentPersonalDetailBinding? = null
     private val binding get() = _binding!!
 
+    private var isTshirtSizeSelected = false
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -31,6 +36,8 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
 
     override fun onTSizeSelected(size: String) {
         binding.spinnerTshirtSize.text = size
+        isTshirtSizeSelected = true
+        updateButtonState()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -40,7 +47,11 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
             result.onSuccess { data ->
                 val userDetails = data.getMyDetails
             }.onFailure { exception ->
-                Toast.makeText(requireContext(), "Error fetching details: ${exception.message}", Toast.LENGTH_LONG).show()
+                Toast.makeText(
+                    requireContext(),
+                    "Error fetching details: ${exception.message}",
+                    Toast.LENGTH_LONG
+                ).show()
             }
         }
         userViewModel.fetchUserDetails()
@@ -54,13 +65,15 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
 
         binding.btnAddDetails.setOnClickListener {
             if (isFormValid()) {
-                binding.btnAddDetails.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.blue_3E3EF7))
                 findNavController().navigate(R.id.action_PersonalDetails_to_AdditionalDetail)
             } else {
-                binding.btnAddDetails.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.gray_border))
                 Toast.makeText(requireContext(), "Please fill all fields.", Toast.LENGTH_SHORT).show()
             }
         }
+
+        binding.etFullName.addTextChangedListener(textWatcher)
+        binding.etFathersName.addTextChangedListener(textWatcher)
+        binding.etWhatsappNumber.addTextChangedListener(textWatcher)
     }
 
     private fun isFormValid(): Boolean {
@@ -69,9 +82,28 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
         val whatsappNumber = binding.etWhatsappNumber.text.toString().trim()
         val tShirtSize = binding.spinnerTshirtSize.text.toString().trim()
 
-        return fullName.isNotEmpty() && fatherName.isNotEmpty() && whatsappNumber.isNotEmpty() && tShirtSize.isNotEmpty()
+        return fullName.isNotEmpty() && fatherName.isNotEmpty() && whatsappNumber.isNotEmpty() && isTshirtSizeSelected
     }
 
+    private fun updateButtonState() {
+        if (isFormValid()) {
+            binding.btnAddDetails.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.blue_3E3EF7))
+            binding.btnAddDetails.isEnabled = true
+        } else {
+            binding.btnAddDetails.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.gray_border))
+            binding.btnAddDetails.isEnabled = false
+        }
+    }
+
+    private val textWatcher = object : TextWatcher {
+        override fun afterTextChanged(s: Editable?) {
+            updateButtonState()
+        }
+
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()

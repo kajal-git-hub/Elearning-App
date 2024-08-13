@@ -27,14 +27,14 @@
         android:theme="@style/Theme.Competishun"
         tools:targetApi="31">
         <activity
-            android:name=".ui.main.HomeActivity"
+            android:name=".ui.main.MainActivity"
             android:exported="false" />
         <activity
             android:name="com.razorpay.CheckoutActivity"
             android:exported="true"
             tools:replace="android:exported"/>
         <activity
-            android:name=".ui.main.MainActivity"
+            android:name=".ui.main.HomeActivity"
             android:exported="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize">

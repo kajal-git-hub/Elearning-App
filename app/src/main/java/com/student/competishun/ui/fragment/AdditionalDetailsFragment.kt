@@ -14,6 +14,7 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.student.competishun.R
 import com.student.competishun.databinding.FragmentAdditionalDetailBinding
+import com.student.competishun.ui.main.HomeActivity
 
 class AdditionalDetailsFragment : Fragment() {
 
@@ -96,6 +97,7 @@ class AdditionalDetailsFragment : Fragment() {
                 }
             }
         }
+        (activity as? HomeActivity)?.updateUiVisibility(this)
     }
 
     private fun displaySelectedFile(uri: Uri, fileSize: String) {
