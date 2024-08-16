@@ -81,8 +81,19 @@ class MainActivity : AppCompatActivity() {
         // Check user data and navigate accordingly
 
         when {
+            !sharedPreferencesManager.reference.isNullOrEmpty() -> {
+                Log.e(
+                    "saved ref",
+                    sharedPreferencesManager.reference.toString() + userInput.fullName
+                )
+                navigateToRefFragment()
+            }
+
             !sharedPreferencesManager.preparingFor.isNullOrEmpty() -> {
-                Log.e("saved prepare", sharedPreferencesManager.preparingFor.toString() + userInput.fullName)
+                Log.e(
+                    "saved prepare",
+                    sharedPreferencesManager.preparingFor.toString() + userInput.fullName
+                )
                 navigateToTargetFragment()
             }
             sharedPreferencesManager.targetYear != 0 -> {
@@ -92,12 +103,9 @@ class MainActivity : AppCompatActivity() {
             !sharedPreferencesManager.name.isNullOrEmpty() && !sharedPreferencesManager.city.isNullOrEmpty() -> {
                 navigateToPreparationFragment()
             }
-            !sharedPreferencesManager.reference.isNullOrEmpty() -> {
-                Log.e("saved ref", sharedPreferencesManager.reference.toString() + userInput.fullName)
-                navigateToRefFragment()
-            }
+
             else -> {
-               // navigateToWelcomeFragment()
+                // navigateToWelcomeFragment()
             }
         }
     }

@@ -24,9 +24,11 @@ import com.student.competishun.ui.fragment.AddressDetailsFragment
 import com.student.competishun.ui.fragment.AllDemoResourcesFree
 import com.student.competishun.ui.fragment.AllFaqFragment
 import com.student.competishun.ui.fragment.BottomSheetDescriptionFragment
+import com.student.competishun.ui.fragment.BottomSheetTSizeFragment
 import com.student.competishun.ui.fragment.CourseEmptyFragment
 import com.student.competishun.ui.fragment.ExploreFragment
 import com.student.competishun.ui.fragment.MyCartFragment
+import com.student.competishun.ui.fragment.PaymentFailedFragment
 import com.student.competishun.ui.fragment.PaymentFragment
 import com.student.competishun.ui.fragment.PaymentLoaderFragment
 import com.student.competishun.ui.fragment.PersonalDetailsFragment
@@ -101,7 +103,13 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
                 super.onFragmentResumed(fm, f)
                 updateUiVisibility(f)
             }
+
+            override fun onFragmentPaused(fm: FragmentManager, f: Fragment) {
+                super.onFragmentPaused(fm, f)
+                // Optional: Update UI visibility when the fragment is paused, if needed
+            }
         }, true)
+
     }
 
     override fun onResume() {
@@ -112,7 +120,7 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
         }
     }
 
-    private fun updateUiVisibility(fragment: Fragment) {
+    fun updateUiVisibility(fragment: Fragment) {
         binding.igContactImage.visibility =
             if (shouldHideContactImage(fragment)) View.GONE else View.VISIBLE
         binding.bottomNav.visibility =
@@ -135,6 +143,8 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
             BottomSheetDescriptionFragment::class.java,
             TopicTypeContentFragment::class.java,
             ExploreFragment::class.java,
+            PaymentFailedFragment::class.java,
+            BottomSheetTSizeFragment::class.java,
         )
         return fragmentsToHide.any { it.isInstance(fragment) }
     }
@@ -155,25 +165,28 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
             ResumeCourseFragment::class.java,
             BottomSheetDescriptionFragment::class.java,
             TopicTypeContentFragment::class.java,
+            PaymentFailedFragment::class.java,
+            BottomSheetTSizeFragment::class.java,
         )
         return fragmentsToHide.any { it.isInstance(fragment) }
     }
 
     override fun onPaymentSuccess(p0: String?) {
         navigateToLoaderScreen()
-        Log.e("success kajal","success : $p0")
+        Log.e("success kajal", "success : $p0")
     }
 
     override fun onPaymentError(p0: Int, p1: String?) {
         navigatePaymentFail()
-        Log.e("success kajal","fail $p1 and $p0")
+        Log.e("success kajal", "fail $p1 and $p0")
     }
-    private fun navigatePaymentFail(){
-       navController.navigate(R.id.PaymentFailedFragment)
+
+    private fun navigatePaymentFail() {
+        navController.navigate(R.id.PaymentFailedFragment)
     }
 
     private fun navigateToLoaderScreen() {
-       navController.navigate(R.id.paymentLoaderFragment)
+        navController.navigate(R.id.paymentLoaderFragment)
 
         Handler(Looper.getMainLooper()).postDelayed({
             if (navController.currentDestination?.id == R.id.paymentLoaderFragment) {
