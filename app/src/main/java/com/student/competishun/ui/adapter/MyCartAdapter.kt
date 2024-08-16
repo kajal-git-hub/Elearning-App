@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.student.competishun.data.model.CartItem
 import com.student.competishun.databinding.MycartItemBinding
 
-class MyCartAdapter(private val cartItems: List<CartItem>) :
+class MyCartAdapter(private val cartItems: MutableList<CartItem>) :
     RecyclerView.Adapter<MyCartAdapter.CartViewHolder>() {
 
     inner class CartViewHolder(val binding: MycartItemBinding) : RecyclerView.ViewHolder(binding.root)
@@ -28,4 +28,9 @@ class MyCartAdapter(private val cartItems: List<CartItem>) :
     }
 
     override fun getItemCount(): Int = cartItems.size
+    fun updateCartItems(newCartItems: List<CartItem>) {
+        cartItems.clear()
+        cartItems.addAll(newCartItems)
+        notifyDataSetChanged() // Notify adapter to refresh the list
+    }
 }

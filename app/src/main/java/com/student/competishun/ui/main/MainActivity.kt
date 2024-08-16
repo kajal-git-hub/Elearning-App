@@ -49,7 +49,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.splash_screen)
 
         Handler(Looper.getMainLooper()).postDelayed({
-            // Switch to the welcome screen after a delay
+            // Switch to the welcome scrmyeen after a delay
             setContentView(R.layout.welcome_screen)
 
             Handler(Looper.getMainLooper()).postDelayed({

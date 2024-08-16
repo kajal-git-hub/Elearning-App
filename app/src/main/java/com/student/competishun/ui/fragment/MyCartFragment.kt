@@ -54,7 +54,7 @@ class MyCartFragment : Fragment() {
     private lateinit var sharedPreferencesManager: SharedPreferencesManager
     private val cartViewModel: CreateCartViewModel by viewModels()
     private lateinit var paymentsClient: PaymentsClient
-
+    private lateinit var cartAdapter: MyCartAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -101,8 +101,6 @@ class MyCartFragment : Fragment() {
                 Log.e("sharedids",userId.toString())
                 sharedPreferencesManager.mobileNo = userDetails.mobileNumber
                 contact = userDetails.mobileNumber
-//                binding.etFullName.text = userDetails.fullName
-//                mobileNumberTextView.text = userDetails.mobileNumber
 //                userInformationTextView.text = userDetails.userInformation.toString() // Customize as needed
             }.onFailure { exception ->
                 // Handle error
@@ -110,76 +108,43 @@ class MyCartFragment : Fragment() {
             }
         }
         userViewModel.fetchUserDetails()
-      val installmentPaidAmount =
-        binding.btnProceedToPay.setOnClickListener {
-                // Sample input
-                val input = CreateOrderInput(
-                    amountPaid = 29999.0,
-                    entityId = "250bceb2-45e4-488e-aa02-c9521555b424",
-                    entityType = "course",
-                    isPaidOnce = true,
-                    paymentMode = "online",
-                    paymentType = "full",
-                    totalAmount = 29999.0,
-                    userId = userId
-
-                )
-            Log.e("sharedid",userId)
-            orderViewModel.createOrder(input)
-
-            // Observe the result
-            orderViewModel.orderResult.observe(viewLifecycleOwner, Observer { result ->
-                Log.e("orederde",result.toString())
-                result.onSuccess { data ->
-                    Log.d("OrderFragment", "Order created successfully: ${data.createOrder}")
-                    val rzpOrderId = data.createOrder.rzpOrderId
-                    var amount = data.createOrder.amountPaid
-                    if (amount>0) {
-                        amount = Math.round(amount * 100).toInt().toDouble()
-                    }
-                    val currency = "INR"
-                    val checkout = Checkout()
-                    checkout.setKeyID("rzp_test_3fLRNvl0KpHfwK")
-                    val obj =  JSONObject()
-                    Log.e("id",data.createOrder.id)
-                    Log.e("getingorder",rzpOrderId.toString())
-                    try {
-                        obj.put("name","Competishun")
-                        obj.put("currency",currency)
-                        obj.put("amount",amount)
-                        val prefill = JSONObject()
-                        prefill.put("order_id",rzpOrderId)
-                        prefill.put("email","gaurav.kumar@example.com")
-
-                        prefill.put("contact","8888888888")
-
-                        obj.put("prefill",prefill)
-                        Log.e("getdatarazor",obj.toString())
-                        checkout.open(requireActivity(), obj)
-                    }catch (e:JSONException){
-                        Log.e("payment ex",e.toString())
-                        e.printStackTrace()
-                    }
-
-                    Toast.makeText(requireContext(), result.toString(), Toast.LENGTH_SHORT).show()
-                }.onFailure { exception ->
-                    // Handle the error
-                    navigatePaymentFail()
-                    Toast.makeText(requireContext(), exception.message, Toast.LENGTH_SHORT).show()
-                }
-            })
-
+        cartAdapter = MyCartAdapter(mutableListOf())
+        binding.rvAllCart.apply {
+            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+            adapter = cartAdapter
         }
-        // Example cart items
-
         // Observe the result of findAllCartItems
         cartViewModel.findAllCartItemsResult.observe(viewLifecycleOwner, Observer { result ->
             result.onSuccess { data ->
                 Toast.makeText(requireContext(), result.isSuccess.toString(), Toast.LENGTH_SHORT)
                     .show()
-//                val cartItems = data.findAllCartItems.get(0).cartItem
-//                val courses = data.findAllCartItems.get(0).course
-                // Use the data to update your UI
+                Log.e("gerafad",data.findAllCartItems.toString())
+                val cartItems = data.findAllCartItems.mapNotNull  { cartItemData ->
+                    val course = cartItemData.course
+                    if (course != null && cartItemData.cartItem != null) {
+                        CartItem(
+                            profileImageResId = R.drawable.frame_1707480855, // Replace with actual logic for image
+                            name = course.name,
+                            viewDetails = "View Details",
+                            forwardDetails = R.drawable.cart_arrow_right,
+                            discount = course.discount?:0,
+                            price = course.price?:0,
+                            entityId = cartItemData.cartItem.entity_id,
+                            cartId = cartItemData.cartItem.cart_id,
+                            courseId = course.id,
+                            withInstallmentPrice = course.with_installment_price?:0,
+                            categoryId = course.category_id.toString()
+                        )
+
+                        } else
+                    {
+                        null
+                    }
+                }
+
+                // Update the adapter with the new data
+                cartAdapter.updateCartItems(cartItems)
+//
             }.onFailure { exception ->
                 Toast.makeText(requireContext(), exception.message, Toast.LENGTH_SHORT).show()
             }
@@ -224,16 +189,11 @@ class MyCartFragment : Fragment() {
             requireActivity().onBackPressed()
         }
 
-        val cartItemsview = listOf(
-            CartItem(R.drawable.frame_1707480855, "Prakhar Integrated (Fast Lane-2) 2024-25", R.drawable.frame_1707480886, "View Details", R.drawable.cart_arrow_right),
-            CartItem(R.drawable.frame_1707480855, "Prakhar Integrated (Fast Lane-2) 2024-25", R.drawable.frame_1707480886, "View Details", R.drawable.cart_arrow_right)
-        )
+//        val cartItemsview = listOf(
+//            CartItem(R.drawable.frame_1707480855, "Prakhar Integrated (Fast Lane-2) 2024-25", R.drawable.frame_1707480886, "View Details", R.drawable.cart_arrow_right),
+//            CartItem(R.drawable.frame_1707480855, "Prakhar Integrated (Fast Lane-2) 2024-25", R.drawable.frame_1707480886, "View Details", R.drawable.cart_arrow_right)
+//        )
 
-        val cartAdapter = MyCartAdapter(cartItemsview)
-        binding.rvAllCart.apply {
-            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-            adapter = cartAdapter
-        }
     }
 
 
