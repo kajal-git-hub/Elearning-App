@@ -116,7 +116,7 @@ class MyCartFragment : Fragment(), PaymentResultListener {
                 val input = CreateOrderInput(
                     amountPaid = 29999.0,
                     entityId = "250bceb2-45e4-488e-aa02-c9521555b424",
-                    entityType = "COURSE",
+                    entityType = "course",
                     isPaidOnce = true,
                     paymentMode = "online",
                     paymentType = "full",
