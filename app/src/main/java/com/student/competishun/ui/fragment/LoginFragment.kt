@@ -1,6 +1,5 @@
 package com.student.competishun.ui.fragment
 
-import android.content.Context.MODE_PRIVATE
 import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable

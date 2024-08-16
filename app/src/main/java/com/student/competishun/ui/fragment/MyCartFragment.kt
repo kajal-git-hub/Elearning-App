@@ -108,10 +108,59 @@ class MyCartFragment : Fragment() {
             }
         }
         userViewModel.fetchUserDetails()
-        cartAdapter = MyCartAdapter(mutableListOf())
-        binding.rvAllCart.apply {
-            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-            adapter = cartAdapter
+
+        binding.btnProceedToPay.setOnClickListener {
+                // Sample input
+                val input = CreateOrderInput(
+                    amountPaid = 29999.0,
+                    entityId = "250bceb2-45e4-488e-aa02-c9521555b424",
+                    entityType = "COURSE",
+                    isPaidOnce = true,
+                    paymentMode = "online",
+                    paymentType = "full",
+                    totalAmount = 29999.0,
+                    userId = userId
+
+                )
+            Log.e("sharedid",userId)
+            orderViewModel.createOrder(input)
+
+            // Observe the result
+            orderViewModel.orderResult.observe(viewLifecycleOwner, Observer { result ->
+                Log.e("orederde",result.toString())
+                result.onSuccess { data ->
+                    Log.d("OrderFragment", "Order created successfully: ${data.createOrder}")
+                    val rzpOrderId = data.createOrder.rzpOrderId
+                    var amount = data.createOrder.totalAmount
+                    if (amount>0) {
+                        amount = Math.round(amount * 100).toInt().toDouble()
+                    }
+                    val currency = "INR"
+                    val checkout = Checkout()
+                    checkout.setKeyID("rzp_test_3fLRNvl0KpHfwK")
+                    val obj =  JSONObject()
+                    try {
+                        obj.put("name","Competishun")
+                        obj.put("description","Test Payment")
+                        obj.put("currency",currency)
+                        obj.put("amount",amount)
+                        obj.put("prefill.contact",contact)
+                        obj.put("prefill.email", "chaitanyamunje@gmail.com")
+                        Log.e("getdatarazor",obj.toString())
+                        checkout.open(requireActivity(), obj)
+                    }catch (e:JSONException){
+                        Log.e("payment ex",e.toString())
+                        e.printStackTrace()
+                    }
+
+                    Toast.makeText(requireContext(), result.toString(), Toast.LENGTH_SHORT).show()
+                }.onFailure { exception ->
+                    // Handle the error
+                    navigatePaymentFail()
+                    Toast.makeText(requireContext(), exception.message, Toast.LENGTH_SHORT).show()
+                }
+            })
+
         }
         // Observe the result of findAllCartItems
         cartViewModel.findAllCartItemsResult.observe(viewLifecycleOwner, Observer { result ->

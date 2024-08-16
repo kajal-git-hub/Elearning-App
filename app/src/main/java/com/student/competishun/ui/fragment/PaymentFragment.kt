@@ -66,7 +66,7 @@ class PaymentFragment : Fragment() {
         }, 3000)
 
         binding.clStartBottomBar.setOnClickListener{
-         findNavController()
+         findNavController().navigate(R.id.PersonalDetailsFragment)
         }
     }
 
