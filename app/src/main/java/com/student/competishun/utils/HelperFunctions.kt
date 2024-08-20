@@ -26,6 +26,7 @@ class HelperFunctions {
         updateDotsIndicator(null, dotsIndicator)
     }
 
+
     fun updateDotsIndicator(recyclerView: RecyclerView?, dotsIndicator: LinearLayout) {
         recyclerView?.let {
             val layoutManager = it.layoutManager
@@ -44,7 +45,7 @@ class HelperFunctions {
                 params.setMargins(4, 0, 4, 0)
                 dot.layoutParams = params
                 dot.setImageResource(
-                    if (i == visiblePageIndex) R.drawable.doc_active
+                    if (i == visiblePageIndex) R.drawable.dot_active
                     else R.drawable.dot_inactive
                 )
             }

@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/f6f6ff"
+    tools:context=".ui.fragment.MyPurchaseFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/MyPurchaseTopView"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="#FFFFFF"
+        android:elevation="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/et_bTPurchase"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_16dp"
+            android:drawableStart="@drawable/arrow_left"
+            android:drawablePadding="@dimen/_10dp"
+            android:fontFamily="@font/nunito"
+            android:text="My Purchase"
+            android:textColor="#2B2829"
+            android:textSize="@dimen/_18sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/ig_purchase_call"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/_8dp"
+                android:src="@drawable/call_calling"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/et_purchaseHelp"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/et_purchaseHelp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/_16dp"
+                android:fontFamily="@font/nunito"
+                android:text="Help?"
+                android:textColor="@color/blue_3E3EF7"
+                android:textSize="@dimen/_14sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_NoOrder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/MyPurchaseTopView">
+
+
+        <pl.droidsonroids.gif.GifImageView
+            android:id="@+id/gf_purchase"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:src="@drawable/purchase_gif"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/et_purchaseNoOrder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_20dp"
+            android:fontFamily="@font/nunito"
+            android:text="No orders yet"
+            android:textColor="@color/_2b2829"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/gf_purchase" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/et_FirstOrderText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="9dp"
+            android:fontFamily="@font/nunito"
+            android:text=" Place your first order to see it here."
+            android:textColor="@color/_5a5555"
+            android:textSize="14dp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/et_purchaseNoOrder" />
+
+
+        <com.google.android.material.button.MaterialButton
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_16dp"
+            android:layout_marginTop="@dimen/_32dp"
+            android:backgroundTint="@color/blue_3E3EF7"
+            android:drawableStart="@drawable/book"
+            android:gravity="center"
+            android:padding="12sp"
+            android:text="Explore Courses"
+            app:cornerRadius="@dimen/_8dp"
+            app:layout_constraintEnd_toEndOf="@+id/et_FirstOrderText"
+            app:layout_constraintStart_toStartOf="@+id/et_FirstOrderText"
+            app:layout_constraintTop_toBottomOf="@+id/et_FirstOrderText" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.google.android.material.button.MaterialButtonToggleGroup
+        android:id="@+id/filterToggleButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/_12sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/MyPurchaseTopView">
+
+        <!-- "All" Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnAll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/segment_selected_bg"
+            android:text="All"
+            android:textColor="@color/blue_3E3EF7"
+            android:textSize="18dp"
+            app:cornerRadius="@dimen/_16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- "Successful" Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSuccessful"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/segment_unselected_bg"
+            android:text="Successful"
+            android:textColor="@color/_5a5555"
+            android:textSize="@dimen/_14sp"
+            app:cornerRadius="@dimen/_16dp"
+            app:layout_constraintStart_toEndOf="@id/btnAll"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- "Failed" Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnFailed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/segment_unselected_bg"
+            android:text="Failed"
+            android:textColor="@color/_5a5555"
+            android:textSize="@dimen/_14sp"
+            app:cornerRadius="@dimen/_16dp"
+            app:layout_constraintStart_toEndOf="@id/btnSuccessful"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </com.google.android.material.button.MaterialButtonToggleGroup>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewPurchases"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:paddingHorizontal="16dp"
+        tools:listitem="@layout/item_purchase"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/filterToggleButton" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+

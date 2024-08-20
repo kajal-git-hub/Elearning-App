@@ -66,6 +66,7 @@ class PaymentFragment : Fragment() {
         }, 3000)
 
         binding.clStartBottomBar.setOnClickListener{
+          //  startActivity(Intent(requireContext(), HomeActivity::class.java))
          findNavController().navigate(R.id.PersonalDetailsFragment)
         }
     }

@@ -1,0 +1,65 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="4sp"
+    android:background="@color/white"
+    android:padding="16dp">
+
+    <View
+        android:id="@+id/vOrangeLine"
+        android:layout_width="4dp"
+        android:layout_height="0dp"
+        android:background="@color/ff7a28"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/ivNotificationIcon"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="@dimen/_16dp"
+        android:src="@drawable/avatar_type"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvNotificationTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_12sp"
+        android:fontFamily="@font/nunito"
+        android:text="Notification Title"
+        android:textColor="@color/_2b2829"
+        android:textSize="@dimen/_16dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/ivNotificationIcon"
+        app:layout_constraintTop_toTopOf="@id/ivNotificationIcon" />
+
+    <TextView
+        android:id="@+id/tvNotificationDescription"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_12sp"
+        android:layout_marginTop="4sp"
+        android:fontFamily="@font/nunito"
+        android:text="Notification Description"
+        android:textColor="@color/_5a5555"
+        android:textSize="@dimen/_14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/ivNotificationIcon"
+        app:layout_constraintTop_toBottomOf="@id/tvNotificationTitle" />
+
+    <ImageView
+        android:id="@+id/ivNotificationImage"
+        android:layout_width="0dp"
+        android:layout_height="159dp"
+        android:layout_marginTop="@dimen/_8dp"
+        android:scaleType="centerCrop"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/tvNotificationDescription"
+        app:layout_constraintTop_toBottomOf="@id/tvNotificationDescription" />
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,6 +1,7 @@
 package com.student.competishun.ui.fragment
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -18,23 +19,30 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.viewModels
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.otaliastudios.opengl.core.use
 import com.student.competishun.R
 import com.student.competishun.databinding.FragmentVerifyBinding
+import com.student.competishun.gatekeeper.UpdateUserMutation
+import com.student.competishun.ui.main.HomeActivity
 import com.student.competishun.ui.main.MainActivity
+import com.student.competishun.ui.viewmodel.UserViewModel
 import com.student.competishun.ui.viewmodel.VerifyOtpViewModel
 import com.student.competishun.utils.SharedPreferencesManager
 import dagger.hilt.android.AndroidEntryPoint
+
 @AndroidEntryPoint
 class VerifyOTPFragment : Fragment() {
 
     private var _binding: FragmentVerifyBinding? = null
     private val binding get() = _binding!!
     private val verifyOtpViewModel: VerifyOtpViewModel by viewModels()
+    private val userViewModel: UserViewModel by viewModels()
 
     private var mobileNumber: String? = null
     private var countryCode: String? = null
@@ -63,6 +71,7 @@ class VerifyOTPFragment : Fragment() {
         setupVerificationCodeText()
         startTimer()
         observeViewModel()
+
     }
 
     private fun setupViews() {
@@ -76,34 +85,63 @@ class VerifyOTPFragment : Fragment() {
             findNavController().navigate(R.id.action_verifyOTPFragment_to_loginFragment)
         }
 
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                findNavController().navigate(R.id.action_verifyOTPFragment_to_loginFragment)
-            }
-        })
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    findNavController().navigate(R.id.action_verifyOTPFragment_to_loginFragment)
+                }
+            })
 
         binding.btnVerify.setOnClickListener {
             if (otpBoxes.all { it.text.length == 1 }) {
                 checkOtpAndNavigate()
             } else {
-                Toast.makeText(requireContext(), "Please enter a valid OTP", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Please enter a valid OTP", Toast.LENGTH_SHORT)
+                    .show()
             }
         }
     }
 
     private fun observeViewModel() {
         Log.d("shared number", sharedPreferencesManager.mobileNo.toString())
-        if (!sharedPreferencesManager.mobileNo.isNullOrEmpty()) mobileNumber = sharedPreferencesManager.mobileNo
+        if (!sharedPreferencesManager.mobileNo.isNullOrEmpty()) mobileNumber =
+            sharedPreferencesManager.mobileNo
 
         verifyOtpViewModel.verifyOtpResult.observe(viewLifecycleOwner) { result ->
             if (result != null) {
-                Log.e("Success in Verify", "${result.user} ${result.refreshToken} ${result.accessToken}")
+                Log.e(
+                    "Success in Verify",
+                    "${result.user} ${result.refreshToken} ${result.accessToken}"
+                )
                 sharedPreferencesManager.userId = result.user?.id
                 sharedPreferencesManager.accessToken = result.accessToken
                 changeOtpBoxesBackground(R.drawable.otp_edit_text_background)
                 binding.etEnterOtpText.text = "Enter the OTP to continue"
                 binding.etEnterOtpText.setTextColor(Color.parseColor("#726C6C"))
-                navigateToHome()
+
+                userViewModel.fetchUserDetails()
+
+                // Observe user details
+                userViewModel.userDetails.observe(viewLifecycleOwner) { userDetailsResult ->
+                    userDetailsResult.onSuccess { data ->
+                        val userDetails = data.getMyDetails
+                        if (userDetails.fullName?.isNotEmpty() == true) {
+                            navigateToHomeActivity()
+                        } else {
+                            // Store necessary data in SharedPreferencesManager
+                            sharedPreferencesManager.mobileNo = userDetails.mobileNumber
+                            navigateToHome()
+                        }
+                    }.onFailure { exception ->
+                        Log.e("mainActivitydetails", exception.message.toString())
+                        Toast.makeText(
+                            requireContext(),
+                            "Error fetching details: ${exception.message}",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                }
             } else {
                 Log.e("FailureBefore", "${result} $mobileNumber")
                 Toast.makeText(requireContext(), "Invalid OTP", Toast.LENGTH_SHORT).show()
@@ -113,6 +151,10 @@ class VerifyOTPFragment : Fragment() {
                 binding.etEnterOtpText.setTextColor(Color.parseColor(getString(R.string.Error)))
             }
         }
+    }
+
+    private fun navigateToHomeActivity() {
+        startActivity(Intent(requireContext(), HomeActivity::class.java))
     }
 
     private fun navigateToHome() {
@@ -144,7 +186,13 @@ class VerifyOTPFragment : Fragment() {
 
         otpBoxes.forEachIndexed { index, editText ->
             editText.addTextChangedListener(object : TextWatcher {
-                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
+                }
 
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 
@@ -196,6 +244,7 @@ class VerifyOTPFragment : Fragment() {
                                 Toast.LENGTH_SHORT
                             ).show()
                         }
+
                         override fun updateDrawState(ds: android.text.TextPaint) {
                             ds.isUnderlineText = false
                         }

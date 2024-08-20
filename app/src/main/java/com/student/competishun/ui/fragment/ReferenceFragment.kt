@@ -42,8 +42,7 @@ class ReferenceFragment : Fragment() {
     private val spanCount = listOf(2, 2, 1)
 
     private var selectedItem: String? = null
-
-    private var SharedSelectedItem: String?=null
+    private var SharedSelectedItem: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -57,7 +56,9 @@ class ReferenceFragment : Fragment() {
             handleBackPressed()
         }
 
+        // Retrieve the saved reference from SharedPreferences
         selectedItem = sharedPreferencesManager.reference
+        SharedSelectedItem = selectedItem
 
         return binding.root
     }
@@ -69,10 +70,15 @@ class ReferenceFragment : Fragment() {
 
         binding.RefNext.text = "Done"
 
-        binding.RefNext.setOnClickListener {
-            sharedPreferencesManager.reference = SharedSelectedItem
+        binding.RefBack.setOnClickListener {
+            println("ClickedBacktoTarget")
+            findNavController().navigate(R.id.TargetFragment)
+        }
 
+        binding.RefNext.setOnClickListener {
             if (isItemSelected) {
+                sharedPreferencesManager.reference = SharedSelectedItem
+
                 val updateUserInput = UpdateUserInput(
                     city = Optional.Present(sharedPreferencesManager.city),
                     fullName = Optional.Present(sharedPreferencesManager.name),
@@ -87,19 +93,23 @@ class ReferenceFragment : Fragment() {
             }
         }
 
+
         updateUserViewModel.updateUserResult.observe(viewLifecycleOwner, Observer { result ->
-            if (result?.user != null) {
+            if (result?.user?.userInformation != null) {
+                Log.e("gettingUserUpdateTarget", result.user.userInformation.targetYear.toString())
+                Log.e("gettingUserUpdaterefer", result.user.userInformation.reference.toString())
+                Log.e("gettingUserUpdateprep", result.user.userInformation.preparingFor.toString())
+                Log.e("gettingUserUpdatecity", result.user.userInformation.city.toString())
+
+                // Save the updated reference to SharedPreferences
+                sharedPreferencesManager.reference = result.user.userInformation.reference
+
                 navigateToLoaderScreen()
-                Log.e("gettingUserUpdate", result.user.fullName.toString())
             } else {
                 Log.e("gettingUserUpdatefail", result.toString())
                 Toast.makeText(context, "Update failed", Toast.LENGTH_SHORT).show()
             }
         })
-
-        binding.RefBack.setOnClickListener {
-            findNavController().popBackStack(R.id.TargetFragment, false)
-        }
 
         binding.etStartedText.text = stepTexts[currentStep]
         binding.etText.text = pageTexts[currentStep]
@@ -112,8 +122,8 @@ class ReferenceFragment : Fragment() {
     }
 
     private fun restoreSelectedItem() {
-        Log.d("SelectedItemRestore", "Selected Item: $selectedItem")
         selectedItem = sharedPreferencesManager.reference
+        SharedSelectedItem = selectedItem
         if (!selectedItem.isNullOrEmpty()) {
             isItemSelected = true
         } else {
@@ -137,7 +147,7 @@ class ReferenceFragment : Fragment() {
             isItemSelected = true
             this.selectedItem = selectedItem
             SharedSelectedItem = selectedItem
-            sharedPreferencesManager.reference = selectedItem // Save selected item
+            sharedPreferencesManager.reference = selectedItem
             binding.RefNext.setBackgroundResource(R.drawable.second_getstarteddone)
             updateButtonBackground()
         }
@@ -170,10 +180,10 @@ class ReferenceFragment : Fragment() {
         findNavController().popBackStack(R.id.TargetFragment, false)
     }
 
-//    override fun onSaveInstanceState(outState: Bundle) {
-//        super.onSaveInstanceState(outState)
-//        outState.putString("SharedSelectedItem", SharedSelectedItem)
-//    }
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString("SharedSelectedItem", SharedSelectedItem)
+    }
 
     private fun navigateToLoaderScreen() {
         binding.root.removeAllViews()

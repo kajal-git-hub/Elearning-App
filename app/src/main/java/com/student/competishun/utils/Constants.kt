@@ -17,7 +17,7 @@ object Constants {
     const val YEAR_2027 = "2027"
     const val YEAR_2028 = "2028"
 
-    const val FRIENDS_FAMILY = "Friends/Family"
+    const val FRIENDS_FAMILY = "Family/Friends"
     const val SOCIAL_MEDIA = "Social Media"
     const val ADVERTISEMENT = "Advertisement"
     const val OTHER = "Other"

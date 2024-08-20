@@ -55,8 +55,8 @@ class MainActivity : AppCompatActivity() {
                     sharedPreferencesManager.mobileNo = userDetails.mobileNumber
                 }
             }.onFailure { exception ->
-                Log.e("mainActivitydetails",exception.message.toString())
-              //  Toast.makeText(this, "Error fetching details: ${exception.message}", Toast.LENGTH_LONG).show()
+                Log.e("mainActivitydetails", exception.message.toString())
+                //  Toast.makeText(this, "Error fetching details: ${exception.message}", Toast.LENGTH_LONG).show()
             }
         }
 
@@ -118,11 +118,11 @@ class MainActivity : AppCompatActivity() {
 
                 setupNavigation()
                 val token = sharedPreferencesManager.accessToken
-                Log.e("token ",token.toString())
-                if (token.isNullOrEmpty() ){
+                Log.e("token ", token.toString())
+                if (token.isNullOrEmpty()) {
                     navController.navigate(R.id.onWelcomeFragment)
-                }else
-                getUserInfo()
+                } else
+                    getUserInfo()
             }, 2000)
         }, 2000)
     }
