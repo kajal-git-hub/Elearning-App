@@ -64,10 +64,14 @@ class HelperFunctions {
         }
     }
 
-    fun calculateDiscountDetails(originalPrice: Int, discountPrice: Int): Pair<Int, Int> {
-        val discountPercentage =
-            ((discountPrice.toDouble() / originalPrice.toDouble()) * 100).toInt()
+    fun calculateDiscountDetails(originalPrice: Double, discountPrice: Double): Pair<Double, Double> {
+        val discountPercentage = ((discountPrice / originalPrice) * 100)
         val realPriceAfterDiscount = originalPrice - discountPrice
-        return Pair(discountPercentage, realPriceAfterDiscount)
+
+        // Round to two decimal places
+        val roundedDiscountPercentage = String.format("%.2f", discountPercentage).toDouble()
+        val roundedRealPriceAfterDiscount = String.format("%.2f", realPriceAfterDiscount).toDouble()
+
+        return Pair(roundedDiscountPercentage, roundedRealPriceAfterDiscount)
     }
 }
