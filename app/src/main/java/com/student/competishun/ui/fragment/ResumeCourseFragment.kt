@@ -30,6 +30,9 @@ class ResumeCourseFragment : Fragment() {
         binding.backIcon.setOnClickListener {
             requireActivity().onBackPressed()
         }
+        binding.clResumeCourseIcon2.setOnClickListener {
+            findNavController().navigate(R.id.action_resumeCourseFragment_to_ScheduleFragment)
+        }
         binding.clMathematics.setOnClickListener {
             findNavController().navigate(R.id.action_resumeCourseFragment_to_subjectContentFragment)
         }

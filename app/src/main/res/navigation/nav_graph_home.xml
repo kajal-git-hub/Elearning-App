@@ -190,6 +190,9 @@
         <action
             android:id="@+id/action_resumeCourseFragment_to_subjectContentFragment"
             app:destination="@+id/SubjectContentFragment"/>
+        <action
+            android:id="@+id/action_resumeCourseFragment_to_ScheduleFragment"
+            app:destination="@+id/ScheduleFragment"/>
     </fragment>
 
 
@@ -212,6 +215,11 @@
         android:id="@+id/NotificationFragment"
         android:name="com.student.competishun.ui.fragment.NotificationFragment"
         tools:layout="@layout/fragment_notification">
+    </fragment>
+    <fragment
+        android:id="@+id/ScheduleFragment"
+        android:name="com.student.competishun.ui.fragment.ScheduleFragment"
+        tools:layout="@layout/fragment_schedule">
     </fragment>
 
 
