@@ -246,7 +246,6 @@ class MyCartFragment : Fragment() {
         binding. tvInstallmentChargePrice.text =  "₹${originalCartItems.get(0).withInstallmentPrice}"
     }
 
-
     private fun processPayment(order: CreateOrderMutation.CreateOrder) {
         val rzpOrderId = order.rzpOrderId
         var amount = order.amountPaid
