@@ -76,9 +76,9 @@ class ReferenceFragment : Fragment() {
         }
 
         binding.RefNext.setOnClickListener {
-            sharedPreferencesManager.reference = SharedSelectedItem
-
             if (isItemSelected) {
+                sharedPreferencesManager.reference = SharedSelectedItem
+
                 val updateUserInput = UpdateUserInput(
                     city = Optional.Present(sharedPreferencesManager.city),
                     fullName = Optional.Present(sharedPreferencesManager.name),
@@ -92,6 +92,7 @@ class ReferenceFragment : Fragment() {
                 Toast.makeText(context, "Please select an option", Toast.LENGTH_SHORT).show()
             }
         }
+
 
         updateUserViewModel.updateUserResult.observe(viewLifecycleOwner, Observer { result ->
             if (result?.user?.userInformation != null) {

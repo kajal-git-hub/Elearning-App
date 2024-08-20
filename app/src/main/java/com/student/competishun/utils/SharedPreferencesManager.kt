@@ -84,7 +84,9 @@ class SharedPreferencesManager(context: Context) {
     var reference: String?
         get() = sharedPreferences.getString(KEY_REFERENCE, null)
         set(value){
-            sharedPreferences.edit().putString(KEY_REFERENCE, value).apply()
+            if(!value.isNullOrEmpty()){
+                sharedPreferences.edit().putString(KEY_REFERENCE, value).apply()
+            }
             Log.e("sharedPrefreference sa", reference.toString() )
         }
 

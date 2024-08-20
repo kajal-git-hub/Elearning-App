@@ -26,6 +26,7 @@ class HelperFunctions {
         updateDotsIndicator(null, dotsIndicator)
     }
 
+
     fun updateDotsIndicator(recyclerView: RecyclerView?, dotsIndicator: LinearLayout) {
         recyclerView?.let {
             val layoutManager = it.layoutManager

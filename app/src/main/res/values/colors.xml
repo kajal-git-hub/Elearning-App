@@ -23,6 +23,11 @@
     <color name="e3e8ef">#E3E8EF</color>
 
 
+    <color name="red">#E25B53</color>
+    <color name="green">#4BB543</color>
+    <color name="gray">#898384</color>
+
+
 
     <color name="PrimaryColor">#3E3EF7</color>
     <color name="gray_progress">#CCCBCB</color>
