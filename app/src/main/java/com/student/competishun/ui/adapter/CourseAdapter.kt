@@ -38,8 +38,8 @@ class CourseAdapter(private val items: List<AllCourseForStudentQuery.Course>,
         holder.binding.tvStartDate.text = "Starts On: " + helperFunctions.formatCourseDate(item.course_start_date.toString())
         holder.binding.tvEndDate.text = "Expiry Date: " + helperFunctions.formatCourseDate(item.course_validity_end_date.toString())
         if (item.price != null && item.discount !==null ) {
-            holder.binding.dicountPrice.text = "₹" + helperFunctions.calculateDiscountDetails(item.price, item.discount).second
-            holder.binding.discPer.text = helperFunctions.calculateDiscountDetails(item.price, item.discount).first.toString()+"% OFF"
+            holder.binding.dicountPrice.text = "₹" + helperFunctions.calculateDiscountDetails(item.price.toDouble(), item.discount.toDouble()).second
+            holder.binding.discPer.text = helperFunctions.calculateDiscountDetails(item.price.toDouble(), item.discount.toDouble()).first.toString()+"% OFF"
         }else{
             holder.binding.dicountPrice.text = "0"
             holder.binding.discPer.text = "0"

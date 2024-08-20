@@ -26,7 +26,7 @@ class RecommendedCoursesAdapter(
         holder.courseName.text = course.name
 
         if (course.price != null && course.discount != null) {
-            val (discountPercent, discountPrice) = helperFunctions.calculateDiscountDetails(course.price, course.discount)
+            val (discountPercent, discountPrice) = helperFunctions.calculateDiscountDetails(course.price.toDouble(), course.discount.toDouble())
             holder.discount.text = "$discountPercent% off"
             holder.discountPrice.text = "₹$discountPrice"
             holder.originalPrice.text = "₹${course.price}"

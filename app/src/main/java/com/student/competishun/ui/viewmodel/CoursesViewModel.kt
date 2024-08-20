@@ -40,7 +40,7 @@ class CoursesViewModel @Inject constructor(
         return helperFunctions.formatCourseDate(date) ?: "No date available"
     }
 
-    fun getDiscountDetails(originalPrice: Int, discountPrice: Int): Pair<Int, Int> {
+    fun getDiscountDetails(originalPrice: Double, discountPrice: Double): Pair<Double, Double> {
         return helperFunctions.calculateDiscountDetails(originalPrice, discountPrice)
     }
 
