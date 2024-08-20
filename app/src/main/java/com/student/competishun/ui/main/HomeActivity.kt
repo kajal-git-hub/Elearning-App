@@ -35,6 +35,7 @@ import com.student.competishun.ui.fragment.PaymentLoaderFragment
 import com.student.competishun.ui.fragment.PersonalDetailsFragment
 import com.student.competishun.ui.fragment.ProfileFragment
 import com.student.competishun.ui.fragment.ResumeCourseFragment
+import com.student.competishun.ui.fragment.ScheduleFragment
 import com.student.competishun.ui.fragment.SubjectContentFragment
 import com.student.competishun.ui.fragment.TopicTypeContentFragment
 import com.student.competishun.utils.SharedPreferencesManager
@@ -148,7 +149,8 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
             PaymentFailedFragment::class.java,
             BottomSheetTSizeFragment::class.java,
             NotificationFragment::class.java,
-            ProfileFragment::class.java
+            ProfileFragment::class.java,
+            ScheduleFragment::class.java,
         )
         return fragmentsToHide.any { it.isInstance(fragment) }
     }
@@ -172,7 +174,8 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
             PaymentFailedFragment::class.java,
             BottomSheetTSizeFragment::class.java,
             NotificationFragment::class.java,
-            ProfileFragment::class.java
+            ProfileFragment::class.java,
+            ScheduleFragment::class.java,
         )
         return fragmentsToHide.any { it.isInstance(fragment) }
     }
