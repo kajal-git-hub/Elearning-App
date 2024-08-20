@@ -25,9 +25,7 @@ class OnBoardingFragment : Fragment() {
     private var _binding: FragmentOnBoardingBinding? = null
     private val binding get() = _binding!!
     private lateinit var sharedPreferencesManager: SharedPreferencesManager
-
-    private var restoredName: String? = null
-    private var restoredCity: String? = null
+    private val userViewModel: UserViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -50,7 +48,9 @@ class OnBoardingFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        retrieveNameCity()
+        observeUserDetails()
+        userViewModel.fetchUserDetails()
+
         setupTextWatchers()
 
         binding.btnBack.setOnClickListener {
@@ -67,17 +67,28 @@ class OnBoardingFragment : Fragment() {
         }
     }
 
-    private fun retrieveNameCity() {
-        restoredName = sharedPreferencesManager.name
-        restoredCity = sharedPreferencesManager.city
+    private fun observeUserDetails() {
+        userViewModel.userDetails.observe(viewLifecycleOwner) { result ->
+            result.onSuccess { data ->
+                val name = data.getMyDetails.fullName
+                val city = data.getMyDetails.userInformation.city
 
-        if (!restoredName.isNullOrEmpty()) {
-            binding.etEnterHereText.setText(restoredName)
+                if (!name.isNullOrEmpty()) {
+                    binding.etEnterHereText.setText(name)
+                }
+                if (!city.isNullOrEmpty()) {
+                    binding.etEnterCityText.setText(city)
+                }
+
+                sharedPreferencesManager.name = name
+                sharedPreferencesManager.city = city
+
+                updateNextButtonState()
+
+            }.onFailure { exception ->
+                Toast.makeText(requireContext(), "Error fetching details: ${exception.message}", Toast.LENGTH_LONG).show()
+            }
         }
-        if (!restoredCity.isNullOrEmpty()) {
-            binding.etEnterCityText.setText(restoredCity)
-        }
-        updateNextButtonState()
     }
 
     private fun setupTextWatchers() {
@@ -107,7 +118,6 @@ class OnBoardingFragment : Fragment() {
         val name = binding.etEnterHereText.text.toString().trim()
         val city = binding.etEnterCityText.text.toString().trim()
         return name.length >= 3 && city.length >= 3
-
     }
 
     private fun saveNameAndCity() {
@@ -116,6 +126,8 @@ class OnBoardingFragment : Fragment() {
 
         sharedPreferencesManager.name = name
         sharedPreferencesManager.city = city
+
+//        userViewModel.updateUserDetails(name, city)
 
         Log.d("OnBoardingFragment", "Name and City saved: $name, $city")
     }

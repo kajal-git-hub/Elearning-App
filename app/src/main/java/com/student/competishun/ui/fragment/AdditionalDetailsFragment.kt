@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.student.competishun.R
@@ -41,6 +42,10 @@ class AdditionalDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.etBTHomeAddress.setOnClickListener {
+            findNavController().navigate(R.id.PersonalDetailsFragment)
+        }
+
         binding.clUploadId.setOnClickListener {
             currentFileType = "ID"
             pickFile()
@@ -51,18 +56,22 @@ class AdditionalDetailsFragment : Fragment() {
             pickFile()
         }
 
-        binding.btnAddDetails.setOnClickListener {
+        binding.btnAddaddressDetails.setOnClickListener {
             findNavController().navigate(R.id.action_AdditionalDetail_to_AddressDetail)
         }
 
         binding.closeButton.setOnClickListener {
             binding.clUploadedAadhar.visibility = View.GONE
             binding.clUploadId.visibility = View.VISIBLE
+            uploadedIdUri = null
+            updateButtonState()
         }
 
         binding.closeButtonPass.setOnClickListener {
             binding.clUploadedPassport.visibility = View.GONE
             binding.clUploadPhoto.visibility = View.VISIBLE
+            uploadedPhotoUri = null
+            updateButtonState()
         }
 
         binding.fileName.setOnClickListener {
@@ -72,6 +81,8 @@ class AdditionalDetailsFragment : Fragment() {
         binding.fileNamePass.setOnClickListener {
             uploadedPhotoUri?.let { uri -> openFile(uri) }
         }
+
+        updateButtonState()
     }
 
     private fun pickFile() {
@@ -90,7 +101,11 @@ class AdditionalDetailsFragment : Fragment() {
             if (uri != null) {
                 val fileSizeMB = getFileSizeMB(uri)
                 if (fileSizeMB > MAX_FILE_SIZE_MB) {
-                    Snackbar.make(binding.root, "File size must be less than 5MB", Snackbar.LENGTH_LONG).show()
+                    Snackbar.make(
+                        binding.root,
+                        "File size must be less than 5MB",
+                        Snackbar.LENGTH_LONG
+                    ).show()
                 } else {
                     val fileSizeFormatted = getFileSizeFormatted(uri)
                     displaySelectedFile(uri, fileSizeFormatted)
@@ -115,6 +130,27 @@ class AdditionalDetailsFragment : Fragment() {
             binding.fileSizePass.text = fileSize
             uploadedPhotoUri = uri
         }
+        updateButtonState()
+    }
+
+    private fun updateButtonState() {
+        if (uploadedIdUri != null && uploadedPhotoUri != null) {
+            binding.btnAddaddressDetails.setBackgroundColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.blue_3E3EF7
+                )
+            )
+            binding.btnAddaddressDetails.isEnabled = true
+        } else {
+            binding.btnAddaddressDetails.setBackgroundColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.gray_border
+                )
+            )
+            binding.btnAddaddressDetails.isEnabled = false
+        }
     }
 
     private fun getFileName(uri: Uri): String {
@@ -123,7 +159,8 @@ class AdditionalDetailsFragment : Fragment() {
             val cursor = context?.contentResolver?.query(uri, null, null, null, null)
             try {
                 if (cursor != null && cursor.moveToFirst()) {
-                    result = cursor.getString(cursor.getColumnIndexOrThrow(OpenableColumns.DISPLAY_NAME))
+                    result =
+                        cursor.getString(cursor.getColumnIndexOrThrow(OpenableColumns.DISPLAY_NAME))
                 }
             } finally {
                 cursor?.close()

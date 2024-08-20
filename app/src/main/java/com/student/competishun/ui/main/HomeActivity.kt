@@ -28,10 +28,12 @@ import com.student.competishun.ui.fragment.BottomSheetTSizeFragment
 import com.student.competishun.ui.fragment.CourseEmptyFragment
 import com.student.competishun.ui.fragment.ExploreFragment
 import com.student.competishun.ui.fragment.MyCartFragment
+import com.student.competishun.ui.fragment.NotificationFragment
 import com.student.competishun.ui.fragment.PaymentFailedFragment
 import com.student.competishun.ui.fragment.PaymentFragment
 import com.student.competishun.ui.fragment.PaymentLoaderFragment
 import com.student.competishun.ui.fragment.PersonalDetailsFragment
+import com.student.competishun.ui.fragment.ProfileFragment
 import com.student.competishun.ui.fragment.ResumeCourseFragment
 import com.student.competishun.ui.fragment.SubjectContentFragment
 import com.student.competishun.ui.fragment.TopicTypeContentFragment
@@ -145,6 +147,8 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
             ExploreFragment::class.java,
             PaymentFailedFragment::class.java,
             BottomSheetTSizeFragment::class.java,
+            NotificationFragment::class.java,
+            ProfileFragment::class.java
         )
         return fragmentsToHide.any { it.isInstance(fragment) }
     }
@@ -167,6 +171,8 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
             TopicTypeContentFragment::class.java,
             PaymentFailedFragment::class.java,
             BottomSheetTSizeFragment::class.java,
+            NotificationFragment::class.java,
+            ProfileFragment::class.java
         )
         return fragmentsToHide.any { it.isInstance(fragment) }
     }

@@ -99,5 +99,7 @@ dependencies {
     implementation(libs.razorpay.checkout)
     implementation(libs.play.services.wallet)
 
+    implementation (libs.github.glide)
+
 
 }

@@ -86,7 +86,7 @@ class MainActivity : AppCompatActivity() {
                     "saved ref",
                     sharedPreferencesManager.reference.toString() + userInput.fullName
                 )
-                navigateToRefFragment()
+                navigateToMainScreen()
             }
 
             !sharedPreferencesManager.preparingFor.isNullOrEmpty() -> {

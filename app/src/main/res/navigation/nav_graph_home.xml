@@ -19,6 +19,12 @@
         <action
             android:id="@+id/action_homeFragment_to_mediaFragment"
             app:destination="@+id/mediaFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_ProfileFragment"
+            app:destination="@+id/ProfileFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_NotificationFragment"
+            app:destination="@+id/NotificationFragment" />
 
     </fragment>
     <fragment
@@ -79,12 +85,16 @@
     <fragment
         android:id="@+id/demoFreeFragment"
         android:name="com.student.competishun.ui.fragment.AllDemoResourcesFree"
-        tools:layout="@layout/fragment_all_demo_resources_free"></fragment>
+        tools:layout="@layout/fragment_all_demo_resources_free">
+
+    </fragment>
 
     <fragment
         android:id="@+id/installmentFragment"
         android:name="com.student.competishun.ui.fragment.InstallmentDetailsBottomSheet"
-        tools:layout="@layout/bottom_sheet_installment_details"></fragment>
+        tools:layout="@layout/bottom_sheet_installment_details">
+
+    </fragment>
 
     <fragment
         android:id="@+id/myCartFragment"
@@ -192,6 +202,16 @@
         android:id="@+id/PaymentFailedFragment"
         android:name="com.student.competishun.ui.fragment.PaymentFailedFragment"
         tools:layout="@layout/fragment_paymet_failed">
+    </fragment>
+    <fragment
+        android:id="@+id/ProfileFragment"
+        android:name="com.student.competishun.ui.fragment.ProfileFragment"
+        tools:layout="@layout/fragment_profile">
+    </fragment>
+    <fragment
+        android:id="@+id/NotificationFragment"
+        android:name="com.student.competishun.ui.fragment.NotificationFragment"
+        tools:layout="@layout/fragment_notification">
     </fragment>
 
 

@@ -83,6 +83,9 @@
         <action
             android:id="@+id/action_ReferenceFragment_to_HomeActivity"
             app:destination="@+id/homeActivity" />
+        <action
+            android:id="@+id/action_ReferenceFragment_to_TargetFragment"
+            app:destination="@+id/TargetFragment" />
     </fragment>
 
 

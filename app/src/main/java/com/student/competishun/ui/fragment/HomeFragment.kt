@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
@@ -97,7 +96,8 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
             PromoBannerModel(R.drawable.promo_banner_home),
         )
         binding.rvpromobanner.adapter = PromoBannerAdapter(promoBannerList)
-        binding.rvpromobanner.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        binding.rvpromobanner.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         setupDotsIndicator(promoBannerList.size, binding.llDotsIndicatorPromoBanner)
         binding.rvpromobanner.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -112,7 +112,7 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
         rvOurCourses.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                updateDotsIndicator(recyclerView, dotsIndicatorOurCourses, 3)
+                updateDotsIndicator(recyclerView, dotsIndicatorOurCourses, 6)
             }
         })
 
@@ -123,6 +123,28 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
         bottomNav = requireActivity().findViewById(R.id.bottomNav)
         val toolbar: MaterialToolbar = view.findViewById(R.id.topAppBar)
         contactImage = requireActivity().findViewById(R.id.ig_ContactImage)
+
+        toolbar.setOnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.action_notification -> {
+                    findNavController().navigate(R.id.action_homeFragment_to_NotificationFragment)
+                    true
+                }
+
+                R.id.action_search -> {
+                    true
+                }
+
+                R.id.action_profile -> {
+                    findNavController().navigate(R.id.action_homeFragment_to_ProfileFragment)
+                    true
+                }
+
+                else -> false
+            }
+        }
+
+
 
         toggle = ActionBarDrawerToggle(
             activity, drawerLayout, toolbar,
@@ -153,13 +175,22 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
         coursesViewModel.courses.observe(viewLifecycleOwner, Observer { courses ->
             Log.e("Coursesres", courses.toString())
             binding.rvRecommendedCourses.adapter = courses?.let { RecommendedCoursesAdapter(it) }
-            binding.rvRecommendedCourses.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            binding.rvRecommendedCourses.layoutManager =
+                LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             recommendedCourseList = Constants.recommendedCourseList
-            setupDotsIndicator(recommendedCourseList.size, binding.llDotsIndicatorRecommendedCourses)
-            binding.rvRecommendedCourses.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            helperFunctions.setupDotsIndicator(
+                requireContext(),
+                recommendedCourseList.size,
+                binding.llDotsIndicatorRecommendedCourses
+            )
+            binding.rvRecommendedCourses.addOnScrollListener(object :
+                RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
-                    updateDotsIndicator(recyclerView, binding.llDotsIndicatorRecommendedCourses)
+                    helperFunctions.updateDotsIndicator(
+                        recyclerView,
+                        binding.llDotsIndicatorRecommendedCourses
+                    )
                 }
             })
         })
@@ -178,7 +209,7 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
                 rvOurCourses.adapter = adapterOurCourses
                 rvOurCourses.layoutManager =
                     GridLayoutManager(context, 3, GridLayoutManager.HORIZONTAL, false)
-                setupDotsIndicator(listOurCoursesItem!!.size, dotsIndicatorOurCourses, 3)
+                setupDotsIndicator(listOurCoursesItem!!.size, dotsIndicatorOurCourses, 6)
             }
         })
         coursesCategoryViewModel.fetchCoursesCategory()
@@ -273,7 +304,7 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
     private fun setupDotsIndicator(
         itemCount: Int,
         dotsIndicator: LinearLayout,
-        spanCount: Int = 1
+        spanCount: Int = 6
     ) {
         val pageCount = (itemCount + spanCount - 1) / spanCount
         dotsIndicator.removeAllViews()
@@ -291,39 +322,21 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
         updateDotsIndicator(null, dotsIndicator, spanCount)
     }
 
+
     private fun updateDotsIndicator(
         recyclerView: RecyclerView?,
         dotsIndicator: LinearLayout,
-        spanCount: Int = 1
+        spanCount: Int = 6
     ) {
         recyclerView?.let {
-            val visiblePageIndex = when (val layoutManager = it.layoutManager) {
-                is LinearLayoutManager -> {
-                    val totalScrollX = layoutManager.findFirstVisibleItemPosition()
-                    val totalWidth = layoutManager.itemCount
-                    val visiblePage = totalScrollX * layoutManager.itemCount / totalWidth
-                    visiblePage
-                }
-
-                is GridLayoutManager -> {
-                    val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
-                    val visiblePage = firstVisibleItemPosition / spanCount
-                    val totalPages =
-                        (layoutManager.itemCount + layoutManager.spanCount - 1) / layoutManager.spanCount
-                    visiblePage.coerceIn(0, totalPages - 1)
-                }
-
-                else -> 0
-            }
+            val visiblePageIndex =
+                (it.layoutManager as? GridLayoutManager)?.findFirstVisibleItemPosition()
+                    ?.div(spanCount) ?: 0
 
             for (i in 0 until dotsIndicator.childCount) {
                 val dot = dotsIndicator.getChildAt(i) as ImageView
-                val size = 16
-                val params = LinearLayout.LayoutParams(size, size)
-                params.setMargins(4, 0, 4, 0)
-                dot.layoutParams = params
                 dot.setImageResource(
-                    if (i == visiblePageIndex) R.drawable.doc_active
+                    if (i == visiblePageIndex) R.drawable.dot_active
                     else R.drawable.dot_inactive
                 )
             }
@@ -333,8 +346,8 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
     override fun onCourseItemClick(course: GetAllCourseCategoriesQuery.GetAllCourseCategory) {
         val bundle = Bundle().apply {
             putString("course_name", course.name)
-            putString("category_id",course.id)
-            Log.e("courseane ",course.name)
+            putString("category_id", course.id)
+            Log.e("courseane ", course.name)
             // Add other course details to the bundle if needed
         }
         findNavController().navigate(R.id.action_homeFragment_to_coursesFragment, bundle)

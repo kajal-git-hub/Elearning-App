@@ -95,7 +95,7 @@ class TargetFragment : Fragment() {
 
     private fun restoreSelectedItem() {
         selectedItem = sharedPreferencesManager.targetYear.toString()
-        Log.d("TargetFragmentPrevious", "Selected Item: $selectedItem")
+        Log.d("TargetFragmentRestore", "Selected Item: $selectedItem")
         if (selectedItem!="0") {
             isItemSelected = true
         } else {

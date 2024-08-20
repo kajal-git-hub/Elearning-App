@@ -26,6 +26,9 @@ class SharedPreferencesManager(context: Context) {
         private const val KEY_PREPARATION_FOR = "preparingFor"
         private const val KEY_TARGET_YEAR = "targetYear"
         private const val KEY_REFERENCE = "reference"
+        private const val KEY_FULL_NAME = "full_name"
+        private const val KEY_FATHER_NAME = "father_name"
+        private const val KEY_USER_MOBILE_NO = "user_mob_no"
 
     }
 
@@ -101,6 +104,7 @@ class SharedPreferencesManager(context: Context) {
             sharedPreferences.edit().putString(KEY_UPDATE_USER_INPUT, json).apply()
             Log.e("sharedPref UserInput", accessToken.toString())
         }
+
     fun clearAccessToken() {
         sharedPreferences.edit().remove(KEY_ACCESS_TOKEN).apply()
     }

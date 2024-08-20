@@ -1,8 +1,8 @@
 package com.student.competishun.ui.fragment
 
-import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
+import android.text.InputFilter
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
@@ -56,6 +56,8 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
         }
         userViewModel.fetchUserDetails()
 
+        binding.etWhatsappNumber.filters = arrayOf<InputFilter>(InputFilter.LengthFilter(10))
+
         binding.spinnerTshirtSize.setOnClickListener {
             val bottomSheet = BottomSheetTSizeFragment().apply {
                 setOnTSizeSelectedListener(this@PersonalDetailsFragment)
@@ -67,13 +69,14 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
             if (isFormValid()) {
                 findNavController().navigate(R.id.action_PersonalDetails_to_AdditionalDetail)
             } else {
-                Toast.makeText(requireContext(), "Please fill all fields.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Please fill all fields.", Toast.LENGTH_SHORT)
+                    .show()
             }
         }
 
         binding.etFullName.addTextChangedListener(textWatcher)
         binding.etFathersName.addTextChangedListener(textWatcher)
-        binding.etWhatsappNumber.addTextChangedListener(textWatcher)
+        binding.etWhatsappNumber.addTextChangedListener(mobileNumberTextWatcher)
     }
 
     private fun isFormValid(): Boolean {
@@ -87,10 +90,20 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
 
     private fun updateButtonState() {
         if (isFormValid()) {
-            binding.btnAddDetails.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.blue_3E3EF7))
+            binding.btnAddDetails.setBackgroundColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.blue_3E3EF7
+                )
+            )
             binding.btnAddDetails.isEnabled = true
         } else {
-            binding.btnAddDetails.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.gray_border))
+            binding.btnAddDetails.setBackgroundColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.gray_border
+                )
+            )
             binding.btnAddDetails.isEnabled = false
         }
     }
@@ -103,6 +116,23 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+    }
+
+    private val mobileNumberTextWatcher = object : TextWatcher {
+        override fun afterTextChanged(s: Editable?) {
+            updateButtonState()
+        }
+
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            if (s != null && s.length > 10) {
+                Toast.makeText(requireContext(), "Please enter a valid 10-digit mobile number", Toast.LENGTH_SHORT).show()
+                val trimmed = s.substring(0, 10)
+                binding.etWhatsappNumber.setText(trimmed)
+                binding.etWhatsappNumber.setSelection(trimmed.length)
+            }
+        }
     }
 
     override fun onDestroyView() {

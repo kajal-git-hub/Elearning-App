@@ -29,6 +29,8 @@
     <color name="gray_border">#CCCBCB</color>
     <color name="_808080">#808080</color>
     <color name="_333333">#333333</color>
+    <color name="f6f6ff">#F6F6FF</color>
+    <color name="ff7a28">#FF7A28</color>
 
 
 </resources>

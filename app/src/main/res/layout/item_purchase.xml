@@ -1,0 +1,78 @@
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:padding="16dp">
+<!--    android:background="@drawable/bg_purchase_item"-->
+
+    <TextView
+        android:id="@+id/tvCourseName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Prakhar Integrated (Fast Lane-2) 2024-25"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+        android:id="@+id/tvAmountPaid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="₹ 32,500"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvCourseName"
+        android:layout_marginTop="8dp"/>
+
+    <TextView
+        android:id="@+id/tvPaidOn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Paid On: 26 July, 2024"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvCourseName"
+        android:layout_marginTop="8dp"/>
+
+    <TextView
+        android:id="@+id/tvPaymentType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="One-Time Payment"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvAmountPaid"
+        android:layout_marginTop="8dp"/>
+
+    <TextView
+        android:id="@+id/tvRollNo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Roll No: 24111001"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvPaidOn"
+        android:layout_marginTop="8dp"/>
+
+    <TextView
+        android:id="@+id/tvStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Complete"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvPaymentType"
+        android:layout_marginTop="8dp"/>
+
+    <ImageView
+        android:id="@+id/ivStatusIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="8dp"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
