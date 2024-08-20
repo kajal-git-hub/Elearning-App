@@ -13,9 +13,7 @@ import androidx.databinding.ObservableField
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.navigation.NavController
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.fragment.findNavController
 import com.razorpay.PaymentResultListener
 import com.student.competishun.R
 import com.student.competishun.databinding.ActivityHomeBinding
