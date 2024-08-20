@@ -187,21 +187,11 @@ class MyCartFragment : Fragment() {
             totalAmount = cartItem.price.toDouble(),
             userId = userId
         )
-    }
-                // Sample input
-                val input = CreateOrderInput(
-                    amountPaid = 29999.0,
-                    entityId = "250bceb2-45e4-488e-aa02-c9521555b424",
-                    entityType = "course",
-                    isPaidOnce = true,
-                    paymentMode = "online",
-                    paymentType = "full",
-                    totalAmount = 29999.0,
-                    userId = userId
 
-                )
-            Log.e("sharedid",userId)
-            orderViewModel.createOrder(input)
+        Log.e("sharedid",userId)
+        orderViewModel.createOrder(input!!)
+    }
+
 
     private fun processPayment(order: CreateOrderMutation.CreateOrder) {
         val rzpOrderId = order.rzpOrderId
