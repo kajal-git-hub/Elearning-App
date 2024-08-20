@@ -23,6 +23,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
 import com.apollographql.apollo3.api.Optional
+import com.student.competishun.ui.viewmodel.UserViewModel
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -30,6 +31,7 @@ class MainActivity : AppCompatActivity() {
     private val mainVM: MainVM by viewModels()
     private lateinit var navController: NavController
     private lateinit var binding: ActivityMainBinding
+    private val userViewModel: UserViewModel by viewModels()
     lateinit var sharedPreferencesManager: SharedPreferencesManager
     lateinit var userInput: UpdateUserInput
 
@@ -41,15 +43,58 @@ class MainActivity : AppCompatActivity() {
         sharedPreferencesManager = SharedPreferencesManager(this)
         userInput = UpdateUserInput()
 
-        // Show splash and welcome screens
-        showSplashAndWelcomeScreens()
+        // Observe the user details LiveData
+        userViewModel.userDetails.observe(this) { result ->
+            result.onSuccess { data ->
+                val userDetails = data.getMyDetails
+                if (isUserDataComplete()) {
+                    // User data is complete, navigate to HomeActivity
+                    navigateToHomeActivity()
+                } else {
+                    // Store necessary data in SharedPreferencesManager
+                    sharedPreferencesManager.mobileNo = userDetails.mobileNumber
+                }
+            }.onFailure { exception ->
+                Log.e("mainActivitydetails",exception.message.toString())
+              //  Toast.makeText(this, "Error fetching details: ${exception.message}", Toast.LENGTH_LONG).show()
+            }
+        }
+
+        // Fetch user details
+        userViewModel.fetchUserDetails()
+
+        // Show splash and welcome screens if user data is not complete
+        if (!isUserDataComplete()) {
+            showSplashAndWelcomeScreens()
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        userViewModel.fetchUserDetails()
+    }
+
+    private fun isUserDataComplete(): Boolean {
+        return sharedPreferencesManager.mobileNo?.isNotEmpty() == true &&
+                sharedPreferencesManager.name?.isNotEmpty() == true &&
+                sharedPreferencesManager.userId?.isNotEmpty() == true &&
+                sharedPreferencesManager.city?.isNotBlank() == true &&
+                sharedPreferencesManager.reference?.isNotEmpty() == true &&
+                sharedPreferencesManager.preparingFor?.isNotEmpty() == true &&
+                sharedPreferencesManager.targetYear != 0
+    }
+
+    private fun navigateToHomeActivity() {
+        val intent = Intent(this, HomeActivity::class.java)
+        startActivity(intent)
+        finish() // Close the MainActivity
     }
 
     private fun showSplashAndWelcomeScreens() {
         setContentView(R.layout.splash_screen)
 
         Handler(Looper.getMainLooper()).postDelayed({
-            // Switch to the welcome screen after a delay
+            // Switch to the welcome scrmyeen after a delay
             setContentView(R.layout.welcome_screen)
 
             Handler(Looper.getMainLooper()).postDelayed({
@@ -72,43 +117,23 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 setupNavigation()
+                val token = sharedPreferencesManager.accessToken
+                Log.e("token ",token.toString())
+                if (token.isNullOrEmpty() ){
+                    navController.navigate(R.id.onWelcomeFragment)
+                }else
                 getUserInfo()
             }, 2000)
         }, 2000)
     }
 
     private fun getUserInfo() {
-        // Check user data and navigate accordingly
-
         when {
-            !sharedPreferencesManager.reference.isNullOrEmpty() -> {
-                Log.e(
-                    "saved ref",
-                    sharedPreferencesManager.reference.toString() + userInput.fullName
-                )
-                navigateToMainScreen()
-            }
-
-            !sharedPreferencesManager.preparingFor.isNullOrEmpty() -> {
-                Log.e(
-                    "saved prepare",
-                    sharedPreferencesManager.preparingFor.toString() + userInput.fullName
-                )
-                navigateToTargetFragment()
-            }
-
-            sharedPreferencesManager.targetYear != 0 -> {
-                Log.e("saved target", sharedPreferencesManager.targetYear.toString())
-                navigateToRefFragment()
-            }
-
-            !sharedPreferencesManager.name.isNullOrEmpty() && !sharedPreferencesManager.city.isNullOrEmpty() -> {
-                navigateToPreparationFragment()
-            }
-
-            else -> {
-                // navigateToWelcomeFragment()
-            }
+            !sharedPreferencesManager.reference.isNullOrEmpty() -> navigateToHomeActivity()
+            !sharedPreferencesManager.preparingFor.isNullOrEmpty() -> navigateToTargetFragment()
+            sharedPreferencesManager.targetYear != 0 -> navigateToRefFragment()
+            !sharedPreferencesManager.name.isNullOrEmpty() && !sharedPreferencesManager.city.isNullOrEmpty() -> navigateToPreparationFragment()
+            else -> Unit
         }
     }
 
@@ -124,11 +149,6 @@ class MainActivity : AppCompatActivity() {
         navController.navigate(R.id.ReferenceFragment)
     }
 
-    private fun navigateToWelcomeFragment() {
-        // This could be used if you need a dedicated welcome fragment
-        navController.navigate(R.id.onWelcomeFragment)
-    }
-
     private fun setupNavigation() {
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as? NavHostFragment
@@ -137,28 +157,8 @@ class MainActivity : AppCompatActivity() {
         Log.d("MainActivity", "NavController: $navController")
     }
 
-    private fun checkToken() {
-        val token = sharedPreferencesManager.accessToken
-        val number = sharedPreferencesManager.updateUserInput
-        Log.e("checktoken", token.toString())
-        Log.e("number  ${number?.fullName}", number?.city.toString())
-        if (token != null) {
-            // Token is available, navigate to the main screen
-            navigateToMainScreen()
-        } else {
-            // Token is not available, navigate to login or other appropriate screen
-//            startActivity(Intent(this, LoginActivity::class.java))
-//            finish()
-        }
-    }
-
-    private fun navigateToMainScreen() {
-        // Navigate to the main activity
-        startActivity(Intent(this, HomeActivity::class.java))
-        finish() // Close the splash activity
-    }
-
     override fun onSupportNavigateUp(): Boolean {
         return navController.navigateUp() || super.onSupportNavigateUp()
     }
 }
+

@@ -241,11 +241,13 @@
                             app:tabTextColor="#5A5555">
 
                             <com.google.android.material.tabs.TabItem
+                                android:id="@+id/item_onetimepay"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Pay One-Time" />
 
                             <com.google.android.material.tabs.TabItem
+                                android:id="@+id/item_full"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Pay In Installments" />
@@ -399,7 +401,7 @@
                             android:id="@+id/tvInstCoursePrice"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="₹44,939"
+                            android:text=""
                             android:textColor="@color/_2b2829"
                             android:textSize="14sp"
                             app:layout_constraintBottom_toBottomOf="@id/tvInstCoursePriceLabel"
