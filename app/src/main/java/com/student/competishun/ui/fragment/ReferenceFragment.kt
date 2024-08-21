@@ -1,5 +1,6 @@
 package com.student.competishun.ui.fragment
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -20,6 +21,7 @@ import com.student.competishun.R
 import com.student.competishun.databinding.FragmentReferenceBinding
 import com.student.competishun.gatekeeper.type.UpdateUserInput
 import com.student.competishun.ui.adapter.ExampleAdapter
+import com.student.competishun.ui.main.HomeActivity
 import com.student.competishun.ui.main.MainActivity
 import com.student.competishun.ui.viewmodel.UpdateUserViewModel
 import com.student.competishun.utils.SharedPreferencesManager
@@ -66,6 +68,9 @@ class ReferenceFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        selectedItem = sharedPreferencesManager.reference
+        SharedSelectedItem = selectedItem
+
         restoreSelectedItem()
 
         binding.RefNext.text = "Done"
@@ -77,7 +82,11 @@ class ReferenceFragment : Fragment() {
 
         binding.RefNext.setOnClickListener {
             if (isItemSelected) {
+                // Save to SharedPreferences only when "Done" is clicked
                 sharedPreferencesManager.reference = SharedSelectedItem
+
+                sharedPreferencesManager.isReferenceSelectionInProgress = false
+
 
                 val updateUserInput = UpdateUserInput(
                     city = Optional.Present(sharedPreferencesManager.city),
@@ -93,16 +102,12 @@ class ReferenceFragment : Fragment() {
             }
         }
 
-
         updateUserViewModel.updateUserResult.observe(viewLifecycleOwner, Observer { result ->
-            if (result?.user?.userInformation != null) {
+            if (result?.user != null) {
                 Log.e("gettingUserUpdateTarget", result.user.userInformation.targetYear.toString())
                 Log.e("gettingUserUpdaterefer", result.user.userInformation.reference.toString())
                 Log.e("gettingUserUpdateprep", result.user.userInformation.preparingFor.toString())
                 Log.e("gettingUserUpdatecity", result.user.userInformation.city.toString())
-
-                // Save the updated reference to SharedPreferences
-                sharedPreferencesManager.reference = result.user.userInformation.reference
 
                 navigateToLoaderScreen()
             } else {
@@ -142,13 +147,13 @@ class ReferenceFragment : Fragment() {
             dataList = dataSets[currentStep],
             currentStep = currentStep,
             spanCount = spanCount[currentStep],
-            selectedItem = sharedPreferencesManager.reference
+            selectedItem = selectedItem
         ) { selectedItem ->
             isItemSelected = true
             this.selectedItem = selectedItem
             SharedSelectedItem = selectedItem
-            sharedPreferencesManager.reference = selectedItem
-            binding.RefNext.setBackgroundResource(R.drawable.second_getstarteddone)
+            sharedPreferencesManager.isReferenceSelectionInProgress = true
+
             updateButtonBackground()
         }
 
@@ -157,6 +162,7 @@ class ReferenceFragment : Fragment() {
             adapter = exampleAdapter
         }
     }
+
 
     private fun updateButtonBackground() {
         if (isItemSelected) {
@@ -191,7 +197,10 @@ class ReferenceFragment : Fragment() {
         binding.root.addView(processingView)
 
         Handler(Looper.getMainLooper()).postDelayed({
-            findNavController().navigate(R.id.homeActivity)
+            val intent = Intent(requireContext(), HomeActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            startActivity(intent)
+            requireActivity().finish()
         }, 5000)
     }
 }

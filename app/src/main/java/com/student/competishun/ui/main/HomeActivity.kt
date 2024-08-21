@@ -48,6 +48,8 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
     private lateinit var binding: ActivityHomeBinding
     private var isCallingSupportVisible = ObservableField(true)
     lateinit var sharedPreferencesManager: SharedPreferencesManager
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -98,6 +100,10 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
+        }
+        if (savedInstanceState == null) {
+            // Ensure that HomeFragment is loaded on the first launch
+            navController.navigate(R.id.homeFragment)
         }
 
         supportFragmentManager.registerFragmentLifecycleCallbacks(object :
