@@ -84,6 +84,7 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         helperFunctions= HelperFunctions()
+        combinedTabItems = listOf()
          courseId = arguments?.getString("course_id").toString()
         sharedPreferencesManager = SharedPreferencesManager(requireContext())
         val items = mutableListOf(
@@ -146,10 +147,12 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
                     val disountprice = ((courses.price?:0)-((courses.discount?:0)))
                     Log.e("discountprice",disountprice.toString())
                     binding.dicountPricexp.text = "₹${disountprice}"
-                    binding.tvStartDate.text = "Starts On: "+helperFunctions.formatCourseDate(courses.course_validity_start_date.toString())
+                    binding.tvStartDate.text = "Starts On: "+helperFunctions.formatCourseDate(courses.course_start_date.toString())
                     binding.tvEndDate.text ="Expiry Date: "+helperFunctions.formatCourseDate(courses.course_validity_end_date.toString())
 
                     val newItems = courses.folder?.map { folder -> mapFolderToOurContentItem(folder) } ?: emptyList()
+                     val freeCourse = courses.folder?.get(0)?.name?.split(" ")?.get(0)
+                    Log.e("getfreecourse",freeCourse.toString())
                     ourContentAdapter.updateItems(newItems)
                 }
 
@@ -157,7 +160,7 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
         }
         // Use the courseId as needed
         Log.d("ExploreFragmentid", "Received course ID: $courseId")
-        binding.backIv.setOnClickListener { requireActivity().onBackPressed() }
+        binding.backIv.setOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed() }
         binding.clBuynow.setOnClickListener {
             // Prepare data for API call
 
@@ -180,7 +183,7 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
                 }
             })
         }
-        binding.igInstallmentUp.setOnClickListener {
+
 
             binding.clInstallmentOptionView.setOnClickListener {
                 val bottomSheet = InstallmentDetailsBottomSheet()
@@ -355,11 +358,12 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
 
 
 
-            helperFunctions.setupDotsIndicator(
-                requireContext(),
-                combinedTabItems.size,
-                binding.llDotsRelatedCourse
-            )
+                helperFunctions.setupDotsIndicator(
+                    requireContext(),
+                    combinedTabItems.size,
+                    binding.llDotsRelatedCourse
+                )
+
             helperFunctions.setupDotsIndicator(
                 requireContext(),
                 teacherItems.size,
@@ -395,7 +399,7 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
                     )
                 }
             })
-        }
+
     }
 
     override fun onFirstItemClick() {
@@ -414,12 +418,14 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
     }
 
     private fun mapFolderToOurContentItem(folder: GetCourseByIdQuery.Folder): OurContentItem {
+        val isFreeCourse = folder.name.split(" ")[0].equals("Free", ignoreCase = true)
+        val drawableRes = if (isFreeCourse) R.drawable.group_1272628768 else R.drawable.lock
+
         return OurContentItem.OtherItem(
             OtherContentItem(
-                // Assuming you have the correct image resource IDs and data mappings
-                R.drawable.frame_1707480918,  // Replace with actual image resource if available
-                folder.name ?: "Default Title",  // Replace with actual title or default
-                R.drawable.lock  // Replace with actual resource if available
+                R.drawable.frame_1707480918,
+                folder.name,                 // Use the folder name
+                drawableRes                  // Use the dynamic drawable resource based on condition
             )
         )
     }

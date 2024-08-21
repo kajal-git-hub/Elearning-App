@@ -43,6 +43,15 @@ class MyCartAdapter(
         }
     }
 
+    fun getItemAt(position: Int): CartItem? {
+        return if (position in cartItems.indices) {
+            cartItems[position]
+        } else {
+            null
+        }
+    }
+
+
     override fun getItemCount(): Int = cartItems.size
     fun updateCartItems(newCartItems: List<CartItem>) {
         cartItems.clear()

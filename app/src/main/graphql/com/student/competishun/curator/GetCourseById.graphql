@@ -7,7 +7,7 @@ query GetCourseById($getCourseByIdId: String!) {
         academic_year
         exam_type
         discount
-        course_validity_start_date
+        course_class
         course_validity_end_date
         course_tags
         course_type
@@ -20,6 +20,7 @@ query GetCourseById($getCourseByIdId: String!) {
         }
         status
         description
+        course_start_date
         course_end_date
         complementary_course
         category_name
