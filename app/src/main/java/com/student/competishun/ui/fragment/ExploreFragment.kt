@@ -21,6 +21,7 @@ import com.apollographql.apollo3.api.Optional
 import com.google.android.material.tabs.TabLayout
 import com.student.competishun.R
 import com.student.competishun.curator.AllCourseForStudentQuery
+import com.student.competishun.curator.GetCourseByIdQuery
 import com.student.competishun.curator.type.CreateCartItemDto
 import com.student.competishun.curator.type.EntityType
 import com.student.competishun.curator.type.FindAllCourseInputStudent
@@ -85,6 +86,49 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
         helperFunctions= HelperFunctions()
          courseId = arguments?.getString("course_id").toString()
         sharedPreferencesManager = SharedPreferencesManager(requireContext())
+        val items = mutableListOf(
+            OurContentItem.FirstItem(
+                OurContentFirstItem(
+                    R.drawable.frame_1707480918,
+                    "Demo Resources",
+                    R.drawable.group_1272628768
+                )
+            ),
+            OurContentItem.OtherItem(
+                OtherContentItem(
+                    R.drawable.frame_1707480918,
+                    "Preparation Mantra",
+                    R.drawable.lock
+                )
+            ),
+            OurContentItem.OtherItem(
+                OtherContentItem(
+                    R.drawable.frame_1707480918,
+                    "Lectures",
+                    R.drawable.lock
+                )
+            ),
+            OurContentItem.OtherItem(
+                OtherContentItem(
+                    R.drawable.frame_1707480918,
+                    "Tests",
+                    R.drawable.lock
+                )
+            ),
+            OurContentItem.OtherItem(
+                OtherContentItem(
+                    R.drawable.frame_1707480918,
+                    "Study Materials",
+                    R.drawable.lock
+                )
+            ),
+        )
+        val ourContentAdapter = OurContentAdapter(items, isItemSize, this)
+        binding.rvOurContent.apply {
+            layoutManager =
+                LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+            adapter = ourContentAdapter
+        }
         if (courseId.isEmpty()){
             Log.e("courseEmpty",courseId.toString())
             binding.progressBar.visibility = View.VISIBLE
@@ -96,6 +140,7 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
                 binding.progressBar.visibility = View.GONE
                 if (courses != null) {
                     Log.e("listcourses", courses.toString())
+                    val folderlist = courses.folder
                     binding.tvCourseName.text = courses.name
                     binding.orgPricexp.text = "₹"+courses.price.toString()
                     val disountprice = ((courses.price?:0)-((courses.discount?:0)))
@@ -103,6 +148,9 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
                     binding.dicountPricexp.text = "₹${disountprice}"
                     binding.tvStartDate.text = "Starts On: "+helperFunctions.formatCourseDate(courses.course_validity_start_date.toString())
                     binding.tvEndDate.text ="Expiry Date: "+helperFunctions.formatCourseDate(courses.course_validity_end_date.toString())
+
+                    val newItems = courses.folder?.map { folder -> mapFolderToOurContentItem(folder) } ?: emptyList()
+                    ourContentAdapter.updateItems(newItems)
                 }
 
             })
@@ -159,71 +207,8 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
                 }
             }
 
-            val items = mutableListOf(
-                OurContentItem.FirstItem(
-                    OurContentFirstItem(
-                        R.drawable.frame_1707480918,
-                        "Demo Resources",
-                        R.drawable.group_1272628768
-                    )
-                ),
-                OurContentItem.OtherItem(
-                    OtherContentItem(
-                        R.drawable.frame_1707480918,
-                        "Preparation Mantra",
-                        R.drawable.lock
-                    )
-                ),
-                OurContentItem.OtherItem(
-                    OtherContentItem(
-                        R.drawable.frame_1707480918,
-                        "Lectures",
-                        R.drawable.lock
-                    )
-                ),
-                OurContentItem.OtherItem(
-                    OtherContentItem(
-                        R.drawable.frame_1707480918,
-                        "Tests",
-                        R.drawable.lock
-                    )
-                ),
-                OurContentItem.OtherItem(
-                    OtherContentItem(
-                        R.drawable.frame_1707480918,
-                        "Study Materials",
-                        R.drawable.lock
-                    )
-                ),
-            )
 
-            val ourContentAdapter = OurContentAdapter(items, isItemSize, this)
-            binding.rvOurContent.apply {
-                layoutManager =
-                    LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-                adapter = ourContentAdapter
-            }
-            val courseId = "250bceb2-45e4-488e-aa02-c9521555b424"
 
-            getCourseByIDViewModel.fetchCourseById(courseId)
-//            getCourseByIDViewModel.loading.observe(viewLifecycleOwner, Observer { isLoading ->
-//                binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
-//            })
-//            getCourseByIDViewModel.error.observe(viewLifecycleOwner, Observer { error ->
-//                if (error != null) {
-//                    Toast.makeText(requireContext(), error, Toast.LENGTH_LONG).show()
-//                }
-//            })
-            binding.progressBar.visibility = View.VISIBLE
-            getCourseByIDViewModel.courseByID.observe(viewLifecycleOwner, Observer { courses ->
-                Log.e("listcourses not", courses.toString())
-                binding.progressBar.visibility = View.GONE
-                if (courses != null) {
-                    Log.e("listcourses", courses.toString())
-                    binding.tvCourseName.text = courses.name
-                }
-
-            })
 
             binding.tvOurContentSeeMore.setOnClickListener {
                 if (showMoreOrLess.get() == "View More") {
@@ -428,6 +413,16 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
         super.onDestroyView()
     }
 
+    private fun mapFolderToOurContentItem(folder: GetCourseByIdQuery.Folder): OurContentItem {
+        return OurContentItem.OtherItem(
+            OtherContentItem(
+                // Assuming you have the correct image resource IDs and data mappings
+                R.drawable.frame_1707480918,  // Replace with actual image resource if available
+                folder.name ?: "Default Title",  // Replace with actual title or default
+                R.drawable.lock  // Replace with actual resource if available
+            )
+        )
+    }
     override fun onCourseItemClicked(course: AllCourseForStudentQuery.Course) {
         val bundle = Bundle().apply {
             putString("course_id", course.id)
