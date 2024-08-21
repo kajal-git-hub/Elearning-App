@@ -127,25 +127,21 @@ class VerifyOTPFragment : Fragment() {
                     userDetailsResult.onSuccess { data ->
                         val userDetails = data.getMyDetails
                         if (userDetails.fullName?.isNotEmpty() == true) {
-                            // Store necessary data
-                            sharedPreferencesManager.userId = userDetails.userInformation.id
-                            sharedPreferencesManager.name = userDetails.fullName
-                            sharedPreferencesManager.mobileNo = userDetails.mobileNumber
-                            sharedPreferencesManager.city = userDetails.userInformation.city
-                            sharedPreferencesManager.preparingFor = userDetails.userInformation.preparingFor
-                            sharedPreferencesManager.targetYear = userDetails.userInformation.targetYear
-
                             navigateToHomeActivity()
                         } else {
-                            // Handle case where user details are incomplete
+                            // Store necessary data in SharedPreferencesManager
+                            sharedPreferencesManager.mobileNo = userDetails.mobileNumber
                             navigateToHome()
                         }
                     }.onFailure { exception ->
-                        Log.e("UserDetailsError", exception.message.toString())
-                        Toast.makeText(requireContext(), "Error fetching user details", Toast.LENGTH_LONG).show()
+                        Log.e("mainActivitydetails", exception.message.toString())
+                        Toast.makeText(
+                            requireContext(),
+                            "Error fetching details: ${exception.message}",
+                            Toast.LENGTH_LONG
+                        ).show()
                     }
                 }
-
             } else {
                 Log.e("FailureBefore", "${result} $mobileNumber")
                 Toast.makeText(requireContext(), "Invalid OTP", Toast.LENGTH_SHORT).show()

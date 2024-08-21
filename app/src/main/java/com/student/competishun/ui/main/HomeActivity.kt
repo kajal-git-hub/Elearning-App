@@ -13,7 +13,9 @@ import androidx.databinding.ObservableField
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.navigation.NavController
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import com.razorpay.PaymentResultListener
 import com.student.competishun.R
 import com.student.competishun.databinding.ActivityHomeBinding
@@ -46,6 +48,8 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
     private lateinit var binding: ActivityHomeBinding
     private var isCallingSupportVisible = ObservableField(true)
     lateinit var sharedPreferencesManager: SharedPreferencesManager
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -96,6 +100,10 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
+        }
+        if (savedInstanceState == null) {
+            // Ensure that HomeFragment is loaded on the first launch
+            navController.navigate(R.id.homeFragment)
         }
 
         supportFragmentManager.registerFragmentLifecycleCallbacks(object :

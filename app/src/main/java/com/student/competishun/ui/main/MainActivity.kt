@@ -11,7 +11,6 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.student.competishun.R
@@ -20,9 +19,6 @@ import com.student.competishun.databinding.ActivityMainBinding
 import com.student.competishun.ui.viewmodel.MainVM
 import com.student.competishun.utils.SharedPreferencesManager
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.supervisorScope
-import com.apollographql.apollo3.api.Optional
 import com.student.competishun.ui.viewmodel.UserViewModel
 
 @AndroidEntryPoint
@@ -129,6 +125,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun getUserInfo() {
         when {
+            sharedPreferencesManager.isReferenceSelectionInProgress -> navigateToRefFragment()
+
             !sharedPreferencesManager.reference.isNullOrEmpty() -> navigateToHomeActivity()
             !sharedPreferencesManager.preparingFor.isNullOrEmpty() -> navigateToTargetFragment()
             sharedPreferencesManager.targetYear != 0 -> navigateToRefFragment()

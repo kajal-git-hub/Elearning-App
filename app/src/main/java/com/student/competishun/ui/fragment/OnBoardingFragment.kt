@@ -48,6 +48,16 @@ class OnBoardingFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val savedName = sharedPreferencesManager.name
+        val savedCity = sharedPreferencesManager.city
+
+        savedName?.let {
+            binding.etEnterHereText.setText(it)
+        }
+        savedCity?.let {
+            binding.etEnterCityText.setText(it)
+        }
+
         observeUserDetails()
         userViewModel.fetchUserDetails()
 

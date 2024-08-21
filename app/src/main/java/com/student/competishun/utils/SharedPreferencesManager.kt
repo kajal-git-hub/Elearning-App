@@ -107,6 +107,11 @@ class SharedPreferencesManager(context: Context) {
             Log.e("sharedPref UserInput", accessToken.toString())
         }
 
+    var isReferenceSelectionInProgress: Boolean
+        get() = sharedPreferences.getBoolean("isReferenceSelectionInProgress", false)
+        set(value) = sharedPreferences.edit().putBoolean("isReferenceSelectionInProgress", value).apply()
+
+
     fun clearAccessToken() {
         sharedPreferences.edit().remove(KEY_ACCESS_TOKEN).apply()
     }
