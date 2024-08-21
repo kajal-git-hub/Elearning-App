@@ -21,6 +21,8 @@ import com.apollographql.apollo3.api.Optional
 import com.google.android.material.tabs.TabLayout
 import com.student.competishun.R
 import com.student.competishun.curator.AllCourseForStudentQuery
+import com.student.competishun.curator.type.CreateCartItemDto
+import com.student.competishun.curator.type.EntityType
 import com.student.competishun.curator.type.FindAllCourseInputStudent
 import com.student.competishun.data.model.CourseFItem
 import com.student.competishun.data.model.FAQItem
@@ -36,9 +38,11 @@ import com.student.competishun.ui.adapter.FAQAdapter
 import com.student.competishun.ui.adapter.OurContentAdapter
 import com.student.competishun.ui.adapter.TeacherAdapter
 import com.student.competishun.ui.viewmodel.CoursesViewModel
+import com.student.competishun.ui.viewmodel.CreateCartViewModel
 import com.student.competishun.ui.viewmodel.GetCourseByIDViewModel
 import com.student.competishun.ui.viewmodel.StudentCoursesViewModel
 import com.student.competishun.utils.HelperFunctions
+import com.student.competishun.utils.SharedPreferencesManager
 import com.student.competishun.utils.StudentCourseItemClickListener
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -51,8 +55,11 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
     private lateinit var combinedTabItems: List<TabItem>
     private lateinit var limitedFaqItems: List<FAQItem>
     private lateinit var faqItems: List<FAQItem>
+    private val createCartViewModel: CreateCartViewModel by viewModels()
+    private val cartViewModel: CreateCartViewModel by viewModels()
     private val courseViewModel: StudentCoursesViewModel by viewModels()
     private var showMoreOrLess = ObservableField("View More")
+    private lateinit var sharedPreferencesManager: SharedPreferencesManager
     var isItemSize = ObservableField(true)
     private lateinit var courseId:String
     private lateinit var helperFunctions: HelperFunctions
@@ -75,8 +82,9 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        helperFunctions= HelperFunctions()
          courseId = arguments?.getString("course_id").toString()
-
+        sharedPreferencesManager = SharedPreferencesManager(requireContext())
         if (courseId.isEmpty()){
             Log.e("courseEmpty",courseId.toString())
             binding.progressBar.visibility = View.VISIBLE
@@ -89,6 +97,12 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
                 if (courses != null) {
                     Log.e("listcourses", courses.toString())
                     binding.tvCourseName.text = courses.name
+                    binding.orgPricexp.text = "₹"+courses.price.toString()
+                    val disountprice = ((courses.price?:0)-((courses.discount?:0)))
+                    Log.e("discountprice",disountprice.toString())
+                    binding.dicountPricexp.text = "₹${disountprice}"
+                    binding.tvStartDate.text = "Starts On: "+helperFunctions.formatCourseDate(courses.course_validity_start_date.toString())
+                    binding.tvEndDate.text ="Expiry Date: "+helperFunctions.formatCourseDate(courses.course_validity_end_date.toString())
                 }
 
             })
@@ -97,7 +111,26 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
         Log.d("ExploreFragmentid", "Received course ID: $courseId")
         binding.backIv.setOnClickListener { requireActivity().onBackPressed() }
         binding.clBuynow.setOnClickListener {
-            findNavController().navigate(R.id.action_exploreFragment_to_myCartFragment)
+            // Prepare data for API call
+
+            val cartItems = listOf(CreateCartItemDto(
+                courseId,
+                EntityType.COURSE,1
+            )) // Replace with actual cart items data
+
+            // Call the API to create cart items
+            createCartViewModel.createCartItems(sharedPreferencesManager.userId.toString(), cartItems)
+
+            // Observe the result and navigate based on success or failure
+            createCartViewModel.cartItemsResult.observe(viewLifecycleOwner, Observer { result ->
+                result.onSuccess {
+
+                    findNavController().navigate(R.id.action_exploreFragment_to_myCartFragment)
+                }.onFailure { exception ->
+                    // Handle error, e.g., show a toast or dialog
+                    Toast.makeText(requireContext(), "Error creating cart items: ${exception.message}", Toast.LENGTH_LONG).show()
+                }
+            })
         }
         binding.igInstallmentUp.setOnClickListener {
 

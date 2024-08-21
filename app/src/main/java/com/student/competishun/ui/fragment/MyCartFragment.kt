@@ -46,6 +46,7 @@ class MyCartFragment : Fragment() {
     private var originalCartItems: List<CartItem> = listOf()
     private var input: CreateOrderInput? = null
     private var paymentType: String = "full"
+    var totalAmount:Int = 0
     private lateinit var helperFunctions: HelperFunctions
     var instAmountpaid = 0.0
     var fullAmount = 0.0
@@ -70,6 +71,7 @@ class MyCartFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         var userId: String = ""
+
         helperFunctions = HelperFunctions()
         binding.CartTabLayout.visibility = View.GONE
         binding.rvAllCart.visibility = View.GONE
@@ -99,12 +101,13 @@ class MyCartFragment : Fragment() {
             Log.e("getamountpaid ${cartItem.price.toDouble()}",amountPaid.toString() )
             input = CreateOrderInput(
                 amountPaid = amountPaid * 100,
+
                 entityId = cartItem.entityId,
                 entityType = "course",
                 isPaidOnce = paymentType == "full",
                 paymentMode = "online",
                 paymentType = paymentType,
-                totalAmount = cartItem.price.toDouble() * 100,
+                totalAmount = totalAmount.toDouble() * 100,
                 userId = userId
             )
         }
@@ -137,7 +140,7 @@ class MyCartFragment : Fragment() {
                         categoryId = course.category_id.toString()
                     )
 
-                }
+                }.takeLast(1)
                 cartAdapter.updateCartItems(cartItems)
                 originalCartItems = cartItems
                 if (cartItems.isNotEmpty()) {
@@ -213,11 +216,12 @@ class MyCartFragment : Fragment() {
         binding.tvInstallmentLabel2.visibility = View.GONE
         binding. tvInstallmentChargePrice.visibility =  View.GONE
         binding. tvInstallmentCharge.visibility =  View.GONE
-        binding.tvInstDiscountLabel.text = "Discount (${originalCartItems.get(0).discount}%)"
-        binding.tvInstDiscount.text = "- ₹${discountPrice}"
-        fullAmount = (originalCartItems.get(0).price)-discountPrice
-        binding.tvPrice.text =  "₹${(originalCartItems.get(0).price)-discountPrice}"
-        binding.tvInstTotalAmount.text = "₹${(originalCartItems.get(0).price)-discountPrice}"
+        totalAmount = originalCartItems.get(0).price.toInt()
+        binding.tvInstDiscountLabel.text = "Discount (${helperFunctions.calculateDiscountDetails(originalCartItems.get(0).price.toDouble(),originalCartItems.get(0).discount.toDouble()).first}%)"
+        binding.tvInstDiscount.text = "- ₹${originalCartItems.get(0).discount.toDouble()}"
+        fullAmount = (helperFunctions.calculateDiscountDetails(originalCartItems.get(0).price.toDouble(),originalCartItems.get(0).discount.toDouble()).second)
+        binding.tvPrice.text =  "₹${(helperFunctions.calculateDiscountDetails(originalCartItems.get(0).price.toDouble(),originalCartItems.get(0).discount.toDouble()).second)}"
+        binding.tvInstTotalAmount.text = "₹${fullAmount}"
 
     }
 
@@ -226,9 +230,9 @@ class MyCartFragment : Fragment() {
         cartAdapter.updateCartItems(partialPaymentItems)
         val discountPrice = (originalCartItems.get(0).price.toDouble() * originalCartItems.get(0).discount.toDouble()) / 100
         var discountPriceVal = (helperFunctions.calculateDiscountDetails(originalCartItems.get(0).price.toDouble(),discountPrice).second)
-        var firstInstallment = calculateDiscountedPrice(originalCartItems.get(0).price.toDouble(),originalCartItems.get(0).withInstallmentPrice.toDouble(),discountPrice)
-        var secondInstallment = (originalCartItems.get(0).price.toDouble()) - firstInstallment - discountPrice + (originalCartItems.get(0).withInstallmentPrice.toDouble())
-
+        var firstInstallment = ((originalCartItems.get(0).price.toDouble() + originalCartItems.get(0).withInstallmentPrice.toDouble()) - originalCartItems.get(0).discount.toDouble())*0.6
+        var secondInstallment = (originalCartItems.get(0).price.toDouble()) - firstInstallment
+        totalAmount = originalCartItems.get(0).price
         binding.tvInstallmentPrice.visibility = View.VISIBLE
         binding.tvInstallmentLabel.visibility = View.VISIBLE
         binding.tvInstallmentPrice2.visibility = View.VISIBLE
@@ -240,8 +244,8 @@ class MyCartFragment : Fragment() {
         binding.tvInstTotalAmount.text =  "₹${firstInstallment + secondInstallment}"
         binding.tvInstCoursePrice.text = "₹${originalCartItems.get(0).price}"
         binding.tvInstallmentPrice.text = "₹${firstInstallment}"
-        binding.tvInstDiscountLabel.text = "Discount (${originalCartItems.get(0).discount}%)"
-        binding.tvInstDiscount.text = "- ₹${discountPrice}"
+        binding.tvInstDiscountLabel.text = "Discount (${helperFunctions.calculateDiscountDetails(originalCartItems.get(0).price.toDouble(),originalCartItems.get(0).discount.toDouble()).first}%)"
+        binding.tvInstDiscount.text = "- ₹${originalCartItems.get(0).discount.toDouble()}"
         binding.tvInstallmentPrice2.text = "₹${secondInstallment}"
         binding. tvInstallmentChargePrice.text =  "₹${originalCartItems.get(0).withInstallmentPrice}"
     }

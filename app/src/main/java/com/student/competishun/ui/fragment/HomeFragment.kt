@@ -24,6 +24,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import com.student.competishun.R
 import com.student.competishun.curator.GetAllCourseCategoriesQuery
+import com.student.competishun.curator.GetAllCourseQuery
+import com.student.competishun.curator.type.CourseStatus
 import com.student.competishun.curator.type.FindAllCourseInput
 import com.student.competishun.data.model.PromoBannerModel
 import com.student.competishun.data.model.RecommendedCourseDataModel
@@ -40,10 +42,10 @@ import com.student.competishun.utils.Constants
 import com.student.competishun.utils.HelperFunctions
 import com.student.competishun.utils.OnCourseItemClickListener
 import dagger.hilt.android.AndroidEntryPoint
+import java.io.Serializable
 
 @AndroidEntryPoint
 class HomeFragment : Fragment(), OnCourseItemClickListener {
-
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private lateinit var recyclerView: RecyclerView
@@ -174,7 +176,14 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
 
         coursesViewModel.courses.observe(viewLifecycleOwner, Observer { courses ->
             Log.e("Coursesres", courses.toString())
-            binding.rvRecommendedCourses.adapter = courses?.let { RecommendedCoursesAdapter(it) }
+            binding.rvRecommendedCourses.adapter = courses?.let { courseList ->
+                RecommendedCoursesAdapter(courseList) { selectedCourse ->
+                    val bundle = Bundle().apply {
+                        putString("course_id", selectedCourse.id)
+                    }
+                    findNavController().navigate(R.id.exploreFragment,bundle)
+                }
+            }
             binding.rvRecommendedCourses.layoutManager =
                 LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             recommendedCourseList = Constants.recommendedCourseList
@@ -215,7 +224,8 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
         coursesCategoryViewModel.fetchCoursesCategory()
         val filters = FindAllCourseInput(
             exam_type = Optional.Absent,
-            is_recommended = Optional.present(true)
+            is_recommended = Optional.present(false),
+            course_status = Optional.present(listOf(CourseStatus.PUBLISHED))
         )
 
         coursesViewModel.fetchCourses(filters)

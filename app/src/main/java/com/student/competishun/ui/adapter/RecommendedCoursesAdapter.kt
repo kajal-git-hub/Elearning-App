@@ -9,7 +9,8 @@ import com.student.competishun.curator.GetAllCourseQuery
 import com.student.competishun.utils.HelperFunctions
 
 class RecommendedCoursesAdapter(
-    private val items: List<GetAllCourseQuery.Course>
+    private val items: List<GetAllCourseQuery.Course>,
+    private val onItemClick: (GetAllCourseQuery.Course) -> Unit
 ) : RecyclerView.Adapter<RecommendedCoursesAdapter.CourseViewHolder>() {
 
     private lateinit var helperFunctions: HelperFunctions
@@ -33,11 +34,14 @@ class RecommendedCoursesAdapter(
         }
 
         holder.targetYear.text = "Target ${course.target_year}"
-        holder.startDate.text = helperFunctions.formatCourseDate(course.course_validity_start_date.toString())
-        holder.endDate.text = helperFunctions.formatCourseDate(course.course_validity_end_date.toString())
+        holder.startDate.text = "Starts On: "+helperFunctions.formatCourseDate(course.course_validity_start_date.toString())
+        holder.endDate.text = "Expiry Date: "+helperFunctions.formatCourseDate(course.course_validity_end_date.toString())
 
         holder.lectureCount.text = "Lectures: 0"
         holder.quizCount.text = "Quiz & Tests: 0"
+        holder.itemView.setOnClickListener {
+            onItemClick(course)
+        }
     }
 
     override fun getItemCount(): Int = items.size
