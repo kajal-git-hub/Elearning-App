@@ -1,3 +1,4 @@
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,15 +25,25 @@ class RecommendedCoursesAdapter(
     override fun onBindViewHolder(holder: CourseViewHolder, position: Int) {
         val course = items[position]
 
-        holder.courseName.text = course.name
+        holder.courseName.text = "${course.name}  ${course.academic_year}"
 
         if (course.price != null && course.discount != null) {
             val (discountPercent, discountPrice) = helperFunctions.calculateDiscountDetails(course.price.toDouble(), course.discount.toDouble())
-            holder.discount.text = "$discountPercent% off"
+            holder.discount.text = "${discountPercent.toInt()}% off"
             holder.discountPrice.text = "₹$discountPrice"
             holder.originalPrice.text = "₹${course.price}"
         }
+        if(course.course_class.toString() =="TWELFTH_PLUS"){
+            holder.recommendedClass.text = "12th+ Class"
 
+        }else if(course.course_class.toString()=="TWELFTH"){
+            holder.recommendedClass.text = "12th Class"
+
+        }
+        else if(course.course_class.toString()=="ELEVENTH"){
+            holder.recommendedClass.text = "11th Class"
+
+        }
         holder.targetYear.text = "Target ${course.target_year}"
         holder.startDate.text = "Starts On: "+helperFunctions.formatCourseDate(course.course_start_date.toString())
         holder.endDate.text = "Expiry Date: "+helperFunctions.formatCourseDate(course.course_validity_end_date.toString())
@@ -49,6 +60,7 @@ class RecommendedCoursesAdapter(
     class CourseViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val courseName: TextView = view.findViewById(R.id.tvRecommendedCourseName)
         val discount: TextView = view.findViewById(R.id.tvDiscount)
+        val recommendedClass : TextView = view.findViewById(R.id.recommendedClass)
         val targetYear: TextView = view.findViewById(R.id.tvTarget)
         val startDate: MaterialTextView = view.findViewById(R.id.tvStartDate)
         val endDate: MaterialTextView = view.findViewById(R.id.tvEndDate)

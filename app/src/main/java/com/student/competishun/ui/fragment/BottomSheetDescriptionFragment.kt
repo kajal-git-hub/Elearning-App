@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import com.student.competishun.databinding.FragmentBottomSheetDescriptionBinding
 
 
-class BottomSheetDescriptionFragment : Fragment() {
+    class BottomSheetDescriptionFragment : Fragment() {
 
     private val binding by lazy {
         FragmentBottomSheetDescriptionBinding.inflate(layoutInflater)

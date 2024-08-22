@@ -44,6 +44,10 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val bottomSheetDescriptionFragment = BottomSheetPersonalDetailsFragment()
+        bottomSheetDescriptionFragment.show(childFragmentManager, "BottomSheetDescriptionFragment")
+
+
         userViewModel.userDetails.observe(viewLifecycleOwner) { result ->
             result.onSuccess { data ->
                 val userDetails = data.getMyDetails

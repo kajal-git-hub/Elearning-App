@@ -23,6 +23,7 @@ import com.student.competishun.ui.fragment.AddressDetailsFragment
 import com.student.competishun.ui.fragment.AllDemoResourcesFree
 import com.student.competishun.ui.fragment.AllFaqFragment
 import com.student.competishun.ui.fragment.BottomSheetDescriptionFragment
+import com.student.competishun.ui.fragment.BottomSheetPersonalDetailsFragment
 import com.student.competishun.ui.fragment.BottomSheetTSizeFragment
 import com.student.competishun.ui.fragment.CourseEmptyFragment
 import com.student.competishun.ui.fragment.CourseFragment
@@ -59,24 +60,26 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
 
 
         val bottomNavigationView = binding.bottomNav
-        bottomNavigationView.selectedItemId = R.id.home
         sharedPreferencesManager = SharedPreferencesManager(this)
+
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.fragmentNavigation) as NavHostFragment
+        navController = navHostFragment.navController
+
         bottomNavigationView.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.home -> {
-                    if (::navController.isInitialized) {
+                    if (navController.currentDestination?.id != R.id.homeFragment) {
                         navController.navigate(R.id.homeFragment)
                     }
                     true
                 }
-
                 R.id.myCourse -> {
-                    if (::navController.isInitialized) {
+                    if (navController.currentDestination?.id != R.id.PersonalDetailsFragment) {
                         navController.navigate(R.id.PersonalDetailsFragment)
                     }
                     true
                 }
-
                 else -> false
             }
         }
@@ -93,9 +96,6 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
             }
         }
 
-        val navHostFragment =
-            supportFragmentManager.findFragmentById(R.id.fragmentNavigation) as NavHostFragment
-        navController = navHostFragment.navController
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -105,6 +105,8 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
         if (savedInstanceState == null) {
             // Ensure that HomeFragment is loaded on the first launch
             navController.navigate(R.id.homeFragment)
+            bottomNavigationView.selectedItemId = R.id.home
+
         }
 
         supportFragmentManager.registerFragmentLifecycleCallbacks(object :
@@ -120,6 +122,14 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
             }
         }, true)
 
+    }
+    override fun onBackPressed() {
+        if (navController.currentDestination?.id != R.id.homeFragment) {
+            navController.navigate(R.id.homeFragment)
+            binding.bottomNav.selectedItemId = R.id.home
+        } else {
+            super.onBackPressed()
+        }
     }
 
     override fun onResume() {
@@ -157,6 +167,7 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
             ExploreFragment::class.java,
             PaymentFailedFragment::class.java,
             BottomSheetTSizeFragment::class.java,
+            BottomSheetPersonalDetailsFragment::class.java,
             NotificationFragment::class.java,
             ProfileFragment::class.java,
             ScheduleFragment::class.java,
@@ -175,6 +186,7 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
             PaymentLoaderFragment::class.java,
             PersonalDetailsFragment::class.java,
             AddressDetailsFragment::class.java,
+            BottomSheetPersonalDetailsFragment::class.java,
             AdditionalDetailsFragment::class.java,
             CourseEmptyFragment::class.java,
             CoursesFragment::class.java,

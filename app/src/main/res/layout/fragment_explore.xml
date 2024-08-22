@@ -653,6 +653,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
+                    android:layout_marginBottom="@dimen/_16dp"
                     app:layout_constraintTop_toBottomOf="@+id/clFAQViewAllText"
                     app:layout_constraintStart_toStartOf="@+id/clFAQViewAllText"
                     >
