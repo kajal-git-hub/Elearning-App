@@ -101,7 +101,6 @@ class MyCartFragment : Fragment() {
             Log.e("getamountpaid ${cartItem.price.toDouble()}",amountPaid.toString() )
             input = CreateOrderInput(
                 amountPaid = amountPaid * 100,
-
                 entityId = cartItem.entityId,
                 entityType = "course",
                 isPaidOnce = paymentType == "full",
@@ -173,19 +172,20 @@ class MyCartFragment : Fragment() {
                 val firstCartItem = cartAdapter.getItemAt(0)
                 firstCartItem?.let { cartItem ->
                     val amountPaid = if (paymentType == "full") {
-                        cartItem.price.toDouble()
+                        fullAmount
                     } else {
-                        calculateDiscountedPrice(cartItem.price.toDouble(), cartItem.withInstallmentPrice.toDouble(), cartItem.discount.toDouble())
+                        instAmountpaid
                     }
 
+
                     input = CreateOrderInput(
-                        amountPaid = amountPaid,
+                        amountPaid = amountPaid * 100,
                         entityId = cartItem.entityId,
                         entityType = "course",
                         isPaidOnce = paymentType == "full",
                         paymentMode = "online",
                         paymentType = paymentType,
-                        totalAmount = cartItem.price.toDouble(),
+                        totalAmount = totalAmount.toDouble() * 100,
                         userId = userId
                     )
                 }
@@ -293,7 +293,7 @@ class MyCartFragment : Fragment() {
             obj.put("order_id", rzpOrderId)
             val prefill = JSONObject()
             prefill.put("email", "gaurav.kumar@example.com")
-            prefill.put("contact", "8888888888")
+            prefill.put("contact", sharedPreferencesManager.mobileNo)
             obj.put("prefill", prefill)
             checkout.open(requireActivity(), obj)
         } catch (e: JSONException) {
