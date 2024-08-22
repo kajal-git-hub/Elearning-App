@@ -71,7 +71,7 @@ class MyCartFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         var userId: String = ""
-
+        binding.igToolbarBackButton.setOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed()  }
         helperFunctions = HelperFunctions()
         binding.CartTabLayout.visibility = View.GONE
         binding.rvAllCart.visibility = View.GONE
@@ -168,6 +168,30 @@ class MyCartFragment : Fragment() {
 
         binding.btnProceedToPay.setOnClickListener {
 
+            // Automatically select the first item in the cart and set the input if input is null
+            if (input == null && cartAdapter.itemCount > 0) {
+                val firstCartItem = cartAdapter.getItemAt(0)
+                firstCartItem?.let { cartItem ->
+                    val amountPaid = if (paymentType == "full") {
+                        cartItem.price.toDouble()
+                    } else {
+                        calculateDiscountedPrice(cartItem.price.toDouble(), cartItem.withInstallmentPrice.toDouble(), cartItem.discount.toDouble())
+                    }
+
+                    input = CreateOrderInput(
+                        amountPaid = amountPaid,
+                        entityId = cartItem.entityId,
+                        entityType = "course",
+                        isPaidOnce = paymentType == "full",
+                        paymentMode = "online",
+                        paymentType = paymentType,
+                        totalAmount = cartItem.price.toDouble(),
+                        userId = userId
+                    )
+                }
+            }
+
+            // Proceed to payment if input is not null
             input?.let { orderInput ->
                 orderViewModel.createOrder(orderInput)
 
@@ -179,10 +203,10 @@ class MyCartFragment : Fragment() {
                         Toast.makeText(requireContext(), exception.message, Toast.LENGTH_SHORT).show()
                     }
                 })
-            } ?: run {
-                Toast.makeText(requireContext(), "Please select a cart item before proceeding.", Toast.LENGTH_SHORT).show()
             }
         }
+
+
 
         binding.CartTabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {

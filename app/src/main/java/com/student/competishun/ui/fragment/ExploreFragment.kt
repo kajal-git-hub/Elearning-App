@@ -21,6 +21,7 @@ import com.apollographql.apollo3.api.Optional
 import com.google.android.material.tabs.TabLayout
 import com.student.competishun.R
 import com.student.competishun.curator.AllCourseForStudentQuery
+import com.student.competishun.curator.GetCourseByIdQuery
 import com.student.competishun.curator.type.CreateCartItemDto
 import com.student.competishun.curator.type.EntityType
 import com.student.competishun.curator.type.FindAllCourseInputStudent
@@ -83,8 +84,52 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         helperFunctions= HelperFunctions()
+        combinedTabItems = listOf()
          courseId = arguments?.getString("course_id").toString()
         sharedPreferencesManager = SharedPreferencesManager(requireContext())
+        val items = mutableListOf(
+            OurContentItem.FirstItem(
+                OurContentFirstItem(
+                    R.drawable.frame_1707480918,
+                    "Demo Resources",
+                    R.drawable.group_1272628768
+                )
+            ),
+            OurContentItem.OtherItem(
+                OtherContentItem(
+                    R.drawable.frame_1707480918,
+                    "Preparation Mantra",
+                    R.drawable.lock
+                )
+            ),
+            OurContentItem.OtherItem(
+                OtherContentItem(
+                    R.drawable.frame_1707480918,
+                    "Lectures",
+                    R.drawable.lock
+                )
+            ),
+            OurContentItem.OtherItem(
+                OtherContentItem(
+                    R.drawable.frame_1707480918,
+                    "Tests",
+                    R.drawable.lock
+                )
+            ),
+            OurContentItem.OtherItem(
+                OtherContentItem(
+                    R.drawable.frame_1707480918,
+                    "Study Materials",
+                    R.drawable.lock
+                )
+            ),
+        )
+        val ourContentAdapter = OurContentAdapter(items, isItemSize, this)
+        binding.rvOurContent.apply {
+            layoutManager =
+                LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+            adapter = ourContentAdapter
+        }
         if (courseId.isEmpty()){
             Log.e("courseEmpty",courseId.toString())
             binding.progressBar.visibility = View.VISIBLE
@@ -96,20 +141,26 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
                 binding.progressBar.visibility = View.GONE
                 if (courses != null) {
                     Log.e("listcourses", courses.toString())
+                    val folderlist = courses.folder
                     binding.tvCourseName.text = courses.name
                     binding.orgPricexp.text = "₹"+courses.price.toString()
                     val disountprice = ((courses.price?:0)-((courses.discount?:0)))
                     Log.e("discountprice",disountprice.toString())
                     binding.dicountPricexp.text = "₹${disountprice}"
-                    binding.tvStartDate.text = "Starts On: "+helperFunctions.formatCourseDate(courses.course_validity_start_date.toString())
+                    binding.tvStartDate.text = "Starts On: "+helperFunctions.formatCourseDate(courses.course_start_date.toString())
                     binding.tvEndDate.text ="Expiry Date: "+helperFunctions.formatCourseDate(courses.course_validity_end_date.toString())
+
+                    val newItems = courses.folder?.map { folder -> mapFolderToOurContentItem(folder) } ?: emptyList()
+                     val freeCourse = courses.folder?.get(0)?.name?.split(" ")?.get(0)
+                    Log.e("getfreecourse",freeCourse.toString())
+                    ourContentAdapter.updateItems(newItems)
                 }
 
             })
         }
         // Use the courseId as needed
         Log.d("ExploreFragmentid", "Received course ID: $courseId")
-        binding.backIv.setOnClickListener { requireActivity().onBackPressed() }
+        binding.backIv.setOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed() }
         binding.clBuynow.setOnClickListener {
             // Prepare data for API call
 
@@ -132,7 +183,7 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
                 }
             })
         }
-        binding.igInstallmentUp.setOnClickListener {
+
 
             binding.clInstallmentOptionView.setOnClickListener {
                 val bottomSheet = InstallmentDetailsBottomSheet()
@@ -159,71 +210,8 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
                 }
             }
 
-            val items = mutableListOf(
-                OurContentItem.FirstItem(
-                    OurContentFirstItem(
-                        R.drawable.frame_1707480918,
-                        "Demo Resources",
-                        R.drawable.group_1272628768
-                    )
-                ),
-                OurContentItem.OtherItem(
-                    OtherContentItem(
-                        R.drawable.frame_1707480918,
-                        "Preparation Mantra",
-                        R.drawable.lock
-                    )
-                ),
-                OurContentItem.OtherItem(
-                    OtherContentItem(
-                        R.drawable.frame_1707480918,
-                        "Lectures",
-                        R.drawable.lock
-                    )
-                ),
-                OurContentItem.OtherItem(
-                    OtherContentItem(
-                        R.drawable.frame_1707480918,
-                        "Tests",
-                        R.drawable.lock
-                    )
-                ),
-                OurContentItem.OtherItem(
-                    OtherContentItem(
-                        R.drawable.frame_1707480918,
-                        "Study Materials",
-                        R.drawable.lock
-                    )
-                ),
-            )
 
-            val ourContentAdapter = OurContentAdapter(items, isItemSize, this)
-            binding.rvOurContent.apply {
-                layoutManager =
-                    LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-                adapter = ourContentAdapter
-            }
-            val courseId = "250bceb2-45e4-488e-aa02-c9521555b424"
 
-            getCourseByIDViewModel.fetchCourseById(courseId)
-//            getCourseByIDViewModel.loading.observe(viewLifecycleOwner, Observer { isLoading ->
-//                binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
-//            })
-//            getCourseByIDViewModel.error.observe(viewLifecycleOwner, Observer { error ->
-//                if (error != null) {
-//                    Toast.makeText(requireContext(), error, Toast.LENGTH_LONG).show()
-//                }
-//            })
-            binding.progressBar.visibility = View.VISIBLE
-            getCourseByIDViewModel.courseByID.observe(viewLifecycleOwner, Observer { courses ->
-                Log.e("listcourses not", courses.toString())
-                binding.progressBar.visibility = View.GONE
-                if (courses != null) {
-                    Log.e("listcourses", courses.toString())
-                    binding.tvCourseName.text = courses.name
-                }
-
-            })
 
             binding.tvOurContentSeeMore.setOnClickListener {
                 if (showMoreOrLess.get() == "View More") {
@@ -370,11 +358,12 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
 
 
 
-            helperFunctions.setupDotsIndicator(
-                requireContext(),
-                combinedTabItems.size,
-                binding.llDotsRelatedCourse
-            )
+                helperFunctions.setupDotsIndicator(
+                    requireContext(),
+                    combinedTabItems.size,
+                    binding.llDotsRelatedCourse
+                )
+
             helperFunctions.setupDotsIndicator(
                 requireContext(),
                 teacherItems.size,
@@ -410,7 +399,7 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
                     )
                 }
             })
-        }
+
     }
 
     override fun onFirstItemClick() {
@@ -428,6 +417,18 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
         super.onDestroyView()
     }
 
+    private fun mapFolderToOurContentItem(folder: GetCourseByIdQuery.Folder): OurContentItem {
+        val isFreeCourse = folder.name.split(" ")[0].equals("Free", ignoreCase = true)
+        val drawableRes = if (isFreeCourse) R.drawable.group_1272628768 else R.drawable.lock
+
+        return OurContentItem.OtherItem(
+            OtherContentItem(
+                R.drawable.frame_1707480918,
+                folder.name,                 // Use the folder name
+                drawableRes                  // Use the dynamic drawable resource based on condition
+            )
+        )
+    }
     override fun onCourseItemClicked(course: AllCourseForStudentQuery.Course) {
         val bundle = Bundle().apply {
             putString("course_id", course.id)

@@ -1,21 +1,42 @@
 query GetCourseById($getCourseByIdId: String!) {
     getCourseById(id: $getCourseByIdId) {
+        id
         name
         price
         target_year
         academic_year
         exam_type
         discount
-        course_validity_start_date
+        course_class
         course_validity_end_date
         course_tags
         course_type
-        description
         banners {
             mobile_banner_image_name
             redirect_link
             mobile_banner_image
             id
+            course_id
+        }
+        status
+        description
+        course_start_date
+        course_end_date
+        complementary_course
+        category_name
+        course_features
+        banner_image
+        category_id
+        course_offline_material_shipment
+        with_installment_price
+        planner_description
+        planner_pdf
+        is_recommended
+        folder {
+            id
+            name
+            scheduled_time
+            description
             course_id
         }
     }

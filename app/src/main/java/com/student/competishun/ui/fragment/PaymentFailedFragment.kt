@@ -37,6 +37,7 @@ class PaymentFailedFragment : Fragment() {
           binding.btTryAgain.setOnClickListener{
               requireActivity().onBackPressedDispatcher.onBackPressed()
           }
+        binding.ivCross.setOnClickListener {  requireActivity().onBackPressedDispatcher.onBackPressed() }
 
     }
 

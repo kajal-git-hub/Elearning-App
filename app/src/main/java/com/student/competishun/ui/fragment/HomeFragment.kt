@@ -224,7 +224,7 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
         coursesCategoryViewModel.fetchCoursesCategory()
         val filters = FindAllCourseInput(
             exam_type = Optional.Absent,
-            is_recommended = Optional.present(false),
+            is_recommended = Optional.present(true),
             course_status = Optional.present(listOf(CourseStatus.PUBLISHED))
         )
 

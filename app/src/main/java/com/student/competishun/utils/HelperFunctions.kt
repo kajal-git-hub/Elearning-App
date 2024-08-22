@@ -58,10 +58,10 @@ class HelperFunctions {
         val outputFormat = SimpleDateFormat("dd MMM, yy", Locale.getDefault())
         return try {
             val date = inputFormat.parse(date)
-            outputFormat.format(date ?: return "No date available")
+            outputFormat.format(date ?: return "-")
         } catch (e: Exception) {
             e.printStackTrace()
-            "No date available"
+            "-"
         }
     }
 

@@ -1,5 +1,6 @@
 package com.student.competishun.ui.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +14,7 @@ import com.student.competishun.data.model.OurContentFirstItem
 import com.student.competishun.data.model.OurContentItem
 
 class OurContentAdapter(
-    private val items: List<OurContentItem>,
+    private var items: List<OurContentItem>,
     private val isItemSize: ObservableField<Boolean>,
     private var listener: OnItemClickListener
 
@@ -54,18 +55,24 @@ class OurContentAdapter(
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        Log.d("ContentAdapter", "view position $position with item ${items[position]}")
         when (val item = items[position]) {
-            is OurContentItem.FirstItem -> (holder as FirstItemViewHolder).bind(item.item,listener)
+            is OurContentItem.FirstItem -> (holder as FirstItemViewHolder).bind(item.item, listener)
             is OurContentItem.OtherItem -> (holder as OtherItemViewHolder).bind(item.item)
         }
     }
 
     override fun getItemCount(): Int {
-        if (isItemSize.get() == true) {
-            return 3
+        return if (isItemSize.get() == true) {
+            items.size
         } else {
-            return items.size
+            items.size
         }
+    }
+
+    fun updateItems(newItems: List<OurContentItem>) {
+        items = newItems
+        notifyDataSetChanged()
     }
 
     class FirstItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -74,7 +81,7 @@ class OurContentAdapter(
         private val iconImageView: ImageView = itemView.findViewById(R.id.iconImageView)
         private val freeBadgeImageView: ImageView = itemView.findViewById(R.id.freeBadgeImageView)
 
-        fun bind(item: OurContentFirstItem,listener: OnItemClickListener) {
+        fun bind(item: OurContentFirstItem, listener: OnItemClickListener) {
             titleTextView.text = item.title
             iconImageView.setImageResource(item.iconResId)
             freeBadgeImageView.setImageResource(item.isFree)

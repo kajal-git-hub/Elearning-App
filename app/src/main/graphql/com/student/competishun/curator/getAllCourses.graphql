@@ -9,6 +9,7 @@ query GetAllCourse($filters: FindAllCourseInput) {
             id
             exam_type
             discount
+            course_class
             banners {
                 mobile_banner_image_name
                 mobile_banner_image
@@ -20,8 +21,8 @@ query GetAllCourse($filters: FindAllCourseInput) {
             description
             course_tags
             course_type
+            course_start_date
             course_validity_end_date
-            course_validity_start_date
             banner_image
             academic_year
         }
