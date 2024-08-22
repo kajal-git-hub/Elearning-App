@@ -48,7 +48,9 @@ class InstallmentDetailsBottomSheet : BottomSheetDialogFragment() {
         )
         var total = firstInstallment?.toInt()?.plus(secondInstallment?.toInt()?:0)
         binding.dicountPricexp.text = total.toString()
-
+        binding.buyNow.setOnClickListener{
+          dismiss()
+        }
         val installmentAdapter = InstallmentAdapter(installmentList)
         binding.rvInstallment.apply {
             layoutManager =

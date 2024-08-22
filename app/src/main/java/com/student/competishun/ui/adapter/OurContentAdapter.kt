@@ -60,7 +60,8 @@ class OurContentAdapter(
 
     override fun getItemCount(): Int {
         return if (isItemSize.get() == true) {
-            folderItems.size
+            minOf(folderItems.size, 3)
+
         } else {
             folderItems.size
         }
