@@ -10,10 +10,11 @@ import com.student.competishun.databinding.ItemTSizeBinding
 
 class TshirtSizeAdapter(
     private val tSizeList: List<TSizeModel>,
+    private val preselectedSize: String?, // Optional preselected size
     private val onItemSelected: (String) -> Unit
 ) : RecyclerView.Adapter<TshirtSizeAdapter.TSizeViewHolder>() {
 
-    private var selectedPosition = -1
+    private var selectedPosition = tSizeList.indexOfFirst { it.t_size == preselectedSize }
 
     inner class TSizeViewHolder(private val binding: ItemTSizeBinding) :
         RecyclerView.ViewHolder(binding.root) {

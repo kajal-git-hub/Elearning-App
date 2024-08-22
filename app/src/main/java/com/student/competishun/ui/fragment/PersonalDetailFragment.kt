@@ -26,6 +26,7 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
     private val binding get() = _binding!!
 
     private var isTshirtSizeSelected = false
+    private var selectedTShirtSize: String? = null // Store the selected size
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,6 +38,7 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
 
     override fun onTSizeSelected(size: String) {
         binding.spinnerTshirtSize.text = size
+        selectedTShirtSize = size
         isTshirtSizeSelected = true
         updateButtonState()
     }
@@ -66,6 +68,9 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
         binding.spinnerTshirtSize.setOnClickListener {
             val bottomSheet = BottomSheetTSizeFragment().apply {
                 setOnTSizeSelectedListener(this@PersonalDetailsFragment)
+                arguments = Bundle().apply {
+                    putString("selectedSize", selectedTShirtSize) // Pass the selected size
+                }
             }
             bottomSheet.show(childFragmentManager, "BottomSheetTSizeFragment")
         }
