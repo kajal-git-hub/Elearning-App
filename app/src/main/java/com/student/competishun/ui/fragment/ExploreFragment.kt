@@ -63,7 +63,10 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
     private lateinit var sharedPreferencesManager: SharedPreferencesManager
     var isItemSize = ObservableField(true)
     private lateinit var courseId:String
+    lateinit var folderlist:List<GetCourseByIdQuery.Folder>
     private lateinit var helperFunctions: HelperFunctions
+    var firstInstallment:Double = 0.0
+    var secondInstallment:Double = 0.0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -73,16 +76,13 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
             lifecycleOwner = viewLifecycleOwner
 
         }
-//        requireActivity().onBackPressedDispatcher.addCallback(this) {
-//            handleBackPressed()
-//        }
+
         return binding.root
     }
-    private fun handleBackPressed() {
-        findNavController().navigate(R.id.homeFragment)
-    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        folderlist = emptyList()
         helperFunctions= HelperFunctions()
         combinedTabItems = listOf()
          courseId = arguments?.getString("course_id").toString()
@@ -124,28 +124,39 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
                 )
             ),
         )
-        val ourContentAdapter = OurContentAdapter(items, isItemSize, this)
+        val ourContentAdapter = OurContentAdapter(folderlist, isItemSize, this)
         binding.rvOurContent.apply {
             layoutManager =
                 LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
             adapter = ourContentAdapter
         }
+
         if (courseId.isEmpty()){
-            Log.e("courseEmpty",courseId.toString())
+            Log.e("courseEmpty",courseId)
             binding.progressBar.visibility = View.VISIBLE
         }else {
-            Log.e("courseID",courseId.toString())
+            Log.e("courseID",courseId)
             getCourseByIDViewModel.fetchCourseById(courseId)
             getCourseByIDViewModel.courseByID.observe(viewLifecycleOwner, Observer { courses ->
-                Log.e("listcourses not", courses.toString())
+                Log.e("listcourses", courses.toString())
                 binding.progressBar.visibility = View.GONE
                 if (courses != null) {
                     Log.e("listcourses", courses.toString())
-                    val folderlist = courses.folder
+                    folderlist = courses.folder ?: emptyList()
+                    val sortedFolderList = folderlist.sortedByDescending {
+                        it.name.startsWith("Free")
+                    }
+                    val coursePrice = courses.price?.toDouble() ?: 0.0
+                    val discount = courses.discount?.toDouble() ?: 0.0
+                    val installmentPrice = courses.with_installment_price?.toDouble() ?: 0.0
+
+                    firstInstallment = ((coursePrice + installmentPrice) - discount) * 0.6
+                     secondInstallment = (coursePrice - firstInstallment)
+                    Log.e("secon $installmentPrice $coursePrice",secondInstallment.toString())
+
                     binding.tvCourseName.text = courses.name
                     binding.orgPricexp.text = "₹"+courses.price.toString()
                     val disountprice = ((courses.price?:0)-((courses.discount?:0)))
-                    Log.e("discountprice",disountprice.toString())
                     binding.dicountPricexp.text = "₹${disountprice}"
                     binding.tvStartDate.text = "Starts On: "+helperFunctions.formatCourseDate(courses.course_start_date.toString())
                     binding.tvEndDate.text ="Expiry Date: "+helperFunctions.formatCourseDate(courses.course_validity_end_date.toString())
@@ -153,13 +164,14 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
                     val newItems = courses.folder?.map { folder -> mapFolderToOurContentItem(folder) } ?: emptyList()
                      val freeCourse = courses.folder?.get(0)?.name?.split(" ")?.get(0)
                     Log.e("getfreecourse",freeCourse.toString())
-                    ourContentAdapter.updateItems(newItems)
+
+                    ourContentAdapter.updateItems(sortedFolderList)
                 }
 
             })
         }
         // Use the courseId as needed
-        Log.d("ExploreFragmentid", "Received course ID: $courseId")
+        Log.d("ExploreFragmentId", "Received course ID: $courseId")
         binding.backIv.setOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed() }
         binding.clBuynow.setOnClickListener {
             // Prepare data for API call
@@ -186,7 +198,11 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
 
 
             binding.clInstallmentOptionView.setOnClickListener {
-                val bottomSheet = InstallmentDetailsBottomSheet()
+
+
+                val bottomSheet = InstallmentDetailsBottomSheet().apply {
+                    setInstallmentData(firstInstallment.toInt(), secondInstallment.toInt())
+                }
                 bottomSheet.show(parentFragmentManager, "InstallmentDetailsBottomSheet")
             }
 
@@ -401,8 +417,13 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
 
     }
 
-    override fun onFirstItemClick() {
+    override fun onFirstItemClick(folderId: String) {
         findNavController().navigate(R.id.action_exploreFragment_to_demoFreeFragment)
+    }
+
+
+    override fun onOtherItemClick(folderId: String) {
+       // findNavController().navigate(R.id.action_exploreFragment_to_demoFreeFragment)
     }
 
     private fun navigateToFaqFragment() {
@@ -419,7 +440,7 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
     private fun mapFolderToOurContentItem(folder: GetCourseByIdQuery.Folder): OurContentItem {
         val isFreeCourse = folder.name.split(" ")[0].equals("Free", ignoreCase = true)
         val drawableRes = if (isFreeCourse) R.drawable.group_1272628768 else R.drawable.lock
-
+       Log.e("getFolderID ${folder.id}", "courseID"+ folder.course_id)
         return OurContentItem.OtherItem(
             OtherContentItem(
                 R.drawable.frame_1707480918,
