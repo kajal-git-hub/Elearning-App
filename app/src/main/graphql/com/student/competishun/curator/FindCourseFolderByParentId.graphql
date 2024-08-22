@@ -1,0 +1,8 @@
+query FindCourseFolderByParentId($parentFolderId: String!) {
+    findCourseFolderByParentId(parentFolderId: $parentFolderId) {
+        course_id
+        id
+        name
+        parent_folder_id
+    }
+}

@@ -4,6 +4,7 @@ import android.util.Log
 import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.api.Optional
 import com.apollographql.apollo3.exception.ApolloException
+import com.student.competishun.curator.FindCourseFolderByParentIdQuery
 import com.student.competishun.curator.GetAllCourseQuery
 import com.student.competishun.curator.type.FindAllCourseInput
 import com.student.competishun.data.api.Curator
@@ -33,4 +34,24 @@ class CoursesRepository @Inject constructor(@Curator private val apolloClient: A
             null
         }
     }
+
+    suspend fun findCourseFolderByParentId(parentFolderId: String): Result<FindCourseFolderByParentIdQuery.Data> {
+        return try {
+            val response = apolloClient.query(FindCourseFolderByParentIdQuery(parentFolderId)).execute()
+
+            if (response.hasErrors()) {
+                Result.failure(Exception(response.errors?.firstOrNull()?.message))
+            } else {
+                val data = response.data
+                if (data != null) {
+                    Result.success(data)
+                } else {
+                    Result.failure(Exception("No data returned from the server"))
+                }
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
 }
