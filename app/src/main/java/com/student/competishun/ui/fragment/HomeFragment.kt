@@ -216,8 +216,7 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
                 listOurCoursesItem = category
                 adapterOurCourses = OurCoursesAdapter(listOurCoursesItem!!, this)
                 rvOurCourses.adapter = adapterOurCourses
-                rvOurCourses.layoutManager =
-                    GridLayoutManager(context, 3, GridLayoutManager.HORIZONTAL, false)
+                rvOurCourses.layoutManager = GridLayoutManager(context, 3, GridLayoutManager.HORIZONTAL, false)
                 setupDotsIndicator(listOurCoursesItem!!.size, dotsIndicatorOurCourses, 6)
             }
         })

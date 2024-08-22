@@ -15,6 +15,14 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class InstallmentDetailsBottomSheet : BottomSheetDialogFragment() {
 
+    private var firstInstallment: Int = 0
+    private var secondInstallment: Int = 0
+
+    fun setInstallmentData(firstInstallment: Int, secondInstallment: Int) {
+        this.firstInstallment = firstInstallment
+        this.secondInstallment = secondInstallment
+    }
+
     private var _binding: BottomSheetInstallmentDetailsBinding? = null
     private val binding get() = _binding!!
 
@@ -35,9 +43,11 @@ class InstallmentDetailsBottomSheet : BottomSheetDialogFragment() {
         )
 
         val installmentList = listOf(
-            InstallmentModel("1st Installment", "₹16,500", installmentItemList),
-            InstallmentModel("2nd Installment", "₹16,500", installmentItemList),
+            InstallmentModel("1st Installment", "₹$firstInstallment", installmentItemList),
+            InstallmentModel("2nd Installment", "₹$secondInstallment", installmentItemList),
         )
+        var total = firstInstallment?.toInt()?.plus(secondInstallment?.toInt()?:0)
+        binding.dicountPricexp.text = total.toString()
 
         val installmentAdapter = InstallmentAdapter(installmentList)
         binding.rvInstallment.apply {

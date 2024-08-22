@@ -27,10 +27,10 @@ class AllDemoResourcesFree : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        binding.igDemoBackButton.setOnClickListener {
-            findNavController().navigateUp()
-        }
+        binding.igDemoBackButton.setOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed() }
+//        binding.igDemoBackButton.setOnClickListener {
+//            findNavController().navigateUp()
+//        }
 
         val freeItems = listOf(
             FreeDemoItem(R.drawable.frame_1707480717,"About this Course","15 mins"),
