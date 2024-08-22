@@ -213,8 +213,10 @@ class MyCartFragment : Fragment() {
                 when (tab?.position) {
                     0 -> {paymentType = "full"
                         showFullPayment()
+                        binding.clSecondbottomInstallement.visibility = View.GONE
                     }
                     1 ->{ paymentType = "partial"
+                        binding.clSecondbottomInstallement.visibility = View.VISIBLE
                         showPartialPayment()
                     }
                 }

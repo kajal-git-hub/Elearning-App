@@ -29,6 +29,7 @@ import com.student.competishun.ui.fragment.CourseEmptyFragment
 import com.student.competishun.ui.fragment.CourseFragment
 import com.student.competishun.ui.fragment.CoursesFragment
 import com.student.competishun.ui.fragment.ExploreFragment
+import com.student.competishun.ui.fragment.InstallmentDetailsBottomSheet
 import com.student.competishun.ui.fragment.MyCartFragment
 import com.student.competishun.ui.fragment.NEETFragment
 import com.student.competishun.ui.fragment.NotificationFragment
@@ -158,6 +159,7 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
             AddressDetailsFragment::class.java,
             AdditionalDetailsFragment::class.java,
             ResumeCourseFragment::class.java,
+            InstallmentDetailsBottomSheet::class.java,
             CourseFragment::class.java,
             NEETFragment::class.java,
             SubjectContentFragment::class.java,
@@ -183,6 +185,7 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
             PaymentFragment::class.java,
             ExploreFragment::class.java,
             NEETFragment::class.java,
+            InstallmentDetailsBottomSheet::class.java,
             PaymentLoaderFragment::class.java,
             PersonalDetailsFragment::class.java,
             AddressDetailsFragment::class.java,

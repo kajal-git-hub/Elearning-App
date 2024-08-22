@@ -3,639 +3,698 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
+
     <data>
+
         <variable
             name="courseByIDViewModel"
             type="com.student.competishun.ui.viewmodel.GetCourseByIDViewModel" />
     </data>
-<androidx.constraintlayout.widget.ConstraintLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/_white_F6F6FF"
-    tools:context=".ui.fragment.ExploreFragment">
 
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/nested_scroll_view"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_0dp"
+        android:layout_height="match_parent"
         android:background="@color/_white_F6F6FF"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
+        tools:context=".ui.fragment.ExploreFragment">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/nested_scroll_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/_0dp"
             android:background="@color/_white_F6F6FF"
-            >
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/topView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/gradiant_bg"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                android:background="@color/_white_F6F6FF">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/clOverviewTop"
+                    android:id="@+id/topView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="@drawable/gradiant_bg"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent">
-
-                    <ImageView
-                        android:id="@+id/back_iv"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_marginTop="24dp"
-                        android:layout_marginStart="20dp"
-                        android:layout_marginBottom="20dp"
-                        android:src="@drawable/arrow_left_white"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"/>
+                    app:layout_constraintTop_toTopOf="parent">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/overviewButton"
-                        android:layout_width="wrap_content"
+                        android:id="@+id/clOverviewTop"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="20dp"
-                        android:layout_marginTop="18dp"
-                        android:layout_marginEnd="16dp"
-                        android:backgroundTint="@color/white"
-                        android:background="@drawable/overview_button_bg"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent">
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
 
-                        <com.google.android.material.textview.MaterialTextView
+                        <ImageView
+                            android:id="@+id/back_iv"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_marginStart="20dp"
+                            android:layout_marginTop="24dp"
+                            android:layout_marginBottom="20dp"
+                            android:src="@drawable/arrow_left_white"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/overviewButton"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Overview"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            android:drawableStart="@drawable/frame_1707480701"
-                            android:textColor="#2B2829"
-                            app:fontFamily="@font/nunito"
-                            android:layout_marginVertical="8dp"
-                            android:layout_marginHorizontal="8dp"
-                            app:layout_constraintStart_toStartOf="parent"
+                            android:layout_marginTop="18dp"
+                            android:layout_marginEnd="16dp"
+                            android:layout_marginBottom="20dp"
+                            android:background="@drawable/overview_button_bg"
+                            android:backgroundTint="@color/white"
+                            app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintBottom_toBottomOf="parent"/>
+                            app:layout_constraintTop_toTopOf="parent">
+
+                            <com.google.android.material.textview.MaterialTextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginHorizontal="8dp"
+                                android:layout_marginVertical="8dp"
+                                android:drawableStart="@drawable/frame_1707480701"
+                                android:text="Overview"
+                                android:textColor="#2B2829"
+                                android:textSize="16sp"
+                                android:textStyle="bold"
+                                app:fontFamily="@font/nunito"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <ImageView
+                        android:id="@+id/crackItImage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="19dp"
+                        android:src="@drawable/crack_it_text"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/clOverviewTop" />
+
+                    <ImageView
+                        android:id="@+id/teachersImage"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="19dp"
+                        android:layout_marginTop="19dp"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/group_1171276769"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/crackItImage" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/clCourseDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/topView">
+
+                    <ProgressBar
+                        android:id="@+id/progressBar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tvCourseName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:text="@{courseByIDViewModel.courseByID != null ? courseByIDViewModel.courseByID.name + ` ` + courseByIDViewModel.courseByID.academic_year : `Target`}"
+                        android:textColor="#2B2829"
+                        android:textSize="22sp"
+                        android:textStyle="bold"
+                        app:fontFamily="@font/nunito"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tvTag1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:background="@drawable/tag_bg"
+                        android:padding="6dp"
+                        android:text="12th Class"
+                        android:textColor="#5A5555"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        app:fontFamily="@font/nunito"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tvCourseName" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tvTag2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="6dp"
+                        android:layout_marginTop="12dp"
+                        android:background="@drawable/tag_bg"
+                        android:padding="6dp"
+                        android:text="Full-Year"
+                        android:textColor="#5A5555"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        app:fontFamily="@font/nunito"
+                        app:layout_constraintStart_toEndOf="@id/tvTag1"
+                        app:layout_constraintTop_toBottomOf="@id/tvCourseName" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tvTag3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="6dp"
+                        android:layout_marginTop="12dp"
+                        android:background="@drawable/tag_bg"
+                        android:padding="6dp"
+                        android:text="@{`Target ` + (courseByIDViewModel.courseByID != null ? String.valueOf(courseByIDViewModel.courseByID.target_year) : ` `)}"
+                        android:textColor="#5A5555"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        app:fontFamily="@font/nunito"
+                        app:layout_constraintStart_toEndOf="@id/tvTag2"
+                        app:layout_constraintTop_toBottomOf="@id/tvCourseName" />
+
+
+                    <View
+                        android:id="@+id/view2"
+                        android:layout_width="0dp"
+                        android:layout_height="2dp"
+                        android:layout_marginTop="16dp"
+                        android:background="#F1F0FA"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tvTag1" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tvCourseDescription"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:ellipsize="end"
+                        android:lineHeight="21sp"
+                        android:maxLines="2"
+                        android:text="@{courseByIDViewModel.courseByID != null ? courseByIDViewModel.courseByID.description : ` `}"
+                        android:textColor="#726C6C"
+                        android:textSize="14sp"
+                        app:fontFamily="@font/nunito"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/view2" />
+                    <!--                    android:text="For 12th studying &amp; passed students. All class 11th &amp; 12th JEE syllabus is We’ve best teachers that helps you learn topics in excel in exams."-->
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tvReadMore"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:drawableEnd="@drawable/arrow_down"
+                        android:drawablePadding="5dp"
+                        android:text="Read More"
+                        android:textColor="#3E3EF7"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        app:fontFamily="@font/nunito"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tvCourseDescription" />
+
+                    <View
+                        android:id="@+id/view3"
+                        android:layout_width="0dp"
+                        android:layout_height="2dp"
+                        android:layout_marginTop="16dp"
+                        android:background="#F1F0FA"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tvReadMore" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tvStartDate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="17dp"
+                        android:drawableStart="@drawable/clock"
+                        android:drawablePadding="6dp"
+                        android:fontFamily="@font/nunito"
+                        android:text=""
+                        android:textColor="#726C6C"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/view3" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tvEndDate"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:drawableStart="@drawable/clock"
+                        android:drawablePadding="6dp"
+                        android:fontFamily="@font/nunito"
+                        android:text=""
+                        android:textColor="#726C6C"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/view3" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tvLectureNo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:drawableStart="@drawable/video_play__1_"
+                        android:drawablePadding="6dp"
+                        android:fontFamily="@font/nunito"
+                        android:text="Lectures: 56"
+                        android:textColor="#726C6C"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tvStartDate" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tvQuizTests"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:drawableStart="@drawable/document_normal"
+                        android:drawablePadding="6dp"
+                        android:fontFamily="@font/nunito"
+                        android:text="Quiz &amp; Tests: 120"
+                        android:textColor="#726C6C"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="@id/tvEndDate"
+                        app:layout_constraintTop_toBottomOf="@id/tvEndDate" />
+
+                    <View
+                        android:id="@+id/view4"
+                        android:layout_width="0dp"
+                        android:layout_height="2dp"
+                        android:layout_marginTop="16dp"
+                        android:background="#F1F0FA"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tvQuizTests" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/tab_cl"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="@dimen/_16dp"
+                    android:layout_marginTop="@dimen/_10dp"
+                    android:layout_marginEnd="@dimen/_16dp"
+                    android:background="@drawable/tab_bg_explorecourse"
+                    app:layout_constraintTop_toBottomOf="@id/clCourseDescription">
+
+                    <com.google.android.material.tabs.TabLayout
+                        android:id="@+id/tab_tablayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_margin="@dimen/_6dp"
+                        android:background="@color/white"
+                        android:paddingBottom="@dimen/_8dp"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:tabBackground="@drawable/tab_background_selector_explore"
+                        app:tabIndicatorHeight="0dp"
+                        app:tabMode="fixed"
+                        app:tabSelectedTextColor="@color/white"
+                        app:tabTextColor="@color/black" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/clOurContent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:background="#FFFFFF"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tab_cl">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tvOurContent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="18dp"
+                        android:text="Our Content"
+                        android:textColor="#2B2829"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        app:fontFamily="@font/nunito"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tvOurContentNumber"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="18dp"
+                        android:layout_marginEnd="16dp"
+                        android:text="132 Total"
+                        android:textColor="#FF7A28"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        app:fontFamily="@font/nunito"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvOurContent"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:orientation="horizontal"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tvOurContent"
+                        tools:itemCount="2"
+                        tools:listitem="@layout/our_content_item" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tvOurContentSeeMore"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginBottom="20dp"
+                        android:text="View More"
+                        android:textColor="#3E3EF7"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        app:fontFamily="@font/nunito"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/rvOurContent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/clCourseFeatures"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:background="@color/white"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/clOurContent">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tvCourseFeatures"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        android:text="Course Features"
+                        android:textColor="#2B2829"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        app:fontFamily="@font/nunito"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvCourseFeatures"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:orientation="horizontal"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tvCourseFeatures"
+                        tools:itemCount="2"
+                        tools:listitem="@layout/course_item" />
+
+                    <LinearLayout
+                        android:id="@+id/llDotsIndicatorFeatures"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginBottom="16dp"
+                        android:orientation="horizontal"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/rvCourseFeatures"></LinearLayout>
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/clCoursePlanner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:background="@color/white"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/clCourseFeatures">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tvCoursePlanner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        android:text="Course Planner"
+                        android:textColor="#2B2829"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        app:fontFamily="@font/nunito"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tvCoursePlannerDescription"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:lineHeight="21sp"
+                        android:text="For 12th studying &amp; passed students. All class 11th &amp; 12th JEE syllabus is We’ve best teachers that helps you learn topics in excel in exams."
+                        android:textColor="#726C6C"
+                        android:textSize="14sp"
+                        app:fontFamily="@font/nunito"
+                        app:layout_constraintEnd_toEndOf="@+id/clGetPlanner"
+                        app:layout_constraintStart_toStartOf="@+id/tvCoursePlanner"
+                        app:layout_constraintTop_toBottomOf="@+id/tvCoursePlanner" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/clGetPlanner"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="14dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginBottom="16dp"
+                        android:background="@drawable/course_planner_bg"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tvCoursePlannerDescription">
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/tvGetPlanner"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginBottom="8dp"
+                            android:text="Get Planner"
+                            android:textColor="#3E3EF7"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            app:fontFamily="@font/nunito"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginEnd="12dp"
+                            android:layout_marginBottom="10dp"
+                            android:src="@drawable/tray_arrow_down"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <ImageView
-                    android:id="@+id/crackItImage"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="19dp"
-                    android:src="@drawable/crack_it_text"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/clOverviewTop"
-                    app:layout_constraintEnd_toEndOf="parent" />
-
-                <ImageView
-                    android:id="@+id/teachersImage"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/group_1171276769"
-                    android:scaleType="fitXY"
-                    android:layout_marginTop="19dp"
-                    android:layout_marginHorizontal="19dp"
-                    app:layout_constraintTop_toBottomOf="@id/crackItImage"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"/>
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/clCourseDescription"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
-                app:layout_constraintTop_toBottomOf="@id/topView"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent">
-
-                <ProgressBar
-                    android:id="@+id/progressBar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:visibility="gone" />
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/tvCourseName"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="22sp"
-                    android:textStyle="bold"
-                    android:textColor="#2B2829"
-                    app:fontFamily="@font/nunito"
-                    android:layout_marginTop="20dp"
-                    android:text="@{courseByIDViewModel.courseByID != null ? courseByIDViewModel.courseByID.name + ` ` + courseByIDViewModel.courseByID.academic_year : `Target`}"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"/>
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/tvTag1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="12th Class"
-                    android:textSize="12sp"
-                    app:fontFamily="@font/nunito"
-                    android:textStyle="bold"
-                    android:textColor="#5A5555"
-                    android:padding="6dp"
-                    android:background="@drawable/tag_bg"
-                    android:layout_marginTop="12dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tvCourseName"/>
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/tvTag2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="6dp"
-                    android:text="Full-Year"
-                    android:textStyle="bold"
-                    android:textSize="12sp"
-                    android:textColor="#5A5555"
-                    app:fontFamily="@font/nunito"
-                    android:padding="6dp"
-                    android:background="@drawable/tag_bg"
-                    android:layout_marginTop="12dp"
-                    app:layout_constraintStart_toEndOf="@id/tvTag1"
-                    app:layout_constraintTop_toBottomOf="@id/tvCourseName"/>
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/tvTag3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="6dp"
-                    android:text="@{`Target ` + (courseByIDViewModel.courseByID != null ? String.valueOf(courseByIDViewModel.courseByID.target_year) : ` `)}"
-                    app:fontFamily="@font/nunito"
-                    android:textSize="12sp"
-                    android:textStyle="bold"
-                    android:textColor="#5A5555"
-                    android:padding="6dp"
-                    android:background="@drawable/tag_bg"
-                    android:layout_marginTop="12dp"
-                    app:layout_constraintStart_toEndOf="@id/tvTag2"
-                    app:layout_constraintTop_toBottomOf="@id/tvCourseName"/>
-
-
-                <View
-                    android:id="@+id/view2"
-                    android:layout_width="0dp"
-                    android:layout_height="2dp"
-                    android:background="#F1F0FA"
-                    android:layout_marginTop="16dp"
-                    app:layout_constraintTop_toBottomOf="@id/tvTag1"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/tvCourseDescription"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="14sp"
-                    app:fontFamily="@font/nunito"
-                    android:textColor="#726C6C"
-                    android:lineHeight="21sp"
-                    android:maxLines="2"
-                    android:ellipsize="end"
-                    android:layout_marginTop="20dp"
-                    android:text="@{courseByIDViewModel.courseByID != null ? courseByIDViewModel.courseByID.description : ` `}"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/view2"/>
-                <!--                    android:text="For 12th studying &amp; passed students. All class 11th &amp; 12th JEE syllabus is We’ve best teachers that helps you learn topics in excel in exams."-->
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/tvReadMore"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="14sp"
-                    app:fontFamily="@font/nunito"
-                    android:layout_marginTop="10dp"
-                    android:drawablePadding="5dp"
-                    android:drawableEnd="@drawable/arrow_down"
-                    android:textColor="#3E3EF7"
-                    android:textStyle="bold"
-                    android:text="Read More"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tvCourseDescription"/>
-
-                <View
-                    android:id="@+id/view3"
-                    android:layout_width="0dp"
-                    android:layout_height="2dp"
-                    android:background="#F1F0FA"
-                    android:layout_marginTop="16dp"
-                    app:layout_constraintTop_toBottomOf="@id/tvReadMore"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/tvStartDate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=""
-                    android:textColor="#726C6C"
-                    android:textStyle="bold"
-                    android:fontFamily="@font/nunito"
-                    android:drawablePadding="6dp"
-                    android:drawableStart="@drawable/clock"
-                    android:layout_marginTop="17dp"
-                    android:textSize="14sp"
-                    app:layout_constraintTop_toBottomOf="@id/view3"
-                    app:layout_constraintStart_toStartOf="parent"/>
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/tvEndDate"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:text=""
-                    android:textColor="#726C6C"
-                    android:textStyle="bold"
-                    android:fontFamily="@font/nunito"
-                    android:drawablePadding="6dp"
-                    android:drawableStart="@drawable/clock"
-                    android:layout_marginTop="16dp"
-                    android:textSize="14sp"
-                    app:layout_constraintTop_toBottomOf="@id/view3"
-                    app:layout_constraintEnd_toEndOf="parent"/>
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/tvLectureNo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Lectures: 56"
-                    android:textColor="#726C6C"
-                    android:textStyle="bold"
-                    android:fontFamily="@font/nunito"
-                    android:drawablePadding="6dp"
-                    android:drawableStart="@drawable/video_play__1_"
-                    android:layout_marginTop="10dp"
-                    android:textSize="14sp"
-                    app:layout_constraintTop_toBottomOf="@id/tvStartDate"
-                    app:layout_constraintStart_toStartOf="parent"/>
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/tvQuizTests"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Quiz &amp; Tests: 120"
-                    android:textColor="#726C6C"
-                    android:textStyle="bold"
-                    android:fontFamily="@font/nunito"
-                    android:drawablePadding="6dp"
-                    android:drawableStart="@drawable/document_normal"
-                    android:layout_marginTop="10dp"
-                    android:textSize="14sp"
-                    app:layout_constraintTop_toBottomOf="@id/tvEndDate"
-                    app:layout_constraintStart_toStartOf="@id/tvEndDate"/>
-
-                <View
-                    android:id="@+id/view4"
-                    android:layout_width="0dp"
-                    android:layout_height="2dp"
-                    android:background="#F1F0FA"
-                    android:layout_marginTop="16dp"
-                    app:layout_constraintTop_toBottomOf="@id/tvQuizTests"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/tab_cl"
-                android:background="@drawable/tab_bg_explorecourse"
-                android:layout_marginTop="@dimen/_10dp"
-                android:layout_marginStart="@dimen/_16dp"
-                android:layout_marginEnd="@dimen/_16dp"
-                app:layout_constraintTop_toBottomOf="@id/clCourseDescription">
-
-                <com.google.android.material.tabs.TabLayout
-                    android:id="@+id/tab_tablayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:background="@color/white"
-                    app:tabBackground="@drawable/tab_background_selector_explore"
-                    app:tabIndicatorHeight="0dp"
-                    app:tabMode="fixed"
-                    android:layout_margin="@dimen/_6dp"
-                    android:paddingBottom="@dimen/_8dp"
-                    app:tabSelectedTextColor="@color/white"
-                    app:tabTextColor="@color/black"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/clOurContent"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="#FFFFFF"
-                android:layout_marginTop="15dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tab_cl">
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/tvOurContent"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Our Content"
-                    android:textColor="#2B2829"
-                    android:textStyle="bold"
-                    app:fontFamily="@font/nunito"
-                    android:textSize="18sp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="18dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"/>
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/tvOurContentNumber"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="132 Total"
-                    android:textColor="#FF7A28"
-                    android:textStyle="bold"
-                    app:fontFamily="@font/nunito"
-                    android:textSize="14sp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginTop="18dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"/>
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rvOurContent"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginTop="16dp"
-                    tools:itemCount="2"
-                    android:orientation="horizontal"
-                    tools:listitem="@layout/our_content_item"
-                    app:layout_constraintTop_toBottomOf="@id/tvOurContent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"/>
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/tvOurContentSeeMore"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="View More"
-                    android:textColor="#3E3EF7"
-                    android:textStyle="bold"
-                    app:fontFamily="@font/nunito"
-                    android:textSize="14sp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginBottom="20dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/rvOurContent"/>
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/clCourseFeatures"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:layout_marginTop="8dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/clOurContent">
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/tvCourseFeatures"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Course Features"
-                    android:textColor="#2B2829"
-                    android:textStyle="bold"
-                    app:fontFamily="@font/nunito"
-                    android:textSize="18sp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"/>
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rvCourseFeatures"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginTop="16dp"
-                    tools:itemCount="2"
-                    tools:listitem="@layout/course_item"
-                    app:layout_constraintTop_toBottomOf="@id/tvCourseFeatures"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    android:orientation="horizontal" />
-
-                <LinearLayout
-                    android:id="@+id/llDotsIndicatorFeatures"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginBottom="16dp"
-                    app:layout_constraintTop_toBottomOf="@id/rvCourseFeatures"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent">
-                </LinearLayout>
-
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/clCoursePlanner"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:background="@color/white"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/clCourseFeatures">
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/tvCoursePlanner"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Course Planner"
-                    android:textColor="#2B2829"
-                    android:textStyle="bold"
-                    app:fontFamily="@font/nunito"
-                    android:textSize="18sp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"/>
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/tvCoursePlannerDescription"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:text="For 12th studying &amp; passed students. All class 11th &amp; 12th JEE syllabus is We’ve best teachers that helps you learn topics in excel in exams."
-                    android:textColor="#726C6C"
-                    android:lineHeight="21sp"
-                    app:fontFamily="@font/nunito"
-                    android:textSize="14sp"
-                    android:layout_marginTop="12dp"
-                    app:layout_constraintEnd_toEndOf="@+id/clGetPlanner"
-                    app:layout_constraintStart_toStartOf="@+id/tvCoursePlanner"
-                    app:layout_constraintTop_toBottomOf="@+id/tvCoursePlanner"/>
-
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/clGetPlanner"
+                    android:id="@+id/clTeachers"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginStart="14dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginBottom="16dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_marginTop="8dp"
+                    android:background="@color/white"
                     app:layout_constraintEnd_toEndOf="parent"
-                    android:background="@drawable/course_planner_bg"
-                    app:layout_constraintTop_toBottomOf="@id/tvCoursePlannerDescription"
-                    app:layout_constraintStart_toStartOf="parent">
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/clCoursePlanner">
 
                     <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/tvGetPlanner"
+                        android:id="@+id/tvTeachers"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Get Planner"
-                        android:textColor="#3E3EF7"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        android:text="Meet Our Teachers"
+                        android:textColor="#2B2829"
+                        android:textSize="18sp"
                         android:textStyle="bold"
                         app:fontFamily="@font/nunito"
-                        android:textSize="14sp"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="8dp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"/>
-
-                    <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginBottom="10dp"
-                        android:layout_marginEnd="12dp"
-                        android:src="@drawable/tray_arrow_down"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"/>
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/clTeachers"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:background="@color/white"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/clCoursePlanner">
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/tvTeachers"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Meet Our Teachers"
-                    android:textColor="#2B2829"
-                    android:textStyle="bold"
-                    app:fontFamily="@font/nunito"
-                    android:textSize="18sp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"/>
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rvMeetTeachers"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginTop="16dp"
-                    tools:itemCount="2"
-                    tools:listitem="@layout/teacher_item"
-                    app:layout_constraintTop_toBottomOf="@id/tvTeachers"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    android:orientation="horizontal" />
-
-                <LinearLayout
-                    android:id="@+id/llDotsIndicatorteachers"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginBottom="16dp"
-                    app:layout_constraintTop_toBottomOf="@id/rvMeetTeachers"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent">
-                </LinearLayout>
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/clFAQViewAll"
-                android:layout_width="match_parent"
-                android:layout_height="283dp"
-                android:layout_marginTop="20dp"
-                app:layout_constraintTop_toBottomOf="@+id/clTeachers"
-                app:layout_constraintStart_toStartOf="parent"
-                >
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/clFAQViewAllText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="16dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="FAQs"
-                        android:textStyle="bold"
-                        android:fontFamily="@font/nunito"
-                        android:textSize="18sp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvMeetTeachers"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:orientation="horizontal"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tvTeachers"
+                        tools:itemCount="2"
+                        tools:listitem="@layout/teacher_item" />
 
-                    <TextView
-                        android:id="@+id/etfaqViewAll"
+                    <LinearLayout
+                        android:id="@+id/llDotsIndicatorteachers"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginBottom="16dp"
+                        android:orientation="horizontal"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/rvMeetTeachers"></LinearLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/clFAQViewAll"
+                    android:layout_width="match_parent"
+                    android:layout_height="283dp"
+
+                    android:layout_marginTop="20dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/clTeachers">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/clFAQViewAllText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="16dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/nunito"
+                            android:text="FAQs"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+
+                        <TextView
+                            android:id="@+id/etfaqViewAll"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/nunito"
+                            android:text="View All"
+                            android:textColor="#3E3EF7"
+                            android:textSize="16sp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/rvFaqConstraint"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginBottom="@dimen/_16dp"
+                        app:layout_constraintStart_toStartOf="@+id/clFAQViewAllText"
+                        app:layout_constraintTop_toBottomOf="@+id/clFAQViewAllText">
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rvFaq"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginBottom="35dp"
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:listitem="@layout/faq_item" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/clRelatedCourses"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="28dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/clFAQViewAll">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tvRelated"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/nunito"
+                        android:text="Related Courses"
+                        android:textColor="#2B2829"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tvViewAll"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/nunito"
@@ -645,349 +704,286 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvRelatedCourses"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:orientation="horizontal"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        app:layout_constraintTop_toBottomOf="@id/tvRelated"
+                        tools:itemCount="2" />
 
+                    <LinearLayout
+                        android:id="@+id/llDotsRelatedCourse"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginBottom="16dp"
+                        android:orientation="horizontal"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/rvRelatedCourses"></LinearLayout>
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/rvFaqConstraint"
+                    android:id="@+id/clRecommendedCourses"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginBottom="@dimen/_16dp"
-                    app:layout_constraintTop_toBottomOf="@+id/clFAQViewAllText"
-                    app:layout_constraintStart_toStartOf="@+id/clFAQViewAllText"
-                    >
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="28dp"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/clRelatedCourses">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tvRecommendedRevision"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/nunito"
+                        android:text="Recommended Courses"
+                        android:textColor="#2B2829"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tvViewAllRevision"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/nunito"
+                        android:text="View All"
+                        android:textColor="#3E3EF7"
+                        android:textSize="16sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rvFaq"
+                        android:id="@+id/rvRecommendedCourses"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        tools:listitem="@layout/faq_item" />
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:orientation="horizontal"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        app:layout_constraintTop_toBottomOf="@id/tvRecommendedRevision"
+                        tools:itemCount="2" />
+
+                    <LinearLayout
+                        android:id="@+id/llDotsRecommendedCourse"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginBottom="16dp"
+                        android:orientation="horizontal"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/rvRecommendedCourses"></LinearLayout>
+
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/clRelatedCourses"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
-                android:layout_marginTop="28dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/clFAQViewAll">
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/tvRelated"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/nunito"
-                    android:text="Related Courses"
-                    android:textColor="#2B2829"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/tvViewAll"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/nunito"
-                    android:text="View All"
-                    android:textColor="#3E3EF7"
-                    android:textSize="16sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rvRelatedCourses"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/clRecommendedTestCourses"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
-                    tools:itemCount="2"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    app:layout_constraintTop_toBottomOf="@id/tvRelated"
-                    android:orientation="horizontal" />
-
-                <LinearLayout
-                    android:id="@+id/llDotsRelatedCourse"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginBottom="16dp"
-                    app:layout_constraintTop_toBottomOf="@id/rvRelatedCourses"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="28dp"
+                    android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent">
-                </LinearLayout>
+                    app:layout_constraintTop_toBottomOf="@id/clRecommendedCourses">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tvRecommendedTest"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/nunito"
+                        android:text="Recommended Test Series"
+                        android:textColor="#2B2829"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tvViewAllTest"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/nunito"
+                        android:text="View All"
+                        android:textColor="#3E3EF7"
+                        android:textSize="16sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvRecommendedTest"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:orientation="horizontal"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        app:layout_constraintTop_toBottomOf="@id/tvRecommendedTest"
+                        tools:itemCount="2" />
+
+                    <LinearLayout
+                        android:id="@+id/llDotsRecommendedTest"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginBottom="16dp"
+                        android:orientation="horizontal"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/rvRecommendedTest"></LinearLayout>
 
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/clRecommendedCourses"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
-                android:layout_marginTop="28dp"
-                android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/clRelatedCourses">
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/tvRecommendedRevision"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/nunito"
-                    android:text="Recommended Courses"
-                    android:textColor="#2B2829"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/tvViewAllRevision"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/nunito"
-                    android:text="View All"
-                    android:textColor="#3E3EF7"
-                    android:textSize="16sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rvRecommendedCourses"
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
-                    tools:itemCount="2"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    app:layout_constraintTop_toBottomOf="@id/tvRecommendedRevision"
-                    android:orientation="horizontal" />
-
-                <LinearLayout
-                    android:id="@+id/llDotsRecommendedCourse"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginBottom="16dp"
-                    app:layout_constraintTop_toBottomOf="@id/rvRecommendedCourses"
+                    android:layout_height="150dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent">
-                </LinearLayout>
-
+                    app:layout_constraintTop_toBottomOf="@id/clRelatedCourses" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/clRecommendedTestCourses"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
-                android:visibility="gone"
-                android:layout_marginTop="28dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/clRecommendedCourses">
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/tvRecommendedTest"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/nunito"
-                    android:text="Recommended Test Series"
-                    android:textColor="#2B2829"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/tvViewAllTest"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/nunito"
-                    android:text="View All"
-                    android:textColor="#3E3EF7"
-                    android:textSize="16sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rvRecommendedTest"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
-                    tools:itemCount="2"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    app:layout_constraintTop_toBottomOf="@id/tvRecommendedTest"
-                    android:orientation="horizontal" />
-
-                <LinearLayout
-                    android:id="@+id/llDotsRecommendedTest"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginBottom="16dp"
-                    app:layout_constraintTop_toBottomOf="@id/rvRecommendedTest"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent">
-                </LinearLayout>
-
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="150dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/clRelatedCourses" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-
-    </androidx.core.widget.NestedScrollView>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/clExplorePriceBottom"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        </androidx.core.widget.NestedScrollView>
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/clInstallmentOptionView"
+            android:id="@+id/clExplorePriceBottom"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/frame_1353"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <com.google.android.material.textview.MaterialTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:textSize="12sp"
-                android:textColor="#2B2829"
-                android:drawablePadding="10dp"
-                android:text="Installment option available, view details..."
-                android:drawableStart="@drawable/frame_1707480073__2_"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"/>
-
-            <ImageView
-                android:id="@+id/ig_Installment_up"
-                android:layout_width="20dp"
-                android:layout_height="18dp"
-                android:layout_marginEnd="12dp"
-                android:src="@drawable/arrow_up"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"/>
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/clBuyCourseSection"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#FFFFFF"
-            app:layout_constraintTop_toBottomOf="@id/clInstallmentOptionView"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/orgPricexp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="₹44,939 "
-                android:textColor="#726C6C"
-                android:textSize="14sp"
-                app:fontFamily="@font/nunito"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="20dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
-
-            <View
-                android:id="@+id/viewxp"
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:background="#726C6C"
-                app:layout_constraintBottom_toBottomOf="@id/orgPricexp"
-                app:layout_constraintTop_toTopOf="@id/orgPricexp"
-                app:layout_constraintEnd_toEndOf="@id/orgPricexp"
-                app:layout_constraintStart_toStartOf="@id/orgPricexp" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/dicountPricexp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=""
-                android:textColor="#0A0A0B"
-                android:textSize="16sp"
-                app:fontFamily="@font/nunito"
-                android:textStyle="bold"
-                android:layout_marginTop="6dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginBottom="20dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/orgPricexp"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/cl_buynow"
-                android:layout_width="wrap_content"
+                android:id="@+id/clInstallmentOptionView"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp"
-                android:layout_marginEnd="16dp"
-                android:backgroundTint="#3E3EF7"
-                android:background="@drawable/button_bg"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent">
+                android:background="@drawable/frame_1353"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
                 <com.google.android.material.textview.MaterialTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Buy Now"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:drawableStart="@drawable/frame_1707480073__2_"
+                    android:drawablePadding="10dp"
+                    android:text="Installment option available, view details..."
+                    android:textColor="#2B2829"
+                    android:textSize="12sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/ig_Installment_up"
+                    android:layout_width="20dp"
+                    android:layout_height="18dp"
+                    android:layout_marginEnd="12dp"
+                    android:src="@drawable/arrow_up"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/clBuyCourseSection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#FFFFFF"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/clInstallmentOptionView">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/orgPricexp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="20dp"
+                    android:text="₹44,939 "
+                    android:textColor="#726C6C"
+                    android:textSize="14sp"
+                    app:fontFamily="@font/nunito"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <View
+                    android:id="@+id/viewxp"
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:background="#726C6C"
+                    app:layout_constraintBottom_toBottomOf="@id/orgPricexp"
+                    app:layout_constraintEnd_toEndOf="@id/orgPricexp"
+                    app:layout_constraintStart_toStartOf="@id/orgPricexp"
+                    app:layout_constraintTop_toTopOf="@id/orgPricexp" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/dicountPricexp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginBottom="20dp"
+                    android:text=""
+                    android:textColor="#0A0A0B"
                     android:textSize="16sp"
                     android:textStyle="bold"
-                    android:textColor="@color/white"
                     app:fontFamily="@font/nunito"
-                    android:layout_marginVertical="12dp"
-                    android:layout_marginHorizontal="32dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"/>
+                    app:layout_constraintTop_toBottomOf="@id/orgPricexp" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cl_buynow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="20dp"
+                    android:background="@drawable/button_bg"
+                    android:backgroundTint="#3E3EF7"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="32dp"
+                        android:layout_marginVertical="12dp"
+                        android:text="Buy Now"
+                        android:textColor="@color/white"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        app:fontFamily="@font/nunito"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
