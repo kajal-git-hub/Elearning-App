@@ -146,6 +146,8 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
                     val sortedFolderList = folderlist.sortedByDescending {
                         it.name.startsWith("Free")
                     }
+                    binding.tvOurContentNumber.text = folderlist.size.toString() + " Total"
+
                     val coursePrice = courses.price?.toDouble() ?: 0.0
                     val discount = courses.discount?.toDouble() ?: 0.0
                     val installmentPrice = courses.with_installment_price?.toDouble() ?: 0.0
@@ -241,6 +243,7 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
                 }
                 ourContentAdapter.notifyDataSetChanged()
             }
+
 
             val teacherItems = listOf(
                 TeacherItem(R.drawable.teacher_bg, "Alok Srivastav", "Mathematics"),
