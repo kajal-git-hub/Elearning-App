@@ -15,7 +15,6 @@ query AllCourseForStudent($filters: FindAllCourseInputStudent!){
             discount
             course_support_teachers
             course_tags
-            course_validity_start_date
             name
             price
             status

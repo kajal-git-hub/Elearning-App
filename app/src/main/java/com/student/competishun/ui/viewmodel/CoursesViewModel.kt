@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.student.competishun.curator.FindCourseFolderByParentIdQuery
 import com.student.competishun.curator.GetAllCourseQuery
 import com.student.competishun.curator.type.FindAllCourseInput
 import com.student.competishun.data.repository.CoursesRepository
@@ -28,6 +29,9 @@ class CoursesViewModel @Inject constructor(
     private val _courseCount = MutableLiveData<Double?>()
     val courseCount: LiveData<Double?> = _courseCount
 
+    private val _courseFolderResult = MutableLiveData<Result<FindCourseFolderByParentIdQuery.Data>>()
+    val courseFolderResult: LiveData<Result<FindCourseFolderByParentIdQuery.Data>> = _courseFolderResult
+
     fun fetchCourses(filters: FindAllCourseInput) {
         viewModelScope.launch {
             val response = coursesRepository.getCourses(filters)
@@ -36,10 +40,19 @@ class CoursesViewModel @Inject constructor(
         }
     }
 
-    fun getFormattedCourseStartDate(date: String?): String {
-        return helperFunctions.formatCourseDate(date) ?: "No date available"
+
+    fun findCourseFolderByParentId(parentFolderId: String) {
+        viewModelScope.launch {
+            val result = coursesRepository.findCourseFolderByParentId(parentFolderId)
+            _courseFolderResult.value = result
+        }
     }
 
+   //to get date formated
+    fun getFormattedCourseStartDate(date: String?): String {
+        return helperFunctions.formatCourseDate(date) ?: "-"
+    }
+    //to get discount
     fun getDiscountDetails(originalPrice: Double, discountPrice: Double): Pair<Double, Double> {
         return helperFunctions.calculateDiscountDetails(originalPrice, discountPrice)
     }

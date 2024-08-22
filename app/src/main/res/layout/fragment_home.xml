@@ -133,6 +133,16 @@
                             app:spanCount="2"
                             tools:itemCount="6"
                             tools:listitem="@layout/our_courses_item" />
+                        <TextView
+                            android:id="@+id/tvFullName"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:text="@string/full_name"
+                            android:visibility="visible"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/tvOurCourse" />
 
                         <LinearLayout
                             android:id="@+id/llDotsIndicatorOurCourses"

@@ -91,7 +91,6 @@ class NEETFragment : Fragment(), StudentCourseItemClickListener {
                             course_class = course.course_class,
                             course_tags = course.course_tags,
                             banner_image = course.banner_image,
-                            course_validity_start_date = course.course_validity_start_date,
                             status = course.status,
                             category_id = course.category_id,
                             category_name = course.category_name,

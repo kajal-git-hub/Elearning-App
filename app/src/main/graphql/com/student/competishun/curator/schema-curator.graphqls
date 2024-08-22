@@ -1,3 +1,9 @@
+type AllBannersResponseDto {
+  banners: [Banner!]!
+
+  count: Float!
+}
+
 type AllCoursesResponseDto {
   count: Float!
 
@@ -91,7 +97,7 @@ type Course {
 
   course_end_date: DateTime
 
-  course_features: [CourseFeatures!]
+  course_features: [String!]
 
   course_offline_material_shipment: Boolean
 
@@ -101,13 +107,11 @@ type Course {
 
   course_support_teachers: [String!]
 
-  course_tags: [CourseTags!]
+  course_tags: [String!]
 
   course_type: CourseType
 
   course_validity_end_date: DateTime
-
-  course_validity_start_date: DateTime
 
   createdAt: DateTime!
 
@@ -133,7 +137,7 @@ type Course {
 
   id: ID!
 
-  is_recommended: Boolean
+  is_recommended: Boolean!
 
   live_date: DateTime
 
@@ -176,16 +180,6 @@ type CourseCategory {
   updatedAt: DateTime!
 }
 
-enum CourseFeatures {
-  DAILY_LIVE_DOUBT_CLASSES
-
-  QUESTION_PAPER_WITH_SOLUTIONS
-
-  RECORDED_LECTURES
-
-  TEST_QUIZ
-}
-
 type CourseFolder {
   course_id: String!
 
@@ -209,19 +203,71 @@ type CourseFolder {
 }
 
 type CourseFolderContent {
+  course_track: [StudentCourseTrack!]
+
   createdAt: DateTime!
 
   deletedAt: DateTime!
 
   description: String
 
-  file_name: String
+  file_name: String!
 
-  file_url: String!
+  file_name_360p: String
 
-  folder_id: String
+  file_name_720p: String
+
+  file_name_1080p: String
+
+  file_type: FileType!
+
+  file_uploading_status: FileUpload!
+
+  file_url: String
+
+  folder_id: String!
 
   id: ID!
+
+  scheduled_time: DateTime
+
+  updatedAt: DateTime!
+
+  video_duration: Int
+}
+
+type CourseFolderLectureCount {
+  pdfCount: Float!
+
+  videoCount: Float!
+
+  videoDuration: Float!
+}
+
+type CourseFolderResponse {
+  courseFoldersWithCount: [CourseFolderWithCount!]!
+
+  parentCount: CourseFolderLectureCount!
+}
+
+type CourseFolderWithCount {
+  course_id: String!
+
+  createdAt: DateTime!
+
+  dataCount: CourseFolderLectureCount!
+
+  deletedAt: DateTime!
+
+  description: String
+
+  folder_content: [CourseFolderContent!]
+
+  id: ID!
+
+  name: String!
+
+  parent_folder_id: String
 
   scheduled_time: DateTime
 
@@ -230,6 +276,10 @@ type CourseFolderContent {
 
 type CourseLectureCount {
   lecture_count: Float!
+
+  pdf_count: Float!
+
+  total_video_duration: Float!
 }
 
 enum CourseStatus {
@@ -240,14 +290,6 @@ enum CourseStatus {
   PUBLISHED
 
   UNPUBLISH
-}
-
-enum CourseTags {
-  CRASH_COURSE
-
-  IITJEE
-
-  NEET
 }
 
 enum CourseType {
@@ -305,7 +347,7 @@ input CreateCourseInput {
 
   course_end_date: DateTime
 
-  course_features: [CourseFeatures!]
+  course_features: [String!]
 
   course_offline_material_shipment: Boolean
 
@@ -315,13 +357,11 @@ input CreateCourseInput {
 
   course_support_teachers: [ID!]
 
-  course_tags: [CourseTags!]
+  course_tags: [String!]
 
   course_type: CourseType
 
   course_validity_end_date: DateTime
-
-  course_validity_start_date: DateTime
 
   created_by: ID!
 
@@ -367,7 +407,7 @@ input CreateCoursePublishInput {
 
   course_end_date: DateTime
 
-  course_features: [CourseFeatures!]!
+  course_features: [String!]!
 
   course_offline_material_shipment: Boolean!
 
@@ -377,13 +417,11 @@ input CreateCoursePublishInput {
 
   course_support_teachers: [ID!]
 
-  course_tags: [CourseTags!]!
+  course_tags: [String!]!
 
   course_type: CourseType!
 
   course_validity_end_date: DateTime!
-
-  course_validity_start_date: DateTime!
 
   created_by: ID!
 
@@ -437,10 +475,30 @@ enum ExamType {
   NEET
 }
 
-input FileWithDescriptionInput {
-  description: String
+enum FileType {
+  DOCUMENT
 
-  file: Upload!
+  IMAGE
+
+  PDF
+
+  VIDEO
+}
+
+enum FileUpload {
+  COMPLETED
+
+  PROCESSING
+
+  REJECTED
+}
+
+input FindAllBannersInput {
+  limit: Int = 10
+
+  offset: Int = 0
+
+  sortOrder: String
 }
 
 input FindAllCourseInput {
@@ -494,7 +552,7 @@ type Mutation {
 
   createCourseFolder(createCourseFolderInput: CreateCourseFolderInput!): CourseFolder!
 
-  createPublishCourse(banner_image: [Upload!]!, createCoursePublishInput: CreateCoursePublishInput!, id: String, orientation_video: [Upload!]!, planner_pdf: [Upload!]!, video_thumbnail: [Upload!]!): Course!
+  createPublishCourse(banner_image: [Upload!]!, createCoursePublishInput: CreateCoursePublishInput!, id: String, orientation_video: [Upload], planner_pdf: [Upload!]!, video_thumbnail: [Upload]): Course!
 
   deleteCourse(id: String!): Boolean!
 
@@ -504,7 +562,7 @@ type Mutation {
 
   findFolderPath(id: String!): String!
 
-  removeBanner(id: Int!): Banner!
+  removeBanner(id: ID!, mobileBanner: Boolean, webBanner: Boolean): Boolean!
 
   removeCart(id: String!): Boolean!
 
@@ -522,7 +580,7 @@ type Mutation {
 
   updateCourseFolderContent(id: String!, updateFolderContent: UpdateFolderContent!): Boolean!
 
-  uploadFilesInFolder(filesWithDescriptions: [FileWithDescriptionInput!]!, id: String!): Boolean!
+  updateVideoProgress(updateVideoProgress: UpdateVideoProgress!): StudentCourseTrack!
 }
 
 enum OtherRequirements {
@@ -544,9 +602,13 @@ type Query {
 
   findCartItemById(id: ID!): CartResponseDto!
 
+  findCourseFolderAndDataCountByParentId(parentFolderId: String!): CourseFolderResponse!
+
+  findCourseFolderByParentId(parentFolderId: String!): [CourseFolder!]!
+
   findOne(id: String!): Cart!
 
-  getAllBanners: [Banner!]!
+  getAllBanners(filters: FindAllBannersInput): AllBannersResponseDto!
 
   getAllCourse(filters: FindAllCourseInput): AllCoursesResponseDto!
 
@@ -562,9 +624,35 @@ type Query {
 
   getCourseCategoryById(id: String!): CourseCategory!
 
+  getCourseFolderContent(id: String!): CourseFolderContent!
+
   getFolderById(id: String!): CourseFolder!
 
+  getFolderLecturesCount(id: String!): CourseFolderLectureCount!
+
+  getVideoProgress(courseFolderContentId: String!): Float!
+
+  getVideoStreamDataSignedUrl(courseFolderContentId: String!, format: String!): VideoStreamData!
+
   getbannerById(id: String!): Banner!
+}
+
+type StudentCourseTrack {
+  completed_duration: Int!
+
+  course_folder_content_id: String!
+
+  createdAt: DateTime!
+
+  current_duration: Int!
+
+  deletedAt: DateTime!
+
+  id: ID!
+
+  updatedAt: DateTime!
+
+  user_id: String!
 }
 
 input UpdateBannerInput {
@@ -612,7 +700,7 @@ input UpdateCourseInput {
 
   course_end_date: DateTime
 
-  course_features: [CourseFeatures!]
+  course_features: [String!]
 
   course_offline_material_shipment: Boolean
 
@@ -622,13 +710,11 @@ input UpdateCourseInput {
 
   course_support_teachers: [ID!]
 
-  course_tags: [CourseTags!]
+  course_tags: [String!]
 
   course_type: CourseType
 
   course_validity_end_date: DateTime
-
-  course_validity_start_date: DateTime
 
   created_by: ID
 
@@ -671,10 +757,20 @@ input UpdateFolderContent {
   scheduled_time: DateTime
 }
 
+input UpdateVideoProgress {
+  courseFolderContentId: ID!
+
+  currentDuration: Int!
+}
+
 """
 The `Upload` scalar type represents a file upload.
 """
 scalar Upload
+
+type VideoStreamData {
+  signedUrl: String!
+}
 
 schema {
   query: Query
