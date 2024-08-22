@@ -69,10 +69,12 @@ class WelcomeFragment : Fragment() {
                     updateData(data2)
                     currentDataIndex = 1
                 }
+
                 1 -> {
                     updateData(data3)
                     currentDataIndex = 2
                 }
+
                 2 -> {
                     navigateToLoginFragment()
                 }

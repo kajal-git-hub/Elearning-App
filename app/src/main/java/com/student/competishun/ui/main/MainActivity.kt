@@ -11,6 +11,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.student.competishun.R
@@ -19,6 +20,9 @@ import com.student.competishun.databinding.ActivityMainBinding
 import com.student.competishun.ui.viewmodel.MainVM
 import com.student.competishun.utils.SharedPreferencesManager
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.supervisorScope
+import com.apollographql.apollo3.api.Optional
 import com.student.competishun.ui.viewmodel.UserViewModel
 
 @AndroidEntryPoint
@@ -44,15 +48,12 @@ class MainActivity : AppCompatActivity() {
             result.onSuccess { data ->
                 val userDetails = data.getMyDetails
                 if (isUserDataComplete()) {
-                    // User data is complete, navigate to HomeActivity
                     navigateToHomeActivity()
                 } else {
-                    // Store necessary data in SharedPreferencesManager
                     sharedPreferencesManager.mobileNo = userDetails.mobileNumber
                 }
             }.onFailure { exception ->
-                Log.e("mainActivitydetails", exception.message.toString())
-                //  Toast.makeText(this, "Error fetching details: ${exception.message}", Toast.LENGTH_LONG).show()
+                Log.e("mainActivity details", exception.message.toString())
             }
         }
 

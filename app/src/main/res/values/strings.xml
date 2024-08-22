@@ -39,8 +39,8 @@
     //navigation drawer
     <string name="title_download">Downloads</string>
     <string name="title_bookmark">Bookmarks</string>
-    <string name="title_aboutUs">About us</string>
-    <string name="title_iWish">I wish</string>
+    <string name="title_aboutUs">About Us</string>
+    <string name="title_iWish">Contact Us</string>
     <string name="title_termsCondition">Terms and Conditions</string>
     <string name="title_privacy">Privacy Policy</string>
     <string name="title_disclaimer">Disclaimer</string>

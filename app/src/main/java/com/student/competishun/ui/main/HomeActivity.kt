@@ -5,7 +5,6 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.View
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -26,8 +25,11 @@ import com.student.competishun.ui.fragment.AllFaqFragment
 import com.student.competishun.ui.fragment.BottomSheetDescriptionFragment
 import com.student.competishun.ui.fragment.BottomSheetTSizeFragment
 import com.student.competishun.ui.fragment.CourseEmptyFragment
+import com.student.competishun.ui.fragment.CourseFragment
+import com.student.competishun.ui.fragment.CoursesFragment
 import com.student.competishun.ui.fragment.ExploreFragment
 import com.student.competishun.ui.fragment.MyCartFragment
+import com.student.competishun.ui.fragment.NEETFragment
 import com.student.competishun.ui.fragment.NotificationFragment
 import com.student.competishun.ui.fragment.PaymentFailedFragment
 import com.student.competishun.ui.fragment.PaymentFragment
@@ -52,7 +54,6 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -115,7 +116,7 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
 
             override fun onFragmentPaused(fm: FragmentManager, f: Fragment) {
                 super.onFragmentPaused(fm, f)
-                // Optional: Update UI visibility when the fragment is paused, if needed
+                updateUiVisibility(f)
             }
         }, true)
 
@@ -147,6 +148,8 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
             AddressDetailsFragment::class.java,
             AdditionalDetailsFragment::class.java,
             ResumeCourseFragment::class.java,
+            CourseFragment::class.java,
+            NEETFragment::class.java,
             SubjectContentFragment::class.java,
             CourseEmptyFragment::class.java,
             BottomSheetDescriptionFragment::class.java,
@@ -168,11 +171,14 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
             AllFaqFragment::class.java,
             PaymentFragment::class.java,
             ExploreFragment::class.java,
+            NEETFragment::class.java,
             PaymentLoaderFragment::class.java,
             PersonalDetailsFragment::class.java,
             AddressDetailsFragment::class.java,
             AdditionalDetailsFragment::class.java,
             CourseEmptyFragment::class.java,
+            CoursesFragment::class.java,
+            CourseFragment::class.java,
             SubjectContentFragment::class.java,
             ResumeCourseFragment::class.java,
             BottomSheetDescriptionFragment::class.java,
@@ -208,5 +214,12 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
                 navController.navigate(R.id.action_paymentLoaderFragment_to_paymentFragment)
             }
         }, 2000)
+    }
+    override fun onStart() {
+        super.onStart()
+        val currentFragment = supportFragmentManager.findFragmentById(R.id.fragmentNavigation)
+        if (currentFragment != null) {
+            updateUiVisibility(currentFragment)
+        }
     }
 }

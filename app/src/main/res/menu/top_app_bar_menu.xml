@@ -6,7 +6,7 @@
         android:id="@+id/action_notification"
         app:showAsAction="always"
         android:title="Notification"
-        android:icon="@drawable/download"/>
+        android:icon="@drawable/notification_home"/>
 
     <item
         android:id="@+id/action_search"

@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/onWelcomeFragment"
-    >
+    app:startDestination="@id/onWelcomeFragment">
 
     <fragment
         android:id="@+id/loginFragment"
@@ -87,6 +86,21 @@
         <action
             android:id="@+id/action_ReferenceFragment_to_TargetFragment"
             app:destination="@+id/TargetFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/SplashFragment"
+        android:name="com.student.competishun.ui.fragment.SplashFragment"
+        tools:layout="@layout/fragment_splash">
+        <action
+            android:id="@+id/action_SplashFragment_to_HomeActivity"
+            app:destination="@+id/homeActivity" />
+        <action
+            android:id="@+id/action_SplashFragment_to_LoginFragment"
+            app:destination="@+id/loginFragment" />
+        <action
+            android:id="@+id/action_SplashFragment_to_WelcomeFragment"
+            app:destination="@+id/onWelcomeFragment" />
     </fragment>
 
 

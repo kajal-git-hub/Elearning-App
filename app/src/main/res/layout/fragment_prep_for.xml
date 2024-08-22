@@ -196,12 +196,12 @@
                             android:maxLines="100"
                             android:padding="10dp"
                             android:textColor="#898384"
-                            app:layout_constraintBottom_toTopOf="@+id/tvWordCounter"
+                            app:layout_constraintBottom_toTopOf="@+id/tvCharCounter"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <TextView
-                            android:id="@+id/tvWordCounter"
+                            android:id="@+id/tvCharCounter"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="10dp"

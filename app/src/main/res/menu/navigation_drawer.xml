@@ -20,8 +20,8 @@
             android:title="@string/title_aboutUs"/>
 
         <item
-            android:id="@+id/iwish"
-            android:icon="@drawable/iwish"
+            android:id="@+id/ContactUs"
+            android:icon="@drawable/phone_call"
             android:title="@string/title_iWish"/>
 
         <item

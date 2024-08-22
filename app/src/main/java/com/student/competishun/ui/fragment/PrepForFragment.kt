@@ -99,7 +99,7 @@ class PrepForFragment : Fragment() {
 
         startSlideInAnimation()
         updateButtonBackground()
-        setupWordCounter()
+        setupCharacterCounter()
     }
 
     private fun restoreSelectedItem() {
@@ -115,20 +115,21 @@ class PrepForFragment : Fragment() {
         }
     }
 
-    private fun setupWordCounter() {
+    private fun setupCharacterCounter() {
         binding.etContent.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                val wordCount = s.toString().trim().split("\\s+".toRegex()).size
-                binding.tvWordCounter.text = "$wordCount/100"
+                val charCount = s?.length ?: 0
+                binding.tvCharCounter.text = "$charCount/100"
             }
 
             override fun afterTextChanged(s: Editable?) {
             }
         })
     }
+
 
     private fun updateButtonBackground() {
         binding.PrepNext.setBackgroundResource(
