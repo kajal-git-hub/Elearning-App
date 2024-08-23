@@ -166,7 +166,6 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
             CourseEmptyFragment::class.java,
             BottomSheetDescriptionFragment::class.java,
             TopicTypeContentFragment::class.java,
-            ExploreFragment::class.java,
             PaymentFailedFragment::class.java,
             BottomSheetTSizeFragment::class.java,
             BottomSheetPersonalDetailsFragment::class.java,

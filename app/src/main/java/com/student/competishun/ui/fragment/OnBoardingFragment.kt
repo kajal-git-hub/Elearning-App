@@ -12,9 +12,12 @@ import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.apollographql.apollo3.api.Optional
 import com.student.competishun.R
 import com.student.competishun.databinding.FragmentOnBoardingBinding
+import com.student.competishun.gatekeeper.type.UpdateUserInput
 import com.student.competishun.ui.main.MainActivity
+import com.student.competishun.ui.viewmodel.UpdateUserViewModel
 import com.student.competishun.ui.viewmodel.UserViewModel
 import com.student.competishun.utils.SharedPreferencesManager
 import dagger.hilt.android.AndroidEntryPoint
@@ -25,6 +28,7 @@ class OnBoardingFragment : Fragment() {
     private var _binding: FragmentOnBoardingBinding? = null
     private val binding get() = _binding!!
     private lateinit var sharedPreferencesManager: SharedPreferencesManager
+    private val updateUserViewModel: UpdateUserViewModel by viewModels()
     private val userViewModel: UserViewModel by viewModels()
 
     override fun onCreateView(
@@ -70,6 +74,12 @@ class OnBoardingFragment : Fragment() {
         binding.NextOnBoarding.setOnClickListener {
             if (isCurrentStepValid()) {
                 saveNameAndCity()
+                val updateUserInput = UpdateUserInput(
+                    city = Optional.Present(sharedPreferencesManager.city),
+                    fullName = Optional.Present(sharedPreferencesManager.name),
+                    )
+                updateUserViewModel.updateUser(updateUserInput)
+
                 findNavController().navigate(R.id.action_OnBoardingFragment_to_prepForFragment)
             } else {
                 Toast.makeText(context, "Please select a name and city", Toast.LENGTH_SHORT).show()
@@ -80,6 +90,8 @@ class OnBoardingFragment : Fragment() {
     private fun observeUserDetails() {
         userViewModel.userDetails.observe(viewLifecycleOwner) { result ->
             result.onSuccess { data ->
+                Log.d("userDetails",data.getMyDetails.fullName.toString())
+                Log.d("userDetails",data.getMyDetails.userInformation.city.toString())
                 val name = data.getMyDetails.fullName
                 val city = data.getMyDetails.userInformation.city
 

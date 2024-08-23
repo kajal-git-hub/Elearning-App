@@ -62,11 +62,11 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
     private var showMoreOrLess = ObservableField("View More")
     private lateinit var sharedPreferencesManager: SharedPreferencesManager
     var isItemSize = ObservableField(true)
-    private lateinit var courseId:String
-    lateinit var folderlist:List<GetCourseByIdQuery.Folder>
+    private lateinit var courseId: String
+    lateinit var folderlist: List<GetCourseByIdQuery.Folder>
     private lateinit var helperFunctions: HelperFunctions
-    var firstInstallment:Double = 0.0
-    var secondInstallment:Double = 0.0
+    var firstInstallment: Double = 0.0
+    var secondInstallment: Double = 0.0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -83,9 +83,9 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         folderlist = emptyList()
-        helperFunctions= HelperFunctions()
+        helperFunctions = HelperFunctions()
         combinedTabItems = listOf()
-         courseId = arguments?.getString("course_id").toString()
+        courseId = arguments?.getString("course_id").toString()
         sharedPreferencesManager = SharedPreferencesManager(requireContext())
         val items = mutableListOf(
             OurContentItem.FirstItem(
@@ -131,11 +131,11 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
             adapter = ourContentAdapter
         }
 
-        if (courseId.isEmpty()){
-            Log.e("courseEmpty",courseId)
+        if (courseId.isEmpty()) {
+            Log.e("courseEmpty", courseId)
             binding.progressBar.visibility = View.VISIBLE
-        }else {
-            Log.e("courseID",courseId)
+        } else {
+            Log.e("courseID", courseId)
             getCourseByIDViewModel.fetchCourseById(courseId)
             getCourseByIDViewModel.courseByID.observe(viewLifecycleOwner, Observer { courses ->
                 Log.e("listcourses", courses.toString())
@@ -153,19 +153,23 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
                     val installmentPrice = courses.with_installment_price?.toDouble() ?: 0.0
 
                     firstInstallment = ((coursePrice + installmentPrice) - discount) * 0.6
-                     secondInstallment = (coursePrice - firstInstallment)
-                    Log.e("secon $installmentPrice $coursePrice",secondInstallment.toString())
+                    secondInstallment = (coursePrice - firstInstallment)
+                    Log.e("secon $installmentPrice $coursePrice", secondInstallment.toString())
 
                     binding.tvCourseName.text = courses.name
-                    binding.orgPricexp.text = "₹"+courses.price.toString()
-                    val disountprice = ((courses.price?:0)-((courses.discount?:0)))
+                    binding.orgPricexp.text = "₹" + courses.price.toString()
+                    val disountprice = ((courses.price ?: 0) - ((courses.discount ?: 0)))
                     binding.dicountPricexp.text = "₹${disountprice}"
-                    binding.tvStartDate.text = "Starts On: "+helperFunctions.formatCourseDate(courses.course_start_date.toString())
-                    binding.tvEndDate.text ="Expiry Date: "+helperFunctions.formatCourseDate(courses.course_validity_end_date.toString())
+                    binding.tvStartDate.text =
+                        "Starts On: " + helperFunctions.formatCourseDate(courses.course_start_date.toString())
+                    binding.tvEndDate.text =
+                        "Expiry Date: " + helperFunctions.formatCourseDate(courses.course_validity_end_date.toString())
 
-                    val newItems = courses.folder?.map { folder -> mapFolderToOurContentItem(folder) } ?: emptyList()
-                     val freeCourse = courses.folder?.get(0)?.name?.split(" ")?.get(0)
-                    Log.e("getfreecourse",freeCourse.toString())
+                    val newItems =
+                        courses.folder?.map { folder -> mapFolderToOurContentItem(folder) }
+                            ?: emptyList()
+                    val freeCourse = courses.folder?.get(0)?.name?.split(" ")?.get(0)
+                    Log.e("getfreecourse", freeCourse.toString())
 
                     ourContentAdapter.updateItems(sortedFolderList)
                 }
@@ -178,13 +182,18 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
         binding.clBuynow.setOnClickListener {
             // Prepare data for API call
 
-            val cartItems = listOf(CreateCartItemDto(
-                courseId,
-                EntityType.COURSE,1
-            )) // Replace with actual cart items data
+            val cartItems = listOf(
+                CreateCartItemDto(
+                    courseId,
+                    EntityType.COURSE, 1
+                )
+            ) // Replace with actual cart items data
 
             // Call the API to create cart items
-            createCartViewModel.createCartItems(sharedPreferencesManager.userId.toString(), cartItems)
+            createCartViewModel.createCartItems(
+                sharedPreferencesManager.userId.toString(),
+                cartItems
+            )
 
             // Observe the result and navigate based on success or failure
             createCartViewModel.cartItemsResult.observe(viewLifecycleOwner, Observer { result ->
@@ -193,230 +202,234 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
                     findNavController().navigate(R.id.action_exploreFragment_to_myCartFragment)
                 }.onFailure { exception ->
                     // Handle error, e.g., show a toast or dialog
-                    Toast.makeText(requireContext(), "Error creating cart items: ${exception.message}", Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        requireContext(),
+                        "Error creating cart items: ${exception.message}",
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
             })
         }
 
 
-            binding.clInstallmentOptionView.setOnClickListener {
+        binding.clInstallmentOptionView.setOnClickListener {
 
 
-                val bottomSheet = InstallmentDetailsBottomSheet().apply {
-                    setInstallmentData(firstInstallment.toInt(), secondInstallment.toInt())
-                }
-                bottomSheet.show(parentFragmentManager, "InstallmentDetailsBottomSheet")
+            val bottomSheet = InstallmentDetailsBottomSheet().apply {
+                setInstallmentData(firstInstallment.toInt(), secondInstallment.toInt())
             }
+            bottomSheet.show(parentFragmentManager, "InstallmentDetailsBottomSheet")
+        }
 
-            helperFunctions = HelperFunctions()
+        helperFunctions = HelperFunctions()
 
-            binding.tvReadMore.setOnClickListener {
-                if (binding.tvCourseDescription.maxLines == 2) {
-                    binding.tvCourseDescription.maxLines = Integer.MAX_VALUE
-                    binding.tvCourseDescription.ellipsize = null
-                    binding.tvReadMore.text = "Read Less"
-                    binding.tvReadMore.setCompoundDrawablesWithIntrinsicBounds(
-                        0, 0, R.drawable.arrow_up_explore, 0
-                    )
-                } else {
-                    binding.tvCourseDescription.maxLines = 2
-                    binding.tvCourseDescription.ellipsize = android.text.TextUtils.TruncateAt.END
-                    binding.tvReadMore.text = "Read More"
-                    binding.tvReadMore.setCompoundDrawablesWithIntrinsicBounds(
-                        0, 0, R.drawable.arrow_down, 0
-                    )
-                }
-            }
-
-
-
-
-            binding.tvOurContentSeeMore.setOnClickListener {
-                if (showMoreOrLess.get() == "View More") {
-                    showMoreOrLess.set("View Less")
-                    binding.tvOurContentSeeMore.text = "View Less"
-                    isItemSize.set(false) // Show all items
-                } else {
-                    showMoreOrLess.set("View More")
-                    binding.tvOurContentSeeMore.text = "View More"
-                    isItemSize.set(true) // Show only 3 items
-                }
-                ourContentAdapter.notifyDataSetChanged()
-            }
-
-
-            val teacherItems = listOf(
-                TeacherItem(R.drawable.teacher_bg, "Alok Srivastav", "Mathematics"),
-                TeacherItem(R.drawable.teacher_bg, "Alok Srivastav", "Physics"),
-                TeacherItem(R.drawable.teacher_bg, "Alok Srivastav", "Chemistry"),
-            )
-            val teacherAdapter = TeacherAdapter(teacherItems)
-            binding.rvMeetTeachers.apply {
-                layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-                adapter = teacherAdapter
-            }
-
-            val courseFItems = listOf(
-                CourseFItem("Question Papers with Detailed Solution", R.drawable.group_1272628766),
-                CourseFItem("Tests & Quiz with Detailed Analysis", R.drawable.group_1272628766),
-                CourseFItem("Question Papers with Detailed Solution", R.drawable.group_1272628766)
-            )
-
-            val courseFeaturesAdapter = CourseFeaturesAdapter(courseFItems)
-            binding.rvCourseFeatures.apply {
-                layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-                adapter = courseFeaturesAdapter
-            }
-
-            faqItems = listOf(
-                FAQItem("Is this course have live online lectures?"),
-                FAQItem("Is installments option available?"),
-                FAQItem("Do you have refund policy?"),
-                FAQItem("Do you have cancellation policy?"),
-                FAQItem("How can I access the course material?"),
-                FAQItem("What is the duration of the course?"),
-                FAQItem("Are there any prerequisites for the course?")
-            )
-            limitedFaqItems = faqItems.take(4)
-
-            val faqAdapter = FAQAdapter(limitedFaqItems)
-
-            binding.rvFaq.apply {
-                layoutManager = LinearLayoutManager(context)
-                adapter = faqAdapter
-            }
-
-            binding.clFAQViewAllText.findViewById<TextView>(R.id.etfaqViewAll).setOnClickListener {
-                navigateToFaqFragment()
-            }
-
-            val tabLayout = binding.tabTablayout
-            val nestedScrollView = binding.nestedScrollView
-            val clOurContent = binding.clOurContent
-            val clCourseFeatures = binding.clCourseFeatures
-            val clCoursePlanner = binding.clCoursePlanner
-            val clTeachers = binding.clTeachers
-
-            tabLayout.addTab(tabLayout.newTab().setText("Content"))
-            tabLayout.addTab(tabLayout.newTab().setText("Features"))
-            tabLayout.addTab(tabLayout.newTab().setText("Planner"))
-            tabLayout.addTab(tabLayout.newTab().setText("Teachers"))
-
-
-            tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-                override fun onTabSelected(tab: TabLayout.Tab) {
-                    when (tab.position) {
-                        0 -> nestedScrollView.scrollTo(0, clOurContent.top)
-                        1 -> nestedScrollView.scrollTo(0, clCourseFeatures.top)
-                        2 -> nestedScrollView.scrollTo(0, clCoursePlanner.top)
-                        3 -> nestedScrollView.scrollTo(0, clTeachers.top)
-                    }
-                }
-
-                override fun onTabUnselected(tab: TabLayout.Tab) {}
-
-                override fun onTabReselected(tab: TabLayout.Tab) {
-                    when (tab.position) {
-                        0 -> nestedScrollView.scrollTo(0, clOurContent.top)
-                        1 -> nestedScrollView.scrollTo(0, clCourseFeatures.top)
-                        2 -> nestedScrollView.scrollTo(0, clCoursePlanner.top)
-                        3 -> nestedScrollView.scrollTo(0, clTeachers.top)
-                    }
-                }
-            })
-
-            val filters = FindAllCourseInputStudent(
-                Optional.present("Complimentary Course"),
-                Optional.present("IIT-JEE"),
-                Optional.present(null),
-                Optional.present(null)
-            )
-            courseViewModel.fetchCourses(filters)
-
-            viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-                courseViewModel.courses.collect { result ->
-                    result?.onSuccess { data ->
-                        Log.e("gettiStudent", data.toString())
-                        val courses = data.getAllCourseForStudent.courses.map { course ->
-                            AllCourseForStudentQuery.Course(
-                                discount = course.discount,
-                                name = course.name,
-                                course_start_date = course.course_start_date,
-                                course_validity_end_date = course.course_validity_end_date,
-                                price = course.price,
-                                target_year = course.target_year,
-                                id = course.id,
-                                academic_year = course.academic_year,
-                                complementary_course = course.complementary_course,
-                                course_features = course.course_features,
-                                course_class = course.course_class,
-                                course_tags = course.course_tags,
-                                banner_image = course.banner_image,
-                                status = course.status,
-                                category_id = course.category_id,
-                                category_name = course.category_name,
-                                course_primary_teachers = course.course_primary_teachers,
-                                course_support_teachers = course.course_support_teachers,
-                                course_type = course.course_type,
-                                entity_type = course.entity_type,
-                                exam_type = course.exam_type,
-                                planner_description = course.planner_description,
-                                with_installment_price = course.with_installment_price
-                            )
-                        } ?: emptyList()
-                        binding.rvRelatedCourses.adapter =
-                            CourseAdapter(courses, this@ExploreFragment)
-                    }?.onFailure { exception ->
-                        // Handle the failure case
-                        Log.e("gettiStudentfaik", exception.toString())
-                    }
-                }
-            }
-
-
-
-
-                helperFunctions.setupDotsIndicator(
-                    requireContext(),
-                    combinedTabItems.size,
-                    binding.llDotsRelatedCourse
+        binding.tvReadMore.setOnClickListener {
+            if (binding.tvCourseDescription.maxLines == 2) {
+                binding.tvCourseDescription.maxLines = Integer.MAX_VALUE
+                binding.tvCourseDescription.ellipsize = null
+                binding.tvReadMore.text = "Read Less"
+                binding.tvReadMore.setCompoundDrawablesWithIntrinsicBounds(
+                    0, 0, R.drawable.arrow_up_explore, 0
                 )
+            } else {
+                binding.tvCourseDescription.maxLines = 2
+                binding.tvCourseDescription.ellipsize = android.text.TextUtils.TruncateAt.END
+                binding.tvReadMore.text = "Read More"
+                binding.tvReadMore.setCompoundDrawablesWithIntrinsicBounds(
+                    0, 0, R.drawable.arrow_down, 0
+                )
+            }
+        }
 
-            helperFunctions.setupDotsIndicator(
-                requireContext(),
-                teacherItems.size,
-                binding.llDotsIndicatorteachers
-            )
-            helperFunctions.setupDotsIndicator(
-                requireContext(),
-                courseFItems.size,
-                binding.llDotsIndicatorFeatures
-            )
-            binding.rvRelatedCourses.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                    super.onScrolled(recyclerView, dx, dy)
-                    helperFunctions.updateDotsIndicator(recyclerView, binding.llDotsRelatedCourse)
-                }
-            })
 
-            binding.rvMeetTeachers.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                    super.onScrolled(recyclerView, dx, dy)
-                    helperFunctions.updateDotsIndicator(
-                        recyclerView,
-                        binding.llDotsIndicatorteachers
-                    )
+
+
+        binding.tvOurContentSeeMore.setOnClickListener {
+            if (showMoreOrLess.get() == "View More") {
+                showMoreOrLess.set("View Less")
+                binding.tvOurContentSeeMore.text = "View Less"
+                isItemSize.set(false) // Show all items
+            } else {
+                showMoreOrLess.set("View More")
+                binding.tvOurContentSeeMore.text = "View More"
+                isItemSize.set(true) // Show only 3 items
+            }
+            ourContentAdapter.notifyDataSetChanged()
+        }
+
+
+        val teacherItems = listOf(
+            TeacherItem(R.drawable.teacher_bg, "Alok Srivastav", "Mathematics"),
+            TeacherItem(R.drawable.teacher_bg, "Alok Srivastav", "Physics"),
+            TeacherItem(R.drawable.teacher_bg, "Alok Srivastav", "Chemistry"),
+        )
+        val teacherAdapter = TeacherAdapter(teacherItems)
+        binding.rvMeetTeachers.apply {
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            adapter = teacherAdapter
+        }
+
+        val courseFItems = listOf(
+            CourseFItem("Question Papers with Detailed Solution", R.drawable.group_1272628766),
+            CourseFItem("Tests & Quiz with Detailed Analysis", R.drawable.group_1272628766),
+            CourseFItem("Question Papers with Detailed Solution", R.drawable.group_1272628766)
+        )
+
+        val courseFeaturesAdapter = CourseFeaturesAdapter(courseFItems)
+        binding.rvCourseFeatures.apply {
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            adapter = courseFeaturesAdapter
+        }
+
+        faqItems = listOf(
+            FAQItem("Is this course have live online lectures?"),
+            FAQItem("Is installments option available?"),
+            FAQItem("Do you have refund policy?"),
+            FAQItem("Do you have cancellation policy?"),
+            FAQItem("How can I access the course material?"),
+            FAQItem("What is the duration of the course?"),
+            FAQItem("Are there any prerequisites for the course?")
+        )
+        limitedFaqItems = faqItems.take(4)
+
+        val faqAdapter = FAQAdapter(limitedFaqItems)
+
+        binding.rvFaq.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = faqAdapter
+        }
+
+        binding.clFAQViewAllText.findViewById<TextView>(R.id.etfaqViewAll).setOnClickListener {
+            navigateToFaqFragment()
+        }
+
+        val tabLayout = binding.tabTablayout
+        val nestedScrollView = binding.nestedScrollView
+        val clOurContent = binding.clOurContent
+        val clCourseFeatures = binding.clCourseFeatures
+        val clCoursePlanner = binding.clCoursePlanner
+        val clTeachers = binding.clTeachers
+
+        tabLayout.addTab(tabLayout.newTab().setText("Content"))
+        tabLayout.addTab(tabLayout.newTab().setText("Features"))
+        tabLayout.addTab(tabLayout.newTab().setText("Planner"))
+        tabLayout.addTab(tabLayout.newTab().setText("Teachers"))
+
+
+        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab) {
+                when (tab.position) {
+                    0 -> nestedScrollView.scrollTo(0, clOurContent.top)
+                    1 -> nestedScrollView.scrollTo(0, clCourseFeatures.top)
+                    2 -> nestedScrollView.scrollTo(0, clCoursePlanner.top)
+                    3 -> nestedScrollView.scrollTo(0, clTeachers.top)
                 }
-            })
-            binding.rvCourseFeatures.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                    super.onScrolled(recyclerView, dx, dy)
-                    helperFunctions.updateDotsIndicator(
-                        recyclerView,
-                        binding.llDotsIndicatorFeatures
-                    )
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab) {}
+
+            override fun onTabReselected(tab: TabLayout.Tab) {
+                when (tab.position) {
+                    0 -> nestedScrollView.scrollTo(0, clOurContent.top)
+                    1 -> nestedScrollView.scrollTo(0, clCourseFeatures.top)
+                    2 -> nestedScrollView.scrollTo(0, clCoursePlanner.top)
+                    3 -> nestedScrollView.scrollTo(0, clTeachers.top)
                 }
-            })
+            }
+        })
+
+        val filters = FindAllCourseInputStudent(
+            Optional.present("Complimentary Course"),
+            Optional.present("IIT-JEE"),
+            Optional.present(null),
+            Optional.present(null)
+        )
+        courseViewModel.fetchCourses(filters)
+
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            courseViewModel.courses.collect { result ->
+                result?.onSuccess { data ->
+                    Log.e("gettiStudent", data.toString())
+                    val courses = data.getAllCourseForStudent.courses.map { course ->
+                        AllCourseForStudentQuery.Course(
+                            discount = course.discount,
+                            name = course.name,
+                            course_start_date = course.course_start_date,
+                            course_validity_end_date = course.course_validity_end_date,
+                            price = course.price,
+                            target_year = course.target_year,
+                            id = course.id,
+                            academic_year = course.academic_year,
+                            complementary_course = course.complementary_course,
+                            course_features = course.course_features,
+                            course_class = course.course_class,
+                            course_tags = course.course_tags,
+                            banner_image = course.banner_image,
+                            status = course.status,
+                            category_id = course.category_id,
+                            category_name = course.category_name,
+                            course_primary_teachers = course.course_primary_teachers,
+                            course_support_teachers = course.course_support_teachers,
+                            course_type = course.course_type,
+                            entity_type = course.entity_type,
+                            exam_type = course.exam_type,
+                            planner_description = course.planner_description,
+                            with_installment_price = course.with_installment_price
+                        )
+                    } ?: emptyList()
+                    binding.rvRelatedCourses.adapter =
+                        CourseAdapter(courses, this@ExploreFragment)
+                }?.onFailure { exception ->
+                    // Handle the failure case
+                    Log.e("gettiStudentfaik", exception.toString())
+                }
+            }
+        }
+
+
+
+
+        helperFunctions.setupDotsIndicator(
+            requireContext(),
+            combinedTabItems.size,
+            binding.llDotsRelatedCourse
+        )
+
+        helperFunctions.setupDotsIndicator(
+            requireContext(),
+            teacherItems.size,
+            binding.llDotsIndicatorteachers
+        )
+        helperFunctions.setupDotsIndicator(
+            requireContext(),
+            courseFItems.size,
+            binding.llDotsIndicatorFeatures
+        )
+        binding.rvRelatedCourses.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                helperFunctions.updateDotsIndicator(recyclerView, binding.llDotsRelatedCourse)
+            }
+        })
+
+        binding.rvMeetTeachers.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                helperFunctions.updateDotsIndicator(
+                    recyclerView,
+                    binding.llDotsIndicatorteachers
+                )
+            }
+        })
+        binding.rvCourseFeatures.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                helperFunctions.updateDotsIndicator(
+                    recyclerView,
+                    binding.llDotsIndicatorFeatures
+                )
+            }
+        })
 
     }
 
@@ -426,7 +439,7 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
 
 
     override fun onOtherItemClick(folderId: String) {
-       // findNavController().navigate(R.id.action_exploreFragment_to_demoFreeFragment)
+        // findNavController().navigate(R.id.action_exploreFragment_to_demoFreeFragment)
     }
 
     private fun navigateToFaqFragment() {
@@ -443,7 +456,7 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
     private fun mapFolderToOurContentItem(folder: GetCourseByIdQuery.Folder): OurContentItem {
         val isFreeCourse = folder.name.split(" ")[0].equals("Free", ignoreCase = true)
         val drawableRes = if (isFreeCourse) R.drawable.group_1272628768 else R.drawable.lock
-       Log.e("getFolderID ${folder.id}", "courseID"+ folder.course_id)
+        Log.e("getFolderID ${folder.id}", "courseID" + folder.course_id)
         return OurContentItem.OtherItem(
             OtherContentItem(
                 R.drawable.frame_1707480918,
@@ -452,10 +465,11 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
             )
         )
     }
+
     override fun onCourseItemClicked(course: AllCourseForStudentQuery.Course) {
         val bundle = Bundle().apply {
             putString("course_id", course.id)
         }
-        findNavController().navigate(R.id.action_coursesFragment_to_ExploreFragment,bundle)
+        findNavController().navigate(R.id.action_coursesFragment_to_ExploreFragment, bundle)
     }
 }
