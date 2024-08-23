@@ -30,7 +30,9 @@ import com.student.competishun.ui.fragment.CourseFragment
 import com.student.competishun.ui.fragment.CoursesFragment
 import com.student.competishun.ui.fragment.ExploreFragment
 import com.student.competishun.ui.fragment.InstallmentDetailsBottomSheet
+import com.student.competishun.ui.fragment.MediaPlayerFragment
 import com.student.competishun.ui.fragment.MyCartFragment
+import com.student.competishun.ui.fragment.MyPurchaseFragment
 import com.student.competishun.ui.fragment.NEETFragment
 import com.student.competishun.ui.fragment.NotificationFragment
 import com.student.competishun.ui.fragment.PaymentFailedFragment
@@ -158,6 +160,7 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
             PersonalDetailsFragment::class.java,
             AddressDetailsFragment::class.java,
             AdditionalDetailsFragment::class.java,
+            MediaPlayerFragment::class.java,
             ResumeCourseFragment::class.java,
             InstallmentDetailsBottomSheet::class.java,
             CourseFragment::class.java,
@@ -167,6 +170,7 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
             BottomSheetDescriptionFragment::class.java,
             TopicTypeContentFragment::class.java,
             ExploreFragment::class.java,
+            MyPurchaseFragment::class.java,
             PaymentFailedFragment::class.java,
             BottomSheetTSizeFragment::class.java,
             BottomSheetPersonalDetailsFragment::class.java,
@@ -183,8 +187,10 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
             MyCartFragment::class.java,
             AllFaqFragment::class.java,
             PaymentFragment::class.java,
+            MediaPlayerFragment::class.java,
             ExploreFragment::class.java,
             NEETFragment::class.java,
+            MyPurchaseFragment::class.java,
             InstallmentDetailsBottomSheet::class.java,
             PaymentLoaderFragment::class.java,
             PersonalDetailsFragment::class.java,

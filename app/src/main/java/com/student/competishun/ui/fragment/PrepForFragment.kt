@@ -123,6 +123,13 @@ class PrepForFragment : Fragment() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val charCount = s?.length ?: 0
                 binding.tvCharCounter.text = "$charCount/100"
+
+                if (charCount > 100) {
+                    Toast.makeText(requireContext(), "Character limit exceeded. Maximum 100 characters allowed.", Toast.LENGTH_SHORT).show()
+                    val trimmedText = s?.substring(0, 100)
+                    binding.etContent.setText(trimmedText)
+                    binding.etContent.setSelection(trimmedText?.length ?: 0)
+                }
             }
 
             override fun afterTextChanged(s: Editable?) {
