@@ -31,6 +31,7 @@ class AddressDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupCharacterCounter()
+        pinCodeCheck()
 
         binding.etBTUpload.setOnClickListener {
             findNavController().navigate(R.id.AdditionalDetailsFragment)
@@ -66,6 +67,8 @@ class AddressDetailsFragment : Fragment() {
 
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
     }
+
+
     private fun updateButtonState() {
         if (isAddressFormValid()) {
             binding.btnAddressDetails.setBackgroundColor(
@@ -85,6 +88,27 @@ class AddressDetailsFragment : Fragment() {
             binding.btnAddressDetails.isEnabled = false
         }
     }
+
+    private fun pinCodeCheck(){
+        binding.etPincode.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val pincode = s?.toString() ?: ""
+                if (pincode.length > 6) {
+                    Toast.makeText(requireContext(), "Pincode cannot be more than 6 digits.", Toast.LENGTH_SHORT).show()
+                    val trimmedPincode = pincode.substring(0, 6)
+                    binding.etPincode.setText(trimmedPincode)
+                    binding.etPincode.setSelection(trimmedPincode.length)
+                }
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+            }
+        })
+
+    }
     private fun setupCharacterCounter() {
         binding.etContentAddress.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -93,11 +117,20 @@ class AddressDetailsFragment : Fragment() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val charCount = s?.length ?: 0
                 binding.tvCharCounter.text = "$charCount/100"
+
+                if (charCount > 100) {
+                    Toast.makeText(requireContext(), "Character limit exceeded. Maximum 100 characters allowed.", Toast.LENGTH_SHORT).show()
+                    val trimmedText = s?.substring(0, 100)
+                    binding.etContentAddress.setText(trimmedText)
+                    binding.etContentAddress.setSelection(trimmedText?.length ?: 0)
+                }
             }
 
             override fun afterTextChanged(s: Editable?) {
             }
         })
     }
+
+
 
 }
