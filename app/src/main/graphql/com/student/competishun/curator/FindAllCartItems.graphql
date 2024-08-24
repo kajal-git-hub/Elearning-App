@@ -12,6 +12,7 @@ query FindAllCartItems {
             price
             name
             id
+            description
             banner_image
             with_installment_price
             category_id

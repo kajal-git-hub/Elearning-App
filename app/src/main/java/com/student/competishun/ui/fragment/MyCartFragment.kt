@@ -18,6 +18,7 @@ import com.student.competishun.ui.adapter.MyCartAdapter
 import com.student.competishun.ui.viewmodel.CreateCartViewModel
 import androidx.lifecycle.Observer
 import com.apollographql.apollo3.api.or
+import com.bumptech.glide.Glide
 import com.google.android.gms.wallet.PaymentsClient
 import com.google.android.gms.wallet.Wallet
 import com.google.android.gms.wallet.WalletConstants
@@ -28,13 +29,14 @@ import com.student.competishun.curator.FindAllCartItemsQuery
 import com.student.competishun.ui.viewmodel.OrderViewModel
 import com.student.competishun.ui.viewmodel.UserViewModel
 import com.student.competishun.utils.HelperFunctions
+import com.student.competishun.utils.OnCartItemRemovedListener
 import com.student.competishun.utils.SharedPreferencesManager
 import dagger.hilt.android.AndroidEntryPoint
 import org.json.JSONException
 import org.json.JSONObject
 
 @AndroidEntryPoint
-class MyCartFragment : Fragment() {
+class MyCartFragment : Fragment(), OnCartItemRemovedListener {
     private var _binding: FragmentMyCartBinding? = null
     private val orderViewModel: OrderViewModel by viewModels()
     private val userViewModel: UserViewModel by viewModels()
@@ -50,6 +52,7 @@ class MyCartFragment : Fragment() {
     private lateinit var helperFunctions: HelperFunctions
     var instAmountpaid = 0.0
     var fullAmount = 0.0
+    var userId: String = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         paymentsClient = Wallet.getPaymentsClient(
@@ -70,7 +73,7 @@ class MyCartFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        var userId: String = ""
+
         binding.igToolbarBackButton.setOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed()  }
         helperFunctions = HelperFunctions()
         binding.CartTabLayout.visibility = View.GONE
@@ -90,7 +93,7 @@ class MyCartFragment : Fragment() {
         userViewModel.fetchUserDetails()
         Log.e("cartAdaptercartITems","cartItem.toString()")
 
-        cartAdapter = MyCartAdapter(mutableListOf()) { cartItem ->
+        cartAdapter = MyCartAdapter(mutableListOf(),cartViewModel,viewLifecycleOwner,userId,this) { cartItem ->
             Log.e("cartAdaptrcartITems",cartItem.toString())
             handleItemClick(cartItem, userId)
 
@@ -126,7 +129,7 @@ class MyCartFragment : Fragment() {
                     Log.e("coursevalue",course.toString())
                    // instAmountpaid = ((course.price ?: 0) + (course.with_installment_price?:0) - (course.discount?:0))* 0.6
                     CartItem(
-                        profileImageResId = R.drawable.frame_1707480855, // Replace with actual logic for image
+                        profileImageResId = course.banner_image?:"", // Replace with actual logic for image
                         name = course.name,
                         viewDetails = "View Details",
                         forwardDetails = R.drawable.cart_arrow_right,
@@ -140,6 +143,8 @@ class MyCartFragment : Fragment() {
                     )
 
                 }.takeLast(1)
+                binding.tvCartCount.text = "(${cartItems.size})"
+                binding.cartBadge.text = cartItems.size.toString()
                 cartAdapter.updateCartItems(cartItems)
                 originalCartItems = cartItems
                 if (cartItems.isNotEmpty()) {
@@ -159,7 +164,7 @@ class MyCartFragment : Fragment() {
                 }
             }.onFailure { exception ->
                 Log.e("exception in cart",exception.toString())
-                Toast.makeText(requireContext(), exception.message, Toast.LENGTH_SHORT).show()
+               // Toast.makeText(requireContext(), exception.message, Toast.LENGTH_SHORT).show()
             }
         })
 
@@ -231,6 +236,8 @@ class MyCartFragment : Fragment() {
         Log.e("cartitemss",cartItem.price.toString())
 
     }
+
+
 
     private fun showFullPayment() {
         cartAdapter.updateCartItems(originalCartItems)
@@ -319,6 +326,14 @@ class MyCartFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onCartItemRemoved() {
+        binding.tvCartCount.text = "(0)"
+        binding.cartBadge.text = "0"
+        binding.clPaymentSummary.visibility = View.GONE
+        binding.clProccedToPay.visibility = View.GONE
+     //   Toast.makeText(requireContext(), "Cart item removed", Toast.LENGTH_SHORT).show()
     }
 }
 

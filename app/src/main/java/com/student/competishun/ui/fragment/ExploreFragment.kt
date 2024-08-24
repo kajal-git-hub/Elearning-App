@@ -517,8 +517,9 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
 
                 findNavController().navigate(R.id.action_exploreFragment_to_myCartFragment)
             }.onFailure { exception ->
+                Log.e("createCart",exception.message.toString())
                 // Handle error, e.g., show a toast or dialog
-                Toast.makeText(requireContext(), "Error creating cart items: ${exception.message}", Toast.LENGTH_LONG).show()
+                Toast.makeText(requireContext(), "Existing Cart Item", Toast.LENGTH_LONG).show()
             }
         })
 

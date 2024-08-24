@@ -10,3 +10,7 @@ interface OnCourseItemClickListener {
 interface StudentCourseItemClickListener {
     fun onCourseItemClicked(course: AllCourseForStudentQuery.Course)
 }
+
+interface OnCartItemRemovedListener {
+    fun onCartItemRemoved()
+}

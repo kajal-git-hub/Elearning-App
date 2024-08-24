@@ -1,0 +1,3 @@
+mutation RemoveCart($removeCartId: String!) {
+    removeCart(id: $removeCartId)
+}
