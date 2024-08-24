@@ -464,11 +464,11 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
     }
 
     override fun onOtherItemClick(folderId: String,folderName: String) {
-        val bundle = Bundle().apply {
-            putString("folderId", folderId)
-            putString("folderName", folderName)
-        }
-       findNavController().navigate(R.id.action_exploreFragment_to_demoFreeFragment,bundle)
+//        val bundle = Bundle().apply {
+//            putString("folderId", folderId)
+//            putString("folderName", folderName)
+//        }
+//       findNavController().navigate(R.id.action_exploreFragment_to_demoFreeFragment,bundle)
     }
     private fun downloadAndDisplayImage(url: String?, imageView: ImageView) {
         Glide.with(this)

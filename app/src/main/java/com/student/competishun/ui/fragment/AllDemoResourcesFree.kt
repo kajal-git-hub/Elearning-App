@@ -16,6 +16,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.viewModels
+import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.student.competishun.R
@@ -26,6 +27,7 @@ import com.student.competishun.databinding.FragmentAllDemoResourcesFreeBinding
 import com.student.competishun.databinding.FragmentExploreBinding
 import com.student.competishun.ui.viewmodel.CoursesViewModel
 import com.student.competishun.ui.viewmodel.StudentCoursesViewModel
+import com.student.competishun.ui.viewmodel.VideourlViewModel
 import com.student.competishun.utils.HelperFunctions
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -36,7 +38,7 @@ class AllDemoResourcesFree : Fragment() {
     private val binding get() = _binding!!
     private val coursesViewModel: CoursesViewModel by viewModels()
     private lateinit var helperFunctions: HelperFunctions
-
+    private val videourlViewModel: VideourlViewModel by viewModels()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -96,12 +98,11 @@ class AllDemoResourcesFree : Fragment() {
                         // Handle the item click
                         val fileType = freeDemoItem.fileType
                         if (fileType.equals("PDF")){
+
                             helperFunctions.showDownloadDialog(requireContext(),freeDemoItem.fileUrl, freeDemoItem.titleDemo)
                         }else
-                        {
-//                            val url = freeDemoItem.fileUrl
-//                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-//                            startActivity(intent)
+                        {(fileType.equals("VIDEO"))
+                            videoUrlApi(videourlViewModel,folderId.toString())
                         }
                     }
                     binding.rvAllDemoFree.apply {
@@ -116,6 +117,31 @@ class AllDemoResourcesFree : Fragment() {
         }
 
     }
+
+
+    fun videoUrlApi(viewModel:VideourlViewModel,folderID:String){
+
+        viewModel.fetchVideoStreamUrl(folderID, "360p")
+
+        viewModel.videoStreamUrl.observe(viewLifecycleOwner, { signedUrl ->
+            if (signedUrl != null) {
+                val bundle = Bundle().apply {
+                    putString("url", signedUrl)
+                }
+                findNavController().navigate(R.id.mediaFragment,bundle)
+                // Use the signed URL to load your video
+                Log.d("VideoFragment", "Signed URL: $signedUrl")
+                // Example: Load the video with an ExoPlayer or other player
+            } else {
+                // Handle error or null URL
+            }
+        })
+
+        // Fetch the URL with the required parameters
+        viewModel.fetchVideoStreamUrl("cc103251-a66d-41ba-9ff6-9d87d83b60be", "360p")
+    }
+
+
 
     private val downloadCompleteReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
