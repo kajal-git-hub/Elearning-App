@@ -45,15 +45,15 @@
         android:id="@+id/tvRecommendedCourseName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:layout_marginStart="@dimen/_16dp"
+        android:layout_marginTop="16dp"
         android:fontFamily="@font/nunito"
         android:maxLines="2"
         android:text="Prakhar Integrated (Fast \nLane-2) 2024-25"
         android:textColor="#2B2829"
         android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="@+id/tvTarget"
         android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/tvTarget"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -173,10 +173,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:background="@drawable/frame_1353"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvQuizTests"
-        >
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvQuizTests">
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/dicountPrice"
@@ -234,8 +233,8 @@
 
         <ImageView
             android:id="@+id/recemmended_banner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="108dp"
+            android:layout_height="154dp"
             android:paddingLeft="11dp"
             android:paddingTop="29dp"
             android:paddingRight="7dp"
