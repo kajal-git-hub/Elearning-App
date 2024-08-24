@@ -56,7 +56,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
-    StudentCourseItemClickListener {
+    StudentCourseItemClickListener{
 
     private lateinit var binding: FragmentExploreBinding
     private val getCourseByIDViewModel: GetCourseByIDViewModel by viewModels()
@@ -159,6 +159,11 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
             getCourseByIDViewModel.courseByID.observe(viewLifecycleOwner, Observer { courses ->
                 Log.e("listcourses", courses.toString())
                 binding.progressBar.visibility = View.GONE
+                binding.tvQuizTests.text = "Validity: "+ helperFunctions.formatCourseDate(courses?.course_validity_end_date.toString())
+                binding.tvCoursePlannerDescription.text = courses?.planner_description
+                binding.clGetPlanner.setOnClickListener {
+                    helperFunctions.showDownloadDialog(requireContext(),courses?.planner_pdf.toString(), "Planner")
+                }
                 if (courses != null) {
                     Log.e("listcourses", courses.toString())
                     var coursefeature = courses.course_features
@@ -220,35 +225,18 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
         binding.backIv.setOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed() }
         binding.clBuynow.setOnClickListener {
             // Prepare data for API call
+                 createCart(createCartViewModel)
 
-            val cartItems = listOf(CreateCartItemDto(
-                courseId,
-                EntityType.COURSE,1
-            )) // Replace with actual cart items data
-
-            // Call the API to create cart items
-            createCartViewModel.createCartItems(sharedPreferencesManager.userId.toString(), cartItems)
-
-            // Observe the result and navigate based on success or failure
-            createCartViewModel.cartItemsResult.observe(viewLifecycleOwner, Observer { result ->
-                result.onSuccess {
-
-                    findNavController().navigate(R.id.action_exploreFragment_to_myCartFragment)
-                }.onFailure { exception ->
-                    // Handle error, e.g., show a toast or dialog
-                    Toast.makeText(requireContext(), "Error creating cart items: ${exception.message}", Toast.LENGTH_LONG).show()
-                }
-            })
         }
 
 
             binding.clInstallmentOptionView.setOnClickListener {
 
-
-                val bottomSheet = InstallmentDetailsBottomSheet().apply {
-                    setInstallmentData(firstInstallment.toInt(), secondInstallment.toInt())
-                }
-                bottomSheet.show(parentFragmentManager, "InstallmentDetailsBottomSheet")
+                showInstallmentDetailsBottomSheet(firstInstallment.toInt(), secondInstallment.toInt())
+//                val bottomSheet = InstallmentDetailsBottomSheet().apply {
+//                    setInstallmentData(firstInstallment.toInt(), secondInstallment.toInt())
+//                }
+//                bottomSheet.show(parentFragmentManager, "InstallmentDetailsBottomSheet")
             }
 
             helperFunctions = HelperFunctions()
@@ -449,10 +437,11 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
 
     }
 
-    override fun onFirstItemClick(folderId: String,folderName: String) {
+    override fun onFirstItemClick(folderId: String,folderName: String, free:Boolean) {
         val bundle = Bundle().apply {
             putString("folderId", folderId)
             putString("folderName", folderName)
+            putBoolean("free",free)
         }
         findNavController().navigate(R.id.action_exploreFragment_to_demoFreeFragment, bundle)
     }
@@ -464,11 +453,12 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
     }
 
     override fun onOtherItemClick(folderId: String,folderName: String) {
-//        val bundle = Bundle().apply {
-//            putString("folderId", folderId)
-//            putString("folderName", folderName)
-//        }
-//       findNavController().navigate(R.id.action_exploreFragment_to_demoFreeFragment,bundle)
+        val bundle = Bundle().apply {
+            putString("folderId", folderId)
+            putString("folderName", folderName)
+
+        }
+       findNavController().navigate(R.id.action_exploreFragment_to_demoFreeFragment,bundle)
     }
     private fun downloadAndDisplayImage(url: String?, imageView: ImageView) {
         Glide.with(this)
@@ -511,10 +501,49 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
         )
     }
 
+    fun createCart(createCartViewModel: CreateCartViewModel){
+
+        val cartItems = listOf(CreateCartItemDto(
+            courseId,
+            EntityType.COURSE,1
+        )) // Replace with actual cart items data
+
+        // Call the API to create cart items
+        createCartViewModel.createCartItems(sharedPreferencesManager.userId.toString(), cartItems)
+
+        // Observe the result and navigate based on success or failure
+        createCartViewModel.cartItemsResult.observe(viewLifecycleOwner, Observer { result ->
+            result.onSuccess {
+
+                findNavController().navigate(R.id.action_exploreFragment_to_myCartFragment)
+            }.onFailure { exception ->
+                // Handle error, e.g., show a toast or dialog
+                Toast.makeText(requireContext(), "Error creating cart items: ${exception.message}", Toast.LENGTH_LONG).show()
+            }
+        })
+
+    }
+
     override fun onCourseItemClicked(course: AllCourseForStudentQuery.Course) {
         val bundle = Bundle().apply {
             putString("course_id", course.id)
         }
         findNavController().navigate(R.id.action_coursesFragment_to_ExploreFragment,bundle)
     }
+
+    private fun showInstallmentDetailsBottomSheet(firstInstallment: Int, secondInstallment: Int) {
+        val bottomSheet = InstallmentDetailsBottomSheet().apply {
+            setInstallmentData(firstInstallment, secondInstallment)
+            setOnBuyNowClickListener(object : InstallmentDetailsBottomSheet.OnBuyNowClickListener {
+                override fun onBuyNowClicked(totalAmount: Int) {
+                    createCart(cartViewModel)
+//                    Toast.makeText(context, "Buy Now clicked with total: ₹$totalAmount", Toast.LENGTH_SHORT).show()
+                }
+            })
+        }
+        bottomSheet.show(parentFragmentManager, "InstallmentDetailsBottomSheet")
+    }
+
+
+
 }

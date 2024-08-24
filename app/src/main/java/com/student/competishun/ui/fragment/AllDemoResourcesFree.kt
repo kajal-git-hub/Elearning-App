@@ -53,11 +53,16 @@ class AllDemoResourcesFree : Fragment() {
         var folderName = arguments?.getString("folderName")
         binding.igDemoBackButton.setOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed() }
         binding.tvDemoTitle.text = folderName
-        if ((folderName?.split(" ")?.get(0)?.equals("Free") == true)){
+        if (folderName?.split(" ")?.get(0)?.equals("Free") == true) {
             binding.igFreeImage.visibility = View.VISIBLE
-        }else binding.igFreeImage.visibility = View.GONE
+            binding.igFreeImage.setImageResource(R.drawable.frame_1707480952)
+        } else {
+            binding.igFreeImage.visibility = View.VISIBLE
+            binding.igFreeImage.setImageResource(R.drawable.lock)
+        }
 
         val folderId = arguments?.getString("folderId")
+        val free = arguments?.getBoolean("free")
         if (folderId != null) {
             // Trigger the API call
             coursesViewModel.findCourseFolderProgress(folderId)
@@ -94,20 +99,27 @@ class AllDemoResourcesFree : Fragment() {
                         )
                     } ?: emptyList()
 
-                    val freeDemoAdapter = FreeDemoAdapter(freeItems) { freeDemoItem ->
-                        // Handle the item click
-                        val fileType = freeDemoItem.fileType
-                        if (fileType.equals("PDF")){
 
-                            helperFunctions.showDownloadDialog(requireContext(),freeDemoItem.fileUrl, freeDemoItem.titleDemo)
-                        }else
-                        {(fileType.equals("VIDEO"))
-                            videoUrlApi(videourlViewModel,folderId.toString())
+                        val freeDemoAdapter = FreeDemoAdapter(freeItems) { freeDemoItem ->
+                            // Handle the item click
+                            val fileType = freeDemoItem.fileType
+                            if (fileType.equals("PDF")) {
+                             if (free == true)
+                                helperFunctions.showDownloadDialog(
+                                    requireContext(),
+                                    freeDemoItem.fileUrl,
+                                    freeDemoItem.titleDemo
+                                )
+                            } else {
+                                (fileType.equals("VIDEO"))
+                                if (free == true)
+                                videoUrlApi(videourlViewModel, freeDemoItem.id)
+                            }
                         }
-                    }
-                    binding.rvAllDemoFree.apply {
-                        layoutManager = LinearLayoutManager(context)
-                        adapter = freeDemoAdapter
+                        binding.rvAllDemoFree.apply {
+                            layoutManager = LinearLayoutManager(context)
+                            adapter = freeDemoAdapter
+
                     }
                 }
             }.onFailure { error ->
@@ -119,26 +131,24 @@ class AllDemoResourcesFree : Fragment() {
     }
 
 
-    fun videoUrlApi(viewModel:VideourlViewModel,folderID:String){
+    fun videoUrlApi(viewModel:VideourlViewModel,folderContentId:String){
 
-        viewModel.fetchVideoStreamUrl(folderID, "360p")
+        viewModel.fetchVideoStreamUrl(folderContentId, "360p")
 
         viewModel.videoStreamUrl.observe(viewLifecycleOwner, { signedUrl ->
+            Log.d("Videourl", "Signed URL: $signedUrl")
             if (signedUrl != null) {
                 val bundle = Bundle().apply {
                     putString("url", signedUrl)
                 }
                 findNavController().navigate(R.id.mediaFragment,bundle)
                 // Use the signed URL to load your video
-                Log.d("VideoFragment", "Signed URL: $signedUrl")
+
                 // Example: Load the video with an ExoPlayer or other player
             } else {
                 // Handle error or null URL
             }
         })
-
-        // Fetch the URL with the required parameters
-        viewModel.fetchVideoStreamUrl("cc103251-a66d-41ba-9ff6-9d87d83b60be", "360p")
     }
 
 

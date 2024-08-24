@@ -15,10 +15,12 @@ class OurContentAdapter(
     private var folderItems: List<GetCourseByIdQuery.Folder>,
     private val isItemSize: ObservableField<Boolean>,
     private var listener: OnItemClickListener
-) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>()
+{
 
     interface OnItemClickListener {
-        fun onFirstItemClick(folderId: String,folderName: String)
+        fun onFirstItemClick(folderId: String,folderName: String,free:Boolean)
         fun onOtherItemClick(folderId: String,folderName: String)
     }
 
@@ -81,6 +83,7 @@ class OurContentAdapter(
 
             titleTextView.text = item.name
             if (item.name.startsWith("Free")) {
+
                 iconImageView.setImageResource(R.drawable.frame_1707480918)
                 freeBadgeImageView.setImageResource(R.drawable.group_1272628768)
             } else {
@@ -89,7 +92,7 @@ class OurContentAdapter(
             }
 
             itemView.setOnClickListener {
-                listener.onFirstItemClick(item.id,item.name)
+                listener.onFirstItemClick(item.id,item.name,true)
             }
         }
     }

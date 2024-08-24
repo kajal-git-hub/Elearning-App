@@ -1,5 +1,6 @@
 package com.student.competishun.ui.fragment
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,12 +16,21 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class InstallmentDetailsBottomSheet : BottomSheetDialogFragment() {
 
+    interface OnBuyNowClickListener {
+        fun onBuyNowClicked(totalAmount: Int)
+    }
+
     private var firstInstallment: Int = 0
     private var secondInstallment: Int = 0
+    private var listener: OnBuyNowClickListener? = null
 
     fun setInstallmentData(firstInstallment: Int, secondInstallment: Int) {
         this.firstInstallment = firstInstallment
         this.secondInstallment = secondInstallment
+    }
+
+    fun setOnBuyNowClickListener(listener: OnBuyNowClickListener) {
+        this.listener = listener
     }
 
     private var _binding: BottomSheetInstallmentDetailsBinding? = null
@@ -46,18 +56,20 @@ class InstallmentDetailsBottomSheet : BottomSheetDialogFragment() {
             InstallmentModel("1st Installment", "₹$firstInstallment", installmentItemList),
             InstallmentModel("2nd Installment", "₹$secondInstallment", installmentItemList),
         )
-        var total = firstInstallment?.toInt()?.plus(secondInstallment?.toInt()?:0)
+        val total = firstInstallment + secondInstallment
         binding.dicountPricexp.text = total.toString()
-        binding.buyNow.setOnClickListener{
-          dismiss()
+
+        binding.buyNow.setOnClickListener {
+            listener?.onBuyNowClicked(total)
+            dismiss()
         }
+
         val installmentAdapter = InstallmentAdapter(installmentList)
         binding.rvInstallment.apply {
             layoutManager =
                 LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
             adapter = installmentAdapter
         }
-
     }
 
     override fun onDestroyView() {
@@ -65,3 +77,4 @@ class InstallmentDetailsBottomSheet : BottomSheetDialogFragment() {
         _binding = null
     }
 }
+

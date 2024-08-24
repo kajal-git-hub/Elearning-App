@@ -3,6 +3,7 @@ package com.student.competishun.ui.fragment
 import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
 import android.os.Bundle
+import android.util.Log
 import android.view.GestureDetector
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -43,7 +44,7 @@ class MediaPlayerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val url = arguments?.getString("url")
-
+        Log.e("viddeourl",url.toString())
         //initialize exoplayer
         player = ExoPlayer.Builder(requireContext()).build()
         binding.playerView.player = player
