@@ -18,8 +18,8 @@ class OurContentAdapter(
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     interface OnItemClickListener {
-        fun onFirstItemClick(folderId: String)
-        fun onOtherItemClick(folderId: String)
+        fun onFirstItemClick(folderId: String,folderName: String)
+        fun onOtherItemClick(folderId: String,folderName: String)
     }
 
     companion object {
@@ -89,7 +89,7 @@ class OurContentAdapter(
             }
 
             itemView.setOnClickListener {
-                listener.onFirstItemClick(item.id)
+                listener.onFirstItemClick(item.id,item.name)
             }
         }
     }
@@ -105,7 +105,7 @@ class OurContentAdapter(
             lockImage.setImageResource(R.drawable.lock)
 
             itemView.setOnClickListener {
-                listener.onOtherItemClick(item.id)
+                listener.onOtherItemClick(item.id,item.name)
             }
         }
     }

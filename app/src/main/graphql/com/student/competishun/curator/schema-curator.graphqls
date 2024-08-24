@@ -237,11 +237,23 @@ type CourseFolderContent {
 }
 
 type CourseFolderLectureCount {
-  pdfCount: Float!
+  completedDuration: Float
 
-  videoCount: Float!
+  completionPercentage: Float
 
-  videoDuration: Float!
+  folder: CourseFolder
+
+  folderContents: [FolderContentWithCompletion!]
+
+  folderCount: Float
+
+  pdfCount: Float
+
+  subfolderDurations: [SubfolderDuration!]
+
+  videoCount: Float
+
+  videoDuration: Float
 }
 
 type CourseFolderResponse {
@@ -280,6 +292,12 @@ type CourseLectureCount {
   pdf_count: Float!
 
   total_video_duration: Float!
+}
+
+type CourseProgressResponseDto {
+  course: Course!
+
+  progress: CourseFolderLectureCount
 }
 
 enum CourseStatus {
@@ -518,6 +536,8 @@ input FindAllCourseInput {
 
   offset: Int = 0
 
+  search: String
+
   sortOrder: String
 
   target_year: [Int!]
@@ -535,6 +555,12 @@ input FindAllCourseInputStudent {
   offset: Int = 0
 
   sortOrder: String
+}
+
+type FolderContentWithCompletion {
+  content: CourseFolderContent
+
+  videoCompletionPercentage: Float
 }
 
 type Mutation {
@@ -600,11 +626,17 @@ enum OtherRequirements {
 type Query {
   findAllCartItems: [CartResponseDto!]!
 
+  findAllCourseFolderContentByScheduleTime(endDate: DateTime!, startDate: DateTime!): [CourseFolderContent!]!
+
   findCartItemById(id: ID!): CartResponseDto!
 
   findCourseFolderAndDataCountByParentId(parentFolderId: String!): CourseFolderResponse!
 
   findCourseFolderByParentId(parentFolderId: String!): [CourseFolder!]!
+
+  findCourseFolderProgress(id: String!): CourseFolderLectureCount!
+
+  findCourseProgress(id: String!): CourseProgressResponseDto!
 
   findOne(id: String!): Cart!
 
@@ -653,6 +685,24 @@ type StudentCourseTrack {
   updatedAt: DateTime!
 
   user_id: String!
+}
+
+type SubfolderDuration {
+  completedDuration: Float!
+
+  completionPercentage: Float!
+
+  folder: CourseFolder!
+
+  folderContents: [FolderContentWithCompletion!]
+
+  folderCount: Float!
+
+  pdfCount: Float!
+
+  videoCount: Float!
+
+  videoDuration: Float!
 }
 
 input UpdateBannerInput {

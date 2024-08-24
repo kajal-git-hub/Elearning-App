@@ -5,6 +5,7 @@ import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.api.Optional
 import com.apollographql.apollo3.exception.ApolloException
 import com.student.competishun.curator.FindCourseFolderByParentIdQuery
+import com.student.competishun.curator.FindCourseFolderProgressQuery
 import com.student.competishun.curator.GetAllCourseQuery
 import com.student.competishun.curator.type.FindAllCourseInput
 import com.student.competishun.data.api.Curator
@@ -35,9 +36,9 @@ class CoursesRepository @Inject constructor(@Curator private val apolloClient: A
         }
     }
 
-    suspend fun findCourseFolderByParentId(parentFolderId: String): Result<FindCourseFolderByParentIdQuery.Data> {
+    suspend fun findCourseFolderProgress(findCourseFolderProgressId: String): Result<FindCourseFolderProgressQuery.Data> {
         return try {
-            val response = apolloClient.query(FindCourseFolderByParentIdQuery(parentFolderId)).execute()
+            val response = apolloClient.query(FindCourseFolderProgressQuery(findCourseFolderProgressId)).execute()
 
             if (response.hasErrors()) {
                 Result.failure(Exception(response.errors?.firstOrNull()?.message))

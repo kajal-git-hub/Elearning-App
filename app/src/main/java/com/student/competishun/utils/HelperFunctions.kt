@@ -1,8 +1,13 @@
 package com.student.competishun.utils
 
+import android.app.AlertDialog
+import android.app.DownloadManager
 import android.content.Context
+import android.net.Uri
+import android.os.Environment
 import android.widget.ImageView
 import android.widget.LinearLayout
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.student.competishun.R
@@ -74,5 +79,28 @@ class HelperFunctions {
         val roundedRealPriceAfterDiscount = String.format("%.2f", realPriceAfterDiscount).toDouble()
 
         return Pair(roundedDiscountPercentage, roundedRealPriceAfterDiscount)
+    }
+
+     fun downloadPdf(context: Context,fileUrl: String, title: String) {
+         val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+         val request = DownloadManager.Request(Uri.parse(fileUrl))
+             .setTitle(title)
+             .setDescription("Downloading PDF...")
+             .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+             .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "$title.pdf")
+
+         downloadManager.enqueue(request)
+    }
+
+    fun showDownloadDialog(context: Context,fileUrl: String, title: String) {
+        AlertDialog.Builder(context)
+            .setTitle("Download PDF")
+            .setMessage("Do you want to download $title?")
+            .setPositiveButton("Yes") { _, _ ->
+                // Call the helper function to download the PDF
+               downloadPdf(context, fileUrl, title)
+            }
+            .setNegativeButton("No", null)
+            .show()
     }
 }

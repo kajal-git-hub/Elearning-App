@@ -24,6 +24,7 @@ query AllCourseForStudent($filters: FindAllCourseInputStudent!){
             id
             exam_type
             entity_type
+            course_features
         }
     }
 }

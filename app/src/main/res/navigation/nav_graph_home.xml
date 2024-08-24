@@ -87,6 +87,10 @@
         android:name="com.student.competishun.ui.fragment.AllDemoResourcesFree"
         tools:layout="@layout/fragment_all_demo_resources_free">
 
+        <argument
+            android:name="folderId"
+            app:argType="string" />
+
     </fragment>
 
     <fragment

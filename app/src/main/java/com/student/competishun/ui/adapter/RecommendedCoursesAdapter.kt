@@ -1,9 +1,12 @@
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import com.bumptech.glide.request.target.Target
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.google.android.material.textview.MaterialTextView
 import com.student.competishun.R
 import com.student.competishun.curator.GetAllCourseQuery
@@ -32,6 +35,12 @@ class RecommendedCoursesAdapter(
             holder.discount.text = "${discountPercent.toInt()}% off"
             holder.discountPrice.text = "₹$discountPrice"
             holder.originalPrice.text = "₹${course.price}"
+            Glide.with(holder.itemView.context)
+
+                .load(course.banner_image)
+                .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
+                .into(holder.bannerImage)
+
         }
         if(course.course_class.toString() =="TWELFTH_PLUS"){
             holder.recommendedClass.text = "12th+ Class"
@@ -68,5 +77,6 @@ class RecommendedCoursesAdapter(
         val quizCount: TextView = view.findViewById(R.id.tvQuizTests)
         val originalPrice: TextView = view.findViewById(R.id.orgPrice)
         val discountPrice: TextView = view.findViewById(R.id.dicountPrice)
+        val bannerImage:ImageView = view.findViewById(R.id.recemmended_banner)
     }
 }

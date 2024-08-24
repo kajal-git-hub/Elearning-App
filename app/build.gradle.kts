@@ -98,7 +98,6 @@ dependencies {
     implementation (libs.dotsindicator.v50)
     implementation(libs.razorpay.checkout)
     implementation(libs.play.services.wallet)
-
     implementation (libs.github.glide)
 
 

@@ -142,10 +142,35 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
                 binding.progressBar.visibility = View.GONE
                 if (courses != null) {
                     Log.e("listcourses", courses.toString())
+                    var coursefeature = courses.course_features
+                    val courseFItems = coursefeature?.map { feature ->
+                        CourseFItem(
+                            featureText = formatFeatureText(feature),
+                            bottomimage = R.drawable.group_1272628766
+                        )
+                    } ?: emptyList()
+
+                    helperFunctions.setupDotsIndicator(
+                        requireContext(),
+                        courseFItems.size,
+                        binding.llDotsIndicatorFeatures
+                    )
+                    val courseItems = listOf(
+                        CourseFItem("Question Papers with Detailed Solution", R.drawable.group_1272628766),
+                        CourseFItem("Tests & Quiz with Detailed Analysis", R.drawable.group_1272628766),
+                        CourseFItem("Question Papers with Detailed Solution", R.drawable.group_1272628766)
+                    )
+
+                    val courseFeaturesAdapter = CourseFeaturesAdapter(courseFItems)
+                    binding.rvCourseFeatures.apply {
+                        layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+                        adapter = courseFeaturesAdapter
+                    }
                     folderlist = courses.folder ?: emptyList()
                     val sortedFolderList = folderlist.sortedByDescending {
                         it.name.startsWith("Free")
                     }
+
                     binding.tvOurContentNumber.text = folderlist.size.toString() + " Total"
 
                     val coursePrice = courses.price?.toDouble() ?: 0.0
@@ -165,7 +190,7 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
 
                     val newItems = courses.folder?.map { folder -> mapFolderToOurContentItem(folder) } ?: emptyList()
                      val freeCourse = courses.folder?.get(0)?.name?.split(" ")?.get(0)
-                    Log.e("getfreecourse",freeCourse.toString())
+                    Log.e("getFreeCourse",freeCourse.toString())
 
                     ourContentAdapter.updateItems(sortedFolderList)
                 }
@@ -256,17 +281,7 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
                 adapter = teacherAdapter
             }
 
-            val courseFItems = listOf(
-                CourseFItem("Question Papers with Detailed Solution", R.drawable.group_1272628766),
-                CourseFItem("Tests & Quiz with Detailed Analysis", R.drawable.group_1272628766),
-                CourseFItem("Question Papers with Detailed Solution", R.drawable.group_1272628766)
-            )
 
-            val courseFeaturesAdapter = CourseFeaturesAdapter(courseFItems)
-            binding.rvCourseFeatures.apply {
-                layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-                adapter = courseFeaturesAdapter
-            }
 
             faqItems = listOf(
                 FAQItem("Is this course have live online lectures?"),
@@ -387,11 +402,7 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
                 teacherItems.size,
                 binding.llDotsIndicatorteachers
             )
-            helperFunctions.setupDotsIndicator(
-                requireContext(),
-                courseFItems.size,
-                binding.llDotsIndicatorFeatures
-            )
+
             binding.rvRelatedCourses.addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
@@ -420,13 +431,26 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
 
     }
 
-    override fun onFirstItemClick(folderId: String) {
-        findNavController().navigate(R.id.action_exploreFragment_to_demoFreeFragment)
+    override fun onFirstItemClick(folderId: String,folderName: String) {
+        val bundle = Bundle().apply {
+            putString("folderId", folderId)
+            putString("folderName", folderName)
+        }
+        findNavController().navigate(R.id.action_exploreFragment_to_demoFreeFragment, bundle)
     }
 
+    fun formatFeatureText(feature: String): String {
+        return feature
+            .split("_")
+            .joinToString(" ") { it.toLowerCase().capitalize() }
+    }
 
-    override fun onOtherItemClick(folderId: String) {
-       // findNavController().navigate(R.id.action_exploreFragment_to_demoFreeFragment)
+    override fun onOtherItemClick(folderId: String,folderName: String) {
+        val bundle = Bundle().apply {
+            putString("folderId", folderId)
+            putString("folderName", folderName)
+        }
+       findNavController().navigate(R.id.action_exploreFragment_to_demoFreeFragment,bundle)
     }
 
     private fun navigateToFaqFragment() {
@@ -447,8 +471,8 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
         return OurContentItem.OtherItem(
             OtherContentItem(
                 R.drawable.frame_1707480918,
-                folder.name,                 // Use the folder name
-                drawableRes                  // Use the dynamic drawable resource based on condition
+                folder.name,
+                drawableRes
             )
         )
     }
