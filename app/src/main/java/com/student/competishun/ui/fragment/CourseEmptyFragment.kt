@@ -79,6 +79,7 @@ class CourseEmptyFragment : Fragment() {
                 // Handle the list of orders
                 for (order in orders) {
                     binding.clEmptyMyCourse.visibility = View.GONE
+                    binding.rvExploreCourses.visibility = View.VISIBLE
                     Log.d("Order", "Amount Paid: ${order.amountPaid}, Entity ID: ${order.entityId}, Payment Status: ${order.paymentStatus}")
                 }
             } ?: run {
