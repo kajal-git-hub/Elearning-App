@@ -53,14 +53,7 @@ class MediaPlayerFragment : Fragment() {
         player.prepare()
         player.play()
 
-//        // Initialize ZoomLayout
-//        zoomLayout = binding.zoomLayout
-//        zoomLayout.setMinZoom(1f, ZoomApi.TYPE_ZOOM)
-//        zoomLayout.setMaxZoom(3f, ZoomApi.TYPE_ZOOM)
-//        zoomLayout.setOverPinchable(true)
-//        zoomLayout.setZoomEnabled(true)
 
-        // Set up gesture detector for double-click
         gestureDetector = GestureDetector(requireContext(), DoubleTapGestureListener())
 
         // Apply gesture detector to player view

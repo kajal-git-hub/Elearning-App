@@ -1,0 +1,5 @@
+query getVideoStreamDataSignedUrl($courseFolderContentId: String!, $format: String!) {
+    getVideoStreamDataSignedUrl(courseFolderContentId: $courseFolderContentId, format: $format) {
+        signedUrl
+    }
+}
