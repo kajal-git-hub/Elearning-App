@@ -55,10 +55,10 @@ class RecommendedCoursesAdapter(
         }
         holder.targetYear.text = "Target ${course.target_year}"
         holder.startDate.text = "Starts On: "+helperFunctions.formatCourseDate(course.course_start_date.toString())
-        holder.endDate.text = "Expiry Date: "+helperFunctions.formatCourseDate(course.course_validity_end_date.toString())
+        holder.endDate.text = "Expiry Date: "+helperFunctions.formatCourseDate(course.course_end_date.toString())
 
         holder.lectureCount.text = "Lectures: 0"
-        holder.quizCount.text = "Quiz & Tests: 0"
+        holder.quizCount.text = "Validity: "+helperFunctions.formatCourseDate(course.course_validity_end_date.toString())
         holder.itemView.setOnClickListener {
             onItemClick(course)
         }

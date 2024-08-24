@@ -209,7 +209,7 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
                     val disountprice = ((courses.price?:0)-((courses.discount?:0)))
                     binding.dicountPricexp.text = "₹${disountprice}"
                     binding.tvStartDate.text = "Starts On: "+helperFunctions.formatCourseDate(courses.course_start_date.toString())
-                    binding.tvEndDate.text ="Expiry Date: "+helperFunctions.formatCourseDate(courses.course_validity_end_date.toString())
+                    binding.tvEndDate.text ="Expiry Date: "+helperFunctions.formatCourseDate(courses.course_end_date.toString())
 
                     val newItems = courses.folder?.map { folder -> mapFolderToOurContentItem(folder) } ?: emptyList()
                      val freeCourse = courses.folder?.get(0)?.name?.split(" ")?.get(0)
