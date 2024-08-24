@@ -126,7 +126,8 @@ class VerifyOTPFragment : Fragment() {
                 userViewModel.userDetails.observe(viewLifecycleOwner) { userDetailsResult ->
                     userDetailsResult.onSuccess { data ->
                         val userDetails = data.getMyDetails
-                        if (userDetails.fullName?.isNotEmpty() == true) {
+                        if (userDetails.userInformation.city!=null && userDetails.userInformation.reference!=null && userDetails.userInformation.targetYear!=null && userDetails.userInformation.preparingFor!=null && userDetails.fullName!=null) {
+
                             navigateToHomeActivity()
                         } else {
                             // Store necessary data in SharedPreferencesManager

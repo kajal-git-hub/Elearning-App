@@ -170,7 +170,6 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
                     val sortedFolderList = folderlist.sortedByDescending {
                         it.name.startsWith("Free")
                     }
-
                     binding.tvOurContentNumber.text = folderlist.size.toString() + " Total"
 
                     val coursePrice = courses.price?.toDouble() ?: 0.0

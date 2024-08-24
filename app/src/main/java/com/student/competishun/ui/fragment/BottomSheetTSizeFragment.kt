@@ -1,5 +1,6 @@
 package com.student.competishun.ui.fragment
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -58,6 +59,13 @@ class BottomSheetTSizeFragment : BottomSheetDialogFragment() {
 
     fun setOnTSizeSelectedListener(listener: OnTSizeSelectedListener) {
         tSizeSelectedListener = listener
+    }
+
+    override fun onDismiss(dialog: DialogInterface) {
+        super.onDismiss(dialog)
+        (parentFragment as? PersonalDetailsFragment)?.let {
+            it.isBottomSheetShowing = false
+        }
     }
 
     override fun onDestroyView() {
