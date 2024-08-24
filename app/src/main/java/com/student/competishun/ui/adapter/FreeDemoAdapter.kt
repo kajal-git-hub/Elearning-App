@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.student.competishun.R
 import com.student.competishun.data.model.FreeDemoItem
 
-class FreeDemoAdapter(private val demoItemList: List<FreeDemoItem>) :
+class FreeDemoAdapter(private val demoItemList: List<FreeDemoItem>,  private val onItemClick: (FreeDemoItem) -> Unit) :
     RecyclerView.Adapter<FreeDemoAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -20,6 +20,10 @@ class FreeDemoAdapter(private val demoItemList: List<FreeDemoItem>) :
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val courseItem = demoItemList[position]
         holder.bind(courseItem)
+
+        holder.itemView.setOnClickListener {
+            onItemClick(courseItem)
+        }
     }
 
     override fun getItemCount(): Int {

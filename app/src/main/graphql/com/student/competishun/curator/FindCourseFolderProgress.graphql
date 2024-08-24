@@ -1,0 +1,27 @@
+query FindCourseFolderProgress($findCourseFolderProgressId: String!) {
+    findCourseFolderProgress(id: $findCourseFolderProgressId) {
+        completedDuration
+        completionPercentage
+        folder {
+            id
+            name
+            parent_folder_id
+            scheduled_time
+        }
+        folderCount
+        pdfCount
+        videoCount
+        videoDuration
+        folderContents {
+            content {
+                course_track {
+                    completed_duration
+                }
+                file_name
+                file_url
+                file_type
+                id
+            }
+        }
+    }
+}

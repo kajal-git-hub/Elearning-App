@@ -114,7 +114,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 setupNavigation()
-                val token = sharedPreferencesManager.accessToken
+                val token = sharedPreferencesManager.refreshToken
                 Log.e("token ", token.toString())
                 if (token.isNullOrEmpty()) {
                     navController.navigate(R.id.onWelcomeFragment)
