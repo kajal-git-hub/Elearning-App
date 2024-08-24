@@ -1,0 +1,7 @@
+query OrdersByUserIds($userIds: [String!]!) {
+    ordersByUserIds(userIds: $userIds) {
+        amountPaid
+        entityId
+        paymentStatus
+    }
+}

@@ -155,7 +155,11 @@ class VerifyOTPFragment : Fragment() {
     }
 
     private fun navigateToHomeActivity() {
-        startActivity(Intent(requireContext(), HomeActivity::class.java))
+        val userId = sharedPreferencesManager.userId  // Replace with your actual userId
+        val intent = Intent(requireContext(), HomeActivity::class.java).apply {
+            putExtra("userId", userId)
+        }
+        startActivity(intent)
     }
 
     private fun navigateToHome() {

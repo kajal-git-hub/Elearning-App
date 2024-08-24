@@ -47,9 +47,15 @@ input CreatePaymentInput {
 
   status: String!
 
-  transactionId: String
-
   userId: String!
+}
+
+type CustomOrder {
+  amountPaid: Int!
+
+  entityId: String!
+
+  paymentStatus: String!
 }
 
 """
@@ -69,8 +75,6 @@ type Installment {
   id: ID!
 
   installmentNumber: Float!
-
-  installmentStatus: String!
 
   orderId: String!
 
@@ -114,7 +118,11 @@ type Order {
 
   id: ID!
 
+  installments: [Installment!]!
+
   isPaidOnce: Boolean!
+
+  payments: [Payment!]!
 
   rzpOrderId: String
 
@@ -154,23 +162,31 @@ type Payment {
 
   status: String!
 
-  transactionId: String
-
   updatedAt: DateTime!
 
   userId: String!
 }
 
+type PaymentResponse {
+  payments: [Payment!]!
+
+  totalCount: Int!
+}
+
 type Query {
+  findAllPayments(limit: Int!, page: Int! = 1, status: String!): PaymentResponse!
+
   findByInstallment(id: String!): Installment!
 
   findByOrder(id: String!): [Installment!]!
+
+  findSinglePayment(id: String!): Payment!
 
   orderById(id: String!): Order!
 
   orders: [Order!]!
 
-  payment(id: Int!): Payment!
+  ordersByUserIds(userIds: [String!]!): [CustomOrder!]!
 
   paymentsByUser(id: String!): [Payment!]!
 }
@@ -217,8 +233,6 @@ input UpdatePaymentInput {
   rzpOrderId: String
 
   status: String
-
-  transactionId: String
 
   userId: String
 }

@@ -8,6 +8,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,17 +16,23 @@ import androidx.activity.addCallback
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.student.competishun.R
 import com.student.competishun.databinding.FragmentPaymentBinding
 import com.student.competishun.ui.main.HomeActivity
+import com.student.competishun.ui.viewmodel.OrdersViewModel
+import com.student.competishun.ui.viewmodel.UserViewModel
+import com.student.competishun.utils.SharedPreferencesManager
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class PaymentFragment : Fragment() {
-
+    private lateinit var sharedPreferencesManager: SharedPreferencesManager
     private var _binding: FragmentPaymentBinding? = null
     private val binding get() = _binding!!
+    private val ordersViewModel: OrdersViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,7 +59,14 @@ class PaymentFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val binding = binding
+        sharedPreferencesManager = SharedPreferencesManager(requireContext())
+        var userId = arguments?.getString("user_id").toString()
         // Show the GIF first
+        Log.e("userid  $userId: ",sharedPreferencesManager.userId.toString())
+        //  startActivity(Intent(requireContext(), HomeActivity::class.java))
+        if (!sharedPreferencesManager.userId.isNullOrEmpty()) {
+            orderdetails(ordersViewModel,sharedPreferencesManager.userId.toString())
+        }else orderdetails(ordersViewModel,userId)
         binding.paymentTickGif.visibility = View.VISIBLE
 
         // Delay for 2 seconds to show the text
@@ -66,11 +80,33 @@ class PaymentFragment : Fragment() {
         }, 3000)
 
         binding.clStartBottomBar.setOnClickListener{
-          //  startActivity(Intent(requireContext(), HomeActivity::class.java))
+
          findNavController().navigate(R.id.PersonalDetailsFragment)
         }
     }
 
+    fun orderdetails(ordersViewModel: OrdersViewModel,userId:String
+    ){
+        val userIds = listOf(userId)
+        ordersViewModel.fetchOrdersByUserIds(userIds)
+        ordersViewModel.ordersByUserIds.observe(viewLifecycleOwner, Observer { orders ->
+            orders?.let {
+                // Handle the list of orders
+                for (order in orders) {
+                    binding.tvAmount.text = "₹ ${order.amountPaid}"
+                    binding.paymentSuccessText.text = order.paymentStatus
+                    Log.d("Order", "Amount Paid: ${order.amountPaid}, Entity ID: ${order.entityId}, Payment Status: ${order.paymentStatus}")
+                }
+            } ?: run {
+
+                // Handle the case where orders is null
+                Log.e("OrdersFragment", "No orders found")
+            }
+        })
+
+        // Fetch orders by user IDs
+
+    }
     private fun animateLayout() {
         val clTickSuccess = binding.clTickSuccess
         val paymentSuccessText = binding.paymentSuccessText

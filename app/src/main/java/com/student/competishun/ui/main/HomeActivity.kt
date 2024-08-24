@@ -229,10 +229,13 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
 
     private fun navigateToLoaderScreen() {
         navController.navigate(R.id.paymentLoaderFragment)
+        val bundle = Bundle().apply {
+            putString("user_id", sharedPreferencesManager.userId)
+        }
 
         Handler(Looper.getMainLooper()).postDelayed({
             if (navController.currentDestination?.id == R.id.paymentLoaderFragment) {
-                navController.navigate(R.id.action_paymentLoaderFragment_to_paymentFragment)
+                navController.navigate(R.id.action_paymentLoaderFragment_to_paymentFragment,bundle)
             }
         }, 2000)
     }
