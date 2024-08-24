@@ -8,6 +8,7 @@ query GetCourseById($getCourseByIdId: String!) {
         exam_type
         discount
         course_class
+        video_thumbnail
         course_validity_end_date
         course_tags
         course_type

@@ -101,7 +101,6 @@
                     android:id="@+id/iv_bannerExplore"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:src="@{courseByIDViewModel.courseByID.banner_image}"
                     android:scaleType="centerCrop"
                     app:layout_constraintTop_toBottomOf="@+id/topView"
                     app:layout_constraintStart_toStartOf="parent"
@@ -249,7 +248,7 @@
                         android:fontFamily="@font/nunito"
                         android:text=""
                         android:textColor="#726C6C"
-                        android:textSize="14sp"
+                        android:textSize="12sp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/view3" />
@@ -264,7 +263,7 @@
                         android:fontFamily="@font/nunito"
                         android:text=""
                         android:textColor="#726C6C"
-                        android:textSize="14sp"
+                        android:textSize="12sp"
                         android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/view3" />
@@ -279,7 +278,7 @@
                         android:fontFamily="@font/nunito"
                         android:text="Lectures: 0"
                         android:textColor="#726C6C"
-                        android:textSize="14sp"
+                        android:textSize="12sp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/tvStartDate" />
@@ -295,7 +294,7 @@
                         android:visibility="gone"
                         android:text="Quiz &amp; Tests: 0"
                         android:textColor="#726C6C"
-                        android:textSize="14sp"
+                        android:textSize="12sp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="@id/tvEndDate"
                         app:layout_constraintTop_toBottomOf="@id/tvEndDate" />
@@ -306,6 +305,7 @@
                         android:layout_height="2dp"
                         android:layout_marginTop="16dp"
                         android:background="#F1F0FA"
+                        android:visibility="gone"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/tvQuizTests" />

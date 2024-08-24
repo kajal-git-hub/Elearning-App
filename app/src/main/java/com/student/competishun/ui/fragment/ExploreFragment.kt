@@ -1,10 +1,13 @@
 package com.student.competishun.ui.fragment
 
+import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.addCallback
@@ -18,6 +21,10 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.apollographql.apollo3.api.Optional
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.SimpleTarget
+import com.bumptech.glide.request.target.Target
+import com.bumptech.glide.request.transition.Transition
 import com.google.android.material.tabs.TabLayout
 import com.student.competishun.R
 import com.student.competishun.curator.AllCourseForStudentQuery
@@ -82,6 +89,18 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
+        getCourseByIDViewModel.courseByID.observe(viewLifecycleOwner) { course ->
+            course?.let {
+                val imageUrl = it.video_thumbnail
+                Log.d("Course", imageUrl ?: "No URL")
+
+                // Use the new method to download and display the image
+                downloadAndDisplayImage(imageUrl, binding.ivBannerExplore)
+            }
+        }
+
         folderlist = emptyList()
         helperFunctions= HelperFunctions()
         combinedTabItems = listOf()
@@ -451,6 +470,22 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
         }
        findNavController().navigate(R.id.action_exploreFragment_to_demoFreeFragment,bundle)
     }
+    private fun downloadAndDisplayImage(url: String?, imageView: ImageView) {
+        Glide.with(this)
+            .asBitmap()
+            .load(url)
+            .into(object : SimpleTarget<Bitmap>() {
+                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                    imageView.setImageBitmap(resource)
+                }
+
+                override fun onLoadFailed(errorDrawable: Drawable?) {
+                    super.onLoadFailed(errorDrawable)
+//                    imageView.setImageResource(R.drawable.error_image) // Optional: Handle error with a fallback image
+                }
+            })
+    }
+
 
     private fun navigateToFaqFragment() {
         val bundle = Bundle().apply {
@@ -475,6 +510,7 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
             )
         )
     }
+
     override fun onCourseItemClicked(course: AllCourseForStudentQuery.Course) {
         val bundle = Bundle().apply {
             putString("course_id", course.id)
