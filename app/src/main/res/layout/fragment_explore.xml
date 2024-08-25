@@ -107,6 +107,15 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     />
 
+                <VideoView
+                    android:id="@+id/videoView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@+id/topView"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    />
+
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/clCourseDescription"
                     android:layout_width="match_parent"

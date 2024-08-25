@@ -35,8 +35,10 @@ class TopicTypeContentFragment : Fragment() {
                 playIcon = R.drawable.play_video_icon,
                 lecture = "Lecture",
                 lecturerName = "Prof. John Doe",
-                topicName = "Introduction to Android",
-                topicDescription = "This is an introductory course to Android development. You will learn about the basics of Android.",
+                topicName = "Applying Trig Functions to Angles of Rotation",
+                topicDescription = "Relations and Functions: Types of relations and types and relat\n" +
+                        "tions.Relations and Functions: Types of relations and functions, & Inverse trigonometric functions.\n" +
+                        "s and...",
                 progress = 75
             ),
             TopicContentModel(
@@ -44,8 +46,10 @@ class TopicTypeContentFragment : Fragment() {
                 playIcon = R.drawable.play_video_icon,
                 lecture = "Lecture 2",
                 lecturerName = "Prof. Jane Smith",
-                topicName = "Advanced Android",
-                topicDescription = "This course covers advanced topics in Android development, including performance optimization and architecture patterns.",
+                topicName = "Applying Trig Functions to Angles of Rotation",
+                topicDescription = "Relations and Functions: Types of relations and types and relat\n" +
+                        "tions.Relations and Functions: Types of relations and functions, & Inverse trigonometric functions.\n" +
+                        "s and...",
                 progress = 50
             )
         )
