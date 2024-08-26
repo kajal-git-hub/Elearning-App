@@ -516,6 +516,7 @@
                         android:drawableEnd="@drawable/arrow_down"
                         android:drawablePadding="5dp"
                         android:text="Read More"
+                        android:layout_marginBottom="@dimen/_8dp"
                         android:textColor="#3E3EF7"
                         android:textSize="14sp"
                         android:textStyle="bold"
