@@ -8,8 +8,10 @@ import android.os.Environment
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.student.competishun.R
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -30,6 +32,7 @@ class HelperFunctions {
         }
         updateDotsIndicator(null, dotsIndicator)
     }
+
 
 
     fun updateDotsIndicator(recyclerView: RecyclerView?, dotsIndicator: LinearLayout) {

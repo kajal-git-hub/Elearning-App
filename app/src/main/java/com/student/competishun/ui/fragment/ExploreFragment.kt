@@ -103,28 +103,46 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
                 val videoUrl = it.orientation_video
 
                 Log.d("CourseVideoThumbnail", imageUrl ?: "No URL")
-                Log.d("CourseOrientThumbnail", videoUrl ?: "No URL")
+                Log.d("CourseOrientVideo", videoUrl ?: "No URL")
 
                 // Display the image thumbnail
                 downloadAndDisplayImage(imageUrl, binding.ivBannerExplore)
 
                 // Handle ImageView click to play video
                 binding.ivBannerExplore.setOnClickListener {
-                    binding.ivBannerExplore.visibility = View.GONE
-                    binding.videoView.visibility = View.VISIBLE
+                    if (!videoUrl.isNullOrEmpty()) {
+                        binding.ivBannerExplore.visibility = View.GONE
+                        binding.videoView.visibility = View.VISIBLE
 
-                    // Set the video URI and start playing
-                    binding.videoView.setVideoURI(Uri.parse(videoUrl))
-                    binding.videoView.start()
+                        // Set the video URI and start playing
+                        try {
+                            val uri = Uri.parse(videoUrl)
+                            binding.videoView.setVideoURI(uri)
+                            binding.videoView.setOnPreparedListener { mediaPlayer ->
+                                mediaPlayer.start()
+                            }
+                        } catch (e: Exception) {
+                            Log.e("VideoPlayError", "Error setting video URI", e)
+                            binding.ivBannerExplore.visibility = View.VISIBLE
+                            binding.videoView.visibility = View.GONE
+                        }
 
-                    // Set up a listener for when the video completes
-                    binding.videoView.setOnCompletionListener {
-                        binding.videoView.visibility = View.GONE
+                        // Set up a listener for when the video completes
+                        binding.videoView.setOnCompletionListener {
+                            binding.videoView.visibility = View.GONE
+                            binding.ivBannerExplore.visibility = View.VISIBLE
+                        }
+                    } else {
+                        // If videoUrl is empty, make sure ivBannerExplore is visible
                         binding.ivBannerExplore.visibility = View.VISIBLE
+                        binding.videoView.visibility = View.GONE
+                        Log.d("CourseVideoError", "Video URL is empty")
                     }
                 }
             }
         }
+
+
 
         folderlist = emptyList()
         helperFunctions= HelperFunctions()
