@@ -97,6 +97,7 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
             PromoBannerModel(R.drawable.promo_banner_home),
             PromoBannerModel(R.drawable.promo_banner_home),
         )
+
         binding.rvpromobanner.adapter = PromoBannerAdapter(promoBannerList)
         binding.rvpromobanner.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)

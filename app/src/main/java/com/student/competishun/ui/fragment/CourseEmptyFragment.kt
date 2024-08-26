@@ -10,7 +10,9 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.apollographql.apollo3.api.or
 import com.student.competishun.R
+import com.student.competishun.coinkeeper.OrdersByUserIdsQuery
 import com.student.competishun.data.model.ExploreCourse
 import com.student.competishun.databinding.FragmentCourseEmptyBinding
 import com.student.competishun.ui.adapter.ExploreCourseAdapter
@@ -52,32 +54,60 @@ class CourseEmptyFragment : Fragment() {
         if (!sharedPreferencesManager.userId.isNullOrEmpty()) {
             orderdetails(ordersViewModel,sharedPreferencesManager.userId.toString())
         }else orderdetails(ordersViewModel,userId)
-        val exploreCourseList = listOf(
-            ExploreCourse("Prakhar Integrated (Fast Lane-2) 2024-25", "12th class", "Full-Year", "Target 2025", "Ongoing", 10),
-            ExploreCourse("Prakhar Integrated (Fast Lane-2) 2024-25", "Revision", "Full-Year", "Target 2025", "Completed", 100),
-            ExploreCourse("Prakhar Integrated (Fast Lane-2) 2024-25", "Revision", "Full-Year", "Target 2025", "Completed", 100)
 
-        )
-
-
-
-        val adapter = ExploreCourseAdapter(exploreCourseList) { course ->
-            findNavController().navigate(R.id.action_courseEmptyFragment_to_ResumeCourseFragment)
-        }
-
-        binding.rvExploreCourses.adapter = adapter
-        binding.rvExploreCourses.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+//        val exploreCourseList = listOf(
+//            ExploreCourse("Prakhar Integrated (Fast Lane-2) 2024-25", "12th class", "Full-Year", "Target 2025", "Ongoing", 10),
+//            ExploreCourse("Prakhar Integrated (Fast Lane-2) 2024-25", "Revision", "Full-Year", "Target 2025", "Completed", 100),
+//            ExploreCourse("Prakhar Integrated (Fast Lane-2) 2024-25", "Revision", "Full-Year", "Target 2025", "Completed", 100)
+//
+//        )
+//
+//
+//
+//        val adapter = ExploreCourseAdapter(exploreCourseList) { course ->
+//            findNavController().navigate(R.id.action_courseEmptyFragment_to_ResumeCourseFragment)
+//        }
+//
+//        binding.rvExploreCourses.adapter = adapter
+//        binding.rvExploreCourses.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
     }
 
-    fun courseDetails(courseID:String){
-        getCourseByIDViewModel.fetchCourseById(courseID)
+    private fun courseDetails(orders: List<OrdersByUserIdsQuery.OrdersByUserId>) {
+        val courseDetailsList = mutableListOf<ExploreCourse>()
 
-        getCourseByIDViewModel.courseByID.observe(viewLifecycleOwner) { course ->
+        getCourseByIDViewModel.courseByID.observe(viewLifecycleOwner, Observer { course ->
             course?.let {
+                val tag1 = it.course_class?.name.orEmpty()
+                val tag2 = it.category_name.orEmpty()
+                courseDetailsList.add(
+                    ExploreCourse(
+                        it.name,
+                        tag1,
+                        tag2,
+                        "Target ${it.target_year}",
+                        it.status.toString(),
+                        10
+                    )
+                )
 
+               if (courseDetailsList.size == orders.size) {
+                    binding.clEmptyMyCourse.visibility = View.GONE
+                    binding.rvExploreCourses.visibility = View.VISIBLE
+                    val adapter = ExploreCourseAdapter(courseDetailsList) { course ->
+                        findNavController().navigate(R.id.action_courseEmptyFragment_to_ResumeCourseFragment)
+                    }
+                    binding.rvExploreCourses.adapter = adapter
+                    binding.rvExploreCourses.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+                }
             }
+        })
+
+        orders.forEach { order ->
+            getCourseByIDViewModel.fetchCourseById(order.entityId)
         }
     }
+
+
 
     fun orderdetails(ordersViewModel: OrdersViewModel, userId:String
     ){
@@ -88,16 +118,9 @@ class CourseEmptyFragment : Fragment() {
             binding.clEmptyMyCourse.visibility = View.VISIBLE
             binding.welcomeUserTxt.text = "Hello, "+sharedPreferencesManager.name
             orders?.let {
-                // Handle the list of orders
-                for (order in orders) {
-                    val courseID = order.entityId
-                    binding.clEmptyMyCourse.visibility = View.GONE
-                    binding.rvExploreCourses.visibility = View.VISIBLE
-                    Log.d("Order", "Amount Paid: ${order.amountPaid}, Entity ID: ${order.entityId}, Payment Status: ${order.paymentStatus}")
-                }
+                courseDetails(orders)
             } ?: run {
                 binding.clEmptyMyCourse.visibility = View.VISIBLE
-                // Handle the case where orders is null
                 Log.e("courseEmpty", "No orders found")
             }
         })
