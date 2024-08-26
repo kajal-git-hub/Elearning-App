@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.addCallback
 import com.student.competishun.R
 import com.student.competishun.databinding.FragmentOnBoardingBinding
 import com.student.competishun.databinding.FragmentProfileBinding
@@ -30,6 +31,9 @@ class ProfileFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        binding.etProfileHelp.setOnClickListener {
+            requireActivity().onBackPressedDispatcher.onBackPressed()
+        }
         super.onViewCreated(view, savedInstanceState)
 
     }

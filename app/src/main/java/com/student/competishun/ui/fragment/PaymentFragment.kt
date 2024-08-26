@@ -19,9 +19,13 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.student.competishun.R
+import com.student.competishun.data.model.CourseFItem
 import com.student.competishun.databinding.FragmentPaymentBinding
+import com.student.competishun.ui.adapter.CourseFeaturesAdapter
 import com.student.competishun.ui.main.HomeActivity
+import com.student.competishun.ui.viewmodel.GetCourseByIDViewModel
 import com.student.competishun.ui.viewmodel.OrdersViewModel
 import com.student.competishun.ui.viewmodel.UserViewModel
 import com.student.competishun.utils.SharedPreferencesManager
@@ -33,7 +37,7 @@ class PaymentFragment : Fragment() {
     private var _binding: FragmentPaymentBinding? = null
     private val binding get() = _binding!!
     private val ordersViewModel: OrdersViewModel by viewModels()
-
+    private val getCourseByIDViewModel: GetCourseByIDViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -60,7 +64,7 @@ class PaymentFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val binding = binding
         sharedPreferencesManager = SharedPreferencesManager(requireContext())
-        var userId = arguments?.getString("user_id").toString()
+        var userId = arguments?.getString("userId").toString()
         // Show the GIF first
         Log.e("userid  $userId: ",sharedPreferencesManager.userId.toString())
         //  startActivity(Intent(requireContext(), HomeActivity::class.java))
@@ -93,8 +97,8 @@ class PaymentFragment : Fragment() {
             orders?.let {
                 // Handle the list of orders
                 for (order in orders) {
-                    binding.tvAmount.text = "₹ ${order.amountPaid}"
-                    binding.paymentSuccessText.text = order.paymentStatus
+                    binding.tvAmount.text = "₹ ${order.amountPaid/100}"
+                    binding.paymentSuccessText.text = order.paymentStatus + "Successfully"
                     Log.d("Order", "Amount Paid: ${order.amountPaid}, Entity ID: ${order.entityId}, Payment Status: ${order.paymentStatus}")
                 }
             } ?: run {
@@ -147,6 +151,20 @@ class PaymentFragment : Fragment() {
         })
 
         animatorSet.start()
+    }
+
+    private fun observeCourseById(entityId:String) {
+
+        getCourseByIDViewModel.fetchCourseById(entityId)
+        getCourseByIDViewModel.courseByID.observe(viewLifecycleOwner, Observer { courses ->
+            Log.e("listcourses", courses.toString())
+
+            if (courses != null) {
+                Log.e("listcourses", courses.toString())
+                val coursefeature = courses.course_features
+                // Do something with course features
+            }
+        })
     }
 
     override fun onDestroyView() {

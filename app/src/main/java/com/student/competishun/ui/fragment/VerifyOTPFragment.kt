@@ -128,7 +128,7 @@ class VerifyOTPFragment : Fragment() {
                         val userDetails = data.getMyDetails
                         if (userDetails.userInformation.city!=null && userDetails.userInformation.reference!=null && userDetails.userInformation.targetYear!=null && userDetails.userInformation.preparingFor!=null && userDetails.fullName!=null) {
 
-                            navigateToHomeActivity()
+                            navigateToHomeActivity(userDetails.userInformation.id)
                         } else {
                             // Store necessary data in SharedPreferencesManager
                             sharedPreferencesManager.mobileNo = userDetails.mobileNumber
@@ -154,8 +154,9 @@ class VerifyOTPFragment : Fragment() {
         }
     }
 
-    private fun navigateToHomeActivity() {
-        val userId = sharedPreferencesManager.userId  // Replace with your actual userId
+    private fun navigateToHomeActivity(userId:String) {
+       sharedPreferencesManager.userId = userId
+        Log.e("userIdvero",userId.toString())
         val intent = Intent(requireContext(), HomeActivity::class.java).apply {
             putExtra("userId", userId)
         }

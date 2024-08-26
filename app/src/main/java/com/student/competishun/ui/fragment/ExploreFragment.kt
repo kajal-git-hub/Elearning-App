@@ -258,7 +258,23 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
                     )
                 }
             }
-
+            binding.tvPlannerReadMore.setOnClickListener {
+            if (binding.tvCoursePlannerDescription.maxLines == 3) {
+                binding.tvCoursePlannerDescription.maxLines = Integer.MAX_VALUE
+                binding.tvCoursePlannerDescription.ellipsize = null
+                binding.tvPlannerReadMore.text = "Read Less"
+                binding.tvPlannerReadMore.setCompoundDrawablesWithIntrinsicBounds(
+                    0, 0, R.drawable.arrow_up_explore, 0
+                )
+            } else {
+                binding.tvCoursePlannerDescription.maxLines = 3
+                binding.tvCoursePlannerDescription.ellipsize = android.text.TextUtils.TruncateAt.END
+                binding.tvPlannerReadMore.text = "Read More"
+                binding.tvPlannerReadMore.setCompoundDrawablesWithIntrinsicBounds(
+                    0, 0, R.drawable.arrow_down, 0
+                )
+            }
+        }
 
 
 
@@ -277,9 +293,9 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
 
 
             val teacherItems = listOf(
-                TeacherItem(R.drawable.teacher_bg, "Alok Srivastav", "Mathematics"),
+                TeacherItem(R.drawable.teacher_bg, "Narayan Verma", "Mathematics"),
                 TeacherItem(R.drawable.teacher_bg, "Alok Srivastav", "Physics"),
-                TeacherItem(R.drawable.teacher_bg, "Alok Srivastav", "Chemistry"),
+                TeacherItem(R.drawable.teacher_bg, "Vijay Bhatt", "Chemistry"),
             )
             val teacherAdapter = TeacherAdapter(teacherItems)
             binding.rvMeetTeachers.apply {

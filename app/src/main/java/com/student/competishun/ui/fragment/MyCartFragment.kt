@@ -299,7 +299,7 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
             obj.put("amount", amount)
             obj.put("order_id", rzpOrderId)
             val prefill = JSONObject()
-            prefill.put("email", "gaurav.kumar@example.com")
+            prefill.put("userId", sharedPreferencesManager.userId)
             prefill.put("contact", sharedPreferencesManager.mobileNo)
             obj.put("prefill", prefill)
             checkout.open(requireActivity(), obj)

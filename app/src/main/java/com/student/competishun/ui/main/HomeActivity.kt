@@ -54,7 +54,7 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
     private lateinit var binding: ActivityHomeBinding
     private var isCallingSupportVisible = ObservableField(true)
     lateinit var sharedPreferencesManager: SharedPreferencesManager
-
+     var userId:String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -137,6 +137,8 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
 
     override fun onResume() {
         super.onResume()
+        userId = sharedPreferencesManager.userId.toString()
+        Log.e("Sharedhome $userId", intent.getStringExtra("userId").toString())
         val currentFragment = supportFragmentManager.findFragmentById(R.id.fragmentNavigation)
         if (currentFragment != null) {
             updateUiVisibility(currentFragment)
@@ -227,9 +229,10 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
     }
 
     private fun navigateToLoaderScreen() {
+    Log.e("homeuserIDload",userId.toString())
         navController.navigate(R.id.paymentLoaderFragment)
         val bundle = Bundle().apply {
-            putString("user_id", sharedPreferencesManager.userId)
+            putString("userId", userId)
         }
 
         Handler(Looper.getMainLooper()).postDelayed({

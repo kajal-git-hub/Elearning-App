@@ -34,6 +34,7 @@ class MainActivity : AppCompatActivity() {
     private val userViewModel: UserViewModel by viewModels()
     lateinit var sharedPreferencesManager: SharedPreferencesManager
     lateinit var userInput: UpdateUserInput
+    var userId :String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,8 +48,11 @@ class MainActivity : AppCompatActivity() {
         userViewModel.userDetails.observe(this) { result ->
             result.onSuccess { data ->
                 val userDetails = data.getMyDetails
+                Log.e("mainActivity details", userDetails.toString())
                 if (isUserDataComplete()) {
-                    navigateToHomeActivity()
+                   userId = data.getMyDetails.userInformation.id
+                    sharedPreferencesManager.userId = userId
+                    navigateToHomeActivity(userId)
                 } else {
                     sharedPreferencesManager.mobileNo = userDetails.mobileNumber
                 }
@@ -81,10 +85,13 @@ class MainActivity : AppCompatActivity() {
                 sharedPreferencesManager.targetYear != 0
     }
 
-    private fun navigateToHomeActivity() {
-        val intent = Intent(this, HomeActivity::class.java)
+    private fun navigateToHomeActivity(userId:String) {
+        // Replace with your actual userId
+        Log.e("mainUserID",userId)
+        val intent = Intent(this, HomeActivity::class.java).apply {
+            putExtra("userId", userId)
+        }
         startActivity(intent)
-        finish() // Close the MainActivity
     }
 
     private fun showSplashAndWelcomeScreens() {
@@ -127,8 +134,7 @@ class MainActivity : AppCompatActivity() {
     private fun getUserInfo() {
         when {
             sharedPreferencesManager.isReferenceSelectionInProgress -> navigateToRefFragment()
-
-            !sharedPreferencesManager.reference.isNullOrEmpty() -> navigateToHomeActivity()
+            !sharedPreferencesManager.reference.isNullOrEmpty() -> navigateToHomeActivity(userId)
             !sharedPreferencesManager.preparingFor.isNullOrEmpty() -> navigateToTargetFragment()
             sharedPreferencesManager.targetYear != 0 -> navigateToRefFragment()
             !sharedPreferencesManager.name.isNullOrEmpty() && !sharedPreferencesManager.city.isNullOrEmpty() -> navigateToPreparationFragment()
