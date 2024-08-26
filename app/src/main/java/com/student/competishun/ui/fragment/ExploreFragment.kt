@@ -108,25 +108,25 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
                 // Display the image thumbnail
               // downloadAndDisplayImage(imageUrl, binding.ivBannerExplore)
                 Glide.with(requireContext())
-
                     .load(course.banner_image)
                     .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
                     .into(binding.ivBannerExplore)
                 // Handle ImageView click to play video
-                binding.ivBannerExplore.setOnClickListener {
-                    binding.ivBannerExplore.visibility = View.GONE
-                    binding.videoView.visibility = View.VISIBLE
-
-                    // Set the video URI and start playing
-                    binding.videoView.setVideoURI(Uri.parse(videoUrl))
-                    binding.videoView.start()
-
-                    // Set up a listener for when the video completes
-                    binding.videoView.setOnCompletionListener {
-                        binding.videoView.visibility = View.GONE
-                        binding.ivBannerExplore.visibility = View.VISIBLE
-                    }
-                }
+//                if (videoUrl!=null)
+//                binding.ivBannerExplore.setOnClickListener {
+//                    binding.ivBannerExplore.visibility = View.GONE
+//                    binding.videoView.visibility = View.VISIBLE
+//
+//                    // Set the video URI and start playing
+//                    binding.videoView.setVideoURI(Uri.parse(videoUrl))
+//                    binding.videoView.start()
+//
+//                    // Set up a listener for when the video completes
+//                    binding.videoView.setOnCompletionListener {
+//                        binding.videoView.visibility = View.GONE
+//                        binding.ivBannerExplore.visibility = View.VISIBLE
+//                    }
+//                }
             }
         }
 
@@ -186,6 +186,35 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
             Log.e("courseID",courseId)
             getCourseByIDViewModel.fetchCourseById(courseId)
             getCourseByIDViewModel.courseByID.observe(viewLifecycleOwner, Observer { courses ->
+
+                val imageUrl = courses?.video_thumbnail
+                val videoUrl = courses?.orientation_video
+
+                Log.d("CourseVideoThumbnail", imageUrl ?: "No URL")
+                Log.d("CourseOrientThumbnail", videoUrl ?: "No URL")
+
+                // Display the image thumbnail
+                // downloadAndDisplayImage(imageUrl, binding.ivBannerExplore)
+                Glide.with(requireContext())
+                    .load(courses?.banner_image)
+                    .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
+                    .into(binding.ivBannerExplore)
+                // Handle ImageView click to play video
+//                if (videoUrl!=null)
+//                    binding.ivBannerExplore.setOnClickListener {
+//                        binding.ivBannerExplore.visibility = View.GONE
+//                        binding.videoView.visibility = View.VISIBLE
+//
+//                        // Set the video URI and start playing
+//                        binding.videoView.setVideoURI(Uri.parse(videoUrl))
+//                        binding.videoView.start()
+//
+//                        // Set up a listener for when the video completes
+//                        binding.videoView.setOnCompletionListener {
+//                            binding.videoView.visibility = View.GONE
+//                            binding.ivBannerExplore.visibility = View.VISIBLE
+//                        }
+//                    }
                 Log.e("listcourses", courses.toString())
                 binding.progressBar.visibility = View.GONE
                 binding.tvQuizTests.text = "Validity: "+ helperFunctions.formatCourseDate(courses?.course_validity_end_date.toString())
