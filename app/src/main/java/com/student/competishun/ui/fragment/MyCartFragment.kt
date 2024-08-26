@@ -164,6 +164,8 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
                 }
             }.onFailure { exception ->
                 Log.e("exception in cart",exception.toString())
+                binding.clPaymentSummary.visibility = View.GONE
+                binding.clProccedToPay.visibility = View.GONE
                // Toast.makeText(requireContext(), exception.message, Toast.LENGTH_SHORT).show()
             }
         })

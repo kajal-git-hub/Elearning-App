@@ -104,7 +104,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/nunito"
-                android:text="Aman Sharma"
+                android:text=""
                 android:textColor="@color/_2b2829"
                 android:textSize="@dimen/_18sp"
                 android:textStyle="bold"
