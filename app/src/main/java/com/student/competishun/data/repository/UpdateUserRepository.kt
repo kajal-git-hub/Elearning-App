@@ -41,11 +41,16 @@ class UpdateUserRepository @Inject constructor( @Gatekeeper private val apolloCl
                             countryCode = user.countryCode,
                             userInformation = user.userInformation.let { info ->
                                 UserInformation(
-                                    id = info.id,
+                                    id = user.id,
                                     preparingFor = info.preparingFor,
                                     targetYear = info.targetYear,
                                     city = info.city,
-                                    reference = info.reference
+                                    reference = info.reference,
+                                    tShirtSize = info.tShirtSize,
+                                    documentPhoto = info.documentPhoto,
+                                    schoolName = info.schoolName,
+                                    waCountryCode = info.waCountryCode
+
                                 )
                             }
                         )

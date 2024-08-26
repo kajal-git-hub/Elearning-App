@@ -38,7 +38,7 @@ class VerifyOtpRepository @Inject constructor(@Gatekeeper private val apolloClie
                             fullName = user.fullName,
                             countryCode = user.countryCode,
                             id = "",
-                            userInformation = UserInformation(0,"","","","")
+                            userInformation = UserInformation(0,"","","","","","","","")
                         )
                     },
                     refreshToken = result.refreshToken,

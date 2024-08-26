@@ -6,5 +6,9 @@ data class UserInformation(
     public val preparingFor: String?,
     public val id: String,
     public val city: String?,
+    public val waCountryCode: String?,
+    public val documentPhoto: String?,
+    public val schoolName: String?,
+    public val tShirtSize: String?,
 )
 

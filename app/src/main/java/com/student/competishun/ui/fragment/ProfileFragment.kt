@@ -34,6 +34,9 @@ class ProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         sharedPreferencesManager = SharedPreferencesManager(requireContext())
+        binding.etProfileHelp.setOnClickListener {
+            requireActivity().onBackPressedDispatcher.onBackPressed()
+        }
         binding.llMyCart.setOnClickListener {
             findNavController().navigate(R.id.myCartFragment)
         }
@@ -41,9 +44,7 @@ class ProfileFragment : Fragment() {
         binding.ProfileEmail.text = sharedPreferencesManager.mobileNo
         binding.tvExamType.text = sharedPreferencesManager.preparingFor
         binding.tvYear.text= sharedPreferencesManager.targetYear.toString()
-        binding.etProfileHelp.setOnClickListener {
-            requireActivity().onBackPressedDispatcher.onBackPressed()
-        }
+
         super.onViewCreated(view, savedInstanceState)
 
     }

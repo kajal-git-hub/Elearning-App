@@ -1,16 +1,21 @@
-mutation UpdateUser($updateUserInput: UpdateUserInput!) {
-    updateUser(updateUserInput: $updateUserInput) {
-        id
-        mobileNumber
+mutation UpdateUser($updateUserInput: UpdateUserInput!, $documentPhoto: Upload, $passportPhoto: Upload) {
+    updateUser(updateUserInput: $updateUserInput, documentPhoto: $documentPhoto, passportPhoto: $passportPhoto) {
         fullName
-        countryCode
+        mobileNumber
         userInformation {
-            id
+            reference
             preparingFor
             targetYear
             city
-            reference
+            collegeName
+            waCountryCode
+            documentPhoto
+            schoolName
+            tShirtSize
         }
+        id
+        countryCode
 
+        email
     }
 }

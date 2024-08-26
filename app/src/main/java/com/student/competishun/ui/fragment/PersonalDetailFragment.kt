@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.InputFilter
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,9 +13,13 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import com.apollographql.apollo3.api.Optional
 import com.student.competishun.R
 import com.student.competishun.databinding.FragmentPersonalDetailBinding
+import com.student.competishun.gatekeeper.type.UpdateUserInput
+import com.student.competishun.ui.viewmodel.UpdateUserViewModel
 import com.student.competishun.ui.viewmodel.UserViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -24,7 +29,7 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
     private val userViewModel: UserViewModel by viewModels()
     private var _binding: FragmentPersonalDetailBinding? = null
     private val binding get() = _binding!!
-
+    private val updateUserViewModel: UpdateUserViewModel by viewModels()
     private var isTshirtSizeSelected = false
     private var selectedTShirtSize: String? = null // Store the selected size
     var isBottomSheetShowing = false
@@ -55,6 +60,16 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
         userViewModel.userDetails.observe(viewLifecycleOwner) { result ->
             result.onSuccess { data ->
                 val userDetails = data.getMyDetails
+                Log.e("userDetails",userDetails.toString())
+                val updateUserInput = UpdateUserInput(
+                    city = Optional.Present(userDetails.userInformation.city),
+                    fullName = Optional.Present(userDetails.fullName),
+                    preparingFor = Optional.Present(userDetails.userInformation.preparingFor),
+                    reference = Optional.Present(userDetails.userInformation.reference),
+                    targetYear = Optional.Present(userDetails.userInformation.targetYear),
+                    waCountryCode = Optional.Present(userDetails.userInformation.targetYear.toString()),
+                )
+                userUpdate(updateUserInput)
             }.onFailure { exception ->
                 Toast.makeText(
                     requireContext(),
@@ -148,6 +163,22 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
                 binding.etWhatsappNumber.setSelection(trimmed.length)
             }
         }
+    }
+
+    fun userUpdate(updateUserInput:UpdateUserInput){
+        updateUserViewModel.updateUser(updateUserInput)
+        updateUserViewModel.updateUserResult.observe(viewLifecycleOwner, Observer { result ->
+            if (result?.user != null) {
+                Log.e("gettingUserUpdateTarget", result.user.userInformation.targetYear.toString())
+                Log.e("gettingUserUpdaterefer", result.user.userInformation.reference.toString())
+                Log.e("gettingUserUpdateprep", result.user.userInformation.preparingFor.toString())
+                Log.e("gettingUserUpdatecity", result.user.userInformation.city.toString())
+
+            } else {
+                Log.e("gettingUserUpdatefail", result.toString())
+                Toast.makeText(context, "Update failed", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 
     override fun onDestroyView() {
