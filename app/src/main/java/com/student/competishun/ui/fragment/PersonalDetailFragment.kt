@@ -67,7 +67,8 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
                     preparingFor = Optional.Present(userDetails.userInformation.preparingFor),
                     reference = Optional.Present(userDetails.userInformation.reference),
                     targetYear = Optional.Present(userDetails.userInformation.targetYear),
-                    waCountryCode = Optional.Present(userDetails.userInformation.targetYear.toString()),
+                    waCountryCode = Optional.Present("+91"),
+
                 )
                 userUpdate(updateUserInput)
             }.onFailure { exception ->
