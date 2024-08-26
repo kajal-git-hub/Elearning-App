@@ -2,12 +2,14 @@ package com.student.competishun.ui.fragment
 
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.MediaController
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.addCallback
@@ -91,13 +93,36 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
         super.onViewCreated(view, savedInstanceState)
 
 
+
+        val mediaController = MediaController(context)
+        binding.videoView.setMediaController(mediaController)
+
         getCourseByIDViewModel.courseByID.observe(viewLifecycleOwner) { course ->
             course?.let {
                 val imageUrl = it.video_thumbnail
-                Log.d("Course", imageUrl ?: "No URL")
+                val videoUrl = it.orientation_video
 
-                // Use the new method to download and display the image
+                Log.d("CourseVideoThumbnail", imageUrl ?: "No URL")
+                Log.d("CourseOrientThumbnail", videoUrl ?: "No URL")
+
+                // Display the image thumbnail
                 downloadAndDisplayImage(imageUrl, binding.ivBannerExplore)
+
+                // Handle ImageView click to play video
+                binding.ivBannerExplore.setOnClickListener {
+                    binding.ivBannerExplore.visibility = View.GONE
+                    binding.videoView.visibility = View.VISIBLE
+
+                    // Set the video URI and start playing
+                    binding.videoView.setVideoURI(Uri.parse(videoUrl))
+                    binding.videoView.start()
+
+                    // Set up a listener for when the video completes
+                    binding.videoView.setOnCompletionListener {
+                        binding.videoView.visibility = View.GONE
+                        binding.ivBannerExplore.visibility = View.VISIBLE
+                    }
+                }
             }
         }
 
