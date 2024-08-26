@@ -31,7 +31,7 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
     private val binding get() = _binding!!
     private val updateUserViewModel: UpdateUserViewModel by viewModels()
     private var isTshirtSizeSelected = false
-    private var selectedTShirtSize: String? = null // Store the selected size
+    private var selectedTShirtSize: String? = null
     var isBottomSheetShowing = false
 
 
@@ -67,7 +67,10 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
                     preparingFor = Optional.Present(userDetails.userInformation.preparingFor),
                     reference = Optional.Present(userDetails.userInformation.reference),
                     targetYear = Optional.Present(userDetails.userInformation.targetYear),
-                    waCountryCode = Optional.Present(userDetails.userInformation.targetYear.toString()),
+                    waCountryCode = Optional.Present("+91"),
+                    waMobileNumber = Optional.Present(binding.etWhatsappNumber.text.toString().trim()),
+                    fatherName = Optional.Present(binding.etFathersName.text.toString().trim()),
+                    tShirtSize = Optional.Present(selectedTShirtSize)
                 )
                 userUpdate(updateUserInput)
             }.onFailure { exception ->
@@ -115,7 +118,7 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
         val whatsappNumber = binding.etWhatsappNumber.text.toString().trim()
         val tShirtSize = binding.spinnerTshirtSize.text.toString().trim()
 
-        return fullName.isNotEmpty() && fatherName.isNotEmpty() && whatsappNumber.isNotEmpty() && isTshirtSizeSelected
+        return fullName.isNotEmpty() && fatherName.isNotEmpty() && whatsappNumber.isNotEmpty() && isTshirtSizeSelected && tShirtSize.isNotEmpty()
     }
 
     private fun updateButtonState() {
@@ -173,6 +176,7 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
                 Log.e("gettingUserUpdaterefer", result.user.userInformation.reference.toString())
                 Log.e("gettingUserUpdateprep", result.user.userInformation.preparingFor.toString())
                 Log.e("gettingUserUpdatecity", result.user.userInformation.city.toString())
+
 
             } else {
                 Log.e("gettingUserUpdatefail", result.toString())

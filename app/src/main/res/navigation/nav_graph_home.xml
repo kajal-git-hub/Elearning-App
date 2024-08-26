@@ -216,18 +216,25 @@
     <fragment
         android:id="@+id/ProfileFragment"
         android:name="com.student.competishun.ui.fragment.ProfileFragment"
-        tools:layout="@layout/fragment_profile">
-    </fragment>
+        tools:layout="@layout/fragment_profile"/>
+
     <fragment
         android:id="@+id/NotificationFragment"
         android:name="com.student.competishun.ui.fragment.NotificationFragment"
         tools:layout="@layout/fragment_notification">
     </fragment>
+
     <fragment
         android:id="@+id/ScheduleFragment"
         android:name="com.student.competishun.ui.fragment.ScheduleFragment"
         tools:layout="@layout/fragment_schedule">
     </fragment>
+
+    <fragment
+        android:id="@+id/loginFragment2"
+        android:name="com.student.competishun.ui.fragment.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" />
 
 
 </navigation>
