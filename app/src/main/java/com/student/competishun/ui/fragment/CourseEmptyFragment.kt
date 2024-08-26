@@ -14,6 +14,7 @@ import com.student.competishun.R
 import com.student.competishun.data.model.ExploreCourse
 import com.student.competishun.databinding.FragmentCourseEmptyBinding
 import com.student.competishun.ui.adapter.ExploreCourseAdapter
+import com.student.competishun.ui.viewmodel.GetCourseByIDViewModel
 import com.student.competishun.ui.viewmodel.OrdersViewModel
 import com.student.competishun.utils.SharedPreferencesManager
 import dagger.hilt.android.AndroidEntryPoint
@@ -26,6 +27,7 @@ class CourseEmptyFragment : Fragment() {
     private val binding get() = _binding!!
     lateinit var sharedPreferencesManager: SharedPreferencesManager
     private val ordersViewModel: OrdersViewModel by viewModels()
+    private val getCourseByIDViewModel: GetCourseByIDViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -67,6 +69,16 @@ class CourseEmptyFragment : Fragment() {
         binding.rvExploreCourses.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
     }
 
+    fun courseDetails(courseID:String){
+        getCourseByIDViewModel.fetchCourseById(courseID)
+
+        getCourseByIDViewModel.courseByID.observe(viewLifecycleOwner) { course ->
+            course?.let {
+
+            }
+        }
+    }
+
     fun orderdetails(ordersViewModel: OrdersViewModel, userId:String
     ){
         val userIds = listOf(userId)
@@ -78,6 +90,7 @@ class CourseEmptyFragment : Fragment() {
             orders?.let {
                 // Handle the list of orders
                 for (order in orders) {
+                    val courseID = order.entityId
                     binding.clEmptyMyCourse.visibility = View.GONE
                     binding.rvExploreCourses.visibility = View.VISIBLE
                     Log.d("Order", "Amount Paid: ${order.amountPaid}, Entity ID: ${order.entityId}, Payment Status: ${order.paymentStatus}")
