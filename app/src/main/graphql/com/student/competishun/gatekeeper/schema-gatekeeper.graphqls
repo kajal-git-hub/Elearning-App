@@ -1,3 +1,31 @@
+type Admin {
+  createdAt: DateTime!
+
+  deletedAt: DateTime!
+
+  email: String!
+
+  id: ID!
+
+  role: Role!
+
+  updatedAt: DateTime!
+}
+
+type AdminAuth {
+  accessToken: String!
+
+  admin: Admin!
+
+  refreshToken: String!
+}
+
+input AdminSignInInput {
+  email: String!
+
+  password: String!
+}
+
 type Auth {
   accessToken: String!
 
@@ -14,6 +42,36 @@ input CreateCustomerInput {
   mobileNumber: String
 
   name: String!
+}
+
+input CreateStudentByAdminInput {
+  aadharNumber: String
+
+  address: String!
+
+  bloodGroup: String
+
+  collegeName: String
+
+  countryCode: String!
+
+  dob: DateTime!
+
+  email: String!
+
+  fullName: String!
+
+  gender: String
+
+  mobileNumber: String!
+
+  nationality: String
+
+  schoolName: String
+
+  tenth_marks: String
+
+  twelfth_marks: String
 }
 
 type Customer {
@@ -45,8 +103,24 @@ input GetOtpInput {
   mobileNumber: String!
 }
 
+type GetStudentsDto {
+  count: Int!
+
+  students: [User!]!
+}
+
+type MarksDto {
+  tenth: String
+
+  twelfth: String
+}
+
 type Mutation {
   createCustomer(createCustomerInput: CreateCustomerInput!): Customer!
+
+  createStudentByAdmin(createStudentByAdminInput: CreateStudentByAdminInput!): User!
+
+  deleteMyAccount: Boolean!
 
   getNewTokens: Auth!
 
@@ -54,15 +128,33 @@ type Mutation {
 
   updateCustomer(updateCustomerInput: UpdateCustomerInput!): Customer!
 
-  updateUser(updateUserInput: UpdateUserInput!): User!
+  updateStudentByAdmin(updateStudentByAdminInput: UpdateStudentByAdminInput!): User!
+
+  updateUser(documentPhoto: Upload, passportPhoto: Upload, updateUserInput: UpdateUserInput!): User!
 
   verifyOtp(verifyOtpInput: VerifyOtpInput!): Auth!
 }
 
 type Query {
+  adminSignIn(adminSignInInput: AdminSignInInput!): AdminAuth!
+
   getMyDetails: User!
 
+  getStudents(limit: Float!, offset: Float!, search: String, sort: String = "DESC", studentId: String, targetYear: Float): GetStudentsDto!
+
   sayHello: String!
+}
+
+type Role {
+  createdAt: DateTime!
+
+  deletedAt: DateTime!
+
+  id: ID!
+
+  name: String!
+
+  updatedAt: DateTime!
 }
 
 input UpdateCustomerInput {
@@ -77,8 +169,42 @@ input UpdateCustomerInput {
   name: String
 }
 
+input UpdateStudentByAdminInput {
+  aadharNumber: String
+
+  address: String
+
+  bloodGroup: String
+
+  collegeName: String
+
+  countryCode: String
+
+  dob: DateTime
+
+  email: String
+
+  fullName: String
+
+  gender: String
+
+  id: ID!
+
+  mobileNumber: String
+
+  nationality: String
+
+  schoolName: String
+
+  tenth_marks: String
+
+  twelfth_marks: String
+}
+
 input UpdateUserInput {
   city: String
+
+  fatherName: String
 
   fullName: String
 
@@ -86,8 +212,19 @@ input UpdateUserInput {
 
   reference: String
 
+  tShirtSize: String
+
   targetYear: Int
+
+  waCountryCode: String
+
+  waMobileNumber: String
 }
+
+"""
+The `Upload` scalar type represents a file upload.
+"""
+scalar Upload
 
 type User {
   countryCode: String!
@@ -96,11 +233,15 @@ type User {
 
   deletedAt: DateTime!
 
+  email: String
+
   fullName: String
 
   id: ID!
 
   mobileNumber: String!
+
+  role: Role!
 
   updatedAt: DateTime!
 
@@ -108,21 +249,53 @@ type User {
 }
 
 type UserInformation {
+  aadharNumber: String
+
+  address: String
+
+  bloodGroup: String
+
   city: String
+
+  collegeName: String
 
   createdAt: DateTime!
 
   deletedAt: DateTime!
 
+  dob: DateTime
+
+  documentPhoto: String
+
+  fatherName: String
+
+  gender: String
+
   id: ID!
+
+  marks: MarksDto
+
+  nationality: String
+
+  passportPhoto: String
 
   preparingFor: String
 
   reference: String
 
+  rollNumber: String
+
+  schoolName: String
+
+  tShirtSize: String
+
   targetYear: Int
 
   updatedAt: DateTime!
+
+  waCountryCode: String
+
+  waMobileNumber: String
 }
 
 input VerifyOtpInput {
