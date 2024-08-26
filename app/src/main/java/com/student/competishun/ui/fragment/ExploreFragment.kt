@@ -106,8 +106,12 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
                 Log.d("CourseOrientThumbnail", videoUrl ?: "No URL")
 
                 // Display the image thumbnail
-                downloadAndDisplayImage(imageUrl, binding.ivBannerExplore)
+              // downloadAndDisplayImage(imageUrl, binding.ivBannerExplore)
+                Glide.with(requireContext())
 
+                    .load(course.banner_image)
+                    .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
+                    .into(binding.ivBannerExplore)
                 // Handle ImageView click to play video
                 binding.ivBannerExplore.setOnClickListener {
                     binding.ivBannerExplore.visibility = View.GONE
@@ -186,9 +190,10 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
                 binding.progressBar.visibility = View.GONE
                 binding.tvQuizTests.text = "Validity: "+ helperFunctions.formatCourseDate(courses?.course_validity_end_date.toString())
               //  binding.tvCoursePlannerDescription.text = courses?.planner_description
+                if (courses?.planner_pdf != null)
                 binding.clGetPlanner.setOnClickListener {
-                    helperFunctions.showDownloadDialog(requireContext(),courses?.planner_pdf.toString(), "Planner")
-                }
+                    helperFunctions.showDownloadDialog(requireContext(),courses.planner_pdf, "Planner")
+                } else   Toast.makeText(requireContext(), "Upload Soon...", Toast.LENGTH_LONG).show()
                 if (courses != null) {
                     Log.e("listcourses", courses.toString())
                     var coursefeature = courses.course_features
