@@ -33,19 +33,30 @@ class ProfileFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            requireActivity().finish()
+        }
+
         sharedPreferencesManager = SharedPreferencesManager(requireContext())
         binding.etProfileHelp.setOnClickListener {
             requireActivity().onBackPressedDispatcher.onBackPressed()
         }
+
         binding.llMyCart.setOnClickListener {
             findNavController().navigate(R.id.myCartFragment)
         }
+
+        binding.llLogout.setOnClickListener {
+            sharedPreferencesManager.clearAccessToken()
+            findNavController().navigate(R.id.loginFragment2)
+        }
+
         binding.ProfileUserName.text = sharedPreferencesManager.name
         binding.ProfileEmail.text = sharedPreferencesManager.mobileNo
         binding.tvExamType.text = sharedPreferencesManager.preparingFor
         binding.tvYear.text= sharedPreferencesManager.targetYear.toString()
 
-        super.onViewCreated(view, savedInstanceState)
 
     }
 

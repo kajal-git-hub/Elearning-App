@@ -56,6 +56,7 @@ import com.student.competishun.utils.SharedPreferencesManager
 import com.student.competishun.utils.StudentCourseItemClickListener
 import dagger.hilt.android.AndroidEntryPoint
 
+
 @AndroidEntryPoint
 class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
     StudentCourseItemClickListener{
@@ -97,38 +98,38 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
         val mediaController = MediaController(context)
         binding.videoView.setMediaController(mediaController)
 
-        getCourseByIDViewModel.courseByID.observe(viewLifecycleOwner) { course ->
-            course?.let {
-                val imageUrl = it.video_thumbnail
-                val videoUrl = it.orientation_video
-
-                Log.d("CourseVideoThumbnail", imageUrl ?: "No URL")
-                Log.d("CourseOrientThumbnail", videoUrl ?: "No URL")
-
-                // Display the image thumbnail
-              // downloadAndDisplayImage(imageUrl, binding.ivBannerExplore)
-                Glide.with(requireContext())
-                    .load(course.banner_image)
-                    .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
-                    .into(binding.ivBannerExplore)
-                // Handle ImageView click to play video
-//                if (videoUrl!=null)
-//                binding.ivBannerExplore.setOnClickListener {
-//                    binding.ivBannerExplore.visibility = View.GONE
-//                    binding.videoView.visibility = View.VISIBLE
+//        getCourseByIDViewModel.courseByID.observe(viewLifecycleOwner) { course ->
+//            course?.let {
+//                val imageUrl = it.video_thumbnail
+//                val videoUrl = it.orientation_video
 //
-//                    // Set the video URI and start playing
-//                    binding.videoView.setVideoURI(Uri.parse(videoUrl))
-//                    binding.videoView.start()
+//                Log.d("CourseVideoThumbnail", imageUrl ?: "No URL")
+//                Log.d("CourseOrientThumbnail", videoUrl ?: "No URL")
 //
-//                    // Set up a listener for when the video completes
-//                    binding.videoView.setOnCompletionListener {
-//                        binding.videoView.visibility = View.GONE
-//                        binding.ivBannerExplore.visibility = View.VISIBLE
-//                    }
-//                }
-            }
-        }
+//                // Display the image thumbnail
+//              // downloadAndDisplayImage(imageUrl, binding.ivBannerExplore)
+//                Glide.with(requireContext())
+//                    .load(course.banner_image)
+//                    .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
+//                    .into(binding.ivBannerExplore)
+//                // Handle ImageView click to play video
+////                if (videoUrl!=null)
+////                binding.ivBannerExplore.setOnClickListener {
+////                    binding.ivBannerExplore.visibility = View.GONE
+////                    binding.videoView.visibility = View.VISIBLE
+////
+////                    // Set the video URI and start playing
+////                    binding.videoView.setVideoURI(Uri.parse(videoUrl))
+////                    binding.videoView.start()
+////
+////                    // Set up a listener for when the video completes
+////                    binding.videoView.setOnCompletionListener {
+////                        binding.videoView.visibility = View.GONE
+////                        binding.ivBannerExplore.visibility = View.VISIBLE
+////                    }
+////                }
+//            }
+//        }
 
         folderlist = emptyList()
         helperFunctions= HelperFunctions()
@@ -199,22 +200,40 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
                     .load(courses?.banner_image)
                     .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
                     .into(binding.ivBannerExplore)
-                // Handle ImageView click to play video
-//                if (videoUrl!=null)
-//                    binding.ivBannerExplore.setOnClickListener {
-//                        binding.ivBannerExplore.visibility = View.GONE
-//                        binding.videoView.visibility = View.VISIBLE
-//
-//                        // Set the video URI and start playing
-//                        binding.videoView.setVideoURI(Uri.parse(videoUrl))
-//                        binding.videoView.start()
-//
-//                        // Set up a listener for when the video completes
-//                        binding.videoView.setOnCompletionListener {
-//                            binding.videoView.visibility = View.GONE
-//                            binding.ivBannerExplore.visibility = View.VISIBLE
-//                        }
-//                    }
+
+                binding.ivBannerExplore.setOnClickListener {
+                    if (!videoUrl.isNullOrEmpty()) {
+                        binding.ivBannerExplore.visibility = View.GONE
+                        binding.videoView.visibility = View.VISIBLE
+
+                        // Set the video URI and start playing
+                        try {
+                            val uri = Uri.parse(videoUrl)
+                            binding.videoView.setVideoURI(uri)
+                            binding.videoView.setOnPreparedListener { mediaPlayer ->
+                                mediaPlayer.start()
+                            }
+                        } catch (e: Exception) {
+                            Log.e("VideoPlayError", "Error setting video URI", e)
+                            binding.ivBannerExplore.visibility = View.VISIBLE
+                            binding.videoView.visibility = View.GONE
+                        }
+
+                        // Set up a listener for when the video completes
+                        binding.videoView.setOnCompletionListener {
+                            binding.videoView.visibility = View.GONE
+                            binding.ivBannerExplore.visibility = View.VISIBLE
+                        }
+                    } else {
+                        // If videoUrl is empty, make sure ivBannerExplore is visible
+                        binding.ivBannerExplore.visibility = View.VISIBLE
+                        binding.videoView.visibility = View.GONE
+                        Log.d("CourseVideoError", "Video URL is empty")
+                    }
+                }
+
+
+
                 Log.e("listcourses", courses.toString())
                 binding.progressBar.visibility = View.GONE
                 binding.tvQuizTests.text = "Validity: "+ helperFunctions.formatCourseDate(courses?.course_validity_end_date.toString())
