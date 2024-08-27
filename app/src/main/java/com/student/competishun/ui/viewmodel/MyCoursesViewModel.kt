@@ -6,9 +6,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.student.competishun.curator.MyCoursesQuery
 import com.student.competishun.data.repository.MyCoursesRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class MyCoursesViewModel(private val repository: MyCoursesRepository) : ViewModel() {
+@HiltViewModel
+class MyCoursesViewModel@Inject constructor(private val repository: MyCoursesRepository) : ViewModel() {
 
     private val _myCourses = MutableLiveData<Result<MyCoursesQuery.Data>>()
     val myCourses: LiveData<Result<MyCoursesQuery.Data>> get() = _myCourses
