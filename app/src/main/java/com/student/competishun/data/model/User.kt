@@ -5,5 +5,6 @@ data class User(
     val mobileNumber: String,
     val fullName: String?,
     val countryCode: String,
+    val email:String,
     val userInformation: UserInformation
 )

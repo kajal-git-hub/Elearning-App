@@ -65,7 +65,6 @@ class PaymentFragment : Fragment() {
         val binding = binding
         sharedPreferencesManager = SharedPreferencesManager(requireContext())
         var userId = arguments?.getString("userId").toString()
-        // Show the GIF first
         Log.e("userid  $userId: ",sharedPreferencesManager.userId.toString())
         //  startActivity(Intent(requireContext(), HomeActivity::class.java))
         if (!sharedPreferencesManager.userId.isNullOrEmpty()) {

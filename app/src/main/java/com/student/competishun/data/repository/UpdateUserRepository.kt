@@ -2,7 +2,10 @@ package com.student.competishun.data.repository
 
 import android.util.Log
 import com.apollographql.apollo3.ApolloClient
+import com.apollographql.apollo3.api.DefaultUpload
+import com.apollographql.apollo3.api.Optional
 import com.apollographql.apollo3.api.http.HttpHeader
+import com.apollographql.apollo3.api.toUpload
 import com.apollographql.apollo3.exception.ApolloException
 import com.student.competishun.data.api.Gatekeeper
 import com.student.competishun.gatekeeper.UpdateUserMutation
@@ -10,21 +13,34 @@ import com.student.competishun.data.model.UpdateUserResponse
 import com.student.competishun.data.model.UserInformation
 import com.student.competishun.gatekeeper.type.UpdateUserInput
 import com.student.competishun.data.model.User
+import com.student.competishun.gatekeeper.type.Upload
+import java.io.File
 import javax.inject.Inject
 import javax.inject.Singleton
 
+
 @Singleton
-class UpdateUserRepository @Inject constructor( @Gatekeeper private val apolloClient: ApolloClient) {
+class UpdateUserRepository @Inject constructor(@Gatekeeper private val apolloClient: ApolloClient) {
 
     private val TAG = "UpdateUserRepository"
-    suspend fun updateUser(updateUserInput: UpdateUserInput): UpdateUserResponse? {
-        val mutation = UpdateUserMutation(updateUserInput)
+
+    suspend fun updateUser(
+        updateUserInput: UpdateUserInput,
+        documentPhoto: File?,
+        passportPhoto: File?
+    ): UpdateUserResponse? {
+        val documentPhotoContentType = "image/jpeg" // Adjust based on the actual content type
+        val passportPhotoContentType = "image/jpeg"
+        val mutation = UpdateUserMutation(
+            updateUserInput = updateUserInput,
+            documentPhoto = Optional.present(documentPhoto?.toUpload(documentPhotoContentType))?:Optional.absent(),
+            passportPhoto = Optional.present(passportPhoto?.toUpload(passportPhotoContentType))?:Optional.absent()
+        )
 
         return try {
             val response = apolloClient.mutate(mutation).execute()
 
             if (response.hasErrors()) {
-                // Handle errors if needed
                 response.errors?.forEach {
                     Log.e("GraphQL Error", it.message)
                 }
@@ -39,7 +55,8 @@ class UpdateUserRepository @Inject constructor( @Gatekeeper private val apolloCl
                             mobileNumber = user.mobileNumber,
                             fullName = user.fullName,
                             countryCode = user.countryCode,
-                            userInformation = user.userInformation.let { info ->
+                            email = user.email.toString(),
+                            userInformation = user.userInformation?.let { info ->
                                 UserInformation(
                                     id = user.id,
                                     preparingFor = info.preparingFor,
@@ -50,9 +67,18 @@ class UpdateUserRepository @Inject constructor( @Gatekeeper private val apolloCl
                                     documentPhoto = info.documentPhoto,
                                     schoolName = info.schoolName,
                                     waCountryCode = info.waCountryCode
-
                                 )
-                            }
+                            } ?: UserInformation(
+                                id = user.id,
+                                preparingFor = null,
+                                targetYear = null,
+                                city = null,
+                                reference = null,
+                                tShirtSize = null,
+                                documentPhoto = null,
+                                schoolName = null,
+                                waCountryCode = null
+                            )
                         )
                     }
                 )
@@ -63,3 +89,8 @@ class UpdateUserRepository @Inject constructor( @Gatekeeper private val apolloCl
         }
     }
 }
+
+
+
+
+

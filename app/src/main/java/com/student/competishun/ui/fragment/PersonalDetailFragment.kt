@@ -22,6 +22,7 @@ import com.student.competishun.gatekeeper.type.UpdateUserInput
 import com.student.competishun.ui.viewmodel.UpdateUserViewModel
 import com.student.competishun.ui.viewmodel.UserViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import java.io.File
 
 @AndroidEntryPoint
 class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSelectedListener {
@@ -72,7 +73,9 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
                     fatherName = Optional.Present(binding.etFathersName.text.toString().trim()),
                     tShirtSize = Optional.Present(selectedTShirtSize)
                 )
-                userUpdate(updateUserInput)
+                val documentPhotoFile: File? = File("")
+                val passportPhotoFile: File? = File("")
+                userUpdate(updateUserInput,documentPhotoFile,passportPhotoFile)
             }.onFailure { exception ->
                 Toast.makeText(
                     requireContext(),
@@ -168,8 +171,8 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
         }
     }
 
-    fun userUpdate(updateUserInput:UpdateUserInput){
-        updateUserViewModel.updateUser(updateUserInput)
+    fun userUpdate(updateUserInput:UpdateUserInput,documentPhotoFile: File?,passportPhotoFile: File?){
+        updateUserViewModel.updateUser(updateUserInput,documentPhotoFile,passportPhotoFile)
         updateUserViewModel.updateUserResult.observe(viewLifecycleOwner, Observer { result ->
             if (result?.user != null) {
                 Log.e("gettingUserUpdateTarget", result.user.userInformation.targetYear.toString())

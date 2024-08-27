@@ -9,19 +9,28 @@ import com.student.competishun.data.repository.UpdateUserRepository
 import com.student.competishun.gatekeeper.type.UpdateUserInput
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.io.File
 import javax.inject.Inject
 
 @HiltViewModel
 class UpdateUserViewModel @Inject constructor(
     private val updateUserRepository: UpdateUserRepository
-):ViewModel() {
+) : ViewModel() {
 
     private val _updateUserResult = MutableLiveData<UpdateUserResponse?>()
     val updateUserResult: LiveData<UpdateUserResponse?> = _updateUserResult
 
-    fun updateUser(updateUserInput: UpdateUserInput){
+    fun updateUser(
+        updateUserInput: UpdateUserInput,
+        documentPhoto: File? = null,
+        passportPhoto: File? = null
+    ) {
         viewModelScope.launch {
-            _updateUserResult.value = updateUserRepository.updateUser(updateUserInput)
+            _updateUserResult.value = updateUserRepository.updateUser(
+                updateUserInput,
+                documentPhoto,
+                passportPhoto
+            )
         }
     }
 }
