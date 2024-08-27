@@ -12,11 +12,16 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.apollographql.apollo3.api.Optional
+import com.google.android.material.tabs.TabLayout
 import com.student.competishun.R
 import com.student.competishun.curator.AllCourseForStudentQuery
 import com.student.competishun.curator.type.FindAllCourseInputStudent
 import com.student.competishun.data.model.TabItem
+import com.student.competishun.databinding.FragmentCourseBinding
+import com.student.competishun.databinding.FragmentCoursesBinding
 import com.student.competishun.databinding.FragmentExploreBinding
+import com.student.competishun.databinding.FragmentHomeBinding
+import com.student.competishun.databinding.FragmentMyCartBinding
 import com.student.competishun.ui.adapter.CourseAdapter
 import com.student.competishun.ui.viewmodel.StudentCoursesViewModel
 import com.student.competishun.utils.StudentCourseItemClickListener
@@ -28,7 +33,7 @@ private const val TAG = "CourseFragment"
 @AndroidEntryPoint
 class CourseFragment : Fragment(), StudentCourseItemClickListener {
     private lateinit var recyclerView: RecyclerView
-    private lateinit var binding: FragmentExploreBinding
+    private lateinit var binding: FragmentCourseBinding
     private val courseViewModel: StudentCoursesViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,7 +60,7 @@ class CourseFragment : Fragment(), StudentCourseItemClickListener {
         super.onViewCreated(view, savedInstanceState)
         val categoryName = arguments?.getString("category_name")
         // Fetch courses with filters
-        val filters = FindAllCourseInputStudent(Optional.present(categoryName),Optional.present("IIT-JEE"),Optional.present(null),Optional.present(null))
+        val filters = FindAllCourseInputStudent(Optional.present(categoryName),Optional.present("12th"),Optional.present("IIT-JEE"),Optional.present(null))
         courseViewModel.fetchCourses(filters)
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             courseViewModel.courses.collect { result ->
@@ -96,6 +101,64 @@ class CourseFragment : Fragment(), StudentCourseItemClickListener {
                 }
             }
         }
+    }
+
+    fun tabselection(){
+//        binding.studentTabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+//            override fun onTabSelected(tab: TabLayout.Tab?) {
+//                tab?.let {
+//                    val filters = when (it.position) {
+//                        0 -> {
+//                            // 11th selected
+//                            FindAllCourseInputStudent(
+//                                Optional.present("11th"),
+//                                Optional.present("IIT-JEE"),
+//                                Optional.present(null),
+//                                Optional.present(null)
+//                            )
+//                        }
+//                        1 -> {
+//                            // 12th selected
+//                            FindAllCourseInputStudent(
+//                                Optional.present("12th"),
+//                                Optional.present("IIT-JEE"),
+//                                Optional.present(null),
+//                                Optional.present(null)
+//                            )
+//                        }
+//                        2 -> {
+//                            // 12th+ selected
+//                            FindAllCourseInputStudent(
+//                                Optional.present("12th+"),
+//                                Optional.present("IIT-JEE"),
+//                                Optional.present(null),
+//                                Optional.present(null)
+//                            )
+//                        }
+//                        else -> {
+//                            // Default or fallback case
+//                            FindAllCourseInputStudent(
+//                                Optional.present(null),
+//                                Optional.present("IIT-JEE"),
+//                                Optional.present(null),
+//                                Optional.present(null)
+//                            )
+//                        }
+//                    }
+//
+//                    // Fetch and filter courses based on the selected tab
+//                    courseViewModel.fetchCourses(filters)
+//                }
+//            }
+//
+//            override fun onTabUnselected(tab: TabLayout.Tab?) {
+//                // Handle if needed
+//            }
+//
+//            override fun onTabReselected(tab: TabLayout.Tab?) {
+//                // Handle if needed
+//            }
+//        })
     }
 
     override fun onCourseItemClicked(course: AllCourseForStudentQuery.Course) {

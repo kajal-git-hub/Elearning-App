@@ -31,7 +31,7 @@ class CourseEmptyFragment : Fragment() {
     private val binding get() = _binding!!
     lateinit var sharedPreferencesManager: SharedPreferencesManager
     private val ordersViewModel: OrdersViewModel by viewModels()
-    private lateinit var viewModel: MyCoursesViewModel
+    private val viewModel: MyCoursesViewModel  by viewModels()
     private val getCourseByIDViewModel: GetCourseByIDViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,6 +51,7 @@ class CourseEmptyFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        myCourses()
         sharedPreferencesManager = SharedPreferencesManager(requireContext())
         var userId = arguments?.getString("user_id").toString()
          Log.e("userid  $userId: ",sharedPreferencesManager.userId.toString())

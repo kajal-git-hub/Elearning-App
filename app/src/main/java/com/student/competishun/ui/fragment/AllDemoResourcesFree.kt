@@ -110,10 +110,17 @@ class AllDemoResourcesFree : Fragment() {
                                     freeDemoItem.fileUrl,
                                     freeDemoItem.titleDemo
                                 )
-                            } else {
-                                (fileType.equals("VIDEO"))
-                                if (free == true)
-                                videoUrlApi(videourlViewModel, freeDemoItem.id)
+                            } else if(fileType.equals("FOLDER")){
+                                freeDemoItem.fileUrl
+                                val bundle = Bundle().apply {
+                                    putString("folderId", folderId)
+                                    putString("folderName", folderName)
+                                }
+                                findNavController().navigate(R.id.action_exploreFragment_to_demoFreeFragment, bundle)
+                            }
+                            else
+                            { (fileType)
+                                if (free == true) videoUrlApi(videourlViewModel, freeDemoItem.id)
                             }
                         }
                         binding.rvAllDemoFree.apply {

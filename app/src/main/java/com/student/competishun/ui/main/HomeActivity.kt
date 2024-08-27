@@ -79,7 +79,7 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
                 }
                 R.id.myCourse -> {
                     if (navController.currentDestination?.id != R.id.PersonalDetailsFragment) {
-                        navController.navigate(R.id.courseEmptyFragment)
+                        navController.navigate(R.id.SubjectContentFragment)
                     }
                     true
                 }

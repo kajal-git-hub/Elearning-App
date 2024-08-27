@@ -35,6 +35,14 @@ query FindCourseFolderProgress($findCourseFolderProgressId: String!) {
             pdfCount
             folderCount
             videoDuration
+            folderContents {
+                videoCompletionPercentage
+                content {
+                    file_url
+                    file_name
+                    file_type
+                }
+            }
             folder {
                 id
                 name

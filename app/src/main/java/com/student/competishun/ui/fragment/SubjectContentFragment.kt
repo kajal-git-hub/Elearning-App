@@ -38,9 +38,10 @@ class SubjectContentFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val folderId = arguments?.getString("folderId")
-        if (!folderId.isNullOrEmpty()) {
-            folderProgress(folderId)
-        }
+
+            folderProgress("81c5cc01-666c-4a97-a4b5-b153b1d9380e")
+
+
         val subjectContentList = listOf(
             SubjectContentItem(1, "Trigonometric ratios", "08 Learning Material"),
             SubjectContentItem(2, "Pythagorean theorem", "05 Learning Material"),
@@ -69,17 +70,14 @@ class SubjectContentFragment : Fragment() {
 
     fun folderProgress(folderId:String){
         if (folderId != null) {
-            // Trigger the API call
             coursesViewModel.findCourseFolderProgress(folderId)
         }
-
-        // Observe the API response
         coursesViewModel.courseFolderProgress.observe(viewLifecycleOwner) { result ->
             result.onSuccess { data ->
-                Log.e("GetFolderdata", data.toString())
+                Log.e("GetFolderdata", data.findCourseFolderProgress.folder.toString())
                 val folderProgressFolder = data.findCourseFolderProgress.folder
                 val folderProgressContent = data.findCourseFolderProgress.folderContents
-
+                 binding.tvSubjectName.text = data.findCourseFolderProgress.folder?.name
 
             }.onFailure { error ->
                 // Handle the error
