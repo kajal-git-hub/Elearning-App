@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
@@ -17,6 +18,7 @@ import com.student.competishun.data.model.ExploreCourse
 import com.student.competishun.databinding.FragmentCourseEmptyBinding
 import com.student.competishun.ui.adapter.ExploreCourseAdapter
 import com.student.competishun.ui.viewmodel.GetCourseByIDViewModel
+import com.student.competishun.ui.viewmodel.MyCoursesViewModel
 import com.student.competishun.ui.viewmodel.OrdersViewModel
 import com.student.competishun.utils.SharedPreferencesManager
 import dagger.hilt.android.AndroidEntryPoint
@@ -29,6 +31,7 @@ class CourseEmptyFragment : Fragment() {
     private val binding get() = _binding!!
     lateinit var sharedPreferencesManager: SharedPreferencesManager
     private val ordersViewModel: OrdersViewModel by viewModels()
+    private lateinit var viewModel: MyCoursesViewModel
     private val getCourseByIDViewModel: GetCourseByIDViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,7 +80,19 @@ class CourseEmptyFragment : Fragment() {
 
         getCourseByIDViewModel.courseByID.observe(viewLifecycleOwner, Observer { course ->
             course?.let {
-                val tag1 = it.course_class?.name.orEmpty()
+                var courseClass = ""
+                if(course.course_class.toString() =="TWELFTH_PLUS"){
+                    courseClass = "12th+ Class"
+
+                }else if(course.course_class.toString()=="TWELFTH"){
+                    courseClass = "12th Class"
+
+                }
+                else if(course.course_class.toString()=="ELEVENTH"){
+                    courseClass = "11th Class"
+
+                }
+                val tag1 = courseClass
                 val tag2 = it.category_name.orEmpty()
                 courseDetailsList.add(
                     ExploreCourse(
@@ -127,6 +142,20 @@ class CourseEmptyFragment : Fragment() {
 
         // Fetch orders by user IDs
 
+    }
+
+    fun myCourses(){
+        viewModel.myCourses.observe(viewLifecycleOwner) { result ->
+            result.onSuccess { data ->
+                val courses = data.myCourses?.map { it.course }
+                Log.e("getMyCourses",courses.toString())
+            }.onFailure {
+                Log.e("MyCoursesFail",it.message.toString())
+                Toast.makeText(requireContext(), "Failed to load courses: ${it.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        viewModel.fetchMyCourses()
     }
 
 

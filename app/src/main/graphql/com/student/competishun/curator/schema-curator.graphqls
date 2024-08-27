@@ -32,6 +32,22 @@ type Banner {
   web_banner_image_name: String
 }
 
+type Bookmark {
+  course_folder_content: CourseFolderContent!
+
+  course_folder_content_id: String!
+
+  createdAt: DateTime!
+
+  deletedAt: DateTime!
+
+  id: ID!
+
+  updatedAt: DateTime!
+
+  user_id: String!
+}
+
 type Cart {
   cart_items: [CartItem!]
 
@@ -145,6 +161,8 @@ type Course {
 
   orientation_video: String
 
+  orientation_video_name: String
+
   other_requirements: [OtherRequirements!]
 
   planner_description: String
@@ -181,6 +199,8 @@ type CourseCategory {
 }
 
 type CourseFolder {
+  course: Course!
+
   course_id: String!
 
   createdAt: DateTime!
@@ -203,6 +223,8 @@ type CourseFolder {
 }
 
 type CourseFolderContent {
+  bookmarks: [Bookmark!]
+
   course_track: [StudentCourseTrack!]
 
   createdAt: DateTime!
@@ -224,6 +246,8 @@ type CourseFolderContent {
   file_uploading_status: FileUpload!
 
   file_url: String
+
+  folder: CourseFolder!
 
   folder_id: String!
 
@@ -263,6 +287,8 @@ type CourseFolderResponse {
 }
 
 type CourseFolderWithCount {
+  course: Course!
+
   course_id: String!
 
   createdAt: DateTime!
@@ -516,6 +542,8 @@ input FindAllBannersInput {
 
   offset: Int = 0
 
+  search: String
+
   sortOrder: String
 }
 
@@ -546,6 +574,8 @@ input FindAllCourseInput {
 input FindAllCourseInputStudent {
   category_name: String
 
+  course_class: String
+
   exam_type: String
 
   is_recommended: Boolean
@@ -565,6 +595,8 @@ type FolderContentWithCompletion {
 
 type Mutation {
   createBanner(createBannerInput: CreateBannerInput!, mobile_banner: [Upload], web_banner: [Upload]): Banner!
+
+  createBookmark(contentId: String!): Bookmark!
 
   createBulkCourseCategory: Boolean!
 
@@ -589,6 +621,8 @@ type Mutation {
   findFolderPath(id: String!): String!
 
   removeBanner(id: ID!, mobileBanner: Boolean, webBanner: Boolean): Boolean!
+
+  removeBookmark(id: String!): Boolean!
 
   removeCart(id: String!): Boolean!
 
@@ -624,9 +658,13 @@ enum OtherRequirements {
 }
 
 type Query {
+  findAllBookmarks(fileType: String): [Bookmark!]!
+
   findAllCartItems: [CartResponseDto!]!
 
-  findAllCourseFolderContentByScheduleTime(endDate: DateTime!, startDate: DateTime!): [CourseFolderContent!]!
+  findAllCourseFolderContentByScheduleTime(course_id: String, endDate: DateTime!, startDate: DateTime!): [CourseFolderContent!]!
+
+  findBookmark(id: String!): Bookmark!
 
   findCartItemById(id: ID!): CartResponseDto!
 
@@ -667,6 +705,8 @@ type Query {
   getVideoStreamDataSignedUrl(courseFolderContentId: String!, format: String!): VideoStreamData!
 
   getbannerById(id: String!): Banner!
+
+  myCourses: [CourseProgressResponseDto!]!
 }
 
 type StudentCourseTrack {
@@ -802,7 +842,7 @@ input UpdateCourseInput {
 input UpdateFolderContent {
   description: String
 
-  file_name: String!
+  file_name: String
 
   scheduled_time: DateTime
 }

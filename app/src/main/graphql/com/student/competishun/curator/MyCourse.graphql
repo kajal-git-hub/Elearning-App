@@ -1,0 +1,26 @@
+
+query MyCourses {
+    myCourses {
+        course {
+            course_class
+            id
+            name
+            price
+            target_year
+            status
+            exam_type
+            entity_type
+        }
+        progress {
+            completionPercentage
+            subfolderDurations {
+                completionPercentage
+                folderCount
+                folder {
+                    name
+                    id
+                }
+            }
+        }
+    }
+}
