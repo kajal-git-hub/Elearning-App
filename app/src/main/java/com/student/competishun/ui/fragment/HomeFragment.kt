@@ -91,25 +91,6 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
         super.onViewCreated(view, savedInstanceState)
 
 
-
-        promoBannerList = listOf(
-            PromoBannerModel(R.drawable.promo_banner_home),
-            PromoBannerModel(R.drawable.promo_banner_home),
-            PromoBannerModel(R.drawable.promo_banner_home),
-        )
-
-        binding.rvpromobanner.adapter = PromoBannerAdapter(promoBannerList)
-        binding.rvpromobanner.layoutManager =
-            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        setupDotsIndicator(promoBannerList.size, binding.llDotsIndicatorPromoBanner)
-        binding.rvpromobanner.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                updateDotsIndicator(recyclerView, binding.llDotsIndicatorPromoBanner)
-            }
-        })
-
-
         rvOurCourses = view.findViewById(R.id.rvOurCourses)
         dotsIndicatorOurCourses = view.findViewById(R.id.llDotsIndicatorOurCourses)
         rvOurCourses.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -176,7 +157,29 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
         dotsIndicatorWhyCompetishun = view.findViewById(R.id.llDotsIndicatorWhyCompetishun)
 
         coursesViewModel.courses.observe(viewLifecycleOwner, Observer { courses ->
-            Log.e("Coursesres", courses.toString())
+            Log.e("Coursesres", courses?.get(7)?.banner_image.toString())
+            Log.e("Coursesres", courses?.get(8)?.banner_image.toString())
+            Log.e("Coursesres", courses?.get(9)?.banner_image.toString())
+
+            val bannerList = mutableListOf<PromoBannerModel>()
+
+            courses?.forEach { course ->
+                Log.e("Course", course.toString())
+                bannerList.add(PromoBannerModel(course.banner_image))
+            }
+
+
+            binding.rvpromobanner.adapter = PromoBannerAdapter(bannerList)
+            binding.rvpromobanner.layoutManager =
+                LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            setupDotsIndicator(bannerList.size, binding.llDotsIndicatorPromoBanner)
+            binding.rvpromobanner.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+                    updateDotsIndicator(recyclerView, binding.llDotsIndicatorPromoBanner)
+                }
+            })
+
             binding.rvRecommendedCourses.adapter = courses?.let { courseList ->
                 RecommendedCoursesAdapter(courseList) { selectedCourse ->
                     val bundle = Bundle().apply {

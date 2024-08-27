@@ -231,10 +231,8 @@
     </fragment>
 
     <fragment
-        android:id="@+id/loginFragment2"
+        android:id="@+id/loginFragment"
         android:name="com.student.competishun.ui.fragment.LoginFragment"
-        android:label="fragment_login"
-        tools:layout="@layout/fragment_login" />
-
-
+        tools:layout="@layout/fragment_login">
+    </fragment>
 </navigation>

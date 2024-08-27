@@ -31,7 +31,8 @@ class CourseEmptyFragment : Fragment() {
     private val binding get() = _binding!!
     lateinit var sharedPreferencesManager: SharedPreferencesManager
     private val ordersViewModel: OrdersViewModel by viewModels()
-    private lateinit var viewModel: MyCoursesViewModel
+    private val viewModel: MyCoursesViewModel by viewModels()
+    private var coursepercent=0
     private val getCourseByIDViewModel: GetCourseByIDViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,6 +53,7 @@ class CourseEmptyFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         sharedPreferencesManager = SharedPreferencesManager(requireContext())
+        myCourses()
         var userId = arguments?.getString("user_id").toString()
          Log.e("userid  $userId: ",sharedPreferencesManager.userId.toString())
         if (!sharedPreferencesManager.userId.isNullOrEmpty()) {
@@ -80,18 +82,21 @@ class CourseEmptyFragment : Fragment() {
 
         getCourseByIDViewModel.courseByID.observe(viewLifecycleOwner, Observer { course ->
             course?.let {
-                var courseClass = ""
-                if(course.course_class.toString() =="TWELFTH_PLUS"){
-                    courseClass = "12th+ Class"
-
-                }else if(course.course_class.toString()=="TWELFTH"){
-                    courseClass = "12th Class"
-
+                Log.e("course", course.folder.toString())
+                var hasFreeFolder = false
+                course.folder?.forEach { folder ->
+                    if (folder.name.startsWith("Free")) {
+                        hasFreeFolder = true
+                    }
                 }
-                else if(course.course_class.toString()=="ELEVENTH"){
-                    courseClass = "11th Class"
 
+                val courseClass = when (course.course_class.toString()) {
+                    "TWELFTH_PLUS" -> "12th+ Class"
+                    "TWELFTH" -> "12th Class"
+                    "ELEVENTH" -> "11th Class"
+                    else -> ""
                 }
+
                 val tag1 = courseClass
                 val tag2 = it.category_name.orEmpty()
                 courseDetailsList.add(
@@ -101,14 +106,16 @@ class CourseEmptyFragment : Fragment() {
                         tag2,
                         "Target ${it.target_year}",
                         it.status.toString(),
-                        10
+                        coursepercent,
+                        hasFreeFolder
                     )
                 )
-
-               if (courseDetailsList.size == orders.size) {
+                if (courseDetailsList.size == orders.size) {
                     binding.clEmptyMyCourse.visibility = View.GONE
                     binding.rvExploreCourses.visibility = View.VISIBLE
                     val adapter = ExploreCourseAdapter(courseDetailsList) { course ->
+                        val bundle = Bundle()
+                        bundle.putString("course_name", course.name)
                         findNavController().navigate(R.id.action_courseEmptyFragment_to_ResumeCourseFragment)
                     }
                     binding.rvExploreCourses.adapter = adapter
@@ -121,14 +128,13 @@ class CourseEmptyFragment : Fragment() {
             getCourseByIDViewModel.fetchCourseById(order.entityId)
         }
     }
-
-
-
     fun orderdetails(ordersViewModel: OrdersViewModel, userId:String
     ){
         val userIds = listOf(userId)
         ordersViewModel.fetchOrdersByUserIds(userIds)
         ordersViewModel.ordersByUserIds.observe(viewLifecycleOwner, Observer { orders ->
+
+            Log.d("orders",orders.toString())
 
             binding.clEmptyMyCourse.visibility = View.VISIBLE
             binding.welcomeUserTxt.text = "Hello, "+sharedPreferencesManager.name
@@ -147,8 +153,11 @@ class CourseEmptyFragment : Fragment() {
     fun myCourses(){
         viewModel.myCourses.observe(viewLifecycleOwner) { result ->
             result.onSuccess { data ->
-                val courses = data.myCourses?.map { it.course }
-                Log.e("getMyCourses",courses.toString())
+                Log.e("getMyCourses",data.toString())
+                val courses = data.myCourses ?.map { coursepercent=
+                    it.progress?.completionPercentage?.toInt() ?: 0
+                }
+
             }.onFailure {
                 Log.e("MyCoursesFail",it.message.toString())
                 Toast.makeText(requireContext(), "Failed to load courses: ${it.message}", Toast.LENGTH_SHORT).show()
