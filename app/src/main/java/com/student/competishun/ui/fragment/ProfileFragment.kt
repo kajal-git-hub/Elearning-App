@@ -49,15 +49,13 @@ class ProfileFragment : Fragment() {
 
         binding.llLogout.setOnClickListener {
             sharedPreferencesManager.clearAccessToken()
-            findNavController().navigate(R.id.loginFragment2)
+            findNavController().navigate(R.id.loginFragment)
         }
 
         binding.ProfileUserName.text = sharedPreferencesManager.name
         binding.ProfileEmail.text = sharedPreferencesManager.mobileNo
         binding.tvExamType.text = sharedPreferencesManager.preparingFor
         binding.tvYear.text= sharedPreferencesManager.targetYear.toString()
-
-
     }
 
 }

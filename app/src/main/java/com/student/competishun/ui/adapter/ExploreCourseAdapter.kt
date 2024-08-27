@@ -39,6 +39,8 @@ class ExploreCourseAdapter(
                 append(course.percentCompleted.toString())
                 append("%")
             }
+
+            binding.ivFreeTag.visibility = if (course.hasFreeFolder) View.VISIBLE else View.GONE
             binding.customProgressIndicator.progress = course.percentCompleted
         }
     }

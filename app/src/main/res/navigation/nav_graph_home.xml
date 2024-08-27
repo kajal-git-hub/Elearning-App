@@ -25,21 +25,21 @@
         <action
             android:id="@+id/action_homeFragment_to_NotificationFragment"
             app:destination="@+id/NotificationFragment" />
-
     </fragment>
+
     <fragment
         android:id="@+id/coursesFragment"
         android:name="com.student.competishun.ui.fragment.CoursesFragment"
         android:label="fragment_courses"
-        tools:layout="@layout/fragment_courses" >
+        tools:layout="@layout/fragment_courses">
+        <argument
+            android:name="courseId"
+            app:argType="string" />
         <action
             android:id="@+id/action_coursesFragment_to_ExploreFragment"
-            app:destination="@+id/exploreFragment">
-            <argument
-                android:name="courseId"
-                app:argType="string" />
-        </action>
+            app:destination="@+id/exploreFragment" />
     </fragment>
+
     <fragment
         android:id="@+id/mediaFragment"
         android:name="com.student.competishun.ui.fragment.MediaPlayerFragment"
@@ -50,6 +50,7 @@
             android:defaultValue=""
             app:argType="string" />
     </fragment>
+
     <fragment
         android:id="@+id/exploreFragment"
         android:name="com.student.competishun.ui.fragment.ExploreFragment"
@@ -74,37 +75,33 @@
             android:id="@+id/action_exploreFragment_to_paymentFragment"
             app:destination="@+id/paymentFragment" />
     </fragment>
+
     <fragment
         android:id="@+id/allFaqFragment"
         android:name="com.student.competishun.ui.fragment.AllFaqFragment"
         android:label="fragment_all_faq"
         tools:layout="@layout/fragment_all_faq">
-
     </fragment>
 
     <fragment
         android:id="@+id/demoFreeFragment"
         android:name="com.student.competishun.ui.fragment.AllDemoResourcesFree"
         tools:layout="@layout/fragment_all_demo_resources_free">
-
         <argument
             android:name="folderId"
             app:argType="string" />
-
     </fragment>
 
     <fragment
         android:id="@+id/installmentFragment"
         android:name="com.student.competishun.ui.fragment.InstallmentDetailsBottomSheet"
         tools:layout="@layout/bottom_sheet_installment_details">
-
     </fragment>
 
     <fragment
         android:id="@+id/myCartFragment"
         android:name="com.student.competishun.ui.fragment.MyCartFragment"
         tools:layout="@layout/fragment_my_cart">
-
         <action
             android:id="@+id/action_mycartFragment_to_paymentFragment"
             app:destination="@+id/paymentFragment" />
@@ -123,14 +120,12 @@
         <argument
             android:name="userId"
             app:argType="string" />
-
     </fragment>
 
     <fragment
         android:id="@+id/paymentLoaderFragment"
         android:name="com.student.competishun.ui.fragment.PaymentLoaderFragment"
         tools:layout="@layout/fragment_payment_loader">
-
         <action
             android:id="@+id/action_paymentLoaderFragment_to_paymentFragment"
             app:destination="@+id/paymentFragment" />
@@ -140,33 +135,29 @@
         android:id="@+id/PersonalDetailsFragment"
         android:name="com.student.competishun.ui.fragment.PersonalDetailsFragment"
         tools:layout="@layout/fragment_personal_detail">
-
         <action
             android:id="@+id/action_PersonalDetails_to_AdditionalDetail"
             app:destination="@+id/AdditionalDetailsFragment" />
     </fragment>
 
-
     <fragment
         android:id="@+id/AdditionalDetailsFragment"
         android:name="com.student.competishun.ui.fragment.AdditionalDetailsFragment"
         tools:layout="@layout/fragment_additional_detail">
-
         <action
             android:id="@+id/action_AdditionalDetail_to_AddressDetail"
             app:destination="@+id/AddressDetailFragment" />
     </fragment>
 
-
     <fragment
         android:id="@+id/AddressDetailFragment"
         android:name="com.student.competishun.ui.fragment.AddressDetailsFragment"
         tools:layout="@layout/fragment_address_details">
-
         <action
             android:id="@+id/action_AddressDetail_to_CourseEmpty"
             app:destination="@+id/courseEmptyFragment" />
     </fragment>
+
     <fragment
         android:id="@+id/courseEmptyFragment"
         android:name="com.student.competishun.ui.fragment.CourseEmptyFragment"
@@ -176,24 +167,28 @@
             app:destination="@+id/SubjectContentFragment"/>
         <action
             android:id="@+id/action_courseEmptyFragment_to_ResumeCourseFragment"
-            app:destination="@+id/ResumeCourseFragment"/>
+            app:destination="@+id/ResumeCourseFragment" />
     </fragment>
 
     <fragment
         android:id="@+id/SubjectContentFragment"
         android:name="com.student.competishun.ui.fragment.SubjectContentFragment"
         tools:layout="@layout/fragment_subject_content">
-
         <action
             android:id="@+id/action_subjectContentFragment_to_TopicTYPEContentFragment"
             app:destination="@+id/TopicTYPEContentFragment"/>
-
     </fragment>
 
     <fragment
         android:id="@+id/ResumeCourseFragment"
         android:name="com.student.competishun.ui.fragment.ResumeCourseFragment"
         tools:layout="@layout/fragment_resume_course">
+        <argument
+            android:name="course_Id"
+            app:argType="string" />
+        <argument
+            android:name="folder_Id"
+            app:argType="string" />
         <action
             android:id="@+id/action_resumeCourseFragment_to_subjectContentFragment"
             app:destination="@+id/SubjectContentFragment"/>
@@ -202,17 +197,18 @@
             app:destination="@+id/ScheduleFragment"/>
     </fragment>
 
-
     <fragment
         android:id="@+id/TopicTYPEContentFragment"
         android:name="com.student.competishun.ui.fragment.TopicTypeContentFragment"
         tools:layout="@layout/fragment_topic_type_content">
     </fragment>
+
     <fragment
         android:id="@+id/PaymentFailedFragment"
         android:name="com.student.competishun.ui.fragment.PaymentFailedFragment"
         tools:layout="@layout/fragment_paymet_failed">
     </fragment>
+
     <fragment
         android:id="@+id/ProfileFragment"
         android:name="com.student.competishun.ui.fragment.ProfileFragment"
@@ -231,10 +227,8 @@
     </fragment>
 
     <fragment
-        android:id="@+id/loginFragment2"
+        android:id="@+id/loginFragment"
         android:name="com.student.competishun.ui.fragment.LoginFragment"
-        android:label="fragment_login"
-        tools:layout="@layout/fragment_login" />
-
-
+        tools:layout="@layout/fragment_login">
+    </fragment>
 </navigation>

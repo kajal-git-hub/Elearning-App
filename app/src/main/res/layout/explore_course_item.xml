@@ -13,6 +13,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <ImageView
+        android:id="@+id/iv_free_tag"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/group_1272628768"
