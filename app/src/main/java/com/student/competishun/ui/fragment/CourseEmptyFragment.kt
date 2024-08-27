@@ -33,6 +33,8 @@ class CourseEmptyFragment : Fragment() {
     private val ordersViewModel: OrdersViewModel by viewModels()
     private val viewModel: MyCoursesViewModel by viewModels()
     private var coursepercent=0
+    private var currentCourseId=""
+    private var folderId=""
     private val getCourseByIDViewModel: GetCourseByIDViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -90,6 +92,8 @@ class CourseEmptyFragment : Fragment() {
                     }
                 }
 
+                folderId = course.folder?.get(0)?.id.toString()
+
                 val courseClass = when (course.course_class.toString()) {
                     "TWELFTH_PLUS" -> "12th+ Class"
                     "TWELFTH" -> "12th Class"
@@ -115,8 +119,11 @@ class CourseEmptyFragment : Fragment() {
                     binding.rvExploreCourses.visibility = View.VISIBLE
                     val adapter = ExploreCourseAdapter(courseDetailsList) { course ->
                         val bundle = Bundle()
-                        bundle.putString("course_name", course.name)
-                        findNavController().navigate(R.id.action_courseEmptyFragment_to_ResumeCourseFragment)
+                        bundle.putString("course_Id", currentCourseId)
+                        bundle.putString("folder_Id", folderId)
+                        Log.d("course_Id", currentCourseId)
+                        Log.d("folder_Id", folderId)
+                        findNavController().navigate(R.id.action_courseEmptyFragment_to_ResumeCourseFragment,bundle)
                     }
                     binding.rvExploreCourses.adapter = adapter
                     binding.rvExploreCourses.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
@@ -125,6 +132,7 @@ class CourseEmptyFragment : Fragment() {
         })
 
         orders.forEach { order ->
+            currentCourseId=order.entityId
             getCourseByIDViewModel.fetchCourseById(order.entityId)
         }
     }
