@@ -41,7 +41,7 @@ class SubjectContentFragment : Fragment() {
 
             folderProgress("81c5cc01-666c-4a97-a4b5-b153b1d9380e")
 
-
+        binding.backIconSubjectContent.setOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed() }
         val subjectContentList = listOf(
             SubjectContentItem(1, "Trigonometric ratios", "08 Learning Material"),
             SubjectContentItem(2, "Pythagorean theorem", "05 Learning Material"),

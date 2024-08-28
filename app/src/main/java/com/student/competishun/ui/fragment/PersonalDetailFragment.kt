@@ -21,6 +21,7 @@ import com.student.competishun.databinding.FragmentPersonalDetailBinding
 import com.student.competishun.gatekeeper.type.UpdateUserInput
 import com.student.competishun.ui.viewmodel.UpdateUserViewModel
 import com.student.competishun.ui.viewmodel.UserViewModel
+import com.student.competishun.utils.SharedPreferencesManager
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 
@@ -34,7 +35,7 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
     private var isTshirtSizeSelected = false
     private var selectedTShirtSize: String? = null
     var isBottomSheetShowing = false
-
+    lateinit var sharedPreferencesManager: SharedPreferencesManager
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -53,7 +54,7 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        sharedPreferencesManager = SharedPreferencesManager(requireContext())
         val bottomSheetDescriptionFragment = BottomSheetPersonalDetailsFragment()
         bottomSheetDescriptionFragment.show(childFragmentManager, "BottomSheetDescriptionFragment")
 
@@ -73,6 +74,7 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
                     fatherName = Optional.Present(binding.etFathersName.text.toString().trim()),
                     tShirtSize = Optional.Present(selectedTShirtSize)
                 )
+                sharedPreferencesManager.name = userDetails.fullName
                 val documentPhotoFile: File? = File("")
                 val passportPhotoFile: File? = File("")
                 userUpdate(updateUserInput,documentPhotoFile,passportPhotoFile)

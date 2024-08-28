@@ -111,10 +111,11 @@ class AllDemoResourcesFree : Fragment() {
                                     freeDemoItem.titleDemo
                                 )
                             } else if(fileType.equals("FOLDER")){
-                                freeDemoItem.fileUrl
+
+                                Log.e("fodername id ${freeDemoItem.id}",freeDemoItem.titleDemo)
                                 val bundle = Bundle().apply {
-                                    putString("folderId", folderId)
-                                    putString("folderName", folderName)
+                                    putString("folderId", freeDemoItem.id)
+                                    putString("folderName", freeDemoItem.titleDemo)
                                 }
                                 findNavController().navigate(R.id.action_exploreFragment_to_demoFreeFragment, bundle)
                             }

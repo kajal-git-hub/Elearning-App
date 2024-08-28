@@ -57,10 +57,14 @@ class CourseEmptyFragment : Fragment() {
         sharedPreferencesManager = SharedPreferencesManager(requireContext())
         myCourses()
         var userId = arguments?.getString("user_id").toString()
-         Log.e("userid  $userId: ",sharedPreferencesManager.userId.toString())
-        if (!sharedPreferencesManager.userId.isNullOrEmpty()) {
-            orderdetails(ordersViewModel,sharedPreferencesManager.userId.toString())
-        }else orderdetails(ordersViewModel,userId)
+        if (!sharedPreferencesManager.name.isNullOrEmpty()) {
+            binding.welcomeUserTxt.text = "Hello, " + sharedPreferencesManager.name
+        }
+        // Log.e("userid  $userId: ",sharedPreferencesManager.userId.toString())
+         myCourses()
+//        if (!sharedPreferencesManager.userId.isNullOrEmpty()) {
+//            orderdetails(ordersViewModel,sharedPreferencesManager.userId.toString())
+//        }else orderdetails(ordersViewModel,userId)
 
 //        val exploreCourseList = listOf(
 //            ExploreCourse("Prakhar Integrated (Fast Lane-2) 2024-25", "12th class", "Full-Year", "Target 2025", "Ongoing", 10),
@@ -81,7 +85,6 @@ class CourseEmptyFragment : Fragment() {
 
     private fun courseDetails(orders: List<OrdersByUserIdsQuery.OrdersByUserId>) {
         val courseDetailsList = mutableListOf<ExploreCourse>()
-
         getCourseByIDViewModel.courseByID.observe(viewLifecycleOwner, Observer { course ->
             course?.let {
                 Log.e("course", course.folder.toString())
@@ -133,35 +136,64 @@ class CourseEmptyFragment : Fragment() {
 
         orders.forEach { order ->
             currentCourseId=order.entityId
+            Log.e("courseID",currentCourseId)
             getCourseByIDViewModel.fetchCourseById(order.entityId)
         }
     }
-    fun orderdetails(ordersViewModel: OrdersViewModel, userId:String
-    ){
-        val userIds = listOf(userId)
-        ordersViewModel.fetchOrdersByUserIds(userIds)
-        ordersViewModel.ordersByUserIds.observe(viewLifecycleOwner, Observer { orders ->
-
-            Log.d("orders",orders.toString())
-
-            binding.clEmptyMyCourse.visibility = View.VISIBLE
-            binding.welcomeUserTxt.text = "Hello, "+sharedPreferencesManager.name
-            orders?.let {
-                courseDetails(orders)
-            } ?: run {
-                binding.clEmptyMyCourse.visibility = View.VISIBLE
-                Log.e("courseEmpty", "No orders found")
-            }
-        })
-
-        // Fetch orders by user IDs
-
-    }
-
     fun myCourses(){
+//        Log.e("getMyresule",myco.toString())
+        val courseDetailsList = mutableListOf<ExploreCourse>()
         viewModel.myCourses.observe(viewLifecycleOwner) { result ->
+            Log.e("getMyresule",result.toString())
             result.onSuccess { data ->
                 Log.e("getMyCourses",data.toString())
+                data.myCourses?.forEach { courselist->
+                    Log.e("geafa",courselist.toString())
+                    var hasFreeFolder = false
+
+                    courselist.progress?.subfolderDurations?.forEach { folders ->
+                        if (folders.folder.name.startsWith("Free")) {
+                            hasFreeFolder = true
+                        }
+                        folderId = folders.folder.id.toString()
+                    }
+
+
+
+                    val courseClass = when (courselist.course.course_class.toString()) {
+                        "TWELFTH_PLUS" -> "12th+ Class"
+                        "TWELFTH" -> "12th Class"
+                        "ELEVENTH" -> "11th Class"
+                        else -> ""
+                    }
+
+                    val tag1 = courseClass
+                    val tag2 = courselist.course.category_name.orEmpty()
+                    courseDetailsList.add(
+                        ExploreCourse(
+                            courselist.course.name,
+                            tag1,
+                            tag2,
+                            "Target ${courselist.course.target_year}",
+                            courselist.course.status.toString(),
+                            coursepercent,
+                            hasFreeFolder
+                        )
+                    )
+                    if (data.myCourses.isNotEmpty()) {
+                        binding.clEmptyMyCourse.visibility = View.GONE
+                        binding.rvExploreCourses.visibility = View.VISIBLE
+                        val adapter = ExploreCourseAdapter(courseDetailsList) { course ->
+                            val bundle = Bundle()
+                            bundle.putString("folder_Id", folderId)
+                            bundle.putString("courseName", course.name)
+                            Log.d("folder_Id namecouse: ${course.name}", folderId)
+                            findNavController().navigate(R.id.action_courseEmptyFragment_to_ResumeCourseFragment,bundle)
+                        }
+                        binding.rvExploreCourses.adapter = adapter
+                        binding.rvExploreCourses.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+                    }
+                }
                 val courses = data.myCourses ?.map { coursepercent=
                     it.progress?.completionPercentage?.toInt() ?: 0
                 }
@@ -174,6 +206,29 @@ class CourseEmptyFragment : Fragment() {
 
         viewModel.fetchMyCourses()
     }
+
+//    fun orderdetails(ordersViewModel: OrdersViewModel, userId:String
+//    ){
+//        val userIds = listOf(userId)
+//        ordersViewModel.fetchOrdersByUserIds(userIds)
+//        ordersViewModel.ordersByUserIds.observe(viewLifecycleOwner, Observer { orders ->
+//
+//            Log.d("orders",orders.toString())
+//
+//            binding.clEmptyMyCourse.visibility = View.VISIBLE
+//            binding.welcomeUserTxt.text = "Hello, "+sharedPreferencesManager.name
+//            orders?.let {
+//                courseDetails(orders)
+//            } ?: run {
+//                binding.clEmptyMyCourse.visibility = View.VISIBLE
+//                Log.e("courseEmpty", "No orders found")
+//            }
+//        })
+//
+//        // Fetch orders by user IDs
+//
+//    }
+
 
 
     override fun onDestroyView() {
