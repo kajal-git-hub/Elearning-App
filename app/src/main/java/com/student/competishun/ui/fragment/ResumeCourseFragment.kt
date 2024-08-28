@@ -12,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import com.student.competishun.R
 import com.student.competishun.curator.MyCoursesQuery
 import com.student.competishun.databinding.FragmentResumeCourseBinding
+import com.student.competishun.ui.viewmodel.CoursesViewModel
 import com.student.competishun.ui.viewmodel.MyCoursesViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -21,7 +22,7 @@ class ResumeCourseFragment : Fragment() {
     private var _binding: FragmentResumeCourseBinding? = null
     private val binding get() = _binding!!
     private val myCourseViewModel: MyCoursesViewModel by viewModels()
-
+    private val coursesViewModel: CoursesViewModel by viewModels()
     private val courseId: String? by lazy {
         arguments?.getString("course_Id")
     }
@@ -40,15 +41,15 @@ class ResumeCourseFragment : Fragment() {
         binding.backIcon.setOnClickListener {
             requireActivity().onBackPressed()
         }
-
+        folderProgress("b8b9cb32-661b-4e8e-90d0-9c5a0740d273")
         Log.d("resumecourse", "courseId: $courseId")
-
+        binding.backIcon.setOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed() }
         binding.clResumeCourseIcon2.setOnClickListener {
             findNavController().navigate(R.id.action_resumeCourseFragment_to_ScheduleFragment)
         }
-        binding.clMathematics.setOnClickListener {
-            findNavController().navigate(R.id.action_resumeCourseFragment_to_subjectContentFragment)
-        }
+//        binding.clMathematics.setOnClickListener {
+//            findNavController().navigate(R.id.action_resumeCourseFragment_to_subjectContentFragment)
+//        }
         myCourse()
     }
 
@@ -75,6 +76,25 @@ class ResumeCourseFragment : Fragment() {
         binding.courseNameResumeCourse.text = course.course.name
     }
 
+    fun folderProgress(folderId:String){
+        if (folderId != null) {
+            coursesViewModel.findCourseFolderProgress(folderId)
+        }
+        coursesViewModel.courseFolderProgress.observe(viewLifecycleOwner) { result ->
+            result.onSuccess { data ->
+                Log.e("GetFolderdata", data.findCourseFolderProgress.folder.toString())
+                var subFolder = data.findCourseFolderProgress.subfolderDurations
+                if (subFolder.isNullOrEmpty()){
+                    findNavController().navigate(R.id.TopicTYPEContentFragment)
+                }else{
+                    findNavController().navigate(R.id.action_resumeCourseFragment_to_subjectContentFragment)
+                }
+
+            }.onFailure { error ->
+                Log.e("AllDemoResourcesFree", error.message.toString())
+            }
+        }
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()

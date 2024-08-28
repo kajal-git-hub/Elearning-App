@@ -149,9 +149,7 @@ class AllDemoResourcesFree : Fragment() {
                     putString("url", signedUrl)
                 }
                 findNavController().navigate(R.id.mediaFragment,bundle)
-                // Use the signed URL to load your video
 
-                // Example: Load the video with an ExoPlayer or other player
             } else {
                 // Handle error or null URL
             }

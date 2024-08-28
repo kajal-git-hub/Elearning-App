@@ -37,7 +37,7 @@ class SubjectContentFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val folderId = arguments?.getString("folderId")
+       // val folderId = arguments?.getString("folderId")
 
             folderProgress("81c5cc01-666c-4a97-a4b5-b153b1d9380e")
 
