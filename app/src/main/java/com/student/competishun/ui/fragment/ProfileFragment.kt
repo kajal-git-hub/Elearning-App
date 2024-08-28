@@ -1,5 +1,6 @@
 package com.student.competishun.ui.fragment
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -11,6 +12,7 @@ import com.student.competishun.R
 import com.student.competishun.databinding.FragmentOnBoardingBinding
 import com.student.competishun.databinding.FragmentProfileBinding
 import com.student.competishun.databinding.FragmentReferenceBinding
+import com.student.competishun.ui.main.MainActivity
 import com.student.competishun.utils.SharedPreferencesManager
 
 class ProfileFragment : Fragment() {
@@ -48,8 +50,16 @@ class ProfileFragment : Fragment() {
         }
 
         binding.llLogout.setOnClickListener {
+            // Clear the user session
+
             sharedPreferencesManager.clearAccessToken()
-            findNavController().navigate(R.id.loginFragment)
+            sharedPreferencesManager.clearRefreshToken()
+
+            val intent = Intent(requireContext(), MainActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            intent.putExtra("navigateToLogin", true)
+            startActivity(intent)
+            requireActivity().finish()
         }
 
         binding.ProfileUserName.text = sharedPreferencesManager.name

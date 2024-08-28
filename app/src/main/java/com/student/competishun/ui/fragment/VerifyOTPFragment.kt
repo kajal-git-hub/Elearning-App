@@ -116,6 +116,7 @@ class VerifyOTPFragment : Fragment() {
                 )
                 sharedPreferencesManager.userId = result.user?.id
                 sharedPreferencesManager.accessToken = result.accessToken
+                sharedPreferencesManager.refreshToken = result.refreshToken
                 changeOtpBoxesBackground(R.drawable.otp_edit_text_background)
                 binding.etEnterOtpText.text = "Enter the OTP to continue"
                 binding.etEnterOtpText.setTextColor(Color.parseColor("#726C6C"))

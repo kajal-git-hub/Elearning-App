@@ -115,4 +115,7 @@ class SharedPreferencesManager(context: Context) {
     fun clearAccessToken() {
         sharedPreferences.edit().remove(KEY_ACCESS_TOKEN).apply()
     }
+    fun clearRefreshToken() {
+        sharedPreferences.edit().remove(KEY_REFRESH_TOKEN).apply()
+    }
 }
