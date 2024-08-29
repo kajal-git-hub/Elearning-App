@@ -14,7 +14,7 @@ import com.student.competishun.R
 import com.student.competishun.data.model.TopicContentModel
 import com.student.competishun.databinding.ItemTopicTypeContentBinding
 
-class TopicContentAdapter(private val topicContents: List<TopicContentModel>) :
+class TopicContentAdapter(private val topicContents: List<TopicContentModel>, private val folderContentId: String,private val onItemClick: (TopicContentModel, String) -> Unit) :
     RecyclerView.Adapter<TopicContentAdapter.TopicContentViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TopicContentViewHolder {
@@ -25,7 +25,13 @@ class TopicContentAdapter(private val topicContents: List<TopicContentModel>) :
     }
 
     override fun onBindViewHolder(holder: TopicContentViewHolder, position: Int) {
+
+        val topicContent = topicContents[position]
         holder.bind(topicContents[position])
+
+        holder.itemView.setOnClickListener {
+            onItemClick(topicContent,folderContentId)
+        }
     }
 
     override fun getItemCount(): Int = topicContents.size
@@ -83,6 +89,7 @@ class TopicContentAdapter(private val topicContents: List<TopicContentModel>) :
                     binding.tvCourseDescription.text = topicContent.topicDescription
                 }
             }
+
         }
     }
 }

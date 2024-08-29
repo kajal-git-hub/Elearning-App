@@ -5,13 +5,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.student.competishun.curator.FindAllCourseFolderContentByScheduleTimeQuery
 import com.student.competishun.data.model.CalendarDate
 import com.student.competishun.data.model.ScheduleData
 import com.student.competishun.databinding.FragmentScheduleBinding
 import com.student.competishun.ui.adapter.ScheduleAdapter
+import com.student.competishun.ui.viewmodel.MyCoursesViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class ScheduleFragment : Fragment() {
 
     private val binding by lazy {
@@ -20,13 +26,12 @@ class ScheduleFragment : Fragment() {
 
     private lateinit var calendarSetUp: HorizontalCalendarSetUp
     private lateinit var scheduleAdapter: ScheduleAdapter
-
+    private val myCourseViewModel: MyCoursesViewModel by viewModels()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         setupCalendar()
-        setupRecyclerView()
         return binding.root
     }
 
@@ -56,8 +61,25 @@ class ScheduleFragment : Fragment() {
         )
     }
 
-    private fun setupRecyclerView() {
+    private fun setupRecyclerView(findAllCourseFolderContentByScheduleTime: List<FindAllCourseFolderContentByScheduleTimeQuery.FindAllCourseFolderContentByScheduleTime>) {
+      findAllCourseFolderContentByScheduleTime.get(0).folder.name
 
+        val transformedData = findAllCourseFolderContentByScheduleTime.map { folderContent ->
+            ScheduleData(
+                day = "",
+                date = folderContent.scheduled_time.toString(),
+                innerItems = folderContent.folder.folder_content?.map { item ->
+                    ScheduleData.InnerScheduleItem(
+                        subject_name = item.file_name,
+                        topic_name = item.description?:"",
+                        lecture_start_time = "03:12:34 PM",
+                        lecture_end_time = "09:12:34 PM",
+                        lecture_status = "Scheduled"
+                    )
+                }?: emptyList()
+
+            )
+        }
         val sampleData = listOf(
             ScheduleData(
                 "Sat", "03", listOf(
@@ -392,7 +414,7 @@ class ScheduleFragment : Fragment() {
             )
         )
 
-        scheduleAdapter = ScheduleAdapter(sampleData, requireContext())
+        scheduleAdapter = ScheduleAdapter(transformedData, requireContext())
         binding.rvCalenderSchedule.adapter = scheduleAdapter
         binding.rvCalenderSchedule.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
@@ -401,6 +423,24 @@ class ScheduleFragment : Fragment() {
         val currentDate = calendarSetUp.getCurrentDate()
         scrollToDate(currentDate)
     }
+
+    fun FindAllCourseFolderContentByScheduleTimeQuery(){
+        myCourseViewModel.courseFolderContent.observe(viewLifecycleOwner) { result ->
+            result.onSuccess { data ->
+                 setupRecyclerView(data.findAllCourseFolderContentByScheduleTime)
+
+            }.onFailure { exception ->
+                Toast.makeText(context, "Error: ${exception.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
+        myCourseViewModel.getCourseFolderContent("08-29-2024", "10-30-2025", "c00d3ee9-dc1e-47c7-894a-5f63535c1fdc")
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        FindAllCourseFolderContentByScheduleTimeQuery()
+    }
+
 
     private fun scrollToDate(calendarDate: CalendarDate) {
         val position = scheduleAdapter.findPositionByDate(calendarDate.date)

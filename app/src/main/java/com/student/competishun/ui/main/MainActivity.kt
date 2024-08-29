@@ -62,6 +62,7 @@ class MainActivity : AppCompatActivity() {
         userViewModel.userDetails.observe(this) { result ->
             result.onSuccess { data ->
                 val userDetails = data.getMyDetails
+                sharedPreferencesManager.name = userDetails.fullName
                 Log.e("mainActivity details", userDetails.toString())
                 userId = data.getMyDetails.userInformation.id
             }.onFailure { exception ->

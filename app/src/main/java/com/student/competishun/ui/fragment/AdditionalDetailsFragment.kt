@@ -1,27 +1,46 @@
 package com.student.competishun.ui.fragment
 
+import android.content.Context
 import android.content.Intent
 import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
 import android.provider.OpenableColumns
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import com.apollographql.apollo3.api.Optional
+import com.google.android.gms.common.util.IOUtils.copyStream
 import com.google.android.material.snackbar.Snackbar
 import com.student.competishun.R
 import com.student.competishun.databinding.FragmentAdditionalDetailBinding
+import com.student.competishun.gatekeeper.type.UpdateUserInput
 import com.student.competishun.ui.main.HomeActivity
+import com.student.competishun.ui.viewmodel.UpdateUserViewModel
+import com.student.competishun.ui.viewmodel.UserViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import java.io.File
+import java.io.FileOutputStream
+import java.io.InputStream
+import java.io.OutputStream
 
+@AndroidEntryPoint
 class AdditionalDetailsFragment : Fragment() {
 
     private val binding by lazy {
         FragmentAdditionalDetailBinding.inflate(layoutInflater)
     }
+
+    private val userViewModel: UserViewModel by viewModels()
+    private val updateUserViewModel: UpdateUserViewModel by viewModels()
 
     companion object {
         private const val REQUEST_CODE_PICK_FILE = 1
@@ -31,6 +50,7 @@ class AdditionalDetailsFragment : Fragment() {
 
     private var uploadedIdUri: Uri? = null
     private var uploadedPhotoUri: Uri? = null
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,6 +62,30 @@ class AdditionalDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        userViewModel.userDetails.observe(viewLifecycleOwner) { result ->
+            result.onSuccess { data ->
+                val userDetails = data.getMyDetails
+                Log.e("userDetails",userDetails.toString())
+                val updateUserInput = UpdateUserInput(
+                    city = Optional.Present(userDetails.userInformation.city),
+                    fullName = Optional.Present(userDetails.fullName),
+                    preparingFor = Optional.Present(userDetails.userInformation.preparingFor),
+                    reference = Optional.Present(userDetails.userInformation.reference),
+                    targetYear = Optional.Present(userDetails.userInformation.targetYear),
+                    waCountryCode = Optional.Present("+91"),
+                )
+
+                val documentPhotoFile: File? = uploadedIdUri?.let { getFileFromUri(requireContext(), it) }
+                val passportPhotoFile: File? = uploadedPhotoUri?.let { getFileFromUri(requireContext(), it) }
+                userUpdate(updateUserInput,null,null)
+            }.onFailure { exception ->
+                Toast.makeText(
+                    requireContext(),
+                    "Error fetching details: ${exception.message}",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
         binding.etBTHomeAddress.setOnClickListener {
             findNavController().navigate(R.id.PersonalDetailsFragment)
         }
@@ -55,6 +99,7 @@ class AdditionalDetailsFragment : Fragment() {
             currentFileType = "PHOTO"
             pickFile()
         }
+
 
         binding.btnAddaddressDetails.setOnClickListener {
             findNavController().navigate(R.id.action_AdditionalDetail_to_AddressDetail)
@@ -83,6 +128,45 @@ class AdditionalDetailsFragment : Fragment() {
         }
 
         updateButtonState()
+    }
+    // Function to get a File from a Uri
+    fun getFileFromUri(context: Context, uri: Uri): File? {
+        val fileName = getFileName(uri, context) ?: return null
+        val file = File(context.cacheDir, fileName)
+        try {
+            val inputStream: InputStream? = context.contentResolver.openInputStream(uri)
+            val outputStream: OutputStream = FileOutputStream(file)
+            copyStream(inputStream!!, outputStream)
+            inputStream.close()
+            outputStream.close()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return null
+        }
+        return file
+    }
+
+    // Helper function to get the file name from the Uri
+    private fun getFileName(uri: Uri, context: Context): String? {
+        var result: String? = null
+        if (uri.scheme.equals("content")) {
+            val cursor: Cursor? = context.contentResolver.query(uri, null, null, null, null)
+            try {
+                if (cursor != null && cursor.moveToFirst()) {
+                    result = cursor.getString(cursor.getColumnIndexOrThrow(OpenableColumns.DISPLAY_NAME))
+                }
+            } finally {
+                cursor?.close()
+            }
+        }
+        if (result == null) {
+            result = uri.path
+            val cut = result?.lastIndexOf('/')
+            if (cut != -1) {
+                result = result?.substring(cut!! + 1)
+            }
+        }
+        return result
     }
 
     private fun pickFile() {
@@ -215,5 +299,22 @@ class AdditionalDetailsFragment : Fragment() {
             flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
         }
         startActivity(intent)
+    }
+
+
+    fun userUpdate(updateUserInput: UpdateUserInput, documentPhotoFile: File?, passportPhotoFile: File?){
+        updateUserViewModel.updateUser(updateUserInput,documentPhotoFile,passportPhotoFile)
+        updateUserViewModel.updateUserResult.observe(viewLifecycleOwner, Observer { result ->
+            if (result?.user != null) {
+                Log.e("gettingUserUpdateTarget", result.user.userInformation.targetYear.toString())
+                Log.e("gettingUserUpdaterefer", result.user.userInformation.reference.toString())
+                Log.e("gettingUserUpdateprep", result.user.userInformation.preparingFor.toString())
+                Log.e("gettingUserUpdatecity", result.user.userInformation.city.toString())
+
+            } else {
+                Log.e("gettingUserUpdatefail", result.toString())
+                Toast.makeText(context, "Update failed", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 }

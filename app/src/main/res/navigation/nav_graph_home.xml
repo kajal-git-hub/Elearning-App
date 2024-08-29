@@ -195,6 +195,7 @@
         <action
             android:id="@+id/action_resumeCourseFragment_to_ScheduleFragment"
             app:destination="@+id/ScheduleFragment"/>
+
     </fragment>
 
     <fragment

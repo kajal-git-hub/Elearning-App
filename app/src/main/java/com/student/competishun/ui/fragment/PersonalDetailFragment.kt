@@ -33,6 +33,7 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
     private val binding get() = _binding!!
     private val updateUserViewModel: UpdateUserViewModel by viewModels()
     private var isTshirtSizeSelected = false
+    private var selectedTShirtSize: String? = null
     var isBottomSheetShowing = false
     lateinit var sharedPreferencesManager: SharedPreferencesManager
     private var fatherName = ""

@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.student.competishun.curator.FindAllCourseFolderContentByScheduleTimeQuery
 import com.student.competishun.curator.MyCoursesQuery
 import com.student.competishun.data.repository.MyCoursesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,6 +16,9 @@ class MyCoursesViewModel@Inject constructor(private val repository: MyCoursesRep
 
     private val _myCourses = MutableLiveData<Result<MyCoursesQuery.Data>>()
     val myCourses: LiveData<Result<MyCoursesQuery.Data>> get() = _myCourses
+    private val _courseFolderContent = MutableLiveData<Result<FindAllCourseFolderContentByScheduleTimeQuery.Data>>()
+    val courseFolderContent: LiveData<Result<FindAllCourseFolderContentByScheduleTimeQuery.Data>> = _courseFolderContent
+
 
     fun fetchMyCourses() {
         viewModelScope.launch {
@@ -22,4 +26,13 @@ class MyCoursesViewModel@Inject constructor(private val repository: MyCoursesRep
             _myCourses.postValue(result)
         }
     }
+
+  fun getCourseFolderContent(startDate: String, endDate: String, courseId: String) {
+        viewModelScope.launch {
+            val result = repository.findAllCourseFolderContentByScheduleTime(startDate, endDate, courseId)
+            _courseFolderContent.postValue(result)
+        }
+    }
+
+
 }

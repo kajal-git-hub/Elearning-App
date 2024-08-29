@@ -9,7 +9,14 @@ query MyCourses {
             target_year
             status
             exam_type
+            category_name
+            category_id
             entity_type
+            folder {
+                id
+                name
+                description
+            }
         }
         progress {
             completionPercentage
@@ -19,6 +26,8 @@ query MyCourses {
                 folder {
                     name
                     id
+                    description
+                    parent_folder_id
                 }
             }
         }

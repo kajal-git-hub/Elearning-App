@@ -66,8 +66,8 @@ class NEETFragment : Fragment(), StudentCourseItemClickListener {
         val categoryName = arguments?.getString("category_name")
         val filters = FindAllCourseInputStudent(
             Optional.present(categoryName),
+            Optional.present("12th"),
             Optional.present("NEET"),
-            Optional.present(null),
             Optional.present(null))
         courseViewModel.fetchCourses(filters)
 

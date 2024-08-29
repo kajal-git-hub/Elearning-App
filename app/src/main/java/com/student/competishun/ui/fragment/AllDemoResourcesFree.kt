@@ -110,10 +110,18 @@ class AllDemoResourcesFree : Fragment() {
                                     freeDemoItem.fileUrl,
                                     freeDemoItem.titleDemo
                                 )
-                            } else {
-                                (fileType.equals("VIDEO"))
-                                if (free == true)
-                                videoUrlApi(videourlViewModel, freeDemoItem.id)
+                            } else if(fileType.equals("FOLDER")){
+
+                                Log.e("fodername id ${freeDemoItem.id}",freeDemoItem.titleDemo)
+                                val bundle = Bundle().apply {
+                                    putString("folderId", freeDemoItem.id)
+                                    putString("folderName", freeDemoItem.titleDemo)
+                                }
+                                findNavController().navigate(R.id.action_exploreFragment_to_demoFreeFragment, bundle)
+                            }
+                            else
+                            { (fileType)
+                                if (free == true) videoUrlApi(videourlViewModel, freeDemoItem.id)
                             }
                         }
                         binding.rvAllDemoFree.apply {
@@ -142,9 +150,7 @@ class AllDemoResourcesFree : Fragment() {
                     putString("url", signedUrl)
                 }
                 findNavController().navigate(R.id.mediaFragment,bundle)
-                // Use the signed URL to load your video
 
-                // Example: Load the video with an ExoPlayer or other player
             } else {
                 // Handle error or null URL
             }

@@ -40,7 +40,8 @@ class ExploreCourseAdapter(
                 append("%")
             }
 
-            binding.ivFreeTag.visibility = if (course.hasFreeFolder) View.VISIBLE else View.GONE
+            binding.ivFreeTag.visibility =  View.GONE
+           // if (course.hasFreeFolder) View.VISIBLE else
             binding.customProgressIndicator.progress = course.percentCompleted
         }
     }

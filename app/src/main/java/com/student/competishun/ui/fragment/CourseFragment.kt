@@ -15,6 +15,12 @@ import com.google.android.material.tabs.TabLayout
 import com.student.competishun.R
 import com.student.competishun.curator.AllCourseForStudentQuery
 import com.student.competishun.curator.type.FindAllCourseInputStudent
+import com.student.competishun.data.model.TabItem
+import com.student.competishun.databinding.FragmentCourseBinding
+import com.student.competishun.databinding.FragmentCoursesBinding
+import com.student.competishun.databinding.FragmentExploreBinding
+import com.student.competishun.databinding.FragmentHomeBinding
+import com.student.competishun.databinding.FragmentMyCartBinding
 import com.student.competishun.databinding.FragmentCourseBinding
 import com.student.competishun.ui.adapter.CourseAdapter
 import com.student.competishun.ui.viewmodel.StudentCoursesViewModel
@@ -23,12 +29,14 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class CourseFragment : Fragment(), StudentCourseItemClickListener {
-
+    private lateinit var recyclerView: RecyclerView
     private lateinit var binding: FragmentCourseBinding
     private val courseViewModel: StudentCoursesViewModel by viewModels()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        arguments?.let {
+
+        }
     }
 
     override fun onCreateView(

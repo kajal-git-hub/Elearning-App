@@ -226,7 +226,8 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
         val filters = FindAllCourseInput(
             exam_type = Optional.Absent,
             is_recommended = Optional.present(true),
-            course_status = Optional.present(listOf(CourseStatus.PUBLISHED))
+            course_status = Optional.present(listOf(CourseStatus.PUBLISHED)),
+            limit = Optional.present(20)
         )
 
         coursesViewModel.fetchCourses(filters)
