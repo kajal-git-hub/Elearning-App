@@ -75,9 +75,8 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
                     tShirtSize = Optional.Present(selectedTShirtSize)
                 )
                 sharedPreferencesManager.name = userDetails.fullName
-                val documentPhotoFile: File? = File("")
-                val passportPhotoFile: File? = File("")
-                userUpdate(updateUserInput,documentPhotoFile,passportPhotoFile)
+
+                userUpdate(updateUserInput,null,null)
             }.onFailure { exception ->
                 Toast.makeText(
                     requireContext(),

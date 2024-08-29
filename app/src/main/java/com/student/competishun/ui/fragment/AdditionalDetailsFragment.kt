@@ -26,11 +26,13 @@ import com.student.competishun.gatekeeper.type.UpdateUserInput
 import com.student.competishun.ui.main.HomeActivity
 import com.student.competishun.ui.viewmodel.UpdateUserViewModel
 import com.student.competishun.ui.viewmodel.UserViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
 import java.io.OutputStream
 
+@AndroidEntryPoint
 class AdditionalDetailsFragment : Fragment() {
 
     private val binding by lazy {
@@ -72,9 +74,10 @@ class AdditionalDetailsFragment : Fragment() {
                     targetYear = Optional.Present(userDetails.userInformation.targetYear),
                     waCountryCode = Optional.Present("+91"),
                 )
+
                 val documentPhotoFile: File? = uploadedIdUri?.let { getFileFromUri(requireContext(), it) }
                 val passportPhotoFile: File? = uploadedPhotoUri?.let { getFileFromUri(requireContext(), it) }
-                userUpdate(updateUserInput,documentPhotoFile,passportPhotoFile)
+                userUpdate(updateUserInput,null,null)
             }.onFailure { exception ->
                 Toast.makeText(
                     requireContext(),
