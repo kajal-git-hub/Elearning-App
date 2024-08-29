@@ -26,6 +26,7 @@ import com.razorpay.Checkout
 import com.student.competishun.coinkeeper.CreateOrderMutation
 import com.student.competishun.coinkeeper.type.CreateOrderInput
 import com.student.competishun.curator.FindAllCartItemsQuery
+import com.student.competishun.ui.viewmodel.GetCourseByIDViewModel
 import com.student.competishun.ui.viewmodel.OrderViewModel
 import com.student.competishun.ui.viewmodel.UserViewModel
 import com.student.competishun.utils.HelperFunctions
@@ -40,6 +41,7 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
     private var _binding: FragmentMyCartBinding? = null
     private val orderViewModel: OrderViewModel by viewModels()
     private val userViewModel: UserViewModel by viewModels()
+    private val getCourseByIDViewModel: GetCourseByIDViewModel by viewModels()
     private val binding get() = _binding!!
     private lateinit var sharedPreferencesManager: SharedPreferencesManager
     private val cartViewModel: CreateCartViewModel by viewModels()
@@ -127,7 +129,7 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
                 val cartItems = data.findAllCartItems.mapNotNull { cartItemData ->
                     val course = cartItemData.course
                     Log.e("coursevalue",course.toString())
-                   // instAmountpaid = ((course.price ?: 0) + (course.with_installment_price?:0) - (course.discount?:0))* 0.6
+                    instAmountpaid = ((course.price ?: 0) + (course.with_installment_price?:0) * 0.6)
                     CartItem(
                         profileImageResId = course.banner_image?:"", // Replace with actual logic for image
                         name = course.name,
@@ -265,24 +267,26 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
         cartAdapter.updateCartItems(partialPaymentItems)
         val discountPrice = (originalCartItems.get(0).price.toDouble() * originalCartItems.get(0).discount.toDouble()) / 100
         var discountPriceVal = (helperFunctions.calculateDiscountDetails(originalCartItems.get(0).price.toDouble(),discountPrice).second)
-        var firstInstallment = ((originalCartItems.get(0).price.toDouble() + originalCartItems.get(0).withInstallmentPrice.toDouble()) - originalCartItems.get(0).discount.toDouble())*0.6
+       var firstInstallment = ((originalCartItems.get(0).price.toDouble() + originalCartItems.get(0).withInstallmentPrice.toDouble()))*0.6
         var secondInstallment = (originalCartItems.get(0).price.toDouble()) - firstInstallment
         totalAmount = originalCartItems.get(0).price
+//        var  firstInstallment = originalCartItems.get(0).withInstallmentPrice
+//        var secondInstallment = originalCartItems.get(0).price.minus(originalCartItems.get(0).withInstallmentPrice)
         binding.tvInstallmentPrice.visibility = View.VISIBLE
         binding.tvInstallmentLabel.visibility = View.VISIBLE
         binding.tvInstallmentPrice2.visibility = View.VISIBLE
         binding.tvInstallmentLabel2.visibility = View.VISIBLE
         binding. tvInstallmentCharge.visibility =  View.VISIBLE
         binding.tvInstallmentChargePrice.visibility =  View.VISIBLE
+        binding.tvInstDiscountLabel.visibility = View.GONE
+        binding.tvInstDiscount.visibility = View.GONE
         binding.tvPrice.text =  "₹${firstInstallment}"
-        instAmountpaid = firstInstallment
+        var installmentChart = originalCartItems.get(0).withInstallmentPrice
         binding.tvInstTotalAmount.text =  "₹${firstInstallment + secondInstallment}"
         binding.tvInstCoursePrice.text = "₹${originalCartItems.get(0).price}"
         binding.tvInstallmentPrice.text = "₹${firstInstallment}"
-        binding.tvInstDiscountLabel.text = "Discount (${helperFunctions.calculateDiscountDetails(originalCartItems.get(0).price.toDouble(),originalCartItems.get(0).discount.toDouble()).first}%)"
-        binding.tvInstDiscount.text = "- ₹${originalCartItems.get(0).discount.toDouble()}"
         binding.tvInstallmentPrice2.text = "₹${secondInstallment}"
-        binding. tvInstallmentChargePrice.text =  "₹${originalCartItems.get(0).withInstallmentPrice}"
+        binding.tvInstallmentChargePrice.text =  "₹${installmentChart}"
     }
 
     private fun processPayment(order: CreateOrderMutation.CreateOrder) {
@@ -330,12 +334,29 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
         _binding = null
     }
 
+
     override fun onCartItemRemoved() {
         binding.tvCartCount.text = "(0)"
         binding.cartBadge.text = "0"
         binding.clPaymentSummary.visibility = View.GONE
         binding.clProccedToPay.visibility = View.GONE
      //   Toast.makeText(requireContext(), "Cart item removed", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun observeCourseById(courseId:String) {
+        getCourseByIDViewModel.fetchCourseById(courseId)
+        getCourseByIDViewModel.courseByID.observe(viewLifecycleOwner, Observer { courses ->
+            Log.e("listcourses", courses.toString())
+
+            if (courses != null) {
+                Log.e("listcourses", courses.toString())
+                val courseName = "${courses.name}"
+                val categoryName = courses.category_name?.split(" ") ?: emptyList()
+                val wordsWithoutLast = categoryName.dropLast(1)
+
+
+            }
+        })
     }
 }
 

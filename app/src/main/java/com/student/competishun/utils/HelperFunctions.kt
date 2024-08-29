@@ -73,7 +73,10 @@ class HelperFunctions {
         }
     }
 
-    fun calculateDiscountDetails(originalPrice: Double, discountPrice: Double): Pair<Double, Double> {
+    fun calculateDiscountDetails(
+        originalPrice: Double,
+        discountPrice: Double
+    ): Pair<Double, Double> {
         val discountPercentage = ((discountPrice / originalPrice) * 100)
         val realPriceAfterDiscount = originalPrice - discountPrice
 
@@ -84,15 +87,26 @@ class HelperFunctions {
         return Pair(roundedDiscountPercentage, roundedRealPriceAfterDiscount)
     }
 
-     fun downloadPdf(context: Context,fileUrl: String, title: String) {
-         val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-         val request = DownloadManager.Request(Uri.parse(fileUrl))
-             .setTitle(title)
-             .setDescription("Downloading PDF...")
-             .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-             .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "$title.pdf")
+    fun downloadPdf(context: Context, fileUrl: String, title: String) {
+        val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+        val request = DownloadManager.Request(Uri.parse(fileUrl))
+            .setTitle(title)
+            .setDescription("Downloading PDF...")
+            .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+            .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "$title.pdf")
 
-         downloadManager.enqueue(request)
+        downloadManager.enqueue(request)
+    }
+
+
+    fun toDisplayString(classname: String?): String {
+        return when (classname) {
+            "ELEVENTH" -> "11th"
+            "TWELFTH" -> "12th"
+            "TWELFTH_PLUS" -> "12th+"
+            "UNKNOWN" -> "Unknown"
+            else -> "Unknown"
+        }
     }
 
     fun showDownloadDialog(context: Context,fileUrl: String, title: String) {

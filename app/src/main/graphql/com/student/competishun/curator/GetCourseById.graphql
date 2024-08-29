@@ -2,6 +2,7 @@ query GetCourseById($getCourseByIdId: String!) {
     getCourseById(id: $getCourseByIdId) {
         id
         name
+        complementary_course
         price
         target_year
         academic_year

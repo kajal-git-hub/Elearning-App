@@ -75,8 +75,8 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
     private lateinit var courseId:String
     lateinit var folderlist:List<GetCourseByIdQuery.Folder>
     private lateinit var helperFunctions: HelperFunctions
-    var firstInstallment:Double = 0.0
-    var secondInstallment:Double = 0.0
+    var firstInstallment:Int = 0
+    var secondInstallment:Int = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -274,15 +274,18 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
                     }
                     binding.tvOurContentNumber.text = folderlist.size.toString() + " Total"
 
-                    val coursePrice = courses.price?.toDouble() ?: 0.0
-                    val discount = courses.discount?.toDouble() ?: 0.0
-                    val installmentPrice = courses.with_installment_price?.toDouble() ?: 0.0
+                    val coursePrice = courses.price ?: 0
+                    val discount = courses.discount?: 0
+                    val installmentPrice1 = courses.with_installment_price ?: 0
 
-                    firstInstallment = ((coursePrice + installmentPrice) - discount) * 0.6
-                     secondInstallment = (coursePrice - firstInstallment)
-                    Log.e("secon $installmentPrice $coursePrice",secondInstallment.toString())
+                    firstInstallment = ((((courses.price?.plus(courses.with_installment_price?:0)))?:0 *(0.6)).toInt())
+                    secondInstallment = (coursePrice - firstInstallment)
+                    Log.e("secon $installmentPrice1 $coursePrice",secondInstallment.toString()+ "discount $discount")
 
                     binding.tvCourseName.text = courses.name
+                    val categoryName = courses.category_name?.split(" ") ?: emptyList()
+                    val firstTwoWords = categoryName.take(2).joinToString(" ")
+                    binding.tvTag2.text = firstTwoWords
                     binding.orgPricexp.text = "₹"+courses.price.toString()
                     val disountprice = ((courses.price?:0)-((courses.discount?:0)))
                     binding.dicountPricexp.text = "₹${disountprice}"

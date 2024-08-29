@@ -36,12 +36,10 @@ class ProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            requireActivity().finish()
-        }
+
 
         sharedPreferencesManager = SharedPreferencesManager(requireContext())
-        binding.etProfileHelp.setOnClickListener {
+        binding.etBTUpload.setOnClickListener {
             requireActivity().onBackPressedDispatcher.onBackPressed()
         }
 
@@ -49,12 +47,14 @@ class ProfileFragment : Fragment() {
             findNavController().navigate(R.id.myCartFragment)
         }
 
+        binding.llMyPurchase.setOnClickListener{
+            findNavController().navigate(R.id.courseEmptyFragment)
+        }
         binding.llLogout.setOnClickListener {
             // Clear the user session
 
             sharedPreferencesManager.clearAccessToken()
             sharedPreferencesManager.clearRefreshToken()
-
             val intent = Intent(requireContext(), MainActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             intent.putExtra("navigateToLogin", true)
