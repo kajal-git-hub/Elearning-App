@@ -36,7 +36,7 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
     private var selectedTShirtSize: String? = null
     var isBottomSheetShowing = false
     lateinit var sharedPreferencesManager: SharedPreferencesManager
-
+    private var updateUserInput: UpdateUserInput? = null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -63,7 +63,7 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
             result.onSuccess { data ->
                 val userDetails = data.getMyDetails
                 Log.e("userDetails",userDetails.toString())
-                val updateUserInput = UpdateUserInput(
+                  updateUserInput = UpdateUserInput(
                     city = Optional.Present(userDetails.userInformation.city),
                     fullName = Optional.Present(userDetails.fullName),
                     preparingFor = Optional.Present(userDetails.userInformation.preparingFor),
@@ -75,8 +75,6 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
                     tShirtSize = Optional.Present(selectedTShirtSize)
                 )
                 sharedPreferencesManager.name = userDetails.fullName
-
-                userUpdate(updateUserInput,null,null)
             }.onFailure { exception ->
                 Toast.makeText(
                     requireContext(),
@@ -104,6 +102,9 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
 
         binding.btnAddDetails.setOnClickListener {
             if (isFormValid()) {
+                updateUserInput?.let { input ->
+                    userUpdate(input, null, null)
+                }
                 findNavController().navigate(R.id.action_PersonalDetails_to_AdditionalDetail)
             } else {
                 Toast.makeText(requireContext(), "Please fill all fields.", Toast.LENGTH_SHORT)
