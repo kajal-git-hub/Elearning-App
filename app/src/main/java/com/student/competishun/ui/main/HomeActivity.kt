@@ -40,6 +40,7 @@ import com.student.competishun.ui.fragment.PaymentFragment
 import com.student.competishun.ui.fragment.PaymentLoaderFragment
 import com.student.competishun.ui.fragment.PersonalDetailsFragment
 import com.student.competishun.ui.fragment.ProfileFragment
+import com.student.competishun.ui.fragment.RecommendViewDetail
 import com.student.competishun.ui.fragment.ResumeCourseFragment
 import com.student.competishun.ui.fragment.ScheduleFragment
 import com.student.competishun.ui.fragment.SubjectContentFragment
@@ -171,6 +172,7 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
             BottomSheetDescriptionFragment::class.java,
             TopicTypeContentFragment::class.java,
             MyPurchaseFragment::class.java,
+            RecommendViewDetail::class.java,
             PaymentFailedFragment::class.java,
             BottomSheetTSizeFragment::class.java,
             BottomSheetPersonalDetailsFragment::class.java,
@@ -197,6 +199,7 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
             AddressDetailsFragment::class.java,
             BottomSheetPersonalDetailsFragment::class.java,
             AdditionalDetailsFragment::class.java,
+            RecommendViewDetail::class.java,
             CourseEmptyFragment::class.java,
             CoursesFragment::class.java,
             CourseFragment::class.java,

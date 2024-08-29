@@ -89,6 +89,11 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
         super.onViewCreated(view, savedInstanceState)
 
 
+        binding.tvRecommendViewAll.setOnClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_RecommendDetailFragment)
+        }
+
+
         rvOurCourses = view.findViewById(R.id.rvOurCourses)
         dotsIndicatorOurCourses = view.findViewById(R.id.llDotsIndicatorOurCourses)
         rvOurCourses.addOnScrollListener(object : RecyclerView.OnScrollListener() {
