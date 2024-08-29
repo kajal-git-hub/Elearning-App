@@ -48,10 +48,6 @@ class HelperFunctions {
 
             for (i in 0 until dotsIndicator.childCount) {
                 val dot = dotsIndicator.getChildAt(i) as ImageView
-                val size = 24
-                val params = LinearLayout.LayoutParams(size, size)
-                params.setMargins(4, 0, 4, 0)
-                dot.layoutParams = params
                 dot.setImageResource(
                     if (i == visiblePageIndex) R.drawable.dot_active
                     else R.drawable.dot_inactive
@@ -84,15 +80,15 @@ class HelperFunctions {
         return Pair(roundedDiscountPercentage, roundedRealPriceAfterDiscount)
     }
 
-     fun downloadPdf(context: Context,fileUrl: String, title: String) {
-         val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-         val request = DownloadManager.Request(Uri.parse(fileUrl))
-             .setTitle(title)
-             .setDescription("Downloading PDF...")
-             .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-             .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "$title.pdf")
+    fun downloadPdf(context: Context,fileUrl: String, title: String) {
+        val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+        val request = DownloadManager.Request(Uri.parse(fileUrl))
+            .setTitle(title)
+            .setDescription("Downloading PDF...")
+            .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+            .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "$title.pdf")
 
-         downloadManager.enqueue(request)
+        downloadManager.enqueue(request)
     }
 
     fun showDownloadDialog(context: Context,fileUrl: String, title: String) {
@@ -101,7 +97,7 @@ class HelperFunctions {
             .setMessage("Do you want to download $title?")
             .setPositiveButton("Yes") { _, _ ->
                 // Call the helper function to download the PDF
-               downloadPdf(context, fileUrl, title)
+                downloadPdf(context, fileUrl, title)
             }
             .setNegativeButton("No", null)
             .show()
