@@ -44,7 +44,6 @@ class RecommendViewDetail : Fragment() {
 
         setupToolbar()
 
-        // Initialize adapter with an empty list initially
         adapter = RecommendViewAllAdapter(emptyList()) { selectedCourse ->
             val bundle = Bundle().apply {
                 putString("course_id", selectedCourse.id)
@@ -56,14 +55,12 @@ class RecommendViewDetail : Fragment() {
         binding.rvRecommendedCourses.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
-        // Observe courses data
         coursesViewModel.courses.observe(viewLifecycleOwner, Observer { courses ->
             if (courses != null) {
                 adapter.updateData(courses)
             }
         })
 
-        // Fetch courses
         val filters = FindAllCourseInput(
             exam_type = Optional.Absent,
             is_recommended = Optional.present(true),

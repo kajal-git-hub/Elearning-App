@@ -12,7 +12,6 @@ import com.google.android.material.textview.MaterialTextView
 import com.student.competishun.R
 import com.student.competishun.curator.GetAllCourseQuery
 import com.student.competishun.utils.HelperFunctions
-import dagger.hilt.android.AndroidEntryPoint
 import java.util.Locale
 
 class RecommendViewAllAdapter(
