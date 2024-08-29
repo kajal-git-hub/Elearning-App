@@ -414,7 +414,7 @@ class ScheduleFragment : Fragment() {
             )
         )
 
-        scheduleAdapter = ScheduleAdapter(transformedData, requireContext())
+        scheduleAdapter = ScheduleAdapter(sampleData, requireContext())
         binding.rvCalenderSchedule.adapter = scheduleAdapter
         binding.rvCalenderSchedule.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
@@ -438,6 +438,9 @@ class ScheduleFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.backIconSchedule.setOnClickListener {
+            requireActivity().onBackPressedDispatcher.onBackPressed()
+        }
         FindAllCourseFolderContentByScheduleTimeQuery()
     }
 
