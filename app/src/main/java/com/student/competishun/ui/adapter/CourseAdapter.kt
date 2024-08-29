@@ -1,5 +1,6 @@
 package com.student.competishun.ui.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -29,7 +30,8 @@ class CourseAdapter(
 
         holder.binding.apply {
             tvRecommendedCourseName.text = item.name
-            tvTag1.text = "12th Class"  // Placeholder, change as needed
+            tvTag1.text = helperFunctions.toDisplayString(item.course_class?.name)
+            Log.e("courseclassval",helperFunctions.toDisplayString(item.course_class?.name))// Placeholder, change as needed
             orgPrice.text = "₹${item.price}"
 
             tvStartDate.text = "Starts On: ${helperFunctions.formatCourseDate(item.course_start_date.toString())}"
