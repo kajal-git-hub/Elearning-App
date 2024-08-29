@@ -227,9 +227,4 @@
         tools:layout="@layout/fragment_schedule">
     </fragment>
 
-    <fragment
-        android:id="@+id/loginFragment"
-        android:name="com.student.competishun.ui.fragment.LoginFragment"
-        tools:layout="@layout/fragment_login">
-    </fragment>
 </navigation>

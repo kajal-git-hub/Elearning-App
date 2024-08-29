@@ -128,8 +128,6 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
             }
         }
 
-
-
         toggle = ActionBarDrawerToggle(
             activity, drawerLayout, toolbar,
             R.string.navigation_drawer_open,

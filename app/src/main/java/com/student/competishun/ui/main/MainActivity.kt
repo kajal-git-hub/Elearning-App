@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity() {
                 sharedPreferencesManager.name = userDetails.fullName
                 Log.e("mainActivity details", userDetails.toString())
                 if (isUserDataComplete()) {
-                   userId = data.getMyDetails.userInformation.id
+                    userId = data.getMyDetails.userInformation.id
                     sharedPreferencesManager.userId = userId
                     navigateToHomeActivity(userId)
                 } else {
@@ -99,13 +99,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.splash_screen)
 
         Handler(Looper.getMainLooper()).postDelayed({
-            // Switch to the welcome scrmyeen after a delay
             setContentView(R.layout.welcome_screen)
-
             Handler(Looper.getMainLooper()).postDelayed({
 
-
-                // Switch to the main layout after a delay
                 binding = ActivityMainBinding.inflate(layoutInflater)
                 setContentView(binding.root)
                 enableEdgeToEdge()
@@ -124,8 +120,8 @@ class MainActivity : AppCompatActivity() {
                 setupNavigation()
                 val token = sharedPreferencesManager.refreshToken
                 Log.e("token ", token.toString())
-                if (token.isNullOrEmpty()) {
-                    navController.navigate(R.id.onWelcomeFragment)
+                if (!token.isNullOrEmpty()) {
+                    navController.navigate(R.id.homeActivity)
                 } else
                     getUserInfo()
             }, 2000)
