@@ -46,7 +46,7 @@ class CoursesFragment : Fragment() {
         Log.e("getcaourws $categoryId",categoryName.toString())
         val examIIT = "IIT-JEE"
         val examNEET = "NEET"
-        // Use the data as needed
+
         clickedViewMessage?.let {
             val tittle = view.findViewById<TextView>(R.id.tittle_tb)
             tittle.text = it
@@ -60,16 +60,24 @@ class CoursesFragment : Fragment() {
         tabTabLayout.getTabAt(0)?.select()
     }
 
-    private fun setupViewPager(viewPager: ViewPager,examIIT: String, examNEET: String) {
+    private fun setupViewPager(viewPager: ViewPager, examIIT: String, examNEET: String) {
         val adapter = ViewPagerAdapter(childFragmentManager)
-        val bundle = Bundle().apply {
-            putString("category_name", categoryName)  // Include other data if needed
+
+        val bundleIIT = Bundle().apply {
+            putString("category_name", categoryName)
+            putString("exam_type", examIIT)  // Passing IIT-JEE as exam type
         }
-        val courseFragment = CourseFragment().apply { arguments = bundle }
-        val neetFragment = NEETFragment().apply { arguments = bundle }
+        val courseFragment = CourseFragment().apply { arguments = bundleIIT }
+
+        val bundleNEET = Bundle().apply {
+            putString("category_name", categoryName)
+            putString("exam_type", examNEET)  // Passing NEET as exam type
+        }
+        val neetFragment = NEETFragment().apply { arguments = bundleNEET }
 
         adapter.addFragment(courseFragment, examIIT)
         adapter.addFragment(neetFragment, examNEET)
         viewPager.adapter = adapter
     }
+
 }
