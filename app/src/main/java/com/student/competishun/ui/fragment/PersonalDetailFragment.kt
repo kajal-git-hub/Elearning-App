@@ -36,6 +36,9 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
     private var selectedTShirtSize: String? = null
     var isBottomSheetShowing = false
     lateinit var sharedPreferencesManager: SharedPreferencesManager
+    private var fatherName = ""
+    private var whatsappNumber = ""
+    private var tShirtSize = ""
     private var updateUserInput: UpdateUserInput? = null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,7 +50,7 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
 
     override fun onTSizeSelected(size: String) {
         binding.spinnerTshirtSize.text = size
-        selectedTShirtSize = size
+        tShirtSize = size
         isTshirtSizeSelected = true
         updateButtonState()
     }
@@ -58,7 +61,36 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
         val bottomSheetDescriptionFragment = BottomSheetPersonalDetailsFragment()
         bottomSheetDescriptionFragment.show(childFragmentManager, "BottomSheetDescriptionFragment")
 
+        userViewModel.fetchUserDetails()
 
+        binding.spinnerTshirtSize.setOnClickListener {
+            if (!isBottomSheetShowing) {
+                isBottomSheetShowing = true
+                val bottomSheet = BottomSheetTSizeFragment().apply {
+                    setOnTSizeSelectedListener(this@PersonalDetailsFragment)
+                    arguments = Bundle().apply {
+                        putString("selectedSize", tShirtSize)
+                    }
+                }
+                bottomSheet.show(childFragmentManager, "BottomSheetTSizeFragment")
+            }
+        }
+
+        binding.btnAddDetails.setOnClickListener {
+            if (isFormValid()) {
+                updateUserDetails()
+                findNavController().navigate(R.id.action_PersonalDetails_to_AdditionalDetail)
+            } else {
+                Toast.makeText(requireContext(), "Please fill all fields.", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        binding.etFullName.addTextChangedListener(textWatcher)
+        binding.etFathersName.addTextChangedListener(textWatcher)
+        binding.etWhatsappNumber.addTextChangedListener(mobileNumberTextWatcher)
+    }
+
+    private fun updateUserDetails() {
         userViewModel.userDetails.observe(viewLifecycleOwner) { result ->
             result.onSuccess { data ->
                 val userDetails = data.getMyDetails
@@ -70,10 +102,11 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
                     reference = Optional.Present(userDetails.userInformation.reference),
                     targetYear = Optional.Present(userDetails.userInformation.targetYear),
                     waCountryCode = Optional.Present("+91"),
-                    waMobileNumber = Optional.Present(binding.etWhatsappNumber.text.toString().trim()),
-                    fatherName = Optional.Present(binding.etFathersName.text.toString().trim()),
-                    tShirtSize = Optional.Present(selectedTShirtSize)
+                    waMobileNumber = Optional.Present(whatsappNumber),
+                    fatherName = Optional.Present(fatherName),
+                    tShirtSize = Optional.Present(tShirtSize)
                 )
+                Log.d("updateUserInput",updateUserInput.toString())
                 sharedPreferencesManager.name = userDetails.fullName
             }.onFailure { exception ->
                 Toast.makeText(
@@ -83,45 +116,30 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
                 ).show()
             }
         }
-        userViewModel.fetchUserDetails()
+    }
 
-        binding.etWhatsappNumber.filters = arrayOf<InputFilter>(InputFilter.LengthFilter(10))
+    fun userUpdate(updateUserInput:UpdateUserInput,documentPhotoFile: File?,passportPhotoFile: File?){
+        updateUserViewModel.updateUser(updateUserInput,documentPhotoFile,passportPhotoFile)
+        updateUserViewModel.updateUserResult.observe(viewLifecycleOwner, Observer { result ->
+            if (result?.user != null) {
+                Log.e("gettingUserUpdateTarget", result.user.userInformation.targetYear.toString())
+                Log.e("gettingUserUpdaterefer", result.user.userInformation.reference.toString())
+                Log.e("gettingUserUpdateprep", result.user.userInformation.preparingFor.toString())
+                Log.e("gettingUserUpdatecity", result.user.userInformation.city.toString())
 
-        binding.spinnerTshirtSize.setOnClickListener {
-            if (!isBottomSheetShowing) {
-                isBottomSheetShowing = true
-                val bottomSheet = BottomSheetTSizeFragment().apply {
-                    setOnTSizeSelectedListener(this@PersonalDetailsFragment)
-                    arguments = Bundle().apply {
-                        putString("selectedSize", selectedTShirtSize) // Pass the selected size
-                    }
-                }
-                bottomSheet.show(childFragmentManager, "BottomSheetTSizeFragment")
-            }
-        }
-
-        binding.btnAddDetails.setOnClickListener {
-            if (isFormValid()) {
-                updateUserInput?.let { input ->
-                    userUpdate(input, null, null)
-                }
-                findNavController().navigate(R.id.action_PersonalDetails_to_AdditionalDetail)
             } else {
-                Toast.makeText(requireContext(), "Please fill all fields.", Toast.LENGTH_SHORT)
-                    .show()
+                Log.e("gettingUserUpdatefail", result.toString())
+                Toast.makeText(context, "Update failed", Toast.LENGTH_SHORT).show()
             }
-        }
-
-        binding.etFullName.addTextChangedListener(textWatcher)
-        binding.etFathersName.addTextChangedListener(textWatcher)
-        binding.etWhatsappNumber.addTextChangedListener(mobileNumberTextWatcher)
+        })
     }
 
     private fun isFormValid(): Boolean {
         val fullName = binding.etFullName.text.toString().trim()
-        val fatherName = binding.etFathersName.text.toString().trim()
-        val whatsappNumber = binding.etWhatsappNumber.text.toString().trim()
-        val tShirtSize = binding.spinnerTshirtSize.text.toString().trim()
+        fatherName = binding.etFathersName.text.toString().trim()
+        whatsappNumber = binding.etWhatsappNumber.text.toString().trim()
+        tShirtSize = binding.spinnerTshirtSize.text.toString().trim()
+        binding.etWhatsappNumber.filters = arrayOf<InputFilter>(InputFilter.LengthFilter(10))
 
         return fullName.isNotEmpty() && fatherName.isNotEmpty() && whatsappNumber.isNotEmpty() && isTshirtSizeSelected && tShirtSize.isNotEmpty()
     }
@@ -171,22 +189,6 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
                 binding.etWhatsappNumber.setSelection(trimmed.length)
             }
         }
-    }
-
-    fun userUpdate(updateUserInput:UpdateUserInput,documentPhotoFile: File?,passportPhotoFile: File?){
-        updateUserViewModel.updateUser(updateUserInput,documentPhotoFile,passportPhotoFile)
-        updateUserViewModel.updateUserResult.observe(viewLifecycleOwner, Observer { result ->
-            if (result?.user != null) {
-                Log.e("gettingUserUpdateTarget", result.user.userInformation.targetYear.toString())
-                Log.e("gettingUserUpdaterefer", result.user.userInformation.reference.toString())
-                Log.e("gettingUserUpdateprep", result.user.userInformation.preparingFor.toString())
-                Log.e("gettingUserUpdatecity", result.user.userInformation.city.toString())
-
-            } else {
-                Log.e("gettingUserUpdatefail", result.toString())
-                Toast.makeText(context, "Update failed", Toast.LENGTH_SHORT).show()
-            }
-        })
     }
 
     override fun onDestroyView() {

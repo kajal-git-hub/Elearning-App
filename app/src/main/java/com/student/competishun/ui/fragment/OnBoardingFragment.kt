@@ -62,6 +62,14 @@ class OnBoardingFragment : Fragment() {
             binding.etEnterCityText.setText(it)
         }
 
+        userViewModel.userDetails.observe(requireActivity()) { result ->
+            result.onSuccess { data ->
+               sharedPreferencesManager.userId=data.getMyDetails.userInformation.id
+            }.onFailure { exception ->
+                Log.e("mainActivity details", exception.message.toString())
+            }
+        }
+
         observeUserDetails()
         userViewModel.fetchUserDetails()
 

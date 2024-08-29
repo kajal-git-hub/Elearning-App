@@ -18,17 +18,10 @@ import com.student.competishun.curator.AllCourseForStudentQuery
 import com.student.competishun.curator.type.FindAllCourseInputStudent
 import com.student.competishun.data.model.TabItem
 import com.student.competishun.databinding.FragmentCourseBinding
-import com.student.competishun.databinding.FragmentCoursesBinding
-import com.student.competishun.databinding.FragmentExploreBinding
-import com.student.competishun.databinding.FragmentHomeBinding
-import com.student.competishun.databinding.FragmentMyCartBinding
 import com.student.competishun.ui.adapter.CourseAdapter
 import com.student.competishun.ui.viewmodel.StudentCoursesViewModel
 import com.student.competishun.utils.StudentCourseItemClickListener
 import dagger.hilt.android.AndroidEntryPoint
-
-
-private const val TAG = "CourseFragment"
 
 @AndroidEntryPoint
 class CourseFragment : Fragment(), StudentCourseItemClickListener {
@@ -45,129 +38,113 @@ class CourseFragment : Fragment(), StudentCourseItemClickListener {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val view = inflater.inflate(R.layout.fragment_course, container, false)
-
-        recyclerView = view.findViewById(R.id.recyclerView)
-        recyclerView.layoutManager = LinearLayoutManager(context)
-
-      //  recyclerView.adapter = CourseAdapter(combinedTabItems)
-
-        return view
+    ): View {
+        binding = FragmentCourseBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        setupRecyclerView()
+        setupTabLayout()
+        fetchCoursesForClass("11th")
+        observeCourses()
+    }
+
+    private fun setupRecyclerView() {
+        binding.recyclerView.layoutManager = LinearLayoutManager(context)
+    }
+
+    private fun setupTabLayout() {
+        binding.studentTabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                tab?.let {
+                    when (it.position) {
+                        0 -> fetchCoursesForClass("11th")
+                        1 -> fetchCoursesForClass("12th")
+                        2 -> fetchCoursesForClass("12+")
+                    }
+                }
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+                // Handle tab unselected if needed
+            }
+
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+                // Handle tab reselected if needed
+            }
+        })
+    }
+
+    private fun fetchCoursesForClass(courseClass: String) {
         val categoryName = arguments?.getString("category_name")
-        // Fetch courses with filters
-        val filters = FindAllCourseInputStudent(Optional.present(categoryName),Optional.present("12th"),Optional.present("IIT-JEE"),Optional.present(null))
+        val examType = arguments?.getString("exam_type")
+        val filters = FindAllCourseInputStudent(
+            Optional.present(categoryName),
+            Optional.present(courseClass),
+            Optional.present(examType),
+            Optional.present(null)
+        )
         courseViewModel.fetchCourses(filters)
+    }
+
+    private fun observeCourses() {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             courseViewModel.courses.collect { result ->
                 result?.onSuccess { data ->
-                   Log.e("gettiStudent",data.toString())
-                   val courses = data.getAllCourseForStudent.courses.map {
-                       course ->
-                       AllCourseForStudentQuery.Course(
-                           discount = course.discount,
-                           name = course.name,
-                           course_start_date = course.course_start_date,
-                           course_validity_end_date = course.course_validity_end_date,
-                           price =course.price,
-                           target_year = course.target_year,
-                           id = course.id,
-                           academic_year = course.academic_year,
-                           complementary_course = course.complementary_course,
-                           course_features = course.course_features,
-                           course_class = course.course_class,
-                           course_tags = course.course_tags,
-                           banner_image = course.banner_image,
-                           status = course.status,
-                           category_id = course.category_id,
-                           category_name = course.category_name,
-                           course_primary_teachers = course.course_primary_teachers,
-                           course_support_teachers = course.course_support_teachers,
-                           course_type = course.course_type,
-                           entity_type = course.entity_type,
-                           exam_type = course.exam_type,
-                           planner_description = course.planner_description,
-                           with_installment_price = course.with_installment_price
-                           )
-                   } ?: emptyList()
-                    recyclerView.adapter = CourseAdapter(courses,this@CourseFragment)
+                    Log.e(TAG, data.toString())
+                    val courses = data.getAllCourseForStudent.courses.map { course ->
+                        course.toCourse()
+                    } ?: emptyList()
+                    Log.d("courseFragment", courses.toString())
+                    binding.recyclerView.adapter = CourseAdapter(courses, this@CourseFragment)
                 }?.onFailure { exception ->
                     // Handle the failure case
-                    Log.e("gettiStudentfaik",exception.toString())
+                    Log.e(TAG, exception.toString())
                 }
             }
         }
-    }
-
-    fun tabselection(){
-//        binding.studentTabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-//            override fun onTabSelected(tab: TabLayout.Tab?) {
-//                tab?.let {
-//                    val filters = when (it.position) {
-//                        0 -> {
-//                            // 11th selected
-//                            FindAllCourseInputStudent(
-//                                Optional.present("11th"),
-//                                Optional.present("IIT-JEE"),
-//                                Optional.present(null),
-//                                Optional.present(null)
-//                            )
-//                        }
-//                        1 -> {
-//                            // 12th selected
-//                            FindAllCourseInputStudent(
-//                                Optional.present("12th"),
-//                                Optional.present("IIT-JEE"),
-//                                Optional.present(null),
-//                                Optional.present(null)
-//                            )
-//                        }
-//                        2 -> {
-//                            // 12th+ selected
-//                            FindAllCourseInputStudent(
-//                                Optional.present("12th+"),
-//                                Optional.present("IIT-JEE"),
-//                                Optional.present(null),
-//                                Optional.present(null)
-//                            )
-//                        }
-//                        else -> {
-//                            // Default or fallback case
-//                            FindAllCourseInputStudent(
-//                                Optional.present(null),
-//                                Optional.present("IIT-JEE"),
-//                                Optional.present(null),
-//                                Optional.present(null)
-//                            )
-//                        }
-//                    }
-//
-//                    // Fetch and filter courses based on the selected tab
-//                    courseViewModel.fetchCourses(filters)
-//                }
-//            }
-//
-//            override fun onTabUnselected(tab: TabLayout.Tab?) {
-//                // Handle if needed
-//            }
-//
-//            override fun onTabReselected(tab: TabLayout.Tab?) {
-//                // Handle if needed
-//            }
-//        })
     }
 
     override fun onCourseItemClicked(course: AllCourseForStudentQuery.Course) {
         val bundle = Bundle().apply {
             putString("course_id", course.id)
         }
-        Log.e("coursseID",course.id.toString())
-        findNavController().navigate(R.id.action_coursesFragment_to_ExploreFragment,bundle)
-
+        Log.e(TAG, course.id.toString())
+        findNavController().navigate(R.id.action_coursesFragment_to_ExploreFragment, bundle)
     }
 
+    private fun AllCourseForStudentQuery.Course.toCourse(): AllCourseForStudentQuery.Course {
+        return AllCourseForStudentQuery.Course(
+            discount = this.discount,
+            name = this.name,
+            course_start_date = this.course_start_date,
+            course_validity_end_date = this.course_validity_end_date,
+            price = this.price,
+            target_year = this.target_year,
+            id = this.id,
+            academic_year = this.academic_year,
+            complementary_course = this.complementary_course,
+            course_features = this.course_features,
+            course_class = this.course_class,
+            course_tags = this.course_tags,
+            banner_image = this.banner_image,
+            status = this.status,
+            category_id = this.category_id,
+            category_name = this.category_name,
+            course_primary_teachers = this.course_primary_teachers,
+            course_support_teachers = this.course_support_teachers,
+            course_type = this.course_type,
+            entity_type = this.entity_type,
+            exam_type = this.exam_type,
+            planner_description = this.planner_description,
+            with_installment_price = this.with_installment_price
+        )
+    }
+
+    companion object {
+        private const val TAG = "CourseFragment"
+    }
 }

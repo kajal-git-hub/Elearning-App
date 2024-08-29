@@ -11,7 +11,6 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.student.competishun.R
@@ -20,9 +19,6 @@ import com.student.competishun.databinding.ActivityMainBinding
 import com.student.competishun.ui.viewmodel.MainVM
 import com.student.competishun.utils.SharedPreferencesManager
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.supervisorScope
-import com.apollographql.apollo3.api.Optional
 import com.student.competishun.ui.viewmodel.UserViewModel
 
 @AndroidEntryPoint
@@ -40,35 +36,75 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
-        // Initialize SharedPreferencesManager
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as? NavHostFragment
+        navController = navHostFragment?.navController ?: throw IllegalStateException("NavController not found")
+
         sharedPreferencesManager = SharedPreferencesManager(this)
         userInput = UpdateUserInput()
 
-        // Observe the user details LiveData
+        val shouldNavigateToLogin = intent.getBooleanExtra("navigateToLogin", false)
+        if (shouldNavigateToLogin) {
+            navigateToLoginFragment()
+        } else {
+            setupInitialFlow()
+        }
+        setContentView(binding.root)
+    }
+
+    private fun navigateToLoginFragment() {
+        val navGraph = navController.navInflater.inflate(R.navigation.nav_graph)
+        navGraph.setStartDestination(R.id.loginFragment)
+        navController.graph = navGraph
+    }
+
+    private fun setupInitialFlow() {
         userViewModel.userDetails.observe(this) { result ->
             result.onSuccess { data ->
                 val userDetails = data.getMyDetails
                 sharedPreferencesManager.name = userDetails.fullName
                 Log.e("mainActivity details", userDetails.toString())
-                if (isUserDataComplete()) {
-                    userId = data.getMyDetails.userInformation.id
-                    sharedPreferencesManager.userId = userId
-                    navigateToHomeActivity(userId)
-                } else {
-                    sharedPreferencesManager.mobileNo = userDetails.mobileNumber
-                }
+                userId = data.getMyDetails.userInformation.id
             }.onFailure { exception ->
                 Log.e("mainActivity details", exception.message.toString())
             }
         }
 
-        // Fetch user details
         userViewModel.fetchUserDetails()
+        getUserInfo()
+        Log.d("mainActivity", sharedPreferencesManager.refreshToken.isNullOrEmpty().toString())
+        Log.d("mainActivity", sharedPreferencesManager.accessToken.isNullOrEmpty().toString())
+        Log.d("mainActivity", isUserDataComplete().toString())
 
-        // Show splash and welcome screens if user data is not complete
-        if (!isUserDataComplete()) {
-            showSplashAndWelcomeScreens()
+        if (isUserDataComplete() && sharedPreferencesManager.refreshToken.isNullOrEmpty() && sharedPreferencesManager.accessToken.isNullOrEmpty()) {
+            directLoginFlow()
+        } else {
+            onWelcomeFlow()
         }
+    }
+
+    private fun directLoginFlow() {
+        Log.d("insidedirectlogin","true1")
+
+        val navGraph = navController.navInflater.inflate(R.navigation.nav_graph)
+        val startDestination = R.id.loginFragment
+
+        navGraph.setStartDestination(startDestination)
+        navController.graph = navGraph
+        setContentView(binding.root)
+        navController.navigate(startDestination)
+    }
+
+    private fun onWelcomeFlow() {
+        Log.d("insidedirectlogin","false1")
+        val navGraph = navController.navInflater.inflate(R.navigation.nav_graph)
+        val startDestination = R.id.onWelcomeFragment
+
+        navGraph.setStartDestination(startDestination)
+        navController.graph = navGraph
+        setContentView(binding.root)
+        navController.navigate(startDestination)
+        getUserInfo()
     }
 
     override fun onResume() {
@@ -77,6 +113,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun isUserDataComplete(): Boolean {
+        Log.e("mainActivity",sharedPreferencesManager.mobileNo.toString())
+        Log.e("mainActivity",sharedPreferencesManager.name.toString())
+        Log.e("mainActivity",sharedPreferencesManager.userId.toString())
+        Log.e("mainActivity",sharedPreferencesManager.city.toString())
+        Log.e("mainActivity",sharedPreferencesManager.reference.toString())
+        Log.e("mainActivity",sharedPreferencesManager.preparingFor.toString())
+        Log.e("mainActivity",sharedPreferencesManager.targetYear.toString())
+
         return sharedPreferencesManager.mobileNo?.isNotEmpty() == true &&
                 sharedPreferencesManager.name?.isNotEmpty() == true &&
                 sharedPreferencesManager.userId?.isNotEmpty() == true &&
@@ -93,39 +137,6 @@ class MainActivity : AppCompatActivity() {
             putExtra("userId", userId)
         }
         startActivity(intent)
-    }
-
-    private fun showSplashAndWelcomeScreens() {
-        setContentView(R.layout.splash_screen)
-
-        Handler(Looper.getMainLooper()).postDelayed({
-            setContentView(R.layout.welcome_screen)
-            Handler(Looper.getMainLooper()).postDelayed({
-
-                binding = ActivityMainBinding.inflate(layoutInflater)
-                setContentView(binding.root)
-                enableEdgeToEdge()
-
-                ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
-                    val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-                    v.setPadding(
-                        systemBars.left,
-                        systemBars.top,
-                        systemBars.right,
-                        systemBars.bottom
-                    )
-                    insets
-                }
-
-                setupNavigation()
-                val token = sharedPreferencesManager.refreshToken
-                Log.e("token ", token.toString())
-                if (!token.isNullOrEmpty()) {
-                    navController.navigate(R.id.homeActivity)
-                } else
-                    getUserInfo()
-            }, 2000)
-        }, 2000)
     }
 
     private fun getUserInfo() {
@@ -149,14 +160,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun navigateToRefFragment() {
         navController.navigate(R.id.ReferenceFragment)
-    }
-
-    private fun setupNavigation() {
-        val navHostFragment =
-            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as? NavHostFragment
-        navController =
-            navHostFragment?.navController ?: throw IllegalStateException("NavController not found")
-        Log.d("MainActivity", "NavController: $navController")
     }
 
     override fun onSupportNavigateUp(): Boolean {

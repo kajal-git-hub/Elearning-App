@@ -66,8 +66,6 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
     private lateinit var adapterOurCourses: OurCoursesAdapter
     private var listOurCoursesItem: List<GetAllCourseCategoriesQuery.GetAllCourseCategory>? = null
 
-    private lateinit var promoBannerList: List<PromoBannerModel>
-
     private lateinit var recommendedCourseList: List<RecommendedCourseDataModel>
 
     private lateinit var helperFunctions: HelperFunctions
@@ -166,15 +164,14 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
                 bannerList.add(PromoBannerModel(course.banner_image))
             }
 
-
             binding.rvpromobanner.adapter = PromoBannerAdapter(bannerList)
             binding.rvpromobanner.layoutManager =
                 LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-            setupDotsIndicator(bannerList.size, binding.llDotsIndicatorPromoBanner)
+            helperFunctions.setupDotsIndicator(requireContext(),bannerList.size, binding.llDotsIndicatorPromoBanner)
             binding.rvpromobanner.addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
-                    updateDotsIndicator(recyclerView, binding.llDotsIndicatorPromoBanner)
+                    helperFunctions.updateDotsIndicator(recyclerView, binding.llDotsIndicatorPromoBanner)
                 }
             })
 
@@ -234,7 +231,6 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
 
         listWhyCompetishun = Constants.listWhyCompetishun
         testimonials = Constants.testimonials
-
         adapter = TestimonialsAdapter(testimonials)
         adapterWhyCompetishun = WhyCompetishunAdapter(listWhyCompetishun)
         recyclerView.adapter = adapter
