@@ -35,8 +35,8 @@ class CourseAdapter(
             orgPrice.text = "₹${item.price}"
 
             tvStartDate.text = "Starts On: ${helperFunctions.formatCourseDate(item.course_start_date.toString())}"
-            tvEndDate.text = "Expiry Date: ${helperFunctions.formatCourseDate(item.course_validity_end_date.toString())}"
-
+            tvEndDate.text = "Expiry Date: ${helperFunctions.formatCourseDate(item.course_end_date.toString())}"
+            tvQuizTests.text = "validity ${helperFunctions.formatCourseDate(item.course_validity_end_date.toString())}"
             if (item.price != null && item.discount != null) {
                 val discountDetails = helperFunctions.calculateDiscountDetails(item.price.toDouble(), item.discount.toDouble())
                 dicountPrice.text = "₹${discountDetails.second}"

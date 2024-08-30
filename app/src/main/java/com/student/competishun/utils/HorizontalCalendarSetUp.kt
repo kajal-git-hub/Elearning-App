@@ -1,17 +1,37 @@
 
 import android.content.Context
+import android.os.Build
 import android.widget.ImageView
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.student.competishun.data.model.CalendarDate
 import com.student.competishun.ui.adapter.CalendarDateAdapter
 import java.text.SimpleDateFormat
+import java.time.ZoneId
+import java.time.ZonedDateTime
 import java.util.*
 
 class HorizontalCalendarSetUp {
 
     private var currentMonth = Calendar.getInstance()
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun scrollToSpecificDate(
+        recyclerView: RecyclerView,
+        zonedDateTime: ZonedDateTime
+    ) {
+        val dates = getDatesForMonth(currentMonth)
+        val adapter = recyclerView.adapter as? CalendarDateAdapter
+
+        val position = dates.indexOfFirst { it.zonedDateTime?.toLocalDate() == zonedDateTime.toLocalDate() }
+        if (position != -1) {
+            (recyclerView.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(position, 0)
+            adapter?.setSelectedPosition(position)
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
     fun setUpCalendarAdapter(
         recyclerView: RecyclerView,
         context: Context,
@@ -33,6 +53,7 @@ class HorizontalCalendarSetUp {
         return getCurrentMonthYear(currentMonth)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun setUpCalendarPrevNextClickListener(
         recyclerView: RecyclerView,
         nextButton: ImageView,
@@ -53,6 +74,7 @@ class HorizontalCalendarSetUp {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun getDatesForMonth(calendar: Calendar): List<CalendarDate> {
         val dates = mutableListOf<CalendarDate>()
         val month = calendar.get(Calendar.MONTH)
@@ -64,7 +86,8 @@ class HorizontalCalendarSetUp {
         while (calendar.get(Calendar.MONTH) == month) {
             val date = dateFormat.format(calendar.time)
             val day = dayFormat.format(calendar.time)
-            dates.add(CalendarDate(date, day, null))
+            val zonedDateTime = ZonedDateTime.ofInstant(calendar.toInstant(), ZoneId.systemDefault())
+            dates.add(CalendarDate(date,day ,null,zonedDateTime))
             calendar.add(Calendar.DAY_OF_MONTH, 1)
         }
 
@@ -79,15 +102,18 @@ class HorizontalCalendarSetUp {
         return dateFormat.format(calendar.time)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun getCurrentDate(): CalendarDate {
         val calendar = Calendar.getInstance()
         val dateFormat = SimpleDateFormat("dd", Locale.getDefault())
         val dayFormat = SimpleDateFormat("EEE", Locale.getDefault())
-
+        val zonedDateTime = ZonedDateTime.ofInstant(calendar.toInstant(), ZoneId.systemDefault())
         val date = dateFormat.format(calendar.time)
         val day = dayFormat.format(calendar.time)
 
-        return CalendarDate(date, day, null)
+        return CalendarDate(date, day, null,zonedDateTime)
     }
+
+
 }
 

@@ -140,7 +140,8 @@ class CourseFragment : Fragment(), StudentCourseItemClickListener {
             entity_type = this.entity_type,
             exam_type = this.exam_type,
             planner_description = this.planner_description,
-            with_installment_price = this.with_installment_price
+            with_installment_price = this.with_installment_price,
+            course_end_date = this.course_end_date
         )
     }
 

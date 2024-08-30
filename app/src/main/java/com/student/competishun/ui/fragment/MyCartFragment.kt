@@ -55,6 +55,7 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
     var instAmountpaid = 0.0
     var fullAmount = 0.0
     var userId: String = ""
+    var userName:String = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         paymentsClient = Wallet.getPaymentsClient(
@@ -75,18 +76,24 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        var courseName:String = ""
         binding.igToolbarBackButton.setOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed()  }
         helperFunctions = HelperFunctions()
         binding.CartTabLayout.visibility = View.GONE
         binding.rvAllCart.visibility = View.GONE
         binding.btnProceedToPay.visibility = View.GONE
+        binding.clEmptyCart.visibility = View.VISIBLE
+        binding.clEmptyCart.setOnClickListener {
+            //   findNavController().navigate(R.id.coursesFragment)
+        }
+        binding.clrvContainer.visibility = View.GONE
         sharedPreferencesManager = SharedPreferencesManager(requireContext())
 
         userViewModel.userDetails.observe(viewLifecycleOwner) { result ->
             result.onSuccess { data ->
                 val userDetails = data.getMyDetails
                 userId = userDetails.userInformation.id
+                userName = userDetails.fullName?:""
                 sharedPreferencesManager.mobileNo = userDetails.mobileNumber
             }.onFailure { exception ->
                 Toast.makeText(requireContext(), "Error fetching details: ${exception.message}", Toast.LENGTH_LONG).show()
@@ -112,7 +119,9 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
                 paymentMode = "online",
                 paymentType = paymentType,
                 totalAmount = totalAmount.toDouble() * 100,
-                userId = userId
+                userId = userId,
+                userName = userName,
+                courseName = courseName
             )
         }
 
@@ -128,6 +137,7 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
                 Log.e("CartItems", data.findAllCartItems.toString() )
                 val cartItems = data.findAllCartItems.mapNotNull { cartItemData ->
                     val course = cartItemData.course
+                    courseName = course.name
                     Log.e("coursevalue",course.toString())
                     instAmountpaid = ((course.price ?: 0) + (course.with_installment_price?:0) * 0.6)
                     CartItem(
@@ -145,6 +155,7 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
                     )
 
                 }.takeLast(1)
+
                 binding.tvCartCount.text = "(${cartItems.size})"
                 binding.cartBadge.text = cartItems.size.toString()
                 cartAdapter.updateCartItems(cartItems)
@@ -195,7 +206,9 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
                         paymentMode = "online",
                         paymentType = paymentType,
                         totalAmount = totalAmount.toDouble() * 100,
-                        userId = userId
+                        userId = userId,
+                        userName = userName,
+                        courseName = courseName
                     )
                 }
             }

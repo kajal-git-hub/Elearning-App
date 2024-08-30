@@ -165,6 +165,7 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
             ResumeCourseFragment::class.java,
             InstallmentDetailsBottomSheet::class.java,
             CourseFragment::class.java,
+            CoursesFragment::class.java,
             NEETFragment::class.java,
             SubjectContentFragment::class.java,
             CourseEmptyFragment::class.java,

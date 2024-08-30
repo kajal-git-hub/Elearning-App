@@ -479,7 +479,8 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
                                 entity_type = course.entity_type,
                                 exam_type = course.exam_type,
                                 planner_description = course.planner_description,
-                                with_installment_price = course.with_installment_price
+                                with_installment_price = course.with_installment_price,
+                                course_end_date = course.course_end_date
                             )
                         } ?: emptyList()
                         binding.rvRelatedCourses.adapter =

@@ -170,7 +170,7 @@
                 android:drawableStart="@drawable/document_normal"
                 android:drawablePadding="6dp"
                 android:fontFamily="@font/nunito"
-                android:text="Quiz &amp; Tests: 120"
+                android:text=""
                 android:textColor="#726C6C"
                 android:textSize="14sp"
                 android:textStyle="bold"
