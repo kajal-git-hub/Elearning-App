@@ -88,28 +88,32 @@ class PaymentFragment : Fragment() {
         }
     }
 
-    fun orderdetails(ordersViewModel: OrdersViewModel,userId:String
-    ){
+    fun orderdetails(ordersViewModel: OrdersViewModel, userId: String) {
         val userIds = listOf(userId)
         ordersViewModel.fetchOrdersByUserIds(userIds)
         ordersViewModel.ordersByUserIds.observe(viewLifecycleOwner, Observer { orders ->
             orders?.let {
-                // Handle the list of orders
                 for (order in orders) {
-                    binding.tvAmount.text = "₹ ${order.amountPaid/100}"
-                    binding.paymentSuccessText.text = order.paymentStatus + "Successfully"
-                    Log.d("Order", "Amount Paid: ${order.amountPaid}, Entity ID: ${order.entityId}, Payment Status: ${order.paymentStatus}")
+                    binding.tvAmount.text = "₹ ${order.amountPaid / 100}"
+                    binding.paymentSuccessText.text = "${order.paymentStatus} Successfully"
+
+                    if (order.paymentStatus.equals("paid", ignoreCase = true)) {
+                        // Save the payment success status to SharedPreferences
+                        sharedPreferencesManager.putBoolean("savePaymentSuccess", true)
+                        Log.d("Order", "Payment Successful. Amount Paid: ${order.amountPaid}")
+                    } else {
+                        // Save the payment failure status to SharedPreferences
+                        sharedPreferencesManager.putBoolean("savePaymentSuccess", false)
+                        Log.d("Order", "Payment Failed. Status: ${order.paymentStatus}")
+                    }
                 }
             } ?: run {
-
-                // Handle the case where orders is null
                 Log.e("OrdersFragment", "No orders found")
             }
         })
-
-        // Fetch orders by user IDs
-
     }
+
+
     private fun animateLayout() {
         val clTickSuccess = binding.clTickSuccess
         val paymentSuccessText = binding.paymentSuccessText

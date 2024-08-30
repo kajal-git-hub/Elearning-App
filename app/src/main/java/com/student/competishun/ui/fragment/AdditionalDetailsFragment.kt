@@ -24,7 +24,6 @@ import com.student.competishun.R
 import com.student.competishun.databinding.FragmentAdditionalDetailBinding
 import com.student.competishun.gatekeeper.type.UpdateUserInput
 import com.student.competishun.ui.main.HomeActivity
-import com.student.competishun.ui.viewmodel.MyCoursesViewModel
 import com.student.competishun.ui.viewmodel.UpdateUserViewModel
 import com.student.competishun.ui.viewmodel.UserViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -35,10 +34,6 @@ import java.io.OutputStream
 
 @AndroidEntryPoint
 class AdditionalDetailsFragment : Fragment() {
-
-    private val myCoursesViewModel: MyCoursesViewModel by viewModels()
-    private var fieldsToVisible = mutableListOf<String>()
-
 
     private val binding by lazy {
         FragmentAdditionalDetailBinding.inflate(layoutInflater)
@@ -134,30 +129,6 @@ class AdditionalDetailsFragment : Fragment() {
 
         updateButtonState()
     }
-
-
-
-    fun myCourses(){
-        myCoursesViewModel.myCourses.observe(viewLifecycleOwner) { result ->
-            Log.e("getMyresule",result.toString())
-            result.onSuccess { data ->
-                Log.e("getMyCourses",data.toString())
-                data.myCourses?.forEach { courselist ->
-                    courselist.course.other_requirements?.let { requirements ->
-                        fieldsToVisible.addAll(requirements.map { it.toString() })
-                    }
-                }
-                updateUIVisibility()
-
-            }.onFailure {
-                Log.e("MyCoursesFail",it.message.toString())
-                Toast.makeText(requireContext(), "Failed to load courses: ${it.message}", Toast.LENGTH_SHORT).show()
-            }
-        }
-
-        myCoursesViewModel.fetchMyCourses()
-    }
-
     // Function to get a File from a Uri
     fun getFileFromUri(context: Context, uri: Uri): File? {
         val fileName = getFileName(uri, context) ?: return null
@@ -328,11 +299,6 @@ class AdditionalDetailsFragment : Fragment() {
             flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
         }
         startActivity(intent)
-    }
-
-    private fun updateUIVisibility() {
-        binding.clUploadId.visibility = if (fieldsToVisible.contains("AADHAR_CARD")) View.VISIBLE else View.GONE
-        binding.clUploadPhoto.visibility = if (fieldsToVisible.contains("PASSPORT_SIZE_PHOTO")) View.VISIBLE else View.GONE
     }
 
 
