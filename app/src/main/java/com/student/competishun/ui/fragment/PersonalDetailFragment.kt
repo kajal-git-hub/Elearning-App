@@ -242,7 +242,7 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
         binding.spinnerTshirtSize.visibility = if (fieldsToVisible.contains("T_SHIRTS")) View.VISIBLE else View.GONE
         binding.tvTshirtNote.visibility = if (fieldsToVisible.contains("T_SHIRTS")) View.VISIBLE else View.GONE
 
-        updateButtonState()  // Call updateButtonState to ensure the button is enabled/disabled correctly
+        updateButtonState()
     }
 
     override fun onDestroyView() {
