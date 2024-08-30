@@ -80,7 +80,7 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
                 }
                 R.id.myCourse -> {
                     if (navController.currentDestination?.id != R.id.PersonalDetailsFragment) {
-                        navController.navigate(R.id.PersonalDetailsFragment)
+                        navController.navigate(R.id.courseEmptyFragment)
                     }
                     true
                 }
@@ -172,7 +172,6 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
             BottomSheetDescriptionFragment::class.java,
             TopicTypeContentFragment::class.java,
             MyPurchaseFragment::class.java,
-            RecommendViewDetail::class.java,
             PaymentFailedFragment::class.java,
             BottomSheetTSizeFragment::class.java,
             BottomSheetPersonalDetailsFragment::class.java,

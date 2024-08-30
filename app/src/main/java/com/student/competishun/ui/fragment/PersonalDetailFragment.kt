@@ -15,10 +15,14 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.apollographql.apollo3.api.Optional
 import com.student.competishun.R
+import com.student.competishun.data.model.ExploreCourse
 import com.student.competishun.databinding.FragmentPersonalDetailBinding
 import com.student.competishun.gatekeeper.type.UpdateUserInput
+import com.student.competishun.ui.adapter.ExploreCourseAdapter
+import com.student.competishun.ui.viewmodel.MyCoursesViewModel
 import com.student.competishun.ui.viewmodel.UpdateUserViewModel
 import com.student.competishun.ui.viewmodel.UserViewModel
 import com.student.competishun.utils.SharedPreferencesManager
@@ -29,6 +33,8 @@ import java.io.File
 class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSelectedListener {
 
     private val userViewModel: UserViewModel by viewModels()
+    private val myCoursesViewModel: MyCoursesViewModel by viewModels()
+
     private var _binding: FragmentPersonalDetailBinding? = null
     private val binding get() = _binding!!
     private val updateUserViewModel: UpdateUserViewModel by viewModels()
@@ -39,6 +45,7 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
     private var fatherName = ""
     private var whatsappNumber = ""
     private var tShirtSize = ""
+    private var fieldsToVisible = mutableListOf<String>()
 
 
     override fun onCreateView(
@@ -58,6 +65,10 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        myCourses()
+        Log.d("fieldsToVisible",fieldsToVisible.toString())
+
         sharedPreferencesManager = SharedPreferencesManager(requireContext())
         val bottomSheetDescriptionFragment = BottomSheetPersonalDetailsFragment()
         bottomSheetDescriptionFragment.show(childFragmentManager, "BottomSheetDescriptionFragment")
@@ -192,6 +203,26 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
                 binding.etWhatsappNumber.setSelection(trimmed.length)
             }
         }
+    }
+
+    fun myCourses(){
+        myCoursesViewModel.myCourses.observe(viewLifecycleOwner) { result ->
+            Log.e("getMyresule",result.toString())
+            result.onSuccess { data ->
+                Log.e("getMyCourses",data.toString())
+                data.myCourses?.forEach { courselist ->
+                    courselist.course.other_requirements?.let { requirements ->
+                        fieldsToVisible.addAll(requirements.map { it.toString() })
+                    }
+                }
+
+            }.onFailure {
+                Log.e("MyCoursesFail",it.message.toString())
+                Toast.makeText(requireContext(), "Failed to load courses: ${it.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        myCoursesViewModel.fetchMyCourses()
     }
 
     override fun onDestroyView() {
