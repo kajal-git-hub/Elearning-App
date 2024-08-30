@@ -3,21 +3,26 @@ package com.student.competishun.ui.fragment
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.student.competishun.R
 import com.student.competishun.databinding.FragmentAddressDetailsBinding
 import com.student.competishun.databinding.FragmentPersonalDetailBinding
+import com.student.competishun.ui.viewmodel.MyCoursesViewModel
 
 class AddressDetailsFragment : Fragment() {
 
     private var _binding: FragmentAddressDetailsBinding?=null
     private val binding get() = _binding!!
+    private val myCoursesViewModel: MyCoursesViewModel by viewModels()
+    private var fieldsToVisible = mutableListOf<String>()
 
 
     override fun onCreateView(
@@ -68,6 +73,32 @@ class AddressDetailsFragment : Fragment() {
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
     }
 
+
+    fun myCourses(){
+        myCoursesViewModel.myCourses.observe(viewLifecycleOwner) { result ->
+            Log.e("getMyresule",result.toString())
+            result.onSuccess { data ->
+                Log.e("getMyCourses",data.toString())
+                data.myCourses?.forEach { courselist ->
+                    courselist.course.other_requirements?.let { requirements ->
+                        fieldsToVisible.addAll(requirements.map { it.toString() })
+                    }
+                }
+                updateUIVisibility()
+
+            }.onFailure {
+                Log.e("MyCoursesFail",it.message.toString())
+                Toast.makeText(requireContext(), "Failed to load courses: ${it.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        myCoursesViewModel.fetchMyCourses()
+    }
+
+    private fun updateUIVisibility() {
+        binding.tvFlatNoLabel.visibility = if (fieldsToVisible.contains("FATHERS_NAME")) View.VISIBLE else View.GONE
+        binding.etFlatNoLabel.visibility = if (fieldsToVisible.contains("FATHERS_NAME")) View.VISIBLE else View.GONE
+    }
 
     private fun updateButtonState() {
         if (isAddressFormValid()) {

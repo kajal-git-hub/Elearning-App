@@ -100,6 +100,8 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
         binding.etFullName.addTextChangedListener(textWatcher)
         binding.etFathersName.addTextChangedListener(textWatcher)
         binding.etWhatsappNumber.addTextChangedListener(mobileNumberTextWatcher)
+
+        updateUIVisibility()
     }
 
     private fun updateUserDetails() {
@@ -215,6 +217,7 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
                         fieldsToVisible.addAll(requirements.map { it.toString() })
                     }
                 }
+                updateUIVisibility()
 
             }.onFailure {
                 Log.e("MyCoursesFail",it.message.toString())
@@ -223,6 +226,15 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
         }
 
         myCoursesViewModel.fetchMyCourses()
+    }
+
+    private fun updateUIVisibility() {
+        binding.tvFathersNameLabel.visibility = if (fieldsToVisible.contains("FATHERS_NAME")) View.VISIBLE else View.GONE
+        binding.etFathersName.visibility = if (fieldsToVisible.contains("FATHERS_NAME")) View.VISIBLE else View.GONE
+        binding.tvWhatsappNumberLabel.visibility = if (fieldsToVisible.contains("WHATSAPP_NUMBER")) View.VISIBLE else View.GONE
+        binding.etWhatsappNumber.visibility = if (fieldsToVisible.contains("WHATSAPP_NUMBER")) View.VISIBLE else View.GONE
+        binding.tvTshirtSizeLabel.visibility = if (fieldsToVisible.contains("T_SHIRTS")) View.VISIBLE else View.GONE
+        binding.spinnerTshirtSize.visibility = if (fieldsToVisible.contains("T_SHIRTS")) View.VISIBLE else View.GONE
     }
 
     override fun onDestroyView() {
