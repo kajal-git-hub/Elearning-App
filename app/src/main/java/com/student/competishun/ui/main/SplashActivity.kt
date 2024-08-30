@@ -34,7 +34,7 @@ class SplashActivity : AppCompatActivity() {
             Handler(Looper.getMainLooper()).postDelayed({
                 val token = sharedPreferencesManager.refreshToken
                 Log.e("token ", token.toString())
-                if (!token.isNullOrEmpty() && isUserDataComplete() ) {
+                if (!token.isNullOrEmpty()) {
                     startActivity(Intent(this, HomeActivity::class.java))
                 } else {
                     startActivity(Intent(this, MainActivity::class.java))
@@ -43,23 +43,4 @@ class SplashActivity : AppCompatActivity() {
         }, 2000)
 
     }
-
-    private fun isUserDataComplete(): Boolean {
-        Log.e("mainActivity",sharedPreferencesManager.mobileNo.toString())
-        Log.e("mainActivity",sharedPreferencesManager.name.toString())
-        Log.e("mainActivity",sharedPreferencesManager.userId.toString())
-        Log.e("mainActivity",sharedPreferencesManager.city.toString())
-        Log.e("mainActivity",sharedPreferencesManager.reference.toString())
-        Log.e("mainActivity",sharedPreferencesManager.preparingFor.toString())
-        Log.e("mainActivity",sharedPreferencesManager.targetYear.toString())
-
-        return sharedPreferencesManager.mobileNo?.isNotEmpty() == true &&
-                sharedPreferencesManager.name?.isNotEmpty() == true &&
-                sharedPreferencesManager.userId?.isNotEmpty() == true &&
-                sharedPreferencesManager.city?.isNotBlank() == true &&
-                sharedPreferencesManager.reference?.isNotEmpty() == true &&
-                sharedPreferencesManager.preparingFor?.isNotEmpty() == true &&
-                sharedPreferencesManager.targetYear != 0
-    }
-
 }

@@ -211,6 +211,7 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
             result.onSuccess { data ->
                 Log.e("getMyCourses",data.toString())
                 data.myCourses?.forEach { courselist ->
+                    Log.d("courselist",courselist.course.other_requirements.toString())
                     courselist.course.other_requirements?.let { requirements ->
                         fieldsToVisible.addAll(requirements.map { it.toString() })
                     }
