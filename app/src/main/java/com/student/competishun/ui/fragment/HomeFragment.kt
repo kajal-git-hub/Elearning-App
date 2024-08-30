@@ -113,10 +113,10 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
 
         toolbar.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
-                R.id.action_notification -> {
-                    findNavController().navigate(R.id.action_homeFragment_to_NotificationFragment)
-                    true
-                }
+//                R.id.action_notification -> {
+//                    findNavController().navigate(R.id.action_homeFragment_to_NotificationFragment)
+//                    true
+//                }
 
                 R.id.action_search -> {
                     true
