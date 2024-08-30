@@ -15,10 +15,14 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.apollographql.apollo3.api.Optional
 import com.student.competishun.R
+import com.student.competishun.data.model.ExploreCourse
 import com.student.competishun.databinding.FragmentPersonalDetailBinding
 import com.student.competishun.gatekeeper.type.UpdateUserInput
+import com.student.competishun.ui.adapter.ExploreCourseAdapter
+import com.student.competishun.ui.viewmodel.MyCoursesViewModel
 import com.student.competishun.ui.viewmodel.UpdateUserViewModel
 import com.student.competishun.ui.viewmodel.UserViewModel
 import com.student.competishun.utils.SharedPreferencesManager
@@ -29,6 +33,8 @@ import java.io.File
 class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSelectedListener {
 
     private val userViewModel: UserViewModel by viewModels()
+    private val myCoursesViewModel: MyCoursesViewModel by viewModels()
+
     private var _binding: FragmentPersonalDetailBinding? = null
     private val binding get() = _binding!!
     private val updateUserViewModel: UpdateUserViewModel by viewModels()
@@ -40,6 +46,8 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
     private var whatsappNumber = ""
     private var tShirtSize = ""
     private var updateUserInput: UpdateUserInput? = null
+    private var fieldsToVisible = mutableListOf<String>()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -57,6 +65,10 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        myCourses()
+        Log.d("fieldsToVisible", fieldsToVisible.toString())
+
         sharedPreferencesManager = SharedPreferencesManager(requireContext())
         val bottomSheetDescriptionFragment = BottomSheetPersonalDetailsFragment()
         bottomSheetDescriptionFragment.show(childFragmentManager, "BottomSheetDescriptionFragment")
@@ -88,6 +100,8 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
         binding.etFullName.addTextChangedListener(textWatcher)
         binding.etFathersName.addTextChangedListener(textWatcher)
         binding.etWhatsappNumber.addTextChangedListener(mobileNumberTextWatcher)
+
+        updateUIVisibility()
     }
 
     private fun updateUserDetails() {
@@ -108,6 +122,8 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
                 )
                 Log.d("updateUserInput",updateUserInput.toString())
                 sharedPreferencesManager.name = userDetails.fullName
+
+                userUpdate(updateUserInput,null,null)
             }.onFailure { exception ->
                 Toast.makeText(
                     requireContext(),
@@ -118,8 +134,8 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
         }
     }
 
-    fun userUpdate(updateUserInput:UpdateUserInput,documentPhotoFile: File?,passportPhotoFile: File?){
-        updateUserViewModel.updateUser(updateUserInput,documentPhotoFile,passportPhotoFile)
+    fun userUpdate(updateUserInput: UpdateUserInput, documentPhotoFile: File?, passportPhotoFile: File?) {
+        updateUserViewModel.updateUser(updateUserInput, documentPhotoFile, passportPhotoFile)
         updateUserViewModel.updateUserResult.observe(viewLifecycleOwner, Observer { result ->
             if (result?.user != null) {
                 Log.e("gettingUserUpdateTarget", result.user.userInformation.targetYear.toString())
@@ -141,7 +157,12 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
         tShirtSize = binding.spinnerTshirtSize.text.toString().trim()
         binding.etWhatsappNumber.filters = arrayOf<InputFilter>(InputFilter.LengthFilter(10))
 
-        return fullName.isNotEmpty() && fatherName.isNotEmpty() && whatsappNumber.isNotEmpty() && isTshirtSizeSelected && tShirtSize.isNotEmpty()
+        // Only check fields that are visible
+        val isFatherNameValid = if (binding.etFathersName.visibility == View.VISIBLE) fatherName.isNotEmpty() else true
+        val isWhatsappNumberValid = if (binding.etWhatsappNumber.visibility == View.VISIBLE) whatsappNumber.isNotEmpty() else true
+        val isTshirtSizeValid = if (binding.spinnerTshirtSize.visibility == View.VISIBLE) tShirtSize.isNotEmpty() else true
+
+        return fullName.isNotEmpty() && isFatherNameValid && isWhatsappNumberValid && isTshirtSizeValid
     }
 
     private fun updateButtonState() {
@@ -189,6 +210,40 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
                 binding.etWhatsappNumber.setSelection(trimmed.length)
             }
         }
+    }
+
+    fun myCourses() {
+        myCoursesViewModel.myCourses.observe(viewLifecycleOwner) { result ->
+            Log.e("getMyresule", result.toString())
+            result.onSuccess { data ->
+                Log.e("getMyCourses", data.toString())
+                data.myCourses?.forEach { courselist ->
+                    Log.d("courselist", courselist.course.other_requirements.toString())
+                    courselist.course.other_requirements?.let { requirements ->
+                        fieldsToVisible.addAll(requirements.map { it.toString() })
+                    }
+                }
+                updateUIVisibility()
+
+            }.onFailure {
+                Log.e("MyCoursesFail", it.message.toString())
+                Toast.makeText(requireContext(), "Failed to load courses: ${it.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        myCoursesViewModel.fetchMyCourses()
+    }
+
+    private fun updateUIVisibility() {
+        binding.tvFathersNameLabel.visibility = if (fieldsToVisible.contains("FATHERS_NAME")) View.VISIBLE else View.GONE
+        binding.etFathersName.visibility = if (fieldsToVisible.contains("FATHERS_NAME")) View.VISIBLE else View.GONE
+        binding.tvWhatsappNumberLabel.visibility = if (fieldsToVisible.contains("WHATSAPP_NUMBER")) View.VISIBLE else View.GONE
+        binding.etWhatsappNumber.visibility = if (fieldsToVisible.contains("WHATSAPP_NUMBER")) View.VISIBLE else View.GONE
+        binding.tvTshirtSizeLabel.visibility = if (fieldsToVisible.contains("T_SHIRTS")) View.VISIBLE else View.GONE
+        binding.spinnerTshirtSize.visibility = if (fieldsToVisible.contains("T_SHIRTS")) View.VISIBLE else View.GONE
+        binding.tvTshirtNote.visibility = if (fieldsToVisible.contains("T_SHIRTS")) View.VISIBLE else View.GONE
+
+        updateButtonState()
     }
 
     override fun onDestroyView() {

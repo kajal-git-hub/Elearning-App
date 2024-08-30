@@ -3,14 +3,9 @@ package com.student.competishun.ui.main
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
-import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.student.competishun.R
@@ -43,6 +38,8 @@ class MainActivity : AppCompatActivity() {
         sharedPreferencesManager = SharedPreferencesManager(this)
         userInput = UpdateUserInput()
 
+        getUserInfo()
+
         val shouldNavigateToLogin = intent.getBooleanExtra("navigateToLogin", false)
         if (shouldNavigateToLogin) {
             navigateToLoginFragment()
@@ -59,24 +56,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupInitialFlow() {
-        userViewModel.userDetails.observe(this) { result ->
-            result.onSuccess { data ->
-                val userDetails = data.getMyDetails
-                sharedPreferencesManager.name = userDetails.fullName
-                Log.e("mainActivity details", userDetails.toString())
-                userId = data.getMyDetails.userInformation.id
-            }.onFailure { exception ->
-                Log.e("mainActivity details", exception.message.toString())
-            }
-        }
-
-        userViewModel.fetchUserDetails()
-        getUserInfo()
-        Log.d("mainActivity", sharedPreferencesManager.refreshToken.isNullOrEmpty().toString())
-        Log.d("mainActivity", sharedPreferencesManager.accessToken.isNullOrEmpty().toString())
-        Log.d("mainActivity", isUserDataComplete().toString())
-
-        if (isUserDataComplete() && sharedPreferencesManager.refreshToken.isNullOrEmpty() && sharedPreferencesManager.accessToken.isNullOrEmpty()) {
+        userId= sharedPreferencesManager.userId.toString()
+        Log.d("aman1",sharedPreferencesManager.userId.toString())
+        Log.d("aman2",sharedPreferencesManager.accessToken.toString())
+        if (!sharedPreferencesManager.userId.isNullOrEmpty() && sharedPreferencesManager.accessToken.isNullOrEmpty()) {
             directLoginFlow()
         } else {
             onWelcomeFlow()
@@ -85,7 +68,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun directLoginFlow() {
         Log.d("insidedirectlogin","true1")
-
         val navGraph = navController.navInflater.inflate(R.navigation.nav_graph)
         val startDestination = R.id.loginFragment
 

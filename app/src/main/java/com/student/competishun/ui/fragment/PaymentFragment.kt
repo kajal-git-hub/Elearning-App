@@ -108,6 +108,15 @@ class PaymentFragment : Fragment() {
                     binding.paymentSuccessText.text = "Payment Sucessfully"
                     observeCourseById(order.entityId)
                     binding.tvPaidDate.text =  getCurrentDateString()
+                    if (order.paymentStatus.equals("paid", ignoreCase = true)) {
+                        // Save the payment success status to SharedPreferences
+                        sharedPreferencesManager.putBoolean("savePaymentSuccess", true)
+                        Log.d("Order", "Payment Successful. Amount Paid: ${order.amountPaid}")
+                    } else {
+                        // Save the payment failure status to SharedPreferences
+                        sharedPreferencesManager.putBoolean("savePaymentSuccess", false)
+                        Log.d("Order", "Payment Failed. Status: ${order.paymentStatus}")
+                    }
                     Log.d("Order", "Amount Paid: ${order.amountPaid}, Entity ID: ${order.entityId}, Payment Status: ${order.paymentStatus}")
                 }
             } ?: run {

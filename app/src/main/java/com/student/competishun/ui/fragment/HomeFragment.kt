@@ -89,6 +89,11 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
         super.onViewCreated(view, savedInstanceState)
 
 
+        binding.tvRecommendViewAll.setOnClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_RecommendDetailFragment)
+        }
+
+
         rvOurCourses = view.findViewById(R.id.rvOurCourses)
         dotsIndicatorOurCourses = view.findViewById(R.id.llDotsIndicatorOurCourses)
         rvOurCourses.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -108,10 +113,10 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
 
         toolbar.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
-                R.id.action_notification -> {
-                    findNavController().navigate(R.id.action_homeFragment_to_NotificationFragment)
-                    true
-                }
+//                R.id.action_notification -> {
+//                    findNavController().navigate(R.id.action_homeFragment_to_NotificationFragment)
+//                    true
+//                }
 
                 R.id.action_search -> {
                     true

@@ -12,6 +12,7 @@ query MyCourses {
             exam_type
             category_name
             category_id
+            other_requirements
             entity_type
             folder {
                 id

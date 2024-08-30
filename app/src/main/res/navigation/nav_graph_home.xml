@@ -25,6 +25,9 @@
         <action
             android:id="@+id/action_homeFragment_to_NotificationFragment"
             app:destination="@+id/NotificationFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_RecommendDetailFragment"
+            app:destination="@+id/RecommendViewDetail" />
     </fragment>
 
     <fragment
@@ -226,5 +229,12 @@
         android:name="com.student.competishun.ui.fragment.ScheduleFragment"
         tools:layout="@layout/fragment_schedule">
     </fragment>
+
+    <fragment
+        android:id="@+id/RecommendViewDetail"
+        android:name="com.student.competishun.ui.fragment.RecommendViewDetail"
+        tools:layout="@layout/fragment_recommend_view_detail">
+    </fragment>
+
 
 </navigation>

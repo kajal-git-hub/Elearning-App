@@ -40,6 +40,7 @@ import com.student.competishun.ui.fragment.PaymentFragment
 import com.student.competishun.ui.fragment.PaymentLoaderFragment
 import com.student.competishun.ui.fragment.PersonalDetailsFragment
 import com.student.competishun.ui.fragment.ProfileFragment
+import com.student.competishun.ui.fragment.RecommendViewDetail
 import com.student.competishun.ui.fragment.ResumeCourseFragment
 import com.student.competishun.ui.fragment.ScheduleFragment
 import com.student.competishun.ui.fragment.SubjectContentFragment
@@ -61,13 +62,25 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        sharedPreferencesManager = SharedPreferencesManager(this)
 
+
+        val savePaymentSuccess = sharedPreferencesManager.getBoolean("savePaymentSuccess", false)
         val bottomNavigationView = binding.bottomNav
+        val menu = bottomNavigationView.menu
         sharedPreferencesManager = SharedPreferencesManager(this)
 
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.fragmentNavigation) as NavHostFragment
         navController = navHostFragment.navController
+
+        if (savePaymentSuccess) {
+            menu.findItem(R.id.News).isVisible = false
+            menu.findItem(R.id.Chat).isVisible = true
+        } else {
+            menu.findItem(R.id.News).isVisible = true
+            menu.findItem(R.id.Chat).isVisible = false
+        }
 
         bottomNavigationView.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
@@ -198,6 +211,7 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
             AddressDetailsFragment::class.java,
             BottomSheetPersonalDetailsFragment::class.java,
             AdditionalDetailsFragment::class.java,
+            RecommendViewDetail::class.java,
             CourseEmptyFragment::class.java,
             CoursesFragment::class.java,
             CourseFragment::class.java,

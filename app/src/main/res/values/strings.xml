@@ -48,6 +48,8 @@
     <string name="privacy_policytext">Privacy Policy</string>
     <string name="dadada">#DADADA</string>
     <string name="_3e3ef7">#3E3EF7</string>
+    <string name="title_News">News</string>
+    <string name="title_Announcement">Announcements</string>
 
 
 </resources>

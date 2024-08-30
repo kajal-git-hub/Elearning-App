@@ -18,4 +18,9 @@
         android:id="@+id/Chat"
         android:icon="@drawable/message"
         android:title="Chat" />
+
+    <item
+        android:id="@+id/News"
+        android:icon="@drawable/document_text"
+        android:title="News"/>
 </menu>
