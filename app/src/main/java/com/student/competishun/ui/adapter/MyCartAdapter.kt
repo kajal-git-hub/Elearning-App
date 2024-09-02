@@ -51,11 +51,19 @@ class MyCartAdapter(
     override fun onBindViewHolder(holder: CartViewHolder, position: Int) {
         val currentItem = cartItems[position]
 
+
         with(holder.binding) {
             Glide.with(holder.itemView.context)
                 .load(currentItem.profileImageResId)
                 .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
                 .into(imgProfile)
+            if (currentItem.isFree) {
+               igDeleteIcon.visibility = View.GONE
+                //here its free course show free banners in it
+            }else{
+                igDeleteIcon.visibility = View.VISIBLE
+                //here its free course show free banners should not be visible in it
+            }
             etCartNameText.text = currentItem.name
             etCartViewDetails.text = currentItem.viewDetails
             igDeleteIcon.setOnClickListener {

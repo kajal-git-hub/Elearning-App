@@ -36,6 +36,8 @@ class CoursesRepository @Inject constructor(@Curator private val apolloClient: A
         }
     }
 
+
+
     suspend fun findCourseFolderProgress(findCourseFolderProgressId: String): Result<FindCourseFolderProgressQuery.Data> {
         return try {
             val response = apolloClient.query(FindCourseFolderProgressQuery(findCourseFolderProgressId)).execute()
