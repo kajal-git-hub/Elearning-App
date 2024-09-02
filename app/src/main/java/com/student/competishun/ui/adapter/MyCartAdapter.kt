@@ -59,9 +59,11 @@ class MyCartAdapter(
                 .into(imgProfile)
             if (currentItem.isFree) {
                igDeleteIcon.visibility = View.GONE
+                ivFreeCartItem.visibility = View.VISIBLE
                 //here its free course show free banners in it
             }else{
                 igDeleteIcon.visibility = View.VISIBLE
+                ivFreeCartItem.visibility = View.GONE
                 //here its free course show free banners should not be visible in it
             }
             etCartNameText.text = currentItem.name
