@@ -61,7 +61,6 @@ class CourseEmptyFragment : Fragment() {
             binding.welcomeUserTxt.text = "Hello, " + sharedPreferencesManager.name
         }
         // Log.e("userid  $userId: ",sharedPreferencesManager.userId.toString())
-         myCourses()
 //        if (!sharedPreferencesManager.userId.isNullOrEmpty()) {
 //            orderdetails(ordersViewModel,sharedPreferencesManager.userId.toString())
 //        }else orderdetails(ordersViewModel,userId)
@@ -149,51 +148,59 @@ class CourseEmptyFragment : Fragment() {
             Log.e("getMyresule",result.toString())
             result.onSuccess { data ->
                 Log.e("getMyCourses",data.toString())
-                data.myCourses?.forEach { courselist->
-                    Log.e("geafa",courselist.toString())
-                    var hasFreeFolder = false
+                if (data.myCourses.isEmpty()) {
+                    // Handle the empty list case
+                    _binding?.clEmptyMyCourse?.visibility = View.VISIBLE
+                }else {
+                    data.myCourses.forEach { courselist ->
+                        Log.e("geafa", courselist.toString())
+                        var hasFreeFolder = false
 
-                    courselist.progress?.subfolderDurations?.forEach { folders ->
-                        if (folders.folder.name.startsWith("Free")) {
-                            hasFreeFolder = true
+                        courselist.progress?.subfolderDurations?.forEach { folders ->
+                            if (folders.folder.name.startsWith("Free")) {
+                                hasFreeFolder = true
+                            }
+                            folderId = folders.folder.id.toString()
                         }
-                        folderId = folders.folder.id.toString()
-                    }
 
 
+                        val courseClass = when (courselist.course.course_class.toString()) {
+                            "TWELFTH_PLUS" -> "12th+ Class"
+                            "TWELFTH" -> "12th Class"
+                            "ELEVENTH" -> "11th Class"
+                            else -> ""
+                        }
 
-                    val courseClass = when (courselist.course.course_class.toString()) {
-                        "TWELFTH_PLUS" -> "12th+ Class"
-                        "TWELFTH" -> "12th Class"
-                        "ELEVENTH" -> "11th Class"
-                        else -> ""
-                    }
-
-                    val tag1 = courseClass
-                    val tag2 = courselist.course.category_name.orEmpty()
-                    courseDetailsList.add(
-                        ExploreCourse(
-                            courselist.course.name,
-                            tag1,
-                            tag2,
-                            "Target ${courselist.course.target_year}",
-                            courselist.course.status.toString(),
-                            coursepercent,
-                            hasFreeFolder
+                        val tag1 = courseClass
+                        val tag2 = courselist.course.category_name.orEmpty()
+                        courseDetailsList.add(
+                            ExploreCourse(
+                                courselist.course.name,
+                                tag1,
+                                tag2,
+                                "Target ${courselist.course.target_year}",
+                                courselist.course.status.toString(),
+                                coursepercent,
+                                hasFreeFolder
+                            )
                         )
-                    )
-                    if (data.myCourses.isNotEmpty()) {
-                        binding.clEmptyMyCourse.visibility = View.GONE
-                        binding.rvExploreCourses.visibility = View.VISIBLE
-                        val adapter = ExploreCourseAdapter(courseDetailsList) { course ->
-                            val bundle = Bundle()
-                            bundle.putString("folder_Id", folderId)
-                            bundle.putString("courseName", course.name)
-                            Log.d("folder_Id namecouse: ${course.name}", folderId)
-                            findNavController().navigate(R.id.action_courseEmptyFragment_to_ResumeCourseFragment,bundle)
+                        if (data.myCourses.isNotEmpty()) {
+                            binding.clEmptyMyCourse.visibility = View.GONE
+                            binding.rvExploreCourses.visibility = View.VISIBLE
+                            val adapter = ExploreCourseAdapter(courseDetailsList) { course ->
+                                val bundle = Bundle()
+                                bundle.putString("folder_Id", folderId)
+                                bundle.putString("courseName", course.name)
+                                Log.d("folder_Id namecouse: ${course.name}", folderId)
+                                findNavController().navigate(
+                                    R.id.action_courseEmptyFragment_to_ResumeCourseFragment,
+                                    bundle
+                                )
+                            }
+                            binding.rvExploreCourses.adapter = adapter
+                            binding.rvExploreCourses.layoutManager =
+                                LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
                         }
-                        binding.rvExploreCourses.adapter = adapter
-                        binding.rvExploreCourses.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
                     }
                 }
                 val courses = data.myCourses ?.map { coursepercent=

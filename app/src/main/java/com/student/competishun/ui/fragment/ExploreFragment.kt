@@ -445,7 +445,7 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
 
             val filters = FindAllCourseInputStudent(
                 Optional.present("Complimentary Course"),
-                Optional.present("IIT-JEE"),
+                Optional.present("12th"),
                 Optional.present(null),
                 Optional.present(null)
             )

@@ -77,12 +77,9 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         var courseName:String = ""
+       // var complementryId:String = ""
         binding.igToolbarBackButton.setOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed()  }
         helperFunctions = HelperFunctions()
-        binding.CartTabLayout.visibility = View.GONE
-      //  binding.rvAllCart.visibility = View.GONE
-        binding.btnProceedToPay.visibility = View.GONE
-        binding.clEmptyCart.visibility = View.VISIBLE
         binding.clEmptyCart.setOnClickListener {
             //   findNavController().navigate(R.id.coursesFragment)
         }
@@ -130,20 +127,25 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
             layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
             adapter = cartAdapter
         }
-
+        cartViewModel.findAllCartItems(userId)
         cartViewModel.findAllCartItemsResult.observe(viewLifecycleOwner, Observer { result ->
 
             result.onSuccess { data ->
-                binding.clEmptyCart.visibility = View.GONE
-                binding.rvAllCart.visibility = View.VISIBLE
-                Log.e("CartItems", data.findAllCartItems.toString() )
-                val cartItems = data.findAllCartItems.mapNotNull { cartItemData ->
+
+
+                Log.e("CartItems", data.findAllCartItems.toString())
+                var complementryId = ""
+                val cartItems = data.findAllCartItems.map { cartItemData ->
+                    binding.clEmptyCart.visibility = View.GONE
+                    binding.rvAllCart.visibility = View.VISIBLE
                     val course = cartItemData.course
                     courseName = course.name
-                    Log.e("coursevalue",course.toString())
-                    instAmountpaid = ((course.price ?: 0) + (course.with_installment_price?:0) * 0.6)
+                    if (!course.complementary_course.isNullOrEmpty())
+                     complementryId = course.complementary_course
+                    Log.e("complementryIDd", complementryId)
+                    instAmountpaid = ((course.price ?: 0) + (course.with_installment_price ?: 0) * 0.6)
                     CartItem(
-                        profileImageResId = course.banner_image?:"", // Replace with actual logic for image
+                        profileImageResId = course.banner_image ?: "", // Replace with actual logic for image
                         name = course.name,
                         viewDetails = "View Details",
                         forwardDetails = R.drawable.cart_arrow_right,
@@ -155,37 +157,65 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
                         withInstallmentPrice = course.with_installment_price ?: 0,
                         categoryId = course.category_id.toString()
                     )
-
                 }.takeLast(1)
 
-                binding.tvCartCount.text = "(${cartItems.size})"
-                binding.cartBadge.text = cartItems.size.toString()
-                cartAdapter.updateCartItems(cartItems)
-                originalCartItems = cartItems
-                if (cartItems.isNotEmpty()) {
-                    originalCartItems = cartItems
-                    cartAdapter.updateCartItems(cartItems)
+                // Ensure this observer is only added once
+                if (getCourseByIDViewModel.courseByID.hasActiveObservers().not()) {
+                    getCourseByIDViewModel.courseByID.observe(viewLifecycleOwner, Observer { course ->
+                        Log.e("listcourses", course.toString())
 
-                    // Show the tab layout and related views
-                    binding.CartTabLayout.visibility = View.VISIBLE
-                    binding.rvAllCart.visibility = View.VISIBLE
-                    binding.btnProceedToPay.visibility = View.VISIBLE
+                        if (course != null) {
+                            Log.e("listcourses", course.toString())
+                            val freeCourseItem = CartItem(
+                                profileImageResId = course.banner_image ?: "",
+                                name = course.name,
+                                viewDetails = "View Details",
+                                forwardDetails = R.drawable.cart_arrow_right,
+                                discount = course.discount ?: 0,
+                                price = course.price ?: 0,
+                                entityId = course.id,
+                                cartId = "", // Assuming this will be a new cart item
+                                courseId = course.id,
+                                withInstallmentPrice = course.with_installment_price ?: 0,
+                                categoryId = course.category_id.toString(),
+                                isFree = true
+                            )
+                            if (freeCourseItem !in cartItems) {
+                                val updatedCartItems = cartItems.toMutableList()
+                                updatedCartItems.add(freeCourseItem)
+                                binding.tvCartCount.text = "(${updatedCartItems.size})"
+                                binding.cartBadge.text = updatedCartItems.size.toString()
+                                cartAdapter.updateCartItems(updatedCartItems)
+                                originalCartItems = cartItems
 
-                    // Show full payment data by default
-                    showFullPayment()
-                } else {
-                    // Optionally show a message indicating no items are available
-                    Toast.makeText(requireContext(), "No items available in the cart", Toast.LENGTH_SHORT).show()
+                                if (updatedCartItems.isNotEmpty()) {
+                                    originalCartItems = updatedCartItems
+                                    cartAdapter.updateCartItems(updatedCartItems)
+
+                                    binding.CartTabLayout.visibility = View.VISIBLE
+                                    binding.rvAllCart.visibility = View.VISIBLE
+                                    binding.btnProceedToPay.visibility = View.VISIBLE
+
+                                    showFullPayment()
+                                } else {
+                                    Toast.makeText(requireContext(), "No items available in the cart", Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                        }
+                    })
                 }
+                getCourseByIDViewModel.fetchCourseById(complementryId)
+
             }.onFailure { exception ->
-                Log.e("exception in cart",exception.toString())
+                Log.e("exception in cart", exception.toString())
                 binding.clPaymentSummary.visibility = View.GONE
                 binding.clProccedToPay.visibility = View.GONE
-               // Toast.makeText(requireContext(), exception.message, Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), exception.message, Toast.LENGTH_SHORT).show()
             }
         })
 
-        cartViewModel.findAllCartItems(userId)
+
+
 
         binding.btnProceedToPay.setOnClickListener {
 
@@ -360,21 +390,6 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
      //   Toast.makeText(requireContext(), "Cart item removed", Toast.LENGTH_SHORT).show()
     }
 
-    private fun observeCourseById(courseId:String) {
-        getCourseByIDViewModel.fetchCourseById(courseId)
-        getCourseByIDViewModel.courseByID.observe(viewLifecycleOwner, Observer { courses ->
-            Log.e("listcourses", courses.toString())
-
-            if (courses != null) {
-                Log.e("listcourses", courses.toString())
-                val courseName = "${courses.name}"
-                val categoryName = courses.category_name?.split(" ") ?: emptyList()
-                val wordsWithoutLast = categoryName.dropLast(1)
-
-
-            }
-        })
-    }
 }
 
 

@@ -14,6 +14,7 @@ query FindAllCartItems {
             id
             description
             banner_image
+            complementary_course
             with_installment_price
             category_id
             banners {
