@@ -30,6 +30,7 @@ import com.google.android.material.navigation.NavigationView
 import com.student.competishun.R
 import com.student.competishun.curator.AllCourseForStudentQuery
 import com.student.competishun.curator.GetAllCourseCategoriesQuery
+import com.student.competishun.curator.type.FindAllBannersInput
 import com.student.competishun.curator.type.FindAllCourseInputStudent
 import com.student.competishun.data.model.PromoBannerModel
 import com.student.competishun.data.model.RecommendedCourseDataModel
@@ -48,6 +49,7 @@ import com.student.competishun.utils.Constants
 import com.student.competishun.utils.HelperFunctions
 import com.student.competishun.utils.OnCourseItemClickListener
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.map
 import java.io.Serializable
 
 @AndroidEntryPoint
@@ -98,6 +100,9 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
+        getAllBanners()
 
         binding.tvRecommendViewAll.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_RecommendDetailFragment)
@@ -376,6 +381,53 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
         findNavController().navigate(R.id.action_homeFragment_to_coursesFragment, bundle)
     }
 
+    fun getAllBanners() {
+        val filtersbanner = FindAllBannersInput(
+            limit = Optional.Absent
+        )
+        studentCoursesViewModel.fetchBanners(filtersbanner)
+
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            studentCoursesViewModel.banners.collect { result ->
+                val bannerList = mutableListOf<PromoBannerModel>()
+
+                result?.forEach { bannerlist ->
+                    bannerlist?.let {
+                        bannerList.add(PromoBannerModel(it.mobile_banner_image, it.redirect_link))
+                    }
+                }
+
+                val adapter = PromoBannerAdapter(bannerList) { redirectLink ->
+                    openLink(redirectLink)
+                }
+                binding.rvpromobanner.adapter = adapter
+                binding.rvpromobanner.layoutManager =
+                    LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+
+                // Setup dots indicator
+                helperFunctions.setupDotsIndicator(
+                    requireContext(),
+                    bannerList.size,
+                    binding.llDotsIndicatorPromoBanner
+                )
+
+                // Set up the scroll listener for updating the dots indicator
+                binding.rvpromobanner.addOnScrollListener(object :
+                    RecyclerView.OnScrollListener() {
+                    override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                        super.onScrolled(recyclerView, dx, dy)
+                        helperFunctions.updateDotsIndicator(
+                            recyclerView,
+                            binding.llDotsIndicatorPromoBanner
+                        )
+                    }
+                })
+            }
+        }
+    }
+
+
+
     fun getAllCoursesForStudent(courseType: String) {
         var courseTypes = courseType
         if (courseType != "IIT-JEE" || courseType != "NEET") {
@@ -388,6 +440,7 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
             is_recommended = Optional.present(true)
         )
         studentCoursesViewModel.fetchCourses(filters)
+
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             studentCoursesViewModel.courses.collect { result ->
@@ -423,40 +476,20 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
                         )
                     } ?: emptyList()
 
-                    val bannerList = mutableListOf<PromoBannerModel>()
 
-                    courses.forEach { course ->
-                        Log.e("Course", course.toString())
-                        Log.e("bannersList", course.banners.toString())
-                        course.banners?.forEach { banner ->
-                            bannerList.add(
-                                PromoBannerModel(
-                                    banner.mobile_banner_image,
-                                    banner.redirect_link
-                                )
-                            )
-                        }
-                    }
-                    binding.rvpromobanner.adapter = PromoBannerAdapter(bannerList) { redirectLink ->
-                        openLink(redirectLink)
-                    }
-                    binding.rvpromobanner.layoutManager =
-                        LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-                    helperFunctions.setupDotsIndicator(
-                        requireContext(),
-                        bannerList.size,
-                        binding.llDotsIndicatorPromoBanner
-                    )
-                    binding.rvpromobanner.addOnScrollListener(object :
-                        RecyclerView.OnScrollListener() {
-                        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                            super.onScrolled(recyclerView, dx, dy)
-                            helperFunctions.updateDotsIndicator(
-                                recyclerView,
-                                binding.llDotsIndicatorPromoBanner
-                            )
-                        }
-                    })
+//                    courses.forEach { course ->
+//                        Log.e("Course", course.toString())
+//                        Log.e("bannersList", course.banners.toString())
+//                        course.banners?.forEach { banner ->
+//                            bannerList.add(
+//                                PromoBannerModel(
+//                                    banner.mobile_banner_image,
+//                                    banner.redirect_link
+//                                )
+//                            )
+//                        }
+//                    }
+
 
                     binding.rvRecommendedCourses.adapter = courses?.let { courseList ->
                         RecommendedCoursesAdapter(courseList) { selectedCourse ->

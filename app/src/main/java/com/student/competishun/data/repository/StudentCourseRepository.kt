@@ -3,7 +3,11 @@ package com.student.competishun.data.repository
 
 import android.util.Log
 import com.apollographql.apollo3.ApolloClient
+import com.apollographql.apollo3.api.Optional
+import com.apollographql.apollo3.exception.ApolloException
 import com.student.competishun.curator.AllCourseForStudentQuery
+import com.student.competishun.curator.GetAllBannersQuery
+import com.student.competishun.curator.type.FindAllBannersInput
 import javax.inject.Inject
 import com.student.competishun.curator.type.FindAllCourseInputStudent
 import com.student.competishun.data.api.Curator
@@ -21,11 +25,31 @@ class StudentCourseRepository @Inject constructor(
             if (response.hasErrors()) {
                 Result.failure(Exception(response.errors?.first()?.message))
             } else {
-                Log.e("StudentCourseRepositodat","${response.data}")
+                Log.e("StudentCourseR","${response.data}")
                 Result.success(response.data!!)
             }
         } catch (e: Exception) {
             Result.failure(e)
+        }
+    }
+
+    suspend fun getAllBanners(filters: FindAllBannersInput?): List<GetAllBannersQuery.Banner?>? {
+        val query = GetAllBannersQuery(Optional.presentIfNotNull(filters))
+
+        return try {
+            val response = apolloClient.query(query).execute()
+
+            if (response.hasErrors()) {
+                response.errors?.forEach {
+                    Log.e("GraphQL Error", it.message)
+                }
+                return null
+            }
+
+            response.data?.getAllBanners?.banners
+        } catch (e: ApolloException) {
+            Log.e("BannersRepository", e.message ?: "Unknown error")
+            null
         }
     }
 }

@@ -1,0 +1,9 @@
+query GetAllBanners($filters: FindAllBannersInput) {
+    getAllBanners(filters: $filters) {
+        banners {
+            mobile_banner_image
+            redirect_link
+        }
+        count
+    }
+}
