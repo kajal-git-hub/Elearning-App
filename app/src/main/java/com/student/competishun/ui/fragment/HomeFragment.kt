@@ -158,9 +158,7 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
         dotsIndicatorWhyCompetishun = view.findViewById(R.id.llDotsIndicatorWhyCompetishun)
 
         coursesViewModel.courses.observe(viewLifecycleOwner, Observer { courses ->
-            Log.e("Coursesres", courses?.get(7)?.banner_image.toString())
-            Log.e("Coursesres", courses?.get(8)?.banner_image.toString())
-            Log.e("Coursesres", courses?.get(9)?.banner_image.toString())
+
 
             val bannerList = mutableListOf<PromoBannerModel>()
 

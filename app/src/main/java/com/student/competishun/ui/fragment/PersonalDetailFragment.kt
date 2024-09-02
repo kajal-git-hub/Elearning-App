@@ -120,10 +120,11 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
                     fatherName = Optional.Present(fatherName),
                     tShirtSize = Optional.Present(tShirtSize)
                 )
+                userUpdate(updateUserInput,null,null)
                 Log.d("updateUserInput",updateUserInput.toString())
                 sharedPreferencesManager.name = userDetails.fullName
 
-                userUpdate(updateUserInput,null,null)
+
             }.onFailure { exception ->
                 Toast.makeText(
                     requireContext(),
@@ -134,8 +135,10 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
         }
     }
 
-    fun userUpdate(updateUserInput: UpdateUserInput, documentPhotoFile: File?, passportPhotoFile: File?) {
-        updateUserViewModel.updateUser(updateUserInput, documentPhotoFile, passportPhotoFile)
+    fun userUpdate(updateUserInput: UpdateUserInput?, documentPhotoFile: File?, passportPhotoFile: File?) {
+        if (updateUserInput != null) {
+            updateUserViewModel.updateUser(updateUserInput, documentPhotoFile, passportPhotoFile)
+        }
         updateUserViewModel.updateUserResult.observe(viewLifecycleOwner, Observer { result ->
             if (result?.user != null) {
                 Log.e("gettingUserUpdateTarget", result.user.userInformation.targetYear.toString())
