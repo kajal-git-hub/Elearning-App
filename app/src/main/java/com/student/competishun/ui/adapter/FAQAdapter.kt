@@ -33,6 +33,7 @@ class FAQAdapter(private var faqList: List<FAQItem>) :
 
         fun bind(faqItem: FAQItem) {
             questionText.text = faqItem.question
+            additionalText.text = faqItem.details
             additionalText.visibility = if (faqItem.isExpanded) View.VISIBLE else View.GONE
             plusIcon.setImageResource(if (faqItem.isExpanded) R.drawable.minus else R.drawable.add)
 

@@ -89,12 +89,11 @@ class RecommendViewDetail : Fragment() {
     }
 
     fun getAllCoursesForStudent(courseType: String) {
+        var courseTypes = courseType
         if (courseType!="IIT-JEE"|| courseType!="NEET" ){
-            this.courseType ="IIT-JEE"
+            courseTypes ="IIT-JEE"
         }
-        val filters = FindAllCourseInputStudent(
-            Optional.Absent,Optional.Absent,
-            Optional.present(courseType),Optional.present(true))
+        val filters = FindAllCourseInputStudent(Optional.Absent,Optional.Absent, Optional.present(courseTypes),Optional.present(true))
         studentCoursesViewModel.fetchCourses(filters)
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
@@ -134,10 +133,17 @@ class RecommendViewDetail : Fragment() {
 
                     val bannerList = mutableListOf<PromoBannerModel>()
 
-                    courses?.forEach { course ->
+                    courses.forEach { course ->
                         Log.e("Course", course.toString())
-                        Log.e("bannersList",course.banners.toString())
-                        bannerList.add(PromoBannerModel(course.banner_image))
+                        Log.e("bannersList", course.banners.toString())
+                        course.banners?.forEach { banner ->
+                            bannerList.add(
+                                PromoBannerModel(
+                                    banner.mobile_banner_image,
+                                    banner.redirect_link
+                                )
+                            )
+                        }
                     }
 
                     binding.rvRecommendedCourses.adapter = courses?.let { courseList ->
@@ -150,7 +156,6 @@ class RecommendViewDetail : Fragment() {
                     }
                     binding.rvRecommendedCourses.layoutManager =
                         LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-
 
                 }?.onFailure { exception ->
                     // Handle the failure case

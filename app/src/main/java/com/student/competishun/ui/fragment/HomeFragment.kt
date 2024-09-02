@@ -1,6 +1,8 @@
 package com.student.competishun.ui.fragment
 
 import RecommendedCoursesAdapter
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -64,7 +66,7 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
     private lateinit var bottomNav: BottomNavigationView
     private lateinit var toggle: ActionBarDrawerToggle
     private val coursesCategoryViewModel: CoursesCategoryViewModel by viewModels()
-    private val studentCoursesViewModel:StudentCoursesViewModel by viewModels()
+    private val studentCoursesViewModel: StudentCoursesViewModel by viewModels()
     private lateinit var rvOurCourses: RecyclerView
     private lateinit var dotsIndicatorOurCourses: LinearLayout
     private lateinit var adapterOurCourses: OurCoursesAdapter
@@ -78,7 +80,6 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
     private lateinit var contactImage: ImageView
 
 
-
     private val userViewModel: UserViewModel by viewModels()
 
 
@@ -87,7 +88,7 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentHomeBinding.inflate(inflater, container, false).apply {
-          //  this.coursesViewModel = this@HomeFragment.coursesViewModel
+            //  this.coursesViewModel = this@HomeFragment.coursesViewModel
             this.studentCoursesViewModel = this@HomeFragment.studentCoursesViewModel
             this.coursesCategoryViewModel = this@HomeFragment.coursesCategoryViewModel
             lifecycleOwner = viewLifecycleOwner
@@ -227,7 +228,8 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
                 listOurCoursesItem = category
                 adapterOurCourses = OurCoursesAdapter(listOurCoursesItem!!, this)
                 rvOurCourses.adapter = adapterOurCourses
-                rvOurCourses.layoutManager = GridLayoutManager(context, 3, GridLayoutManager.HORIZONTAL, false)
+                rvOurCourses.layoutManager =
+                    GridLayoutManager(context, 3, GridLayoutManager.HORIZONTAL, false)
                 setupDotsIndicator(listOurCoursesItem!!.size, dotsIndicatorOurCourses, 6)
             }
         })
@@ -376,24 +378,28 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
 
     fun getAllCoursesForStudent(courseType: String) {
         var courseTypes = courseType
-        if (courseType!="IIT-JEE"|| courseType!="NEET" ){
-            courseTypes ="IIT-JEE"
+        if (courseType != "IIT-JEE" || courseType != "NEET") {
+            courseTypes = "IIT-JEE"
         }
-        val filters = FindAllCourseInputStudent(Optional.Absent,Optional.Absent, Optional.present(courseTypes),Optional.present(true))
+        val filters = FindAllCourseInputStudent(
+            category_name = Optional.Absent,
+            course_class = Optional.Absent,
+            exam_type = Optional.present(courseTypes),
+            is_recommended = Optional.present(true)
+        )
         studentCoursesViewModel.fetchCourses(filters)
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             studentCoursesViewModel.courses.collect { result ->
                 result?.onSuccess { data ->
-                    Log.e("gettiStudent",data.toString())
-                    val courses = data.getAllCourseForStudent.courses.map {
-                            course ->
+                    Log.e("gettiStudent", data.toString())
+                    val courses = data.getAllCourseForStudent.courses.map { course ->
                         AllCourseForStudentQuery.Course(
                             discount = course.discount,
                             name = course.name,
                             course_start_date = course.course_start_date,
                             course_validity_end_date = course.course_validity_end_date,
-                            price =course.price,
+                            price = course.price,
                             target_year = course.target_year,
                             id = course.id,
                             academic_year = course.academic_year,
@@ -419,19 +425,36 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
 
                     val bannerList = mutableListOf<PromoBannerModel>()
 
-                    courses?.forEach { course ->
+                    courses.forEach { course ->
                         Log.e("Course", course.toString())
-                        Log.e("bannersList",course.banners.toString())
-                        bannerList.add(PromoBannerModel(course.banner_image))
+                        Log.e("bannersList", course.banners.toString())
+                        course.banners?.forEach { banner ->
+                            bannerList.add(
+                                PromoBannerModel(
+                                    banner.mobile_banner_image,
+                                    banner.redirect_link
+                                )
+                            )
+                        }
                     }
-                    binding.rvpromobanner.adapter = PromoBannerAdapter(bannerList)
+                    binding.rvpromobanner.adapter = PromoBannerAdapter(bannerList) { redirectLink ->
+                        openLink(redirectLink)
+                    }
                     binding.rvpromobanner.layoutManager =
                         LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-                    helperFunctions.setupDotsIndicator(requireContext(),bannerList.size, binding.llDotsIndicatorPromoBanner)
-                    binding.rvpromobanner.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                    helperFunctions.setupDotsIndicator(
+                        requireContext(),
+                        bannerList.size,
+                        binding.llDotsIndicatorPromoBanner
+                    )
+                    binding.rvpromobanner.addOnScrollListener(object :
+                        RecyclerView.OnScrollListener() {
                         override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                             super.onScrolled(recyclerView, dx, dy)
-                            helperFunctions.updateDotsIndicator(recyclerView, binding.llDotsIndicatorPromoBanner)
+                            helperFunctions.updateDotsIndicator(
+                                recyclerView,
+                                binding.llDotsIndicatorPromoBanner
+                            )
                         }
                     })
 
@@ -440,7 +463,7 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
                             val bundle = Bundle().apply {
                                 putString("course_id", selectedCourse.id)
                             }
-                            findNavController().navigate(R.id.exploreFragment,bundle)
+                            findNavController().navigate(R.id.exploreFragment, bundle)
                         }
                     }
                     binding.rvRecommendedCourses.layoutManager =
@@ -464,7 +487,7 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
 
                 }?.onFailure { exception ->
                     // Handle the failure case
-                    Log.e("gettiStudentfaik",exception.toString())
+                    Log.e("gettiStudentfaik", exception.toString())
                 }
             }
         }
@@ -475,15 +498,23 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
         userViewModel.userDetails.observe(viewLifecycleOwner) { result ->
             result.onSuccess { data ->
                 val userDetails = data.getMyDetails
-               var courseType = userDetails.userInformation.preparingFor?:""
+                var courseType = userDetails.userInformation.preparingFor ?: ""
                 getAllCoursesForStudent(courseType)
-                Log.e("courseeTypehome",courseType)
+                Log.e("courseeTypehome", courseType)
 
             }.onFailure { exception ->
-                Toast.makeText(requireContext(), "Error fetching details: ${exception.message}", Toast.LENGTH_LONG).show()
+                Toast.makeText(
+                    requireContext(),
+                    "Error fetching details: ${exception.message}",
+                    Toast.LENGTH_LONG
+                ).show()
             }
 
         }
+    }
+    private fun openLink(redirectLink: String) {
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(redirectLink))
+        startActivity(intent)
     }
 
     override fun onDestroyView() {

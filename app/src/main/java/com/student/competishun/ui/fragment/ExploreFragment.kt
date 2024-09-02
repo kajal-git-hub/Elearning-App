@@ -384,17 +384,14 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
                 adapter = teacherAdapter
             }
 
+        faqItems = listOf(
+            FAQItem("Will I get Physical Study Material ?", "NO, With this Course Purchase, you will get only Digital Study Material like DPP’s and their respective Text and Video Solution. Physical Study Material is not provided with this Short term Course."),
+            FAQItem("Will Classes be any Live Classes ?", "NO, There will be only Recorded Scheduled Lectures will be provided. In week there will be LIVE INTERACTION Session for your guidance for 30 Minutes."),
+            FAQItem("Will Test be conducted in this course ?", "YES, Test will be conducted on weekly basis as per test grid that will be provided to you along with the course. Test will be conducted on COMPETISHUN DIGITAL APP / WEBSITE and we will share the complete details in your Official Support Prior to your 1st test"),
+            FAQItem("Will Doubt clearing session will be conducted ?", "YES, you can ask your doubts in your doubt groups tagging faculties and you will get a reply at the earliest."),
+            FAQItem("How Do you contact Support Staff of Competishun ?", "You can contact Support Staff at 8888-0000-21, 7410-900-901 ")
+        )
 
-
-            faqItems = listOf(
-                FAQItem("Is this course have live online lectures?"),
-                FAQItem("Is installments option available?"),
-                FAQItem("Do you have refund policy?"),
-                FAQItem("Do you have cancellation policy?"),
-                FAQItem("How can I access the course material?"),
-                FAQItem("What is the duration of the course?"),
-                FAQItem("Are there any prerequisites for the course?")
-            )
             limitedFaqItems = faqItems.take(4)
 
             val faqAdapter = FAQAdapter(limitedFaqItems)

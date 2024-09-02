@@ -4,11 +4,12 @@ import android.os.Parcelable
 
 data class FAQItem(
     val question: String,
+    var details:String,
     var isExpanded: Boolean = false
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readString() ?: "",
-        parcel.readByte() != 0.toByte()
+        (parcel.readByte() != 0.toByte()).toString()
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
