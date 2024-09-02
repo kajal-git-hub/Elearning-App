@@ -77,7 +77,7 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
 
     private lateinit var contactImage: ImageView
 
-    var courseType:String = ""
+
 
     private val userViewModel: UserViewModel by viewModels()
 
@@ -97,7 +97,7 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-       Log.e("CourseTypeStudent",courseType)
+
         binding.tvRecommendViewAll.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_RecommendDetailFragment)
         }
@@ -233,7 +233,7 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
         })
         coursesCategoryViewModel.fetchCoursesCategory()
         getMyDetails()
-        getAllCoursesForStudent(courseType)
+
 //        val filters = FindAllCourseInput(
 //            exam_type = Optional.Absent,
 //            is_recommended = Optional.present(true),
@@ -369,19 +369,17 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
         val bundle = Bundle().apply {
             putString("course_name", course.name)
             putString("category_id", course.id)
-            Log.e("courseane ", course.name)
-            // Add other course details to the bundle if needed
+
         }
         findNavController().navigate(R.id.action_homeFragment_to_coursesFragment, bundle)
     }
 
     fun getAllCoursesForStudent(courseType: String) {
+        var courseTypes = courseType
         if (courseType!="IIT-JEE"|| courseType!="NEET" ){
-            this.courseType ="IIT-JEE"
+            courseTypes ="IIT-JEE"
         }
-        val filters = FindAllCourseInputStudent(
-            Optional.Absent,Optional.Absent,
-            Optional.present(courseType),Optional.present(true))
+        val filters = FindAllCourseInputStudent(Optional.Absent,Optional.Absent, Optional.present(courseTypes),Optional.present(true))
         studentCoursesViewModel.fetchCourses(filters)
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
@@ -477,13 +475,14 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
         userViewModel.userDetails.observe(viewLifecycleOwner) { result ->
             result.onSuccess { data ->
                 val userDetails = data.getMyDetails
-                courseType = userDetails.userInformation.preparingFor?:""
-
+               var courseType = userDetails.userInformation.preparingFor?:""
+                getAllCoursesForStudent(courseType)
                 Log.e("courseeTypehome",courseType)
 
             }.onFailure { exception ->
                 Toast.makeText(requireContext(), "Error fetching details: ${exception.message}", Toast.LENGTH_LONG).show()
             }
+
         }
     }
 
