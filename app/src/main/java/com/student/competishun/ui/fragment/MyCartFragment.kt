@@ -77,6 +77,12 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         var courseName:String = ""
+
+        binding.MyCartNavigateToCourses.setOnClickListener {
+            findNavController().navigate(R.id.homeFragment)
+        }
+
+
         binding.igToolbarBackButton.setOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed()  }
         helperFunctions = HelperFunctions()
         binding.CartTabLayout.visibility = View.GONE

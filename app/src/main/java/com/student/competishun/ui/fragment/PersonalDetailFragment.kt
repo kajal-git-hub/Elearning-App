@@ -109,7 +109,7 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
             result.onSuccess { data ->
                 val userDetails = data.getMyDetails
                 Log.e("userDetails", userDetails.toString())
-                val updateUserInput = UpdateUserInput(
+                updateUserInput = UpdateUserInput(
                     city = Optional.Present(userDetails.userInformation.city),
                     fullName = Optional.Present(userDetails.fullName),
                     preparingFor = Optional.Present(userDetails.userInformation.preparingFor),
@@ -134,8 +134,10 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
         }
     }
 
-    fun userUpdate(updateUserInput: UpdateUserInput, documentPhotoFile: File?, passportPhotoFile: File?) {
-        updateUserViewModel.updateUser(updateUserInput, documentPhotoFile, passportPhotoFile)
+    fun userUpdate(updateUserInput: UpdateUserInput?, documentPhotoFile: File?, passportPhotoFile: File?) {
+        if (updateUserInput != null) {
+            updateUserViewModel.updateUser(updateUserInput, documentPhotoFile, passportPhotoFile)
+        }
         updateUserViewModel.updateUserResult.observe(viewLifecycleOwner, Observer { result ->
             if (result?.user != null) {
                 Log.e("gettingUserUpdateTarget", result.user.userInformation.targetYear.toString())

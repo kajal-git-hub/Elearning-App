@@ -9,6 +9,7 @@ query GetAllCourse($filters: FindAllCourseInput) {
             id
             exam_type
             discount
+
             course_class
             course_end_date
             banners {

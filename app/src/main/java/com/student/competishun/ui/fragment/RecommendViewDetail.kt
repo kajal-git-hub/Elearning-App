@@ -42,6 +42,10 @@ class RecommendViewDetail : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.appbar.setNavigationOnClickListener {
+            findNavController().navigateUp()
+        }
+
         setupToolbar()
 
         adapter = RecommendViewAllAdapter(emptyList()) { selectedCourse ->
