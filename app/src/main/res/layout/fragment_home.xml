@@ -5,7 +5,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <variable
+            name="studentCoursesViewModel"
+            type="com.student.competishun.ui.viewmodel.StudentCoursesViewModel" />
         <variable
             name="coursesViewModel"
             type="com.student.competishun.ui.viewmodel.CoursesViewModel" />

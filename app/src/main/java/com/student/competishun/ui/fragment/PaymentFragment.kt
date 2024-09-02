@@ -78,7 +78,6 @@ class PaymentFragment : Fragment() {
         }else orderdetails(ordersViewModel,userId)
         binding.paymentTickGif.visibility = View.VISIBLE
 
-        // Delay for 2 seconds to show the text
         Handler(Looper.getMainLooper()).postDelayed({
             binding.paymentSuccessText.visibility = View.VISIBLE
         }, 2000)
@@ -94,7 +93,8 @@ class PaymentFragment : Fragment() {
         }
     }
 
-    fun orderdetails(ordersViewModel: OrdersViewModel, userId: String) {
+    fun orderdetails(ordersViewModel: OrdersViewModel,userId:String
+    ){
         binding.progressBar.visibility = View.VISIBLE
         val userIds = listOf(userId)
         ordersViewModel.fetchOrdersByUserIds(userIds)
@@ -102,9 +102,10 @@ class PaymentFragment : Fragment() {
             binding.progressBar.visibility = View.GONE
             binding.clMypurchase.visibility = View.VISIBLE
             orders?.let {
+
                 for (order in orders) {
-                    binding.tvAmount.text = "₹ ${order.amountPaid / 100}"
-                    binding.paymentSuccessText.text = "${order.paymentStatus} Successfully"
+                    binding.tvAmount.text = "₹ ${order.amountPaid/100}"
+                    binding.paymentSuccessText.text = "Payment Sucessfully"
                     observeCourseById(order.entityId)
                     binding.tvPaidDate.text =  getCurrentDateString()
                     if (order.paymentStatus.equals("paid", ignoreCase = true)) {
@@ -116,6 +117,7 @@ class PaymentFragment : Fragment() {
                         sharedPreferencesManager.putBoolean("savePaymentSuccess", false)
                         Log.d("Order", "Payment Failed. Status: ${order.paymentStatus}")
                     }
+                    Log.d("Order", "Amount Paid: ${order.amountPaid}, Entity ID: ${order.entityId}, Payment Status: ${order.paymentStatus}")
                 }
             } ?: run {
 

@@ -86,13 +86,13 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
         binding.igToolbarBackButton.setOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed()  }
         helperFunctions = HelperFunctions()
         binding.CartTabLayout.visibility = View.GONE
-        binding.rvAllCart.visibility = View.GONE
+      //  binding.rvAllCart.visibility = View.GONE
         binding.btnProceedToPay.visibility = View.GONE
         binding.clEmptyCart.visibility = View.VISIBLE
         binding.clEmptyCart.setOnClickListener {
             //   findNavController().navigate(R.id.coursesFragment)
         }
-        binding.clrvContainer.visibility = View.GONE
+      //  binding.clrvContainer.visibility = View.GONE
         sharedPreferencesManager = SharedPreferencesManager(requireContext())
 
         userViewModel.userDetails.observe(viewLifecycleOwner) { result ->
@@ -140,6 +140,8 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
         cartViewModel.findAllCartItemsResult.observe(viewLifecycleOwner, Observer { result ->
 
             result.onSuccess { data ->
+                binding.clEmptyCart.visibility = View.GONE
+                binding.rvAllCart.visibility = View.VISIBLE
                 Log.e("CartItems", data.findAllCartItems.toString() )
                 val cartItems = data.findAllCartItems.mapNotNull { cartItemData ->
                     val course = cartItemData.course
@@ -359,6 +361,8 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
         binding.cartBadge.text = "0"
         binding.clPaymentSummary.visibility = View.GONE
         binding.clProccedToPay.visibility = View.GONE
+        binding.clEmptyCart.visibility = View.VISIBLE
+        binding.clrvContainer.visibility = View.GONE
      //   Toast.makeText(requireContext(), "Cart item removed", Toast.LENGTH_SHORT).show()
     }
 

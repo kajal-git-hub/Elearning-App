@@ -45,9 +45,9 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
     private var fatherName = ""
     private var whatsappNumber = ""
     private var tShirtSize = ""
+    private var updateUserInput: UpdateUserInput? = null
     private var fieldsToVisible = mutableListOf<String>()
 
-    private var updateUserInput: UpdateUserInput? = null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -108,8 +108,8 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
         userViewModel.userDetails.observe(viewLifecycleOwner) { result ->
             result.onSuccess { data ->
                 val userDetails = data.getMyDetails
-                Log.e("userDetails", userDetails.toString())
-                updateUserInput = UpdateUserInput(
+                Log.e("userDetails",userDetails.toString())
+                  updateUserInput = UpdateUserInput(
                     city = Optional.Present(userDetails.userInformation.city),
                     fullName = Optional.Present(userDetails.fullName),
                     preparingFor = Optional.Present(userDetails.userInformation.preparingFor),
@@ -120,10 +120,11 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
                     fatherName = Optional.Present(fatherName),
                     tShirtSize = Optional.Present(tShirtSize)
                 )
-                Log.d("updateUserInput", updateUserInput.toString())
+                userUpdate(updateUserInput,null,null)
+                Log.d("updateUserInput",updateUserInput.toString())
                 sharedPreferencesManager.name = userDetails.fullName
 
-                userUpdate(updateUserInput, null, null)
+
             }.onFailure { exception ->
                 Toast.makeText(
                     requireContext(),

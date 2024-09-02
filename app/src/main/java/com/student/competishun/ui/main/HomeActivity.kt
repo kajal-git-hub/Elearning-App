@@ -5,6 +5,8 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.View
+import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -12,9 +14,7 @@ import androidx.databinding.ObservableField
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.navigation.NavController
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.fragment.findNavController
 import com.razorpay.PaymentResultListener
 import com.student.competishun.R
 import com.student.competishun.databinding.ActivityHomeBinding
@@ -45,6 +45,7 @@ import com.student.competishun.ui.fragment.ResumeCourseFragment
 import com.student.competishun.ui.fragment.ScheduleFragment
 import com.student.competishun.ui.fragment.SubjectContentFragment
 import com.student.competishun.ui.fragment.TopicTypeContentFragment
+import com.student.competishun.ui.viewmodel.UserViewModel
 import com.student.competishun.utils.SharedPreferencesManager
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -55,9 +56,11 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
     private lateinit var binding: ActivityHomeBinding
     private var isCallingSupportVisible = ObservableField(true)
     lateinit var sharedPreferencesManager: SharedPreferencesManager
+    var courseType:String = ""
      var userId:String = ""
-
+    val bundle = Bundle()
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -73,6 +76,8 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.fragmentNavigation) as NavHostFragment
         navController = navHostFragment.navController
+
+        Log.e("courseTu[ea",courseType)
 
         if (savePaymentSuccess) {
             menu.findItem(R.id.News).isVisible = false
@@ -118,8 +123,9 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
             insets
         }
         if (savedInstanceState == null) {
+
             // Ensure that HomeFragment is loaded on the first launch
-            navController.navigate(R.id.homeFragment)
+            navController.navigate(R.id.homeFragment,bundle)
             bottomNavigationView.selectedItemId = R.id.home
 
         }
@@ -139,8 +145,10 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
 
     }
     override fun onBackPressed() {
+
         if (navController.currentDestination?.id != R.id.homeFragment) {
-            navController.navigate(R.id.homeFragment)
+            Log.e("cousswetype",bundle.toString())
+            navController.navigate(R.id.homeFragment,bundle)
             binding.bottomNav.selectedItemId = R.id.home
         } else {
             super.onBackPressed()
@@ -253,6 +261,8 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
             }
         }, 2000)
     }
+
+
     override fun onStart() {
         super.onStart()
         val currentFragment = supportFragmentManager.findFragmentById(R.id.fragmentNavigation)

@@ -9,12 +9,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.android.material.textview.MaterialTextView
 import com.student.competishun.R
+import com.student.competishun.curator.AllCourseForStudentQuery
 import com.student.competishun.curator.GetAllCourseQuery
+import com.student.competishun.curator.adapter.AllCourseForStudentQuery_ResponseAdapter
 import com.student.competishun.utils.HelperFunctions
 
 class RecommendedCoursesAdapter(
-    private val items: List<GetAllCourseQuery.Course>,
-    private val onItemClick: (GetAllCourseQuery.Course) -> Unit
+    private val items: List<AllCourseForStudentQuery.Course>,
+    private val onItemClick: (AllCourseForStudentQuery.Course) -> Unit
 ) : RecyclerView.Adapter<RecommendedCoursesAdapter.CourseViewHolder>() {
 
     private lateinit var helperFunctions: HelperFunctions
