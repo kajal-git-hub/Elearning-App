@@ -74,6 +74,7 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
 
     private lateinit var helperFunctions: HelperFunctions
 
+
     private lateinit var contactImage: ImageView
 
     var courseType:String = ""

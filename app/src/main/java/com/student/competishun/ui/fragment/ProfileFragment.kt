@@ -42,7 +42,7 @@ class ProfileFragment : Fragment() {
 
         sharedPreferencesManager = SharedPreferencesManager(requireContext())
         binding.etBTUpload.setOnClickListener {
-            requireActivity().onBackPressedDispatcher.onBackPressed()
+            findNavController().navigateUp()
         }
 
         binding.llMyCart.setOnClickListener {
