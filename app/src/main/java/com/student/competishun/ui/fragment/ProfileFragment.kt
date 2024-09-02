@@ -49,9 +49,14 @@ class ProfileFragment : Fragment() {
             findNavController().navigate(R.id.myCartFragment)
         }
 
+        binding.llMyPurchase.setOnClickListener{
+            findNavController().navigate(R.id.courseEmptyFragment)
+        }
         binding.llLogout.setOnClickListener {
-            sharedPreferencesManager.clearRefreshToken()
+            // Clear the user session
+
             sharedPreferencesManager.clearAccessToken()
+            sharedPreferencesManager.clearRefreshToken()
             val intent = Intent(requireContext(), MainActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             intent.putExtra("navigateToLogin", true)

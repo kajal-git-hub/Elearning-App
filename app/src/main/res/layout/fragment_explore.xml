@@ -180,7 +180,7 @@
                         android:layout_marginTop="12dp"
                         android:background="@drawable/tag_bg"
                         android:padding="6dp"
-                        android:text="Full-Year"
+                        android:text=""
                         android:textColor="#5A5555"
                         android:textSize="12sp"
                         android:textStyle="bold"

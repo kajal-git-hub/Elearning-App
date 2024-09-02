@@ -26,6 +26,7 @@ import com.razorpay.Checkout
 import com.student.competishun.coinkeeper.CreateOrderMutation
 import com.student.competishun.coinkeeper.type.CreateOrderInput
 import com.student.competishun.curator.FindAllCartItemsQuery
+import com.student.competishun.ui.viewmodel.GetCourseByIDViewModel
 import com.student.competishun.ui.viewmodel.OrderViewModel
 import com.student.competishun.ui.viewmodel.UserViewModel
 import com.student.competishun.utils.HelperFunctions
@@ -40,6 +41,7 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
     private var _binding: FragmentMyCartBinding? = null
     private val orderViewModel: OrderViewModel by viewModels()
     private val userViewModel: UserViewModel by viewModels()
+    private val getCourseByIDViewModel: GetCourseByIDViewModel by viewModels()
     private val binding get() = _binding!!
     private lateinit var sharedPreferencesManager: SharedPreferencesManager
     private val cartViewModel: CreateCartViewModel by viewModels()
@@ -53,6 +55,7 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
     var instAmountpaid = 0.0
     var fullAmount = 0.0
     var userId: String = ""
+    var userName:String = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         paymentsClient = Wallet.getPaymentsClient(
@@ -73,18 +76,24 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        var courseName:String = ""
         binding.igToolbarBackButton.setOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed()  }
         helperFunctions = HelperFunctions()
         binding.CartTabLayout.visibility = View.GONE
         binding.rvAllCart.visibility = View.GONE
         binding.btnProceedToPay.visibility = View.GONE
+        binding.clEmptyCart.visibility = View.VISIBLE
+        binding.clEmptyCart.setOnClickListener {
+            //   findNavController().navigate(R.id.coursesFragment)
+        }
+        binding.clrvContainer.visibility = View.GONE
         sharedPreferencesManager = SharedPreferencesManager(requireContext())
 
         userViewModel.userDetails.observe(viewLifecycleOwner) { result ->
             result.onSuccess { data ->
                 val userDetails = data.getMyDetails
                 userId = userDetails.userInformation.id
+                userName = userDetails.fullName?:""
                 sharedPreferencesManager.mobileNo = userDetails.mobileNumber
             }.onFailure { exception ->
                 Toast.makeText(requireContext(), "Error fetching details: ${exception.message}", Toast.LENGTH_LONG).show()
@@ -110,7 +119,9 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
                 paymentMode = "online",
                 paymentType = paymentType,
                 totalAmount = totalAmount.toDouble() * 100,
-                userId = userId
+                userId = userId,
+                userName = userName,
+                courseName = courseName
             )
         }
 
@@ -126,8 +137,9 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
                 Log.e("CartItems", data.findAllCartItems.toString() )
                 val cartItems = data.findAllCartItems.mapNotNull { cartItemData ->
                     val course = cartItemData.course
+                    courseName = course.name
                     Log.e("coursevalue",course.toString())
-                   // instAmountpaid = ((course.price ?: 0) + (course.with_installment_price?:0) - (course.discount?:0))* 0.6
+                    instAmountpaid = ((course.price ?: 0) + (course.with_installment_price?:0) * 0.6)
                     CartItem(
                         profileImageResId = course.banner_image?:"", // Replace with actual logic for image
                         name = course.name,
@@ -143,6 +155,7 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
                     )
 
                 }.takeLast(1)
+
                 binding.tvCartCount.text = "(${cartItems.size})"
                 binding.cartBadge.text = cartItems.size.toString()
                 cartAdapter.updateCartItems(cartItems)
@@ -193,7 +206,9 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
                         paymentMode = "online",
                         paymentType = paymentType,
                         totalAmount = totalAmount.toDouble() * 100,
-                        userId = userId
+                        userId = userId,
+                        userName = userName,
+                        courseName = courseName
                     )
                 }
             }
@@ -265,24 +280,26 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
         cartAdapter.updateCartItems(partialPaymentItems)
         val discountPrice = (originalCartItems.get(0).price.toDouble() * originalCartItems.get(0).discount.toDouble()) / 100
         var discountPriceVal = (helperFunctions.calculateDiscountDetails(originalCartItems.get(0).price.toDouble(),discountPrice).second)
-        var firstInstallment = ((originalCartItems.get(0).price.toDouble() + originalCartItems.get(0).withInstallmentPrice.toDouble()) - originalCartItems.get(0).discount.toDouble())*0.6
+       var firstInstallment = ((originalCartItems.get(0).price.toDouble() + originalCartItems.get(0).withInstallmentPrice.toDouble()))*0.6
         var secondInstallment = (originalCartItems.get(0).price.toDouble()) - firstInstallment
         totalAmount = originalCartItems.get(0).price
+//        var  firstInstallment = originalCartItems.get(0).withInstallmentPrice
+//        var secondInstallment = originalCartItems.get(0).price.minus(originalCartItems.get(0).withInstallmentPrice)
         binding.tvInstallmentPrice.visibility = View.VISIBLE
         binding.tvInstallmentLabel.visibility = View.VISIBLE
         binding.tvInstallmentPrice2.visibility = View.VISIBLE
         binding.tvInstallmentLabel2.visibility = View.VISIBLE
         binding. tvInstallmentCharge.visibility =  View.VISIBLE
         binding.tvInstallmentChargePrice.visibility =  View.VISIBLE
+        binding.tvInstDiscountLabel.visibility = View.GONE
+        binding.tvInstDiscount.visibility = View.GONE
         binding.tvPrice.text =  "₹${firstInstallment}"
-        instAmountpaid = firstInstallment
+        var installmentChart = originalCartItems.get(0).withInstallmentPrice
         binding.tvInstTotalAmount.text =  "₹${firstInstallment + secondInstallment}"
         binding.tvInstCoursePrice.text = "₹${originalCartItems.get(0).price}"
         binding.tvInstallmentPrice.text = "₹${firstInstallment}"
-        binding.tvInstDiscountLabel.text = "Discount (${helperFunctions.calculateDiscountDetails(originalCartItems.get(0).price.toDouble(),originalCartItems.get(0).discount.toDouble()).first}%)"
-        binding.tvInstDiscount.text = "- ₹${originalCartItems.get(0).discount.toDouble()}"
         binding.tvInstallmentPrice2.text = "₹${secondInstallment}"
-        binding. tvInstallmentChargePrice.text =  "₹${originalCartItems.get(0).withInstallmentPrice}"
+        binding.tvInstallmentChargePrice.text =  "₹${installmentChart}"
     }
 
     private fun processPayment(order: CreateOrderMutation.CreateOrder) {
@@ -330,12 +347,29 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
         _binding = null
     }
 
+
     override fun onCartItemRemoved() {
         binding.tvCartCount.text = "(0)"
         binding.cartBadge.text = "0"
         binding.clPaymentSummary.visibility = View.GONE
         binding.clProccedToPay.visibility = View.GONE
      //   Toast.makeText(requireContext(), "Cart item removed", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun observeCourseById(courseId:String) {
+        getCourseByIDViewModel.fetchCourseById(courseId)
+        getCourseByIDViewModel.courseByID.observe(viewLifecycleOwner, Observer { courses ->
+            Log.e("listcourses", courses.toString())
+
+            if (courses != null) {
+                Log.e("listcourses", courses.toString())
+                val courseName = "${courses.name}"
+                val categoryName = courses.category_name?.split(" ") ?: emptyList()
+                val wordsWithoutLast = categoryName.dropLast(1)
+
+
+            }
+        })
     }
 }
 

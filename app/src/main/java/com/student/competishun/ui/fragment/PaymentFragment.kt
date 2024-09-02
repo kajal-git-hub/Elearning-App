@@ -28,8 +28,12 @@ import com.student.competishun.ui.main.HomeActivity
 import com.student.competishun.ui.viewmodel.GetCourseByIDViewModel
 import com.student.competishun.ui.viewmodel.OrdersViewModel
 import com.student.competishun.ui.viewmodel.UserViewModel
+import com.student.competishun.utils.HelperFunctions
 import com.student.competishun.utils.SharedPreferencesManager
 import dagger.hilt.android.AndroidEntryPoint
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @AndroidEntryPoint
 class PaymentFragment : Fragment() {
@@ -37,6 +41,7 @@ class PaymentFragment : Fragment() {
     private var _binding: FragmentPaymentBinding? = null
     private val binding get() = _binding!!
     private val ordersViewModel: OrdersViewModel by viewModels()
+    private lateinit var  helperFunctions:HelperFunctions
     private val getCourseByIDViewModel: GetCourseByIDViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,6 +68,7 @@ class PaymentFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val binding = binding
+        helperFunctions= HelperFunctions()
         sharedPreferencesManager = SharedPreferencesManager(requireContext())
         var userId = arguments?.getString("userId").toString()
         Log.e("userid  $userId: ",sharedPreferencesManager.userId.toString())
@@ -89,14 +95,18 @@ class PaymentFragment : Fragment() {
     }
 
     fun orderdetails(ordersViewModel: OrdersViewModel, userId: String) {
+        binding.progressBar.visibility = View.VISIBLE
         val userIds = listOf(userId)
         ordersViewModel.fetchOrdersByUserIds(userIds)
         ordersViewModel.ordersByUserIds.observe(viewLifecycleOwner, Observer { orders ->
+            binding.progressBar.visibility = View.GONE
+            binding.clMypurchase.visibility = View.VISIBLE
             orders?.let {
                 for (order in orders) {
                     binding.tvAmount.text = "₹ ${order.amountPaid / 100}"
                     binding.paymentSuccessText.text = "${order.paymentStatus} Successfully"
-
+                    observeCourseById(order.entityId)
+                    binding.tvPaidDate.text =  getCurrentDateString()
                     if (order.paymentStatus.equals("paid", ignoreCase = true)) {
                         // Save the payment success status to SharedPreferences
                         sharedPreferencesManager.putBoolean("savePaymentSuccess", true)
@@ -108,12 +118,15 @@ class PaymentFragment : Fragment() {
                     }
                 }
             } ?: run {
+
+                // Handle the case where orders is null
                 Log.e("OrdersFragment", "No orders found")
             }
         })
+
+        // Fetch orders by user IDs
+
     }
-
-
     private fun animateLayout() {
         val clTickSuccess = binding.clTickSuccess
         val paymentSuccessText = binding.paymentSuccessText
@@ -164,10 +177,21 @@ class PaymentFragment : Fragment() {
 
             if (courses != null) {
                 Log.e("listcourses", courses.toString())
-                val coursefeature = courses.course_features
-                // Do something with course features
+                val courseName = "${courses.name}"
+                binding.tvCourseName.text = courseName
+                binding.className.text = helperFunctions.toDisplayString(courses.course_class?.name) +" Class"
+                binding.targettv.text = "Target ${courses.target_year}"
+                val categoryName = courses.category_name?.split(" ") ?: emptyList()
+                val wordsWithoutLast = categoryName.dropLast(1)
+                binding.category.text = wordsWithoutLast.joinToString(" ")
+
+
             }
         })
+    }
+    fun getCurrentDateString(): String {
+        val dateFormat = SimpleDateFormat("dd-MM,yyyy", Locale.getDefault())
+        return dateFormat.format(Date())
     }
 
     override fun onDestroyView() {

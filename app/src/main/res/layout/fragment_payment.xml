@@ -30,7 +30,7 @@
             android:text="Payment Successful"
             android:textColor="@color/_357f2f"
             android:textSize="20sp"
-            android:visibility="gone"
+            android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/payment_tick_gif" />
@@ -45,14 +45,23 @@
         android:layout_marginTop="240dp"
         android:background="@drawable/mypurchase_bg"
         android:backgroundTint="#FEFEFF"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintTop_toBottomOf="@+id/cl_tickSuccess">
-
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_mypurchase"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="@dimen/_16sp"
+            android:visibility="visible"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -72,7 +81,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/nunito"
-                android:text="Prakhar Integrated (Fast Lane-2)\n2024-25"
+                android:text=""
                 android:textColor="#1F1D1E"
                 android:textSize="18sp"
                 android:textStyle="bold"
@@ -89,33 +98,36 @@
                 app:layout_constraintTop_toBottomOf="@id/tvCourseName">
 
                 <TextView
+                    android:id="@+id/class_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/nunito"
                     android:padding="8dp"
-                    android:text="12th Class"
+                    android:text=""
                     android:textColor="#898384"
                     android:textSize="12sp"
                     android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/category"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:fontFamily="@font/nunito"
                     android:padding="8dp"
-                    android:text="Full-Year"
+                    android:text=""
                     android:textColor="#898384"
                     android:textSize="12sp"
                     android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/targettv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:fontFamily="@font/nunito"
                     android:padding="8dp"
-                    android:text="Target 2025"
+                    android:text=""
                     android:textColor="#898384"
                     android:textSize="12sp"
                     android:textStyle="bold" />
@@ -220,6 +232,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/nunito"
                     android:text="Roll No:"
+                    android:visibility="gone"
                     android:textColor="#898384"
                     android:textSize="12sp"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -232,6 +245,7 @@
                     android:layout_marginStart="8dp"
                     android:fontFamily="@font/nunito"
                     android:text="24111001"
+                    android:visibility="gone"
                     android:textColor="#2B2829"
                     android:textSize="12sp"
                     android:textStyle="bold"

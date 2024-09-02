@@ -47,6 +47,7 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
     private var tShirtSize = ""
     private var fieldsToVisible = mutableListOf<String>()
 
+    private var updateUserInput: UpdateUserInput? = null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

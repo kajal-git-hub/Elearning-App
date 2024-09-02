@@ -7,6 +7,8 @@ input CreateInstallmentPaymentInput {
 input CreateOrderInput {
   amountPaid: Float!
 
+  courseName: String!
+
   entityId: String!
 
   entityType: String!
@@ -24,10 +26,14 @@ input CreateOrderInput {
   totalInstallments: Int
 
   userId: String!
+
+  userName: String!
 }
 
 input CreatePaymentInput {
   amount: Float!
+
+  courseName: String!
 
   currency: String
 
@@ -48,12 +54,16 @@ input CreatePaymentInput {
   status: String!
 
   userId: String!
+
+  userName: String!
 }
 
 type CustomOrder {
   amountPaid: Int!
 
   entityId: String!
+
+  entityType: String!
 
   paymentStatus: String!
 }
@@ -62,6 +72,22 @@ type CustomOrder {
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
+
+input FindAllPaymentsInput {
+  date: DateTime
+
+  endDate: DateTime
+
+  limit: Int = 10
+
+  offset: Int = 0
+
+  search: String
+
+  startDate: DateTime
+
+  status: String
+}
 
 type Installment {
   amount: Float!
@@ -108,6 +134,8 @@ type Mutation {
 type Order {
   amountPaid: Float!
 
+  courseName: String!
+
   createdAt: DateTime!
 
   deletedAt: DateTime!
@@ -133,10 +161,14 @@ type Order {
   updatedAt: DateTime!
 
   userId: String!
+
+  userName: String!
 }
 
 type Payment {
   amount: Float!
+
+  courseName: String!
 
   createdAt: DateTime!
 
@@ -165,16 +197,18 @@ type Payment {
   updatedAt: DateTime!
 
   userId: String!
+
+  userName: String!
 }
 
 type PaymentResponse {
-  payments: [Payment!]!
+  count: Int!
 
-  totalCount: Int!
+  payments: [Payment!]!
 }
 
 type Query {
-  findAllPayments(limit: Int!, page: Int! = 1, status: String!): PaymentResponse!
+  findAllPayments(filters: FindAllPaymentsInput): PaymentResponse!
 
   findByInstallment(id: String!): Installment!
 
@@ -214,6 +248,8 @@ input UpdateInstallmentInput {
 input UpdatePaymentInput {
   amount: Float
 
+  courseName: String
+
   currency: String
 
   entityId: String
@@ -235,6 +271,8 @@ input UpdatePaymentInput {
   status: String
 
   userId: String
+
+  userName: String
 }
 
 schema {

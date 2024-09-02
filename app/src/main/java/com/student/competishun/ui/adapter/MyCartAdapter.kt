@@ -3,6 +3,7 @@ package com.student.competishun.ui.adapter
 import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.LifecycleOwner
@@ -73,6 +74,7 @@ class MyCartAdapter(
                 notifyItemRemoved(position)
                 notifyItemRangeChanged(position, cartItems.size)
                 onCartItemRemovedListener.onCartItemRemoved()
+
                 cartViewModel.findAllCartItems(userId)
                 Toast.makeText(context, "Cart removed successfully", Toast.LENGTH_SHORT).show()
             }.onFailure {

@@ -141,9 +141,11 @@ class CourseEmptyFragment : Fragment() {
         }
     }
     fun myCourses(){
-//        Log.e("getMyresule",myco.toString())
+        binding.progressBar.visibility = View.VISIBLE
+        _binding?.clEmptyMyCourse?.visibility = View.GONE
         val courseDetailsList = mutableListOf<ExploreCourse>()
         viewModel.myCourses.observe(viewLifecycleOwner) { result ->
+            binding?.progressBar?.visibility = View.GONE
             Log.e("getMyresule",result.toString())
             result.onSuccess { data ->
                 Log.e("getMyCourses",data.toString())

@@ -80,15 +80,26 @@ class HelperFunctions {
         return Pair(roundedDiscountPercentage, roundedRealPriceAfterDiscount)
     }
 
-    fun downloadPdf(context: Context,fileUrl: String, title: String) {
-        val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-        val request = DownloadManager.Request(Uri.parse(fileUrl))
-            .setTitle(title)
-            .setDescription("Downloading PDF...")
-            .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-            .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "$title.pdf")
+     fun downloadPdf(context: Context,fileUrl: String, title: String) {
+         val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+         val request = DownloadManager.Request(Uri.parse(fileUrl))
+             .setTitle(title)
+             .setDescription("Downloading PDF...")
+             .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+             .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "$title.pdf")
 
-        downloadManager.enqueue(request)
+         downloadManager.enqueue(request)
+    }
+
+
+    fun toDisplayString(classname: String?): String {
+        return when (classname) {
+            "ELEVENTH" -> "11th"
+            "TWELFTH" -> "12th"
+            "TWELFTH_PLUS" -> "12th+"
+            "UNKNOWN" -> "Unknown"
+            else -> "Unknown"
+        }
     }
 
     fun showDownloadDialog(context: Context,fileUrl: String, title: String) {
@@ -97,7 +108,7 @@ class HelperFunctions {
             .setMessage("Do you want to download $title?")
             .setPositiveButton("Yes") { _, _ ->
                 // Call the helper function to download the PDF
-                downloadPdf(context, fileUrl, title)
+               downloadPdf(context, fileUrl, title)
             }
             .setNegativeButton("No", null)
             .show()

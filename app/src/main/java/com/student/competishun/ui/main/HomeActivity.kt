@@ -92,7 +92,7 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
                 }
                 R.id.myCourse -> {
                     if (navController.currentDestination?.id != R.id.PersonalDetailsFragment) {
-                        navController.navigate(R.id.PersonalDetailsFragment)
+                        navController.navigate(R.id.courseEmptyFragment)
                     }
                     true
                 }
@@ -178,6 +178,7 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
             ResumeCourseFragment::class.java,
             InstallmentDetailsBottomSheet::class.java,
             CourseFragment::class.java,
+            CoursesFragment::class.java,
             NEETFragment::class.java,
             SubjectContentFragment::class.java,
             CourseEmptyFragment::class.java,

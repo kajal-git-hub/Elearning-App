@@ -8,6 +8,7 @@ query MyCourses {
             price
             target_year
             status
+            other_requirements
             exam_type
             category_name
             category_id

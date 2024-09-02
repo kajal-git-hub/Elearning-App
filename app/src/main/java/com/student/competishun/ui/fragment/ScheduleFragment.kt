@@ -1,11 +1,14 @@
 package com.student.competishun.ui.fragment
 
 import HorizontalCalendarSetUp
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,6 +19,10 @@ import com.student.competishun.databinding.FragmentScheduleBinding
 import com.student.competishun.ui.adapter.ScheduleAdapter
 import com.student.competishun.ui.viewmodel.MyCoursesViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import java.time.ZoneId
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 @AndroidEntryPoint
 class ScheduleFragment : Fragment() {
@@ -27,25 +34,29 @@ class ScheduleFragment : Fragment() {
     private lateinit var calendarSetUp: HorizontalCalendarSetUp
     private lateinit var scheduleAdapter: ScheduleAdapter
     private val myCourseViewModel: MyCoursesViewModel by viewModels()
+    lateinit var scheduleData:ZonedDateTime
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        setupCalendar()
+       // setupCalendar()
         return binding.root
     }
 
-    private fun setupCalendar() {
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun setupCalendar(scheduleTime:String) {
         calendarSetUp = HorizontalCalendarSetUp()
 
         val currentMonth = calendarSetUp.setUpCalendarAdapter(
             binding.rvCalenderDates,
             requireContext(),
             onDateSelected = { calendarDate ->
-                scrollToDate(calendarDate)
+              //  scrollToDate(calendarDate)
             }
         )
-        binding.tvCalenderCurrentMonth.text = currentMonth
+        Log.e("schedule57 $scheduleTime", convertIST(scheduleTime).month.toString() )
+        binding.tvCalenderCurrentMonth.text = "${convertIST(scheduleData.toString()).month} ${convertIST(scheduleData.toString()).year} "
 
         calendarSetUp.setUpCalendarPrevNextClickListener(
             binding.rvCalenderDates,
@@ -53,393 +64,135 @@ class ScheduleFragment : Fragment() {
             binding.arrowLeftCalender,
             requireContext(),
             { newMonth ->
-                binding.tvCalenderCurrentMonth.text = newMonth
+              //  binding.tvCalenderCurrentMonth.text = newMonth
             },
             { calendarDate ->
-                scrollToDate(calendarDate)
+              //  scrollToDate(calendarDate)
             }
         )
+        calendarSetUp.scrollToSpecificDate(binding.rvCalenderDates, convertIST(scheduleTime))
     }
 
-    private fun setupRecyclerView(findAllCourseFolderContentByScheduleTime: List<FindAllCourseFolderContentByScheduleTimeQuery.FindAllCourseFolderContentByScheduleTime>) {
-      findAllCourseFolderContentByScheduleTime.get(0).folder.name
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun setupRecyclerView(contentList: List<FindAllCourseFolderContentByScheduleTimeQuery.FindAllCourseFolderContentByScheduleTime>) {
+    Log.e("foldevontent" ,contentList.toString())
+        var courseDate:CalendarDate = CalendarDate("","","",null)
 
-        val transformedData = findAllCourseFolderContentByScheduleTime.map { folderContent ->
+
+        val sampleData =
+
+          contentList.map { content ->
+              Log.e("coursefolderntent" ,convertCalender(content.folder.scheduled_time.toString()).toString())
+                Log.e("courseDatentent" ,courseDate.toString())
             ScheduleData(
-                day = "",
-                date = folderContent.scheduled_time.toString(),
-                innerItems = folderContent.folder.folder_content?.map { item ->
+                convertIST(content.folder.scheduled_time.toString()).dayOfWeek.toString().take(3), convertIST(content.folder.scheduled_time.toString()).dayOfMonth.toString(),
+                contentList.map { content ->
+                    courseDate = convertCalender(content.folder.scheduled_time.toString())
                     ScheduleData.InnerScheduleItem(
-                        subject_name = item.file_name,
-                        topic_name = item.description?:"",
-                        lecture_start_time = "03:12:34 PM",
-                        lecture_end_time = "09:12:34 PM",
-                        lecture_status = "Scheduled"
+                        content.folder.name,
+                        content.file_name,
+                       formatTime(convertIST(content.folder.scheduled_time.toString())),
+                        "11:00 AM",
+                        ""
                     )
-                }?: emptyList()
-
+                }
+            )
+   }
+        val scheduleDataList = contentList.groupBy {
+            val scheduledTime = convertIST(it.folder.scheduled_time.toString())
+            scheduledTime.dayOfWeek.toString().take(3) to scheduledTime.dayOfMonth.toString()
+        }.map { (dateInfo, groupedContentList) ->
+            val (dayOfWeek, dayOfMonth) = dateInfo
+            ScheduleData(
+                dayOfWeek,
+                dayOfMonth,
+                groupedContentList.map { content ->
+                    ScheduleData.InnerScheduleItem(
+                        content.folder.name,
+                        content.file_name,
+                        formatTime(convertIST(content.folder.scheduled_time.toString())),
+                        "11:00 AM", // Replace with actual end time logic
+                        "" // Replace with any extra info if needed
+                    )
+                }
             )
         }
-        val sampleData = listOf(
-            ScheduleData(
-                "Sat", "03", listOf(
-                    ScheduleData.InnerScheduleItem(
-                        "Math",
-                        "Introduction to Thermodynamics",
-                        "10:00 AM",
-                        "11:00 AM",
-                        "Class Attended"
-                    ),
-                    ScheduleData.InnerScheduleItem(
-                        "Science",
-                        "Introduction to Thermodynamics",
-                        "8:00 PM",
-                        "10:00 PM",
-                        "Class Missed"
-                    ),
-                    ScheduleData.InnerScheduleItem(
-                        "Science",
-                        "Introduction to Thermodynamics",
-                        "8:00 PM",
-                        "9:00 PM",
-                        "Class Cancelled"
-                    ),
-                )
-            ),
-            ScheduleData(
-                "Sun", "04", listOf(
-                    ScheduleData.InnerScheduleItem(
-                        "English",
-                        "Introduction to Thermodynamics",
-                        "7:00 PM",
-                        "8:00 PM",
-                        "Not Started Yet"
-                    ),
-                    ScheduleData.InnerScheduleItem(
-                        "History",
-                        "Introduction to Thermodynamics",
-                        "05:00 PM",
-                        "06:00 PM",
-                        "On Going"
-                    )
-                )
-            ),
-            ScheduleData(
-                "Mon", "05", listOf(
-                    ScheduleData.InnerScheduleItem(
-                        "English",
-                        "Introduction to Thermodynamics",
-                        "7:00 PM",
-                        "8:00 PM",
-                        "Not Started Yet"
-                    ),
-                    ScheduleData.InnerScheduleItem(
-                        "History",
-                        "Introduction to Thermodynamics",
-                        "04:00 PM",
-                        "05:00 PM",
-                        "Class Attended"
-                    )
-                )
-            ),
-            ScheduleData(
-                "Tue", "06", listOf(
-                    ScheduleData.InnerScheduleItem(
-                        "English",
-                        "Introduction to Thermodynamics",
-                        "7:00 PM",
-                        "8:00 PM",
-                        "Not Started Yet"
-                    ),
-                    ScheduleData.InnerScheduleItem(
-                        "History",
-                        "Introduction to Thermodynamics",
-                        "04:00 PM",
-                        "05:00 PM",
-                        "Class Attended"
-                    )
-                )
-            ),
-            ScheduleData(
-                "Wed", "07", listOf(
-                    ScheduleData.InnerScheduleItem(
-                        "English",
-                        "Introduction to Thermodynamics",
-                        "7:00 PM",
-                        "8:00 PM",
-                        "Not Started Yet"
-                    ),
-                    ScheduleData.InnerScheduleItem(
-                        "History",
-                        "Introduction to Thermodynamics",
-                        "04:00 PM",
-                        "05:00 PM",
-                        "Class Attended"
-                    )
-                )
-            ),
-            ScheduleData(
-                "Thu", "08", listOf(
-                    ScheduleData.InnerScheduleItem(
-                        "English",
-                        "Introduction to Thermodynamics",
-                        "7:00 PM",
-                        "8:00 PM",
-                        "Not Started Yet"
-                    ),
-                    ScheduleData.InnerScheduleItem(
-                        "History",
-                        "Introduction to Thermodynamics",
-                        "04:00 PM",
-                        "05:00 PM",
-                        "Class Attended"
-                    )
-                )
-            ),
-            ScheduleData(
-                "Fri", "09", listOf(
-                    ScheduleData.InnerScheduleItem(
-                        "English",
-                        "Introduction to Thermodynamics",
-                        "7:00 PM",
-                        "8:00 PM",
-                        "Not Started Yet"
-                    ),
-                    ScheduleData.InnerScheduleItem(
-                        "History",
-                        "Introduction to Thermodynamics",
-                        "04:00 PM",
-                        "05:00 PM",
-                        "Class Attended"
-                    )
-                )
-            ),
-            ScheduleData(
-                "Sat", "10", listOf(
-                    ScheduleData.InnerScheduleItem(
-                        "English",
-                        "Introduction to Thermodynamics",
-                        "7:00 PM",
-                        "8:00 PM",
-                        "Not Started Yet"
-                    ),
-                    ScheduleData.InnerScheduleItem(
-                        "History",
-                        "Introduction to Thermodynamics",
-                        "04:00 PM",
-                        "05:00 PM",
-                        "Class Attended"
-                    )
-                )
-            ),
-            ScheduleData(
-                "Sun", "11", listOf(
-                    ScheduleData.InnerScheduleItem(
-                        "English",
-                        "Introduction to Thermodynamics",
-                        "7:00 PM",
-                        "8:00 PM",
-                        "Not Started Yet"
-                    ),
-                    ScheduleData.InnerScheduleItem(
-                        "History",
-                        "Introduction to Thermodynamics",
-                        "04:00 PM",
-                        "05:00 PM",
-                        "Class Attended"
-                    )
-                )
-            ),
-            ScheduleData(
-                "Mon", "12", listOf(
-                    ScheduleData.InnerScheduleItem(
-                        "English",
-                        "Introduction to Thermodynamics",
-                        "7:00 PM",
-                        "8:00 PM",
-                        "Not Started Yet"
-                    ),
-                    ScheduleData.InnerScheduleItem(
-                        "History",
-                        "Introduction to Thermodynamics",
-                        "04:00 PM",
-                        "05:00 PM",
-                        "Class Attended"
-                    )
-                )
-            ),
-            ScheduleData(
-                "Tue", "13", listOf(
-                    ScheduleData.InnerScheduleItem(
-                        "English",
-                        "Introduction to Thermodynamics",
-                        "7:00 PM",
-                        "8:00 PM",
-                        "Not Started Yet"
-                    ),
-                    ScheduleData.InnerScheduleItem(
-                        "History",
-                        "Introduction to Thermodynamics",
-                        "04:00 PM",
-                        "05:00 PM",
-                        "Class Attended"
-                    )
-                )
-            ),
-            ScheduleData(
-                "Wed", "14", listOf(
-                    ScheduleData.InnerScheduleItem(
-                        "English",
-                        "Introduction to Thermodynamics",
-                        "7:00 PM",
-                        "8:00 PM",
-                        "Not Started Yet"
-                    ),
-                    ScheduleData.InnerScheduleItem(
-                        "History",
-                        "Introduction to Thermodynamics",
-                        "04:00 PM",
-                        "05:00 PM",
-                        "Class Attended"
-                    )
-                )
-            ),
-            ScheduleData(
-                "Thu", "15", listOf(
-                    ScheduleData.InnerScheduleItem(
-                        "English",
-                        "Introduction to Thermodynamics",
-                        "7:00 PM",
-                        "8:00 PM",
-                        "Not Started Yet"
-                    ),
-                    ScheduleData.InnerScheduleItem(
-                        "History",
-                        "Introduction to Thermodynamics",
-                        "04:00 PM",
-                        "05:00 PM",
-                        "Class Attended"
-                    )
-                )
-            ),
-            ScheduleData(
-                "Fri", "16", listOf(
-                    ScheduleData.InnerScheduleItem(
-                        "English",
-                        "Introduction to Thermodynamics",
-                        "7:00 PM",
-                        "8:00 PM",
-                        "Not Started Yet"
-                    ),
-                    ScheduleData.InnerScheduleItem(
-                        "History",
-                        "Introduction to Thermodynamics",
-                        "04:00 PM",
-                        "05:00 PM",
-                        "Class Attended"
-                    )
-                )
-            ),
-            ScheduleData(
-                "Sat", "17", listOf(
-                    ScheduleData.InnerScheduleItem(
-                        "English",
-                        "Introduction to Thermodynamics",
-                        "7:00 PM",
-                        "8:00 PM",
-                        "Not Started Yet"
-                    ),
-                    ScheduleData.InnerScheduleItem(
-                        "History",
-                        "Introduction to Thermodynamics",
-                        "04:00 PM",
-                        "05:00 PM",
-                        "Class Attended"
-                    )
-                )
-            ),
-            ScheduleData(
-                "Sun", "18", listOf(
-                    ScheduleData.InnerScheduleItem(
-                        "English",
-                        "Introduction to Thermodynamics",
-                        "7:00 PM",
-                        "8:00 PM",
-                        "Not Started Yet"
-                    ),
-                    ScheduleData.InnerScheduleItem(
-                        "History",
-                        "Introduction to Thermodynamics",
-                        "04:00 PM",
-                        "05:00 PM",
-                        "Class Attended"
-                    )
-                )
-            ),
-            ScheduleData(
-                "Mon", "19", listOf(
-                    ScheduleData.InnerScheduleItem(
-                        "English",
-                        "Introduction to Thermodynamics",
-                        "7:00 PM",
-                        "8:00 PM",
-                        "Not Started Yet"
-                    ),
-                    ScheduleData.InnerScheduleItem(
-                        "History",
-                        "Introduction to Thermodynamics",
-                        "04:00 PM",
-                        "05:00 PM",
-                        "Class Attended"
-                    )
-                )
-            ),
-            ScheduleData(
-                "Tue", "20", listOf(
-                    ScheduleData.InnerScheduleItem(
-                        "English",
-                        "Introduction to Thermodynamics",
-                        "7:00 PM",
-                        "8:00 PM",
-                        "Not Started Yet"
-                    ),
-                    ScheduleData.InnerScheduleItem(
-                        "History",
-                        "Introduction to Thermodynamics",
-                        "04:00 PM",
-                        "05:00 PM",
-                        "Class Attended"
-                    )
-                )
-            )
-        )
 
-        scheduleAdapter = ScheduleAdapter(transformedData, requireContext())
+
+        scheduleAdapter = ScheduleAdapter(scheduleDataList, requireContext())
         binding.rvCalenderSchedule.adapter = scheduleAdapter
-        binding.rvCalenderSchedule.layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        binding.rvCalenderSchedule.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        scrollToDate(courseDate)
 
-        // Scroll to the current date by default
-        val currentDate = calendarSetUp.getCurrentDate()
-        scrollToDate(currentDate)
+
+
+
+        scheduleDataList.forEach { scheduleData ->
+            Log.e("ScheduleDatakaj", scheduleData.toString())
+        }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun FindAllCourseFolderContentByScheduleTimeQuery(){
         myCourseViewModel.courseFolderContent.observe(viewLifecycleOwner) { result ->
             result.onSuccess { data ->
-                 setupRecyclerView(data.findAllCourseFolderContentByScheduleTime)
+                Log.e("getdatafolder",data.toString())
+                setupRecyclerView(data.findAllCourseFolderContentByScheduleTime)
+                Log.e("timesize",data.findAllCourseFolderContentByScheduleTime.size.toString())
+                data.findAllCourseFolderContentByScheduleTime.forEachIndexed { index, scheduleContent ->
+                    Log.e("timea $index", scheduleContent.folder.scheduled_time.toString())
+                }
+                data.findAllCourseFolderContentByScheduleTime.forEach { schedulecontent->
+                // Log.e("timea",schedulecontent.s.toString())
+                 schedulecontent.folder.scheduled_time.let {
+                     setupCalendar(it.toString())
+
+                 }
+                    Log.e("schedule57 $scheduleData", convertIST(scheduleData.toString()).toString())
+                    binding.tvCalenderCurrentMonth.text = "${convertIST(scheduleData.toString()).month} ${convertIST(scheduleData.toString()).year}"
+
+                }
 
             }.onFailure { exception ->
                 Toast.makeText(context, "Error: ${exception.message}", Toast.LENGTH_SHORT).show()
             }
         }
-        myCourseViewModel.getCourseFolderContent("08-29-2024", "10-30-2025", "c00d3ee9-dc1e-47c7-894a-5f63535c1fdc")
+        myCourseViewModel.getCourseFolderContent("08-27-2024", "10-30-2025", "30321205-bc5a-4d98-b8bf-79119b1e2ba4")
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun convertIST(dateString: String): ZonedDateTime {
+        val zonedDateTime = ZonedDateTime.parse(dateString) // Adjust this according to your input format
+        return zonedDateTime.withZoneSameInstant(ZoneId.of("Asia/Kolkata"))
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        scheduleData = ZonedDateTime.now()
+        binding.backIconSchedule.setOnClickListener {
+            requireActivity().onBackPressedDispatcher.onBackPressed()
+        }
         FindAllCourseFolderContentByScheduleTimeQuery()
     }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun convertToIST(time: String): ISTTime {
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX")
+        val utcTime = ZonedDateTime.parse(time, formatter)
+
+        val istTime = utcTime.withZoneSameInstant(ZoneId.of("Asia/Kolkata"))
+
+        val timeFormatter = DateTimeFormatter.ofPattern("hh:mm:ss a")
+        val formattedTime = istTime.format(timeFormatter)
+
+        return ISTTime(istTime, formattedTime)
+    }
+    data class ISTTime(
+        val zonedDateTime: ZonedDateTime,
+        val formattedTime: String
+    )
+
 
 
     private fun scrollToDate(calendarDate: CalendarDate) {
@@ -447,6 +200,29 @@ class ScheduleFragment : Fragment() {
         if (position != -1) {
             binding.rvCalenderSchedule.scrollToPosition(position)
         }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun convertCalender(scheduledTime: Any): CalendarDate {
+        // Parse the scheduledTime to a ZonedDateTime object
+        val zonedDateTime = ZonedDateTime.parse(scheduledTime.toString())
+
+        // Format the date and day
+        val dateFormat = DateTimeFormatter.ofPattern("dd", Locale.getDefault())
+        val dayFormat = DateTimeFormatter.ofPattern("EEE", Locale.getDefault())
+        val timeFormat = DateTimeFormatter.ofPattern("hh:mm a", Locale.getDefault())
+
+        val date = zonedDateTime.format(dateFormat)
+        val day = zonedDateTime.format(dayFormat)
+        val time = zonedDateTime.format(timeFormat)
+
+        // Return a CalendarDate object
+        return CalendarDate(date, day, time, zonedDateTime)
+    }
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun formatTime(zonedDateTime: ZonedDateTime): String {
+        val formatter = DateTimeFormatter.ofPattern("hh:mm a")
+        return zonedDateTime.format(formatter)
     }
 }
 

@@ -14,11 +14,13 @@ query FindAllCourseFolderContentByScheduleTime($endDate: DateTime!, $startDate: 
         file_url
         folder {
             id
+            scheduled_time
             name
             parent_folder_id
             folder_content {
                 description
                 file_name
+                scheduled_time
             }
         }
     }
