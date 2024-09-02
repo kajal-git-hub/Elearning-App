@@ -158,7 +158,7 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
                         categoryId = course.category_id.toString()
                     )
                 }.takeLast(1)
-
+                binding.tvCartCount.text = "(${cartItems.size})"
                 // Ensure this observer is only added once
                 if (getCourseByIDViewModel.courseByID.hasActiveObservers().not()) {
                     getCourseByIDViewModel.courseByID.observe(viewLifecycleOwner, Observer { course ->
@@ -183,7 +183,7 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
                             if (freeCourseItem !in cartItems) {
                                 val updatedCartItems = cartItems.toMutableList()
                                 updatedCartItems.add(freeCourseItem)
-                                binding.tvCartCount.text = "(${updatedCartItems.size})"
+
                                 binding.cartBadge.text = updatedCartItems.size.toString()
                                 cartAdapter.updateCartItems(updatedCartItems)
                                 originalCartItems = cartItems
