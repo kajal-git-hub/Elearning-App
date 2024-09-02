@@ -85,9 +85,9 @@
 
             <pl.droidsonroids.gif.GifImageView
                 android:id="@+id/ig_emptyCircle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/empty_circle"
+                android:layout_width="@dimen/_234dp"
+                android:layout_height="@dimen/_234dp"
+                android:src="@drawable/empty_cart"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

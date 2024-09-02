@@ -4,6 +4,7 @@ import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
@@ -88,6 +89,7 @@ class MainActivity : AppCompatActivity() {
         navController.navigate(startDestination)
         getUserInfo()
     }
+
 
     override fun onResume() {
         super.onResume()

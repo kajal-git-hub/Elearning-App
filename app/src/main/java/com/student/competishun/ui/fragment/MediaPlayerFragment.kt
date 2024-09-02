@@ -48,7 +48,7 @@ class MediaPlayerFragment : Fragment() {
         //initialize exoplayer
         player = ExoPlayer.Builder(requireContext()).build()
         binding.playerView.player = player
-
+      //  binding.igToolbarBackButton.setOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed()  }
         val mediaItem = MediaItem.fromUri(url!!)
         player.setMediaItem(mediaItem)
         player.prepare()

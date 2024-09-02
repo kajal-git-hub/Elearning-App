@@ -101,7 +101,8 @@ class NEETFragment : Fragment(), StudentCourseItemClickListener {
                             exam_type = course.exam_type,
                             planner_description = course.planner_description,
                             with_installment_price = course.with_installment_price,
-                            course_end_date = course.course_end_date
+                            course_end_date = course.course_end_date,
+                            banners = course.banners
                         )
                     } ?: emptyList()
                     recyclerView.adapter = CourseAdapter(courses,this@NEETFragment)

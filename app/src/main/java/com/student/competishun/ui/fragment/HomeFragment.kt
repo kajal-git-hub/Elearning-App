@@ -8,12 +8,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,10 +26,9 @@ import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import com.student.competishun.R
+import com.student.competishun.curator.AllCourseForStudentQuery
 import com.student.competishun.curator.GetAllCourseCategoriesQuery
-import com.student.competishun.curator.GetAllCourseQuery
-import com.student.competishun.curator.type.CourseStatus
-import com.student.competishun.curator.type.FindAllCourseInput
+import com.student.competishun.curator.type.FindAllCourseInputStudent
 import com.student.competishun.data.model.PromoBannerModel
 import com.student.competishun.data.model.RecommendedCourseDataModel
 import com.student.competishun.data.model.Testimonial
@@ -38,11 +40,12 @@ import com.student.competishun.ui.adapter.TestimonialsAdapter
 import com.student.competishun.ui.adapter.WhyCompetishunAdapter
 import com.student.competishun.ui.viewmodel.CoursesCategoryViewModel
 import com.student.competishun.ui.viewmodel.CoursesViewModel
+import com.student.competishun.ui.viewmodel.StudentCoursesViewModel
+import com.student.competishun.ui.viewmodel.UserViewModel
 import com.student.competishun.utils.Constants
 import com.student.competishun.utils.HelperFunctions
 import com.student.competishun.utils.OnCourseItemClickListener
 import dagger.hilt.android.AndroidEntryPoint
-import java.io.Serializable
 
 @AndroidEntryPoint
 class HomeFragment : Fragment(), OnCourseItemClickListener {
@@ -59,8 +62,8 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var bottomNav: BottomNavigationView
     private lateinit var toggle: ActionBarDrawerToggle
-    private val coursesViewModel: CoursesViewModel by viewModels()
     private val coursesCategoryViewModel: CoursesCategoryViewModel by viewModels()
+    private val studentCoursesViewModel:StudentCoursesViewModel by viewModels()
     private lateinit var rvOurCourses: RecyclerView
     private lateinit var dotsIndicatorOurCourses: LinearLayout
     private lateinit var adapterOurCourses: OurCoursesAdapter
@@ -72,13 +75,18 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
 
     private lateinit var contactImage: ImageView
 
+    var courseType:String = ""
+
+    private val userViewModel: UserViewModel by viewModels()
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentHomeBinding.inflate(inflater, container, false).apply {
-            this.coursesViewModel = this@HomeFragment.coursesViewModel
+          //  this.coursesViewModel = this@HomeFragment.coursesViewModel
+            this.studentCoursesViewModel = this@HomeFragment.studentCoursesViewModel
             this.coursesCategoryViewModel = this@HomeFragment.coursesCategoryViewModel
             lifecycleOwner = viewLifecycleOwner
         }
@@ -87,8 +95,7 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-
+       Log.e("CourseTypeStudent",courseType)
         binding.tvRecommendViewAll.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_RecommendDetailFragment)
         }
@@ -157,54 +164,54 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
         dotsIndicatorTestimonials = view.findViewById(R.id.llDotsIndicator)
         dotsIndicatorWhyCompetishun = view.findViewById(R.id.llDotsIndicatorWhyCompetishun)
 
-        coursesViewModel.courses.observe(viewLifecycleOwner, Observer { courses ->
-
-
-            val bannerList = mutableListOf<PromoBannerModel>()
-
-            courses?.forEach { course ->
-                Log.e("Course", course.toString())
-                bannerList.add(PromoBannerModel(course.banner_image))
-            }
-
-            binding.rvpromobanner.adapter = PromoBannerAdapter(bannerList)
-            binding.rvpromobanner.layoutManager =
-                LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-            helperFunctions.setupDotsIndicator(requireContext(),bannerList.size, binding.llDotsIndicatorPromoBanner)
-            binding.rvpromobanner.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                    super.onScrolled(recyclerView, dx, dy)
-                    helperFunctions.updateDotsIndicator(recyclerView, binding.llDotsIndicatorPromoBanner)
-                }
-            })
-
-            binding.rvRecommendedCourses.adapter = courses?.let { courseList ->
-                RecommendedCoursesAdapter(courseList) { selectedCourse ->
-                    val bundle = Bundle().apply {
-                        putString("course_id", selectedCourse.id)
-                    }
-                    findNavController().navigate(R.id.exploreFragment,bundle)
-                }
-            }
-            binding.rvRecommendedCourses.layoutManager =
-                LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-            recommendedCourseList = Constants.recommendedCourseList
-            helperFunctions.setupDotsIndicator(
-                requireContext(),
-                recommendedCourseList.size,
-                binding.llDotsIndicatorRecommendedCourses
-            )
-            binding.rvRecommendedCourses.addOnScrollListener(object :
-                RecyclerView.OnScrollListener() {
-                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                    super.onScrolled(recyclerView, dx, dy)
-                    helperFunctions.updateDotsIndicator(
-                        recyclerView,
-                        binding.llDotsIndicatorRecommendedCourses
-                    )
-                }
-            })
-        })
+//        coursesViewModel.courses.observe(viewLifecycleOwner, Observer { courses ->
+//
+//
+//            val bannerList = mutableListOf<PromoBannerModel>()
+//
+//            courses?.forEach { course ->
+//                Log.e("Course", course.toString())
+//                bannerList.add(PromoBannerModel(course.banner_image))
+//            }
+//
+//            binding.rvpromobanner.adapter = PromoBannerAdapter(bannerList)
+//            binding.rvpromobanner.layoutManager =
+//                LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+//            helperFunctions.setupDotsIndicator(requireContext(),bannerList.size, binding.llDotsIndicatorPromoBanner)
+//            binding.rvpromobanner.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+//                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+//                    super.onScrolled(recyclerView, dx, dy)
+//                    helperFunctions.updateDotsIndicator(recyclerView, binding.llDotsIndicatorPromoBanner)
+//                }
+//            })
+//
+//            binding.rvRecommendedCourses.adapter = courses?.let { courseList ->
+//                RecommendedCoursesAdapter(courseList) { selectedCourse ->
+//                    val bundle = Bundle().apply {
+//                        putString("course_id", selectedCourse.id)
+//                    }
+//                    findNavController().navigate(R.id.exploreFragment,bundle)
+//                }
+//            }
+//            binding.rvRecommendedCourses.layoutManager =
+//                LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+//            recommendedCourseList = Constants.recommendedCourseList
+//            helperFunctions.setupDotsIndicator(
+//                requireContext(),
+//                recommendedCourseList.size,
+//                binding.llDotsIndicatorRecommendedCourses
+//            )
+//            binding.rvRecommendedCourses.addOnScrollListener(object :
+//                RecyclerView.OnScrollListener() {
+//                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+//                    super.onScrolled(recyclerView, dx, dy)
+//                    helperFunctions.updateDotsIndicator(
+//                        recyclerView,
+//                        binding.llDotsIndicatorRecommendedCourses
+//                    )
+//                }
+//            })
+//        })
 
         _binding?.progressBar?.visibility = View.VISIBLE
         _binding?.rvOurCourses?.visibility = View.GONE
@@ -223,14 +230,16 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
             }
         })
         coursesCategoryViewModel.fetchCoursesCategory()
-        val filters = FindAllCourseInput(
-            exam_type = Optional.Absent,
-            is_recommended = Optional.present(true),
-            course_status = Optional.present(listOf(CourseStatus.PUBLISHED)),
-            limit = Optional.present(20)
-        )
-
-        coursesViewModel.fetchCourses(filters)
+        getMyDetails()
+        getAllCoursesForStudent(courseType)
+//        val filters = FindAllCourseInput(
+//            exam_type = Optional.Absent,
+//            is_recommended = Optional.present(true),
+//            course_status = Optional.present(listOf(CourseStatus.PUBLISHED)),
+//            limit = Optional.present(20)
+//        )
+//
+//        coursesViewModel.fetchCourses(filters)
 
         listWhyCompetishun = Constants.listWhyCompetishun
         testimonials = Constants.testimonials
@@ -364,6 +373,117 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
         findNavController().navigate(R.id.action_homeFragment_to_coursesFragment, bundle)
     }
 
+    fun getAllCoursesForStudent(courseType: String) {
+        if (courseType!="IIT-JEE"|| courseType!="NEET" ){
+            this.courseType ="IIT-JEE"
+        }
+        val filters = FindAllCourseInputStudent(
+            Optional.Absent,Optional.Absent,
+            Optional.present(courseType),Optional.present(true))
+        studentCoursesViewModel.fetchCourses(filters)
+
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            studentCoursesViewModel.courses.collect { result ->
+                result?.onSuccess { data ->
+                    Log.e("gettiStudent",data.toString())
+                    val courses = data.getAllCourseForStudent.courses.map {
+                            course ->
+                        AllCourseForStudentQuery.Course(
+                            discount = course.discount,
+                            name = course.name,
+                            course_start_date = course.course_start_date,
+                            course_validity_end_date = course.course_validity_end_date,
+                            price =course.price,
+                            target_year = course.target_year,
+                            id = course.id,
+                            academic_year = course.academic_year,
+                            complementary_course = course.complementary_course,
+                            course_features = course.course_features,
+                            course_class = course.course_class,
+                            course_tags = course.course_tags,
+                            banner_image = course.banner_image,
+                            status = course.status,
+                            category_id = course.category_id,
+                            category_name = course.category_name,
+                            course_primary_teachers = course.course_primary_teachers,
+                            course_support_teachers = course.course_support_teachers,
+                            course_type = course.course_type,
+                            entity_type = course.entity_type,
+                            exam_type = course.exam_type,
+                            planner_description = course.planner_description,
+                            with_installment_price = course.with_installment_price,
+                            course_end_date = course.course_end_date,
+                            banners = course.banners
+                        )
+                    } ?: emptyList()
+
+                    val bannerList = mutableListOf<PromoBannerModel>()
+
+                    courses?.forEach { course ->
+                        Log.e("Course", course.toString())
+                        Log.e("bannersList",course.banners.toString())
+                        bannerList.add(PromoBannerModel(course.banner_image))
+                    }
+                    binding.rvpromobanner.adapter = PromoBannerAdapter(bannerList)
+                    binding.rvpromobanner.layoutManager =
+                        LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+                    helperFunctions.setupDotsIndicator(requireContext(),bannerList.size, binding.llDotsIndicatorPromoBanner)
+                    binding.rvpromobanner.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                            super.onScrolled(recyclerView, dx, dy)
+                            helperFunctions.updateDotsIndicator(recyclerView, binding.llDotsIndicatorPromoBanner)
+                        }
+                    })
+
+                    binding.rvRecommendedCourses.adapter = courses?.let { courseList ->
+                        RecommendedCoursesAdapter(courseList) { selectedCourse ->
+                            val bundle = Bundle().apply {
+                                putString("course_id", selectedCourse.id)
+                            }
+                            findNavController().navigate(R.id.exploreFragment,bundle)
+                        }
+                    }
+                    binding.rvRecommendedCourses.layoutManager =
+                        LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+                    recommendedCourseList = Constants.recommendedCourseList
+                    helperFunctions.setupDotsIndicator(
+                        requireContext(),
+                        recommendedCourseList.size,
+                        binding.llDotsIndicatorRecommendedCourses
+                    )
+                    binding.rvRecommendedCourses.addOnScrollListener(object :
+                        RecyclerView.OnScrollListener() {
+                        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                            super.onScrolled(recyclerView, dx, dy)
+                            helperFunctions.updateDotsIndicator(
+                                recyclerView,
+                                binding.llDotsIndicatorRecommendedCourses
+                            )
+                        }
+                    })
+
+                }?.onFailure { exception ->
+                    // Handle the failure case
+                    Log.e("gettiStudentfaik",exception.toString())
+                }
+            }
+        }
+    }
+
+    fun getMyDetails() {
+        userViewModel.fetchUserDetails()
+        userViewModel.userDetails.observe(viewLifecycleOwner) { result ->
+            result.onSuccess { data ->
+                val userDetails = data.getMyDetails
+                courseType = userDetails.userInformation.preparingFor?:""
+
+                Log.e("courseeTypehome",courseType)
+
+            }.onFailure { exception ->
+                Toast.makeText(requireContext(), "Error fetching details: ${exception.message}", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
