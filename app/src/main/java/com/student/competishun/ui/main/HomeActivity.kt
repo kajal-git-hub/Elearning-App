@@ -261,4 +261,6 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
             updateUiVisibility(currentFragment)
         }
     }
+
+
 }
