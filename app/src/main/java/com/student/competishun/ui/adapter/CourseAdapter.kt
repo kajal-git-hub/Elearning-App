@@ -4,6 +4,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.Target
 import com.student.competishun.curator.AllCourseForStudentQuery
 import com.student.competishun.databinding.ItemCourseBinding
 import com.student.competishun.utils.HelperFunctions
@@ -37,6 +39,11 @@ class CourseAdapter(
             tvStartDate.text = "Starts On: ${helperFunctions.formatCourseDate(item.course_start_date.toString())}"
             tvEndDate.text = "Expiry Date: ${helperFunctions.formatCourseDate(item.course_end_date.toString())}"
             tvQuizTests.text = "validity ${helperFunctions.formatCourseDate(item.course_validity_end_date.toString())}"
+            Glide.with(holder.itemView.context)
+
+                .load(item.banner_image)
+                .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
+                .into(ivImage)
             if (item.price != null && item.discount != null) {
                 val discountDetails = helperFunctions.calculateDiscountPercentage(item.price.toInt(), item.discount.toInt())
                 dicountPrice.text = "₹${item.discount}"
