@@ -27,7 +27,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.student.competishun.curator.AllCourseForStudentQuery
 import com.student.competishun.curator.type.FindAllCourseInputStudent
 import com.student.competishun.data.model.PromoBannerModel
-import com.student.competishun.ui.adapter.PromoBannerAdapter
 import com.student.competishun.ui.viewmodel.StudentCoursesViewModel
 import com.student.competishun.ui.viewmodel.UserViewModel
 import com.student.competishun.utils.Constants

@@ -193,9 +193,7 @@ class CourseEmptyFragment : Fragment() {
                                 bundle.putString("courseName", course.name)
                                 Log.d("folder_Id namecouse: ${course.name}", folderId)
                                 findNavController().navigate(
-                                    R.id.action_courseEmptyFragment_to_ResumeCourseFragment,
-                                    bundle
-                                )
+                                    R.id.action_courseEmptyFragment_to_ResumeCourseFragment, bundle)
                             }
                             binding.rvExploreCourses.adapter = adapter
                             binding.rvExploreCourses.layoutManager =
