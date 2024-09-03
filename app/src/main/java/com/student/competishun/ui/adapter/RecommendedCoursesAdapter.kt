@@ -1,3 +1,5 @@
+package com.student.competishun.ui.adapter
+
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -10,10 +12,7 @@ import com.bumptech.glide.Glide
 import com.google.android.material.textview.MaterialTextView
 import com.student.competishun.R
 import com.student.competishun.curator.AllCourseForStudentQuery
-import com.student.competishun.curator.GetAllCourseQuery
-import com.student.competishun.curator.adapter.AllCourseForStudentQuery_ResponseAdapter
 import com.student.competishun.utils.HelperFunctions
-import org.w3c.dom.Text
 
 class RecommendedCoursesAdapter(
     private val items: List<AllCourseForStudentQuery.Course>,
@@ -99,7 +98,7 @@ class RecommendedCoursesAdapter(
         val quizCount: TextView = view.findViewById(R.id.tvQuizTests)
         val originalPrice: TextView = view.findViewById(R.id.orgPrice)
         val discountPrice: TextView = view.findViewById(R.id.dicountPrice)
-        val bannerImage:ImageView = view.findViewById(R.id.recemmended_banner)
+        val bannerImage:ImageView = view.findViewById(R.id.recommendbanner)
         val tvTag2:TextView = view.findViewById(R.id.tvTag2)
 
         val tvLastField:TextView = view.findViewById(R.id.tvLastField)

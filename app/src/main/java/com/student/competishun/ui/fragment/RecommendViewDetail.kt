@@ -1,7 +1,7 @@
 package com.student.competishun.ui.fragment
 
 import RecommendViewAllAdapter
-import RecommendedCoursesAdapter
+import com.student.competishun.ui.adapter.RecommendedCoursesAdapter
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -10,26 +10,20 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.apollographql.apollo3.api.Optional
 import com.student.competishun.R
-import com.student.competishun.curator.type.CourseStatus
-import com.student.competishun.curator.type.FindAllCourseInput
 import com.student.competishun.databinding.FragmentRecommendViewDetailBinding
-import com.student.competishun.ui.viewmodel.CoursesViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.RecyclerView
 import com.student.competishun.curator.AllCourseForStudentQuery
 import com.student.competishun.curator.type.FindAllCourseInputStudent
 import com.student.competishun.data.model.PromoBannerModel
 import com.student.competishun.ui.viewmodel.StudentCoursesViewModel
 import com.student.competishun.ui.viewmodel.UserViewModel
-import com.student.competishun.utils.Constants
 
 @AndroidEntryPoint
 class RecommendViewDetail : Fragment() {

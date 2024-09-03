@@ -5,9 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="15dp"
-    android:paddingBottom="@dimen/_10dp"
     android:layout_marginEnd="@dimen/_16dp"
     android:background="@drawable/card_bg"
+    android:paddingBottom="@dimen/_10dp"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toBottomOf="@+id/tvViewAll">
@@ -101,6 +101,7 @@
         app:fontFamily="@font/nunito"
         app:layout_constraintStart_toEndOf="@id/tvTag2"
         app:layout_constraintTop_toBottomOf="@id/tvRecommendedCourseName" />
+
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/tvLastField"
         android:layout_width="wrap_content"
@@ -236,25 +237,17 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <ImageView
+        android:id="@+id/recommendbanner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="1dp"
+        android:layout_marginRight="@dimen/_10dp"
         android:background="@drawable/rectangle_1072"
+        android:paddingHorizontal="@dimen/_10dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/tech_image"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintEnd_toEndOf="parent" />
 
-        <ImageView
-            android:id="@+id/recemmended_banner"
-            android:layout_width="108dp"
-            android:layout_height="154dp"
-            android:paddingLeft="11dp"
-            android:paddingTop="29dp"
-            android:paddingRight="7dp"
-            android:src="@drawable/tech_image"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
