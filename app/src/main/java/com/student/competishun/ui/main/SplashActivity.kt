@@ -32,7 +32,7 @@ class SplashActivity : AppCompatActivity() {
         Handler(Looper.getMainLooper()).postDelayed({
             setContentView(R.layout.welcome_screen)
             Handler(Looper.getMainLooper()).postDelayed({
-                val token = sharedPreferencesManager.refreshToken
+                val token = sharedPreferencesManager.accessToken
                 Log.e("token ", token.toString())
                 if (!token.isNullOrEmpty()) {
                     startActivity(Intent(this, HomeActivity::class.java))

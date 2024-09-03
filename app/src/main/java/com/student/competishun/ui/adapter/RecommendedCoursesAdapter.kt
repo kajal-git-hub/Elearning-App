@@ -13,6 +13,7 @@ import com.student.competishun.curator.AllCourseForStudentQuery
 import com.student.competishun.curator.GetAllCourseQuery
 import com.student.competishun.curator.adapter.AllCourseForStudentQuery_ResponseAdapter
 import com.student.competishun.utils.HelperFunctions
+import org.w3c.dom.Text
 
 class RecommendedCoursesAdapter(
     private val items: List<AllCourseForStudentQuery.Course>,
@@ -29,6 +30,25 @@ class RecommendedCoursesAdapter(
 
     override fun onBindViewHolder(holder: CourseViewHolder, position: Int) {
         val course = items[position]
+        val courseTags = course.course_tags
+        Log.d("courseTags", courseTags.toString())
+
+        holder.recommendedClass.apply {
+            text = courseTags?.getOrNull(0) ?: ""
+            visibility = if (text.isEmpty()) View.GONE else View.VISIBLE
+        }
+
+        holder.tvTag2.apply {
+            text = courseTags?.getOrNull(1) ?: ""
+            visibility = if (text.isEmpty()) View.GONE else View.VISIBLE
+        }
+
+        holder.tvLastField.apply {
+            text = courseTags?.getOrNull(2) ?: ""
+            visibility = if (text.isEmpty()) View.GONE else View.VISIBLE
+        }
+
+
 
         holder.courseName.text = "${course.name}  ${course.academic_year}"
 
@@ -44,17 +64,17 @@ class RecommendedCoursesAdapter(
                 .into(holder.bannerImage)
 
         }
-        if(course.course_class.toString() =="TWELFTH_PLUS"){
-            holder.recommendedClass.text = "12th+ Class"
-
-        }else if(course.course_class.toString()=="TWELFTH"){
-            holder.recommendedClass.text = "12th Class"
-
-        }
-        else if(course.course_class.toString()=="ELEVENTH"){
-            holder.recommendedClass.text = "11th Class"
-
-        }
+//        if(course.course_class.toString() =="TWELFTH_PLUS"){
+//            holder.recommendedClass.text = "12th+ Class"
+//
+//        }else if(course.course_class.toString()=="TWELFTH"){
+//            holder.recommendedClass.text = "12th Class"
+//
+//        }
+//        else if(course.course_class.toString()=="ELEVENTH"){
+//            holder.recommendedClass.text = "11th Class"
+//
+//        }
         holder.targetYear.text = "Target ${course.target_year}"
         holder.startDate.text = "Starts On: "+helperFunctions.formatCourseDate(course.course_start_date.toString())
         holder.endDate.text = "Expiry Date: "+helperFunctions.formatCourseDate(course.course_end_date.toString())
@@ -80,5 +100,8 @@ class RecommendedCoursesAdapter(
         val originalPrice: TextView = view.findViewById(R.id.orgPrice)
         val discountPrice: TextView = view.findViewById(R.id.dicountPrice)
         val bannerImage:ImageView = view.findViewById(R.id.recemmended_banner)
+        val tvTag2:TextView = view.findViewById(R.id.tvTag2)
+
+        val tvLastField:TextView = view.findViewById(R.id.tvLastField)
     }
 }

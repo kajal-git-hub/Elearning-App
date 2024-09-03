@@ -35,10 +35,8 @@ import com.student.competishun.utils.Constants
 class RecommendViewDetail : Fragment() {
 
     private val userViewModel: UserViewModel by viewModels()
-
     private val studentCoursesViewModel: StudentCoursesViewModel by viewModels()
-    var courseType:String = ""
-
+    private var courseType:String = ""
     private var _binding: FragmentRecommendViewDetailBinding? = null
     private val binding get() = _binding!!
     private lateinit var adapter: RecommendViewAllAdapter
@@ -54,19 +52,22 @@ class RecommendViewDetail : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
+        adapter = RecommendViewAllAdapter(emptyList()) { selectedCourse ->
+            val bundle = Bundle().apply {
+                putString("course_id", selectedCourse.id)
+            }
+            findNavController().navigate(R.id.exploreFragment, bundle)
+        }
+
         binding.appbar.setNavigationOnClickListener {
             findNavController().navigateUp()
         }
-
+        getMyDetails()
         setupToolbar()
         getAllCoursesForStudent(courseType)
 
-//        adapter = RecommendViewAllAdapter(emptyList()) { selectedCourse ->
-//            val bundle = Bundle().apply {
-//                putString("course_id", selectedCourse.id)
-//            }
-//            findNavController().navigate(R.id.exploreFragment, bundle)
-//        }
+
 //
 //        binding.rvRecommendedCourses.adapter = adapter
 //        binding.rvRecommendedCourses.layoutManager =
@@ -130,34 +131,18 @@ class RecommendViewDetail : Fragment() {
                         )
                     } ?: emptyList()
 
-                    val bannerList = mutableListOf<PromoBannerModel>()
 
-                    courses.forEach { course ->
-                        Log.e("Course", course.toString())
-                        Log.e("bannersList", course.banners.toString())
-                        course.banners?.forEach { banner ->
-                            bannerList.add(
-                                PromoBannerModel(
-                                    banner.mobile_banner_image,
-                                    banner.redirect_link
-                                )
-                            )
-                        }
-                    }
-
-                    binding.rvRecommendedCourses.adapter = courses?.let { courseList ->
-                        RecommendedCoursesAdapter(courseList) { selectedCourse ->
+                    binding.rvRecommendedCourses.adapter =
+                        RecommendedCoursesAdapter(courses) { selectedCourse ->
                             val bundle = Bundle().apply {
                                 putString("course_id", selectedCourse.id)
                             }
                             findNavController().navigate(R.id.exploreFragment,bundle)
                         }
-                    }
                     binding.rvRecommendedCourses.layoutManager =
                         LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
                 }?.onFailure { exception ->
-                    // Handle the failure case
                     Log.e("gettiStudentfaik",exception.toString())
                 }
             }
@@ -166,10 +151,10 @@ class RecommendViewDetail : Fragment() {
 
 
     private fun setupToolbar() {
-        val searchView = binding.appbar.menu.findItem(R.id.action_search).actionView as SearchView
+        val searchView = binding.appbar.menu.findItem(R.id.action_search)?.actionView as? SearchView
 
-        searchView.queryHint = "Search Courses"
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+        searchView?.queryHint = "Search Courses"
+        searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 return false
             }
