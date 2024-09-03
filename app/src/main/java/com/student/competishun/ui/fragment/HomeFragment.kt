@@ -1,6 +1,6 @@
 package com.student.competishun.ui.fragment
 
-import RecommendedCoursesAdapter
+import com.student.competishun.ui.adapter.RecommendedCoursesAdapter
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -11,7 +11,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -42,15 +41,12 @@ import com.student.competishun.ui.adapter.PromoBannerAdapter
 import com.student.competishun.ui.adapter.TestimonialsAdapter
 import com.student.competishun.ui.adapter.WhyCompetishunAdapter
 import com.student.competishun.ui.viewmodel.CoursesCategoryViewModel
-import com.student.competishun.ui.viewmodel.CoursesViewModel
 import com.student.competishun.ui.viewmodel.StudentCoursesViewModel
 import com.student.competishun.ui.viewmodel.UserViewModel
 import com.student.competishun.utils.Constants
 import com.student.competishun.utils.HelperFunctions
 import com.student.competishun.utils.OnCourseItemClickListener
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.map
-import java.io.Serializable
 
 @AndroidEntryPoint
 class HomeFragment : Fragment(), OnCourseItemClickListener {
@@ -194,7 +190,7 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
 //            })
 //
 //            binding.rvRecommendedCourses.adapter = courses?.let { courseList ->
-//                RecommendedCoursesAdapter(courseList) { selectedCourse ->
+//                com.student.competishun.ui.adapter.RecommendedCoursesAdapter(courseList) { selectedCourse ->
 //                    val bundle = Bundle().apply {
 //                        putString("course_id", selectedCourse.id)
 //                    }
