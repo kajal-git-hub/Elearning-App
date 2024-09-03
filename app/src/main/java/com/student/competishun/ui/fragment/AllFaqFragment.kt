@@ -4,13 +4,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.student.competishun.R
 import com.student.competishun.data.model.FAQItem
 import com.student.competishun.databinding.FragmentAllFaqBinding
 import com.student.competishun.ui.adapter.FAQAdapter
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class AllFaqFragment : Fragment() {
 
     private var _binding: FragmentAllFaqBinding? = null
@@ -29,6 +33,11 @@ class AllFaqFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Register the back press callback here
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            handleBackPressed()
+        }
+
         binding.igFaqBackButton.setOnClickListener {
             findNavController().navigateUp()
         }
@@ -41,6 +50,10 @@ class AllFaqFragment : Fragment() {
             layoutManager = LinearLayoutManager(context)
             adapter = faqAdapter
         }
+    }
+
+    private fun handleBackPressed() {
+        findNavController().navigate(R.id.exploreFragment)
     }
 
     override fun onDestroyView() {

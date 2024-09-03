@@ -27,10 +27,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.apollographql.apollo3.api.Optional
 import com.bumptech.glide.Glide
+import androidx.media3.common.MediaItem
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.target.Target
 import com.bumptech.glide.request.transition.Transition
-import com.google.android.exoplayer2.MediaItem
 import com.google.android.material.tabs.TabLayout
 import com.student.competishun.R
 import com.student.competishun.curator.AllCourseForStudentQuery
@@ -66,6 +66,7 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
     StudentCourseItemClickListener{
 
     private lateinit var binding: FragmentExploreBinding
+    private var player: ExoPlayer? = null
     private val getCourseByIDViewModel: GetCourseByIDViewModel by viewModels()
     private lateinit var combinedTabItems: List<TabItem>
     private lateinit var limitedFaqItems: List<FAQItem>
@@ -97,10 +98,6 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-
-        val mediaController = MediaController(context)
-        binding.videoView.setMediaController(mediaController)
 
 //        getCourseByIDViewModel.courseByID.observe(viewLifecycleOwner) { course ->
 //            course?.let {
@@ -198,7 +195,6 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
                 Log.d("CourseVideoThumbnail", imageUrl ?: "No URL")
                 Log.d("CourseOrientThumbnail", videoUrl ?: "No URL")
 
-// Display the image thumbnail
                 Glide.with(requireContext())
                     .load(courses?.banner_image)
                     .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
@@ -207,30 +203,50 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
                 binding.ivBannerExplore.setOnClickListener {
                     if (!videoUrl.isNullOrEmpty()) {
                         binding.ivBannerExplore.visibility = View.GONE
-                        binding.videoView.visibility = View.VISIBLE
+                        binding.playerView.visibility = View.VISIBLE
 
-                        // Set the video URI and start playing
-                        try {
-                            val uri = Uri.parse(videoUrl)
-                            binding.videoView.setVideoURI(uri)
-                            binding.videoView.setOnPreparedListener { mediaPlayer ->
-                                mediaPlayer.start()
+
+                        initializePlayer(videoUrl)
+
+
+
+                        player?.addListener(object : Player.Listener {
+                            override fun onPlaybackStateChanged(state: Int) {
+                                if (state == Player.STATE_ENDED) {
+                                    binding.playerView.visibility = View.GONE
+                                    binding.ivBannerExplore.visibility = View.VISIBLE
+                                }
                             }
-                        } catch (e: Exception) {
-                            Log.e("VideoPlayError", "Error setting video URI", e)
-                            binding.ivBannerExplore.visibility = View.VISIBLE
-                            binding.videoView.visibility = View.GONE
-                        }
-
-                        // Set up a listener for when the video completes
-                        binding.videoView.setOnCompletionListener {
-                            binding.videoView.visibility = View.GONE
-                            binding.ivBannerExplore.visibility = View.VISIBLE
-                        }
+                        })
                     } else {
-                        // If videoUrl is empty, make sure ivBannerExplore is visible
                         binding.ivBannerExplore.visibility = View.VISIBLE
-                        binding.videoView.visibility = View.GONE
+                        binding.playerView.visibility = View.GONE
+                        Log.d("CourseVideoError", "Video URL is empty")
+                    }
+
+                }
+
+                binding.overviewButton.setOnClickListener {
+                    if (!videoUrl.isNullOrEmpty()) {
+                        binding.ivBannerExplore.visibility = View.GONE
+                        binding.playerView.visibility = View.VISIBLE
+
+
+                        initializePlayer(videoUrl)
+
+
+
+                        player?.addListener(object : Player.Listener {
+                            override fun onPlaybackStateChanged(state: Int) {
+                                if (state == Player.STATE_ENDED) {
+                                    binding.playerView.visibility = View.GONE
+                                    binding.ivBannerExplore.visibility = View.VISIBLE
+                                }
+                            }
+                        })
+                    } else {
+                        binding.ivBannerExplore.visibility = View.VISIBLE
+                        binding.playerView.visibility = View.GONE
                         Log.d("CourseVideoError", "Video URL is empty")
                     }
                 }
@@ -549,6 +565,34 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
         }
         findNavController().navigate(R.id.action_exploreFragment_to_demoFreeFragment, bundle)
     }
+
+    private fun initializePlayer(videoUrl: String) {
+        player = ExoPlayer.Builder(requireContext()).build()
+        binding.playerView.player = player
+
+        val mediaItem = MediaItem.fromUri(videoUrl)
+        player?.setMediaItem(mediaItem)
+        player?.prepare()
+        player?.play()
+
+        // Add a listener to handle playback errors
+        player?.addListener(object : Player.Listener {
+            override fun onPlayerError(error: PlaybackException) {
+                Log.e("VideoPlaybackError", "Error during playback: ${error.message}")
+                // Handle the error (e.g., show a message to the user, revert UI)
+                binding.ivBannerExplore.visibility = View.VISIBLE
+                binding.playerView.visibility = View.GONE
+            }
+
+            override fun onPlaybackStateChanged(state: Int) {
+                if (state == Player.STATE_ENDED) {
+                    binding.playerView.visibility = View.GONE
+                    binding.ivBannerExplore.visibility = View.VISIBLE
+                }
+            }
+        })
+    }
+
 
     fun formatFeatureText(feature: String): String {
         return feature
