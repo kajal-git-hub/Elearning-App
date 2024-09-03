@@ -24,9 +24,9 @@ class ResumeCourseFragment : Fragment() {
     private val binding get() = _binding!!
     private val myCourseViewModel: MyCoursesViewModel by viewModels()
     private val coursesViewModel: CoursesViewModel by viewModels()
-    private val folderId: String? by lazy {
-        arguments?.getString("folder_Id")
-    }
+//    private val folderId: String? by lazy {
+//        arguments?.getString("folder_Id")
+//    }
 
 
     override fun onCreateView(
@@ -42,11 +42,13 @@ class ResumeCourseFragment : Fragment() {
         binding.backIcon.setOnClickListener {
             requireActivity().onBackPressed()
         }
+        val folderIds: ArrayList<String>? = arguments?.getStringArrayList("folder_ids")
+
         val courseName  =  arguments?.getString("courseName")
         binding.courseNameResumeCourse.text = courseName
-        Log.d("folderi",folderId.toString())
-        folderId?.let { folderProgress(it) }
-        Log.d("resumecourse name $courseName", "courseId: $folderId")
+        Log.d("resumename $courseName", "courseId: $folderIds")
+        folderIds?.forEach{ folderProgress(it) }
+        Log.d("resumecourse name $courseName", "courseId: $folderIds")
         binding.backIcon.setOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed() }
         binding.clResumeCourseIcon2.setOnClickListener {
             findNavController().navigate(R.id.action_resumeCourseFragment_to_ScheduleFragment)

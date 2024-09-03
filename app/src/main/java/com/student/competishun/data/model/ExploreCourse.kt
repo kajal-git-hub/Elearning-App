@@ -1,5 +1,8 @@
 package com.student.competishun.data.model
 
+import android.os.Parcelable
+import com.student.competishun.curator.MyCoursesQuery
+
 data class ExploreCourse(
     val name: String,
     val className: String,
@@ -8,5 +11,6 @@ data class ExploreCourse(
     val ongoingStatus: String,
     val percentCompleted: Int,
     val hasFreeFolder: Boolean = false,
-    val folderId:String
+    val folderIds: List<MyCoursesQuery.Folder>?
 )
+

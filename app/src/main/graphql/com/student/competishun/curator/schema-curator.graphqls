@@ -11,11 +11,15 @@ type AllCoursesResponseDto {
 }
 
 type Banner {
-  course_id: String!
+  course: Course
+
+  course_id: String
 
   createdAt: DateTime!
 
   deletedAt: DateTime!
+
+  folder_name_for_banner: String
 
   id: ID!
 
@@ -149,7 +153,11 @@ type Course {
 
   exam_type: ExamType
 
+  final_status: CourseStatus
+
   folder: [CourseFolder!]
+
+  folder_count: String
 
   id: ID!
 
@@ -172,6 +180,8 @@ type Course {
   price: Int
 
   status: CourseStatus!
+
+  student_course_track: [StudentCourseTrack!]
 
   target_year: Int
 
@@ -235,7 +245,7 @@ type CourseFolderContent {
 
   file_name: String!
 
-  file_name_360p: String
+  file_name_480p: String
 
   file_name_720p: String
 
@@ -252,6 +262,8 @@ type CourseFolderContent {
   folder_id: String!
 
   id: ID!
+
+  orignal_file_name: String!
 
   scheduled_time: DateTime
 
@@ -270,6 +282,8 @@ type CourseFolderLectureCount {
   folderContents: [FolderContentWithCompletion!]
 
   folderCount: Float
+
+  imageCount: Float
 
   pdfCount: Float
 
@@ -313,14 +327,22 @@ type CourseFolderWithCount {
 }
 
 type CourseLectureCount {
+  bannerImage: String!
+
+  image_count: Float!
+
   lecture_count: Float!
 
   pdf_count: Float!
+
+  plannerPdf: String!
 
   total_video_duration: Float!
 }
 
 type CourseProgressResponseDto {
+  complementaryAssociationFlag: String
+
   course: Course!
 
   progress: CourseFolderLectureCount
@@ -345,7 +367,7 @@ enum CourseType {
 }
 
 input CreateBannerInput {
-  course_id: ID!
+  course_id: ID
 
   redirect_link: String
 }
@@ -477,9 +499,9 @@ input CreateCoursePublishInput {
 
   doubt_session: Boolean!
 
-  download_pdf: Boolean!
-
   exam_type: ExamType!
+
+  final_status: CourseStatus!
 
   is_recommended: Boolean
 
@@ -558,6 +580,8 @@ input FindAllCourseInput {
 
   exam_type: [ExamType!]
 
+  final_status: [CourseStatus!]
+
   is_recommended: Boolean
 
   limit: Int = 10
@@ -610,13 +634,15 @@ type Mutation {
 
   createCourseFolder(createCourseFolderInput: CreateCourseFolderInput!): CourseFolder!
 
-  createPublishCourse(banner_image: [Upload!]!, createCoursePublishInput: CreateCoursePublishInput!, id: String, orientation_video: [Upload], planner_pdf: [Upload!]!, video_thumbnail: [Upload]): Course!
+  createPublishCourse(banner_image: [Upload], createCoursePublishInput: CreateCoursePublishInput!, id: String, orientation_video: [Upload], planner_pdf: [Upload], video_thumbnail: [Upload]): Course!
 
   deleteCourse(id: String!): Boolean!
 
   deleteCourseCategory(id: String!): Boolean!
 
   deleteCourseFolder(id: String!): Boolean!
+
+  deleteCourseFolderContent(id: String!): Boolean!
 
   findFolderPath(id: String!): String!
 
@@ -649,6 +675,8 @@ enum OtherRequirements {
   ALL
 
   FATHERS_NAME
+
+  FULL_ADDRESS
 
   PASSPORT_SIZE_PHOTO
 
@@ -707,6 +735,10 @@ type Query {
   getbannerById(id: String!): Banner!
 
   myCourses: [CourseProgressResponseDto!]!
+
+  myCoursesForAdmin(userId: String!): [CourseProgressResponseDto!]!
+
+  relatedCourses(categoryName: String!): [Course!]!
 }
 
 type StudentCourseTrack {
@@ -722,6 +754,8 @@ type StudentCourseTrack {
 
   id: ID!
 
+  total_duration: Int!
+
   updatedAt: DateTime!
 
   user_id: String!
@@ -732,15 +766,15 @@ type SubfolderDuration {
 
   completionPercentage: Float!
 
-  folder: CourseFolder!
+  folder: CourseFolder
 
   folderContents: [FolderContentWithCompletion!]
 
   folderCount: Float!
 
-  pdfCount: Float!
+  pdfCount: Float
 
-  videoCount: Float!
+  videoCount: Float
 
   videoDuration: Float!
 }
