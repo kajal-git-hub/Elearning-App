@@ -19,6 +19,9 @@ import androidx.databinding.ObservableField
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import androidx.media3.common.PlaybackException
+import androidx.media3.common.Player
+import androidx.media3.exoplayer.ExoPlayer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -27,6 +30,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.target.Target
 import com.bumptech.glide.request.transition.Transition
+import com.google.android.exoplayer2.MediaItem
 import com.google.android.material.tabs.TabLayout
 import com.student.competishun.R
 import com.student.competishun.curator.AllCourseForStudentQuery
@@ -194,8 +198,7 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
                 Log.d("CourseVideoThumbnail", imageUrl ?: "No URL")
                 Log.d("CourseOrientThumbnail", videoUrl ?: "No URL")
 
-                // Display the image thumbnail
-                // downloadAndDisplayImage(imageUrl, binding.ivBannerExplore)
+// Display the image thumbnail
                 Glide.with(requireContext())
                     .load(courses?.banner_image)
                     .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
@@ -231,6 +234,9 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
                         Log.d("CourseVideoError", "Video URL is empty")
                     }
                 }
+
+
+
 
 
 
@@ -278,7 +284,9 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
                     val discount = courses.discount?: 0
                     val installmentPrice1 = courses.with_installment_price ?: 0
 
-                    firstInstallment = ((((courses.price?.plus(courses.with_installment_price?:0)))?:0 *(0.6)).toInt())
+                   // firstInstallment = ((((courses.price?.plus(courses.with_installment_price?:0)))?:0 *(0.6)).toInt())
+                    Log.e("installmentd $installmentPrice1",coursePrice.toString())
+                    firstInstallment = (installmentPrice1*(0.6)).toInt()
                     secondInstallment = (coursePrice - firstInstallment)
                     Log.e("secon $installmentPrice1 $coursePrice",secondInstallment.toString()+ "discount $discount")
 
@@ -288,7 +296,7 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
                     binding.tvTag2.text = firstTwoWords
                     binding.orgPricexp.text = "₹"+courses.price.toString()
                     val disountprice = ((courses.price?:0)-((courses.discount?:0)))
-                    binding.dicountPricexp.text = "₹${disountprice}"
+                    binding.dicountPricexp.text = "₹${courses.discount}"
                     binding.tvStartDate.text = "Starts On: "+helperFunctions.formatCourseDate(courses.course_start_date.toString())
                     binding.tvEndDate.text ="Expiry Date: "+helperFunctions.formatCourseDate(courses.course_end_date.toString())
 

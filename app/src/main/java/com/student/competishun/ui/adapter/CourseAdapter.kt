@@ -30,17 +30,17 @@ class CourseAdapter(
 
         holder.binding.apply {
             tvRecommendedCourseName.text = item.name
-            tvTag1.text = helperFunctions.toDisplayString(item.course_class?.name)
+            tvTag1.text = helperFunctions.toDisplayString(item.course_class?.name) + " Class"
             Log.e("courseclassval",helperFunctions.toDisplayString(item.course_class?.name))// Placeholder, change as needed
             orgPrice.text = "₹${item.price}"
-
+            Log.e("cousediscount ${item.with_installment_price}",item.discount.toString()+ " " + item.price)
             tvStartDate.text = "Starts On: ${helperFunctions.formatCourseDate(item.course_start_date.toString())}"
             tvEndDate.text = "Expiry Date: ${helperFunctions.formatCourseDate(item.course_end_date.toString())}"
             tvQuizTests.text = "validity ${helperFunctions.formatCourseDate(item.course_validity_end_date.toString())}"
             if (item.price != null && item.discount != null) {
-                val discountDetails = helperFunctions.calculateDiscountDetails(item.price.toDouble(), item.discount.toDouble())
-                dicountPrice.text = "₹${discountDetails.second}"
-                discPer.text = "${discountDetails.first.toInt()}% OFF"
+                val discountDetails = helperFunctions.calculateDiscountPercentage(item.price.toInt(), item.discount.toInt())
+                dicountPrice.text = "₹${item.discount}"
+                discPer.text = "${discountDetails.toInt()}% OFF"
             } else {
                 dicountPrice.text = "₹0"
                 discPer.text = "0% OFF"
