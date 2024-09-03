@@ -174,9 +174,9 @@ class NEETFragment : Fragment(), StudentCourseItemClickListener {
     }
 
     private fun initializeTabLayout() {
-        binding.studentTabLayout.getTabAt(0)?.text = "11th (0)"
-        binding.studentTabLayout.getTabAt(1)?.text = "12th (0)"
-        binding.studentTabLayout.getTabAt(2)?.text = "12th+ (0)"
+        binding.studentTabLayout.getTabAt(0)?.text = "11th"
+        binding.studentTabLayout.getTabAt(1)?.text = "12th"
+        binding.studentTabLayout.getTabAt(2)?.text = "12th+"
     }
 
     companion object {
