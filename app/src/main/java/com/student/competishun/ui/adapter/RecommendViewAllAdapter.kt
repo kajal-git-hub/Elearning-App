@@ -85,7 +85,11 @@ class RecommendViewAllAdapter(
             }
 
             override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
-                filteredItems = results?.values as MutableList<GetAllCourseQuery.Course>
+                filteredItems = if (results?.values is MutableList<*>) {
+                    results.values as MutableList<GetAllCourseQuery.Course>
+                } else {
+                    mutableListOf()
+                }
                 notifyDataSetChanged()
             }
         }

@@ -40,7 +40,7 @@ class CourseAdapter(
             if (item.price != null && item.discount != null) {
                 val discountDetails = helperFunctions.calculateDiscountDetails(item.price.toDouble(), item.discount.toDouble())
                 dicountPrice.text = "₹${discountDetails.second}"
-                discPer.text = "${discountDetails.first}% OFF"
+                discPer.text = "${discountDetails.first.toInt()}% OFF"
             } else {
                 dicountPrice.text = "₹0"
                 discPer.text = "0% OFF"
