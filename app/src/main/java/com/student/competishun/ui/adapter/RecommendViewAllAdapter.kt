@@ -106,6 +106,6 @@ class RecommendViewAllAdapter(
         val quizCount: TextView = view.findViewById(R.id.tvQuizTests)
         val originalPrice: TextView = view.findViewById(R.id.orgPrice)
         val discountPrice: TextView = view.findViewById(R.id.dicountPrice)
-        val bannerImage: ImageView = view.findViewById(R.id.recemmended_banner)
+        val bannerImage: ImageView = view.findViewById(R.id.recommendbanner)
     }
 }

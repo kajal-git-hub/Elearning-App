@@ -238,13 +238,13 @@
 
 
     <ImageView
-        android:id="@+id/recommended_banner"
+        android:id="@+id/recommendbanner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="@dimen/_10dp"
         android:background="@drawable/rectangle_1072"
         android:paddingHorizontal="@dimen/_10dp"
-        android:scaleType="fitXY"
+        android:scaleType="centerCrop"
         android:src="@drawable/tech_image"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
