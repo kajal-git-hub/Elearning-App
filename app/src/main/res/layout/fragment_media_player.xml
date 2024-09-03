@@ -15,6 +15,13 @@
             android:layout_gravity="center"
             app:resize_mode="fit"
             app:use_controller="true" />
+        <ImageButton
+            android:id="@+id/ig_toolbar_back_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|start"
+            android:layout_margin="16dp"
+            android:src="@drawable/arrow_left_white" />
 
     </FrameLayout>
 

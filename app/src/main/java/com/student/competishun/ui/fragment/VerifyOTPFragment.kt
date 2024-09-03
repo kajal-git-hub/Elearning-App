@@ -129,7 +129,7 @@ class VerifyOTPFragment : Fragment() {
                         val userDetails = data.getMyDetails
                         if (userDetails.userInformation.city!=null && userDetails.userInformation.reference!=null && userDetails.userInformation.targetYear!=null && userDetails.userInformation.preparingFor!=null && userDetails.fullName!=null) {
 
-                            navigateToHomeActivity(userDetails.userInformation.id)
+                            navigateToHomeActivity(userDetails.id)
                         } else {
                             // Store necessary data in SharedPreferencesManager
                             sharedPreferencesManager.mobileNo = userDetails.mobileNumber

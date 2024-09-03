@@ -86,11 +86,11 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
         binding.igToolbarBackButton.setOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed()  }
         helperFunctions = HelperFunctions()
         binding.CartTabLayout.visibility = View.GONE
-      //  binding.rvAllCart.visibility = View.GONE
+        binding.clrvContainer.visibility = View.GONE
         binding.btnProceedToPay.visibility = View.GONE
         binding.clEmptyCart.visibility = View.VISIBLE
         binding.clEmptyCart.setOnClickListener {
-            //   findNavController().navigate(R.id.coursesFragment)
+
         }
       //  binding.clrvContainer.visibility = View.GONE
         sharedPreferencesManager = SharedPreferencesManager(requireContext())
@@ -98,7 +98,7 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
         userViewModel.userDetails.observe(viewLifecycleOwner) { result ->
             result.onSuccess { data ->
                 val userDetails = data.getMyDetails
-                userId = userDetails.userInformation.id
+                userId = userDetails.id
                 userName = userDetails.fullName?:""
                 sharedPreferencesManager.mobileNo = userDetails.mobileNumber
             }.onFailure { exception ->
@@ -131,7 +131,6 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
             )
         }
 
-
         binding.rvAllCart.apply {
             layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
             adapter = cartAdapter
@@ -152,6 +151,7 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
                     if (!course.complementary_course.isNullOrEmpty())
                      complementryId = course.complementary_course
                     Log.e("complementryIDd", complementryId)
+                    Log.e("coureseIDd", course.id)
                     instAmountpaid = ((course.price ?: 0) + (course.with_installment_price ?: 0) * 0.6)
                     CartItem(
                         profileImageResId = course.banner_image ?: "", // Replace with actual logic for image
@@ -168,6 +168,7 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
                     )
                 }.takeLast(1)
                 binding.tvCartCount.text = "(${cartItems.size})"
+                binding.cartBadge.text = cartItems.size.toString()
                 // Ensure this observer is only added once
                 if (getCourseByIDViewModel.courseByID.hasActiveObservers().not()) {
                     getCourseByIDViewModel.courseByID.observe(viewLifecycleOwner, Observer { course ->
@@ -193,14 +194,14 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
                                 val updatedCartItems = cartItems.toMutableList()
                                 updatedCartItems.add(freeCourseItem)
 
-                                binding.cartBadge.text = updatedCartItems.size.toString()
+
                                 cartAdapter.updateCartItems(updatedCartItems)
                                 originalCartItems = cartItems
 
                                 if (updatedCartItems.isNotEmpty()) {
                                     originalCartItems = updatedCartItems
                                     cartAdapter.updateCartItems(updatedCartItems)
-
+                                    binding.clrvContainer.visibility = View.VISIBLE
                                     binding.CartTabLayout.visibility = View.VISIBLE
                                     binding.rvAllCart.visibility = View.VISIBLE
                                     binding.btnProceedToPay.visibility = View.VISIBLE
@@ -307,6 +308,8 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
         binding.tvInstallmentLabel2.visibility = View.GONE
         binding. tvInstallmentChargePrice.visibility =  View.GONE
         binding. tvInstallmentCharge.visibility =  View.GONE
+        binding.tvInstDiscountLabel.visibility = View.VISIBLE
+        binding.tvInstDiscount.visibility = View.VISIBLE
         totalAmount = originalCartItems.get(0).price.toInt()
         binding.tvInstDiscountLabel.text = "Discount (${helperFunctions.calculateDiscountDetails(originalCartItems.get(0).price.toDouble(),originalCartItems.get(0).discount.toDouble()).first}%)"
         binding.tvInstDiscount.text = "- ₹${originalCartItems.get(0).discount.toDouble()}"
@@ -345,13 +348,14 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
 
     private fun processPayment(order: CreateOrderMutation.CreateOrder) {
         val rzpOrderId = order.rzpOrderId
+        Log.e("razorpaydi",rzpOrderId.toString())
         var amount = order.amountPaid
-        if (amount > 0) {
-            amount = Math.round(amount * 100).toInt().toDouble()
-        }
+
         val currency = "INR"
         val checkout = Checkout()
         checkout.setKeyID("rzp_test_DcVrk6NysFj71r")
+        Log.e("user/id=",userId.toString())
+        Log.e("user/tokem=",sharedPreferencesManager.accessToken.toString())
         val obj = JSONObject()
         try {
             obj.put("name", "Competishun")
@@ -359,9 +363,10 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
             obj.put("amount", amount)
             obj.put("order_id", rzpOrderId)
             val prefill = JSONObject()
-            prefill.put("userId", sharedPreferencesManager.userId)
+            prefill.put("userId", userId)
             prefill.put("contact", sharedPreferencesManager.mobileNo)
             obj.put("prefill", prefill)
+            Log.e("orderData",obj.toString())
             checkout.open(requireActivity(), obj)
         } catch (e: JSONException) {
             e.printStackTrace()

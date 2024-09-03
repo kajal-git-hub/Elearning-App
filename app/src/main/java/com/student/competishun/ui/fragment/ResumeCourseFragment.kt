@@ -50,35 +50,42 @@ class ResumeCourseFragment : Fragment() {
         binding.clResumeCourseIcon2.setOnClickListener {
             findNavController().navigate(R.id.action_resumeCourseFragment_to_ScheduleFragment)
         }
+        showShimmer()
         myCourse()
     }
 
     private fun myCourse() {
-        myCourseViewModel.myCourses.observe(viewLifecycleOwner) { result ->
-            result.onSuccess { data ->
-               Log.e("datamyco",data.myCourses.toString())
-                data.myCourses.forEach { courselist ->
-                    Log.e("courseID", courselist.course.id)
-                }
-                if (data.myCourses.isNotEmpty()) {
-                    dataBind(data.myCourses.get(0).progress?.subfolderDurations)
+            myCourseViewModel.myCourses.observe(viewLifecycleOwner) { result ->
+                result.onSuccess { data ->
+                    Log.e("datamyco", data.myCourses.toString())
+                    data.myCourses.forEach { courselist ->
+                        Log.e("courseID", courselist.course.id)
+                    }
+                    if (data.myCourses.isNotEmpty()) {
+                        hideShimmer()
+                        dataBind(data.myCourses.get(0).progress?.subfolderDurations)
 
-                }
+                    }
 
 
-                val course = data.myCourses.find { it.course.id == folderId }
-                course?.let {
-                    populateCourseData(it)
-                } ?: run {
-                    Toast.makeText(requireContext(), "Course not found", Toast.LENGTH_SHORT).show()
+//                    val course = data.myCourses.find { it.course.id == folderId }
+//                    course?.let {
+ //                       populateCourseData(it)
+//                    } ?: run {
+//                       Log.e( "Course not found", course?.course?.folder.toString())
+//                    }
+                }.onFailure {
+                    Log.e("MyCoursesFail", it.message.toString())
+                    Toast.makeText(
+                        requireContext(),
+                        "Failed to load courses: ${it.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
-            }.onFailure {
-                Log.e("MyCoursesFail", it.message.toString())
-                Toast.makeText(requireContext(), "Failed to load courses: ${it.message}", Toast.LENGTH_SHORT).show()
-            }
+
         }
-
         myCourseViewModel.fetchMyCourses()
+
     }
 
     private fun populateCourseData(course: MyCoursesQuery.MyCourse) {
@@ -102,7 +109,9 @@ class ResumeCourseFragment : Fragment() {
                     binding.clClassNotes
                 )
                 courseSetOnClickListener.forEach { view ->
+                    Log.e("clickded on ",view.toString())
                     subfolderDurations?.forEach { folders ->
+                        Log.e("subfolderDurations on ",folders.toString())
                         setupNavigation(view, folders.folder)
                     }
                 }
@@ -184,6 +193,7 @@ class ResumeCourseFragment : Fragment() {
     }
 
     private fun setupNavigation(view: View, subFolder: FindCourseFolderProgressQuery.Folder1?) {
+        Log.e("subfoleer",subFolder.toString())
         view.setOnClickListener {
            if (subFolder != null) {
                 findNavController().navigate(R.id.TopicTYPEContentFragment)
@@ -191,6 +201,16 @@ class ResumeCourseFragment : Fragment() {
                 findNavController().navigate(R.id.action_resumeCourseFragment_to_subjectContentFragment)
             }
         }
+    }
+
+    private fun showShimmer() {
+        binding.progress.visibility = View.VISIBLE
+        binding.clSubjectsAndTopics.visibility = View.GONE
+    }
+
+    private fun hideShimmer() {
+        binding. progress.visibility = View.GONE
+        binding.clSubjectsAndTopics.visibility = View.VISIBLE
     }
 
     override fun onDestroyView() {

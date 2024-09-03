@@ -64,7 +64,7 @@ class OnBoardingFragment : Fragment() {
 
         userViewModel.userDetails.observe(requireActivity()) { result ->
             result.onSuccess { data ->
-               sharedPreferencesManager.userId=data.getMyDetails.userInformation.id
+               sharedPreferencesManager.userId=data.getMyDetails.id
             }.onFailure { exception ->
                 Log.e("mainActivity details", exception.message.toString())
             }

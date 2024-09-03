@@ -437,12 +437,15 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
         )
         studentCoursesViewModel.fetchCourses(filters)
 
-
+        binding.progressBarRec.visibility = View.VISIBLE
+        binding.rvRecommendedCourses.visibility = View.GONE
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             studentCoursesViewModel.courses.collect { result ->
                 result?.onSuccess { data ->
                     Log.e("gettiStudent", data.toString())
                     val courses = data.getAllCourseForStudent.courses.map { course ->
+                        binding.progressBarRec.visibility = View.GONE
+                        binding.rvRecommendedCourses.visibility = View.VISIBLE
                         AllCourseForStudentQuery.Course(
                             discount = course.discount,
                             name = course.name,

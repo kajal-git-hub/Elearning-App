@@ -137,7 +137,9 @@ class ScheduleFragment : Fragment() {
         myCourseViewModel.courseFolderContent.observe(viewLifecycleOwner) { result ->
             result.onSuccess { data ->
                 Log.e("getdatafolder",data.toString())
+                if (data.findAllCourseFolderContentByScheduleTime.isNullOrEmpty()){}else{
                 setupRecyclerView(data.findAllCourseFolderContentByScheduleTime)
+                }
                 Log.e("timesize",data.findAllCourseFolderContentByScheduleTime.size.toString())
                 data.findAllCourseFolderContentByScheduleTime.forEachIndexed { index, scheduleContent ->
                     Log.e("timea $index", scheduleContent.folder.scheduled_time.toString())

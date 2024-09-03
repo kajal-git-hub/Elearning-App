@@ -1,5 +1,6 @@
 query MyDetails {
     getMyDetails {
+        id
         fullName
         mobileNumber
         userInformation {
