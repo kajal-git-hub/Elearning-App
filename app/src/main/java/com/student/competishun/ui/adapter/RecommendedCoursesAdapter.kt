@@ -33,9 +33,21 @@ class RecommendedCoursesAdapter(
         val courseTags = course.course_tags
         Log.d("courseTags", courseTags.toString())
 
-        holder.recommendedClass.text = courseTags?.getOrNull(0) ?: "NA"
-        holder.tvTag2.text = courseTags?.getOrNull(1) ?: "NA"
-        holder.tvLastField.text = courseTags?.getOrNull(2) ?: "NA"
+        holder.recommendedClass.apply {
+            text = courseTags?.getOrNull(0) ?: ""
+            visibility = if (text.isEmpty()) View.GONE else View.VISIBLE
+        }
+
+        holder.tvTag2.apply {
+            text = courseTags?.getOrNull(1) ?: ""
+            visibility = if (text.isEmpty()) View.GONE else View.VISIBLE
+        }
+
+        holder.tvLastField.apply {
+            text = courseTags?.getOrNull(2) ?: ""
+            visibility = if (text.isEmpty()) View.GONE else View.VISIBLE
+        }
+
 
 
         holder.courseName.text = "${course.name}  ${course.academic_year}"
