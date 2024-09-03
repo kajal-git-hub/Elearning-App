@@ -1,6 +1,7 @@
 package com.student.competishun.ui.adapter
 
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,6 +24,7 @@ class ExploreCourseAdapter(
         holder.bind(course)
         holder.itemView.setOnClickListener {
             onItemClicked(course)
+            Log.e("folder_Idada:", course.folderId)
         }
     }
 

@@ -7,5 +7,6 @@ data class ExploreCourse(
     val target: String,
     val ongoingStatus: String,
     val percentCompleted: Int,
-    val hasFreeFolder: Boolean = false
+    val hasFreeFolder: Boolean = false,
+    val folderId:String
 )

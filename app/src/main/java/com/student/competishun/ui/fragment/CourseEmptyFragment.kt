@@ -82,63 +82,63 @@ class CourseEmptyFragment : Fragment() {
 //        binding.rvExploreCourses.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
     }
 
-    private fun courseDetails(orders: List<OrdersByUserIdsQuery.OrdersByUserId>) {
-        val courseDetailsList = mutableListOf<ExploreCourse>()
-        getCourseByIDViewModel.courseByID.observe(viewLifecycleOwner, Observer { course ->
-            course?.let {
-                Log.e("course", course.folder.toString())
-                var hasFreeFolder = false
-                course.folder?.forEach { folder ->
-                    if (folder.name.startsWith("Free")) {
-                        hasFreeFolder = true
-                    }
-                }
-
-                folderId = course.folder?.get(0)?.id.toString()
-
-                val courseClass = when (course.course_class.toString()) {
-                    "TWELFTH_PLUS" -> "12th+ Class"
-                    "TWELFTH" -> "12th Class"
-                    "ELEVENTH" -> "11th Class"
-                    else -> ""
-                }
-
-                val tag1 = courseClass
-                val tag2 = it.category_name.orEmpty()
-                courseDetailsList.add(
-                    ExploreCourse(
-                        it.name,
-                        tag1,
-                        tag2,
-                        "Target ${it.target_year}",
-                        it.status.toString(),
-                        coursepercent,
-                        hasFreeFolder
-                    )
-                )
-                if (courseDetailsList.size == orders.size) {
-                    binding.clEmptyMyCourse.visibility = View.GONE
-                    binding.rvExploreCourses.visibility = View.VISIBLE
-                    val adapter = ExploreCourseAdapter(courseDetailsList) { course ->
-                        val bundle = Bundle()
-                        bundle.putString("course_Id", currentCourseId)
-                        bundle.putString("folder_Id", folderId)
-                        Log.d("course_Id", currentCourseId)
-                        Log.d("folder_Id", folderId)
-                        findNavController().navigate(R.id.action_courseEmptyFragment_to_ResumeCourseFragment,bundle)
-                    }
-                    binding.rvExploreCourses.adapter = adapter
-                    binding.rvExploreCourses.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-                }
-            }
-        })
-
-        orders.forEach { order ->
-            currentCourseId=order.entityId
-            Log.e("courseID",currentCourseId)
-            getCourseByIDViewModel.fetchCourseById(order.entityId)
-        }
-    }
+//    private fun courseDetails(orders: List<OrdersByUserIdsQuery.OrdersByUserId>) {
+//        val courseDetailsList = mutableListOf<ExploreCourse>()
+//        getCourseByIDViewModel.courseByID.observe(viewLifecycleOwner, Observer { course ->
+//            course?.let {
+//                Log.e("course", course.folder.toString())
+//                var hasFreeFolder = false
+//                course.folder?.forEach { folder ->
+//                    if (folder.name.startsWith("Free")) {
+//                        hasFreeFolder = true
+//                    }
+//                }
+//
+//                folderId = course.folder?.get(0)?.id.toString()
+//
+//                val courseClass = when (course.course_class.toString()) {
+//                    "TWELFTH_PLUS" -> "12th+ Class"
+//                    "TWELFTH" -> "12th Class"
+//                    "ELEVENTH" -> "11th Class"
+//                    else -> ""
+//                }
+//
+//                val tag1 = courseClass
+//                val tag2 = it.category_name.orEmpty()
+//                courseDetailsList.add(
+//                    ExploreCourse(
+//                        it.name,
+//                        tag1,
+//                        tag2,
+//                        "Target ${it.target_year}",
+//                        it.status.toString(),
+//                        coursepercent,
+//                        hasFreeFolder
+//                    )
+//                )
+//                if (courseDetailsList.size == orders.size) {
+//                    binding.clEmptyMyCourse.visibility = View.GONE
+//                    binding.rvExploreCourses.visibility = View.VISIBLE
+//                    val adapter = ExploreCourseAdapter(courseDetailsList) { course ->
+//                        val bundle = Bundle()
+//                        bundle.putString("course_Id", currentCourseId)
+//                        bundle.putString("folder_Id", folderId)
+//                        Log.d("course_Id", currentCourseId)
+//                        Log.d("folder_Idnamecouse1", folderId)
+//                        findNavController().navigate(R.id.action_courseEmptyFragment_to_ResumeCourseFragment,bundle)
+//                    }
+//                    binding.rvExploreCourses.adapter = adapter
+//                    binding.rvExploreCourses.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+//                }
+//            }
+//        })
+//
+//        orders.forEach { order ->
+//            currentCourseId=order.entityId
+//            Log.e("courseID",currentCourseId)
+//            getCourseByIDViewModel.fetchCourseById(order.entityId)
+//        }
+//    }
     fun myCourses(){
         binding.progressBar.visibility = View.VISIBLE
         _binding?.clEmptyMyCourse?.visibility = View.GONE
@@ -181,17 +181,18 @@ class CourseEmptyFragment : Fragment() {
                                 "Target ${courselist.course.target_year}",
                                 courselist.course.status.toString(),
                                 coursepercent,
-                                hasFreeFolder
+                                hasFreeFolder,
+                                folderId
                             )
                         )
                         if (data.myCourses.isNotEmpty()) {
                             binding.clEmptyMyCourse.visibility = View.GONE
                             binding.rvExploreCourses.visibility = View.VISIBLE
+                            Log.e("folder_Idnamecouse:", folderId)
                             val adapter = ExploreCourseAdapter(courseDetailsList) { course ->
                                 val bundle = Bundle()
-                                bundle.putString("folder_Id", folderId)
+                                bundle.putString("folder_Id", course.folderId)
                                 bundle.putString("courseName", course.name)
-                                Log.d("folder_Id namecouse: ${course.name}", folderId)
                                 findNavController().navigate(
                                     R.id.action_courseEmptyFragment_to_ResumeCourseFragment, bundle)
                             }

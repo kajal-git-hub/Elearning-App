@@ -137,7 +137,10 @@ class ScheduleFragment : Fragment() {
         myCourseViewModel.courseFolderContent.observe(viewLifecycleOwner) { result ->
             result.onSuccess { data ->
                 Log.e("getdatafolder",data.toString())
-                if (data.findAllCourseFolderContentByScheduleTime.isNullOrEmpty()){}else{
+                if (data.findAllCourseFolderContentByScheduleTime.isEmpty()){
+                   binding.clEmptySchedule.visibility = View.VISIBLE
+                }else{
+                    binding.clEmptySchedule.visibility = View.GONE
                 setupRecyclerView(data.findAllCourseFolderContentByScheduleTime)
                 }
                 Log.e("timesize",data.findAllCourseFolderContentByScheduleTime.size.toString())
@@ -175,6 +178,7 @@ class ScheduleFragment : Fragment() {
         binding.backIconSchedule.setOnClickListener {
             requireActivity().onBackPressedDispatcher.onBackPressed()
         }
+        binding.clEmptySchedule.visibility = View.VISIBLE
         FindAllCourseFolderContentByScheduleTimeQuery()
     }
 

@@ -44,6 +44,7 @@ class ResumeCourseFragment : Fragment() {
         }
         val courseName  =  arguments?.getString("courseName")
         binding.courseNameResumeCourse.text = courseName
+        Log.d("folderi",folderId.toString())
         folderId?.let { folderProgress(it) }
         Log.d("resumecourse name $courseName", "courseId: $folderId")
         binding.backIcon.setOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed() }
@@ -63,6 +64,7 @@ class ResumeCourseFragment : Fragment() {
                     }
                     if (data.myCourses.isNotEmpty()) {
                         hideShimmer()
+                        var foldrduration =
                         dataBind(data.myCourses.get(0).progress?.subfolderDurations)
 
                     }
