@@ -7,7 +7,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -20,19 +22,25 @@ import com.student.competishun.data.model.TabItem
 import com.student.competishun.databinding.FragmentCourseBinding
 import com.student.competishun.ui.adapter.CourseAdapter
 import com.student.competishun.ui.viewmodel.StudentCoursesViewModel
+import com.student.competishun.utils.HelperFunctions
 import com.student.competishun.utils.StudentCourseItemClickListener
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class CourseFragment : Fragment(), StudentCourseItemClickListener {
     private lateinit var recyclerView: RecyclerView
     private lateinit var binding: FragmentCourseBinding
+    var courseListSize = ""
+    val lectureCounts = mutableMapOf<String, Int>()
+    private lateinit var helperFunctions: HelperFunctions
     private val courseViewModel: StudentCoursesViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
 
         }
+
     }
 
     override fun onCreateView(
@@ -45,9 +53,10 @@ class CourseFragment : Fragment(), StudentCourseItemClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        setupRecyclerView()
+        helperFunctions = HelperFunctions()
+        initializeTabLayout()
         setupTabLayout()
+        setupRecyclerView()
         fetchCoursesForClass("11th")
         observeCourses()
     }
@@ -61,7 +70,7 @@ class CourseFragment : Fragment(), StudentCourseItemClickListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 tab?.let {
                     when (it.position) {
-                        0 -> fetchCoursesForClass("11th")
+                        0 ->  fetchCoursesForClass("11th")
                         1 -> fetchCoursesForClass("12th")
                         2 -> fetchCoursesForClass("12+")
                     }
@@ -87,6 +96,7 @@ class CourseFragment : Fragment(), StudentCourseItemClickListener {
             Optional.present(examType),
             Optional.present(null)
         )
+        setupTabLayout()
         courseViewModel.fetchCourses(filters)
     }
 
@@ -94,12 +104,26 @@ class CourseFragment : Fragment(), StudentCourseItemClickListener {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             courseViewModel.courses.collect { result ->
                 result?.onSuccess { data ->
-                    Log.e(TAG, data.toString())
+                    Log.e(TAG , data.toString())
+                    val courseSize = data.getAllCourseForStudent.courses.size
+
                     val courses = data.getAllCourseForStudent.courses.map { course ->
+
+                        getAllLectureCount(course.id) { courseId, lectureCount ->
+                            lectureCounts[courseId] = lectureCount
+                            binding.recyclerView.adapter?.notifyDataSetChanged()
+                        }
+                        val courseClass = course.course_class?.name?:""
+                        Log.e("NEETcouseacal",helperFunctions.toDisplayString(courseClass))
+                        when (helperFunctions.toDisplayString(courseClass)) {
+                            "11th" -> updateTabText(0, courseSize)
+                            "12th" -> updateTabText(1, courseSize)
+                            "12+" -> updateTabText(2, courseSize)
+                        }
                         course.toCourse()
                     } ?: emptyList()
-                    Log.d("courseFragment", courses.toString())
-                    binding.recyclerView.adapter = CourseAdapter(courses, this@CourseFragment)
+                    Log.d("NEETFragment", courses.toString())
+                    binding.recyclerView.adapter = CourseAdapter(courses,lectureCounts, this@CourseFragment)
                 }?.onFailure { exception ->
                     // Handle the failure case
                     Log.e(TAG, exception.toString())
@@ -144,6 +168,42 @@ class CourseFragment : Fragment(), StudentCourseItemClickListener {
             course_end_date = this.course_end_date,
             banners = this.banners
         )
+    }
+
+    fun getAllLectureCount(courseId: String, callback: (String, Int) -> Unit){
+
+        courseViewModel.fetchLectures(courseId)
+        Log.e("getcourseIds",courseId)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                courseViewModel.lectures.collect { result ->
+                    result?.onSuccess { lecture ->
+                        val count = lecture.getAllCourseLecturesCount.lecture_count.toInt()
+                        Log.e("lectureCount",count.toString())
+                        callback(courseId, count)
+                    }?.onFailure { exception ->
+                        Log.e("LectureException", exception.toString())
+                    }
+                }
+            }
+        }
+    }
+
+    private fun updateTabText(position: Int, courseSize: Int) {
+        val tabLayout = binding.studentTabLayout
+        val tabText = when (position) {
+            0 -> "11th ($courseSize)"
+            1 -> "12th ($courseSize)"
+            2 -> "12th+ ($courseSize)"
+            else -> ""
+        }
+        tabLayout.getTabAt(position)?.text = tabText
+    }
+
+    private fun initializeTabLayout() {
+        binding.studentTabLayout.getTabAt(0)?.text = "11th"
+        binding.studentTabLayout.getTabAt(1)?.text = "12th"
+        binding.studentTabLayout.getTabAt(2)?.text = "12th+"
     }
 
     companion object {
