@@ -80,6 +80,7 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
     private lateinit var courseId:String
     lateinit var folderlist:List<GetCourseByIdQuery.Folder>
     private lateinit var helperFunctions: HelperFunctions
+    val lectureCounts = mutableMapOf<String, Int>()
     var firstInstallment:Int = 0
     var secondInstallment:Int = 0
 
@@ -475,7 +476,7 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
                             )
                         } ?: emptyList()
                         binding.rvRelatedCourses.adapter =
-                            CourseAdapter(courses, this@ExploreFragment)
+                            CourseAdapter(courses,lectureCounts, this@ExploreFragment)
                     }?.onFailure { exception ->
                         // Handle the failure case
                         Log.e("gettiStudentfaik", exception.toString())

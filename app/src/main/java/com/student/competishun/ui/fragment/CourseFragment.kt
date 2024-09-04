@@ -7,7 +7,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -22,11 +24,13 @@ import com.student.competishun.ui.adapter.CourseAdapter
 import com.student.competishun.ui.viewmodel.StudentCoursesViewModel
 import com.student.competishun.utils.StudentCourseItemClickListener
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class CourseFragment : Fragment(), StudentCourseItemClickListener {
     private lateinit var recyclerView: RecyclerView
     private lateinit var binding: FragmentCourseBinding
+    val lectureCounts = mutableMapOf<String, Int>()
     private val courseViewModel: StudentCoursesViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -96,10 +100,14 @@ class CourseFragment : Fragment(), StudentCourseItemClickListener {
                 result?.onSuccess { data ->
                     Log.e(TAG, data.toString())
                     val courses = data.getAllCourseForStudent.courses.map { course ->
+                        getAllLectureCount(course.id) { courseId, lectureCount ->
+                            lectureCounts[courseId] = lectureCount
+                            binding.recyclerView.adapter?.notifyDataSetChanged()
+                        }
                         course.toCourse()
                     } ?: emptyList()
                     Log.d("courseFragment", courses.toString())
-                    binding.recyclerView.adapter = CourseAdapter(courses, this@CourseFragment)
+                    binding.recyclerView.adapter = CourseAdapter(courses,lectureCounts, this@CourseFragment)
                 }?.onFailure { exception ->
                     // Handle the failure case
                     Log.e(TAG, exception.toString())
@@ -110,10 +118,32 @@ class CourseFragment : Fragment(), StudentCourseItemClickListener {
 
     override fun onCourseItemClicked(course: AllCourseForStudentQuery.Course) {
         val bundle = Bundle().apply {
+            val lectureCount = lectureCounts[course.id]?.toString() ?: "0"
             putString("course_id", course.id)
+            putString("LectureCount", lectureCount)
         }
         Log.e(TAG, course.id.toString())
         findNavController().navigate(R.id.action_coursesFragment_to_ExploreFragment, bundle)
+    }
+
+
+    fun getAllLectureCount(courseId: String, callback: (String, Int) -> Unit){
+
+        courseViewModel.fetchLectures(courseId)
+        Log.e("getcourseIds",courseId)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                courseViewModel.lectures.collect { result ->
+                    result?.onSuccess { lecture ->
+                        val count = lecture.getAllCourseLecturesCount.lecture_count.toInt()
+                        Log.e("lectureCount",count.toString())
+                        callback(courseId, count)
+                    }?.onFailure { exception ->
+                        Log.e("LectureException", exception.toString())
+                    }
+                }
+            }
+        }
     }
 
     private fun AllCourseForStudentQuery.Course.toCourse(): AllCourseForStudentQuery.Course {

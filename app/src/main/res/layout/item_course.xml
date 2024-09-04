@@ -155,7 +155,7 @@
                 android:drawableStart="@drawable/video_play__1_"
                 android:drawablePadding="6dp"
                 android:fontFamily="@font/nunito"
-                android:text="Lectures: 0"
+                android:hint="Lectures: 0"
                 android:textColor="#726C6C"
                 android:textSize="14sp"
                 android:textStyle="bold"

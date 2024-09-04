@@ -13,6 +13,7 @@ import com.student.competishun.utils.StudentCourseItemClickListener
 
 class CourseAdapter(
     private var items: List<AllCourseForStudentQuery.Course>,
+    private val lectureCounts: Map<String, Int>,
     private val listener: StudentCourseItemClickListener
 ) : RecyclerView.Adapter<CourseAdapter.CourseViewHolder>() {
 
@@ -39,6 +40,7 @@ class CourseAdapter(
             tvStartDate.text = "Starts On: ${helperFunctions.formatCourseDate(item.course_start_date.toString())}"
             tvEndDate.text = "Expiry Date: ${helperFunctions.formatCourseDate(item.course_end_date.toString())}"
             tvQuizTests.text = "validity ${helperFunctions.formatCourseDate(item.course_validity_end_date.toString())}"
+            tvLectureNo.text = "Lectures: ${(lectureCounts[item.id] ?: 0)}"
             Glide.with(holder.itemView.context)
 
                 .load(item.banner_image)
