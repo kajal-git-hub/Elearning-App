@@ -1,5 +1,6 @@
 package com.student.competishun.ui.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -7,9 +8,12 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.student.competishun.R
+import com.student.competishun.curator.FindCourseFolderProgressQuery
 import com.student.competishun.data.model.FreeDemoItem
 
-class FreeDemoAdapter(private val demoItemList: List<FreeDemoItem>,  private val onItemClick: (FreeDemoItem) -> Unit) :
+class FreeDemoAdapter(private val demoItemList: List<FreeDemoItem>,
+                      private val subfolderDurationFolders: List<FindCourseFolderProgressQuery.Folder1>?,
+                      private val onItemClick: (FreeDemoItem) -> Unit) :
     RecyclerView.Adapter<FreeDemoAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -19,7 +23,7 @@ class FreeDemoAdapter(private val demoItemList: List<FreeDemoItem>,  private val
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val courseItem = demoItemList[position]
-        holder.bind(courseItem)
+        subfolderDurationFolders?.let { holder.bind(courseItem, it) }
 
         holder.itemView.setOnClickListener {
             onItemClick(courseItem)
@@ -35,10 +39,16 @@ class FreeDemoAdapter(private val demoItemList: List<FreeDemoItem>,  private val
         private var titleTextView: TextView = itemView.findViewById(R.id.titleTextView)
         private var timeTextView: TextView = itemView.findViewById(R.id.timeTextView)
 
-        fun bind(item: FreeDemoItem) {
+        fun bind(item: FreeDemoItem,subfolderDurationFolders: List<FindCourseFolderProgressQuery.Folder1>) {
             iconImageView.setImageResource(item.playIcon)
             titleTextView.text = item.titleDemo
             timeTextView.text = item.timeDemo
+
+            if (!subfolderDurationFolders.isNullOrEmpty()) {
+                Log.e("Subfolderdata",subfolderDurationFolders.get(0).name)
+                val folder = subfolderDurationFolders[adapterPosition]
+                titleTextView.text = folder.name
+            }
         }
     }
 }

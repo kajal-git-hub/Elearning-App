@@ -5,7 +5,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -16,7 +15,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.viewModels
-import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.student.competishun.R
@@ -24,9 +22,7 @@ import com.student.competishun.curator.type.FileType
 import com.student.competishun.data.model.FreeDemoItem
 import com.student.competishun.ui.adapter.FreeDemoAdapter
 import com.student.competishun.databinding.FragmentAllDemoResourcesFreeBinding
-import com.student.competishun.databinding.FragmentExploreBinding
 import com.student.competishun.ui.viewmodel.CoursesViewModel
-import com.student.competishun.ui.viewmodel.StudentCoursesViewModel
 import com.student.competishun.ui.viewmodel.VideourlViewModel
 import com.student.competishun.utils.HelperFunctions
 import dagger.hilt.android.AndroidEntryPoint
@@ -74,11 +70,12 @@ class AllDemoResourcesFree : Fragment() {
                 Log.e("GetFolderdata", data.toString())
                 val folderProgressFolder = data.findCourseFolderProgress.folder
                 val folderProgressContent = data.findCourseFolderProgress.folderContents
-                val subFolderduration = data.findCourseFolderProgress.subfolderDurations
+                val subfolderDurationFolders = data.findCourseFolderProgress.subfolderDurations?.mapNotNull { it.folder }
+                Log.e("subFolderdata", subfolderDurationFolders.toString())
                 if (folderProgressFolder != null) {
-                    if (subFolderduration != null){
 
-                    }
+
+
                     val folderName = folderProgressFolder.name
 
                     val totalDuration = data.findCourseFolderProgress.videoDuration ?: 0.0
@@ -98,12 +95,13 @@ class AllDemoResourcesFree : Fragment() {
                             titleDemo = folderContent.content?.file_name.toString(),
                             timeDemo = if(folderContent.content?.file_type == FileType.PDF ){ ""} else {duration},
                             fileUrl = folderContent.content?.file_url.toString(),
-                            fileType = folderContent.content?.file_type?.name.toString()
+                            fileType = folderContent.content?.file_type?.name.toString(),
+                            subFolderduration = subfolderDurationFolders
                         )
                     } ?: emptyList()
 
 
-                        val freeDemoAdapter = FreeDemoAdapter(freeItems) { freeDemoItem ->
+                        val freeDemoAdapter = FreeDemoAdapter(freeItems,subfolderDurationFolders) { freeDemoItem ->
                             // Handle the item click
                             val fileType = freeDemoItem.fileType
                             if (fileType.equals("PDF")) {
@@ -113,7 +111,7 @@ class AllDemoResourcesFree : Fragment() {
                                     freeDemoItem.fileUrl,
                                     freeDemoItem.titleDemo
                                 )
-                            } else if(fileType.equals("FOLDER")){
+                            } else if(!subfolderDurationFolders.isNullOrEmpty()){
 
                                 Log.e("fodername id ${freeDemoItem.id}",freeDemoItem.titleDemo)
                                 val bundle = Bundle().apply {
