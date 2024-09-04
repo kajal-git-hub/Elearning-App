@@ -89,16 +89,17 @@
         android:background="@drawable/rectangle_1072"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <ImageView
+
+        <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/iv_purchased"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/tech_image"
-            android:paddingTop="29dp"
-            android:paddingStart="11dp"
-            android:paddingEnd="7dp"
+            android:layout_width="@dimen/_108dp"
+            android:layout_height="158dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/rectangle_1072"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:shapeAppearanceOverlay="@style/CustomImageShape"
+            />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
