@@ -273,7 +273,7 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
                    // firstInstallment = ((((courses.price?.plus(courses.with_installment_price?:0)))?:0 *(0.6)).toInt())
                     Log.e("installmentd $installmentPrice1",coursePrice.toString())
                     firstInstallment = (installmentPrice1*(0.6)).toInt()
-                    secondInstallment = (coursePrice - firstInstallment)
+                    secondInstallment = (coursePrice.minus( firstInstallment))
                     Log.e("secon $installmentPrice1 $coursePrice",secondInstallment.toString()+ "discount $discount")
 
                     binding.tvCourseName.text = courses.name
@@ -304,15 +304,19 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
 
         }
 
-
+        if (firstInstallment>0) {
             binding.clInstallmentOptionView.setOnClickListener {
 
-                showInstallmentDetailsBottomSheet(firstInstallment.toInt(), secondInstallment.toInt())
+                showInstallmentDetailsBottomSheet(
+                    firstInstallment.toInt(),
+                    secondInstallment.toInt()
+                )
 //                val bottomSheet = InstallmentDetailsBottomSheet().apply {
 //                    setInstallmentData(firstInstallment.toInt(), secondInstallment.toInt())
 //                }
 //                bottomSheet.show(parentFragmentManager, "InstallmentDetailsBottomSheet")
             }
+        }
 
             helperFunctions = HelperFunctions()
 
