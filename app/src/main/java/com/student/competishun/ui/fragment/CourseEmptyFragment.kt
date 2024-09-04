@@ -188,6 +188,7 @@ class CourseEmptyFragment : Fragment() {
                                 tag1,
                                 tag2,
                                 "Target ${courselist.course.target_year}",
+                                courselist.course.banner_image,
                                 courselist.course.status.toString(),
                                 coursepercent,
                                 hasFreeFolder,
