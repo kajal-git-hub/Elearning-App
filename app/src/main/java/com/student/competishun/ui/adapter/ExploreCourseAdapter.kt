@@ -1,11 +1,13 @@
 package com.student.competishun.ui.adapter
 
-
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.Target
+import com.student.competishun.R
 import com.student.competishun.data.model.ExploreCourse
 import com.student.competishun.databinding.ExploreCourseItemBinding
 
@@ -22,16 +24,23 @@ class ExploreCourseAdapter(
     override fun onBindViewHolder(holder: ExploreCourseViewHolder, position: Int) {
         val course = courses[position]
         holder.bind(course)
+
+        Glide.with(holder.itemView.context)
+            .load(course.bannerImage)
+            .placeholder(R.drawable.rectangle_1072)
+            .error(R.drawable.frame_1707480074)
+            .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
+            .into(holder.binding.ivPurchased)
+
         holder.itemView.setOnClickListener {
             onItemClicked(course)
-            Log.e("folder_Idada:", course.folderIds.toString())
             Log.e("folder_Idada:", course.folderIds.toString())
         }
     }
 
     override fun getItemCount(): Int = courses.size
 
-    class ExploreCourseViewHolder(private val binding: ExploreCourseItemBinding) : RecyclerView.ViewHolder(binding.root) {
+    class ExploreCourseViewHolder(val binding: ExploreCourseItemBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(course: ExploreCourse) {
             binding.tvExploreCourseName.text = course.name
             binding.tvTag1ExploreCourse.text = course.className
@@ -43,8 +52,7 @@ class ExploreCourseAdapter(
                 append("%")
             }
 
-            binding.ivFreeTag.visibility =  View.GONE
-           // if (course.hasFreeFolder) View.VISIBLE else
+            binding.ivFreeTag.visibility = View.GONE
             binding.customProgressIndicator.progress = course.percentCompleted
         }
     }
