@@ -179,6 +179,7 @@ class CourseEmptyFragment : Fragment() {
                         val tag1 = courseClass
                         val tag2 = courselist.course.category_name.orEmpty()
                         val folderlist = courselist.course.folder
+                        Log.e("getingfolderlist",folderlist.toString())
                         val progress: MyCoursesQuery.Progress = courselist.progress!!
 
                         courseDetailsList.add(

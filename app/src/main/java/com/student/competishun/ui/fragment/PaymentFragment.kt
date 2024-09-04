@@ -38,8 +38,7 @@ import java.util.Locale
 @AndroidEntryPoint
 class PaymentFragment : Fragment() {
     private lateinit var sharedPreferencesManager: SharedPreferencesManager
-    private var _binding: FragmentPaymentBinding? = null
-    private val binding get() = _binding!!
+    private lateinit var binding: FragmentPaymentBinding
     private val ordersViewModel: OrdersViewModel by viewModels()
     private lateinit var  helperFunctions:HelperFunctions
     private val getCourseByIDViewModel: GetCourseByIDViewModel by viewModels()
@@ -61,7 +60,7 @@ class PaymentFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentPaymentBinding.inflate(inflater, container, false)
+        binding = FragmentPaymentBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -196,8 +195,5 @@ class PaymentFragment : Fragment() {
         return dateFormat.format(Date())
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
+
 }

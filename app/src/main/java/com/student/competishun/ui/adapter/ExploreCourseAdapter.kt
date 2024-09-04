@@ -25,6 +25,7 @@ class ExploreCourseAdapter(
         holder.itemView.setOnClickListener {
             onItemClicked(course)
             Log.e("folder_Idada:", course.folderIds.toString())
+            Log.e("folder_Idada:", course.folderIds.toString())
         }
     }
 
