@@ -92,10 +92,10 @@ class NEETFragment : Fragment(), StudentCourseItemClickListener {
         val categoryName = arguments?.getString("category_name")
         val examType = arguments?.getString("exam_type")
         val filters = FindAllCourseInputStudent(
-            Optional.present(categoryName),
-            Optional.present(courseClass),
-            Optional.present(examType),
-            Optional.present(null)
+            category_name = Optional.present(categoryName),
+            course_class = Optional.present(courseClass),
+            exam_type = Optional.present(examType),
+            is_recommended = Optional.present(null)
         )
         setupTabLayout()
         courseViewModel.fetchCourses(filters)

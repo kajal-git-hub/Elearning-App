@@ -410,6 +410,29 @@
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintTop_toTopOf="@id/tvInstCoursePriceLabel" />
 
+                        <!-- Installment Charge -->
+                        <TextView
+                            android:id="@+id/tvInstallmentCharge"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="Installment Price"
+                            android:textColor="@color/_726c6c"
+                            android:textSize="14sp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/tvInstCoursePriceLabel" />
+
+                        <TextView
+                            android:id="@+id/tvInstallmentChargePrice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:textColor="@color/_2b2829"
+                            android:textSize="14sp"
+                            app:layout_constraintBottom_toBottomOf="@id/tvInstallmentCharge"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="@id/tvInstallmentCharge" />
+
                         <TextView
                             android:id="@+id/tvInstallmentLabel"
                             android:layout_width="wrap_content"
@@ -419,7 +442,7 @@
                             android:textColor="@color/_726c6c"
                             android:textSize="14sp"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/tvInstCoursePriceLabel" />
+                            app:layout_constraintTop_toBottomOf="@+id/tvInstallmentCharge" />
 
                         <TextView
                             android:id="@+id/tvInstallmentPrice"
@@ -443,7 +466,6 @@
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/tvInstallmentLabel" />
 
-
                         <TextView
                             android:id="@+id/tvInstallmentPrice2"
                             android:layout_width="wrap_content"
@@ -455,28 +477,6 @@
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintTop_toTopOf="@id/tvInstallmentLabel2" />
 
-                        <TextView
-                            android:id="@+id/tvInstallmentCharge"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:text="Installment Charge"
-                            android:textColor="@color/_726c6c"
-                            android:textSize="14sp"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/tvInstallmentLabel2" />
-
-                        <TextView
-                            android:id="@+id/tvInstallmentChargePrice"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text=""
-                            android:textColor="@color/_2b2829"
-                            android:textSize="14sp"
-                            app:layout_constraintBottom_toBottomOf="@id/tvInstallmentCharge"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="@id/tvInstallmentCharge" />
-
                         <!-- Discount -->
                         <TextView
                             android:id="@+id/tvInstDiscountLabel"
@@ -487,7 +487,7 @@
                             android:textColor="@color/_726c6c"
                             android:textSize="14sp"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/tvInstallmentCharge" />
+                            app:layout_constraintTop_toBottomOf="@id/tvInstallmentLabel2" />
 
                         <TextView
                             android:id="@+id/tvInstDiscount"
@@ -562,6 +562,7 @@
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintTop_toTopOf="@id/tvInstTotalAmountLabel" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
+
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

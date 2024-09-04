@@ -58,6 +58,13 @@ class CourseEmptyFragment : Fragment() {
         if (!sharedPreferencesManager.name.isNullOrEmpty()) {
             binding.welcomeUserTxt.text = "Hello, " + sharedPreferencesManager.name
         }
+
+
+       binding.profileIcon.setOnClickListener {
+           findNavController().navigate(R.id.action_courseEmptyFragment_to_ProfileFragment)
+       }
+
+
         // Log.e("userid  $userId: ",sharedPreferencesManager.userId.toString())
 //        if (!sharedPreferencesManager.userId.isNullOrEmpty()) {
 //            orderdetails(ordersViewModel,sharedPreferencesManager.userId.toString())
