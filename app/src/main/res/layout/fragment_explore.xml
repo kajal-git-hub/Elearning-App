@@ -107,7 +107,7 @@
                    <ImageView
                        android:id="@+id/iv_bannerExplore"
                        android:layout_width="match_parent"
-                       android:layout_height="280dp"
+                       android:layout_height="253dp"
                        android:src="@drawable/header__2_"
                        android:scaleType="centerCrop"
                        android:visibility="visible"
@@ -118,7 +118,7 @@
                    <androidx.media3.ui.PlayerView
                        android:id="@+id/playerView"
                        android:layout_width="match_parent"
-                       android:layout_height="wrap_content"
+                       android:layout_height="253dp"
                        android:visibility="gone"
                        app:layout_constraintTop_toTopOf="parent"
                        app:layout_constraintStart_toStartOf="parent"
