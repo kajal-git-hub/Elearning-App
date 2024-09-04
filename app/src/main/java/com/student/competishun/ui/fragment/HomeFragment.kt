@@ -52,7 +52,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class HomeFragment : Fragment(), OnCourseItemClickListener {
+class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private lateinit var recyclerView: RecyclerView
@@ -230,7 +230,16 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
                 Log.e("coursesCategor not", category.toString())
                 _binding?.rvOurCourses?.visibility = View.VISIBLE
                 listOurCoursesItem = category
-                adapterOurCourses = OurCoursesAdapter(listOurCoursesItem!!, this)
+                adapterOurCourses = OurCoursesAdapter(listOurCoursesItem!!, object :OnCourseItemClickListener{
+                    override fun onCourseItemClick(course: GetAllCourseCategoriesQuery.GetAllCourseCategory) {
+                        val bundle = Bundle().apply {
+                            putString("course_name", course.name)
+                            putString("category_id", course.id)
+
+                        }
+                        findNavController().navigate(R.id.action_homeFragment_to_coursesFragment, bundle)
+                    }
+                })
                 rvOurCourses.adapter = adapterOurCourses
                 rvOurCourses.layoutManager =
                     GridLayoutManager(context, 3, GridLayoutManager.HORIZONTAL, false)
@@ -371,14 +380,14 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
         }
     }
 
-    override fun onCourseItemClick(course: GetAllCourseCategoriesQuery.GetAllCourseCategory) {
-        val bundle = Bundle().apply {
-            putString("course_name", course.name)
-            putString("category_id", course.id)
-
-        }
-        findNavController().navigate(R.id.action_homeFragment_to_coursesFragment, bundle)
-    }
+//    override fun onCourseItemClick(course: GetAllCourseCategoriesQuery.GetAllCourseCategory) {
+//        val bundle = Bundle().apply {
+//            putString("course_name", course.name)
+//            putString("category_id", course.id)
+//
+//        }
+//        findNavController().navigate(R.id.action_homeFragment_to_coursesFragment, bundle)
+//    }
 
     fun getAllBanners() {
         val filtersbanner = FindAllBannersInput(
@@ -397,7 +406,12 @@ class HomeFragment : Fragment(), OnCourseItemClickListener {
                 }
 
                 val adapter = PromoBannerAdapter(bannerList) { redirectLink ->
-                    openLink(redirectLink)
+                    if(!redirectLink.isNullOrEmpty()){
+                        openLink(redirectLink)
+                    }else{
+                        Toast.makeText(requireContext(), "Redirect not available for this banner", Toast.LENGTH_SHORT).show()
+
+                    }
                 }
                 binding.rvpromobanner.adapter = adapter
                 binding.rvpromobanner.layoutManager =
