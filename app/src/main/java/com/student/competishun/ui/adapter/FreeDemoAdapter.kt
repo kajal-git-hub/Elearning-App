@@ -12,7 +12,6 @@ import com.student.competishun.curator.FindCourseFolderProgressQuery
 import com.student.competishun.data.model.FreeDemoItem
 
 class FreeDemoAdapter(private val demoItemList: List<FreeDemoItem>,
-                      private val subfolderDurationFolders: List<FindCourseFolderProgressQuery.Folder1>?,
                       private val onItemClick: (FreeDemoItem) -> Unit) :
     RecyclerView.Adapter<FreeDemoAdapter.ViewHolder>() {
 
@@ -23,7 +22,7 @@ class FreeDemoAdapter(private val demoItemList: List<FreeDemoItem>,
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val courseItem = demoItemList[position]
-        subfolderDurationFolders?.let { holder.bind(courseItem, it) }
+       // subfolderDurationFolders?.let { holder.bind(courseItem, it) }
 
         holder.itemView.setOnClickListener {
             onItemClick(courseItem)
@@ -44,11 +43,6 @@ class FreeDemoAdapter(private val demoItemList: List<FreeDemoItem>,
             titleTextView.text = item.titleDemo
             timeTextView.text = item.timeDemo
 
-            if (!subfolderDurationFolders.isNullOrEmpty()) {
-                Log.e("Subfolderdata",subfolderDurationFolders.get(0).name)
-                val folder = subfolderDurationFolders[adapterPosition]
-                titleTextView.text = folder.name
-            }
         }
     }
 }

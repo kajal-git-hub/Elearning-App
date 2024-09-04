@@ -9,5 +9,5 @@ data class FreeDemoItem(
     var timeDemo:String,
     var fileUrl: String,
     var fileType: String,
-    var subFolderduration: List<FindCourseFolderProgressQuery.Folder1>?
+
 )

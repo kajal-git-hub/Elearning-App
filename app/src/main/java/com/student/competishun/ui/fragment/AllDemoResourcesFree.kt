@@ -70,20 +70,34 @@ class AllDemoResourcesFree : Fragment() {
                 Log.e("GetFolderdata", data.toString())
                 val folderProgressFolder = data.findCourseFolderProgress.folder
                 val folderProgressContent = data.findCourseFolderProgress.folderContents
-                val subfolderDurationFolders = data.findCourseFolderProgress.subfolderDurations?.mapNotNull { it.folder }
+                val subfolderDurationFolders = data.findCourseFolderProgress.subfolderDurations
                 Log.e("subFolderdata", subfolderDurationFolders.toString())
                 if (folderProgressFolder != null) {
 
-
+                 if (!subfolderDurationFolders.isNullOrEmpty()){
+                     Log.e("insidefolders",subfolderDurationFolders.toString())
+                     val FolderItems = subfolderDurationFolders?.map { subfolderContent ->
+                         val folderName = subfolderContent.folder?.name ?: ""
+                         val completionPercentage = "${subfolderContent.completionPercentage} perc"
+                         val subFolder = subfolderContent?.folder
+                         Log.e("infoldersname",folderName.toString())
+                         FreeDemoItem(
+                             id = subFolder?.id.toString(),
+                             playIcon =  R.drawable.frame_1707480717, //static icon
+                             titleDemo = subFolder?.name.toString(),
+                             timeDemo =   "",
+                             fileUrl = "",
+                             fileType = ""
+                         )
+                     } ?: emptyList()
+                 }
 
                     val folderName = folderProgressFolder.name
 
                     val totalDuration = data.findCourseFolderProgress.videoDuration ?: 0.0
-
                     // Calculate duration per item or use a static value
                     val contentCount = folderProgressContent?.size ?: 0
                     val durationPerContent = if (contentCount > 0) totalDuration / contentCount else 0.0
-
                     // Map folderContents to FreeDemoItem
                     val freeItems = folderProgressContent?.map { folderContent ->
                         val fileName = folderContent.content?.course_track ?: "Unknown"
@@ -95,13 +109,10 @@ class AllDemoResourcesFree : Fragment() {
                             titleDemo = folderContent.content?.file_name.toString(),
                             timeDemo = if(folderContent.content?.file_type == FileType.PDF ){ ""} else {duration},
                             fileUrl = folderContent.content?.file_url.toString(),
-                            fileType = folderContent.content?.file_type?.name.toString(),
-                            subFolderduration = subfolderDurationFolders
+                            fileType = folderContent.content?.file_type?.name.toString()
                         )
                     } ?: emptyList()
-
-
-                        val freeDemoAdapter = FreeDemoAdapter(freeItems,subfolderDurationFolders) { freeDemoItem ->
+                        val freeDemoAdapter = FreeDemoAdapter(freeItems) { freeDemoItem ->
                             // Handle the item click
                             val fileType = freeDemoItem.fileType
                             if (fileType.equals("PDF")) {
