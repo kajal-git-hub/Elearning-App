@@ -416,7 +416,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
-                            android:text="Installment Charge"
+                            android:text="Installment Price"
                             android:textColor="@color/_726c6c"
                             android:textSize="14sp"
                             app:layout_constraintStart_toStartOf="parent"
