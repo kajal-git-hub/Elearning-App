@@ -148,6 +148,7 @@
                     android:id="@+id/tv_Class"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:visibility="gone"
                     android:fontFamily="@font/nunito"
                     android:text="11th"
                     android:textColor="@color/_2b2829"
@@ -155,46 +156,44 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <!-- Divider -->
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="10dp"
-                    android:layout_marginHorizontal="@dimen/_8dp"
-                    android:background="#898384"
-                    app:layout_constraintStart_toEndOf="@id/tv_Class"
-                    app:layout_constraintTop_toTopOf="parent" />
+<!--                &lt;!&ndash; Divider &ndash;&gt;-->
+<!--                <View-->
+<!--                    android:layout_width="1dp"-->
+<!--                    android:layout_height="10dp"-->
+<!--                    android:layout_marginHorizontal="@dimen/_8dp"-->
+<!--                    android:background="#898384"-->
+<!--                    app:layout_constraintStart_toEndOf="@id/tv_Class"-->
+<!--                    app:layout_constraintTop_toTopOf="parent" />-->
 
                 <!-- Exam Type -->
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/tv_ExamType"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/_8dp"
                     android:fontFamily="@font/nunito"
-                    android:text="IIT-JEE"
+                    android:hint="IIT-JEE"
                     android:textColor="@color/_2b2829"
                     android:textSize="@dimen/_14sp"
                     app:layout_constraintStart_toEndOf="@id/tv_Class"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <!-- Divider -->
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="10dp"
-                    android:layout_marginHorizontal="@dimen/_8dp"
-                    android:background="#898384"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/tv_ExamType"
-                    app:layout_constraintTop_toTopOf="parent" />
+<!--                &lt;!&ndash; Divider &ndash;&gt;-->
+<!--                <View-->
+<!--                    android:layout_width="1dp"-->
+<!--                    android:layout_height="10dp"-->
+<!--                    android:layout_marginHorizontal="@dimen/_8dp"-->
+<!--                    android:background="#898384"-->
+<!--                    app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                    app:layout_constraintStart_toEndOf="@id/tv_ExamType"-->
+<!--                    app:layout_constraintTop_toTopOf="parent" />-->
 
                 <!-- Year -->
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/tv_Year"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/_8dp"
                     android:fontFamily="@font/nunito"
-                    android:text="2026"
+                    android:hint="2026"
                     android:textColor="@color/_2b2829"
                     android:textSize="@dimen/_14sp"
                     app:layout_constraintStart_toEndOf="@id/tv_ExamType"
