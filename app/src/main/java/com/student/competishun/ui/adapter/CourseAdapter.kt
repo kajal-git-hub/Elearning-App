@@ -2,6 +2,7 @@ package com.student.competishun.ui.adapter
 
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -31,8 +32,16 @@ class CourseAdapter(
         val item = items[position]
 
         holder.binding.apply {
+
+            val courseTags = item.course_tags
+
+
             tvRecommendedCourseName.text = item.name
-            tvTag1.text = helperFunctions.toDisplayString(item.course_class?.name) + " Class"
+            tvTag1.apply {
+                text = courseTags?.getOrNull(0) ?: ""
+                visibility = if (text.isEmpty()) View.GONE else View.VISIBLE
+            }
+//            tvTag1.text = helperFunctions.toDisplayString(item.course_class?.name) + " Class"
             Log.e("courseclassval",helperFunctions.toDisplayString(item.course_class?.name))// Placeholder, change as needed
             orgPrice.text = "₹${item.price}"
             Log.e("cousediscount ${item.with_installment_price}",item.discount.toString()+ " " + item.price)
@@ -52,10 +61,17 @@ class CourseAdapter(
                 dicountPrice.text = "₹0"
                 discPer.text = "0% OFF"
             }
-
-            tvTag2.text = item.category_name?.split(" ")?.firstOrNull() ?: ""
+            tvTag2.apply {
+                text = courseTags?.getOrNull(1) ?: ""
+                visibility = if (text.isEmpty()) View.GONE else View.VISIBLE
+            }
+//            tvTag2.text = item.category_name?.split(" ")?.firstOrNull() ?: ""
             tvTag3.text = "Target ${item.target_year}"
 
+            tvTag4.apply {
+                text = courseTags?.getOrNull(2) ?: ""
+                visibility = if (text.isEmpty()) View.GONE else View.VISIBLE
+            }
             itemCourse.setOnClickListener {
                 listener.onCourseItemClicked(item)
             }

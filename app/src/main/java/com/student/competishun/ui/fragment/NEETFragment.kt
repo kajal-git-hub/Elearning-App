@@ -23,22 +23,11 @@ import com.student.competishun.utils.HelperFunctions
 import com.student.competishun.utils.StudentCourseItemClickListener
 import dagger.hilt.android.AndroidEntryPoint
 
-
-private const val TAG = "NEETFragment"
 @AndroidEntryPoint
 class NEETFragment : Fragment(), StudentCourseItemClickListener {
-    private lateinit var recyclerView: RecyclerView
     private lateinit var binding: FragmentCourseBinding
-    var courseListSize = ""
-    private lateinit var helperFunctions: HelperFunctions
     private val courseViewModel: StudentCoursesViewModel by viewModels()
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-
-        }
-
-    }
+    private lateinit var helperFunctions: HelperFunctions
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,11 +40,13 @@ class NEETFragment : Fragment(), StudentCourseItemClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         helperFunctions = HelperFunctions()
+        observeCourses()
         initializeTabLayout()
         setupTabLayout()
         setupRecyclerView()
+
         fetchCoursesForClass("11th")
-        observeCourses()
+
     }
 
     private fun setupRecyclerView() {
@@ -67,20 +58,15 @@ class NEETFragment : Fragment(), StudentCourseItemClickListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 tab?.let {
                     when (it.position) {
-                        0 ->  fetchCoursesForClass("11th")
+                        0 -> fetchCoursesForClass("11th")
                         1 -> fetchCoursesForClass("12th")
                         2 -> fetchCoursesForClass("12+")
                     }
                 }
             }
 
-            override fun onTabUnselected(tab: TabLayout.Tab?) {
-                // Handle tab unselected if needed
-            }
-
-            override fun onTabReselected(tab: TabLayout.Tab?) {
-                // Handle tab reselected if needed
-            }
+            override fun onTabUnselected(tab: TabLayout.Tab?) {}
+            override fun onTabReselected(tab: TabLayout.Tab?) {}
         })
     }
 
@@ -88,12 +74,11 @@ class NEETFragment : Fragment(), StudentCourseItemClickListener {
         val categoryName = arguments?.getString("category_name")
         val examType = arguments?.getString("exam_type")
         val filters = FindAllCourseInputStudent(
-            Optional.present(categoryName),
-            Optional.present(courseClass),
-            Optional.present(examType),
-            Optional.present(null)
+            category_name = Optional.present(categoryName),
+            course_class = Optional.present(courseClass),
+            exam_type = Optional.present(examType),
+            is_recommended = Optional.present(null)
         )
-        setupTabLayout()
         courseViewModel.fetchCourses(filters)
     }
 
@@ -101,34 +86,44 @@ class NEETFragment : Fragment(), StudentCourseItemClickListener {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             courseViewModel.courses.collect { result ->
                 result?.onSuccess { data ->
-                    Log.e(TAG , data.toString())
-                    val courseSize = data.getAllCourseForStudent.courses.size
+                    Log.e(TAG, data.toString())
 
-                    val courses = data.getAllCourseForStudent.courses.map { course ->
-                        val courseClass = course.course_class?.name?:""
-                       Log.e("couseacal",helperFunctions.toDisplayString(courseClass))
-                        when (helperFunctions.toDisplayString(courseClass)) {
-                            "11th" -> updateTabText(0, courseSize)
-                            "12th" -> updateTabText(1, courseSize)
-                            "12+" -> updateTabText(2, courseSize)
-                        }
-                        course.toCourse()
-                    } ?: emptyList()
-                    Log.d("courseFragment", courses.toString())
-                    binding.recyclerView.adapter = CourseAdapter(courses, this@NEETFragment)
+                    // Group courses by class
+                    val groupedCourses = data.getAllCourseForStudent.courses.groupBy { course ->
+                        helperFunctions.toDisplayString(course.course_class?.name ?: "")
+                    }
+
+                    // Get the sizes for each class
+                    val eleventhCoursesSize = groupedCourses["11th"]?.size ?: 0
+                    val twelfthCoursesSize = groupedCourses["12th"]?.size ?: 0
+                    val twelfthPlusCoursesSize = groupedCourses["12+"]?.size ?: 0
+
+                    // Log the sizes of each course class
+                    Log.d(TAG, "11th size: $eleventhCoursesSize")
+                    Log.d(TAG, "12th size: $twelfthCoursesSize")
+                    Log.d(TAG, "12+ size: $twelfthPlusCoursesSize")
+
+                    // Update tab text with course counts
+                    updateTabText(0, eleventhCoursesSize)
+                    updateTabText(1, twelfthCoursesSize)
+                    updateTabText(2, twelfthPlusCoursesSize)
+
+                    // Set up the adapter with all courses
+                    val allCourses = groupedCourses.values.flatten().map { it.toCourse() }
+                    binding.recyclerView.adapter = CourseAdapter(allCourses, this@NEETFragment)
+
                 }?.onFailure { exception ->
-                    // Handle the failure case
                     Log.e(TAG, exception.toString())
                 }
             }
         }
     }
 
+
     override fun onCourseItemClicked(course: AllCourseForStudentQuery.Course) {
         val bundle = Bundle().apply {
             putString("course_id", course.id)
         }
-        Log.e(TAG, course.id.toString())
         findNavController().navigate(R.id.action_coursesFragment_to_ExploreFragment, bundle)
     }
 
@@ -174,12 +169,13 @@ class NEETFragment : Fragment(), StudentCourseItemClickListener {
     }
 
     private fun initializeTabLayout() {
-        binding.studentTabLayout.getTabAt(0)?.text = "11th"
-        binding.studentTabLayout.getTabAt(1)?.text = "12th"
-        binding.studentTabLayout.getTabAt(2)?.text = "12th+"
+        binding.studentTabLayout.getTabAt(0)?.text = "11th(0)"
+        binding.studentTabLayout.getTabAt(1)?.text = "12th(0)"
+        binding.studentTabLayout.getTabAt(2)?.text = "12th+(0)"
     }
 
     companion object {
-        private const val TAG = "CourseFragment"
+        private const val TAG = "NEETFragment"
     }
 }
+
