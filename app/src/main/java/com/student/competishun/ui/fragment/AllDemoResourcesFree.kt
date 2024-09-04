@@ -74,24 +74,34 @@ class AllDemoResourcesFree : Fragment() {
                 Log.e("subFolderdata", subfolderDurationFolders.toString())
                 if (folderProgressFolder != null) {
 
-                 if (!subfolderDurationFolders.isNullOrEmpty()){
-                     Log.e("insidefolders",subfolderDurationFolders.toString())
-                     val FolderItems = subfolderDurationFolders?.map { subfolderContent ->
-                         val folderName = subfolderContent.folder?.name ?: ""
-                         val completionPercentage = "${subfolderContent.completionPercentage} perc"
-                         val subFolder = subfolderContent?.folder
-                         Log.e("infoldersname",folderName.toString())
-                         FreeDemoItem(
-                             id = subFolder?.id.toString(),
-                             playIcon =  R.drawable.frame_1707480717, //static icon
-                             titleDemo = subFolder?.name.toString(),
-                             timeDemo =   "",
-                             fileUrl = "",
-                             fileType = ""
-                         )
-                     } ?: emptyList()
-                 }
+                    if (!subfolderDurationFolders.isNullOrEmpty()){
+                        Log.e("insidefolders",subfolderDurationFolders.toString())
+                        val FolderItems = subfolderDurationFolders?.map { subfolderContent ->
+                            val folderName = subfolderContent.folder?.name ?: ""
+                            val completionPercentage = "${subfolderContent.completionPercentage} perc"
+                            val subFolder = subfolderContent?.folder
+                            Log.e("infoldersname",folderName.toString())
+                            FreeDemoItem(
+                                id = subFolder?.id.toString(),
+                                playIcon =  R.drawable.folder_bg, //static icon
+                                titleDemo = folderName,
+                                timeDemo =  "",
+                                fileUrl = "",
+                                fileType = ""
+                            )
+                        } ?: emptyList()
 
+                        val folderDemoAdapter = FreeDemoAdapter(FolderItems) { freeDemoItem ->
+
+                        }
+                        binding.rvAllDemoFree.apply {
+                            layoutManager = LinearLayoutManager(context)
+                            adapter = folderDemoAdapter
+
+                        }
+
+                    }else  {
+                        Log.e("subfoldernot availe",subfolderDurationFolders.toString())
                     val folderName = folderProgressFolder.name
 
                     val totalDuration = data.findCourseFolderProgress.videoDuration ?: 0.0
@@ -122,14 +132,6 @@ class AllDemoResourcesFree : Fragment() {
                                     freeDemoItem.fileUrl,
                                     freeDemoItem.titleDemo
                                 )
-                            } else if(!subfolderDurationFolders.isNullOrEmpty()){
-
-                                Log.e("fodername id ${freeDemoItem.id}",freeDemoItem.titleDemo)
-                                val bundle = Bundle().apply {
-                                    putString("folderId", freeDemoItem.id)
-                                    putString("folderName", freeDemoItem.titleDemo)
-                                }
-                                findNavController().navigate(R.id.action_exploreFragment_to_demoFreeFragment, bundle)
                             }
                             else
                             { (fileType)
@@ -141,6 +143,7 @@ class AllDemoResourcesFree : Fragment() {
                             adapter = freeDemoAdapter
 
                     }
+                        }
                 }
             }.onFailure { error ->
                 // Handle the error

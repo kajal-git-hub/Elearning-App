@@ -22,6 +22,7 @@ class FreeDemoAdapter(private val demoItemList: List<FreeDemoItem>,
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val courseItem = demoItemList[position]
+        holder.bind(courseItem)
        // subfolderDurationFolders?.let { holder.bind(courseItem, it) }
 
         holder.itemView.setOnClickListener {
@@ -38,7 +39,8 @@ class FreeDemoAdapter(private val demoItemList: List<FreeDemoItem>,
         private var titleTextView: TextView = itemView.findViewById(R.id.titleTextView)
         private var timeTextView: TextView = itemView.findViewById(R.id.timeTextView)
 
-        fun bind(item: FreeDemoItem,subfolderDurationFolders: List<FindCourseFolderProgressQuery.Folder1>) {
+        fun bind(item: FreeDemoItem) {
+            Log.d("FreeDemoAdapter", "Binding item: ${item.titleDemo}")
             iconImageView.setImageResource(item.playIcon)
             titleTextView.text = item.titleDemo
             timeTextView.text = item.timeDemo
