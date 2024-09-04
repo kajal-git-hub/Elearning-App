@@ -60,8 +60,11 @@ class RecommendedCoursesAdapter(
             Glide.with(holder.itemView.context)
 
                 .load(course.banner_image)
+                .placeholder(R.drawable.rectangle_1072)
+                .error(R.drawable.frame_1707480074)
                 .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
                 .into(holder.bannerImage)
+
 
         }
         holder.targetYear.text = "Target ${course.target_year}"

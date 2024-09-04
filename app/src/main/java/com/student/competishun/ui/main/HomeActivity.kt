@@ -56,7 +56,6 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
 
     private lateinit var navController: NavController
     private lateinit var binding: ActivityHomeBinding
-
     private lateinit var bottomNavigationView: BottomNavigationView
     lateinit var callIcon: ImageView
     private var isCallingSupportVisible = ObservableField(true)
