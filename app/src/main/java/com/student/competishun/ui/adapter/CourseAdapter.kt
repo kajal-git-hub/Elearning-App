@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.Target
+import com.student.competishun.R
 import com.student.competishun.curator.AllCourseForStudentQuery
 import com.student.competishun.databinding.ItemCourseBinding
 import com.student.competishun.utils.HelperFunctions
@@ -51,8 +52,9 @@ class CourseAdapter(
             tvQuizTests.text = "validity ${helperFunctions.formatCourseDate(item.course_validity_end_date.toString())}"
             tvLectureNo.text = "Lectures: ${(lectureCounts[item.id] ?: 0)}"
             Glide.with(holder.itemView.context)
-
                 .load(item.banner_image)
+                .placeholder(R.drawable.rectangle_1072)
+                .error(R.drawable.frame_1707480074)
                 .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
                 .into(ivImage)
             if (item.price != null && item.discount != null) {
