@@ -78,8 +78,9 @@ class HelperFunctions {
         if (price <= 0) {
             throw IllegalArgumentException("Price must be greater than 0")
         }
-        return ((price - discountPrice).toDouble() / price) * 100
+        return String.format("%.2f", ((price - discountPrice).toDouble() / price) * 100).toDouble()
     }
+
 
 
     fun calculateDiscountDetails(originalPrice: Double, discountPrice: Double): Pair<Double, Double> {
