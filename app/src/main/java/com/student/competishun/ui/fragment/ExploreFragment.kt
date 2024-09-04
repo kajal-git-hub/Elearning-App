@@ -98,45 +98,13 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-//        getCourseByIDViewModel.courseByID.observe(viewLifecycleOwner) { course ->
-//            course?.let {
-//                val imageUrl = it.video_thumbnail
-//                val videoUrl = it.orientation_video
-//
-//                Log.d("CourseVideoThumbnail", imageUrl ?: "No URL")
-//                Log.d("CourseOrientThumbnail", videoUrl ?: "No URL")
-//
-//                // Display the image thumbnail
-//              // downloadAndDisplayImage(imageUrl, binding.ivBannerExplore)
-//                Glide.with(requireContext())
-//                    .load(course.banner_image)
-//                    .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
-//                    .into(binding.ivBannerExplore)
-//                // Handle ImageView click to play video
-////                if (videoUrl!=null)
-////                binding.ivBannerExplore.setOnClickListener {
-////                    binding.ivBannerExplore.visibility = View.GONE
-////                    binding.videoView.visibility = View.VISIBLE
-////
-////                    // Set the video URI and start playing
-////                    binding.videoView.setVideoURI(Uri.parse(videoUrl))
-////                    binding.videoView.start()
-////
-////                    // Set up a listener for when the video completes
-////                    binding.videoView.setOnCompletionListener {
-////                        binding.videoView.visibility = View.GONE
-////                        binding.ivBannerExplore.visibility = View.VISIBLE
-////                    }
-////                }
-//            }
-//        }
-
+        val lectureCount = arguments?.getString("LectureCount")
         folderlist = emptyList()
         helperFunctions= HelperFunctions()
         combinedTabItems = listOf()
          courseId = arguments?.getString("course_id").toString()
         sharedPreferencesManager = SharedPreferencesManager(requireContext())
+        binding.tvLectureNo.text = "Lectures: $lectureCount"
         val items = mutableListOf(
             OurContentItem.FirstItem(
                 OurContentFirstItem(
@@ -195,6 +163,7 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
                 Log.d("CourseVideoThumbnail", imageUrl ?: "No URL")
                 Log.d("CourseOrientThumbnail", videoUrl ?: "No URL")
 
+// Display the image thumbnail
                 Glide.with(requireContext())
                     .load(courses?.banner_image)
                     .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)

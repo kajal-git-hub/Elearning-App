@@ -43,7 +43,7 @@ class ResumeCourseFragment : Fragment() {
             requireActivity().onBackPressed()
         }
         val folderIds: ArrayList<String>? = arguments?.getStringArrayList("folder_ids")
-
+        val folderNames: ArrayList<String>? = arguments?.getStringArrayList("folder_names")
         val courseName  =  arguments?.getString("courseName")
         binding.courseNameResumeCourse.text = courseName
         Log.d("resumename $courseName", "courseId: $folderIds")
@@ -112,13 +112,23 @@ class ResumeCourseFragment : Fragment() {
                     binding.clSM,
                     binding.clClassNotes
                 )
+
+
+
                 courseSetOnClickListener.forEach { view ->
                     Log.e("clickded on ",view.toString())
                     subfolderDurations?.forEach { folders ->
                         Log.e("subfolderDurations on ",folders.toString())
                         setupNavigation(view, folders.folder)
                     }
+
                 }
+
+//                textViews.forEachIndexed { index, textView ->
+//                    val folderName = data.findCourseFolderProgress.folder?.name?.getOrNull(index).
+//                    Log.e("foldernam", folderName)
+//                    textView.text = folderName
+//                }
 
 
             }.onFailure { error ->

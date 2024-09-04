@@ -7,6 +7,7 @@ import com.apollographql.apollo3.api.Optional
 import com.apollographql.apollo3.exception.ApolloException
 import com.student.competishun.curator.AllCourseForStudentQuery
 import com.student.competishun.curator.GetAllBannersQuery
+import com.student.competishun.curator.GetAllCourseLecturesCountQuery
 import com.student.competishun.curator.type.FindAllBannersInput
 import javax.inject.Inject
 import com.student.competishun.curator.type.FindAllCourseInputStudent
@@ -25,11 +26,29 @@ class StudentCourseRepository @Inject constructor(
             if (response.hasErrors()) {
                 Result.failure(Exception(response.errors?.first()?.message))
             } else {
-                Log.e("StudentCourseR","${response.data}")
+                Log.e("StudentCourseRepo","${response.data}")
                 Result.success(response.data!!)
             }
         } catch (e: Exception) {
+            Log.e("StudentCourseRepo", e.message ?: "Unknown error")
             Result.failure(e)
+        }
+    }
+
+    suspend fun getAllLectureCount(courseId: String): Result<GetAllCourseLecturesCountQuery.Data> {
+        return try {
+            val response = apolloClient.query(GetAllCourseLecturesCountQuery(courseId))
+                .execute()
+            if (response.hasErrors()) {
+                Result.failure(Exception(response.errors?.first()?.message))
+            } else {
+                Log.e("LectureRepository","${response.data}")
+                Result.success(response.data!!)
+            }
+        } catch (e: Exception) {
+            Log.e("LectureRepository", e.message ?: "Unknown error")
+            Result.failure(e)
+
         }
     }
 
