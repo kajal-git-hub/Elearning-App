@@ -11,6 +11,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.student.competishun.R
+import com.student.competishun.curator.MyCoursesQuery
 import com.student.competishun.data.model.ExploreCourse
 import com.student.competishun.databinding.FragmentCourseEmptyBinding
 import com.student.competishun.ui.adapter.ExploreCourseAdapter
@@ -171,6 +172,8 @@ class CourseEmptyFragment : Fragment() {
                         val tag1 = courseClass
                         val tag2 = courselist.course.category_name.orEmpty()
                         val folderlist = courselist.course.folder
+                        val progress: MyCoursesQuery.Progress = courselist.progress!!
+
                         courseDetailsList.add(
                             ExploreCourse(
                                 courselist.course.name,
@@ -180,7 +183,8 @@ class CourseEmptyFragment : Fragment() {
                                 courselist.course.status.toString(),
                                 coursepercent,
                                 hasFreeFolder,
-                                folderlist
+                                folderlist,
+                                progress
                             )
                         )
                         if (data.myCourses.isNotEmpty()) {
@@ -190,7 +194,9 @@ class CourseEmptyFragment : Fragment() {
                             val adapter = ExploreCourseAdapter(courseDetailsList) { course ->
                                 val bundle = Bundle()
                                 val folderIds = ArrayList(course.folderIds?.map { it.id } ?: emptyList())
+                                val folderNames = ArrayList(course.folderIds?.map { it.name } ?: emptyList())
                                 bundle.putStringArrayList("folder_ids", folderIds)
+                                bundle.putStringArrayList("folder_names",folderNames)
                                 bundle.putString("courseName", course.name)
                                 findNavController().navigate(
                                     R.id.action_courseEmptyFragment_to_ResumeCourseFragment, bundle)

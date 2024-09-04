@@ -1,6 +1,7 @@
 query AllCourseForStudent($filters: FindAllCourseInputStudent!){
     getAllCourseForStudent(filters: $filters) {
         courses {
+            id
             category_id
             category_name
             complementary_course
@@ -27,7 +28,6 @@ query AllCourseForStudent($filters: FindAllCourseInputStudent!){
             target_year
             with_installment_price
             planner_description
-            id
             exam_type
             entity_type
             course_features

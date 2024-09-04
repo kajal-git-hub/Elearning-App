@@ -98,7 +98,7 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
         super.onViewCreated(view, savedInstanceState)
 
 
-
+        val lectureCount = arguments?.getString("LectureCount")
         val mediaController = MediaController(context)
         binding.videoView.setMediaController(mediaController)
 
@@ -140,6 +140,7 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
         combinedTabItems = listOf()
          courseId = arguments?.getString("course_id").toString()
         sharedPreferencesManager = SharedPreferencesManager(requireContext())
+        binding.tvLectureNo.text = "Lectures: $lectureCount"
         val items = mutableListOf(
             OurContentItem.FirstItem(
                 OurContentFirstItem(

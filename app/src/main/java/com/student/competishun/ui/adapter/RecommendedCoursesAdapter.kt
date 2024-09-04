@@ -16,6 +16,7 @@ import com.student.competishun.utils.HelperFunctions
 
 class RecommendedCoursesAdapter(
     private val items: List<AllCourseForStudentQuery.Course>,
+    private val lectureCounts: Map<String, Int>,
     private val onItemClick: (AllCourseForStudentQuery.Course) -> Unit
 ) : RecyclerView.Adapter<RecommendedCoursesAdapter.CourseViewHolder>() {
 
@@ -52,9 +53,9 @@ class RecommendedCoursesAdapter(
         holder.courseName.text = "${course.name}  ${course.academic_year}"
 
         if (course.price != null && course.discount != null) {
-            val (discountPercent, discountPrice) = helperFunctions.calculateDiscountDetails(course.price.toDouble(), course.discount.toDouble())
+            val discountPercent = helperFunctions.calculateDiscountPercentage(course.price, course.discount)
             holder.discount.text = "${discountPercent.toInt()}% off"
-            holder.discountPrice.text = "₹$discountPrice"
+            holder.discountPrice.text = "₹${course.discount}"
             holder.originalPrice.text = "₹${course.price}"
             Glide.with(holder.itemView.context)
 
@@ -63,22 +64,10 @@ class RecommendedCoursesAdapter(
                 .into(holder.bannerImage)
 
         }
-//        if(course.course_class.toString() =="TWELFTH_PLUS"){
-//            holder.recommendedClass.text = "12th+ Class"
-//
-//        }else if(course.course_class.toString()=="TWELFTH"){
-//            holder.recommendedClass.text = "12th Class"
-//
-//        }
-//        else if(course.course_class.toString()=="ELEVENTH"){
-//            holder.recommendedClass.text = "11th Class"
-//
-//        }
         holder.targetYear.text = "Target ${course.target_year}"
         holder.startDate.text = "Starts On: "+helperFunctions.formatCourseDate(course.course_start_date.toString())
         holder.endDate.text = "Expiry Date: "+helperFunctions.formatCourseDate(course.course_end_date.toString())
-
-        holder.lectureCount.text = "Lectures: 0"
+        holder.lectureCount.text = "Lectures: ${(lectureCounts[course.id] ?: 0)}"
         holder.quizCount.text = "Validity: "+helperFunctions.formatCourseDate(course.course_validity_end_date.toString())
         holder.itemView.setOnClickListener {
             onItemClick(course)

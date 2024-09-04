@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import androidx.lifecycle.viewModelScope
 import com.student.competishun.curator.GetAllBannersQuery
+import com.student.competishun.curator.GetAllCourseLecturesCountQuery
 import com.student.competishun.curator.type.FindAllBannersInput
 import com.student.competishun.data.repository.StudentCourseRepository
 import kotlinx.coroutines.flow.asStateFlow
@@ -24,16 +25,29 @@ class StudentCoursesViewModel @Inject constructor(
     private val _courses = MutableStateFlow<Result<AllCourseForStudentQuery.Data>?>(null)
     val courses: StateFlow<Result<AllCourseForStudentQuery.Data>?> = _courses.asStateFlow()
 
+    private val _lectures = MutableStateFlow<Result<GetAllCourseLecturesCountQuery.Data>?>(null)
+    val lectures: StateFlow<Result<GetAllCourseLecturesCountQuery.Data>?> = _lectures.asStateFlow()
+
+    private val _banners = MutableStateFlow<List<GetAllBannersQuery.Banner?>?>(null)
+    val banners: StateFlow<List<GetAllBannersQuery.Banner?>?> = _banners
+
+
     fun fetchCourses(filters: FindAllCourseInputStudent) {
         viewModelScope.launch {
             val result = studentCourseRepository.getAllCourseForStudent(filters)
             _courses.value = result
-            Log.e("StudentCoursesViewModel","${result}")
+            Log.e("StudentCoursesVM","${result}")
         }
     }
 
-    private val _banners = MutableStateFlow<List<GetAllBannersQuery.Banner?>?>(null)
-    val banners: StateFlow<List<GetAllBannersQuery.Banner?>?> = _banners
+    fun fetchLectures(courseId: String) {
+        viewModelScope.launch {
+            val result = studentCourseRepository.getAllLectureCount(courseId)
+            _lectures.value = result
+            Log.e("LectureCountVM","${result}")
+        }
+    }
+
 
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading
