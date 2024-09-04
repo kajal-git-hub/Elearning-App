@@ -171,6 +171,9 @@
         <action
             android:id="@+id/action_courseEmptyFragment_to_ResumeCourseFragment"
             app:destination="@+id/ResumeCourseFragment" />
+        <action
+            android:id="@+id/action_courseEmptyFragment_to_ProfileFragment"
+            app:destination="@+id/ProfileFragment" />
     </fragment>
 
     <fragment
