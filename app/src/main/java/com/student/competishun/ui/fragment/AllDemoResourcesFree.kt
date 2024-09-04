@@ -74,8 +74,11 @@ class AllDemoResourcesFree : Fragment() {
                 Log.e("GetFolderdata", data.toString())
                 val folderProgressFolder = data.findCourseFolderProgress.folder
                 val folderProgressContent = data.findCourseFolderProgress.folderContents
-
+                val subFolderduration = data.findCourseFolderProgress.subfolderDurations
                 if (folderProgressFolder != null) {
+                    if (subFolderduration != null){
+
+                    }
                     val folderName = folderProgressFolder.name
 
                     val totalDuration = data.findCourseFolderProgress.videoDuration ?: 0.0
