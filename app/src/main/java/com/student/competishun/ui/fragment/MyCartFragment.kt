@@ -89,6 +89,7 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
         binding.CartTabLayout.visibility = View.GONE
         binding.clrvContainer.visibility = View.GONE
         binding.btnProceedToPay.visibility = View.GONE
+        binding.clPaymentSummary.visibility = View.GONE
         binding.clEmptyCart.visibility = View.VISIBLE
         binding.clEmptyCart.setOnClickListener {
 
@@ -147,6 +148,7 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
                 val cartItems = data.findAllCartItems.map { cartItemData ->
                     binding.clEmptyCart.visibility = View.GONE
                     binding.rvAllCart.visibility = View.VISIBLE
+                    binding.clPaymentSummary.visibility = View.VISIBLE
                     val course = cartItemData.course
                     courseName = course.name
                     if (!course.complementary_course.isNullOrEmpty())
@@ -301,6 +303,7 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
 
 
     private fun showFullPayment() {
+        binding.tvOneTimePayment.text = "One-Time Payment"
         cartAdapter.updateCartItems(originalCartItems)
         Log.e("getpaymentd",originalCartItems.get(0).toString())
         val discountPrice = (originalCartItems.get(0).price.toDouble() * originalCartItems.get(0).discount.toDouble()) / 100
@@ -323,6 +326,7 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
     }
 
     private fun showPartialPayment() {
+        binding.tvOneTimePayment.text = "1st Installment"
         val partialPaymentItems = originalCartItems.filter { it.withInstallmentPrice > 0 }
         cartAdapter.updateCartItems(partialPaymentItems)
         val discountPrice = (originalCartItems.get(0).price.toDouble() * originalCartItems.get(0).discount.toDouble()) / 100

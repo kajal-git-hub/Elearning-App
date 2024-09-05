@@ -308,7 +308,13 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
 
         }
 
-        if (firstInstallment>0) {
+        if (firstInstallment<=0) {
+            Log.d("firstInstallment",firstInstallment.toString())
+            binding.clInstallmentOptionView.visibility = View.GONE
+
+        }else{
+            Log.d("firstInstallment",firstInstallment.toString())
+            binding.clInstallmentOptionView.visibility = View.VISIBLE
             binding.clInstallmentOptionView.setOnClickListener {
 
                 showInstallmentDetailsBottomSheet(
