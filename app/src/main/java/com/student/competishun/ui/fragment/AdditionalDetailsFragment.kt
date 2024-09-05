@@ -62,6 +62,10 @@ class AdditionalDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
+        (activity as? HomeActivity)?.showBottomNavigationView(false)
+        (activity as? HomeActivity)?.showFloatingButton(false)
+
         userViewModel.userDetails.observe(viewLifecycleOwner) { result ->
             result.onSuccess { data ->
                 val userDetails = data.getMyDetails
@@ -196,7 +200,7 @@ class AdditionalDetailsFragment : Fragment() {
                 }
             }
         }
-        (activity as? HomeActivity)?.updateUiVisibility(this)
+//        (activity as? HomeActivity)?.updateUiVisibility(this)
     }
 
     private fun displaySelectedFile(uri: Uri, fileSize: String) {

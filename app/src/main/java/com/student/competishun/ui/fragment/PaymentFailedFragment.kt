@@ -9,6 +9,7 @@ import androidx.navigation.fragment.findNavController
 import com.student.competishun.R
 import com.student.competishun.databinding.FragmentPaymentBinding
 import com.student.competishun.databinding.FragmentPaymetFailedBinding
+import com.student.competishun.ui.main.HomeActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.callbackFlow
 
@@ -34,6 +35,11 @@ class PaymentFailedFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
+        (activity as? HomeActivity)?.showBottomNavigationView(false)
+        (activity as? HomeActivity)?.showFloatingButton(false)
+
           binding.btTryAgain.setOnClickListener{
               requireActivity().onBackPressedDispatcher.onBackPressed()
           }

@@ -9,6 +9,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import android.widget.MediaController
 import android.widget.TextView
 import android.widget.Toast
@@ -39,6 +43,7 @@ import com.student.competishun.curator.type.CreateCartItemDto
 import com.student.competishun.curator.type.EntityType
 import com.student.competishun.curator.type.FindAllCourseInputStudent
 import com.student.competishun.data.model.CourseFItem
+import com.student.competishun.data.model.ExploreCourse
 import com.student.competishun.data.model.FAQItem
 import com.student.competishun.data.model.OtherContentItem
 import com.student.competishun.data.model.OurContentFirstItem
@@ -48,9 +53,11 @@ import com.student.competishun.data.model.TeacherItem
 import com.student.competishun.databinding.FragmentExploreBinding
 import com.student.competishun.ui.adapter.CourseAdapter
 import com.student.competishun.ui.adapter.CourseFeaturesAdapter
+import com.student.competishun.ui.adapter.ExploreCourseAdapter
 import com.student.competishun.ui.adapter.FAQAdapter
 import com.student.competishun.ui.adapter.OurContentAdapter
 import com.student.competishun.ui.adapter.TeacherAdapter
+import com.student.competishun.ui.main.HomeActivity
 import com.student.competishun.ui.viewmodel.CoursesViewModel
 import com.student.competishun.ui.viewmodel.CreateCartViewModel
 import com.student.competishun.ui.viewmodel.GetCourseByIDViewModel
@@ -83,8 +90,9 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
     val lectureCounts = mutableMapOf<String, Int>()
     var firstInstallment:Int = 0
     var secondInstallment:Int = 0
+    val courseTaglist = ""
 
-    override fun onCreateView(
+        override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         binding = FragmentExploreBinding.inflate(inflater, container, false).apply {
@@ -98,6 +106,12 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
+        (activity as? HomeActivity)?.showBottomNavigationView(false)
+        (activity as? HomeActivity)?.showFloatingButton(true)
+
+        getCourseTagsData()
 
         var lectureCount = arguments?.getString("LectureCount")
         folderlist = emptyList()
@@ -553,6 +567,52 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
             })
 
     }
+
+    private fun getCourseTagsData() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            courseViewModel.courses.collect { result ->
+                when {
+                    result?.isSuccess == true -> {
+                        val data = result.onSuccess {
+                            it.getAllCourseForStudent.courses.map {
+
+                                binding.tvTag4.text =  it.target_year.toString()
+                                val courseTags = it.course_tags
+
+                                binding.tvTag1.apply {
+                                    text = courseTags?.getOrNull(0) ?: ""
+                                    visibility = if (text.isEmpty()) View.GONE else View.VISIBLE
+                                }
+                                binding.tvTag2.apply {
+                                    text = courseTags?.getOrNull(1) ?: ""
+                                    visibility = if (text.isEmpty()) View.GONE else View.VISIBLE
+                                }
+                                binding.tvTag3.apply {
+                                    text = courseTags?.getOrNull(2) ?: ""
+                                    visibility = if (text.isEmpty()) View.GONE else View.VISIBLE
+                                }
+
+                            }
+                        }
+                        Log.d("CourseTagsData", "Success: $data")
+                    }
+                    result?.isFailure == true -> {
+                        val exception = result.exceptionOrNull()
+                        Log.d("CourseTagsData", "Error: ${exception?.message}")
+                    }
+                    else -> {
+                        Log.d("CourseTagsData", "No data available")
+                    }
+                }
+            }
+        }
+
+        // Fetching the courses with desired filters
+        val filters = FindAllCourseInputStudent(/* initialize with required data */)
+        courseViewModel.fetchCourses(filters)
+    }
+
+
 
     override fun onFirstItemClick(folderId: String,folderName: String, free:Boolean) {
         val bundle = Bundle().apply {

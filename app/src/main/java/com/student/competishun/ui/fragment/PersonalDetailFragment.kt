@@ -22,6 +22,7 @@ import com.student.competishun.data.model.ExploreCourse
 import com.student.competishun.databinding.FragmentPersonalDetailBinding
 import com.student.competishun.gatekeeper.type.UpdateUserInput
 import com.student.competishun.ui.adapter.ExploreCourseAdapter
+import com.student.competishun.ui.main.HomeActivity
 import com.student.competishun.ui.viewmodel.MyCoursesViewModel
 import com.student.competishun.ui.viewmodel.UpdateUserViewModel
 import com.student.competishun.ui.viewmodel.UserViewModel
@@ -65,6 +66,10 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
+        (activity as? HomeActivity)?.showBottomNavigationView(false)
+        (activity as? HomeActivity)?.showFloatingButton(false)
 
         myCourses()
         Log.d("fieldsToVisible", fieldsToVisible.toString())

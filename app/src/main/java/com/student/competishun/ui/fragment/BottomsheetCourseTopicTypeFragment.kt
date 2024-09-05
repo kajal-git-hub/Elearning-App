@@ -9,6 +9,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.student.competishun.data.model.TopicTypeModel
 import com.student.competishun.databinding.FragmentBottomsheetCourseTopicTypeBinding
 import com.student.competishun.ui.adapter.TopicTypeAdapter
+import com.student.competishun.ui.main.HomeActivity
 
 
 class BottomsheetCourseTopicTypeFragment : BottomSheetDialogFragment() {
@@ -27,6 +28,11 @@ class BottomsheetCourseTopicTypeFragment : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
+
+        (activity as? HomeActivity)?.showBottomNavigationView(false)
+        (activity as? HomeActivity)?.showFloatingButton(false)
 
         val TopicTypeList = listOf(
             TopicTypeModel("Basic Maths (08)"),

@@ -20,6 +20,7 @@ import androidx.navigation.fragment.findNavController
 import com.otaliastudios.zoom.ZoomApi
 import com.otaliastudios.zoom.ZoomLayout
 import com.student.competishun.databinding.FragmentMediaPlayerBinding
+import com.student.competishun.ui.main.HomeActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -35,7 +36,7 @@ class MediaPlayerFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
-        requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
         binding = FragmentMediaPlayerBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -46,6 +47,8 @@ class MediaPlayerFragment : Fragment() {
 
 
 
+        (activity as? HomeActivity)?.showBottomNavigationView(false)
+        (activity as? HomeActivity)?.showFloatingButton(false)
 
         Log.d("reachedd","reacheddddd")
 

@@ -66,6 +66,12 @@ class PaymentFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
+        (activity as? HomeActivity)?.showBottomNavigationView(false)
+        (activity as? HomeActivity)?.showFloatingButton(false)
+
+
         val binding = binding
         helperFunctions= HelperFunctions()
         sharedPreferencesManager = SharedPreferencesManager(requireContext())

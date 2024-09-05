@@ -23,6 +23,7 @@ import com.student.competishun.curator.type.FileType
 import com.student.competishun.data.model.FreeDemoItem
 import com.student.competishun.ui.adapter.FreeDemoAdapter
 import com.student.competishun.databinding.FragmentAllDemoResourcesFreeBinding
+import com.student.competishun.ui.main.HomeActivity
 import com.student.competishun.ui.viewmodel.CoursesViewModel
 import com.student.competishun.ui.viewmodel.VideourlViewModel
 import com.student.competishun.utils.HelperFunctions
@@ -46,6 +47,12 @@ class AllDemoResourcesFree : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
+        (activity as? HomeActivity)?.showBottomNavigationView(false)
+        (activity as? HomeActivity)?.showFloatingButton(false)
+
+
         helperFunctions = HelperFunctions()
         var folderName = arguments?.getString("folderName")
         binding.igDemoBackButton.setOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed() }

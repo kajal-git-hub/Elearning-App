@@ -18,6 +18,7 @@ import com.student.competishun.databinding.FragmentSubjectContentBinding
 import com.student.competishun.ui.adapter.ExploreCourseAdapter
 import com.student.competishun.ui.adapter.FreeDemoAdapter
 import com.student.competishun.ui.adapter.SubjectContentAdapter
+import com.student.competishun.ui.main.HomeActivity
 import com.student.competishun.ui.viewmodel.CoursesViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -37,6 +38,11 @@ class SubjectContentFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
+        (activity as? HomeActivity)?.showBottomNavigationView(false)
+        (activity as? HomeActivity)?.showFloatingButton(false)
+
        // val folderId = arguments?.getString("folderId")
 
             folderProgress("81c5cc01-666c-4a97-a4b5-b153b1d9380e")

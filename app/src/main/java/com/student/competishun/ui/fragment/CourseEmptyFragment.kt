@@ -14,6 +14,7 @@ import com.student.competishun.R
 import com.student.competishun.data.model.ExploreCourse
 import com.student.competishun.databinding.FragmentCourseEmptyBinding
 import com.student.competishun.ui.adapter.ExploreCourseAdapter
+import com.student.competishun.ui.main.HomeActivity
 import com.student.competishun.ui.viewmodel.GetCourseByIDViewModel
 import com.student.competishun.ui.viewmodel.MyCoursesViewModel
 import com.student.competishun.ui.viewmodel.OrdersViewModel
@@ -51,6 +52,12 @@ class CourseEmptyFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
+        (activity as? HomeActivity)?.showBottomNavigationView(true)
+        (activity as? HomeActivity)?.showFloatingButton(false)
+
+
         sharedPreferencesManager = SharedPreferencesManager(requireContext())
         myCourses()
         var userId = arguments?.getString("user_id").toString()

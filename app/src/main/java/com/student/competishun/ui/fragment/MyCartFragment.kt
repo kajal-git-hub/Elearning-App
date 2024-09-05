@@ -77,6 +77,12 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
+        (activity as? HomeActivity)?.showBottomNavigationView(false)
+        (activity as? HomeActivity)?.showFloatingButton(false)
+
+
         var courseName:String = ""
 
         binding.MyCartNavigateToCourses.setOnClickListener {

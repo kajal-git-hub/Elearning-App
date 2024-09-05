@@ -10,6 +10,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.student.competishun.data.model.TSizeModel
 import com.student.competishun.databinding.FragmentBottomSheetTSizeBinding
 import com.student.competishun.ui.adapter.TshirtSizeAdapter
+import com.student.competishun.ui.main.HomeActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -34,6 +35,10 @@ class BottomSheetTSizeFragment : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
+        (activity as? HomeActivity)?.showBottomNavigationView(false)
+        (activity as? HomeActivity)?.showFloatingButton(false)
 
         selectedSize = arguments?.getString("selectedSize")
 

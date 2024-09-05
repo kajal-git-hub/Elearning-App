@@ -13,6 +13,7 @@ import com.student.competishun.R
 import com.student.competishun.curator.FindCourseFolderProgressQuery
 import com.student.competishun.curator.MyCoursesQuery
 import com.student.competishun.databinding.FragmentResumeCourseBinding
+import com.student.competishun.ui.main.HomeActivity
 import com.student.competishun.ui.viewmodel.CoursesViewModel
 import com.student.competishun.ui.viewmodel.MyCoursesViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -39,6 +40,11 @@ class ResumeCourseFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
+        (activity as? HomeActivity)?.showBottomNavigationView(false)
+        (activity as? HomeActivity)?.showFloatingButton(false)
+
         binding.backIcon.setOnClickListener {
             requireActivity().onBackPressed()
         }
