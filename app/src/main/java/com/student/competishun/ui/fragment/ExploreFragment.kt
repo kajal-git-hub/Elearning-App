@@ -99,13 +99,16 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val lectureCount = arguments?.getString("LectureCount")
+        var lectureCount = arguments?.getString("LectureCount")
         folderlist = emptyList()
         helperFunctions= HelperFunctions()
         combinedTabItems = listOf()
          courseId = arguments?.getString("course_id").toString()
         sharedPreferencesManager = SharedPreferencesManager(requireContext())
-        binding.tvLectureNo.text = "Lectures: $lectureCount"
+        if (lectureCount.isNullOrEmpty()) {
+            lectureCount = "0"
+            binding.tvLectureNo.text = "Lectures: $lectureCount"
+        }
         val items = mutableListOf(
             OurContentItem.FirstItem(
                 OurContentFirstItem(

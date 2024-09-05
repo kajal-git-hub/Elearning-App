@@ -221,15 +221,21 @@ type CourseFolder {
 
   folder_content: [CourseFolderContent!]
 
+  folder_count: String
+
   id: ID!
 
   name: String!
 
   parent_folder_id: String
 
+  pdf_count: String
+
   scheduled_time: DateTime
 
   updatedAt: DateTime!
+
+  video_count: String
 }
 
 type CourseFolderContent {
@@ -315,15 +321,21 @@ type CourseFolderWithCount {
 
   folder_content: [CourseFolderContent!]
 
+  folder_count: String
+
   id: ID!
 
   name: String!
 
   parent_folder_id: String
 
+  pdf_count: String
+
   scheduled_time: DateTime
 
   updatedAt: DateTime!
+
+  video_count: String
 }
 
 type CourseLectureCount {
@@ -463,19 +475,19 @@ input CreateCourseInput {
 }
 
 input CreateCoursePublishInput {
-  academic_year: String!
+  academic_year: String
 
   category_id: ID!
 
   complementary_course: ID
 
-  course_class: Class!
+  course_class: Class
 
   course_end_date: DateTime
 
-  course_features: [String!]!
+  course_features: [String!]
 
-  course_offline_material_shipment: Boolean!
+  course_offline_material_shipment: Boolean
 
   course_primary_teachers: [ID!]
 
@@ -483,41 +495,41 @@ input CreateCoursePublishInput {
 
   course_support_teachers: [ID!]
 
-  course_tags: [String!]!
+  course_tags: [String!]
 
-  course_type: CourseType!
+  course_type: CourseType
 
-  course_validity_end_date: DateTime!
+  course_validity_end_date: DateTime
 
   created_by: ID!
 
   customer_id: ID!
 
-  description: String!
+  description: String
 
   discount: Int
 
-  doubt_session: Boolean!
+  doubt_session: Boolean
 
-  exam_type: ExamType!
+  exam_type: ExamType
 
-  final_status: CourseStatus!
+  final_status: CourseStatus
 
   is_recommended: Boolean
 
-  live_date: DateTime!
+  live_date: DateTime
 
-  name: String!
+  name: String
 
-  other_requirements: [OtherRequirements!]!
+  other_requirements: [OtherRequirements!]
 
-  planner_description: String!
+  planner_description: String
 
-  price: Int!
+  price: Int
 
-  status: CourseStatus!
+  status: CourseStatus
 
-  target_year: Int!
+  target_year: Int
 
   with_installment_price: Int
 }
@@ -634,7 +646,7 @@ type Mutation {
 
   createCourseFolder(createCourseFolderInput: CreateCourseFolderInput!): CourseFolder!
 
-  createPublishCourse(banner_image: [Upload], createCoursePublishInput: CreateCoursePublishInput!, id: String, orientation_video: [Upload], planner_pdf: [Upload], video_thumbnail: [Upload]): Course!
+  createPublishCourse(banner_image: [Upload], createCoursePublishInput: CreateCoursePublishInput!, id: String!, orientation_video: [Upload], planner_pdf: [Upload], video_thumbnail: [Upload]): Course!
 
   deleteCourse(id: String!): Boolean!
 
@@ -702,8 +714,6 @@ type Query {
 
   findCourseFolderProgress(id: String!): CourseFolderLectureCount!
 
-  findCourseProgress(id: String!): CourseProgressResponseDto!
-
   findOne(id: String!): Cart!
 
   getAllBanners(filters: FindAllBannersInput): AllBannersResponseDto!
@@ -746,6 +756,8 @@ type StudentCourseTrack {
 
   course_folder_content_id: String!
 
+  course_id: String!
+
   createdAt: DateTime!
 
   current_duration: Int!
@@ -762,7 +774,7 @@ type StudentCourseTrack {
 }
 
 type SubfolderDuration {
-  completedDuration: Float!
+  completedDuration: Float
 
   completionPercentage: Float!
 
@@ -770,13 +782,13 @@ type SubfolderDuration {
 
   folderContents: [FolderContentWithCompletion!]
 
-  folderCount: Float!
+  folderCount: Float
 
   pdfCount: Float
 
   videoCount: Float
 
-  videoDuration: Float!
+  videoDuration: Float
 }
 
 input UpdateBannerInput {

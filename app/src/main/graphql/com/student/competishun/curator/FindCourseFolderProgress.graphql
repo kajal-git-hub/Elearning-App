@@ -29,6 +29,9 @@ query FindCourseFolderProgress($findCourseFolderProgressId: String!) {
             folder {
                 id
                 name
+                folder_count
+                video_count
+                pdf_count
             }
             folderCount
             completionPercentage
