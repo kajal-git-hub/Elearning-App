@@ -11,6 +11,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.student.competishun.R
+import com.student.competishun.curator.MyCoursesQuery
 import com.student.competishun.data.model.ExploreCourse
 import com.student.competishun.databinding.FragmentCourseEmptyBinding
 import com.student.competishun.ui.adapter.ExploreCourseAdapter
@@ -57,6 +58,13 @@ class CourseEmptyFragment : Fragment() {
         if (!sharedPreferencesManager.name.isNullOrEmpty()) {
             binding.welcomeUserTxt.text = "Hello, " + sharedPreferencesManager.name
         }
+
+
+       binding.profileIcon.setOnClickListener {
+           findNavController().navigate(R.id.action_courseEmptyFragment_to_ProfileFragment)
+       }
+
+
         // Log.e("userid  $userId: ",sharedPreferencesManager.userId.toString())
 //        if (!sharedPreferencesManager.userId.isNullOrEmpty()) {
 //            orderdetails(ordersViewModel,sharedPreferencesManager.userId.toString())
@@ -171,16 +179,21 @@ class CourseEmptyFragment : Fragment() {
                         val tag1 = courseClass
                         val tag2 = courselist.course.category_name.orEmpty()
                         val folderlist = courselist.course.folder
+                        Log.e("getingfolderlist",folderlist.toString())
+                        val progress: MyCoursesQuery.Progress = courselist.progress!!
+
                         courseDetailsList.add(
                             ExploreCourse(
                                 courselist.course.name,
                                 tag1,
                                 tag2,
                                 "Target ${courselist.course.target_year}",
+                                courselist.course.banner_image,
                                 courselist.course.status.toString(),
                                 coursepercent,
                                 hasFreeFolder,
-                                folderlist
+                                folderlist,
+                                progress
                             )
                         )
                         if (data.myCourses.isNotEmpty()) {
@@ -190,7 +203,9 @@ class CourseEmptyFragment : Fragment() {
                             val adapter = ExploreCourseAdapter(courseDetailsList) { course ->
                                 val bundle = Bundle()
                                 val folderIds = ArrayList(course.folderIds?.map { it.id } ?: emptyList())
+                                val folderNames = ArrayList(course.folderIds?.map { it.name } ?: emptyList())
                                 bundle.putStringArrayList("folder_ids", folderIds)
+                                bundle.putStringArrayList("folder_names",folderNames)
                                 bundle.putString("courseName", course.name)
                                 findNavController().navigate(
                                     R.id.action_courseEmptyFragment_to_ResumeCourseFragment, bundle)

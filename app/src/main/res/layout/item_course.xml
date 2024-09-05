@@ -77,6 +77,7 @@
                 android:background="@drawable/card_bg"
                 android:padding="6dp"
                 android:hint="12th Class"
+                android:gravity="center"
                 android:textColor="#5A5555"
                 android:textSize="12sp"
                 app:fontFamily="@font/nunito"
@@ -112,6 +113,21 @@
                 android:textSize="12sp"
                 app:fontFamily="@font/nunito"
                 app:layout_constraintStart_toEndOf="@id/tvTag2"
+                app:layout_constraintTop_toBottomOf="@id/tvRecommendedCourseName" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tvTag4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/card_bg"
+                android:padding="6dp"
+                android:gravity="center"
+                android:textColor="#5A5555"
+                android:textSize="12sp"
+                app:fontFamily="@font/nunito"
+                app:layout_constraintStart_toEndOf="@id/tvTag3"
                 app:layout_constraintTop_toBottomOf="@id/tvRecommendedCourseName" />
 
             <com.google.android.material.textview.MaterialTextView
@@ -155,7 +171,7 @@
                 android:drawableStart="@drawable/video_play__1_"
                 android:drawablePadding="6dp"
                 android:fontFamily="@font/nunito"
-                android:text="Lectures: 0"
+                android:hint="Lectures: 0"
                 android:textColor="#726C6C"
                 android:textSize="14sp"
                 android:textStyle="bold"
@@ -241,16 +257,32 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent">
 
-                <ImageView
+                <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/iv_image"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="11dp"
-                    android:paddingTop="29dp"
-                    android:paddingRight="7dp"
-                    android:src="@drawable/tech_image"
+                    android:layout_width="@dimen/_108dp"
+                    android:layout_height="158dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/rectangle_1072"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
+                    app:shapeAppearanceOverlay="@style/CustomImageShape"
+                    />
+
+<!--                <com.google.android.material.imageview.ShapeableImageView-->
+<!--                    android:id="@+id/recommendbanner"-->
+<!--                    android:layout_width="@dimen/_108dp"-->
+<!--                    android:layout_height="158dp"-->
+<!--                    android:layout_marginEnd="10dp"-->
+<!--                    android:scaleType="fitXY"-->
+<!--                    android:src="@drawable/rectangle_1072"-->
+<!--                    app:layout_constraintEnd_toEndOf="parent"-->
+<!--                    app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                    app:shapeAppearanceOverlay="@style/CustomImageShape" -->
+<!--                    />-->
+
+
+
+
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>

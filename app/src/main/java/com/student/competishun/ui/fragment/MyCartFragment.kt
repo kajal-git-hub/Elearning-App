@@ -26,6 +26,7 @@ import com.razorpay.Checkout
 import com.student.competishun.coinkeeper.CreateOrderMutation
 import com.student.competishun.coinkeeper.type.CreateOrderInput
 import com.student.competishun.curator.FindAllCartItemsQuery
+import com.student.competishun.ui.main.HomeActivity
 import com.student.competishun.ui.viewmodel.GetCourseByIDViewModel
 import com.student.competishun.ui.viewmodel.OrderViewModel
 import com.student.competishun.ui.viewmodel.UserViewModel
@@ -298,8 +299,10 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
 
 
 
+
     private fun showFullPayment() {
         cartAdapter.updateCartItems(originalCartItems)
+        Log.e("getpaymentd",originalCartItems.get(0).toString())
         val discountPrice = (originalCartItems.get(0).price.toDouble() * originalCartItems.get(0).discount.toDouble()) / 100
         binding.tvInstCoursePrice.text = "₹${originalCartItems.get(0).price}"
         binding.tvInstallmentPrice.visibility = View.GONE
@@ -311,11 +314,11 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
         binding.tvInstDiscountLabel.visibility = View.VISIBLE
         binding.tvInstDiscount.visibility = View.VISIBLE
         totalAmount = originalCartItems.get(0).price.toInt()
-        binding.tvInstDiscountLabel.text = "Discount (${helperFunctions.calculateDiscountDetails(originalCartItems.get(0).price.toDouble(),originalCartItems.get(0).discount.toDouble()).first}%)"
-        binding.tvInstDiscount.text = "- ₹${originalCartItems.get(0).discount.toDouble()}"
+        binding.tvInstDiscountLabel.text = "Discount (${helperFunctions.calculateDiscountPercentage(originalCartItems.get(0).price,originalCartItems.get(0).discount)}%)"
+        binding.tvInstDiscount.text = "- ₹${(originalCartItems.get(0).price.toDouble()).minus(originalCartItems.get(0).discount.toDouble())}"
         fullAmount = (helperFunctions.calculateDiscountDetails(originalCartItems.get(0).price.toDouble(),originalCartItems.get(0).discount.toDouble()).second)
         binding.tvPrice.text =  "₹${(helperFunctions.calculateDiscountDetails(originalCartItems.get(0).price.toDouble(),originalCartItems.get(0).discount.toDouble()).second)}"
-        binding.tvInstTotalAmount.text = "₹${fullAmount}"
+        binding.tvInstTotalAmount.text = "₹${originalCartItems.get(0).discount}"
 
     }
 
@@ -324,7 +327,7 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
         cartAdapter.updateCartItems(partialPaymentItems)
         val discountPrice = (originalCartItems.get(0).price.toDouble() * originalCartItems.get(0).discount.toDouble()) / 100
         var discountPriceVal = (helperFunctions.calculateDiscountDetails(originalCartItems.get(0).price.toDouble(),discountPrice).second)
-       var firstInstallment = ((originalCartItems.get(0).price.toDouble() + originalCartItems.get(0).withInstallmentPrice.toDouble()))*0.6
+       var firstInstallment = ((originalCartItems.get(0).withInstallmentPrice.toDouble()))*0.6
         var secondInstallment = (originalCartItems.get(0).price.toDouble()) - firstInstallment
         totalAmount = originalCartItems.get(0).price
 //        var  firstInstallment = originalCartItems.get(0).withInstallmentPrice
@@ -338,12 +341,12 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
         binding.tvInstDiscountLabel.visibility = View.GONE
         binding.tvInstDiscount.visibility = View.GONE
         binding.tvPrice.text =  "₹${firstInstallment}"
-        var installmentChart = originalCartItems.get(0).withInstallmentPrice
-        binding.tvInstTotalAmount.text =  "₹${firstInstallment + secondInstallment}"
+        var installmentChart = originalCartItems.get(0).withInstallmentPrice.minus(originalCartItems.get(0).price)
+        binding.tvInstTotalAmount.text =  "₹${originalCartItems.get(0).withInstallmentPrice}"
         binding.tvInstCoursePrice.text = "₹${originalCartItems.get(0).price}"
         binding.tvInstallmentPrice.text = "₹${firstInstallment}"
         binding.tvInstallmentPrice2.text = "₹${secondInstallment}"
-        binding.tvInstallmentChargePrice.text =  "₹${installmentChart}"
+        binding.tvInstallmentChargePrice.text =  "₹${originalCartItems.get(0).withInstallmentPrice}"
     }
 
     private fun processPayment(order: CreateOrderMutation.CreateOrder) {

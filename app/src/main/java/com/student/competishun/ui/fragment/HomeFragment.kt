@@ -16,8 +16,10 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -47,6 +49,7 @@ import com.student.competishun.utils.Constants
 import com.student.competishun.utils.HelperFunctions
 import com.student.competishun.utils.OnCourseItemClickListener
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
@@ -69,7 +72,7 @@ class HomeFragment : Fragment() {
     private lateinit var dotsIndicatorOurCourses: LinearLayout
     private lateinit var adapterOurCourses: OurCoursesAdapter
     private var listOurCoursesItem: List<GetAllCourseCategoriesQuery.GetAllCourseCategory>? = null
-
+    val lectureCounts = mutableMapOf<String, Int>()
     private lateinit var recommendedCourseList: List<RecommendedCourseDataModel>
 
     private lateinit var helperFunctions: HelperFunctions
@@ -456,10 +459,14 @@ class HomeFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             studentCoursesViewModel.courses.collect { result ->
                 result?.onSuccess { data ->
-                    Log.e("gettiStudent", data.toString())
+                    Log.e("StudentCourses", data.toString())
                     val courses = data.getAllCourseForStudent.courses.map { course ->
                         binding.progressBarRec.visibility = View.GONE
                         binding.rvRecommendedCourses.visibility = View.VISIBLE
+                        getAllLectureCount(course.id) { courseId, lectureCount ->
+                            lectureCounts[courseId] = lectureCount
+                            binding.rvRecommendedCourses.adapter?.notifyDataSetChanged()
+                        }
                         AllCourseForStudentQuery.Course(
                             discount = course.discount,
                             name = course.name,
@@ -488,26 +495,12 @@ class HomeFragment : Fragment() {
                             banners = course.banners
                         )
                     } ?: emptyList()
-
-
-//                    courses.forEach { course ->
-//                        Log.e("Course", course.toString())
-//                        Log.e("bannersList", course.banners.toString())
-//                        course.banners?.forEach { banner ->
-//                            bannerList.add(
-//                                PromoBannerModel(
-//                                    banner.mobile_banner_image,
-//                                    banner.redirect_link
-//                                )
-//                            )
-//                        }
-//                    }
-
-
                     binding.rvRecommendedCourses.adapter = courses?.let { courseList ->
-                        RecommendedCoursesAdapter(courseList) { selectedCourse ->
+                        RecommendedCoursesAdapter(courseList, lectureCounts) { selectedCourse ->
+                            val lectureCount = lectureCounts[selectedCourse.id]?.toString() ?: "0"
                             val bundle = Bundle().apply {
                                 putString("course_id", selectedCourse.id)
+                                putString("LectureCount", lectureCount)
                             }
                             findNavController().navigate(R.id.exploreFragment, bundle)
                         }
@@ -556,6 +549,25 @@ class HomeFragment : Fragment() {
                 ).show()
             }
 
+        }
+    }
+
+    fun getAllLectureCount(courseId: String, callback: (String, Int) -> Unit){
+
+        studentCoursesViewModel.fetchLectures(courseId)
+        Log.e("getcourseIds",courseId)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                studentCoursesViewModel.lectures.collect { result ->
+                    result?.onSuccess { lecture ->
+                        val count = lecture.getAllCourseLecturesCount.lecture_count.toInt()
+                        Log.e("lectureCount",count.toString())
+                        callback(courseId, count)
+                    }?.onFailure { exception ->
+                        Log.e("LectureException", exception.toString())
+                    }
+                }
+            }
         }
     }
     private fun openLink(redirectLink: String) {

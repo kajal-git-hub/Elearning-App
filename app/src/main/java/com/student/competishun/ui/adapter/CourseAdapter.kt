@@ -2,10 +2,12 @@ package com.student.competishun.ui.adapter
 
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.Target
+import com.student.competishun.R
 import com.student.competishun.curator.AllCourseForStudentQuery
 import com.student.competishun.databinding.ItemCourseBinding
 import com.student.competishun.utils.HelperFunctions
@@ -13,6 +15,7 @@ import com.student.competishun.utils.StudentCourseItemClickListener
 
 class CourseAdapter(
     private var items: List<AllCourseForStudentQuery.Course>,
+    private val lectureCounts: Map<String, Int>,
     private val listener: StudentCourseItemClickListener
 ) : RecyclerView.Adapter<CourseAdapter.CourseViewHolder>() {
 
@@ -31,17 +34,27 @@ class CourseAdapter(
         val item = items[position]
 
         holder.binding.apply {
+
+            val courseTags = item.course_tags
+
+
             tvRecommendedCourseName.text = item.name
-            tvTag1.text = helperFunctions.toDisplayString(item.course_class?.name) + " Class"
+            tvTag1.apply {
+                text = courseTags?.getOrNull(0) ?: ""
+                visibility = if (text.isEmpty()) View.GONE else View.VISIBLE
+            }
+//            tvTag1.text = helperFunctions.toDisplayString(item.course_class?.name) + " Class"
             Log.e("courseclassval",helperFunctions.toDisplayString(item.course_class?.name))// Placeholder, change as needed
             orgPrice.text = "₹${item.price}"
             Log.e("cousediscount ${item.with_installment_price}",item.discount.toString()+ " " + item.price)
             tvStartDate.text = "Starts On: ${helperFunctions.formatCourseDate(item.course_start_date.toString())}"
             tvEndDate.text = "Expiry Date: ${helperFunctions.formatCourseDate(item.course_end_date.toString())}"
             tvQuizTests.text = "validity ${helperFunctions.formatCourseDate(item.course_validity_end_date.toString())}"
+            tvLectureNo.text = "Lectures: ${(lectureCounts[item.id] ?: 0)}"
             Glide.with(holder.itemView.context)
-
                 .load(item.banner_image)
+                .placeholder(R.drawable.rectangle_1072)
+                .error(R.drawable.frame_1707480074)
                 .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
                 .into(ivImage)
             if (item.price != null && item.discount != null) {
@@ -52,10 +65,17 @@ class CourseAdapter(
                 dicountPrice.text = "₹0"
                 discPer.text = "0% OFF"
             }
-
-            tvTag2.text = item.category_name?.split(" ")?.firstOrNull() ?: ""
+            tvTag2.apply {
+                text = courseTags?.getOrNull(1) ?: ""
+                visibility = if (text.isEmpty()) View.GONE else View.VISIBLE
+            }
+//            tvTag2.text = item.category_name?.split(" ")?.firstOrNull() ?: ""
             tvTag3.text = "Target ${item.target_year}"
 
+            tvTag4.apply {
+                text = courseTags?.getOrNull(2) ?: ""
+                visibility = if (text.isEmpty()) View.GONE else View.VISIBLE
+            }
             itemCourse.setOnClickListener {
                 listener.onCourseItemClicked(item)
             }

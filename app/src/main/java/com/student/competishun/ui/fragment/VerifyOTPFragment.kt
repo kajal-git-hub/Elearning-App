@@ -31,6 +31,7 @@ import com.student.competishun.databinding.FragmentVerifyBinding
 import com.student.competishun.gatekeeper.UpdateUserMutation
 import com.student.competishun.ui.main.HomeActivity
 import com.student.competishun.ui.main.MainActivity
+import com.student.competishun.ui.viewmodel.GetOtpViewModel
 import com.student.competishun.ui.viewmodel.UserViewModel
 import com.student.competishun.ui.viewmodel.VerifyOtpViewModel
 import com.student.competishun.utils.SharedPreferencesManager
@@ -42,6 +43,7 @@ class VerifyOTPFragment : Fragment() {
     private var _binding: FragmentVerifyBinding? = null
     private val binding get() = _binding!!
     private val verifyOtpViewModel: VerifyOtpViewModel by viewModels()
+    private val otpViewModel: GetOtpViewModel by viewModels()
     private val userViewModel: UserViewModel by viewModels()
 
     private var mobileNumber: String? = null
@@ -289,10 +291,25 @@ class VerifyOTPFragment : Fragment() {
                     binding.etTimeText.visibility = View.VISIBLE
                     binding.etResendText.visibility = View.GONE
                     startTimer()  // Restart the timer
+                    sendOTPRequest()
                 }
             }
         }
         countDownTimer.start()
+    }
+
+    private fun sendOTPRequest() {
+
+        otpViewModel.getOtp(countryCode.toString(), mobileNumber.toString())
+        otpViewModel.otpResult.observe(viewLifecycleOwner) { result ->
+
+            if (result == true ) {
+//                countryCode?.let { mobileNo?.let { it1 -> navigateToVerifyOtpFragment(it, it1) } }
+                Log.d("OTPsENT","OTP has been sent")
+            } else {
+                Log.d("OTPnOTSent","OTP not get yet")
+            }
+        }
     }
 
     override fun onDestroyView() {

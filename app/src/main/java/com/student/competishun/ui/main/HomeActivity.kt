@@ -5,6 +5,7 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.View
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -15,6 +16,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.razorpay.PaymentResultListener
 import com.student.competishun.R
 import com.student.competishun.databinding.ActivityHomeBinding
@@ -54,6 +56,8 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
 
     private lateinit var navController: NavController
     private lateinit var binding: ActivityHomeBinding
+    private lateinit var bottomNavigationView: BottomNavigationView
+    lateinit var callIcon: ImageView
     private var isCallingSupportVisible = ObservableField(true)
     lateinit var sharedPreferencesManager: SharedPreferencesManager
     var courseType:String = ""
@@ -66,6 +70,9 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
         setContentView(binding.root)
 
         sharedPreferencesManager = SharedPreferencesManager(this)
+
+        bottomNavigationView = findViewById(R.id.bottomNav)
+        callIcon = findViewById(R.id.ig_ContactImage)
 
 
         val savePaymentSuccess = sharedPreferencesManager.getBoolean("savePaymentSuccess", false)

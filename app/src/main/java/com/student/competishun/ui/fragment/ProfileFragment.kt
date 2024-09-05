@@ -68,7 +68,7 @@ class ProfileFragment : Fragment() {
         binding.ProfileUserName.text = sharedPreferencesManager.name
         binding.ProfileEmail.text = sharedPreferencesManager.mobileNo
         binding.tvExamType.text = sharedPreferencesManager.preparingFor
-        binding.tvYear.text= sharedPreferencesManager.targetYear.toString()
+        binding.tvYear.text= "| "+sharedPreferencesManager.targetYear.toString()
     }
 
 }

@@ -18,12 +18,15 @@ import com.student.competishun.databinding.FragmentRecommendViewDetailBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 import androidx.appcompat.widget.SearchView
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.student.competishun.curator.AllCourseForStudentQuery
 import com.student.competishun.curator.type.FindAllCourseInputStudent
 import com.student.competishun.data.model.PromoBannerModel
 import com.student.competishun.ui.viewmodel.StudentCoursesViewModel
 import com.student.competishun.ui.viewmodel.UserViewModel
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class RecommendViewDetail : Fragment() {
@@ -34,7 +37,7 @@ class RecommendViewDetail : Fragment() {
     private var _binding: FragmentRecommendViewDetailBinding? = null
     private val binding get() = _binding!!
     private lateinit var adapter: RecommendViewAllAdapter
-
+    val lectureCounts = mutableMapOf<String, Int>()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -89,13 +92,19 @@ class RecommendViewDetail : Fragment() {
         }
         val filters = FindAllCourseInputStudent(Optional.Absent,Optional.Absent, Optional.present(courseTypes),Optional.present(true))
         studentCoursesViewModel.fetchCourses(filters)
-
+        binding.progressBarRec.visibility = View.VISIBLE
+        binding.rvRecommendedCourses.visibility = View.GONE
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             studentCoursesViewModel.courses.collect { result ->
                 result?.onSuccess { data ->
                     Log.e("gettiStudent",data.toString())
-                    val courses = data.getAllCourseForStudent.courses.map {
-                            course ->
+                    val courses = data.getAllCourseForStudent.courses.map { course ->
+                        binding.progressBarRec.visibility = View.GONE
+                        binding.rvRecommendedCourses.visibility = View.VISIBLE
+                        getAllLectureCount(course.id) { courseId, lectureCount ->
+                            lectureCounts[courseId] = lectureCount
+                            binding.rvRecommendedCourses.adapter?.notifyDataSetChanged()
+                        }
                         AllCourseForStudentQuery.Course(
                             discount = course.discount,
                             name = course.name,
@@ -126,13 +135,16 @@ class RecommendViewDetail : Fragment() {
                     } ?: emptyList()
 
 
-                    binding.rvRecommendedCourses.adapter =
-                        RecommendedCoursesAdapter(courses) { selectedCourse ->
+                    binding.rvRecommendedCourses.adapter = courses?.let { courseList ->
+                        RecommendedCoursesAdapter(courseList, lectureCounts) { selectedCourse ->
+                            val lectureCount = lectureCounts[selectedCourse.id]?.toString() ?: "0"
                             val bundle = Bundle().apply {
                                 putString("course_id", selectedCourse.id)
+                                putString("LectureCount", lectureCount)
                             }
-                            findNavController().navigate(R.id.exploreFragment,bundle)
+                            findNavController().navigate(R.id.exploreFragment, bundle)
                         }
+                    }
                     binding.rvRecommendedCourses.layoutManager =
                         LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
@@ -159,7 +171,24 @@ class RecommendViewDetail : Fragment() {
             }
         })
     }
+    fun getAllLectureCount(courseId: String, callback: (String, Int) -> Unit){
 
+        studentCoursesViewModel.fetchLectures(courseId)
+        Log.e("getcourseIds",courseId)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                studentCoursesViewModel.lectures.collect { result ->
+                    result?.onSuccess { lecture ->
+                        val count = lecture.getAllCourseLecturesCount.lecture_count.toInt()
+                        Log.e("lectureCount",count.toString())
+                        callback(courseId, count)
+                    }?.onFailure { exception ->
+                        Log.e("LectureException", exception.toString())
+                    }
+                }
+            }
+        }
+    }
     fun getMyDetails() {
         userViewModel.fetchUserDetails()
         userViewModel.userDetails.observe(viewLifecycleOwner) { result ->

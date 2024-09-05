@@ -8,6 +8,10 @@ query MyCourses {
             price
             target_year
             status
+            banners {
+                mobile_banner_image
+            }
+            banner_image
             other_requirements
             exam_type
             category_name

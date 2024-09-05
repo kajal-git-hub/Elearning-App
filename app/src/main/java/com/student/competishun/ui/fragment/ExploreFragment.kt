@@ -80,6 +80,7 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
     private lateinit var courseId:String
     lateinit var folderlist:List<GetCourseByIdQuery.Folder>
     private lateinit var helperFunctions: HelperFunctions
+    val lectureCounts = mutableMapOf<String, Int>()
     var firstInstallment:Int = 0
     var secondInstallment:Int = 0
 
@@ -98,45 +99,16 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-//        getCourseByIDViewModel.courseByID.observe(viewLifecycleOwner) { course ->
-//            course?.let {
-//                val imageUrl = it.video_thumbnail
-//                val videoUrl = it.orientation_video
-//
-//                Log.d("CourseVideoThumbnail", imageUrl ?: "No URL")
-//                Log.d("CourseOrientThumbnail", videoUrl ?: "No URL")
-//
-//                // Display the image thumbnail
-//              // downloadAndDisplayImage(imageUrl, binding.ivBannerExplore)
-//                Glide.with(requireContext())
-//                    .load(course.banner_image)
-//                    .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
-//                    .into(binding.ivBannerExplore)
-//                // Handle ImageView click to play video
-////                if (videoUrl!=null)
-////                binding.ivBannerExplore.setOnClickListener {
-////                    binding.ivBannerExplore.visibility = View.GONE
-////                    binding.videoView.visibility = View.VISIBLE
-////
-////                    // Set the video URI and start playing
-////                    binding.videoView.setVideoURI(Uri.parse(videoUrl))
-////                    binding.videoView.start()
-////
-////                    // Set up a listener for when the video completes
-////                    binding.videoView.setOnCompletionListener {
-////                        binding.videoView.visibility = View.GONE
-////                        binding.ivBannerExplore.visibility = View.VISIBLE
-////                    }
-////                }
-//            }
-//        }
-
+        var lectureCount = arguments?.getString("LectureCount")
         folderlist = emptyList()
         helperFunctions= HelperFunctions()
         combinedTabItems = listOf()
          courseId = arguments?.getString("course_id").toString()
         sharedPreferencesManager = SharedPreferencesManager(requireContext())
+        if (lectureCount.isNullOrEmpty()) {
+            lectureCount = "0"
+            binding.tvLectureNo.text = "Lectures: $lectureCount"
+        }
         val items = mutableListOf(
             OurContentItem.FirstItem(
                 OurContentFirstItem(
@@ -195,6 +167,7 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
                 Log.d("CourseVideoThumbnail", imageUrl ?: "No URL")
                 Log.d("CourseOrientThumbnail", videoUrl ?: "No URL")
 
+// Display the image thumbnail
                 Glide.with(requireContext())
                     .load(courses?.banner_image)
                     .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
@@ -303,7 +276,7 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
                    // firstInstallment = ((((courses.price?.plus(courses.with_installment_price?:0)))?:0 *(0.6)).toInt())
                     Log.e("installmentd $installmentPrice1",coursePrice.toString())
                     firstInstallment = (installmentPrice1*(0.6)).toInt()
-                    secondInstallment = (coursePrice - firstInstallment)
+                    secondInstallment = (coursePrice.minus( firstInstallment))
                     Log.e("secon $installmentPrice1 $coursePrice",secondInstallment.toString()+ "discount $discount")
 
                     binding.tvCourseName.text = courses.name
@@ -334,15 +307,19 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
 
         }
 
-
+        if (firstInstallment>0) {
             binding.clInstallmentOptionView.setOnClickListener {
 
-                showInstallmentDetailsBottomSheet(firstInstallment.toInt(), secondInstallment.toInt())
+                showInstallmentDetailsBottomSheet(
+                    firstInstallment.toInt(),
+                    secondInstallment.toInt()
+                )
 //                val bottomSheet = InstallmentDetailsBottomSheet().apply {
 //                    setInstallmentData(firstInstallment.toInt(), secondInstallment.toInt())
 //                }
 //                bottomSheet.show(parentFragmentManager, "InstallmentDetailsBottomSheet")
             }
+        }
 
             helperFunctions = HelperFunctions()
 
@@ -506,7 +483,7 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
                             )
                         } ?: emptyList()
                         binding.rvRelatedCourses.adapter =
-                            CourseAdapter(courses, this@ExploreFragment)
+                            CourseAdapter(courses,lectureCounts, this@ExploreFragment)
                     }?.onFailure { exception ->
                         // Handle the failure case
                         Log.e("gettiStudentfaik", exception.toString())

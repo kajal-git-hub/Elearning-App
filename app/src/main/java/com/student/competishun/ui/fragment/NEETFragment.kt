@@ -7,7 +7,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.student.competishun.R
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,6 +24,7 @@ import com.student.competishun.ui.viewmodel.StudentCoursesViewModel
 import com.student.competishun.utils.HelperFunctions
 import com.student.competishun.utils.StudentCourseItemClickListener
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 
 private const val TAG = "NEETFragment"
@@ -30,6 +33,7 @@ class NEETFragment : Fragment(), StudentCourseItemClickListener {
     private lateinit var recyclerView: RecyclerView
     private lateinit var binding: FragmentCourseBinding
     var courseListSize = ""
+    val lectureCounts = mutableMapOf<String, Int>()
     private lateinit var helperFunctions: HelperFunctions
     private val courseViewModel: StudentCoursesViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -88,10 +92,10 @@ class NEETFragment : Fragment(), StudentCourseItemClickListener {
         val categoryName = arguments?.getString("category_name")
         val examType = arguments?.getString("exam_type")
         val filters = FindAllCourseInputStudent(
-            Optional.present(categoryName),
-            Optional.present(courseClass),
-            Optional.present(examType),
-            Optional.present(null)
+            category_name = Optional.present(categoryName),
+            course_class = Optional.present(courseClass),
+            exam_type = Optional.present(examType),
+            is_recommended = Optional.present(null)
         )
         setupTabLayout()
         courseViewModel.fetchCourses(filters)
@@ -105,8 +109,13 @@ class NEETFragment : Fragment(), StudentCourseItemClickListener {
                     val courseSize = data.getAllCourseForStudent.courses.size
 
                     val courses = data.getAllCourseForStudent.courses.map { course ->
+
+                        getAllLectureCount(course.id) { courseId, lectureCount ->
+                            lectureCounts[courseId] = lectureCount
+                            binding.recyclerView.adapter?.notifyDataSetChanged()
+                        }
                         val courseClass = course.course_class?.name?:""
-                       Log.e("couseacal",helperFunctions.toDisplayString(courseClass))
+                       Log.e("NEETcouseacal",helperFunctions.toDisplayString(courseClass))
                         when (helperFunctions.toDisplayString(courseClass)) {
                             "11th" -> updateTabText(0, courseSize)
                             "12th" -> updateTabText(1, courseSize)
@@ -114,8 +123,8 @@ class NEETFragment : Fragment(), StudentCourseItemClickListener {
                         }
                         course.toCourse()
                     } ?: emptyList()
-                    Log.d("courseFragment", courses.toString())
-                    binding.recyclerView.adapter = CourseAdapter(courses, this@NEETFragment)
+                    Log.d("NEETFragment", courses.toString())
+                    binding.recyclerView.adapter = CourseAdapter(courses,lectureCounts, this@NEETFragment)
                 }?.onFailure { exception ->
                     // Handle the failure case
                     Log.e(TAG, exception.toString())
@@ -160,6 +169,25 @@ class NEETFragment : Fragment(), StudentCourseItemClickListener {
             course_end_date = this.course_end_date,
             banners = this.banners
         )
+    }
+
+    fun getAllLectureCount(courseId: String, callback: (String, Int) -> Unit){
+
+        courseViewModel.fetchLectures(courseId)
+        Log.e("getcourseIds",courseId)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                courseViewModel.lectures.collect { result ->
+                    result?.onSuccess { lecture ->
+                        val count = lecture.getAllCourseLecturesCount.lecture_count.toInt()
+                        Log.e("lectureCount",count.toString())
+                        callback(courseId, count)
+                    }?.onFailure { exception ->
+                        Log.e("LectureException", exception.toString())
+                    }
+                }
+            }
+        }
     }
 
     private fun updateTabText(position: Int, courseSize: Int) {
