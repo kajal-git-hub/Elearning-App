@@ -117,12 +117,14 @@ class ResumeCourseFragment : Fragment() {
 
                     if (!subfolderDurationFolders.isNullOrEmpty()){
                         Log.e("subfolderDurationszs", subfolderDurationFolders.toString())
-                       // getFolderList(subfolderDurationFolders)
+                        findNavController().navigate(R.id.TopicTYPEContentFragment)
                     }
                     else {
                         if (subfolderDurationFolders.isNullOrEmpty()) {
                             Log.e("folderContentsss", data.findCourseFolderProgress.folderContents.toString())
-                          //  getFileList(data, folderProgressContent, free)
+
+                            findNavController().navigate(R.id.action_resumeCourseFragment_to_subjectContentFragment)
+
                         }
                     }
                 }
@@ -216,13 +218,12 @@ class ResumeCourseFragment : Fragment() {
 
     private fun setupNavigation(view: View, subFolder: String) {
         Log.e("subfoleer",subFolder.toString())
-        //folderProgress(subFolder)
+
         view.setOnClickListener {
+
            if (subFolder != null) {
-                findNavController().navigate(R.id.TopicTYPEContentFragment)
-            } else {
-                findNavController().navigate(R.id.action_resumeCourseFragment_to_subjectContentFragment)
-            }
+               folderProgress(subFolder)
+           }
         }
     }
 
