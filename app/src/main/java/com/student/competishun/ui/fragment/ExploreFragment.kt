@@ -235,6 +235,7 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
               //  binding.tvCoursePlannerDescription.text = courses?.planner_description
                 if (courses?.planner_pdf != null)
                 binding.clGetPlanner.setOnClickListener {
+                    Log.d("planner_pdf",courses.planner_pdf)
                     helperFunctions.showDownloadDialog(requireContext(),courses.planner_pdf, "Planner")
                 } else   Toast.makeText(requireContext(), "Upload Soon...", Toast.LENGTH_LONG).show()
                 if (courses != null) {
