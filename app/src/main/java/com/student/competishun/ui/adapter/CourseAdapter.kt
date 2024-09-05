@@ -54,7 +54,7 @@ class CourseAdapter(
             Glide.with(holder.itemView.context)
                 .load(item.banner_image)
                 .placeholder(R.drawable.rectangle_1072)
-                .error(R.drawable.frame_1707480074)
+                .error(R.drawable.default_image)
                 .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
                 .into(ivImage)
             if (item.price != null && item.discount != null) {

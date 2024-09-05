@@ -28,7 +28,7 @@ class ExploreCourseAdapter(
         Glide.with(holder.itemView.context)
             .load(course.bannerImage)
             .placeholder(R.drawable.rectangle_1072)
-            .error(R.drawable.frame_1707480074)
+            .error(R.drawable.default_image)
             .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
             .into(holder.binding.ivPurchased)
 

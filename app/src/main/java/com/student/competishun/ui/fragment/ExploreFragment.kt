@@ -235,6 +235,7 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
               //  binding.tvCoursePlannerDescription.text = courses?.planner_description
                 if (courses?.planner_pdf != null)
                 binding.clGetPlanner.setOnClickListener {
+                    Log.d("planner_pdf",courses.planner_pdf)
                     helperFunctions.showDownloadDialog(requireContext(),courses.planner_pdf, "Planner")
                 } else   Toast.makeText(requireContext(), "Upload Soon...", Toast.LENGTH_LONG).show()
                 if (courses != null) {
@@ -375,9 +376,23 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
 
 
             val teacherItems = listOf(
-                TeacherItem(R.drawable.teacher_bg, "Narayan Verma", "Mathematics"),
-                TeacherItem(R.drawable.teacher_bg, "Alok Srivastav", "Physics"),
-                TeacherItem(R.drawable.teacher_bg, "Vijay Bhatt", "Chemistry"),
+                TeacherItem(R.drawable.teacher_bg, "ALOK KUMAR", "CHEMISTRY (P/I)"),
+                TeacherItem(R.drawable.teacher_bg, "NEERAJ SAINI", "CHEMISTRY (ORG)"),
+                TeacherItem(R.drawable.teacher_bg, "MOHIT TYAGI", "MATHEMATICS"),
+                TeacherItem(R.drawable.teacher_bg, "AMIT BIJARNIA", "PHYSICS"),
+                TeacherItem(R.drawable.teacher_bg, "RAJAT JAIN", "MATHEMATICS"),
+                TeacherItem(R.drawable.teacher_bg, "NISHA SINSINWAR", "SST"),
+                TeacherItem(R.drawable.teacher_bg, "POONAM GUPTA", "BIOLOGY"),
+                TeacherItem(R.drawable.teacher_bg, "DEEPIKA RAIKANWAR", "CHEMISTRY"),
+                TeacherItem(R.drawable.teacher_bg, "DEEPAK KUMAR SHARMA", "MATHEMATICS"),
+                TeacherItem(R.drawable.teacher_bg, "ROHIT KUMAR GUPTA", "CHEMISTRY"),
+                TeacherItem(R.drawable.teacher_bg, "SATVEER GURJAR", "PHYSICS"),
+                TeacherItem(R.drawable.teacher_bg, "AKSHAY MATHUR", "CHEMISTRY"),
+                TeacherItem(R.drawable.teacher_bg, "ARPIT AGARWAL", "PHYSICS"),
+                TeacherItem(R.drawable.teacher_bg, "CHETAN KUMAWAT", "MATHEMATICS"),
+                TeacherItem(R.drawable.teacher_bg, "DHEERAJ SONI", "PHYSICS"),
+                TeacherItem(R.drawable.teacher_bg, "UDAY PAUL", "CHEMISTRY"),
+                TeacherItem(R.drawable.teacher_bg, "RITESH PATANI", "PHYSICS"),
             )
             val teacherAdapter = TeacherAdapter(teacherItems)
             binding.rvMeetTeachers.apply {
@@ -442,10 +457,10 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
             })
 
             val filters = FindAllCourseInputStudent(
-                Optional.present("Complimentary Course"),
-                Optional.present("12th"),
-                Optional.present(null),
-                Optional.present(null)
+                category_name = Optional.present("Complimentary Course"),
+                course_class = Optional.present("12th"),
+                exam_type = Optional.present(null),
+                is_recommended = Optional.present(null)
             )
             courseViewModel.fetchCourses(filters)
 

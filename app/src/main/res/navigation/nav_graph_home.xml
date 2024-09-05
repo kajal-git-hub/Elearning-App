@@ -240,4 +240,17 @@
     </fragment>
 
 
+    <fragment
+        android:id="@+id/ContactUs"
+        android:name="com.student.competishun.ui.fragment.ContactUsFragment"
+        tools:layout="@layout/fragment_contact_us">
+    </fragment>
+
+    <fragment
+        android:id="@+id/AboutUs"
+        android:name="com.student.competishun.ui.fragment.AboutUsFragment"
+        tools:layout="@layout/fragment_about_us">
+    </fragment>
+
+
 </navigation>
