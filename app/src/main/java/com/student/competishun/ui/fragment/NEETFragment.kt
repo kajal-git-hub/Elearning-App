@@ -139,7 +139,7 @@ class NEETFragment : Fragment(), StudentCourseItemClickListener {
         }
     }
 
-    override fun onCourseItemClicked(course: AllCourseForStudentQuery.Course) {
+    override fun onCourseItemClicked(course: AllCourseForStudentQuery.Course,bundle: Bundle) {
         val bundle = Bundle().apply {
             putString("course_id", course.id)
         }

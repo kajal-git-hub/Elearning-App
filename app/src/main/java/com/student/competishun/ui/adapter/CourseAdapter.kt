@@ -1,5 +1,6 @@
 package com.student.competishun.ui.adapter
 
+import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +13,7 @@ import com.student.competishun.curator.AllCourseForStudentQuery
 import com.student.competishun.databinding.ItemCourseBinding
 import com.student.competishun.utils.HelperFunctions
 import com.student.competishun.utils.StudentCourseItemClickListener
+import java.util.ArrayList
 
 class CourseAdapter(
     private var items: List<AllCourseForStudentQuery.Course>,
@@ -36,6 +38,9 @@ class CourseAdapter(
         holder.binding.apply {
 
             val courseTags = item.course_tags
+
+            val bundle = Bundle()
+            bundle.putStringArrayList("courseTags", courseTags as ArrayList<String>?)
 
 
             tvRecommendedCourseName.text = item.name
@@ -77,8 +82,13 @@ class CourseAdapter(
                 visibility = if (text.isEmpty()) View.GONE else View.VISIBLE
             }
             itemCourse.setOnClickListener {
-                listener.onCourseItemClicked(item)
+                val bundle = Bundle().apply {
+                    putString("course_id", item.id)
+                    putStringArrayList("course_tags", item.course_tags as ArrayList<String>?)
+                }
+                listener.onCourseItemClicked(item, bundle)
             }
+
         }
     }
 

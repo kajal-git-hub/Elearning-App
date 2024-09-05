@@ -139,7 +139,7 @@ class CourseFragment : Fragment(), StudentCourseItemClickListener {
         }
     }
 
-    override fun onCourseItemClicked(course: AllCourseForStudentQuery.Course) {
+    override fun onCourseItemClicked(course: AllCourseForStudentQuery.Course,bundle: Bundle) {
         val bundle = Bundle().apply {
             putString("course_id", course.id)
         }
@@ -215,4 +215,9 @@ class CourseFragment : Fragment(), StudentCourseItemClickListener {
     companion object {
         private const val TAG = "CourseFragment"
     }
+
+//    override fun onCourseItemClicked(course: AllCourseForStudentQuery.Course, bundle: Bundle) {
+//        findNavController().navigate(R.id.action_coursesFragment_to_ExploreFragment, bundle)
+//
+//    }
 }

@@ -107,6 +107,9 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val courseTags = arguments?.getStringArrayList("course_tags")
+
+        Log.d("courseTags", courseTags.toString())
 
         (activity as? HomeActivity)?.showBottomNavigationView(false)
         (activity as? HomeActivity)?.showFloatingButton(true)
@@ -245,7 +248,7 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
 
                 Log.e("listcourses", courses.toString())
                 binding.progressBar.visibility = View.GONE
-                binding.tvQuizTests.text = "Validity: "+ helperFunctions.formatCourseDate(courses?.course_validity_end_date.toString())
+                binding.ExpireValidity.text = "]Validity: "+ helperFunctions.formatCourseDate(courses?.course_validity_end_date.toString())
               //  binding.tvCoursePlannerDescription.text = courses?.planner_description
                 if (courses?.planner_pdf != null)
                 binding.clGetPlanner.setOnClickListener {
@@ -302,7 +305,7 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
                     val disountprice = ((courses.price?:0)-((courses.discount?:0)))
                     binding.dicountPricexp.text = "₹${courses.discount}"
                     binding.tvStartDate.text = "Starts On: "+helperFunctions.formatCourseDate(courses.course_start_date.toString())
-                    binding.tvEndDate.text ="Expiry Date: "+helperFunctions.formatCourseDate(courses.course_end_date.toString())
+                    binding.tvEndDate.text ="Ends On: "+helperFunctions.formatCourseDate(courses.course_end_date.toString())
 
                     val newItems = courses.folder?.map { folder -> mapFolderToOurContentItem(folder) } ?: emptyList()
                      val freeCourse = courses.folder?.get(0)?.name?.split(" ")?.get(0)
@@ -576,7 +579,7 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
                         val data = result.onSuccess {
                             it.getAllCourseForStudent.courses.map {
 
-                                binding.tvTag4.text =  it.target_year.toString()
+                                binding.tvTag4.text =  "Target "+it.target_year.toString()
                                 val courseTags = it.course_tags
 
                                 binding.tvTag1.apply {
@@ -730,7 +733,7 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
 
     }
 
-    override fun onCourseItemClicked(course: AllCourseForStudentQuery.Course) {
+    override fun onCourseItemClicked(course: AllCourseForStudentQuery.Course,bundle: Bundle) {
         val bundle = Bundle().apply {
             putString("course_id", course.id)
         }
@@ -749,6 +752,7 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
         }
         bottomSheet.show(parentFragmentManager, "InstallmentDetailsBottomSheet")
     }
+
 
 
 
