@@ -12,13 +12,6 @@ query GetAllCourse($filters: FindAllCourseInput) {
 
             course_class
             course_end_date
-            banners {
-                mobile_banner_image_name
-                mobile_banner_image
-                id
-                course_id
-                redirect_link
-            }
             with_installment_price
             description
             course_tags

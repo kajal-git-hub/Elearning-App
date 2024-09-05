@@ -13,11 +13,6 @@ query AllCourseForStudent($filters: FindAllCourseInputStudent!){
             course_features
             course_type
             course_end_date
-            banners {
-                id
-                redirect_link
-                mobile_banner_image
-            }
             course_validity_end_date
             discount
             course_support_teachers

@@ -492,7 +492,6 @@ class HomeFragment : Fragment() {
                             planner_description = course.planner_description,
                             with_installment_price = course.with_installment_price,
                             course_end_date = course.course_end_date,
-                            banners = course.banners
                         )
                     } ?: emptyList()
                     binding.rvRecommendedCourses.adapter = courses?.let { courseList ->

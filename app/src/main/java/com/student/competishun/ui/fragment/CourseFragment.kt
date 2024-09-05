@@ -166,7 +166,6 @@ class CourseFragment : Fragment(), StudentCourseItemClickListener {
             planner_description = this.planner_description,
             with_installment_price = this.with_installment_price,
             course_end_date = this.course_end_date,
-            banners = this.banners
         )
     }
 
