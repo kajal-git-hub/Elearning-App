@@ -24,9 +24,9 @@ class ResumeCourseFragment : Fragment() {
     private val binding get() = _binding!!
     private val myCourseViewModel: MyCoursesViewModel by viewModels()
     private val coursesViewModel: CoursesViewModel by viewModels()
-//    private val folderId: String? by lazy {
-//        arguments?.getString("folder_Id")
-//    }
+    var folderNames:ArrayList<String>? = null
+    var folderIds: ArrayList<String>? = null
+
 
 
     override fun onCreateView(
@@ -42,19 +42,20 @@ class ResumeCourseFragment : Fragment() {
         binding.backIcon.setOnClickListener {
             requireActivity().onBackPressed()
         }
-        val folderIds: ArrayList<String>? = arguments?.getStringArrayList("folder_ids")
-        val folderNames: ArrayList<String>? = arguments?.getStringArrayList("folder_names")
+        folderIds = arguments?.getStringArrayList("folder_ids")
+         folderNames = arguments?.getStringArrayList("folder_names")
+        var progress = arguments?.getDouble("progress")?:0.0
         val courseName  =  arguments?.getString("courseName")
+
         binding.courseNameResumeCourse.text = courseName
         Log.d("resumename $courseName", "folderIds: $folderIds")
         Log.e("ffoldername $folderNames", "folders: $folderIds")
-        folderIds?.forEach{ folderProgress(it) }
         Log.d("resumecourse name $courseName", "courseId: $folderIds")
-        dataBind(folderNames, folderIds)
         binding.backIcon.setOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed() }
         binding.clResumeCourseIcon2.setOnClickListener {
             findNavController().navigate(R.id.action_resumeCourseFragment_to_ScheduleFragment)
         }
+        dataBind(folderNames,folderIds,progress)
         showShimmer()
         myCourse()
     }
@@ -98,56 +99,44 @@ class ResumeCourseFragment : Fragment() {
         binding.courseNameResumeCourse.text = course.course.name
     }
 
-    fun folderProgress(folderId:String){
+    private fun folderProgress(folderId:String){
+        Log.e("folderProgress",folderId)
+        val free = arguments?.getBoolean("free")
         if (folderId != null) {
+            // Trigger the API call
             coursesViewModel.findCourseFolderProgress(folderId)
         }
         coursesViewModel.courseFolderProgress.observe(viewLifecycleOwner) { result ->
             result.onSuccess { data ->
-                Log.e("GetFolderdata", data.findCourseFolderProgress.folder.toString())
-                val subfolderDurations = data.findCourseFolderProgress.subfolderDurations
-                Log.e("subfolderDurations", subfolderDurations.toString())
-                val courseSetOnClickListener = listOf(
-                    binding.clMathematics,
-                    binding.clChemistry,
-                    binding.clPhysics,
-                    binding.clSM,
-                    binding.clClassNotes
-                )
+                Log.e("GetFolderdata", data.toString())
+                val folderProgressFolder = data.findCourseFolderProgress.folder
+                val folderProgressContent = data.findCourseFolderProgress.folderContents
+                val subfolderDurationFolders = data.findCourseFolderProgress.subfolderDurations
+                Log.e("subFolderdata", subfolderDurationFolders.toString())
+                if (folderProgressFolder != null) {
 
-
-
-                courseSetOnClickListener.forEach { view ->
-                    Log.e("clickded on ",view.toString())
-                    subfolderDurations?.forEach { folders ->
-                        Log.e("subfolderDurations on ",folders.toString())
-                        setupNavigation(view, folders.folder)
+                    if (!subfolderDurationFolders.isNullOrEmpty()){
+                        Log.e("subfolderDurationszs", subfolderDurationFolders.toString())
+                       // getFolderList(subfolderDurationFolders)
                     }
-
+                    else {
+                        if (subfolderDurationFolders.isNullOrEmpty()) {
+                            Log.e("folderContentsss", data.findCourseFolderProgress.folderContents.toString())
+                          //  getFileList(data, folderProgressContent, free)
+                        }
+                    }
                 }
-
-//                textViews.forEachIndexed { index, textView ->
-//                    val folderName = data.findCourseFolderProgress.folder?.name?.getOrNull(index).
-//                    Log.e("foldernam", folderName)
-//                    textView.text = folderName
-//                }
-
-
             }.onFailure { error ->
+                // Handle the error
                 Log.e("AllDemoResourcesFree", error.message.toString())
             }
         }
     }
 
-    private fun dataBind(folderIds: ArrayList<String>?, folderNames: ArrayList<String>?) {
+    private fun dataBind(folderNames: ArrayList<String>?, folderIds: ArrayList<String>?,completionPercentage:Double) {
+
         if (folderIds != null && folderNames !=null) {
-            val progressIndicators = listOf(
-                binding.customProgressIndicatorMathematics,
-                binding.customProgressIndicatorChemistry,
-                binding.customProgressIndicatorPhysics,
-                binding.customProgressIndicatorSM,
-                binding.customProgressIndicatorClassNotes
-            )
+
 
             val textViews = listOf(
                 binding.tvMathematics,
@@ -156,12 +145,25 @@ class ResumeCourseFragment : Fragment() {
                 binding.tvSM,
                 binding.tvClassNotes
             )
+            textViews.forEachIndexed { index, textView ->
+                val folderName = folderNames?.getOrNull(index) ?: "NA"
+                Log.e("foldernam", folderName)
+                textView.text = folderName
+            }
+
             val textPercentage = listOf(
                 binding.tvPercentCompletedMathematics,
                 binding.tvPercentCompletedChemistry,
                 binding.tvPercentCompletedPhysics,
                 binding.tvPercentCompletedSM,
                 binding.tvPercentCompletedClassNotes
+            )
+            val courseSetOnClickListener = listOf(
+                binding.clMathematics,
+                binding.clChemistry,
+                binding.clPhysics,
+                binding.clSM,
+                binding.clClassNotes
             )
 
             val textchapterCount = listOf(
@@ -170,19 +172,13 @@ class ResumeCourseFragment : Fragment() {
                 binding.tvNoOfChaptersPhysics
             )
 
-            //val subfolderDurations = subfolderlist[0].folder
-
-            progressIndicators.forEachIndexed { index, progressIndicator ->
-                val completionPercentage =
-                   0 ?: 0
-                progressIndicator.progress = completionPercentage
-            }
-
-            textViews.forEachIndexed { index, textView ->
-                val folderName = folderNames?.getOrNull(index) ?: "NA"
-                Log.e("foldernam", folderName)
-                textView.text = folderName
-            }
+            val progressIndicators = listOf(
+                binding.customProgressIndicatorMathematics,
+                binding.customProgressIndicatorChemistry,
+                binding.customProgressIndicatorPhysics,
+                binding.customProgressIndicatorSM,
+                binding.customProgressIndicatorClassNotes
+            )
 
             textchapterCount.forEachIndexed { index, textchapterCount ->
                 val foldersize = 0
@@ -190,22 +186,37 @@ class ResumeCourseFragment : Fragment() {
                 textchapterCount.text = "$foldersize Chapters"
             }
 
+            progressIndicators.forEachIndexed { index, progressIndicator ->
+                val completionPercentage = completionPercentage
+                progressIndicator.progress = completionPercentage?.toInt()?:0
+
+            }
+
+            courseSetOnClickListener.forEach { view ->
+                Log.e("clickded on ",view.toString())
+                folderIds?.forEach { Ids ->
+                    Log.e("subfolderDurations on ",Ids.toString())
+
+                    setupNavigation(view, Ids)
+                }
+
+            }
+
+
             textPercentage.forEachIndexed { index, textPercentage ->
-                val completionPercentage = 0
+                val completionPercentage = String.format("%.2f", completionPercentage)
                 textPercentage.text = "$completionPercentage%"
             }
 
-            progressIndicators.forEachIndexed { index, progressIndicator ->
-                val completionPercentage = 0
-                progressIndicator.progress = completionPercentage
 
-            }
+
         }
 
     }
 
-    private fun setupNavigation(view: View, subFolder: FindCourseFolderProgressQuery.Folder1?) {
+    private fun setupNavigation(view: View, subFolder: String) {
         Log.e("subfoleer",subFolder.toString())
+        //folderProgress(subFolder)
         view.setOnClickListener {
            if (subFolder != null) {
                 findNavController().navigate(R.id.TopicTYPEContentFragment)
