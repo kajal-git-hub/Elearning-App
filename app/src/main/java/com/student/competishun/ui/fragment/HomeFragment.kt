@@ -398,7 +398,7 @@ class HomeFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             studentCoursesViewModel.banners.collect { result ->
                 val bannerList = mutableListOf<PromoBannerModel>()
-
+                Log.e("bannerLists",bannerList.toString())
                 result?.forEach { bannerlist ->
                     bannerlist?.let {
                         bannerList.add(PromoBannerModel(it.mobile_banner_image, it.redirect_link))

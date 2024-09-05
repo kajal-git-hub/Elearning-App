@@ -11,6 +11,11 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.student.competishun.R
+import com.student.competishun.curator.MyCoursesQuery
+import com.student.competishun.curator.MyCoursesQuery.Folder
+import com.student.competishun.curator.type.CourseStatus
+import com.student.competishun.curator.type.ExamType
+import com.student.competishun.curator.type.OtherRequirements
 import com.student.competishun.data.model.ExploreCourse
 import com.student.competishun.databinding.FragmentCourseEmptyBinding
 import com.student.competishun.ui.adapter.ExploreCourseAdapter
@@ -52,7 +57,7 @@ class CourseEmptyFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         sharedPreferencesManager = SharedPreferencesManager(requireContext())
-        myCourses()
+        myCoursesBind()
         var userId = arguments?.getString("user_id").toString()
         if (!sharedPreferencesManager.name.isNullOrEmpty()) {
             binding.welcomeUserTxt.text = "Hello, " + sharedPreferencesManager.name
@@ -143,92 +148,83 @@ class CourseEmptyFragment : Fragment() {
 //            getCourseByIDViewModel.fetchCourseById(order.entityId)
 //        }
 //    }
-    fun myCourses(){
+
+    fun myCoursesBind() {
         binding.progressBar.visibility = View.VISIBLE
         _binding?.clEmptyMyCourse?.visibility = View.GONE
         val courseDetailsList = mutableListOf<ExploreCourse>()
         viewModel.myCourses.observe(viewLifecycleOwner) { result ->
             binding.progressBar?.visibility = View.GONE
-            Log.e("getMyresule",result.toString())
+            Log.e("getMyresule", result.toString())
             result.onSuccess { data ->
-                Log.e("getMyCourses",data.toString())
-                if (data.myCourses.isEmpty()) {
-                    // Handle the empty list case
-                    _binding?.clEmptyMyCourse?.visibility = View.VISIBLE
-                }else {
-                    data.myCourses.forEach { courselist ->
-                        Log.e("geafa", courselist.toString())
-                        var hasFreeFolder = false
+                binding.clEmptyMyCourse.visibility = View.GONE
+                binding.rvExploreCourses.visibility = View.VISIBLE
+                if (data.myCourses.isNotEmpty()) {
+                    // Create lists to hold courses and progress
+                    val courseList = mutableListOf<MyCoursesQuery.Course>()
+                    val progressList = mutableListOf<MyCoursesQuery.Progress>()
 
-                        courselist.progress?.subfolderDurations?.forEach { folders ->
-                            if (folders.folder?.name?.startsWith("Free") == true) {
-                                hasFreeFolder = true
-                                }
-                            folderId = folders.folder?.id.toString()
-                        }
+                    data.myCourses.forEach { myCourse ->
+                        val course = myCourse.course
+                        val progress = myCourse.progress
 
-
-                        val courseClass = when (courselist.course.course_class.toString()) {
-                            "TWELFTH_PLUS" -> "12th+ Class"
-                            "TWELFTH" -> "12th Class"
-                            "ELEVENTH" -> "11th Class"
-                            else -> ""
-                        }
-
-                        val tag1 = courseClass
-                        val tag2 = courselist.course.category_name.orEmpty()
-                        val folderlist = courselist.course.folder
-                        Log.e("getingfolderlist",folderlist.toString())
-                        val progress = courselist.progress?.completionPercentage
-
-                        courseDetailsList.add(
-                            ExploreCourse(
-                                courselist.course.name,
-                                tag1,
-                                tag2,
-                                "Target ${courselist.course.target_year}",
-                                courselist.course.banner_image,
-                                courselist.course.status.toString(),
-                                coursepercent,
-                                hasFreeFolder,
-                                folderlist,
-                                progress
-                            )
+                        val selectedCourse = MyCoursesQuery.Course(
+                            course_class = course.course_class,
+                            id = course.id,
+                            name = course.name,
+                            price = course.price,
+                            target_year = course.target_year,
+                            status = course.status,
+                            banner_image = course.banner_image,
+                            other_requirements = course.other_requirements,
+                            exam_type = course.exam_type,
+                            category_name = course.category_name,
+                            category_id = course.category_id,
+                            entity_type = course.entity_type,
+                            folder = course.folder
                         )
-                        if (data.myCourses.isNotEmpty()) {
-                            binding.clEmptyMyCourse.visibility = View.GONE
-                            binding.rvExploreCourses.visibility = View.VISIBLE
-                            Log.e("folder_Idnamecouse:", folderId)
-                            val adapter = ExploreCourseAdapter(courseDetailsList) { course ->
-                                val bundle = Bundle()
-                                val folderIds = ArrayList(course.folderIds?.map { it.id } ?: emptyList())
-                                val folderNames = ArrayList(course.folderIds?.map { it.name } ?: emptyList())
-                                val progress = course.progress?:0.0
-                                bundle.putStringArrayList("folder_ids", folderIds)
-                                bundle.putStringArrayList("folder_names",folderNames)
-                                bundle.putString("courseName", course.name)
-                                bundle.putDouble("progress", progress)
-                                findNavController().navigate(
-                                    R.id.action_courseEmptyFragment_to_ResumeCourseFragment, bundle)
-                            }
-                            binding.rvExploreCourses.adapter = adapter
-                            binding.rvExploreCourses.layoutManager =
-                                LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-                        }
-                    }
-                }
-                val courses = data.myCourses ?.map { coursepercent=
-                    it.progress?.completionPercentage?.toInt() ?: 0
-                }
 
+                        val selectedProgress = MyCoursesQuery.Progress(
+                            completionPercentage = progress?.completionPercentage ?: 0.0,
+                            subfolderDurations = progress?.subfolderDurations,
+                            folderCount = progress?.folderCount?:0.0
+                        )
+
+                        // Add course and progress to lists
+                        courseList.add(selectedCourse)
+                        progressList.add(selectedProgress)
+                    }
+
+                    // Create adapter with course and progress lists
+                    val adapter = ExploreCourseAdapter(courseList, progressList) { course, folderIds, folderNames, subfolderDurations, folderCounts  ->
+                        // Handle the course click and navigate
+                        Log.d("CourseClick", "Course: ${course.name}, FolderIds: $folderIds, FolderNames: $folderNames, Progress: $folderCounts $subfolderDurations")
+
+                        val bundle = Bundle().apply {
+                            putStringArrayList("folder_ids", ArrayList(folderIds))
+                            putStringArrayList("folder_names", ArrayList(folderNames))
+                            putString("courseName", course.name)
+                            putDouble("subfolderDurations", subfolderDurations)
+                            putStringArrayList("folderCounts", ArrayList(folderCounts))
+                        }
+
+                        findNavController().navigate(R.id.action_courseEmptyFragment_to_ResumeCourseFragment, bundle)
+                    }
+
+                    binding.rvExploreCourses.adapter = adapter
+                    binding.rvExploreCourses.layoutManager =
+                        LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+                }
             }.onFailure {
-                Log.e("MyCoursesFail",it.message.toString())
+                Log.e("MyCoursesFail", it.message.toString())
                 Toast.makeText(requireContext(), "Failed to load courses: ${it.message}", Toast.LENGTH_SHORT).show()
             }
         }
 
         viewModel.fetchMyCourses()
     }
+
+
 
 //    fun orderdetails(ordersViewModel: OrdersViewModel, userId:String
 //    ){

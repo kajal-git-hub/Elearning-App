@@ -21,7 +21,6 @@ import com.student.competishun.R
 import com.student.competishun.data.model.ExploreCourse
 import com.student.competishun.databinding.FragmentPersonalDetailBinding
 import com.student.competishun.gatekeeper.type.UpdateUserInput
-import com.student.competishun.ui.adapter.ExploreCourseAdapter
 import com.student.competishun.ui.viewmodel.MyCoursesViewModel
 import com.student.competishun.ui.viewmodel.UpdateUserViewModel
 import com.student.competishun.ui.viewmodel.UserViewModel

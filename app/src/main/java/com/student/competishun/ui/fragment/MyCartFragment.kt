@@ -17,16 +17,12 @@ import com.student.competishun.databinding.FragmentMyCartBinding
 import com.student.competishun.ui.adapter.MyCartAdapter
 import com.student.competishun.ui.viewmodel.CreateCartViewModel
 import androidx.lifecycle.Observer
-import com.apollographql.apollo3.api.or
-import com.bumptech.glide.Glide
 import com.google.android.gms.wallet.PaymentsClient
 import com.google.android.gms.wallet.Wallet
 import com.google.android.gms.wallet.WalletConstants
 import com.razorpay.Checkout
 import com.student.competishun.coinkeeper.CreateOrderMutation
 import com.student.competishun.coinkeeper.type.CreateOrderInput
-import com.student.competishun.curator.FindAllCartItemsQuery
-import com.student.competishun.ui.main.HomeActivity
 import com.student.competishun.ui.viewmodel.GetCourseByIDViewModel
 import com.student.competishun.ui.viewmodel.OrderViewModel
 import com.student.competishun.ui.viewmodel.UserViewModel
@@ -79,20 +75,20 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
         super.onViewCreated(view, savedInstanceState)
         var courseName:String = ""
 
-        binding.MyCartNavigateToCourses.setOnClickListener {
+        binding.clEmptyCart.setOnClickListener {
             findNavController().navigate(R.id.homeFragment)
         }
 
 
         binding.igToolbarBackButton.setOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed()  }
         helperFunctions = HelperFunctions()
+        binding.parentData.visibility = View.GONE
         binding.CartTabLayout.visibility = View.GONE
         binding.clrvContainer.visibility = View.GONE
-        binding.btnProceedToPay.visibility = View.GONE
+        binding.clProccedToPay.visibility = View.GONE
+        binding.clPaymentSummary.visibility = View.GONE
         binding.clEmptyCart.visibility = View.VISIBLE
-        binding.clEmptyCart.setOnClickListener {
 
-        }
       //  binding.clrvContainer.visibility = View.GONE
         sharedPreferencesManager = SharedPreferencesManager(requireContext())
 
@@ -108,7 +104,7 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
         }
         userViewModel.fetchUserDetails()
         Log.e("cartAdaptercartITems","cartItem.toString()")
-
+        myAllCart(courseName)
         cartAdapter = MyCartAdapter(mutableListOf(),cartViewModel,viewLifecycleOwner,userId,this) { cartItem ->
             Log.e("cartAdaptrcartITems",cartItem.toString())
             handleItemClick(cartItem, userId)
@@ -136,97 +132,6 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
             layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
             adapter = cartAdapter
         }
-        cartViewModel.findAllCartItems(userId)
-        cartViewModel.findAllCartItemsResult.observe(viewLifecycleOwner, Observer { result ->
-
-            result.onSuccess { data ->
-
-
-                Log.e("CartItems", data.findAllCartItems.toString())
-                var complementryId = ""
-                val cartItems = data.findAllCartItems.map { cartItemData ->
-                    binding.clEmptyCart.visibility = View.GONE
-                    binding.rvAllCart.visibility = View.VISIBLE
-                    val course = cartItemData.course
-                    courseName = course.name
-                    if (!course.complementary_course.isNullOrEmpty())
-                     complementryId = course.complementary_course
-                    Log.e("complementryIDd", complementryId)
-                    Log.e("coureseIDd", course.id)
-                    instAmountpaid = ((course.price ?: 0) + (course.with_installment_price ?: 0) * 0.6)
-                    CartItem(
-                        profileImageResId = course.banner_image ?: "", // Replace with actual logic for image
-                        name = course.name,
-                        viewDetails = "View Details",
-                        forwardDetails = R.drawable.cart_arrow_right,
-                        discount = course.discount ?: 0,
-                        price = course.price ?: 0,
-                        entityId = cartItemData.cartItem.entity_id,
-                        cartId = cartItemData.cartItem.cart_id,
-                        courseId = course.id,
-                        withInstallmentPrice = course.with_installment_price ?: 0,
-                        categoryId = course.category_id.toString()
-                    )
-                }.takeLast(1)
-                binding.tvCartCount.text = "(${cartItems.size})"
-                binding.cartBadge.text = cartItems.size.toString()
-                // Ensure this observer is only added once
-                if (getCourseByIDViewModel.courseByID.hasActiveObservers().not()) {
-                    getCourseByIDViewModel.courseByID.observe(viewLifecycleOwner, Observer { course ->
-                        Log.e("listcourses", course.toString())
-
-                        if (course != null) {
-                            Log.e("listcourses", course.toString())
-                            val freeCourseItem = CartItem(
-                                profileImageResId = course.banner_image ?: "",
-                                name = course.name,
-                                viewDetails = "View Details",
-                                forwardDetails = R.drawable.cart_arrow_right,
-                                discount = course.discount ?: 0,
-                                price = course.price ?: 0,
-                                entityId = course.id,
-                                cartId = "", // Assuming this will be a new cart item
-                                courseId = course.id,
-                                withInstallmentPrice = course.with_installment_price ?: 0,
-                                categoryId = course.category_id.toString(),
-                                isFree = true
-                            )
-                            if (freeCourseItem !in cartItems) {
-                                val updatedCartItems = cartItems.toMutableList()
-                                updatedCartItems.add(freeCourseItem)
-
-
-                                cartAdapter.updateCartItems(updatedCartItems)
-                                originalCartItems = cartItems
-
-                                if (updatedCartItems.isNotEmpty()) {
-                                    originalCartItems = updatedCartItems
-                                    cartAdapter.updateCartItems(updatedCartItems)
-                                    binding.clrvContainer.visibility = View.VISIBLE
-                                    binding.CartTabLayout.visibility = View.VISIBLE
-                                    binding.rvAllCart.visibility = View.VISIBLE
-                                    binding.btnProceedToPay.visibility = View.VISIBLE
-
-                                    showFullPayment()
-                                } else {
-                                    Toast.makeText(requireContext(), "No items available in the cart", Toast.LENGTH_SHORT).show()
-                                }
-                            }
-                        }
-                    })
-                }
-                getCourseByIDViewModel.fetchCourseById(complementryId)
-
-            }.onFailure { exception ->
-                Log.e("exception in cart", exception.toString())
-                binding.clPaymentSummary.visibility = View.GONE
-                binding.clProccedToPay.visibility = View.GONE
-                Toast.makeText(requireContext(), exception.message, Toast.LENGTH_SHORT).show()
-            }
-        })
-
-
-
 
         binding.btnProceedToPay.setOnClickListener {
 
@@ -264,6 +169,7 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
                     result.onSuccess { data ->
                         processPayment(data.createOrder)
                     }.onFailure { exception ->
+                        Log.e("payemen",exception.cause.toString(),exception.cause)
                         navigatePaymentFail()
                         Toast.makeText(requireContext(), exception.message, Toast.LENGTH_SHORT).show()
                     }
@@ -378,6 +284,100 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
 
     private fun navigatePaymentFail() {
         findNavController().navigate(R.id.action_mycartFragment_to_paymentFailedFragment)
+    }
+
+    private fun myAllCart(courseName: String) {
+        var courseName = courseName
+        cartViewModel.findAllCartItems(userId)
+        cartViewModel.findAllCartItemsResult.observe(viewLifecycleOwner, Observer { result ->
+
+            result.onSuccess { data ->
+
+
+                Log.e("CartItems", data.findAllCartItems.toString())
+                var complementryId = ""
+                val cartItems = data.findAllCartItems.map { cartItemData ->
+                    binding.clEmptyCart.visibility = View.GONE
+                    binding.parentData.visibility = View.VISIBLE
+                    binding.rvAllCart.visibility = View.VISIBLE
+                    binding.clPaymentSummary.visibility = View.VISIBLE
+                    val course = cartItemData.course
+                    courseName = course.name
+                    if (!course.complementary_course.isNullOrEmpty())
+                        complementryId = course.complementary_course
+                    Log.e("complementryIDd", complementryId)
+                    Log.e("coureseIDd", course.id)
+                    instAmountpaid = ((course.price ?: 0) + (course.with_installment_price ?: 0) * 0.6)
+                    CartItem(
+                        profileImageResId = course.banner_image ?: "", // Replace with actual logic for image
+                        name = course.name,
+                        viewDetails = "View Details",
+                        forwardDetails = R.drawable.cart_arrow_right,
+                        discount = course.discount ?: 0,
+                        price = course.price ?: 0,
+                        entityId = cartItemData.cartItem.entity_id,
+                        cartId = cartItemData.cartItem.cart_id,
+                        courseId = course.id,
+                        withInstallmentPrice = course.with_installment_price ?: 0,
+                        categoryId = course.category_id.toString()
+                    )
+                }.takeLast(1)
+                binding.tvCartCount.text = "(${cartItems.size})"
+                binding.cartBadge.text = cartItems.size.toString()
+                // Ensure this observer is only added once
+                if (getCourseByIDViewModel.courseByID.hasActiveObservers().not()) {
+                    getCourseByIDViewModel.courseByID.observe(viewLifecycleOwner, Observer { course ->
+                        Log.e("listcourses", course.toString())
+
+                        if (course != null)
+                        {
+                            Log.e("listcourses", course.toString())
+                            val freeCourseItem = CartItem(
+                                profileImageResId = course.banner_image ?: "",
+                                name = course.name,
+                                viewDetails = "View Details",
+                                forwardDetails = R.drawable.cart_arrow_right,
+                                discount = course.discount ?: 0,
+                                price = course.price ?: 0,
+                                entityId = course.id,
+                                cartId = "", // Assuming this will be a new cart item
+                                courseId = course.id,
+                                withInstallmentPrice = course.with_installment_price ?: 0,
+                                categoryId = course.category_id.toString(),
+                                isFree = true
+                            )
+                            val updatedCartItems = cartItems.toMutableList()
+                            if (freeCourseItem !in cartItems) {
+                                updatedCartItems.add(freeCourseItem)
+                            }
+
+                                cartAdapter.updateCartItems(updatedCartItems)
+                                originalCartItems = cartItems
+
+                                if (updatedCartItems.isNotEmpty()) {
+                                    originalCartItems = updatedCartItems
+                                    cartAdapter.updateCartItems(updatedCartItems)
+                                    binding.clrvContainer.visibility = View.VISIBLE
+                                    binding.CartTabLayout.visibility = View.VISIBLE
+                                    binding.rvAllCart.visibility = View.VISIBLE
+                                    binding.btnProceedToPay.visibility = View.VISIBLE
+
+                                    showFullPayment()
+                                } else {
+                                    Toast.makeText(requireContext(), "No items available in the cart", Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                    })
+                }
+                getCourseByIDViewModel.fetchCourseById(complementryId)
+
+            }.onFailure { exception ->
+                Log.e("exception in cart", exception.toString())
+                binding.clPaymentSummary.visibility = View.GONE
+                binding.clProccedToPay.visibility = View.GONE
+                Toast.makeText(requireContext(), exception.message, Toast.LENGTH_SHORT).show()
+            }
+        })
     }
     fun calculateDiscountedPrice(price: Double, withInstallmentPrice: Double, discountPrice: Double): Double {
         val totalPrice = price + withInstallmentPrice
