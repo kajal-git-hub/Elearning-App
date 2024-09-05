@@ -9,5 +9,8 @@ data class FreeDemoItem(
     var timeDemo:String,
     var fileUrl: String,
     var fileType: String,
+    var videoCount:String,
+    var pdfCount:String,
+    var folderCount:String
 
 )
