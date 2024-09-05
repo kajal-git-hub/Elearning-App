@@ -103,7 +103,7 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/clTeachers"
+                android:id="@+id/clMentors"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_40dp"
@@ -112,12 +112,12 @@
                 app:layout_constraintTop_toBottomOf="@+id/clAboutUs">
 
                 <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/tvTeachers"
+                    android:id="@+id/tv_mentors"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
-                    android:text="Meet Our Teachers"
+                    android:text="Meet our Mentor"
                     android:textColor="#2B2829"
                     android:textSize="18sp"
                     android:textStyle="bold"
@@ -126,7 +126,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rvMeetTeachers"
+                    android:id="@+id/rvMeetMentors"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
@@ -135,22 +135,9 @@
                     android:orientation="horizontal"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tvTeachers"
+                    app:layout_constraintTop_toBottomOf="@id/tv_mentors"
                     tools:itemCount="2"
-                    tools:listitem="@layout/teacher_item" />
-
-                <LinearLayout
-                    android:id="@+id/llDotsIndicatorteachers"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginBottom="16dp"
-                    android:orientation="horizontal"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/rvMeetTeachers"></LinearLayout>
-
+                    tools:listitem="@layout/mentors_item" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
 

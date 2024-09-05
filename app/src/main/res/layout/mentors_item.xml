@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_marginBottom="12dp"
+    android:background="@drawable/rounded_bgcontactus"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:id="@+id/igTeacher_bg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/iv_mentor"
+        android:scaleType="centerCrop"
+        android:layout_marginTop="@dimen/_16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/etTeacher_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Mohit Tyagi Sir (MT Sir)"
+        android:textSize="16sp"
+        android:textColor="#2B2829"
+        android:textStyle="bold"
+        android:fontFamily="@font/nunito"
+        app:layout_constraintTop_toBottomOf="@+id/igTeacher_bg"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/et_teacher_subject"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Mathematics"
+        android:textColor="#726C6C"
+        android:textSize="@dimen/_14sp"
+        android:fontFamily="@font/nunito"
+        android:textStyle="bold"
+        android:layout_marginTop="3dp"
+        app:layout_constraintTop_toBottomOf="@+id/etTeacher_name"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tv_exp_year"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="22 Years"
+        android:textColor="#726C6C"
+        android:textSize="@dimen/_12sp"
+        android:fontFamily="@font/nunito"
+        android:textStyle="bold"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toStartOf="@id/tv_line"
+        app:layout_constraintTop_toBottomOf="@id/et_teacher_subject"
+        app:layout_constraintStart_toStartOf="@id/et_teacher_subject"/>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tv_line"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="|"
+        android:textColor="#726C6C"
+        android:textSize="@dimen/_12sp"
+        android:fontFamily="@font/nunito"
+        android:layout_marginHorizontal="@dimen/_4dp"
+        android:textStyle="bold"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@id/et_teacher_subject"
+        app:layout_constraintStart_toEndOf="@id/tv_exp_year"
+        app:layout_constraintEnd_toStartOf="@id/tv_CourseAndCollege"/>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tv_CourseAndCollege"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="B.Tech. , IIT Delhi"
+        android:textColor="#726C6C"
+        android:textSize="@dimen/_12sp"
+        android:fontFamily="@font/nunito"
+        android:textStyle="bold"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@id/et_teacher_subject"
+        app:layout_constraintStart_toEndOf="@+id/tv_line"
+        app:layout_constraintEnd_toEndOf="@id/et_teacher_subject"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_mentorsdesc"
+        android:layout_width="@dimen/_0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:visibility="visible"
+        android:orientation="vertical"
+        android:layout_marginHorizontal="@dimen/_16dp"
+        tools:itemCount="4"
+        tools:listitem="@layout/item_mentors_desc"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintTop_toBottomOf="@id/tv_CourseAndCollege"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tvSeeMoreLess"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:drawableEnd="@drawable/arrow_down"
+        android:drawablePadding="5dp"
+        android:text="See More"
+        android:textColor="#3E3EF7"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:fontFamily="@font/nunito"
+        android:layout_marginBottom="@dimen/_16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/rv_mentorsdesc" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
