@@ -180,11 +180,11 @@ class AllDemoResourcesFree : Fragment() {
         // Map folderContents to FreeDemoItem
         val freeItems = folderProgressContent?.map { folderContent ->
             val fileName = folderContent.content?.course_track ?: "Unknown"
-            val duration = "$durationPerContent mins"
+            val duration = "${durationPerContent.toInt()} mins"
 
             FreeDemoItem(
                 id = folderContent.content?.id.toString(),
-                playIcon = if(folderContent.content?.file_type == FileType.PDF ){ R.drawable.frame_1707480717} else {R.drawable.frame_1707480717}, //static icon
+                playIcon = if(folderContent.content?.file_type == FileType.PDF ){ R.drawable.pdf_bg} else {R.drawable.frame_1707480717}, //static icon
                 titleDemo = folderContent.content?.file_name.toString(),
                 timeDemo = if(folderContent.content?.file_type == FileType.PDF ){ ""} else {duration},
                 fileUrl = folderContent.content?.file_url.toString(),
