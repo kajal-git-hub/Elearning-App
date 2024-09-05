@@ -17,13 +17,7 @@ query FindAllCartItems {
             complementary_course
             with_installment_price
             category_id
-            banners {
-                mobile_banner_image
-                course_id
-                id
-                mobile_banner_image_name
-                redirect_link
-            }
+
         }
         price
     }

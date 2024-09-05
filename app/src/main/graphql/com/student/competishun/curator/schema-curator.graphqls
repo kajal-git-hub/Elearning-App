@@ -11,8 +11,6 @@ type AllCoursesResponseDto {
 }
 
 type Banner {
-  course: Course
-
   course_id: String
 
   createdAt: DateTime!
@@ -104,8 +102,6 @@ type Course {
   academic_year: String
 
   banner_image: String
-
-  banners: [Banner!]
 
   category_id: String
 
@@ -666,7 +662,7 @@ type Mutation {
 
   removeCartItem(id: ID!): Boolean!
 
-  updateBanner(id: String!, mobile_banner: [Upload], updateBannerInput: UpdateBannerInput!, web_banner: [Upload]): Boolean!
+  updateBanner(id: String!, mobile_banner: [Upload], updateBannerInput: UpdateBannerInput, web_banner: [Upload]): Boolean!
 
   updateCartItems(updateCartItemsInput: UpdateCartItemsDto!): Boolean!
 

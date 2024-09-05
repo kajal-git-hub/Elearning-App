@@ -46,9 +46,11 @@ class ResumeCourseFragment : Fragment() {
         val folderNames: ArrayList<String>? = arguments?.getStringArrayList("folder_names")
         val courseName  =  arguments?.getString("courseName")
         binding.courseNameResumeCourse.text = courseName
-        Log.d("resumename $courseName", "courseId: $folderIds")
+        Log.d("resumename $courseName", "folderIds: $folderIds")
+        Log.e("ffoldername $folderNames", "folders: $folderIds")
         folderIds?.forEach{ folderProgress(it) }
         Log.d("resumecourse name $courseName", "courseId: $folderIds")
+        dataBind(folderNames, folderIds)
         binding.backIcon.setOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed() }
         binding.clResumeCourseIcon2.setOnClickListener {
             findNavController().navigate(R.id.action_resumeCourseFragment_to_ScheduleFragment)
@@ -66,8 +68,8 @@ class ResumeCourseFragment : Fragment() {
                     }
                     if (data.myCourses.isNotEmpty()) {
                         hideShimmer()
-                        var foldrduration =
-                        dataBind(data.myCourses.get(0).progress?.subfolderDurations)
+                       // var foldrduration =
+                      //  dataBind(data.myCourses.get(0).progress?.subfolderDurations)
 
                     }
 
@@ -137,10 +139,8 @@ class ResumeCourseFragment : Fragment() {
         }
     }
 
-    fun dataBind(subfolderlist: List<MyCoursesQuery.SubfolderDuration>?) {
-        if (subfolderlist != null) {
-
-
+    private fun dataBind(folderIds: ArrayList<String>?, folderNames: ArrayList<String>?) {
+        if (folderIds != null && folderNames !=null) {
             val progressIndicators = listOf(
                 binding.customProgressIndicatorMathematics,
                 binding.customProgressIndicatorChemistry,
@@ -170,35 +170,33 @@ class ResumeCourseFragment : Fragment() {
                 binding.tvNoOfChaptersPhysics
             )
 
-            val subfolderDurations = subfolderlist[0].folder
+            //val subfolderDurations = subfolderlist[0].folder
 
             progressIndicators.forEachIndexed { index, progressIndicator ->
                 val completionPercentage =
-                    subfolderlist.getOrNull(index)?.completionPercentage?.toInt() ?: 0
+                   0 ?: 0
                 progressIndicator.progress = completionPercentage
             }
 
             textViews.forEachIndexed { index, textView ->
-                val folderName = subfolderlist.getOrNull(index)?.folder?.name ?: ""
+                val folderName = folderNames?.getOrNull(index) ?: "NA"
                 Log.e("foldernam", folderName)
                 textView.text = folderName
             }
 
             textchapterCount.forEachIndexed { index, textchapterCount ->
-                val foldersize = subfolderlist.size
+                val foldersize = 0
                 Log.e("foldernam", foldersize.toString())
                 textchapterCount.text = "$foldersize Chapters"
             }
 
             textPercentage.forEachIndexed { index, textPercentage ->
-                val completionPercentage =
-                    subfolderlist.getOrNull(index)?.completionPercentage?.toInt() ?: 0
+                val completionPercentage = 0
                 textPercentage.text = "$completionPercentage%"
             }
 
             progressIndicators.forEachIndexed { index, progressIndicator ->
-                val completionPercentage =
-                    subfolderlist?.getOrNull(index)?.completionPercentage?.toInt() ?: 0
+                val completionPercentage = 0
                 progressIndicator.progress = completionPercentage
 
             }
@@ -232,3 +230,4 @@ class ResumeCourseFragment : Fragment() {
         _binding = null
     }
 }
+

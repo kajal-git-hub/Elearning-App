@@ -50,7 +50,7 @@ class CoursesViewModel @Inject constructor(
 
    //to get date formated
     fun getFormattedCourseStartDate(date: String?): String {
-        return helperFunctions.formatCourseDate(date) ?: "-"
+        return helperFunctions.formatCourseDate(date)
     }
     //to get discount
     fun getDiscountDetails(originalPrice: Double, discountPrice: Double): Pair<Double, Double> {
