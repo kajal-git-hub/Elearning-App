@@ -457,10 +457,10 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
             })
 
             val filters = FindAllCourseInputStudent(
-                Optional.present("Complimentary Course"),
-                Optional.present("12th"),
-                Optional.present(null),
-                Optional.present(null)
+                category_name = Optional.present("Complimentary Course"),
+                course_class = Optional.present("12th"),
+                exam_type = Optional.present(null),
+                is_recommended = Optional.present(null)
             )
             courseViewModel.fetchCourses(filters)
 
