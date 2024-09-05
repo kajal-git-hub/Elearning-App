@@ -241,6 +241,7 @@
                         android:text="Read More"
                         android:textColor="#3E3EF7"
                         android:textSize="14sp"
+                        android:maxLines="3"
                         android:textStyle="bold"
                         app:fontFamily="@font/nunito"
                         app:layout_constraintStart_toStartOf="parent"
@@ -504,7 +505,7 @@
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/tvCoursePlannerDescription"
-                        android:layout_width="0dp"
+                        android:layout_width="328dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
                         android:lineHeight="21sp"
@@ -513,7 +514,6 @@
                         android:textSize="14sp"
                         android:maxLines="3"
                         app:fontFamily="@font/nunito"
-                        app:layout_constraintEnd_toEndOf="@+id/clGetPlanner"
                         app:layout_constraintStart_toStartOf="@+id/tvCoursePlanner"
                         app:layout_constraintTop_toBottomOf="@+id/tvCoursePlanner" />
 
@@ -521,19 +521,18 @@
                         android:id="@+id/tvPlannerReadMore"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginVertical="@dimen/_12sp"
                         android:drawableEnd="@drawable/arrow_down"
                         android:drawablePadding="5dp"
-                        android:layout_marginStart="14sp"
+                        android:gravity="center"
+                        android:layout_marginTop="@dimen/_10dp"
                         android:text="Read More"
                         android:textColor="#3E3EF7"
                         android:textSize="14sp"
                         android:textStyle="bold"
                         app:fontFamily="@font/nunito"
-                        app:layout_constraintTop_toBottomOf="@+id/tvCoursePlannerDescription"
-                        app:layout_constraintBottom_toBottomOf="@id/tvCoursePlannerDescription"
-                        app:layout_constraintStart_toStartOf="@+id/tvCoursePlanner"
-                        app:layout_constraintTop_toTopOf="@+id/clGetPlanner" />
+                        app:layout_constraintBottom_toTopOf="@+id/clGetPlanner"
+                        app:layout_constraintEnd_toEndOf="@+id/clGetPlanner"
+                        />
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/clGetPlanner"
