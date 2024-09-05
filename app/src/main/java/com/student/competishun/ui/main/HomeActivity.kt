@@ -1,5 +1,7 @@
 package com.student.competishun.ui.main
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -70,6 +72,13 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
         setContentView(binding.root)
 
         sharedPreferencesManager = SharedPreferencesManager(this)
+
+        binding.clStartCall.setOnClickListener {
+            val phoneNumber = "8888000021"
+            val intent = Intent(Intent.ACTION_DIAL)
+            intent.data = Uri.parse("tel:$phoneNumber")
+            startActivity(intent)
+        }
 
         bottomNavigationView = findViewById(R.id.bottomNav)
         callIcon = findViewById(R.id.ig_ContactImage)
@@ -148,7 +157,7 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
                 super.onFragmentPaused(fm, f)
                 updateUiVisibility(f)
             }
-        }, true)
+        }, false)
 
     }
     override fun onBackPressed() {
@@ -182,7 +191,6 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
     private fun shouldHideContactImage(fragment: Fragment): Boolean {
         val fragmentsToHide = listOf(
             AllDemoResourcesFree::class.java,
-            MyCartFragment::class.java,
             AllFaqFragment::class.java,
             PaymentFragment::class.java,
             PaymentLoaderFragment::class.java,
@@ -198,6 +206,7 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
             BottomSheetDescriptionFragment::class.java,
             TopicTypeContentFragment::class.java,
             MyPurchaseFragment::class.java,
+            MyCartFragment::class.java,
             PaymentFailedFragment::class.java,
             BottomSheetTSizeFragment::class.java,
             BottomSheetPersonalDetailsFragment::class.java,
@@ -211,7 +220,6 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
     private fun shouldHideBottomNav(fragment: Fragment): Boolean {
         val fragmentsToHide = listOf(
             AllDemoResourcesFree::class.java,
-            MyCartFragment::class.java,
             AllFaqFragment::class.java,
             PaymentFragment::class.java,
             MediaPlayerFragment::class.java,
@@ -225,9 +233,9 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
             BottomSheetPersonalDetailsFragment::class.java,
             AdditionalDetailsFragment::class.java,
             RecommendViewDetail::class.java,
-            CourseEmptyFragment::class.java,
             CoursesFragment::class.java,
             CourseFragment::class.java,
+            MyCartFragment::class.java,
             SubjectContentFragment::class.java,
             ResumeCourseFragment::class.java,
             BottomSheetDescriptionFragment::class.java,

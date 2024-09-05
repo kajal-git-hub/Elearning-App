@@ -35,7 +35,7 @@ class MediaPlayerFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
-        requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         binding = FragmentMediaPlayerBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -43,6 +43,12 @@ class MediaPlayerFragment : Fragment() {
     @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
+
+
+        Log.d("reachedd","reacheddddd")
+
         val url = arguments?.getString("url")
         Log.e("viddeourl",url.toString())
         //initialize exoplayer

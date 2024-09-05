@@ -55,7 +55,7 @@ import kotlinx.coroutines.launch
 class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
-    private lateinit var recyclerView: RecyclerView
+    private lateinit var testimonial_recyclerView: RecyclerView
     private lateinit var rvWhyCompetishun: RecyclerView
     private lateinit var dotsIndicatorTestimonials: LinearLayout
     private lateinit var dotsIndicatorWhyCompetishun: LinearLayout
@@ -166,7 +166,7 @@ class HomeFragment : Fragment() {
             }
         })
 
-        recyclerView = view.findViewById(R.id.recyclerViewTestimonials)
+        testimonial_recyclerView = view.findViewById(R.id.recyclerViewTestimonials)
         rvWhyCompetishun = view.findViewById(R.id.rvWhyCompetishun)
         dotsIndicatorTestimonials = view.findViewById(R.id.llDotsIndicator)
         dotsIndicatorWhyCompetishun = view.findViewById(R.id.llDotsIndicatorWhyCompetishun)
@@ -262,9 +262,9 @@ class HomeFragment : Fragment() {
         testimonials = Constants.testimonials
         adapter = TestimonialsAdapter(testimonials)
         adapterWhyCompetishun = WhyCompetishunAdapter(listWhyCompetishun)
-        recyclerView.adapter = adapter
+        testimonial_recyclerView.adapter = adapter
         rvWhyCompetishun.adapter = adapterWhyCompetishun
-        recyclerView.layoutManager =
+        testimonial_recyclerView.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         rvWhyCompetishun.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
@@ -280,7 +280,7 @@ class HomeFragment : Fragment() {
             dotsIndicatorWhyCompetishun
         )
 
-        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+        testimonial_recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 helperFunctions.updateDotsIndicator(recyclerView, dotsIndicatorTestimonials)
@@ -449,7 +449,7 @@ class HomeFragment : Fragment() {
         val filters = FindAllCourseInputStudent(
             category_name = Optional.Absent,
             course_class = Optional.Absent,
-            exam_type = Optional.present(courseTypes),
+            exam_type = Optional.Absent,
             is_recommended = Optional.present(true)
         )
         studentCoursesViewModel.fetchCourses(filters)
@@ -459,7 +459,7 @@ class HomeFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             studentCoursesViewModel.courses.collect { result ->
                 result?.onSuccess { data ->
-                    Log.e("StudentCourses", data.toString())
+                    Log.e("TotalStudentCourses", data.toString())
                     val courses = data.getAllCourseForStudent.courses.map { course ->
                         binding.progressBarRec.visibility = View.GONE
                         binding.rvRecommendedCourses.visibility = View.VISIBLE

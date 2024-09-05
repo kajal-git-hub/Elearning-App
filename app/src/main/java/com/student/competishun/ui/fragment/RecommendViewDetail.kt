@@ -90,7 +90,7 @@ class RecommendViewDetail : Fragment() {
         if (courseType!="IIT-JEE"|| courseType!="NEET" ){
             courseTypes ="IIT-JEE"
         }
-        val filters = FindAllCourseInputStudent(Optional.Absent,Optional.Absent, Optional.present(courseTypes),Optional.present(true))
+        val filters = FindAllCourseInputStudent(Optional.Absent,Optional.Absent, Optional.Absent,Optional.present(true))
         studentCoursesViewModel.fetchCourses(filters)
         binding.progressBarRec.visibility = View.VISIBLE
         binding.rvRecommendedCourses.visibility = View.GONE
@@ -135,6 +135,7 @@ class RecommendViewDetail : Fragment() {
 
 
                     binding.rvRecommendedCourses.adapter = courses?.let { courseList ->
+                        Log.d("recommendedList",courseList.toString())
                         RecommendedCoursesAdapter(courseList, lectureCounts) { selectedCourse ->
                             val lectureCount = lectureCounts[selectedCourse.id]?.toString() ?: "0"
                             val bundle = Bundle().apply {
