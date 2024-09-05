@@ -53,6 +53,7 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
     var fullAmount = 0.0
     var userId: String = ""
     var userName:String = ""
+    var courseName:String = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         paymentsClient = Wallet.getPaymentsClient(
@@ -73,7 +74,7 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        var courseName:String = ""
+
 
         binding.clEmptyCart.setOnClickListener {
             findNavController().navigate(R.id.homeFragment)
@@ -115,13 +116,13 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
             }
             Log.e("getamountpaid ${cartItem.price.toDouble()}",amountPaid.toString() )
             input = CreateOrderInput(
-                amountPaid = amountPaid * 100,
+                amountPaid = amountPaid,
                 entityId = cartItem.entityId,
                 entityType = "course",
                 isPaidOnce = paymentType == "full",
                 paymentMode = "online",
                 paymentType = paymentType,
-                totalAmount = totalAmount.toDouble() * 100,
+                totalAmount = totalAmount.toDouble(),
                 userId = userId,
                 userName = userName,
                 courseName = courseName
@@ -147,13 +148,13 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
 
 
                     input = CreateOrderInput(
-                        amountPaid = amountPaid * 100,
+                        amountPaid = amountPaid,
                         entityId = cartItem.entityId,
                         entityType = "course",
                         isPaidOnce = paymentType == "full",
                         paymentMode = "online",
                         paymentType = paymentType,
-                        totalAmount = totalAmount.toDouble() * 100,
+                        totalAmount = totalAmount.toDouble(),
                         userId = userId,
                         userName = userName,
                         courseName = courseName
@@ -287,7 +288,6 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
     }
 
     private fun myAllCart(courseName: String) {
-        var courseName = courseName
         cartViewModel.findAllCartItems(userId)
         cartViewModel.findAllCartItemsResult.observe(viewLifecycleOwner, Observer { result ->
 
@@ -300,9 +300,10 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
                     binding.clEmptyCart.visibility = View.GONE
                     binding.parentData.visibility = View.VISIBLE
                     binding.rvAllCart.visibility = View.VISIBLE
+                    binding.clProccedToPay.visibility = View.VISIBLE
                     binding.clPaymentSummary.visibility = View.VISIBLE
                     val course = cartItemData.course
-                    courseName = course.name
+                    this.courseName = course.name
                     if (!course.complementary_course.isNullOrEmpty())
                         complementryId = course.complementary_course
                     Log.e("complementryIDd", complementryId)
