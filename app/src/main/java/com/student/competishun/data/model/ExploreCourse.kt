@@ -12,6 +12,6 @@ data class ExploreCourse(
     val percentCompleted: Int,
     val hasFreeFolder: Boolean = false,
     val folderIds: List<MyCoursesQuery.Folder>?,
-    val progress: MyCoursesQuery.Progress
+    val progress: Double?
 )
 

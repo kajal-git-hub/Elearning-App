@@ -11,7 +11,6 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.student.competishun.R
-import com.student.competishun.curator.MyCoursesQuery
 import com.student.competishun.data.model.ExploreCourse
 import com.student.competishun.databinding.FragmentCourseEmptyBinding
 import com.student.competishun.ui.adapter.ExploreCourseAdapter
@@ -180,7 +179,7 @@ class CourseEmptyFragment : Fragment() {
                         val tag2 = courselist.course.category_name.orEmpty()
                         val folderlist = courselist.course.folder
                         Log.e("getingfolderlist",folderlist.toString())
-                        val progress: MyCoursesQuery.Progress = courselist.progress!!
+                        val progress = courselist.progress?.completionPercentage
 
                         courseDetailsList.add(
                             ExploreCourse(
@@ -204,9 +203,11 @@ class CourseEmptyFragment : Fragment() {
                                 val bundle = Bundle()
                                 val folderIds = ArrayList(course.folderIds?.map { it.id } ?: emptyList())
                                 val folderNames = ArrayList(course.folderIds?.map { it.name } ?: emptyList())
+                                val progress = course.progress?:0.0
                                 bundle.putStringArrayList("folder_ids", folderIds)
                                 bundle.putStringArrayList("folder_names",folderNames)
                                 bundle.putString("courseName", course.name)
+                                bundle.putDouble("progress", progress)
                                 findNavController().navigate(
                                     R.id.action_courseEmptyFragment_to_ResumeCourseFragment, bundle)
                             }
