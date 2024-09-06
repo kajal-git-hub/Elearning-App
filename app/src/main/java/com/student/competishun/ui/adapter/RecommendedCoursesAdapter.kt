@@ -66,6 +66,9 @@ class RecommendedCoursesAdapter(
                 .into(holder.bannerImage)
 
 
+        }else if (course.price!=null && course.discount==null){
+            holder.discountPrice.text = "₹${course.price}"
+            holder.originalPrice.visibility = View.GONE
         }
         holder.targetYear.text = "Target ${course.target_year}"
         holder.startDate.text = "Starts On: "+helperFunctions.formatCourseDate(course.course_start_date.toString())

@@ -9,6 +9,9 @@ query MyDetails {
             preparingFor
             targetYear
             city
+            address {
+                city
+            }
         }
         countryCode
     }

@@ -309,9 +309,14 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
                     val firstTwoWords = categoryName.take(2).joinToString(" ")
                     binding.tvTag2.text = firstTwoWords
                     binding.tvTag1.text = helperFunctions.toDisplayString(courses.course_class?.name)
-                    binding.orgPricexp.text = "₹"+courses.price.toString()
+                    if (courses.discount==null){
+                        binding.dicountPricexp.text = "₹${courses.price}"
+                        binding.orgPricexp.visibility = View.GONE
+                    }else{
+                        binding.orgPricexp.text = "₹"+courses.price.toString()
+                        binding.dicountPricexp.text = "₹${courses.discount?:0}"
+                    }
                     val disountprice = ((courses.price?:0)-((courses.discount?:0)))
-                    binding.dicountPricexp.text = "₹${courses.discount?:0}"
                     binding.tvStartDate.text = "Starts On: "+helperFunctions.formatCourseDate(courses.course_start_date.toString())
                     binding.tvEndDate.text ="Ends On: "+helperFunctions.formatCourseDate(courses.course_end_date.toString())
 

@@ -197,7 +197,7 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/clPriceDetails"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="16dp"
@@ -206,30 +206,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tvQuizTests">
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/orgPrice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginVertical="12dp"
-                    android:hint=""
-                    android:textColor="#726C6C"
-                    android:textSize="14sp"
-                    app:fontFamily="@font/nunito"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/dicountPrice"
-                    app:layout_constraintTop_toTopOf="parent" />
 
-                <View
-                    android:id="@+id/view"
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_marginVertical="12dp"
-                    android:background="#726C6C"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="@id/orgPrice"
-                    app:layout_constraintStart_toStartOf="@id/orgPrice"
-                    app:layout_constraintTop_toTopOf="parent" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/dicountPrice"
@@ -246,6 +223,34 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/orgPrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="12dp"
+                    android:hint="5000"
+                    android:textColor="#726C6C"
+                    android:textSize="16sp"
+                    android:layout_marginEnd="@dimen/_7dp"
+                    app:fontFamily="@font/nunito"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/dicountPrice"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <View
+                    android:id="@+id/view"
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_marginVertical="12dp"
+                    android:background="#726C6C"
+                    app:layout_constraintBottom_toBottomOf="@+id/orgPrice"
+                    app:layout_constraintEnd_toEndOf="@id/orgPrice"
+                    app:layout_constraintStart_toStartOf="@id/orgPrice"
+                    app:layout_constraintTop_toTopOf="@+id/orgPrice"
+                    />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
 
