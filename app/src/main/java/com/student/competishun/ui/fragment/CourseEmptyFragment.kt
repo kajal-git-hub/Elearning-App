@@ -58,6 +58,10 @@ class CourseEmptyFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.btnExploreCoursesEmpty.setOnClickListener {
+            findNavController().navigate(R.id.homeFragment)
+        }
+
 
         (activity as? HomeActivity)?.showBottomNavigationView(true)
         (activity as? HomeActivity)?.showFloatingButton(false)

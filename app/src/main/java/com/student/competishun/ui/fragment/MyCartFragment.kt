@@ -23,6 +23,7 @@ import com.google.android.gms.wallet.WalletConstants
 import com.razorpay.Checkout
 import com.student.competishun.coinkeeper.CreateOrderMutation
 import com.student.competishun.coinkeeper.type.CreateOrderInput
+import com.student.competishun.ui.main.HomeActivity
 import com.student.competishun.ui.viewmodel.GetCourseByIDViewModel
 import com.student.competishun.ui.viewmodel.OrderViewModel
 import com.student.competishun.ui.viewmodel.UserViewModel
@@ -83,10 +84,6 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
         var courseName:String = ""
 
 
-        binding.clEmptyCart.setOnClickListener {
-            findNavController().navigate(R.id.homeFragment)
-        }
-
 
         binding.igToolbarBackButton.setOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed()  }
         helperFunctions = HelperFunctions()
@@ -96,9 +93,11 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
         binding.btnProceedToPay.visibility = View.GONE
         binding.clPaymentSummary.visibility = View.GONE
         binding.clEmptyCart.visibility = View.VISIBLE
-        binding.clEmptyCart.setOnClickListener {
 
+        binding.clEmptyCart.setOnClickListener {
+            findNavController().navigate(R.id.homeFragment)
         }
+
       //  binding.clrvContainer.visibility = View.GONE
         sharedPreferencesManager = SharedPreferencesManager(requireContext())
 

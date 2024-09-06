@@ -107,7 +107,7 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val courseTags = arguments?.getStringArrayList("course_tags")
+        val courseTags = arguments?.getStringArrayList("courseTags")
 
         Log.d("courseTags", courseTags.toString())
 

@@ -13,6 +13,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -42,7 +43,17 @@ class AllDemoResourcesFree : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentAllDemoResourcesFreeBinding.inflate(inflater, container, false)
+
+        requireActivity().onBackPressedDispatcher.addCallback(this) {
+            handleBackPressed()
+        }
+
+
         return binding.root
+    }
+
+    private fun handleBackPressed() {
+        findNavController().navigateUp()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
