@@ -1,3 +1,11 @@
+type AddressDto {
+  addressLine1: String
+
+  city: String
+
+  pinCode: String
+}
+
 type Admin {
   createdAt: DateTime!
 
@@ -47,9 +55,11 @@ input CreateCustomerInput {
 input CreateStudentByAdminInput {
   aadharNumber: String
 
-  address: String!
+  addressLine1: String!
 
   bloodGroup: String
+
+  city: String!
 
   collegeName: String
 
@@ -66,6 +76,8 @@ input CreateStudentByAdminInput {
   mobileNumber: String!
 
   nationality: String
+
+  pinCode: String!
 
   schoolName: String
 
@@ -140,7 +152,9 @@ type Query {
 
   getMyDetails: User!
 
-  getStudents(limit: Float!, offset: Float!, search: String, sort: String = "DESC", studentId: String, targetYear: Float): GetStudentsDto!
+  getStudents(courseIds: [ID!], isEnrolled: Boolean, limit: Float!, offset: Float!, paymentStatuses: [StudentPaymentStatuses!], search: String, sort: String = "DESC", studentId: String, targetYear: [Float!]): GetStudentsDto!
+
+  getStudentsWithoutPagination(courseIds: [ID!], isEnrolled: Boolean, paymentStatuses: [StudentPaymentStatuses!], search: String, sort: String = "DESC", studentId: String, targetYear: [Float!]): GetStudentsDto!
 
   sayHello: String!
 }
@@ -155,6 +169,14 @@ type Role {
   name: String!
 
   updatedAt: DateTime!
+}
+
+enum StudentPaymentStatuses {
+  INSTALLMENT_1
+
+  INSTALLMENT_2
+
+  PAID
 }
 
 input UpdateCustomerInput {
@@ -172,9 +194,11 @@ input UpdateCustomerInput {
 input UpdateStudentByAdminInput {
   aadharNumber: String
 
-  address: String
+  addressLine1: String
 
   bloodGroup: String
+
+  city: String
 
   collegeName: String
 
@@ -194,6 +218,8 @@ input UpdateStudentByAdminInput {
 
   nationality: String
 
+  pinCode: String
+
   schoolName: String
 
   tenth_marks: String
@@ -202,11 +228,15 @@ input UpdateStudentByAdminInput {
 }
 
 input UpdateUserInput {
+  addressLine1: String
+
   city: String
 
   fatherName: String
 
   fullName: String
+
+  pinCode: String
 
   preparingFor: String
 
@@ -239,6 +269,8 @@ type User {
 
   id: ID!
 
+  metadata: UserMetadata!
+
   mobileNumber: String!
 
   role: Role!
@@ -251,7 +283,7 @@ type User {
 type UserInformation {
   aadharNumber: String
 
-  address: String
+  address: AddressDto
 
   bloodGroup: String
 
@@ -296,6 +328,24 @@ type UserInformation {
   waCountryCode: String
 
   waMobileNumber: String
+}
+
+type UserMetadata {
+  createdAt: DateTime!
+
+  deletedAt: DateTime!
+
+  enrolledCourseId: String
+
+  enrolledCourseName: String
+
+  id: ID!
+
+  paymentStatus: String
+
+  pricePaid: Int
+
+  updatedAt: DateTime!
 }
 
 input VerifyOtpInput {

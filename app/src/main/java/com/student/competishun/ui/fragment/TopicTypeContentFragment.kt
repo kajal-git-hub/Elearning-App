@@ -46,7 +46,7 @@ class TopicTypeContentFragment : Fragment() {
         folderProgress("b8b9cb32-661b-4e8e-90d0-9c5a0740d273")
         var folderId = arguments?.getString("folder_Id")
         var folder_Name = arguments?.getString("folder_Name")
-        var folder_Count = arguments?.getString("folder_Count")
+        var folder_Count = arguments?.getString("folder_Count")?:"0"
 
         binding.tvTopicTypeName.text = folder_Name?:""
         if (folderId != null) {

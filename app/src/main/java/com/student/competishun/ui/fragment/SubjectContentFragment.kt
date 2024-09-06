@@ -71,6 +71,20 @@ class SubjectContentFragment : Fragment() {
             )
 
         }
+        val bundle = Bundle().apply {
+            putStringArrayList("folder_ids",  ArrayList(folderIds))
+            putStringArrayList("folder_names",  ArrayList(folderNames))
+            putString("folder_Count",folder_Count)
+        }
+        binding.clTopicType.setOnClickListener {
+            Log.e("clickevent",folderIds.toString())
+            val bottomSheet = BottomsheetCourseTopicTypeFragment().apply { arguments = bundle
+            }
+            bottomSheet.show(
+                childFragmentManager,
+                "BottomsheetCourseTopicTypeFragment"
+            )
+        }
         binding.mtCount.text = "${folderNames.size} Chapters"
         binding.tvSubjectName.text = folderName?:""
             binding.rvSubjectContent.adapter = SubjectContentAdapter(subjectContentList) { selectedItem ->
@@ -86,10 +100,7 @@ class SubjectContentFragment : Fragment() {
 
         }
         // Handle bottom sheet selection
-        binding.downChooseTopic.setOnClickListener {
-            val bottomSheet = BottomsheetCourseTopicTypeFragment()
-            bottomSheet.show(childFragmentManager, "BottomsheetCourseTopicTypeFragment")
-        }
+
     }
 
 
@@ -119,14 +130,24 @@ class SubjectContentFragment : Fragment() {
                             putStringArray("folder_names",folderNames.toTypedArray())
                         }
 
+//                        binding.downChooseTopic.setOnClickListener {
+//                            val bottomSheet = BottomsheetCourseTopicTypeFragment().apply {
+//                                arguments = bundle // Set the arguments to pass data to the fragment
+//                            }
+//                            bottomSheet.show(
+//                                childFragmentManager,
+//                                "BottomsheetCourseTopicTypeFragment"
+//                            )
+//                        }
                     }
                     else {
                         if (subfolderDurationFolders.isNullOrEmpty()) {
                             Log.e("folderContentsss", data.findCourseFolderProgress.folderContents.toString())
-
+                               var folderContent = data.findCourseFolderProgress.folderContents?.forEach { it }
                             val bundle = Bundle().apply {
                                 putString(" folder_Id", folderId)
                                 putString(" folder_Name", folderName)
+                                putString(" folder_Count", folderCount)
                             }
                             findNavController().navigate(R.id.TopicTYPEContentFragment,bundle)
                         }
