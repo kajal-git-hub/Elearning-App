@@ -6,16 +6,18 @@ mutation UpdateUser($updateUserInput: UpdateUserInput!, $documentPhoto: Upload, 
             reference
             preparingFor
             targetYear
-            city
             collegeName
+            city
             waCountryCode
             documentPhoto
             schoolName
             tShirtSize
+            address {
+                city
+            }
         }
         id
         countryCode
-
         email
     }
 }

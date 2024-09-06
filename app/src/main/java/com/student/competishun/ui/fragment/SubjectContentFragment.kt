@@ -90,7 +90,7 @@ class SubjectContentFragment : Fragment() {
             binding.rvSubjectContent.adapter = SubjectContentAdapter(subjectContentList) { selectedItem ->
                 var folderId = selectedItem.id
                 var folderName = selectedItem.topicName
-                folderProgress(folderId,folderName,folder_Count)
+               // folderProgress(folderId,folderName,folder_Count)
                 Log.d("SelectedItem", "Clicked on: ${selectedItem.topicName}")
 //                val bundle = Bundle().apply {
 //                    putStringArrayList("folder_ids", ArrayList(folderIds))
@@ -120,6 +120,7 @@ class SubjectContentFragment : Fragment() {
                 Log.e("subFolderdata", subfolderDurationFolders.toString())
 
                 if (folderProgressFolder != null) {
+                    if (!folderProgressContent.isNullOrEmpty()){}
 
                     if (!subfolderDurationFolders.isNullOrEmpty()){
                         Log.e("subfolderDurationszs", subfolderDurationFolders.toString())
@@ -130,15 +131,6 @@ class SubjectContentFragment : Fragment() {
                             putStringArray("folder_names",folderNames.toTypedArray())
                         }
 
-//                        binding.downChooseTopic.setOnClickListener {
-//                            val bottomSheet = BottomsheetCourseTopicTypeFragment().apply {
-//                                arguments = bundle // Set the arguments to pass data to the fragment
-//                            }
-//                            bottomSheet.show(
-//                                childFragmentManager,
-//                                "BottomsheetCourseTopicTypeFragment"
-//                            )
-//                        }
                     }
                     else {
                         if (subfolderDurationFolders.isNullOrEmpty()) {

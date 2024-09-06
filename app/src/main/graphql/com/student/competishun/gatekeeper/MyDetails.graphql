@@ -7,8 +7,8 @@ query MyDetails {
             id
             reference
             preparingFor
-            targetYear
             city
+            targetYear
             address {
                 city
             }

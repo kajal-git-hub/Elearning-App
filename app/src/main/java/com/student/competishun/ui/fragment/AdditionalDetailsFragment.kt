@@ -313,7 +313,7 @@ class AdditionalDetailsFragment : Fragment() {
                 Log.e("gettingUserUpdateTarget", result.user.userInformation.targetYear.toString())
                 Log.e("gettingUserUpdaterefer", result.user.userInformation.reference.toString())
                 Log.e("gettingUserUpdateprep", result.user.userInformation.preparingFor.toString())
-                Log.e("gettingUserUpdatecity", result.user.userInformation.city.toString())
+                Log.e("gettingUserUpdatecity", result.user.userInformation.address?.city.toString())
 
             } else {
                 Log.e("gettingUserUpdatefail", result.toString())
