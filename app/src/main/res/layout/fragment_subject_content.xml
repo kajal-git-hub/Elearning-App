@@ -123,7 +123,6 @@
             android:fontFamily="@font/nunito"
             android:visibility="gone"
             android:text="Basic Maths"
-            android:visibility="gone"
             android:textColor="#2B2829"
             android:textSize="@dimen/_14sp"
             android:textStyle="bold"
