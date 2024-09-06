@@ -39,7 +39,7 @@ class ResumeCourseFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.backIcon.setOnClickListener {
-            requireActivity().onBackPressed()
+            requireActivity().onBackPressedDispatcher.onBackPressed()
         }
         folderIds = arguments?.getStringArrayList("folder_ids")
          folderNames = arguments?.getStringArrayList("folder_names")

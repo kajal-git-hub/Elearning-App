@@ -39,7 +39,7 @@ class TopicTypeContentFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         var folderId = arguments?.getString("folder_Id")
         var folder_Name = arguments?.getString("folder_Name")
-        var folder_Count = arguments?.getString("folder_Count")
+        var folder_Count = arguments?.getString("folder_Count")?:"0"
 
         binding.tvTopicTypeName.text = folder_Name?:""
         if (folderId != null) {
