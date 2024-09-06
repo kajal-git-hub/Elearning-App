@@ -129,7 +129,8 @@ class VerifyOTPFragment : Fragment() {
                 userViewModel.userDetails.observe(viewLifecycleOwner) { userDetailsResult ->
                     userDetailsResult.onSuccess { data ->
                         val userDetails = data.getMyDetails
-                        if (userDetails.userInformation.city!=null && userDetails.userInformation.reference!=null && userDetails.userInformation.targetYear!=null && userDetails.userInformation.preparingFor!=null && userDetails.fullName!=null) {
+
+                        if (userDetails.userInformation.address?.city!=null && userDetails.userInformation.reference!=null && userDetails.userInformation.targetYear!=null && userDetails.userInformation.preparingFor!=null && userDetails.fullName!=null) {
 
                             navigateToHomeActivity(userDetails.id)
                         } else {

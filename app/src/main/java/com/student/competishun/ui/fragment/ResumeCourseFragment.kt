@@ -107,7 +107,7 @@ class ResumeCourseFragment : Fragment() {
                                 putString("folder_Name", folderNames)
                                 putString("folder_Count", folderCount)
                             }
-                            findNavController().navigate(R.id.TopicTYPEContentFragment,bundle)
+                           findNavController().navigate(R.id.TopicTYPEContentFragment,bundle)
                         }
                     }
                 }
@@ -117,6 +117,7 @@ class ResumeCourseFragment : Fragment() {
             }
         }
     }
+
 
     private fun dataBind(
         folderNames: ArrayList<String>?,
