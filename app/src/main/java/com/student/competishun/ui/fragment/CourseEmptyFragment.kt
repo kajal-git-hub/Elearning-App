@@ -162,7 +162,7 @@ class CourseEmptyFragment : Fragment() {
 
     fun myCoursesBind() {
         binding.progressBar.visibility = View.VISIBLE
-        _binding?.clEmptyMyCourse?.visibility = View.GONE
+        binding.clEmptyMyCourse?.visibility = View.GONE
         val courseDetailsList = mutableListOf<ExploreCourse>()
         viewModel.myCourses.observe(viewLifecycleOwner) { result ->
             binding.progressBar?.visibility = View.GONE
@@ -227,6 +227,7 @@ class CourseEmptyFragment : Fragment() {
                         LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
                 }
             }.onFailure {
+                binding?.clEmptyMyCourse?.visibility = View.VISIBLE
                 Log.e("MyCoursesFail", it.message.toString())
                 Toast.makeText(requireContext(), "Failed to load courses: ${it.message}", Toast.LENGTH_SHORT).show()
             }

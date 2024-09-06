@@ -39,8 +39,8 @@ class CourseAdapter(
 
             val courseTags = item.course_tags
 
-            val bundle = Bundle()
-            bundle.putStringArrayList("courseTags", courseTags as ArrayList<String>?)
+            val courseBundle = Bundle()
+            courseBundle.putStringArrayList("courseTags", courseTags as ArrayList<String>?)
 
 
             tvRecommendedCourseName.text = item.name

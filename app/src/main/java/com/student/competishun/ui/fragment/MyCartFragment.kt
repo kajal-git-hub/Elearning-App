@@ -90,7 +90,7 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
         binding.parentData.visibility = View.GONE
         binding.CartTabLayout.visibility = View.GONE
         binding.clrvContainer.visibility = View.GONE
-        binding.btnProceedToPay.visibility = View.GONE
+        binding.clProccedToPay.visibility = View.GONE
         binding.clPaymentSummary.visibility = View.GONE
         binding.clEmptyCart.visibility = View.VISIBLE
 

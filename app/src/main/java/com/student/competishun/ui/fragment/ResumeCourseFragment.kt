@@ -44,9 +44,6 @@ class ResumeCourseFragment : Fragment() {
         (activity as? HomeActivity)?.showBottomNavigationView(false)
         (activity as? HomeActivity)?.showFloatingButton(false)
 
-        binding.backIcon.setOnClickListener {
-            requireActivity().onBackPressed()
-        }
         folderIds = arguments?.getStringArrayList("folder_ids")
          folderNames = arguments?.getStringArrayList("folder_names")
         var completionPercentage = arguments?.getDouble("subfolderDurations")?:0.0

@@ -90,7 +90,8 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
     val lectureCounts = mutableMapOf<String, Int>()
     var firstInstallment:Int = 0
     var secondInstallment:Int = 0
-    val courseTaglist = ""
+    var ExploreCourseTags: MutableList<String> = mutableListOf()
+
 
         override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -107,9 +108,15 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val courseTags = arguments?.getStringArrayList("courseTags")
+        arguments?.let { bundle ->
+            val tags = bundle.getStringArrayList("course_tags")
+            if (tags != null) {
+                ExploreCourseTags.clear()
+                ExploreCourseTags.addAll(tags)
+            }
+            Log.e("courseTags", "Received Course Tags: $ExploreCourseTags")
+        }
 
-        Log.d("courseTags", courseTags.toString())
 
         (activity as? HomeActivity)?.showBottomNavigationView(false)
         (activity as? HomeActivity)?.showFloatingButton(true)
@@ -186,7 +193,7 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
 
 // Display the image thumbnail
                 Glide.with(requireContext())
-                    .load(courses?.banner_image)
+                    .load(imageUrl)
                     .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
                     .into(binding.ivBannerExplore)
 
@@ -581,18 +588,18 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
                             it.getAllCourseForStudent.courses.map {
 
                                 binding.tvTag4.text =  "Target "+it.target_year.toString()
-                                val courseTags = it.course_tags
+//                                val courseTags = it.course_tags
 
                                 binding.tvTag1.apply {
-                                    text = courseTags?.getOrNull(0) ?: ""
+                                    text = ExploreCourseTags?.getOrNull(0) ?: ""
                                     visibility = if (text.isEmpty()) View.GONE else View.VISIBLE
                                 }
                                 binding.tvTag2.apply {
-                                    text = courseTags?.getOrNull(1) ?: ""
+                                    text = ExploreCourseTags?.getOrNull(1) ?: ""
                                     visibility = if (text.isEmpty()) View.GONE else View.VISIBLE
                                 }
                                 binding.tvTag3.apply {
-                                    text = courseTags?.getOrNull(2) ?: ""
+                                    text = ExploreCourseTags?.getOrNull(2) ?: ""
                                     visibility = if (text.isEmpty()) View.GONE else View.VISIBLE
                                 }
 
