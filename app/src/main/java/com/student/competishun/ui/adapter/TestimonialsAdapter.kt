@@ -25,12 +25,12 @@ class TestimonialsAdapter(private val testimonials: List<Testimonial>) : Recycle
         holder.tvname.text = testimonial.name
         holder.tvclass.text = testimonial.currentClass
         holder.tvtarget.text = testimonial.target
-
-        holder.tvComment.setOnClickListener {
-
-            val url = "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"
-            goToPlayerPage(holder.itemView.findNavController(), url)
-        }
+//
+//        holder.tvComment.setOnClickListener {
+//
+//            val url = "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"
+//            goToPlayerPage(holder.itemView.findNavController(), url)
+//        }
 
     }
 

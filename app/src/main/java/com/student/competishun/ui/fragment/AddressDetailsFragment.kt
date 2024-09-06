@@ -13,6 +13,7 @@ import androidx.navigation.fragment.findNavController
 import com.student.competishun.R
 import com.student.competishun.databinding.FragmentAddressDetailsBinding
 import com.student.competishun.databinding.FragmentPersonalDetailBinding
+import com.student.competishun.ui.main.HomeActivity
 
 class AddressDetailsFragment : Fragment() {
 
@@ -30,6 +31,11 @@ class AddressDetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
+        (activity as? HomeActivity)?.showBottomNavigationView(false)
+        (activity as? HomeActivity)?.showFloatingButton(false)
+
         setupCharacterCounter()
         pinCodeCheck()
 

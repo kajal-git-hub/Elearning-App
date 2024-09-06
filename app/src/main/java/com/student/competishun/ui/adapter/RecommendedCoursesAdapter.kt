@@ -7,6 +7,7 @@ import com.bumptech.glide.request.target.Target
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.android.material.textview.MaterialTextView
@@ -57,6 +58,7 @@ class RecommendedCoursesAdapter(
             holder.discount.text = "${discountPercent.toInt()}% off"
             holder.discountPrice.text = "₹${course.discount}"
             holder.originalPrice.text = "₹${course.price}"
+            holder.percentConstraint.visibility = View.VISIBLE
             Glide.with(holder.itemView.context)
 
                 .load(course.banner_image)
@@ -66,10 +68,16 @@ class RecommendedCoursesAdapter(
                 .into(holder.bannerImage)
 
 
+        }else if (course.price!=null && course.discount==null){
+            holder.discountPrice.text = "₹${course.price}"
+            holder.originalPrice.visibility = View.GONE
+
+        }else if(course.price==course.discount){
+            holder.percentConstraint.visibility = View.GONE
         }
         holder.targetYear.text = "Target ${course.target_year}"
         holder.startDate.text = "Starts On: "+helperFunctions.formatCourseDate(course.course_start_date.toString())
-        holder.endDate.text = "Expiry Date: "+helperFunctions.formatCourseDate(course.course_end_date.toString())
+        holder.endDate.text = "Ends On: "+helperFunctions.formatCourseDate(course.course_end_date.toString())
         holder.lectureCount.text = "Lectures: ${(lectureCounts[course.id] ?: 0)}"
         holder.quizCount.text = "Validity: "+helperFunctions.formatCourseDate(course.course_validity_end_date.toString())
         holder.itemView.setOnClickListener {
@@ -86,12 +94,13 @@ class RecommendedCoursesAdapter(
         val targetYear: TextView = view.findViewById(R.id.tvTarget)
         val startDate: MaterialTextView = view.findViewById(R.id.tvStartDate)
         val endDate: MaterialTextView = view.findViewById(R.id.tvEndDate)
-        val lectureCount: TextView = view.findViewById(R.id.tvLectureNo)
+        val lectureCount: TextView = view.findViewById(R.id.tvLectureNoRecommend)
         val quizCount: TextView = view.findViewById(R.id.tvQuizTests)
         val originalPrice: TextView = view.findViewById(R.id.orgPrice)
         val discountPrice: TextView = view.findViewById(R.id.dicountPrice)
         val bannerImage:ImageView = view.findViewById(R.id.recommendbanner)
         val tvTag2:TextView = view.findViewById(R.id.tvTag2)
+        val percentConstraint :ConstraintLayout = view.findViewById(R.id.cl_percentOff)
 
         val tvLastField:TextView = view.findViewById(R.id.tvLastField)
     }

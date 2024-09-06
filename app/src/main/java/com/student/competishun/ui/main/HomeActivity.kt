@@ -1,5 +1,7 @@
 package com.student.competishun.ui.main
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -57,7 +59,7 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
     private lateinit var navController: NavController
     private lateinit var binding: ActivityHomeBinding
     private lateinit var bottomNavigationView: BottomNavigationView
-    lateinit var callIcon: ImageView
+    private lateinit var callIcon: ImageView
     private var isCallingSupportVisible = ObservableField(true)
     lateinit var sharedPreferencesManager: SharedPreferencesManager
     var courseType:String = ""
@@ -70,6 +72,13 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
         setContentView(binding.root)
 
         sharedPreferencesManager = SharedPreferencesManager(this)
+
+        binding.clStartCall.setOnClickListener {
+            val phoneNumber = "8888000021"
+            val intent = Intent(Intent.ACTION_DIAL)
+            intent.data = Uri.parse("tel:$phoneNumber")
+            startActivity(intent)
+        }
 
         bottomNavigationView = findViewById(R.id.bottomNav)
         callIcon = findViewById(R.id.ig_ContactImage)
@@ -137,19 +146,6 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
 
         }
 
-        supportFragmentManager.registerFragmentLifecycleCallbacks(object :
-            FragmentManager.FragmentLifecycleCallbacks() {
-            override fun onFragmentResumed(fm: FragmentManager, f: Fragment) {
-                super.onFragmentResumed(fm, f)
-                updateUiVisibility(f)
-            }
-
-            override fun onFragmentPaused(fm: FragmentManager, f: Fragment) {
-                super.onFragmentPaused(fm, f)
-                updateUiVisibility(f)
-            }
-        }, true)
-
     }
     override fun onBackPressed() {
 
@@ -166,80 +162,16 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
         super.onResume()
         userId = sharedPreferencesManager.userId.toString()
         Log.e("Sharedhome $userId", intent.getStringExtra("userId").toString())
-        val currentFragment = supportFragmentManager.findFragmentById(R.id.fragmentNavigation)
-        if (currentFragment != null) {
-            updateUiVisibility(currentFragment)
-        }
     }
 
-    fun updateUiVisibility(fragment: Fragment) {
-        binding.igContactImage.visibility =
-            if (shouldHideContactImage(fragment)) View.GONE else View.VISIBLE
-        binding.bottomNav.visibility =
-            if (shouldHideBottomNav(fragment)) View.GONE else View.VISIBLE
+
+    fun showBottomNavigationView(show:Boolean){
+        bottomNavigationView.visibility = if(show) View.VISIBLE else View.GONE
+    }
+    fun showFloatingButton(show:Boolean){
+        callIcon.visibility =  if(show) View.VISIBLE else View.GONE
     }
 
-    private fun shouldHideContactImage(fragment: Fragment): Boolean {
-        val fragmentsToHide = listOf(
-            AllDemoResourcesFree::class.java,
-            MyCartFragment::class.java,
-            AllFaqFragment::class.java,
-            PaymentFragment::class.java,
-            PaymentLoaderFragment::class.java,
-            PersonalDetailsFragment::class.java,
-            AddressDetailsFragment::class.java,
-            AdditionalDetailsFragment::class.java,
-            MediaPlayerFragment::class.java,
-            ResumeCourseFragment::class.java,
-            InstallmentDetailsBottomSheet::class.java,
-            NEETFragment::class.java,
-            SubjectContentFragment::class.java,
-            CourseEmptyFragment::class.java,
-            BottomSheetDescriptionFragment::class.java,
-            TopicTypeContentFragment::class.java,
-            MyPurchaseFragment::class.java,
-            PaymentFailedFragment::class.java,
-            BottomSheetTSizeFragment::class.java,
-            BottomSheetPersonalDetailsFragment::class.java,
-            NotificationFragment::class.java,
-            ProfileFragment::class.java,
-            ScheduleFragment::class.java,
-        )
-        return fragmentsToHide.any { it.isInstance(fragment) }
-    }
-
-    private fun shouldHideBottomNav(fragment: Fragment): Boolean {
-        val fragmentsToHide = listOf(
-            AllDemoResourcesFree::class.java,
-            MyCartFragment::class.java,
-            AllFaqFragment::class.java,
-            PaymentFragment::class.java,
-            MediaPlayerFragment::class.java,
-            ExploreFragment::class.java,
-            NEETFragment::class.java,
-            MyPurchaseFragment::class.java,
-            InstallmentDetailsBottomSheet::class.java,
-            PaymentLoaderFragment::class.java,
-            PersonalDetailsFragment::class.java,
-            AddressDetailsFragment::class.java,
-            BottomSheetPersonalDetailsFragment::class.java,
-            AdditionalDetailsFragment::class.java,
-            RecommendViewDetail::class.java,
-            CourseEmptyFragment::class.java,
-            CoursesFragment::class.java,
-            CourseFragment::class.java,
-            SubjectContentFragment::class.java,
-            ResumeCourseFragment::class.java,
-            BottomSheetDescriptionFragment::class.java,
-            TopicTypeContentFragment::class.java,
-            PaymentFailedFragment::class.java,
-            BottomSheetTSizeFragment::class.java,
-            NotificationFragment::class.java,
-            ProfileFragment::class.java,
-            ScheduleFragment::class.java,
-        )
-        return fragmentsToHide.any { it.isInstance(fragment) }
-    }
 
     override fun onPaymentSuccess(p0: String?) {
         navigateToLoaderScreen()
@@ -272,10 +204,10 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
 
     override fun onStart() {
         super.onStart()
-        val currentFragment = supportFragmentManager.findFragmentById(R.id.fragmentNavigation)
-        if (currentFragment != null) {
-            updateUiVisibility(currentFragment)
-        }
+//        val currentFragment = supportFragmentManager.findFragmentById(R.id.fragmentNavigation)
+//        if (currentFragment != null) {
+//            updateUiVisibility(currentFragment)
+//        }
     }
 
 

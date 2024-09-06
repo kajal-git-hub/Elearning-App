@@ -21,6 +21,7 @@ import com.student.competishun.curator.type.FindAllCourseInputStudent
 import com.student.competishun.data.model.TabItem
 import com.student.competishun.databinding.FragmentCourseBinding
 import com.student.competishun.ui.adapter.CourseAdapter
+import com.student.competishun.ui.main.HomeActivity
 import com.student.competishun.ui.viewmodel.StudentCoursesViewModel
 import com.student.competishun.utils.HelperFunctions
 import com.student.competishun.utils.StudentCourseItemClickListener
@@ -53,6 +54,12 @@ class CourseFragment : Fragment(), StudentCourseItemClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        (activity as? HomeActivity)?.showBottomNavigationView(false)
+        (activity as? HomeActivity)?.showFloatingButton(true)
+
+
+
         helperFunctions = HelperFunctions()
         initializeTabLayout()
         setupTabLayout()
@@ -132,12 +139,19 @@ class CourseFragment : Fragment(), StudentCourseItemClickListener {
         }
     }
 
-    override fun onCourseItemClicked(course: AllCourseForStudentQuery.Course) {
-        val bundle = Bundle().apply {
-            putString("course_id", course.id)
-        }
+    override fun onCourseItemClicked(course: AllCourseForStudentQuery.Course,bundle: Bundle) {
+        val courseTags = bundle.getStringArrayList("course_tags")
+
+
         Log.e(TAG, course.id.toString())
-        findNavController().navigate(R.id.action_coursesFragment_to_ExploreFragment, bundle)
+        Log.e(TAG, "Course Tags: ${courseTags.toString()}")
+
+        val newBundle = Bundle().apply {
+            putString("course_id", course.id)
+            putStringArrayList("course_tags", courseTags)
+        }
+
+        findNavController().navigate(R.id.action_coursesFragment_to_ExploreFragment, newBundle)
     }
 
     private fun AllCourseForStudentQuery.Course.toCourse(): AllCourseForStudentQuery.Course {
@@ -208,4 +222,9 @@ class CourseFragment : Fragment(), StudentCourseItemClickListener {
     companion object {
         private const val TAG = "CourseFragment"
     }
+
+//    override fun onCourseItemClicked(course: AllCourseForStudentQuery.Course, bundle: Bundle) {
+//        findNavController().navigate(R.id.action_coursesFragment_to_ExploreFragment, bundle)
+//
+//    }
 }

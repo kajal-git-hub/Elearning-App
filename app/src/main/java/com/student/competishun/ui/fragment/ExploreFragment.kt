@@ -9,6 +9,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import android.widget.MediaController
 import android.widget.TextView
 import android.widget.Toast
@@ -39,6 +43,7 @@ import com.student.competishun.curator.type.CreateCartItemDto
 import com.student.competishun.curator.type.EntityType
 import com.student.competishun.curator.type.FindAllCourseInputStudent
 import com.student.competishun.data.model.CourseFItem
+import com.student.competishun.data.model.ExploreCourse
 import com.student.competishun.data.model.FAQItem
 import com.student.competishun.data.model.OtherContentItem
 import com.student.competishun.data.model.OurContentFirstItem
@@ -48,9 +53,11 @@ import com.student.competishun.data.model.TeacherItem
 import com.student.competishun.databinding.FragmentExploreBinding
 import com.student.competishun.ui.adapter.CourseAdapter
 import com.student.competishun.ui.adapter.CourseFeaturesAdapter
+import com.student.competishun.ui.adapter.ExploreCourseAdapter
 import com.student.competishun.ui.adapter.FAQAdapter
 import com.student.competishun.ui.adapter.OurContentAdapter
 import com.student.competishun.ui.adapter.TeacherAdapter
+import com.student.competishun.ui.main.HomeActivity
 import com.student.competishun.ui.viewmodel.CoursesViewModel
 import com.student.competishun.ui.viewmodel.CreateCartViewModel
 import com.student.competishun.ui.viewmodel.GetCourseByIDViewModel
@@ -83,8 +90,10 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
     val lectureCounts = mutableMapOf<String, Int>()
     var firstInstallment:Int = 0
     var secondInstallment:Int = 0
+    var ExploreCourseTags: MutableList<String> = mutableListOf()
 
-    override fun onCreateView(
+
+        override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         binding = FragmentExploreBinding.inflate(inflater, container, false).apply {
@@ -98,6 +107,21 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        arguments?.let { bundle ->
+            val tags = bundle.getStringArrayList("course_tags")
+            if (tags != null) {
+                ExploreCourseTags.clear()
+                ExploreCourseTags.addAll(tags)
+            }
+            Log.e("courseTags", "Received Course Tags: $ExploreCourseTags")
+        }
+
+
+        (activity as? HomeActivity)?.showBottomNavigationView(false)
+        (activity as? HomeActivity)?.showFloatingButton(true)
+
+        getCourseTagsData()
 
         var lectureCount = arguments?.getString("LectureCount")
         folderlist = emptyList()
@@ -169,7 +193,7 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
 
 // Display the image thumbnail
                 Glide.with(requireContext())
-                    .load(courses?.banner_image)
+                    .load(imageUrl)
                     .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
                     .into(binding.ivBannerExplore)
 
@@ -231,7 +255,7 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
 
                 Log.e("listcourses", courses.toString())
                 binding.progressBar.visibility = View.GONE
-                binding.tvQuizTests.text = "Validity: "+ helperFunctions.formatCourseDate(courses?.course_validity_end_date.toString())
+                binding.ExpireValidity.text = "Validity: "+ helperFunctions.formatCourseDate(courses?.course_validity_end_date.toString())
               //  binding.tvCoursePlannerDescription.text = courses?.planner_description
                 if (courses?.planner_pdf != null)
                 binding.clGetPlanner.setOnClickListener {
@@ -285,11 +309,16 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
                     val firstTwoWords = categoryName.take(2).joinToString(" ")
                     binding.tvTag2.text = firstTwoWords
                     binding.tvTag1.text = helperFunctions.toDisplayString(courses.course_class?.name)
-                    binding.orgPricexp.text = "₹"+courses.price.toString()
+                    if (courses.discount==null){
+                        binding.dicountPricexp.text = "₹${courses.price}"
+                        binding.orgPricexp.visibility = View.GONE
+                    }else{
+                        binding.orgPricexp.text = "₹"+courses.price.toString()
+                        binding.dicountPricexp.text = "₹${courses.discount?:0}"
+                    }
                     val disountprice = ((courses.price?:0)-((courses.discount?:0)))
-                    binding.dicountPricexp.text = "₹${courses.discount?:0}"
                     binding.tvStartDate.text = "Starts On: "+helperFunctions.formatCourseDate(courses.course_start_date.toString())
-                    binding.tvEndDate.text ="Expiry Date: "+helperFunctions.formatCourseDate(courses.course_end_date.toString())
+                    binding.tvEndDate.text ="Ends On: "+helperFunctions.formatCourseDate(courses.course_end_date.toString())
 
                     val newItems = courses.folder?.map { folder -> mapFolderToOurContentItem(folder) } ?: emptyList()
                      val freeCourse = courses.folder?.get(0)?.name?.split(" ")?.get(0)
@@ -309,7 +338,13 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
 
         }
 
-        if (firstInstallment>0) {
+        if (firstInstallment<=0) {
+            Log.d("firstInstallment",firstInstallment.toString())
+            binding.clInstallmentOptionView.visibility = View.GONE
+
+        }else{
+            Log.d("firstInstallment",firstInstallment.toString())
+            binding.clInstallmentOptionView.visibility = View.VISIBLE
             binding.clInstallmentOptionView.setOnClickListener {
 
                 showInstallmentDetailsBottomSheet(
@@ -549,6 +584,52 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
 
     }
 
+    private fun getCourseTagsData() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            courseViewModel.courses.collect { result ->
+                when {
+                    result?.isSuccess == true -> {
+                        val data = result.onSuccess {
+                            it.getAllCourseForStudent.courses.map {
+
+                                binding.tvTag4.text =  "Target "+it.target_year.toString()
+//                                val courseTags = it.course_tags
+
+                                binding.tvTag1.apply {
+                                    text = ExploreCourseTags?.getOrNull(0) ?: ""
+                                    visibility = if (text.isEmpty()) View.GONE else View.VISIBLE
+                                }
+                                binding.tvTag2.apply {
+                                    text = ExploreCourseTags?.getOrNull(1) ?: ""
+                                    visibility = if (text.isEmpty()) View.GONE else View.VISIBLE
+                                }
+                                binding.tvTag3.apply {
+                                    text = ExploreCourseTags?.getOrNull(2) ?: ""
+                                    visibility = if (text.isEmpty()) View.GONE else View.VISIBLE
+                                }
+
+                            }
+                        }
+                        Log.d("CourseTagsData", "Success: $data")
+                    }
+                    result?.isFailure == true -> {
+                        val exception = result.exceptionOrNull()
+                        Log.d("CourseTagsData", "Error: ${exception?.message}")
+                    }
+                    else -> {
+                        Log.d("CourseTagsData", "No data available")
+                    }
+                }
+            }
+        }
+
+        // Fetching the courses with desired filters
+        val filters = FindAllCourseInputStudent(/* initialize with required data */)
+        courseViewModel.fetchCourses(filters)
+    }
+
+
+
     override fun onFirstItemClick(folderId: String,folderName: String, free:Boolean) {
         val bundle = Bundle().apply {
             putString("folderId", folderId)
@@ -665,7 +746,7 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
 
     }
 
-    override fun onCourseItemClicked(course: AllCourseForStudentQuery.Course) {
+    override fun onCourseItemClicked(course: AllCourseForStudentQuery.Course,bundle: Bundle) {
         val bundle = Bundle().apply {
             putString("course_id", course.id)
         }
@@ -684,6 +765,7 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
         }
         bottomSheet.show(parentFragmentManager, "InstallmentDetailsBottomSheet")
     }
+
 
 
 

@@ -164,7 +164,7 @@
                         android:layout_marginTop="12dp"
                         android:background="@drawable/tag_bg"
                         android:padding="6dp"
-                        android:hint="12th Class"
+                        android:gravity="center"
                         android:textColor="#5A5555"
                         android:textSize="12sp"
                         android:textStyle="bold"
@@ -180,7 +180,8 @@
                         android:layout_marginTop="12dp"
                         android:background="@drawable/tag_bg"
                         android:padding="6dp"
-                        android:text=""
+                        android:gravity="center"
+                        android:hint=""
                         android:textColor="#5A5555"
                         android:textSize="12sp"
                         android:textStyle="bold"
@@ -196,12 +197,28 @@
                         android:layout_marginTop="12dp"
                         android:background="@drawable/tag_bg"
                         android:padding="6dp"
-                        android:text="@{`Target ` + (courseByIDViewModel.courseByID != null ? String.valueOf(courseByIDViewModel.courseByID.target_year) : ` `)}"
+                        android:gravity="center"
                         android:textColor="#5A5555"
                         android:textSize="12sp"
                         android:textStyle="bold"
                         app:fontFamily="@font/nunito"
                         app:layout_constraintStart_toEndOf="@id/tvTag2"
+                        app:layout_constraintTop_toBottomOf="@id/tvCourseName" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tvTag4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="6dp"
+                        android:layout_marginTop="12dp"
+                        android:background="@drawable/tag_bg"
+                        android:padding="6dp"
+                        android:gravity="center"
+                        android:textColor="#5A5555"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        app:fontFamily="@font/nunito"
+                        app:layout_constraintStart_toEndOf="@id/tvTag3"
                         app:layout_constraintTop_toBottomOf="@id/tvCourseName" />
 
 
@@ -295,7 +312,6 @@
                         android:drawableStart="@drawable/video_play__1_"
                         android:drawablePadding="6dp"
                         android:fontFamily="@font/nunito"
-                        android:hint="Lectures: 0"
                         android:textColor="#726C6C"
                         android:textSize="12sp"
                         android:textStyle="bold"
@@ -303,7 +319,7 @@
                         app:layout_constraintTop_toBottomOf="@id/tvStartDate" />
 
                     <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/tvQuizTests"
+                        android:id="@+id/ExpireValidity"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
@@ -505,7 +521,7 @@
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/tvCoursePlannerDescription"
-                        android:layout_width="0dp"
+                        android:layout_width="328dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
                         android:lineHeight="21sp"
@@ -514,7 +530,6 @@
                         android:textSize="14sp"
                         android:maxLines="3"
                         app:fontFamily="@font/nunito"
-                        app:layout_constraintEnd_toEndOf="@+id/clGetPlanner"
                         app:layout_constraintStart_toStartOf="@+id/tvCoursePlanner"
                         app:layout_constraintTop_toBottomOf="@+id/tvCoursePlanner" />
 
@@ -522,19 +537,18 @@
                         android:id="@+id/tvPlannerReadMore"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginVertical="@dimen/_12sp"
                         android:drawableEnd="@drawable/arrow_down"
                         android:drawablePadding="5dp"
-                        android:layout_marginStart="14sp"
+                        android:gravity="center"
+                        android:layout_marginTop="@dimen/_10dp"
                         android:text="Read More"
                         android:textColor="#3E3EF7"
                         android:textSize="14sp"
                         android:textStyle="bold"
                         app:fontFamily="@font/nunito"
-                        app:layout_constraintTop_toBottomOf="@+id/tvCoursePlannerDescription"
-                        app:layout_constraintBottom_toBottomOf="@id/tvCoursePlannerDescription"
-                        app:layout_constraintStart_toStartOf="@+id/tvCoursePlanner"
-                        app:layout_constraintTop_toTopOf="@+id/clGetPlanner" />
+                        app:layout_constraintBottom_toTopOf="@+id/clGetPlanner"
+                        app:layout_constraintEnd_toEndOf="@+id/clGetPlanner"
+                        />
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/clGetPlanner"
@@ -948,7 +962,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="20dp"
-                    android:text="₹44,939 "
                     android:textColor="#726C6C"
                     android:textSize="14sp"
                     app:fontFamily="@font/nunito"
@@ -972,7 +985,6 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="6dp"
                     android:layout_marginBottom="20dp"
-                    android:text=""
                     android:textColor="#0A0A0B"
                     android:textSize="16sp"
                     android:textStyle="bold"

@@ -23,6 +23,7 @@ import com.google.android.gms.wallet.WalletConstants
 import com.razorpay.Checkout
 import com.student.competishun.coinkeeper.CreateOrderMutation
 import com.student.competishun.coinkeeper.type.CreateOrderInput
+import com.student.competishun.ui.main.HomeActivity
 import com.student.competishun.ui.viewmodel.GetCourseByIDViewModel
 import com.student.competishun.ui.viewmodel.OrderViewModel
 import com.student.competishun.ui.viewmodel.UserViewModel
@@ -76,14 +77,21 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
         super.onViewCreated(view, savedInstanceState)
 
 
-        binding.clEmptyCart.setOnClickListener {
-            findNavController().navigate(R.id.homeFragment)
-        }
+        (activity as? HomeActivity)?.showBottomNavigationView(false)
+        (activity as? HomeActivity)?.showFloatingButton(false)
+
+
+        var courseName:String = ""
+
 
 
         binding.igToolbarBackButton.setOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed()  }
         helperFunctions = HelperFunctions()
         binding.parentData.visibility = View.GONE
+
+        binding.clEmptyCart.setOnClickListener {
+            findNavController().navigate(R.id.homeFragment)
+        }
 
       //  binding.clrvContainer.visibility = View.GONE
         sharedPreferencesManager = SharedPreferencesManager(requireContext())
@@ -101,7 +109,6 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
         userViewModel.fetchUserDetails()
         Log.e("cartAdaptercartITems","cartItem.toString()")
         myAllCart(courseName)
-     //   withoutFree()
         cartAdapter = MyCartAdapter(mutableListOf(),cartViewModel,viewLifecycleOwner,userId,this) { cartItem ->
             Log.e("cartAdaptrcartITems",cartItem.toString())
             handleItemClick(cartItem, userId)
@@ -204,6 +211,7 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
 
 
     private fun showFullPayment() {
+        binding.tvOneTimePayment.text = "One-Time Payment"
         cartAdapter.updateCartItems(originalCartItems)
         Log.e("getpaymentd",originalCartItems.get(0).toString())
         val discountPrice = (originalCartItems.get(0).price.toDouble() * originalCartItems.get(0).discount.toDouble()) / 100
@@ -226,7 +234,7 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
     }
 
     private fun showPartialPayment() {
-
+        binding.tvOneTimePayment.text = "1st Installment"
         val partialPaymentItems = originalCartItems.filter { it.withInstallmentPrice > 0 }
         if (partialPaymentItems.isNotEmpty()) {
             cartAdapter.updateCartItems(partialPaymentItems)

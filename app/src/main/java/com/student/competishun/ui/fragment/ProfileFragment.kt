@@ -12,6 +12,7 @@ import com.student.competishun.R
 import com.student.competishun.databinding.FragmentOnBoardingBinding
 import com.student.competishun.databinding.FragmentProfileBinding
 import com.student.competishun.databinding.FragmentReferenceBinding
+import com.student.competishun.ui.main.HomeActivity
 import com.student.competishun.ui.main.MainActivity
 import com.student.competishun.utils.SharedPreferencesManager
 
@@ -36,6 +37,11 @@ class ProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
+        (activity as? HomeActivity)?.showBottomNavigationView(false)
+        (activity as? HomeActivity)?.showFloatingButton(false)
+
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             requireActivity().finish()
         }

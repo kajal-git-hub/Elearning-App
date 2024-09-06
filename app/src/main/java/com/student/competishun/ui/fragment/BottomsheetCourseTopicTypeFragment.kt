@@ -16,6 +16,7 @@ import com.student.competishun.databinding.FragmentBottomsheetCourseTopicTypeBin
 import com.student.competishun.ui.adapter.TopicTypeAdapter
 import com.student.competishun.ui.viewmodel.CoursesViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import com.student.competishun.ui.main.HomeActivity
 
 @AndroidEntryPoint
 class BottomsheetCourseTopicTypeFragment : BottomSheetDialogFragment() {
@@ -37,6 +38,12 @@ class BottomsheetCourseTopicTypeFragment : BottomSheetDialogFragment() {
         val folderIds = arguments?.getStringArrayList("folder_ids")?: arrayListOf()
         val folderNames = arguments?.getStringArrayList("folder_names")?: arrayListOf()
         val folderCount = arguments?.getString("folder_Count")?:"0"
+
+
+
+        (activity as? HomeActivity)?.showBottomNavigationView(false)
+        (activity as? HomeActivity)?.showFloatingButton(false)
+
         val TopicTypeList = listOf(
             TopicTypeModel("Basic Maths (08)"),
             TopicTypeModel("Quadratic Equations (08)"),

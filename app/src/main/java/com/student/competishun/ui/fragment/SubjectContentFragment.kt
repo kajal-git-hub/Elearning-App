@@ -16,6 +16,7 @@ import com.student.competishun.data.model.FreeDemoItem
 import com.student.competishun.data.model.SubjectContentItem
 import com.student.competishun.databinding.FragmentSubjectContentBinding
 import com.student.competishun.ui.adapter.SubjectContentAdapter
+import com.student.competishun.ui.main.HomeActivity
 import com.student.competishun.ui.viewmodel.CoursesViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -35,6 +36,12 @@ class SubjectContentFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
+        (activity as? HomeActivity)?.showBottomNavigationView(false)
+        (activity as? HomeActivity)?.showFloatingButton(false)
+
+       // val folderId = arguments?.getString("folderId")
 
         binding.backIconSubjectContent.setOnClickListener {
             requireActivity().onBackPressedDispatcher.onBackPressed()

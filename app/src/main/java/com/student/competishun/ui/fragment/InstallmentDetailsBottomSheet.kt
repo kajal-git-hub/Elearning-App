@@ -11,6 +11,7 @@ import com.student.competishun.data.model.InstallmentItemModel
 import com.student.competishun.data.model.InstallmentModel
 import com.student.competishun.databinding.BottomSheetInstallmentDetailsBinding
 import com.student.competishun.ui.adapter.InstallmentAdapter
+import com.student.competishun.ui.main.HomeActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -46,6 +47,10 @@ class InstallmentDetailsBottomSheet : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
+        (activity as? HomeActivity)?.showBottomNavigationView(false)
+        (activity as? HomeActivity)?.showFloatingButton(false)
 
         val installmentItemList = listOf(
             InstallmentItemModel("On the day of purchase of the course."),

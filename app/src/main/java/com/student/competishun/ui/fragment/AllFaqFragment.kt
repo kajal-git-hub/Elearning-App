@@ -12,6 +12,7 @@ import com.student.competishun.R
 import com.student.competishun.data.model.FAQItem
 import com.student.competishun.databinding.FragmentAllFaqBinding
 import com.student.competishun.ui.adapter.FAQAdapter
+import com.student.competishun.ui.main.HomeActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -32,6 +33,11 @@ class AllFaqFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
+
+        (activity as? HomeActivity)?.showBottomNavigationView(false)
+        (activity as? HomeActivity)?.showFloatingButton(false)
 
         // Register the back press callback here
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {

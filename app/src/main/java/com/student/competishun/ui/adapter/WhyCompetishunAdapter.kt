@@ -1,6 +1,7 @@
 package com.student.competishun.ui.adapter
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -34,6 +35,7 @@ class WhyCompetishunAdapter(private val listWhyCompetishun: List<WhyCompetishun>
         val bundle = Bundle().apply {
             putString("url", videourl)
         }
+        Log.d("Navigating to Explore","Navigating")
         navController.navigate(R.id.action_homeFragment_to_mediaFragment,bundle)
     }
 

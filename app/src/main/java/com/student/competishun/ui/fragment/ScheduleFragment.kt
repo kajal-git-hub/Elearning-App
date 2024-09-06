@@ -17,6 +17,7 @@ import com.student.competishun.data.model.CalendarDate
 import com.student.competishun.data.model.ScheduleData
 import com.student.competishun.databinding.FragmentScheduleBinding
 import com.student.competishun.ui.adapter.ScheduleAdapter
+import com.student.competishun.ui.main.HomeActivity
 import com.student.competishun.ui.viewmodel.MyCoursesViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.ZoneId
@@ -174,6 +175,11 @@ class ScheduleFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
+        (activity as? HomeActivity)?.showBottomNavigationView(false)
+        (activity as? HomeActivity)?.showFloatingButton(false)
+
         scheduleData = ZonedDateTime.now()
         binding.backIconSchedule.setOnClickListener {
             requireActivity().onBackPressedDispatcher.onBackPressed()

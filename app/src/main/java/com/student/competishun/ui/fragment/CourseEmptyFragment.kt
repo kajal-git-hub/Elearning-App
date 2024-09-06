@@ -19,6 +19,7 @@ import com.student.competishun.curator.type.OtherRequirements
 import com.student.competishun.data.model.ExploreCourse
 import com.student.competishun.databinding.FragmentCourseEmptyBinding
 import com.student.competishun.ui.adapter.ExploreCourseAdapter
+import com.student.competishun.ui.main.HomeActivity
 import com.student.competishun.ui.viewmodel.GetCourseByIDViewModel
 import com.student.competishun.ui.viewmodel.MyCoursesViewModel
 import com.student.competishun.ui.viewmodel.OrdersViewModel
@@ -56,6 +57,16 @@ class CourseEmptyFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.btnExploreCoursesEmpty.setOnClickListener {
+            findNavController().navigate(R.id.homeFragment)
+        }
+
+
+        (activity as? HomeActivity)?.showBottomNavigationView(true)
+        (activity as? HomeActivity)?.showFloatingButton(false)
+
+
         sharedPreferencesManager = SharedPreferencesManager(requireContext())
         myCoursesBind()
         var userId = arguments?.getString("user_id").toString()
@@ -151,7 +162,7 @@ class CourseEmptyFragment : Fragment() {
 
     fun myCoursesBind() {
         binding.progressBar.visibility = View.VISIBLE
-        _binding?.clEmptyMyCourse?.visibility = View.GONE
+        binding.clEmptyMyCourse?.visibility = View.GONE
         val courseDetailsList = mutableListOf<ExploreCourse>()
         viewModel.myCourses.observe(viewLifecycleOwner) { result ->
             binding.progressBar?.visibility = View.GONE
@@ -216,6 +227,7 @@ class CourseEmptyFragment : Fragment() {
                         LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
                 }
             }.onFailure {
+                binding?.clEmptyMyCourse?.visibility = View.VISIBLE
                 Log.e("MyCoursesFail", it.message.toString())
                 Toast.makeText(requireContext(), "Failed to load courses: ${it.message}", Toast.LENGTH_SHORT).show()
             }

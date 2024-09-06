@@ -42,6 +42,8 @@ import com.student.competishun.ui.adapter.OurCoursesAdapter
 import com.student.competishun.ui.adapter.PromoBannerAdapter
 import com.student.competishun.ui.adapter.TestimonialsAdapter
 import com.student.competishun.ui.adapter.WhyCompetishunAdapter
+import com.student.competishun.ui.main.HomeActivity
+import com.student.competishun.ui.main.MainActivity
 import com.student.competishun.ui.viewmodel.CoursesCategoryViewModel
 import com.student.competishun.ui.viewmodel.StudentCoursesViewModel
 import com.student.competishun.ui.viewmodel.UserViewModel
@@ -55,7 +57,7 @@ import kotlinx.coroutines.launch
 class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
-    private lateinit var recyclerView: RecyclerView
+    private lateinit var testimonial_recyclerView: RecyclerView
     private lateinit var rvWhyCompetishun: RecyclerView
     private lateinit var dotsIndicatorTestimonials: LinearLayout
     private lateinit var dotsIndicatorWhyCompetishun: LinearLayout
@@ -99,6 +101,9 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        (activity as? HomeActivity)?.showBottomNavigationView(true)
+        (activity as? HomeActivity)?.showFloatingButton(true)
 
 
         getAllBanners()
@@ -166,7 +171,7 @@ class HomeFragment : Fragment() {
             }
         })
 
-        recyclerView = view.findViewById(R.id.recyclerViewTestimonials)
+        testimonial_recyclerView = view.findViewById(R.id.recyclerViewTestimonials)
         rvWhyCompetishun = view.findViewById(R.id.rvWhyCompetishun)
         dotsIndicatorTestimonials = view.findViewById(R.id.llDotsIndicator)
         dotsIndicatorWhyCompetishun = view.findViewById(R.id.llDotsIndicatorWhyCompetishun)
@@ -262,9 +267,9 @@ class HomeFragment : Fragment() {
         testimonials = Constants.testimonials
         adapter = TestimonialsAdapter(testimonials)
         adapterWhyCompetishun = WhyCompetishunAdapter(listWhyCompetishun)
-        recyclerView.adapter = adapter
+        testimonial_recyclerView.adapter = adapter
         rvWhyCompetishun.adapter = adapterWhyCompetishun
-        recyclerView.layoutManager =
+        testimonial_recyclerView.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         rvWhyCompetishun.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
@@ -280,7 +285,7 @@ class HomeFragment : Fragment() {
             dotsIndicatorWhyCompetishun
         )
 
-        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+        testimonial_recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 helperFunctions.updateDotsIndicator(recyclerView, dotsIndicatorTestimonials)
@@ -398,7 +403,7 @@ class HomeFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             studentCoursesViewModel.banners.collect { result ->
                 val bannerList = mutableListOf<PromoBannerModel>()
-                Log.e("bannerLists",bannerList.toString())
+                Log.d("bannerList",bannerList.toString())
                 result?.forEach { bannerlist ->
                     bannerlist?.let {
                         bannerList.add(PromoBannerModel(it.mobile_banner_image, it.redirect_link))
@@ -460,7 +465,7 @@ class HomeFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             studentCoursesViewModel.courses.collect { result ->
                 result?.onSuccess { data ->
-                    Log.e("StudentCourses", data.toString())
+                    Log.e("TotalStudentCourses", data.toString())
                     val courses = data.getAllCourseForStudent.courses.map { course ->
                         binding.progressBarRec.visibility = View.GONE
                         binding.clRecommendedCourses.visibility = View.VISIBLE

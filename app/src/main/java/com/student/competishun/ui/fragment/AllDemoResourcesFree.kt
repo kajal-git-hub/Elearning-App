@@ -13,6 +13,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -23,6 +24,7 @@ import com.student.competishun.curator.type.FileType
 import com.student.competishun.data.model.FreeDemoItem
 import com.student.competishun.ui.adapter.FreeDemoAdapter
 import com.student.competishun.databinding.FragmentAllDemoResourcesFreeBinding
+import com.student.competishun.ui.main.HomeActivity
 import com.student.competishun.ui.viewmodel.CoursesViewModel
 import com.student.competishun.ui.viewmodel.VideourlViewModel
 import com.student.competishun.utils.HelperFunctions
@@ -41,11 +43,27 @@ class AllDemoResourcesFree : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentAllDemoResourcesFreeBinding.inflate(inflater, container, false)
+
+        requireActivity().onBackPressedDispatcher.addCallback(this) {
+            handleBackPressed()
+        }
+
+
         return binding.root
+    }
+
+    private fun handleBackPressed() {
+        findNavController().navigateUp()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
+        (activity as? HomeActivity)?.showBottomNavigationView(false)
+        (activity as? HomeActivity)?.showFloatingButton(false)
+
+
         helperFunctions = HelperFunctions()
         var folderName = arguments?.getString("folderName")
         binding.igDemoBackButton.setOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed() }

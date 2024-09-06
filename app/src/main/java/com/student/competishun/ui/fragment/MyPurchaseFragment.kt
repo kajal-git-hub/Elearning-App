@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.student.competishun.databinding.FragmentMyPurchaseBinding
+import com.student.competishun.ui.main.HomeActivity
 
 class MyPurchaseFragment : Fragment() {
     private var _binding: FragmentMyPurchaseBinding? = null
@@ -27,6 +28,10 @@ class MyPurchaseFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
+        (activity as? HomeActivity)?.showBottomNavigationView(false)
+        (activity as? HomeActivity)?.showFloatingButton(false)
     }
 
 }

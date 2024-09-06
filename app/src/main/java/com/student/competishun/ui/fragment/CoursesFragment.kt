@@ -16,6 +16,7 @@ import androidx.fragment.app.viewModels
 import androidx.media3.common.util.Log
 import com.google.android.material.appbar.MaterialToolbar
 import com.student.competishun.curator.type.FindAllCourseInputStudent
+import com.student.competishun.ui.main.HomeActivity
 import com.student.competishun.ui.viewmodel.StudentCoursesViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -32,6 +33,10 @@ class CoursesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
+        (activity as? HomeActivity)?.showBottomNavigationView(false)
+        (activity as? HomeActivity)?.showFloatingButton(true)
 
         val tabToolbar = view.findViewById<MaterialToolbar>(R.id.appbar)
         val tabViewPager = view.findViewById<ViewPager>(R.id.tab_viewpager)

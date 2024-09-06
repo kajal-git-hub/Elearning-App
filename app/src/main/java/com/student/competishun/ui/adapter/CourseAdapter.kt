@@ -1,5 +1,6 @@
 package com.student.competishun.ui.adapter
 
+import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +13,7 @@ import com.student.competishun.curator.AllCourseForStudentQuery
 import com.student.competishun.databinding.ItemCourseBinding
 import com.student.competishun.utils.HelperFunctions
 import com.student.competishun.utils.StudentCourseItemClickListener
+import java.util.ArrayList
 
 class CourseAdapter(
     private var items: List<AllCourseForStudentQuery.Course>,
@@ -37,6 +39,9 @@ class CourseAdapter(
 
             val courseTags = item.course_tags
 
+            val courseBundle = Bundle()
+            courseBundle.putStringArrayList("courseTags", courseTags as ArrayList<String>?)
+
 
             tvRecommendedCourseName.text = item.name
             tvTag1.apply {
@@ -59,10 +64,13 @@ class CourseAdapter(
                 .into(ivImage)
             if (item.price != null && item.discount != null) {
                 val discountDetails = helperFunctions.calculateDiscountPercentage(item.price.toInt(), item.discount.toInt())
+                clPercentOffInner.visibility = View.VISIBLE
                 dicountPrice.text = "₹${item.discount}"
                 discPer.text = "${discountDetails.toInt()}% OFF"
             } else {
-                dicountPrice.text = "₹0"
+                clPercentOffInner.visibility = View.GONE
+                dicountPrice.text = "₹${item.price}"
+                orgPrice.visibility = View.GONE
                 discPer.text = "0% OFF"
             }
             tvTag2.apply {
@@ -77,8 +85,13 @@ class CourseAdapter(
                 visibility = if (text.isEmpty()) View.GONE else View.VISIBLE
             }
             itemCourse.setOnClickListener {
-                listener.onCourseItemClicked(item)
+                val bundle = Bundle().apply {
+                    putString("course_id", item.id)
+                    putStringArrayList("course_tags", item.course_tags as ArrayList<String>?)
+                }
+                listener.onCourseItemClicked(item, bundle)
             }
+
         }
     }
 

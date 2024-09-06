@@ -1,5 +1,6 @@
 package com.student.competishun.utils
 
+import android.os.Bundle
 import com.student.competishun.curator.AllCourseForStudentQuery
 import com.student.competishun.curator.GetAllCourseCategoriesQuery
 
@@ -8,7 +9,7 @@ interface OnCourseItemClickListener {
 }
 
 interface StudentCourseItemClickListener {
-    fun onCourseItemClicked(course: AllCourseForStudentQuery.Course)
+    fun onCourseItemClicked(course: AllCourseForStudentQuery.Course,bundle: Bundle)
 }
 
 interface OnCartItemRemovedListener {

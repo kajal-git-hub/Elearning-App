@@ -20,6 +20,7 @@ import com.student.competishun.curator.AllCourseForStudentQuery
 import com.student.competishun.curator.type.FindAllCourseInputStudent
 import com.student.competishun.databinding.FragmentCourseBinding
 import com.student.competishun.ui.adapter.CourseAdapter
+import com.student.competishun.ui.main.HomeActivity
 import com.student.competishun.ui.viewmodel.StudentCoursesViewModel
 import com.student.competishun.utils.HelperFunctions
 import com.student.competishun.utils.StudentCourseItemClickListener
@@ -54,6 +55,11 @@ class NEETFragment : Fragment(), StudentCourseItemClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
+        (activity as? HomeActivity)?.showBottomNavigationView(false)
+        (activity as? HomeActivity)?.showFloatingButton(true)
+
         helperFunctions = HelperFunctions()
         initializeTabLayout()
         setupTabLayout()
@@ -133,7 +139,7 @@ class NEETFragment : Fragment(), StudentCourseItemClickListener {
         }
     }
 
-    override fun onCourseItemClicked(course: AllCourseForStudentQuery.Course) {
+    override fun onCourseItemClicked(course: AllCourseForStudentQuery.Course,bundle: Bundle) {
         val bundle = Bundle().apply {
             putString("course_id", course.id)
         }

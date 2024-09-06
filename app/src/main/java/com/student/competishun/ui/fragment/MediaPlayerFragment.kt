@@ -20,6 +20,7 @@ import androidx.navigation.fragment.findNavController
 import com.otaliastudios.zoom.ZoomApi
 import com.otaliastudios.zoom.ZoomLayout
 import com.student.competishun.databinding.FragmentMediaPlayerBinding
+import com.student.competishun.ui.main.HomeActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -43,6 +44,14 @@ class MediaPlayerFragment : Fragment() {
     @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
+
+        (activity as? HomeActivity)?.showBottomNavigationView(false)
+        (activity as? HomeActivity)?.showFloatingButton(false)
+
+        Log.d("reachedd","reacheddddd")
+
         val url = arguments?.getString("url")
         Log.e("viddeourl",url.toString())
         //initialize exoplayer

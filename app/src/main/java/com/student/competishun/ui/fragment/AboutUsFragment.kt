@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.student.competishun.databinding.FragmentAboutUsBinding
+import com.student.competishun.ui.main.HomeActivity
 
 class AboutUsFragment : Fragment() {
 
@@ -22,6 +23,9 @@ class AboutUsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        (activity as? HomeActivity)?.showBottomNavigationView(false)
+        (activity as? HomeActivity)?.showFloatingButton(false)
 
     }
 
