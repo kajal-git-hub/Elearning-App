@@ -966,7 +966,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="20dp"
-                    android:text="₹44,939 "
+                    android:text=" "
                     android:textColor="#726C6C"
                     android:textSize="14sp"
                     app:fontFamily="@font/nunito"

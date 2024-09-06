@@ -255,7 +255,7 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
 
                 Log.e("listcourses", courses.toString())
                 binding.progressBar.visibility = View.GONE
-                binding.ExpireValidity.text = "]Validity: "+ helperFunctions.formatCourseDate(courses?.course_validity_end_date.toString())
+                binding.ExpireValidity.text = "Validity: "+ helperFunctions.formatCourseDate(courses?.course_validity_end_date.toString())
               //  binding.tvCoursePlannerDescription.text = courses?.planner_description
                 if (courses?.planner_pdf != null)
                 binding.clGetPlanner.setOnClickListener {
