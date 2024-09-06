@@ -94,7 +94,7 @@ class RecommendedCoursesAdapter(
         val targetYear: TextView = view.findViewById(R.id.tvTarget)
         val startDate: MaterialTextView = view.findViewById(R.id.tvStartDate)
         val endDate: MaterialTextView = view.findViewById(R.id.tvEndDate)
-        val lectureCount: TextView = view.findViewById(R.id.tvLectureNo)
+        val lectureCount: TextView = view.findViewById(R.id.tvLectureNoRecommend)
         val quizCount: TextView = view.findViewById(R.id.tvQuizTests)
         val originalPrice: TextView = view.findViewById(R.id.orgPrice)
         val discountPrice: TextView = view.findViewById(R.id.dicountPrice)
