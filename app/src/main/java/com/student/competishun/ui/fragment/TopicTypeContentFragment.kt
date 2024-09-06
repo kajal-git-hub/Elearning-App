@@ -44,11 +44,17 @@ class TopicTypeContentFragment : Fragment() {
         (activity as? HomeActivity)?.showFloatingButton(false)
 
         folderProgress("b8b9cb32-661b-4e8e-90d0-9c5a0740d273")
+        var folderId = arguments?.getString("folder_Id")
+        var folder_Name = arguments?.getString("folder_Name")
+        var folder_Count = arguments?.getString("folder_Count")
+
+        binding.tvTopicTypeName.text = folder_Name?:""
+        if (folderId != null) {
+            folderProgress(folderId)
+        }
         helperFunctions = HelperFunctions()
         binding.backIcon.setOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed() }
-      //  val adapter = TopicContentAdapter(topicContents)
-    //    binding.rvTopicContent.adapter = adapter
-     //   binding.rvTopicContent.layoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
+        binding.tvTopicContentCount.text = "0$folder_Count"
 
     }
 

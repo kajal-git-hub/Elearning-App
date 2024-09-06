@@ -15,8 +15,6 @@ import com.student.competishun.curator.type.FileType
 import com.student.competishun.data.model.FreeDemoItem
 import com.student.competishun.data.model.SubjectContentItem
 import com.student.competishun.databinding.FragmentSubjectContentBinding
-import com.student.competishun.ui.adapter.ExploreCourseAdapter
-import com.student.competishun.ui.adapter.FreeDemoAdapter
 import com.student.competishun.ui.adapter.SubjectContentAdapter
 import com.student.competishun.ui.main.HomeActivity
 import com.student.competishun.ui.viewmodel.CoursesViewModel
@@ -45,46 +43,95 @@ class SubjectContentFragment : Fragment() {
 
        // val folderId = arguments?.getString("folderId")
 
-            folderProgress("81c5cc01-666c-4a97-a4b5-b153b1d9380e")
-
-        binding.backIconSubjectContent.setOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed() }
-        val subjectContentList = listOf(
-            SubjectContentItem(1, "Trigonometric ratios", "08 Learning Material"),
-            SubjectContentItem(2, "Pythagorean theorem", "05 Learning Material"),
-            SubjectContentItem(3, "Vectors and scalars", "07 Learning Material"),
-            SubjectContentItem(4, "Algebraic expressions", "10 Learning Material"),
-            SubjectContentItem(5, "Calculus basics", "12 Learning Material"),
-            SubjectContentItem(6, "Linear equations", "09 Learning Material"),
-            SubjectContentItem(7, "Probability", "06 Learning Material"),
-            SubjectContentItem(8, "Statistics", "08 Learning Material"),
-            SubjectContentItem(8, "Statistics", "08 Learning Material"),
-            SubjectContentItem(8, "Statistics", "08 Learning Material"),
-            SubjectContentItem(8, "Statistics", "08 Learning Material"),
-            SubjectContentItem(8, "Statistics", "08 Learning Material"),
-        )
-
-        binding.rvSubjectContent.adapter = SubjectContentAdapter(subjectContentList){courseitem->
-            findNavController().navigate(R.id.action_subjectContentFragment_to_TopicTYPEContentFragment)
+        binding.backIconSubjectContent.setOnClickListener {
+            requireActivity().onBackPressedDispatcher.onBackPressed()
         }
+
+        // Retrieve arguments passed to the fragment
+        val folderIds = arguments?.getStringArrayList("folder_ids") ?: arrayListOf()
+        val folderNames = arguments?.getStringArrayList("folder_names") ?: arrayListOf()
+        val courseName = arguments?.getString("courseName") ?: ""
+        val folderName = arguments?.getString("folder_Name") ?: ""
+        var folder_Count = arguments?.getString("folder_Count")?:"0"
+
+        Log.e("folderNames", folderNames.toString())
+
+        // Set up layout manager for RecyclerView (before setting the adapter)
         binding.rvSubjectContent.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
+        // Generate the list of SubjectContentItem
+        val subjectContentList = folderNames.mapIndexed { index, name ->
+            Log.e("folderContentLog", name)
+            val id = folderIds[index]
+            SubjectContentItem(
+                id = id,
+                chapterNumber = index + 1,
+                topicName = name,
+                topicDescription = "Description for $name",
+            )
+
+        }
+        binding.mtCount.text = "${folderNames.size} Chapters"
+        binding.tvSubjectName.text = folderName?:""
+            binding.rvSubjectContent.adapter = SubjectContentAdapter(subjectContentList) { selectedItem ->
+                var folderId = selectedItem.id
+                var folderName = selectedItem.topicName
+                folderProgress(folderId,folderName,folder_Count)
+                Log.d("SelectedItem", "Clicked on: ${selectedItem.topicName}")
+//                val bundle = Bundle().apply {
+//                    putStringArrayList("folder_ids", ArrayList(folderIds))
+//                    putStringArrayList("folder_names", ArrayList(folderNames))
+//                }
+
+
+        }
+        // Handle bottom sheet selection
         binding.downChooseTopic.setOnClickListener {
             val bottomSheet = BottomsheetCourseTopicTypeFragment()
             bottomSheet.show(childFragmentManager, "BottomsheetCourseTopicTypeFragment")
         }
     }
 
-    fun folderProgress(folderId:String){
+
+    private fun folderProgress(folderId:String,folderName: String,folderCount:String){
+        Log.e("folderProgress",folderId)
+        val free = arguments?.getBoolean("free")
         if (folderId != null) {
+            // Trigger the API call
             coursesViewModel.findCourseFolderProgress(folderId)
         }
         coursesViewModel.courseFolderProgress.observe(viewLifecycleOwner) { result ->
             result.onSuccess { data ->
-                Log.e("GetFolderdata", data.findCourseFolderProgress.folder.toString())
+                Log.e("GetFolderdata", data.toString())
                 val folderProgressFolder = data.findCourseFolderProgress.folder
                 val folderProgressContent = data.findCourseFolderProgress.folderContents
-                 binding.tvSubjectName.text = data.findCourseFolderProgress.folder?.name
+                val subfolderDurationFolders = data.findCourseFolderProgress.subfolderDurations
+                Log.e("subFolderdata", subfolderDurationFolders.toString())
 
+                if (folderProgressFolder != null) {
+
+                    if (!subfolderDurationFolders.isNullOrEmpty()){
+                        Log.e("subfolderDurationszs", subfolderDurationFolders.toString())
+                        val folderIds = ArrayList(subfolderDurationFolders?.mapNotNull { it.folder?.id } ?: emptyList())
+                        val folderNames = ArrayList(subfolderDurationFolders?.mapNotNull { it.folder?.name } ?: emptyList())
+                        val bundle = Bundle().apply {
+                            putStringArray("folder_ids", folderIds.toTypedArray())
+                            putStringArray("folder_names",folderNames.toTypedArray())
+                        }
+
+                    }
+                    else {
+                        if (subfolderDurationFolders.isNullOrEmpty()) {
+                            Log.e("folderContentsss", data.findCourseFolderProgress.folderContents.toString())
+
+                            val bundle = Bundle().apply {
+                                putString(" folder_Id", folderId)
+                                putString(" folder_Name", folderName)
+                            }
+                            findNavController().navigate(R.id.TopicTYPEContentFragment,bundle)
+                        }
+                    }
+                }
             }.onFailure { error ->
                 // Handle the error
                 Log.e("AllDemoResourcesFree", error.message.toString())

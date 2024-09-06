@@ -17,12 +17,15 @@ query MyCourses {
             entity_type
             folder {
                 id
+                parent_folder_id
                 name
                 description
+                folder_count
             }
         }
         progress {
             completionPercentage
+            folderCount
             subfolderDurations {
                 completionPercentage
                 folderCount
@@ -31,6 +34,7 @@ query MyCourses {
                     id
                     description
                     parent_folder_id
+                    folder_count
                 }
             }
         }

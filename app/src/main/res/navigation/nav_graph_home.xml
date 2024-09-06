@@ -180,6 +180,9 @@
         android:id="@+id/SubjectContentFragment"
         android:name="com.student.competishun.ui.fragment.SubjectContentFragment"
         tools:layout="@layout/fragment_subject_content">
+        <argument
+            android:name="folder_Name"
+            app:argType="string"/>
         <action
             android:id="@+id/action_subjectContentFragment_to_TopicTYPEContentFragment"
             app:destination="@+id/TopicTYPEContentFragment"/>
@@ -208,6 +211,12 @@
         android:id="@+id/TopicTYPEContentFragment"
         android:name="com.student.competishun.ui.fragment.TopicTypeContentFragment"
         tools:layout="@layout/fragment_topic_type_content">
+        <argument
+            android:name="folder_Id"
+            app:argType="string" />
+        <argument
+            android:name="folder_Name"
+            app:argType="string" />
     </fragment>
 
     <fragment

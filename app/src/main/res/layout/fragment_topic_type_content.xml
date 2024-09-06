@@ -54,7 +54,7 @@
             android:ellipsize="end"
             android:fontFamily="@font/nunito"
             android:maxLines="1"
-            android:text="08"
+            android:text="0"
             android:textColor="#FF7A28"
             android:textSize="@dimen/_16sp"
             app:layout_constraintEnd_toStartOf="@id/book_icon_orange"
