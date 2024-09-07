@@ -15,7 +15,7 @@ import com.student.competishun.databinding.ExploreCourseItemBinding
 class ExploreCourseAdapter(
     private val courses: List<MyCoursesQuery.Course>,
     private val progressList: List<MyCoursesQuery.Progress>, // List to hold progress information
-    private val onItemClicked: (MyCoursesQuery.Course, List<String>, List<String>, Double,List<String>) -> Unit// Updated callback
+    private val onItemClicked: (MyCoursesQuery.Course, List<String>, List<String>, List<Double>,List<String>) -> Unit// Updated callback
 ) : RecyclerView.Adapter<ExploreCourseAdapter.ExploreCourseViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExploreCourseViewHolder {
@@ -36,6 +36,8 @@ class ExploreCourseAdapter(
             .into(holder.binding.ivPurchased)
 
         holder.itemView.setOnClickListener {
+            val completionPercentages = progress.subfolderDurations
+                ?.map { it.completionPercentage } ?: emptyList()
             val folderIds = course.folder
                 ?.filter { it.parent_folder_id == null && !it.name.startsWith("Free", ignoreCase = true) }
                 ?.map { it.id } ?: emptyList()
@@ -50,7 +52,7 @@ class ExploreCourseAdapter(
                 course,
                 folderIds,
                 folderNames,
-                progress.completionPercentage ?: 0.0,
+                completionPercentages,
                folderCounts
             )
             Log.e("folder_Idada:", folderIds.toString())
@@ -68,7 +70,7 @@ class ExploreCourseAdapter(
             binding.tvTag3ExploreCourse.text = course.target_year.toString()
             binding.tvOngoing.text = course.status.toString()
             binding.tvPercentCompleted.text = buildString {
-                append(progress?.completionPercentage.toString())
+                append(String.format("%.2f", progress?.completionPercentage))
                 append("%")
             }
 

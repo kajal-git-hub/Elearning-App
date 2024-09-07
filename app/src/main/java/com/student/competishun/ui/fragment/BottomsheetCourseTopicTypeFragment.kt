@@ -1,5 +1,7 @@
 package com.student.competishun.ui.fragment
 
+import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -17,56 +19,51 @@ import com.student.competishun.ui.adapter.TopicTypeAdapter
 import com.student.competishun.ui.viewmodel.CoursesViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import com.student.competishun.ui.main.HomeActivity
+import com.student.competishun.utils.OnTopicTypeSelectedListener
 
 @AndroidEntryPoint
 class BottomsheetCourseTopicTypeFragment : BottomSheetDialogFragment() {
 
-    private var _binding: FragmentBottomsheetCourseTopicTypeBinding? = null
-    private val binding get() = _binding!!
+    private lateinit var binding: FragmentBottomsheetCourseTopicTypeBinding
+    private lateinit var topicTypeAdapter: TopicTypeAdapter
     private val coursesViewModel: CoursesViewModel by viewModels()
+    private var listener: OnTopicTypeSelectedListener? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentBottomsheetCourseTopicTypeBinding.inflate(inflater, container, false)
+        binding = FragmentBottomsheetCourseTopicTypeBinding.inflate(inflater, container, false)
         return binding.root
     }
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val folderIds = arguments?.getStringArrayList("folder_ids")?: arrayListOf()
-        val folderNames = arguments?.getStringArrayList("folder_names")?: arrayListOf()
-        val folderCount = arguments?.getString("folder_Count")?:"0"
-
-
-
         (activity as? HomeActivity)?.showBottomNavigationView(false)
         (activity as? HomeActivity)?.showFloatingButton(false)
 
-        val TopicTypeList = listOf(
-            TopicTypeModel("Basic Maths (08)"),
-            TopicTypeModel("Quadratic Equations (08)"),
-            TopicTypeModel("Algebra (08)"),
-            TopicTypeModel("Trigonometry (08)"),
-            TopicTypeModel("Geometry (08)"),
-            TopicTypeModel("Calculus (08)"),
-            TopicTypeModel("Statistics (08)"),
-            TopicTypeModel("Probability (08)"),
-        )
-
-         folderNames?.mapIndexed { index, name ->
-             val id = folderIds.get(index)?:""
-             Log.e("bottomsca $name", "$index "+id)
-            folderProgress(id,name,folderCount)
-
+        val folderIds = arguments?.getStringArrayList("folder_ids")?: arrayListOf()
+        val folderNames = arguments?.getStringArrayList("folder_names")?: arrayListOf()
+        val folderCount = arguments?.getString("folder_Count")?:"0"
+        // Create a list of TopicTypeModel using folderNames
+        val topicTypeList = folderIds.mapIndexed { index, id ->
+            val name = folderNames.getOrNull(index) ?: "Unknown Name" // Handle out-of-range case
+            TopicTypeModel(id = id, title = name, count = folderCount)
         }
-       // binding.rvTopicTypes.apply {
-      //      layoutManager =
-       //         LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-      //      adapter = installmentAdapter
-      //  }
+        binding.tvTitleNumber.text = "(${folderIds.size})"
 
+
+
+        // Initialize the adapter and set it to the RecyclerView
+        topicTypeAdapter = TopicTypeAdapter(topicTypeList) { selectedTopic ->
+            listener?.onTopicTypeSelected(selectedTopic)
+            dismiss()
+        }
+        binding.rvTopicTypes.apply {
+            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+            adapter = topicTypeAdapter
+        }
     }
 
     private fun folderProgress(folderId:String,folderName: String,folderCount:String){
@@ -95,18 +92,19 @@ class BottomsheetCourseTopicTypeFragment : BottomSheetDialogFragment() {
                         }
                         val topicTypeList = subfolderDurationFolders?.map { folder ->
                             TopicTypeModel(
-                                title = "${folder.folder?.name} (${folder.folder?.folder_count ?: 0})"
+                                title = "${folder.folder?.name} (${folder.folder?.folder_count ?: 0})",
+                                count = "",id=""
                             )
                         } ?: emptyList()
 
                         // Set up the adapter with the newly created topicTypeList
-                        val topicTypeAdapter = TopicTypeAdapter(topicTypeList)
+                       // val topicTypeAdapter = TopicTypeAdapter(topicTypeList)
 
                         // Update RecyclerView with the new list
-                        binding.rvTopicTypes.apply {
-                            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-                            adapter = topicTypeAdapter
-                        }
+//                        binding.rvTopicTypes.apply {
+//                            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+//                            adapter = topicTypeAdapter
+//                        }
 
                     }
                     else {
@@ -129,9 +127,14 @@ class BottomsheetCourseTopicTypeFragment : BottomSheetDialogFragment() {
         }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+    fun setOnTopicTypeSelectedListener(listener: OnTopicTypeSelectedListener) {
+        this.listener = listener
+    }
+
+
+    override fun onDismiss(dialog: DialogInterface) {
+        super.onDismiss(dialog)
+        listener = null
     }
 
 }

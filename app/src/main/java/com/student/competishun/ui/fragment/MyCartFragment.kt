@@ -81,18 +81,10 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
         (activity as? HomeActivity)?.showFloatingButton(false)
 
 
-        var courseName:String = ""
-
-
 
         binding.igToolbarBackButton.setOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed()  }
         helperFunctions = HelperFunctions()
         binding.parentData.visibility = View.GONE
-        binding.CartTabLayout.visibility = View.GONE
-        binding.clrvContainer.visibility = View.GONE
-        binding.clProccedToPay.visibility = View.GONE
-        binding.clPaymentSummary.visibility = View.GONE
-        binding.clEmptyCart.visibility = View.VISIBLE
 
         binding.clEmptyCart.setOnClickListener {
             findNavController().navigate(R.id.homeFragment)
@@ -113,7 +105,7 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
         }
         userViewModel.fetchUserDetails()
         Log.e("cartAdaptercartITems","cartItem.toString()")
-        myAllCart(courseName)
+        myAllCart()
         cartAdapter = MyCartAdapter(mutableListOf(),cartViewModel,viewLifecycleOwner,userId,this) { cartItem ->
             Log.e("cartAdaptrcartITems",cartItem.toString())
             handleItemClick(cartItem, userId)
@@ -306,25 +298,27 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
         findNavController().navigate(R.id.action_mycartFragment_to_paymentFailedFragment)
     }
 
-    private fun myAllCart(courseName: String) {
+    private fun myAllCart() {
+        binding.clPaymentSummary.visibility = View.GONE
+        binding.rvAllCart.visibility = View.GONE
+        binding.clEmptyCart.visibility = View.VISIBLE
         cartViewModel.findAllCartItems(userId)
         cartViewModel.findAllCartItemsResult.observe(viewLifecycleOwner, Observer { result ->
 
 
-
             result.onSuccess { data ->
-                binding.clEmptyCart.visibility = View.GONE
-                binding.parentData.visibility = View.VISIBLE
-                binding.rvAllCart.visibility = View.VISIBLE
-                binding.clProccedToPay.visibility = View.VISIBLE
-                binding.clPaymentSummary.visibility = View.VISIBLE
+
 
                 Log.e("CartItems", data.findAllCartItems.toString())
                 var complementryId = ""
                 val cartItems = data.findAllCartItems.map { cartItemData ->
-
+                    binding.clEmptyCart.visibility = View.GONE
+                    binding.parentData.visibility = View.VISIBLE
+                    binding.clPaymentSummary.visibility = View.VISIBLE
+                    binding.rvAllCart.visibility = View.VISIBLE
+                    binding.clProccedToPay.visibility = View.VISIBLE
                     val course = cartItemData.course
-                    this.courseName = course.name
+                    courseName = course.name
                     if (!course.complementary_course.isNullOrEmpty())
                         complementryId = course.complementary_course
                     Log.e("complementryIDd", complementryId)
@@ -346,7 +340,6 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
                 }.takeLast(1)
                 binding.tvCartCount.text = "(${cartItems.size})"
                 binding.cartBadge.text = cartItems.size.toString()
-                binding.rvAllCart.visibility = View.VISIBLE
                 // Ensure this observer is only added once
                 if (getCourseByIDViewModel.courseByID.hasActiveObservers().not()) {
                     getCourseByIDViewModel.courseByID.observe(viewLifecycleOwner, Observer { course ->
@@ -405,8 +398,7 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
 
             }.onFailure { exception ->
                 Log.e("exception in cart", exception.toString())
-                binding.clPaymentSummary.visibility = View.GONE
-                binding.clProccedToPay.visibility = View.GONE
+
                 Toast.makeText(requireContext(), exception.message, Toast.LENGTH_SHORT).show()
             }
         })

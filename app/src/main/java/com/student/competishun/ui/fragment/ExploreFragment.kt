@@ -21,8 +21,10 @@ import androidx.fragment.app.Fragment
 import androidx.core.widget.NestedScrollView
 import androidx.databinding.ObservableField
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
@@ -129,9 +131,11 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
         combinedTabItems = listOf()
          courseId = arguments?.getString("course_id").toString()
         sharedPreferencesManager = SharedPreferencesManager(requireContext())
+        getAllLectureCount(courseId)
         if (lectureCount.isNullOrEmpty()) {
             lectureCount = "0"
-            binding.tvLectureNo.text = "Lectures: $lectureCount"
+
+
         }
         val items = mutableListOf(
             OurContentItem.FirstItem(
@@ -766,7 +770,25 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
         bottomSheet.show(parentFragmentManager, "InstallmentDetailsBottomSheet")
     }
 
+    fun getAllLectureCount(courseId: String){
 
+        courseViewModel.fetchLectures(courseId)
+        Log.e("getcourseIds",courseId)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                courseViewModel.lectures.collect { result ->
+                    result?.onSuccess { lecture ->
+                        val count = lecture.getAllCourseLecturesCount.lecture_count.toInt()
+                        binding.tvLectureNo.text = "Lectures: $count"
+                        Log.e("lectureCount",count.toString())
+                      //  callback(courseId, count)
+                    }?.onFailure { exception ->
+                        Log.e("LectureException", exception.toString())
+                    }
+                }
+            }
+        }
+    }
 
 
 }

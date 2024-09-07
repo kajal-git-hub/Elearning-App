@@ -194,7 +194,7 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/clPaymentSummary"
                     android:layout_width="0dp"
-                    android:visibility="visible"
+                    android:visibility="gone"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_16sp"
                     android:background="#F6F6FF"
@@ -627,6 +627,7 @@
             android:id="@+id/cl_proccedToPay"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             android:background="@color/white"
             android:padding="16dp"
             app:layout_constraintBottom_toBottomOf="parent">

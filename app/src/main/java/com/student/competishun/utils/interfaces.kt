@@ -3,6 +3,7 @@ package com.student.competishun.utils
 import android.os.Bundle
 import com.student.competishun.curator.AllCourseForStudentQuery
 import com.student.competishun.curator.GetAllCourseCategoriesQuery
+import com.student.competishun.data.model.TopicTypeModel
 
 interface OnCourseItemClickListener {
     fun onCourseItemClick(course: GetAllCourseCategoriesQuery.GetAllCourseCategory)
@@ -14,4 +15,7 @@ interface StudentCourseItemClickListener {
 
 interface OnCartItemRemovedListener {
     fun onCartItemRemoved()
+}
+interface OnTopicTypeSelectedListener {
+    fun onTopicTypeSelected(selectedTopic: TopicTypeModel)
 }

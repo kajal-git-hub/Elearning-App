@@ -1,0 +1,11 @@
+mutation UpdateVideoProgress($updateVideoProgress: UpdateVideoProgress!) {
+    updateVideoProgress(updateVideoProgress: $updateVideoProgress) {
+        completed_duration
+        course_folder_content_id
+        course_id
+        current_duration
+        total_duration
+        id
+        user_id
+    }
+}

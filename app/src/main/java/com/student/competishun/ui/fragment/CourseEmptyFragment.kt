@@ -192,7 +192,9 @@ class CourseEmptyFragment : Fragment() {
                             category_name = course.category_name,
                             category_id = course.category_id,
                             entity_type = course.entity_type,
-                            folder = course.folder
+                            folder = course.folder,
+                            course_end_date = course.course_end_date,
+                            course_start_date = course.course_start_date
                         )
 
                         val selectedProgress = MyCoursesQuery.Progress(
@@ -210,12 +212,15 @@ class CourseEmptyFragment : Fragment() {
                     val adapter = ExploreCourseAdapter(courseList, progressList) { course, folderIds, folderNames, subfolderDurations, folderCounts  ->
                         // Handle the course click and navigate
                         Log.d("CourseClick", "Course: ${course.name}, FolderIds: $folderIds, FolderNames: $folderNames, Progress: $folderCounts $subfolderDurations")
-
+                        val completionPercentagesArray = subfolderDurations.toDoubleArray()
                         val bundle = Bundle().apply {
                             putStringArrayList("folder_ids", ArrayList(folderIds))
                             putStringArrayList("folder_names", ArrayList(folderNames))
                             putString("courseName", course.name)
-                            putDouble("subfolderDurations", subfolderDurations)
+                            putString("courseId", course.id)
+                            putString("courseStart",course.course_start_date.toString())
+                            putString("courseEnd",course.course_end_date.toString())
+                            putDoubleArray("completionPercentages", completionPercentagesArray)
                             putStringArrayList("folderCounts", ArrayList(folderCounts))
                         }
 
