@@ -141,11 +141,13 @@ class RecommendViewDetail : Fragment() {
 
                     binding.rvRecommendedCourses.adapter = courses?.let { courseList ->
                         Log.d("recommendedList",courseList.toString())
-                        RecommendedCoursesAdapter(courseList, lectureCounts) { selectedCourse ->
+                        RecommendedCoursesAdapter(courseList, lectureCounts) { selectedCourse,recommendCourseTags ->
                             val lectureCount = lectureCounts[selectedCourse.id]?.toString() ?: "0"
                             val bundle = Bundle().apply {
                                 putString("course_id", selectedCourse.id)
                                 putString("LectureCount", lectureCount)
+                                putStringArrayList("recommendCourseTags", ArrayList(recommendCourseTags)) // Pass the tags
+
                             }
                             findNavController().navigate(R.id.exploreFragment, bundle)
                         }

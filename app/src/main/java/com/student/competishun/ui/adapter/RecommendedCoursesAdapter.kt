@@ -18,7 +18,7 @@ import com.student.competishun.utils.HelperFunctions
 class RecommendedCoursesAdapter(
     private val items: List<AllCourseForStudentQuery.Course>,
     private val lectureCounts: Map<String, Int>,
-    private val onItemClick: (AllCourseForStudentQuery.Course) -> Unit
+    private val onItemClick: (AllCourseForStudentQuery.Course,List<String>?) -> Unit
 ) : RecyclerView.Adapter<RecommendedCoursesAdapter.CourseViewHolder>() {
 
     private lateinit var helperFunctions: HelperFunctions
@@ -31,21 +31,21 @@ class RecommendedCoursesAdapter(
 
     override fun onBindViewHolder(holder: CourseViewHolder, position: Int) {
         val course = items[position]
-        val courseTags = course.course_tags
-        Log.d("courseTags", courseTags.toString())
+        val recommendCourseTags = course.course_tags
+        Log.d("recommendCourseTags", recommendCourseTags.toString())
 
         holder.recommendedClass.apply {
-            text = courseTags?.getOrNull(0) ?: ""
+            text = recommendCourseTags?.getOrNull(0) ?: ""
             visibility = if (text.isEmpty()) View.GONE else View.VISIBLE
         }
 
         holder.tvTag2.apply {
-            text = courseTags?.getOrNull(1) ?: ""
+            text = recommendCourseTags?.getOrNull(1) ?: ""
             visibility = if (text.isEmpty()) View.GONE else View.VISIBLE
         }
 
         holder.tvLastField.apply {
-            text = courseTags?.getOrNull(2) ?: ""
+            text = recommendCourseTags?.getOrNull(2) ?: ""
             visibility = if (text.isEmpty()) View.GONE else View.VISIBLE
         }
 
@@ -81,7 +81,7 @@ class RecommendedCoursesAdapter(
         holder.lectureCount.text = "Lectures: ${(lectureCounts[course.id] ?: 0)}"
         holder.quizCount.text = "Validity: "+helperFunctions.formatCourseDate(course.course_validity_end_date.toString())
         holder.itemView.setOnClickListener {
-            onItemClick(course)
+            onItemClick(course,recommendCourseTags)
         }
     }
 
