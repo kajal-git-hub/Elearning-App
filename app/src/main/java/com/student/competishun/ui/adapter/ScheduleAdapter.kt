@@ -79,8 +79,6 @@ class ScheduleAdapter(private val scheduleItems: List<ScheduleData>, private val
 //                val lectureStatus = innerItem.lecture_status
 
 //                Log.d("StatusAndTime",lectureStartTime+ "---"+lectureEndTime+"---"+lectureStatus)
-
-
 //                if (lectureStatus=="Class Attended" || lectureStatus=="Class Missed" || lectureStatus=="Class Cancelled") {
 //                    binding.tvClassStatus.text = lectureStatus
 //                    binding.tvClassStatus.visibility = View.VISIBLE

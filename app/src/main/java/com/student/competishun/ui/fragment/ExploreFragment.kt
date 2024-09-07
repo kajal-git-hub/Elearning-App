@@ -112,16 +112,16 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
 
         arguments?.let { bundle ->
             val tags = bundle.getStringArrayList("course_tags")
-            val recommendCourseTags = bundle.getStringArrayList("recommendCourseTags") // Fetch recommendCourseTags from the bundle
+            val recommendCourseTags = bundle.getStringArrayList("recommendCourseTags")
             Log.d("recommendCourseTags", recommendCourseTags.toString())
             Log.d("tags", tags.toString())
 
-            // Check if recommendCourseTags is not null and assign it to ExploreCourseTags
+
             if (recommendCourseTags != null && recommendCourseTags.isNotEmpty()) {
                 ExploreCourseTags.clear()
                 ExploreCourseTags.addAll(recommendCourseTags)
                 Log.e("courseTags", "Received Recommend Course Tags: $ExploreCourseTags")
-            } else if (tags != null) { // If recommendCourseTags is null, fall back to tags
+            } else if (tags != null) {
                 ExploreCourseTags.clear()
                 ExploreCourseTags.addAll(tags)
                 Log.e("courseTags", "Received Course Tags: $ExploreCourseTags")
@@ -292,11 +292,6 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
                         courseFItems.size,
                         binding.llDotsIndicatorFeatures
                     )
-                    val courseItems = listOf(
-                        CourseFItem("Question Papers with Detailed Solution", R.drawable.group_1272628766),
-                        CourseFItem("Tests & Quiz with Detailed Analysis", R.drawable.group_1272628766),
-                        CourseFItem("Question Papers with Detailed Solution", R.drawable.group_1272628766)
-                    )
 
                     val courseFeaturesAdapter = CourseFeaturesAdapter(courseFItems)
                     binding.rvCourseFeatures.apply {
@@ -431,19 +426,6 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
                 TeacherItem(R.drawable.teacher_bg, "NEERAJ SAINI", "CHEMISTRY (ORG)"),
                 TeacherItem(R.drawable.teacher_bg, "MOHIT TYAGI", "MATHEMATICS"),
                 TeacherItem(R.drawable.teacher_bg, "AMIT BIJARNIA", "PHYSICS"),
-                TeacherItem(R.drawable.teacher_bg, "RAJAT JAIN", "MATHEMATICS"),
-                TeacherItem(R.drawable.teacher_bg, "NISHA SINSINWAR", "SST"),
-                TeacherItem(R.drawable.teacher_bg, "POONAM GUPTA", "BIOLOGY"),
-                TeacherItem(R.drawable.teacher_bg, "DEEPIKA RAIKANWAR", "CHEMISTRY"),
-                TeacherItem(R.drawable.teacher_bg, "DEEPAK KUMAR SHARMA", "MATHEMATICS"),
-                TeacherItem(R.drawable.teacher_bg, "ROHIT KUMAR GUPTA", "CHEMISTRY"),
-                TeacherItem(R.drawable.teacher_bg, "SATVEER GURJAR", "PHYSICS"),
-                TeacherItem(R.drawable.teacher_bg, "AKSHAY MATHUR", "CHEMISTRY"),
-                TeacherItem(R.drawable.teacher_bg, "ARPIT AGARWAL", "PHYSICS"),
-                TeacherItem(R.drawable.teacher_bg, "CHETAN KUMAWAT", "MATHEMATICS"),
-                TeacherItem(R.drawable.teacher_bg, "DHEERAJ SONI", "PHYSICS"),
-                TeacherItem(R.drawable.teacher_bg, "UDAY PAUL", "CHEMISTRY"),
-                TeacherItem(R.drawable.teacher_bg, "RITESH PATANI", "PHYSICS"),
             )
             val teacherAdapter = TeacherAdapter(teacherItems)
             binding.rvMeetTeachers.apply {
@@ -605,27 +587,36 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
                 when {
                     result?.isSuccess == true -> {
                         val data = result.onSuccess {
-                            it.getAllCourseForStudent.courses.map {
+                            it.getAllCourseForStudent.courses.map { course ->
+                                binding.tvTag4.text = "Target ${course.target_year}"
 
-                                binding.tvTag4.text =  "Target "+it.target_year.toString()
-//                                val courseTags = it.course_tags
-
-                                binding.tvTag1.apply {
-                                    Log.d("ExploreCourseTagsIndex",ExploreCourseTags.get(0))
-                                    text = ExploreCourseTags?.getOrNull(0) ?: ""
-                                    visibility = if (text.isEmpty()) View.GONE else View.VISIBLE
+                                // Assuming ExploreCourseTags is a list or an array you already have
+                                // Make sure it is initialized before using it
+                                ExploreCourseTags?.let { tags ->
+                                    binding.tvTag1.apply {
+                                        val tag1 = tags.getOrNull(0) ?: ""
+                                        Log.d("ExploreCourseTagsIndex", tag1)
+                                        text = tag1
+                                        visibility = if (text.isEmpty()) View.GONE else View.VISIBLE
+                                    }
+                                    binding.tvTag2.apply {
+                                        val tag2 = tags.getOrNull(1) ?: ""
+                                        Log.d("ExploreCourseTagsIndex", tag2)
+                                        text = tag2
+                                        visibility = if (text.isEmpty()) View.GONE else View.VISIBLE
+                                    }
+                                    binding.tvTag3.apply {
+                                        val tag3 = tags.getOrNull(2) ?: ""
+                                        Log.d("ExploreCourseTagsIndex", tag3)
+                                        text = tag3
+                                        visibility = if (text.isEmpty()) View.GONE else View.VISIBLE
+                                    }
+                                } ?: run {
+                                    Log.d("ExploreCourseTagsIndex", "ExploreCourseTags is null")
+                                    binding.tvTag1.visibility = View.GONE
+                                    binding.tvTag2.visibility = View.GONE
+                                    binding.tvTag3.visibility = View.GONE
                                 }
-                                binding.tvTag2.apply {
-                                    Log.d("ExploreCourseTagsIndex",ExploreCourseTags.get(1))
-                                    text = ExploreCourseTags?.getOrNull(1) ?: ""
-                                    visibility = if (text.isEmpty()) View.GONE else View.VISIBLE
-                                }
-                                binding.tvTag3.apply {
-                                    Log.d("ExploreCourseTagsIndex",ExploreCourseTags.get(2))
-                                    text = ExploreCourseTags?.getOrNull(2) ?: ""
-                                    visibility = if (text.isEmpty()) View.GONE else View.VISIBLE
-                                }
-
                             }
                         }
                         Log.d("CourseTagsData", "Success: $data")

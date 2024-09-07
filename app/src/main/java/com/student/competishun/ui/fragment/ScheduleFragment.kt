@@ -115,7 +115,7 @@ class ScheduleFragment : Fragment() {
                         content.folder.name,
                         content.file_name,
                         formatTime(convertIST(content.folder.scheduled_time.toString())),
-                        "11:00 AM", // Replace with actual end time logic
+                        content.scheduled_time.toString()
                     )
                 }
             )

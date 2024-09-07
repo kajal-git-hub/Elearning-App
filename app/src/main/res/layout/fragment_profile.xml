@@ -207,6 +207,7 @@
                     android:layout_marginStart="@dimen/_8dp"
                     android:contentDescription="Edit Profile"
                     android:src="@drawable/edit_2"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@id/tv_Year"
                     app:layout_constraintTop_toTopOf="parent"
