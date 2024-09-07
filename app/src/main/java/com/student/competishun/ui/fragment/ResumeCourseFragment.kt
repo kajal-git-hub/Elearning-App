@@ -52,14 +52,23 @@ class ResumeCourseFragment : Fragment() {
         var completionPercentage = arguments?.getDouble("subfolderDurations")?:0.0
         var folderCounts = arguments?.getStringArrayList("folderCounts")
         val courseName  =  arguments?.getString("courseName")
+        val courseId  =  arguments?.getString("courseId")
+        val courseStart  =  arguments?.getString("courseStart")
+        val courseEnd  =  arguments?.getString("courseEnd")
+
 
         binding.courseNameResumeCourse.text = courseName
         Log.d("resumename $courseName", "folderIds: $folderIds")
         Log.e("ffoldername $folderNames", "folders: $folderIds")
         Log.d("resumecourse name $courseName", "courseId: $folderIds")
         binding.backIcon.setOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed() }
+        val bundle = Bundle().apply {
+            putString("courseId", courseId)
+            putString("courseStart",courseStart)
+            putString("courseEnd",courseEnd)
+        }
         binding.clResumeCourseIcon2.setOnClickListener {
-            findNavController().navigate(R.id.action_resumeCourseFragment_to_ScheduleFragment)
+            findNavController().navigate(R.id.action_resumeCourseFragment_to_ScheduleFragment,bundle)
         }
         dataBind(folderNames,folderIds,completionPercentages,folderCounts)
 

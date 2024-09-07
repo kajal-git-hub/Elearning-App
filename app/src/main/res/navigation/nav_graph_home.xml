@@ -240,6 +240,17 @@
         android:id="@+id/ScheduleFragment"
         android:name="com.student.competishun.ui.fragment.ScheduleFragment"
         tools:layout="@layout/fragment_schedule">
+
+        <argument
+            android:name="courseId"
+            app:argType="string" />
+        <argument
+            android:name="courseStart"
+            app:argType="string" />
+        <argument
+            android:name="courseEnd"
+            app:argType="string" />
+
     </fragment>
 
     <fragment

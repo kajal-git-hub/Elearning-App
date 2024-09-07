@@ -13,6 +13,8 @@ query MyCourses {
             exam_type
             category_name
             category_id
+            course_start_date
+            course_end_date
             other_requirements
             entity_type
             folder {

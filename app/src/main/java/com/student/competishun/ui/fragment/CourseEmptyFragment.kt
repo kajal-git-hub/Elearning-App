@@ -192,7 +192,9 @@ class CourseEmptyFragment : Fragment() {
                             category_name = course.category_name,
                             category_id = course.category_id,
                             entity_type = course.entity_type,
-                            folder = course.folder
+                            folder = course.folder,
+                            course_end_date = course.course_end_date,
+                            course_start_date = course.course_start_date
                         )
 
                         val selectedProgress = MyCoursesQuery.Progress(
@@ -215,6 +217,9 @@ class CourseEmptyFragment : Fragment() {
                             putStringArrayList("folder_ids", ArrayList(folderIds))
                             putStringArrayList("folder_names", ArrayList(folderNames))
                             putString("courseName", course.name)
+                            putString("courseId", course.id)
+                            putString("courseStart",course.course_start_date.toString())
+                            putString("courseEnd",course.course_end_date.toString())
                             putDoubleArray("completionPercentages", completionPercentagesArray)
                             putStringArrayList("folderCounts", ArrayList(folderCounts))
                         }

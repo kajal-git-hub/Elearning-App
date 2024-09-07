@@ -51,7 +51,7 @@ class BottomsheetCourseTopicTypeFragment : BottomSheetDialogFragment() {
             val name = folderNames.getOrNull(index) ?: "Unknown Name" // Handle out-of-range case
             TopicTypeModel(id = id, title = name, count = folderCount)
         }
-        binding.tvTitleNumber.text = "($folderCount)"
+        binding.tvTitleNumber.text = "(${folderIds.size})"
 
 
 

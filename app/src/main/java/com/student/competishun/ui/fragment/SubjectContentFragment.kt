@@ -58,6 +58,8 @@ class SubjectContentFragment : Fragment() {
         (activity as? HomeActivity)?.showBottomNavigationView(false)
         (activity as? HomeActivity)?.showFloatingButton(false)
 
+
+
        // val folderId = arguments?.getString("folderId")
 
 
@@ -115,7 +117,7 @@ class SubjectContentFragment : Fragment() {
             bottomSheet.setOnTopicTypeSelectedListener(object : OnTopicTypeSelectedListener {
                 override fun onTopicTypeSelected(selectedTopic: TopicTypeModel) {
                     binding.tvTopicType.text = selectedTopic.title
-                    binding.tvTopicType.text = selectedTopic.title
+
                     folderProgress(selectedTopic.id)
                 }
             })
