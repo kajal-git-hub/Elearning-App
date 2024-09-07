@@ -122,32 +122,32 @@ class ResumeCourseFragment : Fragment() {
                         }
                         findNavController().navigate(R.id.SubjectContentFragment,bundle)
                     }
-//                    else {
-//                        if (subfolderDurationFolders.isNullOrEmpty()) {
-//                            Log.e("folderContentsss", data.findCourseFolderProgress.folderContents.toString())
-//
-//                            val bundle = Bundle().apply {
-//                                var file_Ids =
-//                                    ArrayList(folderProgressContent?.mapNotNull { it.content?.id }
-//                                        ?: emptyList())
-//                                val file_Names =
-//                                    ArrayList(folderProgressContent?.mapNotNull { it.content?.file_name }
-//                                        ?: emptyList())
-//                                val fileUrls =
-//                                    ArrayList(folderProgressContent?.mapNotNull { it.content?.file_url }
-//                                        ?: emptyList())
-//                                val fileTypes =
-//                                    ArrayList(folderProgressContent?.mapNotNull { it.content?.file_type?.name }
-//                                        ?: emptyList())
-//
-//                                putStringArrayList("file_Ids", ArrayList(file_Ids))
-//                                putStringArrayList("file_Names", ArrayList(file_Names))
-//                                putStringArrayList("fileUrls", ArrayList(fileUrls))
-//                                putStringArrayList("fileTypes", ArrayList(fileTypes))
-//                            }
-//                         //  findNavController().navigate(R.id.TopicTYPEContentFragment,bundle)
-//                        }
-//                    }
+                    else {
+                        if (subfolderDurationFolders.isNullOrEmpty()) {
+                            Log.e("folderContentsss", data.findCourseFolderProgress.folderContents.toString())
+
+                            val bundle = Bundle().apply {
+                                var file_Ids =
+                                    ArrayList(folderProgressContent?.mapNotNull { it.content?.id }
+                                        ?: emptyList())
+                                val file_Names =
+                                    ArrayList(folderProgressContent?.mapNotNull { it.content?.file_name }
+                                        ?: emptyList())
+                                val fileUrls =
+                                    ArrayList(folderProgressContent?.mapNotNull { it.content?.file_url }
+                                        ?: emptyList())
+                                val fileTypes =
+                                    ArrayList(folderProgressContent?.mapNotNull { it.content?.file_type?.name }
+                                        ?: emptyList())
+
+                                putStringArrayList("file_Ids", ArrayList(file_Ids))
+                                putStringArrayList("file_Names", ArrayList(file_Names))
+                                putStringArrayList("fileUrls", ArrayList(fileUrls))
+                                putStringArrayList("fileTypes", ArrayList(fileTypes))
+                            }
+                           findNavController().navigate(R.id.TopicTYPEContentFragment,bundle)
+                        }
+                    }
                 }
             }.onFailure { error ->
                 // Handle the error

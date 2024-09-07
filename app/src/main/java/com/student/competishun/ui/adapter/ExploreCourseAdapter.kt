@@ -70,7 +70,7 @@ class ExploreCourseAdapter(
             binding.tvTag3ExploreCourse.text = course.target_year.toString()
             binding.tvOngoing.text = course.status.toString()
             binding.tvPercentCompleted.text = buildString {
-                append(progress?.completionPercentage.toString())
+                append(String.format("%.2f", progress?.completionPercentage))
                 append("%")
             }
 
