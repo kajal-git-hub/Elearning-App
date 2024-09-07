@@ -1,6 +1,6 @@
 package com.student.competishun.ui.fragment
 
-import HorizontalCalendarSetUp
+import com.student.competishun.utils.HorizontalCalendarSetUp
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -83,6 +83,7 @@ class ScheduleFragment : Fragment() {
         val sampleData =
 
           contentList.map { content ->
+
               Log.e("coursefolderntent" ,convertCalender(content.folder.scheduled_time.toString()).toString())
                 Log.e("courseDatentent" ,courseDate.toString())
             ScheduleData(
@@ -92,9 +93,8 @@ class ScheduleFragment : Fragment() {
                     ScheduleData.InnerScheduleItem(
                         content.folder.name,
                         content.file_name,
-                       formatTime(convertIST(content.folder.scheduled_time.toString())),
+                       formatTime(convertIST(content.scheduled_time.toString())),
                         "11:00 AM",
-                        ""
                     )
                 }
             )
@@ -113,7 +113,6 @@ class ScheduleFragment : Fragment() {
                         content.file_name,
                         formatTime(convertIST(content.folder.scheduled_time.toString())),
                         "11:00 AM", // Replace with actual end time logic
-                        "" // Replace with any extra info if needed
                     )
                 }
             )
@@ -163,7 +162,7 @@ class ScheduleFragment : Fragment() {
                 Toast.makeText(context, "Error: ${exception.message}", Toast.LENGTH_SHORT).show()
             }
         }
-        myCourseViewModel.getCourseFolderContent("08-27-2024", "10-30-2025", "30321205-bc5a-4d98-b8bf-79119b1e2ba4")
+        myCourseViewModel.getCourseFolderContent("08-27-2024", "10-30-2025", "31296a0b-6dea-42e5-b273-668744bf34a4")
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
