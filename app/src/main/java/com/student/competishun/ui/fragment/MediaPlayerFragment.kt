@@ -253,7 +253,9 @@ class MediaPlayerFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        player.release()
+        if (::player.isInitialized) {
+            player.release()
+        }
         handler.removeCallbacks(updateTask)
         handler.removeCallbacksAndMessages(null)
         // updateSeekBarHandler.removeCallbacks(updateSeekBarRunnable)

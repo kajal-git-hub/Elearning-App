@@ -223,10 +223,12 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
         binding.tvInstDiscount.visibility = View.VISIBLE
         totalAmount = originalCartItems.get(0).price.toInt()
         binding.tvInstDiscountLabel.text = "Discount (${helperFunctions.calculateDiscountPercentage(originalCartItems.get(0).price,originalCartItems.get(0).discount)}%)"
-        binding.tvInstDiscount.text = "- ₹${(originalCartItems.get(0).price.toDouble()).minus(originalCartItems.get(0).discount.toDouble())}"
+        binding.tvInstDiscount.text = "-  ₹${originalCartItems.get(0).discount}"
+         //   "- ₹${(originalCartItems.get(0).price.toDouble()).minus(originalCartItems.get(0).discount.toDouble())}"
         fullAmount = (helperFunctions.calculateDiscountDetails(originalCartItems.get(0).price.toDouble(),originalCartItems.get(0).discount.toDouble()).second)
-        binding.tvPrice.text =  "₹${(helperFunctions.calculateDiscountDetails(originalCartItems.get(0).price.toDouble(),originalCartItems.get(0).discount.toDouble()).second)}"
-        binding.tvInstTotalAmount.text = "₹${originalCartItems.get(0).discount}"
+        binding.tvPrice.text = "₹${(originalCartItems.get(0).price.toDouble()).minus(originalCartItems.get(0).discount.toDouble())}"
+        binding.tvInstTotalAmount.text = "₹${(helperFunctions.calculateDiscountDetails(originalCartItems.get(0).price.toDouble(),originalCartItems.get(0).discount.toDouble()).second)}"
+
 
     }
 

@@ -162,10 +162,10 @@ class SubjectContentFragment : Fragment() {
                                 lecture =  "Lecture",
                                 lecturerName = "Ashok",
                                 topicName= name,
-                                topicDescription= contents.content?.file_type.toString(),
+                                topicDescription= contents.content?.description.toString(),
                                 progress = 1,
                                 url =  contents.content?.file_url.toString(),
-                                fileType = contents.content?.file_type.toString()
+                                fileType = contents.content?.file_type?.name?:""
                             )
 
 
@@ -201,6 +201,7 @@ class SubjectContentFragment : Fragment() {
                         val folderNames = ArrayList(subfolderDurationFolders?.mapNotNull { it.folder?.name } ?: emptyList())
                         val folderCount = ArrayList(subfolderDurationFolders?.mapNotNull { it.folder?.folder_count?:0 } ?: emptyList())
                         val scheduled_time = ArrayList(subfolderDurationFolders?.mapNotNull { it.folder?.scheduled_time?:0 } ?: emptyList())
+
                         val bundle = Bundle().apply {
                             putStringArray("folder_ids", folderIds.toTypedArray())
                             putStringArray("folder_names",folderNames.toTypedArray())
@@ -210,6 +211,7 @@ class SubjectContentFragment : Fragment() {
                             Log.e("folderContentLog", name)
                             val id = folderIds[index]
                             val date = scheduled_time[index].toString()
+
                             val time = helperFunctions.formatCourseDate(date)
                             SubjectContentItem(
                                 id = id,
@@ -243,7 +245,7 @@ class SubjectContentFragment : Fragment() {
                                      lecture =  "Lecture",
                                      lecturerName = "Ashok",
                                      topicName= name,
-                                     topicDescription= contents.content?.file_type.toString(),
+                                     topicDescription= contents.content?.description.toString(),
                                      progress = 1,
                                      url =  contents.content?.file_url.toString(),
                                      fileType = contents.content?.file_type.toString()
