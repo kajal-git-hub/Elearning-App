@@ -22,8 +22,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class TopicTypeContentFragment : Fragment() {
 
-    private var _binding: FragmentTopicTypeContentBinding? = null
-    private val binding get() = _binding!!
+    private lateinit var binding: FragmentTopicTypeContentBinding
     private val coursesViewModel: CoursesViewModel by viewModels()
     private val videourlViewModel: VideourlViewModel by viewModels()
 
@@ -32,7 +31,7 @@ class TopicTypeContentFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentTopicTypeContentBinding.inflate(inflater, container, false)
+        binding = FragmentTopicTypeContentBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -42,9 +41,9 @@ class TopicTypeContentFragment : Fragment() {
 
         (activity as? HomeActivity)?.showBottomNavigationView(false)
         (activity as? HomeActivity)?.showFloatingButton(false)
+        val folderId = arguments?.getString("folder_Id")?:""
+        folderProgress(folderId)
 
-        folderProgress("b8b9cb32-661b-4e8e-90d0-9c5a0740d273")
-        var folderId = arguments?.getString("folder_Id")
         var folder_Name = arguments?.getString("folder_Name")
         var folder_Count = arguments?.getString("folder_Count")?:"0"
 
@@ -84,7 +83,8 @@ class TopicTypeContentFragment : Fragment() {
                 } ?: emptyList()
 
                 val adapter = TopicContentAdapter(topicContents, folderId) { topicContent, folderContentId ->
-                    if (topicContent.fileType == "VIDEO") {
+                    if (topicContent.fileType == "VIDEO")
+                    {
                         // Handle the click event for video file type
                         videoUrlApi(videourlViewModel, topicContent.id)
                     } else if (topicContent.fileType == "PDF"){
@@ -129,8 +129,5 @@ class TopicTypeContentFragment : Fragment() {
         })
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
+
 }

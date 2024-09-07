@@ -210,12 +210,12 @@ class CourseEmptyFragment : Fragment() {
                     val adapter = ExploreCourseAdapter(courseList, progressList) { course, folderIds, folderNames, subfolderDurations, folderCounts  ->
                         // Handle the course click and navigate
                         Log.d("CourseClick", "Course: ${course.name}, FolderIds: $folderIds, FolderNames: $folderNames, Progress: $folderCounts $subfolderDurations")
-
+                        val completionPercentagesArray = subfolderDurations.toDoubleArray()
                         val bundle = Bundle().apply {
                             putStringArrayList("folder_ids", ArrayList(folderIds))
                             putStringArrayList("folder_names", ArrayList(folderNames))
                             putString("courseName", course.name)
-                            putDouble("subfolderDurations", subfolderDurations)
+                            putDoubleArray("completionPercentages", completionPercentagesArray)
                             putStringArrayList("folderCounts", ArrayList(folderCounts))
                         }
 

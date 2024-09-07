@@ -163,7 +163,7 @@ class ScheduleFragment : Fragment() {
                 Toast.makeText(context, "Error: ${exception.message}", Toast.LENGTH_SHORT).show()
             }
         }
-        myCourseViewModel.getCourseFolderContent("08-27-2024", "10-30-2025", "30321205-bc5a-4d98-b8bf-79119b1e2ba4")
+        myCourseViewModel.getCourseFolderContent("08-27-2024", "10-30-2025", "31296a0b-6dea-42e5-b273-668744bf34a4")
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

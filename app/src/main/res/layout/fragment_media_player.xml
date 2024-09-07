@@ -14,7 +14,8 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             app:resize_mode="fit"
-            app:use_controller="true" />
+            android:keepScreenOn="true"
+             />
         <ImageButton
             android:id="@+id/ig_toolbar_back_button"
             android:layout_width="wrap_content"

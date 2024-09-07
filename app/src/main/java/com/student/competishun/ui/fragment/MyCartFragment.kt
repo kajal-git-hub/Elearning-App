@@ -81,9 +81,6 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
         (activity as? HomeActivity)?.showFloatingButton(false)
 
 
-        var courseName:String = ""
-
-
 
         binding.igToolbarBackButton.setOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed()  }
         helperFunctions = HelperFunctions()
@@ -108,7 +105,7 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
         }
         userViewModel.fetchUserDetails()
         Log.e("cartAdaptercartITems","cartItem.toString()")
-        myAllCart(courseName)
+        myAllCart()
         cartAdapter = MyCartAdapter(mutableListOf(),cartViewModel,viewLifecycleOwner,userId,this) { cartItem ->
             Log.e("cartAdaptrcartITems",cartItem.toString())
             handleItemClick(cartItem, userId)
@@ -301,7 +298,7 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
         findNavController().navigate(R.id.action_mycartFragment_to_paymentFailedFragment)
     }
 
-    private fun myAllCart(courseName: String) {
+    private fun myAllCart() {
         binding.clPaymentSummary.visibility = View.GONE
         binding.rvAllCart.visibility = View.GONE
         binding.clEmptyCart.visibility = View.VISIBLE
@@ -321,7 +318,7 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
                     binding.rvAllCart.visibility = View.VISIBLE
                     binding.clProccedToPay.visibility = View.VISIBLE
                     val course = cartItemData.course
-                    this.courseName = course.name
+                    courseName = course.name
                     if (!course.complementary_course.isNullOrEmpty())
                         complementryId = course.complementary_course
                     Log.e("complementryIDd", complementryId)

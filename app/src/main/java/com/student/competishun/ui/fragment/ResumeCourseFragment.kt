@@ -6,7 +6,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.student.competishun.R
@@ -20,8 +19,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class ResumeCourseFragment : Fragment() {
 
-    private var _binding: FragmentResumeCourseBinding? = null
-    private val binding get() = _binding!!
+    private lateinit var binding: FragmentResumeCourseBinding
     private val myCourseViewModel: MyCoursesViewModel by viewModels()
     private val coursesViewModel: CoursesViewModel by viewModels()
     var folderNames:ArrayList<String>? = null
@@ -33,20 +31,22 @@ class ResumeCourseFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentResumeCourseBinding.inflate(inflater, container, false)
+        binding = FragmentResumeCourseBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-        (activity as? HomeActivity)?.showBottomNavigationView(false)
-        (activity as? HomeActivity)?.showFloatingButton(false)
-
         binding.backIcon.setOnClickListener {
             requireActivity().onBackPressedDispatcher.onBackPressed()
         }
+        (activity as? HomeActivity)?.showBottomNavigationView(false)
+        (activity as? HomeActivity)?.showFloatingButton(false)
+
+        val completionPercentagesArray = arguments?.getDoubleArray("completionPercentages")
+        val completionPercentages = completionPercentagesArray?.toList() ?: emptyList()
+        Log.e("completionper $completionPercentages",completionPercentagesArray.toString())
         folderIds = arguments?.getStringArrayList("folder_ids")
          folderNames = arguments?.getStringArrayList("folder_names")
         var completionPercentage = arguments?.getDouble("subfolderDurations")?:0.0
@@ -61,7 +61,7 @@ class ResumeCourseFragment : Fragment() {
         binding.clResumeCourseIcon2.setOnClickListener {
             findNavController().navigate(R.id.action_resumeCourseFragment_to_ScheduleFragment)
         }
-        dataBind(folderNames,folderIds,completionPercentage,folderCounts)
+        dataBind(folderNames,folderIds,completionPercentages,folderCounts)
 
     }
 
@@ -73,7 +73,6 @@ class ResumeCourseFragment : Fragment() {
 
     private fun folderProgress(folderId: String, folderNames: String,folderCount: String){
 
-
         Log.e("folderProgresss",folderId)
         val free = arguments?.getBoolean("free")
         if (folderId != null) {
@@ -83,13 +82,13 @@ class ResumeCourseFragment : Fragment() {
         coursesViewModel.courseFolderProgress.observe(viewLifecycleOwner) { result ->
             result.onSuccess { data ->
                 Log.e("GetFolderdata", data.toString())
+
+
                 val folderProgressFolder = data.findCourseFolderProgress.folder
                 val folderProgressContent = data.findCourseFolderProgress.folderContents
                 val subfolderDurationFolders = data.findCourseFolderProgress.subfolderDurations
                 Log.e("subFolderdata", subfolderDurationFolders.toString())
                 var Name = folderNames
-
-
                 if (folderProgressFolder != null) {
 
                     if (!subfolderDurationFolders.isNullOrEmpty()){
@@ -101,21 +100,54 @@ class ResumeCourseFragment : Fragment() {
                             putStringArrayList("folder_ids",  ArrayList(folderIds))
                             putStringArrayList("folder_names", ArrayList(folderNames))
                             putString("folder_Name",Name)
+                                var file_Ids =
+                                    ArrayList(folderProgressContent?.mapNotNull { it.content?.id }
+                                        ?: emptyList())
+                                val file_Names =
+                                    ArrayList(folderProgressContent?.mapNotNull { it.content?.file_name }
+                                        ?: emptyList())
+                                val fileUrls =
+                                    ArrayList(folderProgressContent?.mapNotNull { it.content?.file_url }
+                                        ?: emptyList())
+                                val fileTypes =
+                                    ArrayList(folderProgressContent?.mapNotNull { it.content?.file_type?.name }
+                                        ?: emptyList())
+
+                                putStringArrayList("file_Ids", ArrayList(file_Ids))
+                                putStringArrayList("file_Names", ArrayList(file_Names))
+
+                                putStringArrayList("fileUrls", ArrayList(fileUrls))
+                                putStringArrayList("fileTypes", ArrayList(fileTypes))
+
                         }
                         findNavController().navigate(R.id.SubjectContentFragment,bundle)
                     }
-                    else {
-                        if (subfolderDurationFolders.isNullOrEmpty()) {
-                            Log.e("folderContentsss", data.findCourseFolderProgress.folderContents.toString())
-
-                            val bundle = Bundle().apply {
-                                putString("folder_Id", folderId)
-                                putString("folder_Name", folderNames)
-                                putString("folder_Count", folderCount)
-                            }
-                           findNavController().navigate(R.id.TopicTYPEContentFragment,bundle)
-                        }
-                    }
+//                    else {
+//                        if (subfolderDurationFolders.isNullOrEmpty()) {
+//                            Log.e("folderContentsss", data.findCourseFolderProgress.folderContents.toString())
+//
+//                            val bundle = Bundle().apply {
+//                                var file_Ids =
+//                                    ArrayList(folderProgressContent?.mapNotNull { it.content?.id }
+//                                        ?: emptyList())
+//                                val file_Names =
+//                                    ArrayList(folderProgressContent?.mapNotNull { it.content?.file_name }
+//                                        ?: emptyList())
+//                                val fileUrls =
+//                                    ArrayList(folderProgressContent?.mapNotNull { it.content?.file_url }
+//                                        ?: emptyList())
+//                                val fileTypes =
+//                                    ArrayList(folderProgressContent?.mapNotNull { it.content?.file_type?.name }
+//                                        ?: emptyList())
+//
+//                                putStringArrayList("file_Ids", ArrayList(file_Ids))
+//                                putStringArrayList("file_Names", ArrayList(file_Names))
+//                                putStringArrayList("fileUrls", ArrayList(fileUrls))
+//                                putStringArrayList("fileTypes", ArrayList(fileTypes))
+//                            }
+//                         //  findNavController().navigate(R.id.TopicTYPEContentFragment,bundle)
+//                        }
+//                    }
                 }
             }.onFailure { error ->
                 // Handle the error
@@ -128,7 +160,7 @@ class ResumeCourseFragment : Fragment() {
     private fun dataBind(
         folderNames: ArrayList<String>?,
         folderIds: ArrayList<String>?,
-        completionPercentage: Double,
+        completionPercentages: List<Double>,
         folderCount: ArrayList<String>?
     ) {
 
@@ -177,17 +209,19 @@ class ResumeCourseFragment : Fragment() {
                 binding.customProgressIndicatorClassNotes
             )
 
+            progressIndicators.forEachIndexed { index, progressIndicator ->
+                val completionPercentage = completionPercentages.get(index)?:0
+                progressIndicator.progress = completionPercentage?.toInt()?:0
+
+            }
+
             textchapterCount.forEachIndexed { index, textchapterCount ->
                 val foldersize = folderCount?.getOrNull(index)
                 Log.e("foldernam", foldersize.toString())
                 textchapterCount.text = "$foldersize Chapters"
             }
 
-            progressIndicators.forEachIndexed { index, progressIndicator ->
-                val completionPercentage = completionPercentage
-                progressIndicator.progress = completionPercentage?.toInt()?:0
 
-            }
 
             courseSetOnClickListener.forEachIndexed { index, view ->
                 view.setOnClickListener {
@@ -206,7 +240,7 @@ class ResumeCourseFragment : Fragment() {
 
 
             textPercentage.forEachIndexed { index, textPercentage ->
-                val completionPercentage = String.format("%.2f", completionPercentage)
+                val completionPercentage = String.format("%.2f", completionPercentages[index])
                 textPercentage.text = "$completionPercentage%"
             }
 
@@ -216,11 +250,5 @@ class ResumeCourseFragment : Fragment() {
 
     }
 
-
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
 }
 
