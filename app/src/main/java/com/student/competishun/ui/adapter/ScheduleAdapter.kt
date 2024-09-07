@@ -76,39 +76,39 @@ class ScheduleAdapter(private val scheduleItems: List<ScheduleData>, private val
 
                 val lectureStartTime = innerItem.lecture_start_time
                 val lectureEndTime = innerItem.lecture_end_time
-                val lectureStatus = innerItem.lecture_status
+//                val lectureStatus = innerItem.lecture_status
 
-                Log.d("StatusAndTime",lectureStartTime+ "---"+lectureEndTime+"---"+lectureStatus)
+//                Log.d("StatusAndTime",lectureStartTime+ "---"+lectureEndTime+"---"+lectureStatus)
 
 
-                if (lectureStatus=="Class Attended" || lectureStatus=="Class Missed" || lectureStatus=="Class Cancelled") {
-                    binding.tvClassStatus.text = lectureStatus
-                    binding.tvClassStatus.visibility = View.VISIBLE
-                    binding.tvClassTimings.visibility = View.GONE
-                    if (lectureStatus=="Class Cancelled") {
-                        binding.tvClassStatus.setTextColor(ContextCompat.getColor(context, R.color.red))
-                        binding.tvClassStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.info_class_cancelled, 0, 0, 0)
-                        binding.view.visibility = View.VISIBLE
-                        binding.dottedLine.visibility = View.GONE
-                        binding.clLectureTimer.visibility = View.GONE
-                        binding.clJoinLecture.visibility = View.GONE
-                    } else if (lectureStatus=="Class Attended") {
-                        binding.tvClassStatus.setTextColor(ContextCompat.getColor(context, R.color.green))
-                        binding.tvClassStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.tick_circle_schedule, 0, 0, 0)
-                        binding.clLectureTimer.visibility = View.GONE
-                        binding.clJoinLecture.visibility = View.GONE
-                    }else {
-                        binding.tvClassStatus.setTextColor(ContextCompat.getColor(context, R.color.gray))
-                        binding.tvClassStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.info_class_missed, 0, 0, 0)
-                        binding.clLectureTimer.visibility = View.GONE
-                        binding.clJoinLecture.visibility = View.GONE
-                    }
-                } else {
-                    binding.tvClassStatus.visibility = View.GONE
-                    binding.tvClassTimings.visibility = View.VISIBLE
-                    binding.tvClassTimings.text = "$lectureStartTime - $lectureEndTime"
-                    startCountdown(lectureStartTime, lectureEndTime)
-                }
+//                if (lectureStatus=="Class Attended" || lectureStatus=="Class Missed" || lectureStatus=="Class Cancelled") {
+//                    binding.tvClassStatus.text = lectureStatus
+//                    binding.tvClassStatus.visibility = View.VISIBLE
+//                    binding.tvClassTimings.visibility = View.GONE
+//                    if (lectureStatus=="Class Cancelled") {
+//                        binding.tvClassStatus.setTextColor(ContextCompat.getColor(context, R.color.red))
+//                        binding.tvClassStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.info_class_cancelled, 0, 0, 0)
+//                        binding.view.visibility = View.VISIBLE
+//                        binding.dottedLine.visibility = View.GONE
+//                        binding.clLectureTimer.visibility = View.GONE
+//                        binding.clJoinLecture.visibility = View.GONE
+//                    } else if (lectureStatus=="Class Attended") {
+//                        binding.tvClassStatus.setTextColor(ContextCompat.getColor(context, R.color.green))
+//                        binding.tvClassStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.tick_circle_schedule, 0, 0, 0)
+//                        binding.clLectureTimer.visibility = View.GONE
+//                        binding.clJoinLecture.visibility = View.GONE
+//                    }else {
+//                        binding.tvClassStatus.setTextColor(ContextCompat.getColor(context, R.color.gray))
+//                        binding.tvClassStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.info_class_missed, 0, 0, 0)
+//                        binding.clLectureTimer.visibility = View.GONE
+//                        binding.clJoinLecture.visibility = View.GONE
+//                    }
+//                } else {
+//                    binding.tvClassStatus.visibility = View.GONE
+//                    binding.tvClassTimings.visibility = View.VISIBLE
+//                    binding.tvClassTimings.text = "$lectureStartTime - $lectureEndTime"
+//                    startCountdown(lectureStartTime, lectureEndTime)
+//                }
             }
 
             private fun startCountdown(startTime: String, endTime: String) {
