@@ -6,6 +6,8 @@ query MyCourses {
             id
             name
             price
+            course_end_date
+            course_start_date
             target_year
             status
             banner_image

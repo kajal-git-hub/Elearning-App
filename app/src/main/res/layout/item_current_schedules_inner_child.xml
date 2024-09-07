@@ -217,47 +217,47 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cl_download_lecture_material"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="14dp"
-        android:visibility="gone"
-        android:layout_marginHorizontal="@dimen/_16dp"
-        android:layout_marginBottom="12dp"
-        android:background="@drawable/bg_download_lecture_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/dotted_line"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
+<!--    <androidx.constraintlayout.widget.ConstraintLayout-->
+<!--        android:id="@+id/cl_download_lecture_material"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="14dp"-->
+<!--        android:visibility="vis"-->
+<!--        android:layout_marginHorizontal="@dimen/_16dp"-->
+<!--        android:layout_marginBottom="12dp"-->
+<!--        android:background="@drawable/bg_download_lecture_content"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/dotted_line"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent">-->
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/tv_download_lecture_material"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Homework PDF"
-            android:textColor="#3E3EF7"
-            android:fontFamily="@font/nunito"
-            android:textStyle="bold"
-            android:textSize="@dimen/_12sp"
-            android:layout_marginVertical="@dimen/_8dp"
-            android:layout_marginStart="12dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+<!--        <com.google.android.material.textview.MaterialTextView-->
+<!--            android:id="@+id/tv_download_lecture_material"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Homework PDF"-->
+<!--            android:textColor="#3E3EF7"-->
+<!--            android:fontFamily="@font/nunito"-->
+<!--            android:textStyle="bold"-->
+<!--            android:textSize="@dimen/_12sp"-->
+<!--            android:layout_marginVertical="@dimen/_8dp"-->
+<!--            android:layout_marginStart="12dp"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="parent"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"/>-->
 
-        <ImageView
-            android:id="@+id/download_material_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/download_material_icon"
-            android:layout_marginEnd="12dp"
-            android:layout_marginVertical="9dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+<!--        <ImageView-->
+<!--            android:id="@+id/download_material_icon"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:src="@drawable/download_material_icon"-->
+<!--            android:layout_marginEnd="12dp"-->
+<!--            android:layout_marginVertical="9dp"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="parent"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"/>-->
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+<!--    </androidx.constraintlayout.widget.ConstraintLayout>-->
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_join_lecture"

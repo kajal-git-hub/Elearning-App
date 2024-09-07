@@ -112,11 +112,22 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
 
         arguments?.let { bundle ->
             val tags = bundle.getStringArrayList("course_tags")
-            if (tags != null) {
+            val recommendCourseTags = bundle.getStringArrayList("recommendCourseTags") // Fetch recommendCourseTags from the bundle
+            Log.d("recommendCourseTags", recommendCourseTags.toString())
+            Log.d("tags", tags.toString())
+
+            // Check if recommendCourseTags is not null and assign it to ExploreCourseTags
+            if (recommendCourseTags != null && recommendCourseTags.isNotEmpty()) {
+                ExploreCourseTags.clear()
+                ExploreCourseTags.addAll(recommendCourseTags)
+                Log.e("courseTags", "Received Recommend Course Tags: $ExploreCourseTags")
+            } else if (tags != null) { // If recommendCourseTags is null, fall back to tags
                 ExploreCourseTags.clear()
                 ExploreCourseTags.addAll(tags)
+                Log.e("courseTags", "Received Course Tags: $ExploreCourseTags")
+            }else{
+
             }
-            Log.e("courseTags", "Received Course Tags: $ExploreCourseTags")
         }
 
 
@@ -311,8 +322,8 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
                     binding.tvCourseName.text = courses.name
                     val categoryName = courses.category_name?.split(" ") ?: emptyList()
                     val firstTwoWords = categoryName.take(2).joinToString(" ")
-                    binding.tvTag2.text = firstTwoWords
-                    binding.tvTag1.text = helperFunctions.toDisplayString(courses.course_class?.name)
+//                    binding.tvTag2.text = firstTwoWords
+//                    binding.tvTag1.text = helperFunctions.toDisplayString(courses.course_class?.name)
                     if (courses.discount==null){
                         binding.dicountPricexp.text = "₹${courses.price}"
                         binding.orgPricexp.visibility = View.GONE
@@ -600,14 +611,17 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
 //                                val courseTags = it.course_tags
 
                                 binding.tvTag1.apply {
+                                    Log.d("ExploreCourseTagsIndex",ExploreCourseTags.get(0))
                                     text = ExploreCourseTags?.getOrNull(0) ?: ""
                                     visibility = if (text.isEmpty()) View.GONE else View.VISIBLE
                                 }
                                 binding.tvTag2.apply {
+                                    Log.d("ExploreCourseTagsIndex",ExploreCourseTags.get(1))
                                     text = ExploreCourseTags?.getOrNull(1) ?: ""
                                     visibility = if (text.isEmpty()) View.GONE else View.VISIBLE
                                 }
                                 binding.tvTag3.apply {
+                                    Log.d("ExploreCourseTagsIndex",ExploreCourseTags.get(2))
                                     text = ExploreCourseTags?.getOrNull(2) ?: ""
                                     visibility = if (text.isEmpty()) View.GONE else View.VISIBLE
                                 }
