@@ -54,7 +54,7 @@
         android:textColor="#2B2829"
         android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="@+id/tvTarget"
+        app:layout_constraintEnd_toEndOf="@+id/tvLastField"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

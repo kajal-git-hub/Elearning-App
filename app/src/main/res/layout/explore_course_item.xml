@@ -78,6 +78,20 @@
         android:layout_marginTop="6dp"
         app:layout_constraintStart_toStartOf="@id/tvTag1ExploreCourse"
         app:layout_constraintTop_toBottomOf="@id/tvTag1ExploreCourse"/>
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tvTag4ExploreCourse"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Target 2025"
+        app:fontFamily="@font/nunito"
+        android:textSize="12sp"
+        android:textColor="#5A5555"
+        android:padding="6dp"
+        android:background="@drawable/card_bg"
+        android:layout_marginTop="6dp"
+        app:layout_constraintStart_toEndOf="@+id/tvTag3ExploreCourse"
+        app:layout_constraintBottom_toBottomOf="@+id/tvTag3ExploreCourse"
+        />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/profImage"
