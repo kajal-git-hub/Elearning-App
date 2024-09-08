@@ -113,30 +113,37 @@ class AllDemoResourcesFree : Fragment() {
             coursesViewModel.findCourseFolderProgress(folderId)
         }
         coursesViewModel.courseFolderProgress.observe(viewLifecycleOwner) { result ->
-            result.onSuccess { data ->
-                Log.e("GetFolderdata", data.toString())
-                val folderProgressFolder = data.findCourseFolderProgress.folder
-                val folderProgressContent = data.findCourseFolderProgress.folderContents
-                val subfolderDurationFolders = data.findCourseFolderProgress.subfolderDurations
-                Log.e("subFolderdata", subfolderDurationFolders.toString())
-                if (folderProgressFolder != null) {
+            when (result) {
+                is com.student.competishun.di.Result.Success -> {
+                    val data = result.data
+                    Log.e("GetFolderdata", data.toString())
+                    val folderProgressFolder = data.findCourseFolderProgress.folder
+                    val folderProgressContent = data.findCourseFolderProgress.folderContents
+                    val subfolderDurationFolders = data.findCourseFolderProgress.subfolderDurations
+                    Log.e("subFolderdata", subfolderDurationFolders.toString())
 
-                    if (!subfolderDurationFolders.isNullOrEmpty()){
-                        Log.e("subfolderDurationszs", subfolderDurationFolders.toString())
-                        getFolderList(subfolderDurationFolders)
-                    }
-                    else {
-                        if (subfolderDurationFolders.isNullOrEmpty()) {
-                            Log.e("folderContentsss", data.findCourseFolderProgress.folderContents.toString())
+                    if (folderProgressFolder != null) {
+                        if (!subfolderDurationFolders.isNullOrEmpty()) {
+                            Log.e("subfolderDurationszs", subfolderDurationFolders.toString())
+                            getFolderList(subfolderDurationFolders)
+                        } else {
+                            Log.e("folderContentsss", folderProgressContent.toString())
                             getFileList(data, folderProgressContent, free)
                         }
                     }
                 }
-            }.onFailure { error ->
-                // Handle the error
-                Log.e("AllDemoResourcesFree", error.message.toString())
+                is com.student.competishun.di.Result.Failure -> {
+                    // Handle the error
+                    Log.e("AllDemoResourcesFree", result.exception.message.toString())
+                }
+                is com.student.competishun.di.Result.Loading -> {
+                    // Handle loading state if needed
+                    Log.e("LoadingState", "Data is loading...")
+                }
             }
         }
+
+
     }
 
     private val downloadCompleteReceiver = object : BroadcastReceiver() {
