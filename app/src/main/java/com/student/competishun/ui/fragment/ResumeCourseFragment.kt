@@ -23,7 +23,6 @@ import com.student.competishun.ui.main.HomeActivity
 import com.student.competishun.ui.viewmodel.CoursesViewModel
 import com.student.competishun.ui.viewmodel.MyCoursesViewModel
 import com.student.competishun.utils.OnCourseItemClickListener
-import com.student.competishun.utils.OnSubjectItemClickListener
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
