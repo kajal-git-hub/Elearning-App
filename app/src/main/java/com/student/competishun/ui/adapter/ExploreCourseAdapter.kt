@@ -65,8 +65,16 @@ class ExploreCourseAdapter(
     class ExploreCourseViewHolder(val binding: ExploreCourseItemBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(course: MyCoursesQuery.Course,progress: MyCoursesQuery.Progress?) {
             binding.tvExploreCourseName.text = course.name
-            binding.tvTag1ExploreCourse.text = course.course_class.toString()
             binding.tvTag2ExploreCourse.text = course.exam_type.toString()
+
+            if(course.course_class.toString()=="ELEVENTH"){
+                binding.tvTag1ExploreCourse.text = "11th"
+            }else if(course.course_class.toString()=="TWELFTH"){
+                binding.tvTag1ExploreCourse.text = "12th"
+            }else if (course.course_class.toString()=="TWELFTH_PLUS"){
+                binding.tvTag1ExploreCourse.text = "12+"
+            }
+
             binding.tvTag3ExploreCourse.text = course.target_year.toString()
             binding.tvOngoing.text = course.status.toString()
             binding.tvPercentCompleted.text = buildString {
