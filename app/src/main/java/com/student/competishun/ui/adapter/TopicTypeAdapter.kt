@@ -1,21 +1,51 @@
 package com.student.competishun.ui.adapter
 
-
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.student.competishun.R
 import com.student.competishun.data.model.TopicTypeModel
 import com.student.competishun.databinding.ItemCourseTypeBinding
-import com.student.competishun.databinding.ItemTSizeBinding
-
 
 class TopicTypeAdapter(
     private val topicTypeList: List<TopicTypeModel>,
+    private val preselectedTopic: String?, // Optional preselected topic type
     private val onItemClicked: (TopicTypeModel) -> Unit // Pass the entire model
 ) : RecyclerView.Adapter<TopicTypeAdapter.TopicTypeViewHolder>() {
 
-    private var selectedItem: String? = null // Track the selected item
+    private var selectedPosition = topicTypeList.indexOfFirst { it.title == preselectedTopic }
+
+    inner class TopicTypeViewHolder(private val binding: ItemCourseTypeBinding) : RecyclerView.ViewHolder(binding.root) {
+
+        fun bind(topicTypeModel: TopicTypeModel, isSelected: Boolean) {
+            // Set the text for the item
+            binding.radioButtonCourseType.text = topicTypeModel.title
+
+            // Update the background based on the selection status
+            binding.root.setBackgroundResource(
+                if (isSelected) R.drawable.getstarted_itembg_selected else R.drawable.getstarted_itembg_unselected
+            )
+
+            // Update the drawable based on the selection status
+            val drawableResId = if (isSelected) R.drawable.property_selected else R.drawable.property_default
+            val drawable = ContextCompat.getDrawable(binding.root.context, drawableResId)
+            binding.radioButtonCourseType.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
+
+            // Handle click events
+            binding.root.setOnClickListener {
+                val previousPosition = selectedPosition
+                selectedPosition = adapterPosition
+
+                // Refresh the previous and current selected items
+                notifyItemChanged(previousPosition)
+                notifyItemChanged(selectedPosition)
+
+                // Pass the clicked model to the listener
+                onItemClicked(topicTypeModel)
+            }
+        }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TopicTypeViewHolder {
         val binding = ItemCourseTypeBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -23,37 +53,11 @@ class TopicTypeAdapter(
     }
 
     override fun onBindViewHolder(holder: TopicTypeViewHolder, position: Int) {
-        val topicTypeModel = topicTypeList[position]
-        holder.bind(topicTypeModel, selectedItem, onItemClicked)
+        // Bind data to the ViewHolder, passing whether the item is selected
+        holder.bind(topicTypeList[position], position == selectedPosition)
     }
 
     override fun getItemCount(): Int {
         return topicTypeList.size
-    }
-
-    inner class TopicTypeViewHolder(private val binding: ItemCourseTypeBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(
-            topicTypeModel: TopicTypeModel,
-            selectedItem: String?,
-            onItemClicked: (TopicTypeModel) -> Unit
-        ) {
-            // Set the radio button text to folder name
-            binding.radioButtonCourseType.text = topicTypeModel.title
-
-            // Highlight the selected item
-            binding.radioButtonCourseType.isChecked = topicTypeModel.title == selectedItem
-
-            // Set click listener on the radio button or root
-            binding.radioButtonCourseType.setOnClickListener {
-                this@TopicTypeAdapter.selectedItem = topicTypeModel.title // Update selected item
-                onItemClicked(topicTypeModel) // Pass the entire model when clicked
-                notifyDataSetChanged() // Notify adapter to refresh the view
-            }
-
-            // Optionally display folderId and folderCount in other views if needed
-            // For example:
-//            binding.tvFolderId.text = topicTypeModel.id
-//            binding.tvFolderCount.text = "Count: ${topicTypeModel.count}"
-        }
     }
 }

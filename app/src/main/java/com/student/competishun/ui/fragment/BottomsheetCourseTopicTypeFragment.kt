@@ -1,6 +1,5 @@
 package com.student.competishun.ui.fragment
 
-import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
@@ -56,9 +55,8 @@ class BottomsheetCourseTopicTypeFragment : BottomSheetDialogFragment() {
 
 
         // Initialize the adapter and set it to the RecyclerView
-        topicTypeAdapter = TopicTypeAdapter(topicTypeList) { selectedTopic ->
+        topicTypeAdapter = TopicTypeAdapter(topicTypeList,null) { selectedTopic ->
             listener?.onTopicTypeSelected(selectedTopic)
-            dismiss()
         }
         binding.rvTopicTypes.apply {
             layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
