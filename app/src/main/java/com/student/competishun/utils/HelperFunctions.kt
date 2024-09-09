@@ -18,7 +18,7 @@ import java.util.Locale
 import java.util.TimeZone
 
 class HelperFunctions {
-    fun setupDotsIndicator(context: Context, itemCount: Int, dotsIndicator: LinearLayout) {
+    fun setupDotsIndicator(context: Context,itemCount: Int, dotsIndicator: LinearLayout) {
         dotsIndicator.removeAllViews()
         for (i in 0 until itemCount) {
             val dot = ImageView(context)
@@ -34,23 +34,24 @@ class HelperFunctions {
         updateDotsIndicator(null, dotsIndicator)
     }
 
-
-
     fun updateDotsIndicator(recyclerView: RecyclerView?, dotsIndicator: LinearLayout) {
         recyclerView?.let {
-            val layoutManager = it.layoutManager
-            val visiblePageIndex = when (layoutManager) {
-                is LinearLayoutManager -> {
-                    (layoutManager.findFirstVisibleItemPosition() + layoutManager.findLastVisibleItemPosition()) / 2
-                }
-
-                else -> 0
-            }
+            val layoutManager = it.layoutManager as LinearLayoutManager
+            val visiblePosition = (layoutManager.findFirstVisibleItemPosition() + layoutManager.findLastVisibleItemPosition()) / 2
 
             for (i in 0 until dotsIndicator.childCount) {
                 val dot = dotsIndicator.getChildAt(i) as ImageView
+                val size = when (Math.abs(i - visiblePosition)) {
+                    0 -> 24
+                    1 -> 20
+                    2 -> 16
+                    else -> 12
+                }
+                val params = LinearLayout.LayoutParams(size, size)
+                params.setMargins(4, 0, 4, 0)
+                dot.layoutParams = params
                 dot.setImageResource(
-                    if (i == visiblePageIndex) R.drawable.dot_active
+                    if (i == visiblePosition) R.drawable.dot_active
                     else R.drawable.dot_inactive
                 )
             }

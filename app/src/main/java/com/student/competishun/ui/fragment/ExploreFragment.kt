@@ -93,6 +93,7 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
     var firstInstallment:Int = 0
     var secondInstallment:Int = 0
     var ExploreCourseTags: MutableList<String> = mutableListOf()
+    var isVideoPlaying = false
 
 
         override fun onCreateView(
@@ -198,6 +199,9 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
         }else {
             Log.e("courseID",courseId)
             getCourseByIDViewModel.fetchCourseById(courseId)
+
+            isVideoPlaying = false
+
             getCourseByIDViewModel.courseByID.observe(viewLifecycleOwner, Observer { courses ->
 
                 val imageUrl = courses?.video_thumbnail
@@ -240,12 +244,20 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
 
                 binding.overviewButton.setOnClickListener {
                     if (!videoUrl.isNullOrEmpty()) {
-                        binding.ivBannerExplore.visibility = View.GONE
-                        binding.playerView.visibility = View.VISIBLE
+                        if(isVideoPlaying){
+                            player?.pause()
+                            isVideoPlaying = false
+                        }else{
+                            binding.ivBannerExplore.visibility = View.GONE
+                            binding.playerView.visibility = View.VISIBLE
 
-
-                        initializePlayer(videoUrl)
-
+                            if(player==null){
+                                initializePlayer(videoUrl)
+                            }else{
+                                player?.play()
+                            }
+                            isVideoPlaying = true
+                        }
 
 
                         player?.addListener(object : Player.Listener {
@@ -714,8 +726,20 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
         findNavController().navigate(R.id.action_exploreFragment_to_allFaqFragment, bundle)
     }
 
+    private fun releasePlayer() {
+        player?.release()
+        player = null
+        isVideoPlaying = false
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
+        releasePlayer()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        player?.pause()
     }
 
     private fun mapFolderToOurContentItem(folder: GetCourseByIdQuery.Folder): OurContentItem {

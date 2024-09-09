@@ -400,6 +400,9 @@ class HomeFragment : Fragment() {
         )
         studentCoursesViewModel.fetchBanners(filtersbanner)
 
+        val courseFilter = FindAllCourseInputStudent(limit = Optional.Absent)
+        studentCoursesViewModel.fetchCourses(courseFilter)
+
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             studentCoursesViewModel.banners.collect { result ->
                 val bannerList = mutableListOf<PromoBannerModel>()
