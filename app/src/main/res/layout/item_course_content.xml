@@ -9,7 +9,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_chapter_number"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="68dp"
         android:layout_marginVertical="14dp"
         android:layout_marginStart="12dp"
         android:background="@drawable/frame_17074809189"
@@ -70,16 +70,43 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/_16dp"
-        android:layout_marginTop="@dimen/_10dp"
+        android:layout_marginTop="@dimen/_5dp"
         android:drawableStart="@drawable/book_topic"
         android:drawablePadding="@dimen/_6dp"
         android:fontFamily="@font/nunito"
-        android:text=""
+        android:text="08 Learning Material"
         android:textColor="#726C6C"
         android:textSize="@dimen/_12sp"
-        android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@id/cl_chapter_number"
         app:layout_constraintTop_toBottomOf="@id/tv_topic_name" />
+
+
+    <ProgressBar
+        android:id="@+id/customTopicProgress"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="0dp"
+        android:layout_height="8dp"
+        android:layout_marginTop="@dimen/_8dp"
+        android:max="100"
+        android:progressDrawable="@drawable/progress_bar_course_reminder"
+        app:layout_constraintStart_toStartOf="@+id/tv_topic_description"
+        app:layout_constraintTop_toBottomOf="@+id/tv_topic_description"
+        />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/CustomTopicPercentCompleted"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="70% complete"
+        android:textColor="#F2A779"
+        android:textSize="@dimen/_10dp"
+        android:layout_marginStart="@dimen/_10dp"
+        android:textStyle="bold"
+        app:fontFamily="@font/nunito"
+        app:layout_constraintBottom_toBottomOf="@id/customTopicProgress"
+        app:layout_constraintTop_toTopOf="@id/customTopicProgress"
+        app:layout_constraintStart_toEndOf="@id/customTopicProgress"
+        />
 
     <ImageView
         android:id="@+id/IvlockImage"

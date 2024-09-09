@@ -2,6 +2,7 @@ package com.student.competishun.ui.main
 
 import android.os.Bundle
 import android.util.Log
+import android.view.WindowManager
 import android.webkit.WebView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -19,7 +20,9 @@ class PdfViewerActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_pdf_viewer)
-
+        window.setFlags(
+            WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE
+        )
         webView = findViewById(R.id.webView)
 
         val pdfUrl = intent.getStringExtra("PDF_URL")

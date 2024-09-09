@@ -166,7 +166,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/cl_topic_type"
-        tools:itemCount="4"
+        tools:itemCount="2"
         tools:listitem="@layout/item_course_content" />
 
 
