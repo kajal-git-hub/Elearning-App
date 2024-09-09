@@ -16,7 +16,7 @@ import com.student.competishun.data.model.PromoBannerModel
 
 class PromoBannerAdapter(
     private val promoBannerList: List<PromoBannerModel>,
-    private val onItemClick: (String) -> Unit
+    private val onItemClick: (String?,String?) -> Unit
 ) :
     RecyclerView.Adapter<PromoBannerAdapter.PromoBannerViewHolder>() {
 
@@ -31,7 +31,7 @@ class PromoBannerAdapter(
         holder.bind(promoBanner)
 
         holder.itemView.setOnClickListener {
-            onItemClick(promoBanner.redirectLink.toString())  // Invoke the lambda with the redirect link
+            onItemClick(promoBanner.redirectLink , promoBanner.courseId)  // Invoke the lambda with the redirect link
         }
     }
 
