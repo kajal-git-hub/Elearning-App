@@ -17,6 +17,7 @@ import android.widget.MediaController
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.addCallback
+import androidx.activity.enableEdgeToEdge
 import androidx.fragment.app.Fragment
 import androidx.core.widget.NestedScrollView
 import androidx.databinding.ObservableField
@@ -92,7 +93,8 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
     var secondInstallment:Int = 0
     val courseTaglist = ""
 
-        override fun onCreateView(
+
+    override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         binding = FragmentExploreBinding.inflate(inflater, container, false).apply {
