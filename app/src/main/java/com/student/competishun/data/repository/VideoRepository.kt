@@ -4,6 +4,8 @@ import android.util.Log
 import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.exception.ApolloException
 import com.student.competishun.curator.GetVideoStreamDataSignedUrlQuery
+import com.student.competishun.curator.UpdateVideoProgressMutation
+import com.student.competishun.curator.type.UpdateVideoProgress
 import com.student.competishun.data.api.Curator
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -30,6 +32,30 @@ class VideoRepository @Inject constructor(@Curator private val apolloClient: Apo
             // Handle ApolloException
             Log.e("VideoRepository", e.message ?: "Unknown error")
             null
+        }
+    }
+
+    suspend fun updateVideoProgress(updateVideoProgress: UpdateVideoProgress): Boolean {
+        val mutation = UpdateVideoProgressMutation(updateVideoProgress)
+
+        return try {
+            val response = apolloClient.mutation(mutation).execute()
+
+            if (response.hasErrors()) {
+                // Handle errors if needed
+                response.errors?.forEach {
+                    Log.e("GraphQL Error", it.message)
+                }
+                false
+            } else {
+                Log.e("VideoRepository", response.data?.updateVideoProgress?.current_duration.toString())
+                response.data?.updateVideoProgress != null
+
+            }
+        } catch (e: ApolloException) {
+            // Handle ApolloException
+            Log.e("VideoRepository", e.message ?: "Unknown error")
+            false
         }
     }
 }

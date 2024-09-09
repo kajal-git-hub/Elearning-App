@@ -2,18 +2,16 @@ package com.student.competishun.data.repository
 
 import android.util.Log
 import com.apollographql.apollo3.ApolloClient
-import com.apollographql.apollo3.api.DefaultUpload
 import com.apollographql.apollo3.api.Optional
-import com.apollographql.apollo3.api.http.HttpHeader
 import com.apollographql.apollo3.api.toUpload
 import com.apollographql.apollo3.exception.ApolloException
 import com.student.competishun.data.api.Gatekeeper
+import com.student.competishun.data.model.Address
 import com.student.competishun.gatekeeper.UpdateUserMutation
 import com.student.competishun.data.model.UpdateUserResponse
 import com.student.competishun.data.model.UserInformation
 import com.student.competishun.gatekeeper.type.UpdateUserInput
 import com.student.competishun.data.model.User
-import com.student.competishun.gatekeeper.type.Upload
 import java.io.File
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -61,23 +59,24 @@ class UpdateUserRepository @Inject constructor(@Gatekeeper private val apolloCli
                                     id = user.id,
                                     preparingFor = info.preparingFor,
                                     targetYear = info.targetYear,
-                                    city = info.city,
                                     reference = info.reference,
                                     tShirtSize = info.tShirtSize,
                                     documentPhoto = info.documentPhoto,
                                     schoolName = info.schoolName,
-                                    waCountryCode = info.waCountryCode
+                                    waCountryCode = info.waCountryCode,
+                                    address = info.address?.let { address-> Address(city = address.city) }
+
                                 )
                             } ?: UserInformation(
                                 id = user.id,
                                 preparingFor = null,
                                 targetYear = null,
-                                city = null,
                                 reference = null,
                                 tShirtSize = null,
                                 documentPhoto = null,
                                 schoolName = null,
-                                waCountryCode = null
+                                waCountryCode = null,
+                                address = null
                             )
                         )
                     }

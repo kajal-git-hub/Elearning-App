@@ -140,11 +140,18 @@ class CourseFragment : Fragment(), StudentCourseItemClickListener {
     }
 
     override fun onCourseItemClicked(course: AllCourseForStudentQuery.Course,bundle: Bundle) {
-        val bundle = Bundle().apply {
-            putString("course_id", course.id)
-        }
+        val courseTags = bundle.getStringArrayList("course_tags")
+
+
         Log.e(TAG, course.id.toString())
-        findNavController().navigate(R.id.action_coursesFragment_to_ExploreFragment, bundle)
+        Log.e(TAG, "Course Tags: ${courseTags.toString()}")
+
+        val newBundle = Bundle().apply {
+            putString("course_id", course.id)
+            putStringArrayList("course_tags", courseTags)
+        }
+
+        findNavController().navigate(R.id.action_coursesFragment_to_ExploreFragment, newBundle)
     }
 
     private fun AllCourseForStudentQuery.Course.toCourse(): AllCourseForStudentQuery.Course {

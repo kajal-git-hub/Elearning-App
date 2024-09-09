@@ -1,6 +1,6 @@
 package com.student.competishun.ui.fragment
 
-import HorizontalCalendarSetUp
+import com.student.competishun.utils.HorizontalCalendarSetUp
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -19,7 +19,9 @@ import com.student.competishun.databinding.FragmentScheduleBinding
 import com.student.competishun.ui.adapter.ScheduleAdapter
 import com.student.competishun.ui.main.HomeActivity
 import com.student.competishun.ui.viewmodel.MyCoursesViewModel
+import com.student.competishun.utils.HelperFunctions
 import dagger.hilt.android.AndroidEntryPoint
+import java.text.SimpleDateFormat
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
@@ -34,6 +36,7 @@ class ScheduleFragment : Fragment() {
 
     private lateinit var calendarSetUp: HorizontalCalendarSetUp
     private lateinit var scheduleAdapter: ScheduleAdapter
+    private lateinit var helperFunctions: HelperFunctions
     private val myCourseViewModel: MyCoursesViewModel by viewModels()
     lateinit var scheduleData:ZonedDateTime
     @RequiresApi(Build.VERSION_CODES.O)
@@ -83,6 +86,7 @@ class ScheduleFragment : Fragment() {
         val sampleData =
 
           contentList.map { content ->
+
               Log.e("coursefolderntent" ,convertCalender(content.folder.scheduled_time.toString()).toString())
                 Log.e("courseDatentent" ,courseDate.toString())
             ScheduleData(
@@ -92,9 +96,8 @@ class ScheduleFragment : Fragment() {
                     ScheduleData.InnerScheduleItem(
                         content.folder.name,
                         content.file_name,
-                       formatTime(convertIST(content.folder.scheduled_time.toString())),
+                       formatTime(convertIST(content.scheduled_time.toString())),
                         "11:00 AM",
-                        ""
                     )
                 }
             )
@@ -112,8 +115,7 @@ class ScheduleFragment : Fragment() {
                         content.folder.name,
                         content.file_name,
                         formatTime(convertIST(content.folder.scheduled_time.toString())),
-                        "11:00 AM", // Replace with actual end time logic
-                        "" // Replace with any extra info if needed
+                        content.scheduled_time.toString()
                     )
                 }
             )
@@ -163,7 +165,7 @@ class ScheduleFragment : Fragment() {
                 Toast.makeText(context, "Error: ${exception.message}", Toast.LENGTH_SHORT).show()
             }
         }
-        myCourseViewModel.getCourseFolderContent("08-27-2024", "10-30-2025", "30321205-bc5a-4d98-b8bf-79119b1e2ba4")
+        myCourseViewModel.getCourseFolderContent("08-27-2024", "10-30-2025", "31296a0b-6dea-42e5-b273-668744bf34a4")
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -176,16 +178,37 @@ class ScheduleFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
+      helperFunctions = HelperFunctions()
         (activity as? HomeActivity)?.showBottomNavigationView(false)
         (activity as? HomeActivity)?.showFloatingButton(false)
-
+        val courseName  =  arguments?.getString("courseName")
+        val courseId  =  arguments?.getString("courseId")?:""
+        val courseStart  =  arguments?.getString("courseStart")
+        val courseEnd  =  arguments?.getString("courseEnd")
+        var start = helperFunctions.formatCourseDate(courseStart)
+        var end = helperFunctions.formatCourseDate(courseEnd)
         scheduleData = ZonedDateTime.now()
         binding.backIconSchedule.setOnClickListener {
             requireActivity().onBackPressedDispatcher.onBackPressed()
         }
         binding.clEmptySchedule.visibility = View.VISIBLE
+        myCourseViewModel.getCourseFolderContent(dateFormate(start), dateFormate(end), courseId)
         FindAllCourseFolderContentByScheduleTimeQuery()
+    }
+
+    fun dateFormate(inputDate:String):String{
+
+        val inputFormat = SimpleDateFormat("dd MMM, yy", Locale.getDefault())
+        val outputFormat = SimpleDateFormat("MM-dd-yyyy", Locale.getDefault())
+
+        return try {
+            val date = inputFormat.parse(inputDate) // Parse the input date
+            val formattedDate = outputFormat.format(date) // Format it into the desired format
+           formattedDate
+        } catch (e: Exception) {
+            e.printStackTrace()
+            "-"// Handle any parsing errors
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

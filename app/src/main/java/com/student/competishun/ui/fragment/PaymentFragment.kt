@@ -109,8 +109,9 @@ class PaymentFragment : Fragment() {
             orders?.let {
 
                 for (order in orders) {
-                    binding.tvAmount.text = "₹ ${order.amountPaid/100}"
+                    binding.tvAmount.text = "₹ ${order.amountPaid}"
                     binding.paymentSuccessText.text = "Payment Sucessfully"
+
                     observeCourseById(order.entityId)
                     binding.tvPaidDate.text =  getCurrentDateString()
                     if (order.paymentStatus.equals("paid", ignoreCase = true)) {
@@ -188,6 +189,7 @@ class PaymentFragment : Fragment() {
                 binding.tvCourseName.text = courseName
                 binding.className.text = helperFunctions.toDisplayString(courses.course_class?.name) +" Class"
                 binding.targettv.text = "Target ${courses.target_year}"
+                binding.starts.text = helperFunctions.formatCourseDate(courses.course_start_date.toString())
                 val categoryName = courses.category_name?.split(" ") ?: emptyList()
                 val wordsWithoutLast = categoryName.dropLast(1)
                 binding.category.text = wordsWithoutLast.joinToString(" ")

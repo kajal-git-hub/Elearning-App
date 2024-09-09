@@ -114,6 +114,9 @@
         <action
             android:id="@+id/action_mycartFragment_to_paymentFailedFragment"
             app:destination="@+id/PaymentFailedFragment" />
+        <action
+            android:id="@+id/action_mycartFragment_to_homeFragment"
+            app:destination="@+id/homeFragment" />
     </fragment>
 
     <fragment
@@ -180,6 +183,9 @@
         android:id="@+id/SubjectContentFragment"
         android:name="com.student.competishun.ui.fragment.SubjectContentFragment"
         tools:layout="@layout/fragment_subject_content">
+        <argument
+            android:name="folder_Name"
+            app:argType="string"/>
         <action
             android:id="@+id/action_subjectContentFragment_to_TopicTYPEContentFragment"
             app:destination="@+id/TopicTYPEContentFragment"/>
@@ -208,6 +214,12 @@
         android:id="@+id/TopicTYPEContentFragment"
         android:name="com.student.competishun.ui.fragment.TopicTypeContentFragment"
         tools:layout="@layout/fragment_topic_type_content">
+        <argument
+            android:name="folder_Id"
+            app:argType="string" />
+        <argument
+            android:name="folder_Name"
+            app:argType="string" />
     </fragment>
 
     <fragment
@@ -231,6 +243,17 @@
         android:id="@+id/ScheduleFragment"
         android:name="com.student.competishun.ui.fragment.ScheduleFragment"
         tools:layout="@layout/fragment_schedule">
+
+        <argument
+            android:name="courseId"
+            app:argType="string" />
+        <argument
+            android:name="courseStart"
+            app:argType="string" />
+        <argument
+            android:name="courseEnd"
+            app:argType="string" />
+
     </fragment>
 
     <fragment

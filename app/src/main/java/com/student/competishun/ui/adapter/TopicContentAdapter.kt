@@ -41,7 +41,16 @@ class TopicContentAdapter(private val topicContents: List<TopicContentModel>, pr
 
         fun bind(topicContent: TopicContentModel) {
             binding.ivSubjectBookIcon.setImageResource(topicContent.subjectIcon)
-            binding.ivPlayVideoIcon.setImageResource(topicContent.playIcon)
+
+            if (topicContent.playIcon != 0) {
+                binding.videoicon.setImageResource(topicContent.playIcon)
+                binding.videoicon.visibility = View.VISIBLE
+                binding.ivPlayVideoIcon.visibility = View.VISIBLE
+
+            } else {
+                binding.videoicon.setImageDrawable(null) // or setVisibility(View.GONE) to hide the view
+            }
+
             binding.tvLecture.text = topicContent.lecture
             binding.tvLecturerName.text = topicContent.lecturerName
             binding.tvTopicName.text = topicContent.topicName

@@ -39,8 +39,8 @@ class CourseAdapter(
 
             val courseTags = item.course_tags
 
-            val bundle = Bundle()
-            bundle.putStringArrayList("courseTags", courseTags as ArrayList<String>?)
+            val courseBundle = Bundle()
+            courseBundle.putStringArrayList("courseTags", courseTags as ArrayList<String>?)
 
 
             tvRecommendedCourseName.text = item.name
@@ -64,10 +64,13 @@ class CourseAdapter(
                 .into(ivImage)
             if (item.price != null && item.discount != null) {
                 val discountDetails = helperFunctions.calculateDiscountPercentage(item.price.toInt(), item.discount.toInt())
+                clPercentOffInner.visibility = View.VISIBLE
                 dicountPrice.text = "₹${item.discount}"
                 discPer.text = "${discountDetails.toInt()}% OFF"
             } else {
-                dicountPrice.text = "₹0"
+                clPercentOffInner.visibility = View.GONE
+                dicountPrice.text = "₹${item.price}"
+                orgPrice.visibility = View.GONE
                 discPer.text = "0% OFF"
             }
             tvTag2.apply {

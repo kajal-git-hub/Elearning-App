@@ -174,7 +174,7 @@
                     app:layout_constraintTop_toBottomOf="@id/crackIITJEETxt" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/btnExploreCourses"
+                    android:id="@+id/btnExploreCoursesEmpty"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="40dp"

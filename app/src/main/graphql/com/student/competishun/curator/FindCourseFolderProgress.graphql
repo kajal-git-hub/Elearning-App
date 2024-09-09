@@ -19,6 +19,7 @@ query FindCourseFolderProgress($findCourseFolderProgressId: String!) {
                 course_track {
                     completed_duration
                 }
+                description
                 id
                 file_url
                 file_type
@@ -32,6 +33,7 @@ query FindCourseFolderProgress($findCourseFolderProgressId: String!) {
                 folder_count
                 video_count
                 pdf_count
+                scheduled_time
             }
             folderCount
             completionPercentage

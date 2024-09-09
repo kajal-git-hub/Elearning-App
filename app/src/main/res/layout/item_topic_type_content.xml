@@ -149,10 +149,12 @@
 
 
         <ImageView
+            android:id="@+id/videoicon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_10dp"
             android:layout_marginEnd="@dimen/_10dp"
+            android:visibility="gone"
             android:src="@drawable/frame_1707481707"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Buffering progress -->
+    <item>
+        <shape android:shape="rectangle">
+            <size android:height="4dp"/> <!-- Adjust height -->
+            <solid android:color="#FF8888"/> <!-- Light red or another color -->
+        </shape>
+    </item>
+</layer-list>

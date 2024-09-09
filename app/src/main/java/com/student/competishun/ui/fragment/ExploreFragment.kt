@@ -22,8 +22,10 @@ import androidx.fragment.app.Fragment
 import androidx.core.widget.NestedScrollView
 import androidx.databinding.ObservableField
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
@@ -91,7 +93,8 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
     val lectureCounts = mutableMapOf<String, Int>()
     var firstInstallment:Int = 0
     var secondInstallment:Int = 0
-    val courseTaglist = ""
+    var ExploreCourseTags: MutableList<String> = mutableListOf()
+
 
 
     override fun onCreateView(
@@ -109,9 +112,26 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val courseTags = arguments?.getStringArrayList("course_tags")
+        arguments?.let { bundle ->
+            val tags = bundle.getStringArrayList("course_tags")
+            val recommendCourseTags = bundle.getStringArrayList("recommendCourseTags")
+            Log.d("recommendCourseTags", recommendCourseTags.toString())
+            Log.d("tags", tags.toString())
 
-        Log.d("courseTags", courseTags.toString())
+
+            if (recommendCourseTags != null && recommendCourseTags.isNotEmpty()) {
+                ExploreCourseTags.clear()
+                ExploreCourseTags.addAll(recommendCourseTags)
+                Log.e("courseTags", "Received Recommend Course Tags: $ExploreCourseTags")
+            } else if (tags != null) {
+                ExploreCourseTags.clear()
+                ExploreCourseTags.addAll(tags)
+                Log.e("courseTags", "Received Course Tags: $ExploreCourseTags")
+            }else{
+
+            }
+        }
+
 
         (activity as? HomeActivity)?.showBottomNavigationView(false)
         (activity as? HomeActivity)?.showFloatingButton(true)
@@ -124,9 +144,11 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
         combinedTabItems = listOf()
          courseId = arguments?.getString("course_id").toString()
         sharedPreferencesManager = SharedPreferencesManager(requireContext())
+        getAllLectureCount(courseId)
         if (lectureCount.isNullOrEmpty()) {
             lectureCount = "0"
-            binding.tvLectureNo.text = "Lectures: $lectureCount"
+
+
         }
         val items = mutableListOf(
             OurContentItem.FirstItem(
@@ -188,7 +210,7 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
 
 // Display the image thumbnail
                 Glide.with(requireContext())
-                    .load(courses?.banner_image)
+                    .load(imageUrl)
                     .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
                     .into(binding.ivBannerExplore)
 
@@ -250,7 +272,7 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
 
                 Log.e("listcourses", courses.toString())
                 binding.progressBar.visibility = View.GONE
-                binding.ExpireValidity.text = "]Validity: "+ helperFunctions.formatCourseDate(courses?.course_validity_end_date.toString())
+                binding.ExpireValidity.text = "Validity: "+ helperFunctions.formatCourseDate(courses?.course_validity_end_date.toString())
               //  binding.tvCoursePlannerDescription.text = courses?.planner_description
                 if (courses?.planner_pdf != null)
                 binding.clGetPlanner.setOnClickListener {
@@ -271,11 +293,6 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
                         requireContext(),
                         courseFItems.size,
                         binding.llDotsIndicatorFeatures
-                    )
-                    val courseItems = listOf(
-                        CourseFItem("Question Papers with Detailed Solution", R.drawable.group_1272628766),
-                        CourseFItem("Tests & Quiz with Detailed Analysis", R.drawable.group_1272628766),
-                        CourseFItem("Question Papers with Detailed Solution", R.drawable.group_1272628766)
                     )
 
                     val courseFeaturesAdapter = CourseFeaturesAdapter(courseFItems)
@@ -302,10 +319,16 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
                     binding.tvCourseName.text = courses.name
                     val categoryName = courses.category_name?.split(" ") ?: emptyList()
                     val firstTwoWords = categoryName.take(2).joinToString(" ")
-                    binding.tvTag2.text = firstTwoWords
-                    binding.orgPricexp.text = "₹"+courses.price.toString()
+//                    binding.tvTag2.text = firstTwoWords
+//                    binding.tvTag1.text = helperFunctions.toDisplayString(courses.course_class?.name)
+                    if (courses.discount==null){
+                        binding.dicountPricexp.text = "₹${courses.price}"
+                        binding.orgPricexp.visibility = View.GONE
+                    }else{
+                        binding.orgPricexp.text = "₹"+courses.price.toString()
+                        binding.dicountPricexp.text = "₹${courses.discount?:0}"
+                    }
                     val disountprice = ((courses.price?:0)-((courses.discount?:0)))
-                    binding.dicountPricexp.text = "₹${courses.discount}"
                     binding.tvStartDate.text = "Starts On: "+helperFunctions.formatCourseDate(courses.course_start_date.toString())
                     binding.tvEndDate.text ="Ends On: "+helperFunctions.formatCourseDate(courses.course_end_date.toString())
 
@@ -405,19 +428,6 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
                 TeacherItem(R.drawable.teacher_bg, "NEERAJ SAINI", "CHEMISTRY (ORG)"),
                 TeacherItem(R.drawable.teacher_bg, "MOHIT TYAGI", "MATHEMATICS"),
                 TeacherItem(R.drawable.teacher_bg, "AMIT BIJARNIA", "PHYSICS"),
-                TeacherItem(R.drawable.teacher_bg, "RAJAT JAIN", "MATHEMATICS"),
-                TeacherItem(R.drawable.teacher_bg, "NISHA SINSINWAR", "SST"),
-                TeacherItem(R.drawable.teacher_bg, "POONAM GUPTA", "BIOLOGY"),
-                TeacherItem(R.drawable.teacher_bg, "DEEPIKA RAIKANWAR", "CHEMISTRY"),
-                TeacherItem(R.drawable.teacher_bg, "DEEPAK KUMAR SHARMA", "MATHEMATICS"),
-                TeacherItem(R.drawable.teacher_bg, "ROHIT KUMAR GUPTA", "CHEMISTRY"),
-                TeacherItem(R.drawable.teacher_bg, "SATVEER GURJAR", "PHYSICS"),
-                TeacherItem(R.drawable.teacher_bg, "AKSHAY MATHUR", "CHEMISTRY"),
-                TeacherItem(R.drawable.teacher_bg, "ARPIT AGARWAL", "PHYSICS"),
-                TeacherItem(R.drawable.teacher_bg, "CHETAN KUMAWAT", "MATHEMATICS"),
-                TeacherItem(R.drawable.teacher_bg, "DHEERAJ SONI", "PHYSICS"),
-                TeacherItem(R.drawable.teacher_bg, "UDAY PAUL", "CHEMISTRY"),
-                TeacherItem(R.drawable.teacher_bg, "RITESH PATANI", "PHYSICS"),
             )
             val teacherAdapter = TeacherAdapter(teacherItems)
             binding.rvMeetTeachers.apply {
@@ -579,24 +589,36 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
                 when {
                     result?.isSuccess == true -> {
                         val data = result.onSuccess {
-                            it.getAllCourseForStudent.courses.map {
+                            it.getAllCourseForStudent.courses.map { course ->
+                                binding.tvTag4.text = "Target ${course.target_year}"
 
-                                binding.tvTag4.text =  "Target "+it.target_year.toString()
-                                val courseTags = it.course_tags
-
-                                binding.tvTag1.apply {
-                                    text = courseTags?.getOrNull(0) ?: ""
-                                    visibility = if (text.isEmpty()) View.GONE else View.VISIBLE
+                                // Assuming ExploreCourseTags is a list or an array you already have
+                                // Make sure it is initialized before using it
+                                ExploreCourseTags?.let { tags ->
+                                    binding.tvTag1.apply {
+                                        val tag1 = tags.getOrNull(0) ?: ""
+                                        Log.d("ExploreCourseTagsIndex", tag1)
+                                        text = tag1
+                                        visibility = if (text.isEmpty()) View.GONE else View.VISIBLE
+                                    }
+                                    binding.tvTag2.apply {
+                                        val tag2 = tags.getOrNull(1) ?: ""
+                                        Log.d("ExploreCourseTagsIndex", tag2)
+                                        text = tag2
+                                        visibility = if (text.isEmpty()) View.GONE else View.VISIBLE
+                                    }
+                                    binding.tvTag3.apply {
+                                        val tag3 = tags.getOrNull(2) ?: ""
+                                        Log.d("ExploreCourseTagsIndex", tag3)
+                                        text = tag3
+                                        visibility = if (text.isEmpty()) View.GONE else View.VISIBLE
+                                    }
+                                } ?: run {
+                                    Log.d("ExploreCourseTagsIndex", "ExploreCourseTags is null")
+                                    binding.tvTag1.visibility = View.GONE
+                                    binding.tvTag2.visibility = View.GONE
+                                    binding.tvTag3.visibility = View.GONE
                                 }
-                                binding.tvTag2.apply {
-                                    text = courseTags?.getOrNull(1) ?: ""
-                                    visibility = if (text.isEmpty()) View.GONE else View.VISIBLE
-                                }
-                                binding.tvTag3.apply {
-                                    text = courseTags?.getOrNull(2) ?: ""
-                                    visibility = if (text.isEmpty()) View.GONE else View.VISIBLE
-                                }
-
                             }
                         }
                         Log.d("CourseTagsData", "Success: $data")
@@ -755,7 +777,25 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
         bottomSheet.show(parentFragmentManager, "InstallmentDetailsBottomSheet")
     }
 
+    fun getAllLectureCount(courseId: String){
 
+        courseViewModel.fetchLectures(courseId)
+        Log.e("getcourseIds",courseId)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                courseViewModel.lectures.collect { result ->
+                    result?.onSuccess { lecture ->
+                        val count = lecture.getAllCourseLecturesCount.lecture_count.toInt()
+                        binding.tvLectureNo.text = "Lectures: $count"
+                        Log.e("lectureCount",count.toString())
+                      //  callback(courseId, count)
+                    }?.onFailure { exception ->
+                        Log.e("LectureException", exception.toString())
+                    }
+                }
+            }
+        }
+    }
 
 
 }

@@ -12,14 +12,17 @@ import com.student.competishun.data.model.CourseFItem
 class CourseFeaturesAdapter(private val items: List<CourseFItem>) :
     RecyclerView.Adapter<CourseFeaturesAdapter.ViewHolder>() {
 
+    private val images = listOf(R.drawable.group_1272628766, R.drawable.course_feature)
+
+
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var textViewTitle: TextView = itemView.findViewById(R.id.textViewTitle)
         var imageViewIcon: ImageView = itemView.findViewById(R.id.imBottomImage)
 
 
-        fun bind(courseFItem: CourseFItem) {
+        fun bind(courseFItem: CourseFItem,imageResId:Int) {
             textViewTitle.text = courseFItem.featureText
-            imageViewIcon.setImageResource(courseFItem.bottomimage)
+            imageViewIcon.setImageResource(imageResId)
         }
 
 
@@ -32,7 +35,8 @@ class CourseFeaturesAdapter(private val items: List<CourseFItem>) :
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val courseItem = items[position]
-        holder.bind(courseItem)
+        val imageResId = images[position%2]
+        holder.bind(courseItem,imageResId)
     }
 
     override fun getItemCount(): Int = items.size

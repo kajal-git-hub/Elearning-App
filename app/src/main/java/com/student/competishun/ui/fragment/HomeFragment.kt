@@ -451,6 +451,7 @@ class HomeFragment : Fragment() {
         if (courseType != "IIT-JEE" || courseType != "NEET") {
             courseTypes = "IIT-JEE"
         }
+        Log.e("cousetyeps",courseTypes)
         val filters = FindAllCourseInputStudent(
             category_name = Optional.Absent,
             course_class = Optional.Absent,
@@ -460,14 +461,14 @@ class HomeFragment : Fragment() {
         studentCoursesViewModel.fetchCourses(filters)
 
         binding.progressBarRec.visibility = View.VISIBLE
-        binding.rvRecommendedCourses.visibility = View.GONE
+        binding.clRecommendedCourses.visibility = View.GONE
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             studentCoursesViewModel.courses.collect { result ->
                 result?.onSuccess { data ->
                     Log.e("TotalStudentCourses", data.toString())
                     val courses = data.getAllCourseForStudent.courses.map { course ->
                         binding.progressBarRec.visibility = View.GONE
-                        binding.rvRecommendedCourses.visibility = View.VISIBLE
+                        binding.clRecommendedCourses.visibility = View.VISIBLE
                         getAllLectureCount(course.id) { courseId, lectureCount ->
                             lectureCounts[courseId] = lectureCount
                             binding.rvRecommendedCourses.adapter?.notifyDataSetChanged()
@@ -500,11 +501,14 @@ class HomeFragment : Fragment() {
                         )
                     } ?: emptyList()
                     binding.rvRecommendedCourses.adapter = courses?.let { courseList ->
-                        RecommendedCoursesAdapter(courseList, lectureCounts) { selectedCourse ->
+                        RecommendedCoursesAdapter(courseList, lectureCounts) { selectedCourse,recommendCourseTags ->
+                            Log.d("recommendCourseTagsHome", recommendCourseTags.toString())
                             val lectureCount = lectureCounts[selectedCourse.id]?.toString() ?: "0"
                             val bundle = Bundle().apply {
                                 putString("course_id", selectedCourse.id)
                                 putString("LectureCount", lectureCount)
+                                putStringArrayList("recommendCourseTags", ArrayList(recommendCourseTags)) // Pass the tags
+
                             }
                             findNavController().navigate(R.id.exploreFragment, bundle)
                         }
@@ -541,6 +545,7 @@ class HomeFragment : Fragment() {
         userViewModel.userDetails.observe(viewLifecycleOwner) { result ->
             result.onSuccess { data ->
                 val userDetails = data.getMyDetails
+                Log.e("courseeTypehome", userDetails.userInformation.address.toString())
                 var courseType = userDetails.userInformation.preparingFor ?: ""
                 getAllCoursesForStudent(courseType)
                 Log.e("courseeTypehome", courseType)

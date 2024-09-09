@@ -6,6 +6,8 @@ query MyCourses {
             id
             name
             price
+            course_end_date
+            course_start_date
             target_year
             status
             banner_image
@@ -13,16 +15,21 @@ query MyCourses {
             exam_type
             category_name
             category_id
+            course_start_date
+            course_end_date
             other_requirements
             entity_type
             folder {
                 id
+                parent_folder_id
                 name
                 description
+                folder_count
             }
         }
         progress {
             completionPercentage
+            folderCount
             subfolderDurations {
                 completionPercentage
                 folderCount
@@ -31,6 +38,7 @@ query MyCourses {
                     id
                     description
                     parent_folder_id
+                    folder_count
                 }
             }
         }

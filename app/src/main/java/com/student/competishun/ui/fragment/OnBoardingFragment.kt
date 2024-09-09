@@ -99,9 +99,9 @@ class OnBoardingFragment : Fragment() {
         userViewModel.userDetails.observe(viewLifecycleOwner) { result ->
             result.onSuccess { data ->
                 Log.d("userDetails",data.getMyDetails.fullName.toString())
-                Log.d("userDetails",data.getMyDetails.userInformation.city.toString())
+                Log.d("userDetails",data.getMyDetails.userInformation.address?.city.toString())
                 val name = data.getMyDetails.fullName
-                val city = data.getMyDetails.userInformation.city
+                val city = data.getMyDetails.userInformation.address?.city
 
                 if (!name.isNullOrEmpty()) {
                     binding.etEnterHereText.setText(name)
