@@ -9,8 +9,8 @@
 
     <ImageView
         android:id="@+id/imgProfile"
-        android:layout_width="86dp"
-        android:layout_height="65dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:scaleType="centerCrop"
         android:src="@drawable/my_cart_choose"
@@ -54,7 +54,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/frame_1707480886"
-        app:layout_constraintStart_toEndOf="@+id/cl_cart_item"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/cl_cart_item" />
 
     <TextView

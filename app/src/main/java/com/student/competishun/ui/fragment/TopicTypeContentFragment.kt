@@ -88,11 +88,10 @@ class TopicTypeContentFragment : Fragment() {
                         // Handle the click event for video file type
                         videoUrlApi(videourlViewModel, topicContent.id)
                     } else if (topicContent.fileType == "PDF"){
-                        helperFunctions.showDownloadDialog(
-                            requireContext(),
-                            topicContent.url,
-                            topicContent.topicName
-                        )
+                        val bundle = Bundle().apply {
+                            putString("url", topicContent.url)
+                        }
+                        findNavController().navigate(R.id.PDFViewFragment, bundle)
                     }
                     else {
                         Log.d("TopicContentAdapter", "File type is not VIDEO: ${topicContent.fileType}")
@@ -115,18 +114,18 @@ class TopicTypeContentFragment : Fragment() {
 
         viewModel.fetchVideoStreamUrl(folderContentId, "360p")
 
-        viewModel.videoStreamUrl.observe(viewLifecycleOwner, { signedUrl ->
+        viewModel.videoStreamUrl.observe(viewLifecycleOwner) { signedUrl ->
             Log.d("Videourl", "Signed URL: $signedUrl")
             if (signedUrl != null) {
                 val bundle = Bundle().apply {
                     putString("url", signedUrl)
                 }
-                findNavController().navigate(R.id.mediaFragment,bundle)
+                findNavController().navigate(R.id.mediaFragment, bundle)
 
             } else {
                 // Handle error or null URL
             }
-        })
+        }
     }
 
 

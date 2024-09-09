@@ -53,7 +53,7 @@ class CoursesViewModel @Inject constructor(
         return helperFunctions.formatCourseDate(date)
     }
     //to get discount
-    fun getDiscountDetails(originalPrice: Double, discountPrice: Double): Pair<Double, Double> {
+    fun getDiscountDetails(originalPrice: Double, discountPrice: Double): Pair<Int, Int> {
         return helperFunctions.calculateDiscountDetails(originalPrice, discountPrice)
     }
 
