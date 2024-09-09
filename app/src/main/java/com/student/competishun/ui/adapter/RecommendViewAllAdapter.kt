@@ -19,8 +19,8 @@ class RecommendViewAllAdapter(
     private val onItemClick: (GetAllCourseQuery.Course) -> Unit
 ) : RecyclerView.Adapter<RecommendViewAllAdapter.CourseViewHolder>(), Filterable {
 
+    private var filteredItems: MutableList<GetAllCourseQuery.Course> = items.toMutableList()
     private val helperFunctions = HelperFunctions()
-    private var filteredItems = items.toMutableList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CourseViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.recommended_course_item, parent, false)
@@ -72,21 +72,22 @@ class RecommendViewAllAdapter(
     override fun getFilter(): Filter {
         return object : Filter() {
             override fun performFiltering(constraint: CharSequence?): FilterResults {
-                val query = constraint?.toString()?.lowercase(Locale.getDefault())
-                val results = FilterResults()
-                results.values = if (query.isNullOrEmpty()) {
+                val query = constraint?.toString()?.lowercase(Locale.getDefault()) ?: ""
+                val filteredList = if (query.isEmpty()) {
                     items
                 } else {
                     items.filter {
                         it.name.lowercase(Locale.getDefault()).contains(query)
                     }
                 }
+                val results = FilterResults()
+                results.values = filteredList
                 return results
             }
 
             override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
-                filteredItems = if (results?.values is MutableList<*>) {
-                    results.values as MutableList<GetAllCourseQuery.Course>
+                filteredItems = if (results?.values is List<*>) {
+                    (results.values as List<GetAllCourseQuery.Course>).toMutableList()
                 } else {
                     mutableListOf()
                 }
@@ -109,3 +110,4 @@ class RecommendViewAllAdapter(
         val bannerImage: ImageView = view.findViewById(R.id.recommendbanner)
     }
 }
+

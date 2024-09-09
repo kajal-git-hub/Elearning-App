@@ -2,6 +2,7 @@
 agp = "8.5.1"
 androidGifDrawable = "1.2.19"
 androidPdfViewer = "3.2.0-beta.1"
+androidPdfViewerVersion = "2.8.2"
 apolloCoroutinesSupport = "3.7.3"
 checkoutVersion = "1.6.38"
 coreSplashscreen = "1.0.1"
@@ -35,6 +36,7 @@ playServicesDrive = "17.0.0"
 [libraries]
 android-gif-drawable = { module = "pl.droidsonroids.gif:android-gif-drawable", version.ref = "androidGifDrawable" }
 android-pdf-viewer = { module = "com.github.barteksc:android-pdf-viewer", version.ref = "androidPdfViewer" }
+android-pdf-viewer-v282 = { module = "com.github.barteksc:android-pdf-viewer", version.ref = "androidPdfViewerVersion" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycleViewmodelKtx" }
 androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycleViewmodelKtx" }

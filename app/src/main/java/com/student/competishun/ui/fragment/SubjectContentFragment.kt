@@ -1,5 +1,6 @@
 package com.student.competishun.ui.fragment
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -25,6 +26,7 @@ import com.student.competishun.di.SharedVM
 import com.student.competishun.ui.adapter.SubjectContentAdapter
 import com.student.competishun.ui.adapter.TopicContentAdapter
 import com.student.competishun.ui.main.HomeActivity
+import com.student.competishun.ui.main.PdfViewerActivity
 import com.student.competishun.ui.viewmodel.CoursesViewModel
 import com.student.competishun.ui.viewmodel.VideourlViewModel
 import com.student.competishun.utils.HelperFunctions
@@ -183,11 +185,19 @@ class SubjectContentFragment : Fragment() {
                                 // Handle the click event for video file typ
                                 videoUrlApi(videourlViewModel, topicContent.id)
                             } else if (topicContent.fileType == "PDF"){
-                                helperFunctions.showDownloadDialog(
-                                    requireContext(),
-                                    topicContent.url,
-                                    topicContent.topicName
-                                )
+//                                helperFunctions.showDownloadDialog(
+//                                    requireContext(),
+//                                    topicContent.url,
+//                                    topicContent.topicName
+//                                )
+
+                                val intent = Intent(context, PdfViewerActivity::class.java).apply {
+                                    putExtra("PDF_URL", topicContent.url)
+                                }
+                                startActivity(intent)
+//
+//                                val pdfUrl = topicContent.url
+//                                openPdf(pdfUrl)
                             }
                             else {
                                 Log.d("TopicContentAdapter", "File type is not VIDEO: ${topicContent.fileType}")
@@ -266,11 +276,16 @@ class SubjectContentFragment : Fragment() {
                                     // Handle the click event for video file typ
                                     videoUrlApi(videourlViewModel, topicContent.id)
                                 } else if (topicContent.fileType == "PDF"){
-                                    helperFunctions.showDownloadDialog(
-                                        requireContext(),
-                                        topicContent.url,
-                                        topicContent.topicName
-                                    )
+//                                    helperFunctions.showDownloadDialog(
+//                                        requireContext(),
+//                                        topicContent.url,
+//                                        topicContent.topicName
+//                                    )
+                                    val intent = Intent(context, PdfViewerActivity::class.java).apply {
+                                        putExtra("PDF_URL", topicContent.url)
+                                    }
+                                    startActivity(intent)
+
                                 }
                                 else {
                                     Log.d("TopicContentAdapter", "File type is not VIDEO: ${topicContent.fileType}")
@@ -329,6 +344,14 @@ class SubjectContentFragment : Fragment() {
             }
         })
     }
+
+    private fun openPdf(pdfUrl: String) {
+        val bundle = Bundle().apply {
+            putString("pdf_url", pdfUrl)
+        }
+        findNavController().navigate(R.id.PDFViewFragment, bundle) // Navigate to PDF viewer fragment
+    }
+
 
 
 
