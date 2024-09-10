@@ -3,6 +3,7 @@ package com.student.competishun.ui.fragment
 import com.student.competishun.utils.HorizontalCalendarSetUp
 import android.os.Build
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -25,10 +26,12 @@ import com.student.competishun.ui.viewmodel.MyCoursesViewModel
 import com.student.competishun.utils.HelperFunctions
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
+import java.time.LocalTime
 import java.time.ZoneId
-import java.time.ZonedDateTime
-import java.time.format.DateTimeFormatter
 import java.util.Locale
+import java.time.ZonedDateTime
+import java.time.Duration
+import java.time.format.DateTimeFormatter
 
 @AndroidEntryPoint
 class ScheduleFragment : Fragment() {
@@ -87,27 +90,8 @@ class ScheduleFragment : Fragment() {
         var courseDate:CalendarDate = CalendarDate("","","",null)
 
 
-        val sampleData =
-
-          contentList.map { content ->
-
-              Log.e("coursefolderntent" ,convertCalender(content.folder.scheduled_time.toString()).toString())
-                Log.e("courseDatentent" ,courseDate.toString())
-            ScheduleData(
-                convertIST(content.folder.scheduled_time.toString()).dayOfWeek.toString().take(3), convertIST(content.folder.scheduled_time.toString()).dayOfMonth.toString(),
-                contentList.map { content ->
-                    courseDate = convertCalender(content.folder.scheduled_time.toString())
-                    ScheduleData.InnerScheduleItem(
-                        content.folder.name,
-                        content.file_name,
-                       formatTime(convertIST(content.scheduled_time.toString())),
-                        "11:00 AM",
-                    )
-                }
-            )
-   }
         val scheduleDataList = contentList.groupBy {
-            val scheduledTime = convertIST(it.folder.scheduled_time.toString())
+            val scheduledTime = convertIST(it.content.scheduled_time.toString())
             scheduledTime.dayOfWeek.toString().take(3) to scheduledTime.dayOfMonth.toString()
         }.map { (dateInfo, groupedContentList) ->
             val (dayOfWeek, dayOfMonth) = dateInfo
@@ -116,10 +100,13 @@ class ScheduleFragment : Fragment() {
                 dayOfMonth,
                 groupedContentList.map { content ->
                     ScheduleData.InnerScheduleItem(
-                        content.folder.name,
-                        content.file_name,
-                        formatTime(convertIST(content.folder.scheduled_time.toString())),
-                        content.scheduled_time.toString()
+                        content.parentFolderName?:"",
+                        content.content.file_name,
+                        formatTime(convertIST(content.content.scheduled_time.toString())),
+                        convertLastDuration(formatTime(convertIST(content.content.scheduled_time.toString())),content.content.video_duration?.toLong()?:0),
+                        content.content.file_type.name,
+                        content.content.scheduled_time.toString()
+
                     )
                 }
             )
@@ -153,11 +140,11 @@ class ScheduleFragment : Fragment() {
                 }
                 Log.e("timesize",data.findAllCourseFolderContentByScheduleTime.size.toString())
                 data.findAllCourseFolderContentByScheduleTime.forEachIndexed { index, scheduleContent ->
-                    Log.e("timea $index", scheduleContent.folder.scheduled_time.toString())
+                    Log.e("timea $index", scheduleContent.content.scheduled_time.toString())
                 }
                 data.findAllCourseFolderContentByScheduleTime.forEach { schedulecontent->
                 // Log.e("timea",schedulecontent.s.toString())
-                 schedulecontent.folder.scheduled_time.let {
+                 schedulecontent.content.scheduled_time.let {
                      setupCalendar(it.toString())
 
                  }
@@ -179,13 +166,31 @@ class ScheduleFragment : Fragment() {
         return zonedDateTime.withZoneSameInstant(ZoneId.of("Asia/Kolkata"))
     }
 
+    fun convertLastDuration(timeString: String, secondsToAdd: Long): String {
+        Log.e("getSWtring",timeString)
+
+        // Define the formatter for formatting the output
+        val formatter = DateTimeFormatter.ofPattern("hh:mm a")
+
+        // Parse the input time
+        val localTime = LocalTime.parse(timeString, formatter)
+
+        // Add the specified number of seconds
+        val updatedLocalTime = localTime.plusSeconds(secondsToAdd)
+
+        // Return the updated time in the same format
+        return updatedLocalTime.format(formatter)
+
+    }
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-      helperFunctions = HelperFunctions()
+
         (activity as? HomeActivity)?.showBottomNavigationView(false)
         (activity as? HomeActivity)?.showFloatingButton(false)
+        helperFunctions = HelperFunctions()
         val courseName  =  arguments?.getString("courseName")
         val courseId  =  arguments?.getString("courseId")?:""
         val courseStart  =  arguments?.getString("courseStart")
@@ -266,6 +271,10 @@ class ScheduleFragment : Fragment() {
         val formatter = DateTimeFormatter.ofPattern("hh:mm a")
         return zonedDateTime.format(formatter)
     }
+
+
+
+
 }
 
 

@@ -32,6 +32,7 @@ dotsindicatorVersion = "5.0"
 playServicesWallet = "19.4.0"
 zoomlayoutVersion = "1.9.0"
 playServicesDrive = "17.0.0"
+coreI18n = "1.0.0-alpha01"
 
 [libraries]
 android-gif-drawable = { module = "pl.droidsonroids.gif:android-gif-drawable", version.ref = "androidGifDrawable" }
@@ -69,6 +70,7 @@ otaliastudios-zoomlayout = { module = "com.otaliastudios:zoomlayout", version.re
 play-services-wallet = { module = "com.google.android.gms:play-services-wallet", version.ref = "playServicesWallet" }
 razorpay-checkout = { module = "com.razorpay:checkout", version.ref = "checkoutVersion" }
 play-services-drive = { group = "com.google.android.gms", name = "play-services-drive", version.ref = "playServicesDrive" }
+androidx-core-i18n = { group = "androidx.core", name = "core-i18n", version.ref = "coreI18n" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

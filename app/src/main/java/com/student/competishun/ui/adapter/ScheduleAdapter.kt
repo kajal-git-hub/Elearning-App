@@ -1,6 +1,7 @@
 package com.student.competishun.ui.adapter
 
 import android.content.Context
+import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
@@ -19,6 +20,15 @@ import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 import java.util.concurrent.TimeUnit
+import java.time.Duration
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
+import java.time.ZoneId
+import android.os.CountDownTimer
+import android.widget.TextView
+import androidx.navigation.fragment.findNavController
+import com.student.competishun.ui.viewmodel.VideourlViewModel
+import com.student.competishun.utils.ToolbarCustomizationListener
 
 class ScheduleAdapter(private val scheduleItems: List<ScheduleData>, private val context: Context) : RecyclerView.Adapter<ScheduleAdapter.ScheduleViewHolder>() {
 
@@ -43,13 +53,14 @@ class ScheduleAdapter(private val scheduleItems: List<ScheduleData>, private val
             binding.tvDay.text = scheduleItem.day
             binding.tvDate.text = scheduleItem.date
 
-            val innerAdapter = InnerScheduleAdapter(scheduleItem.innerItems,context)
+            val innerAdapter = InnerScheduleAdapter(scheduleItem.innerItems)
             binding.rvScheduleInnerItem.adapter = innerAdapter
             binding.rvScheduleInnerItem.layoutManager = LinearLayoutManager(binding.root.context, LinearLayoutManager.VERTICAL, false)
         }
     }
 
-    inner class InnerScheduleAdapter(private val innerItems: List<ScheduleData.InnerScheduleItem>,private val context: Context) : RecyclerView.Adapter<InnerScheduleAdapter.InnerViewHolder>() {
+    inner class InnerScheduleAdapter(private val innerItems: List<ScheduleData.InnerScheduleItem>) : RecyclerView.Adapter<InnerScheduleAdapter.InnerViewHolder>() {
+
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): InnerViewHolder {
             val binding = ItemCurrentSchedulesInnerChildBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -72,10 +83,18 @@ class ScheduleAdapter(private val scheduleItems: List<ScheduleData>, private val
 
                 binding.tvSubjectName.text = innerItem.subject_name
                 binding.tvTopicName.text = innerItem.topic_name
-                binding.tvClassTimings.text = "${innerItem.lecture_start_time+"-"+innerItem.lecture_end_time}"
-
+                 startCountdownTimer(innerItem.scheduleTimer, binding.tvHoursRemaining)
+                if (innerItem.fileType=="VIDEO") {
+                    binding.tvClassTimings.text = "${innerItem.lecture_start_time+"-"+innerItem.lecture_end_time}"
+                    binding.tvHoursRemaining.text = ""
+                  //  binding.videoIV.setImageResource(R.drawable.pdf_bg)
+                }else if (innerItem.fileType=="PDF"){
+                    binding.videoIV.setImageResource(R.drawable.pdf_bg)
+                    binding.tvClassTimings.text = "${innerItem.lecture_start_time}"
+                }
                 val lectureStartTime = innerItem.lecture_start_time
                 val lectureEndTime = innerItem.lecture_end_time
+                Log.e("startedtime $lectureStartTime", lectureEndTime)
 //                val lectureStatus = innerItem.lecture_status
 
 //                Log.d("StatusAndTime",lectureStartTime+ "---"+lectureEndTime+"---"+lectureStatus)
@@ -171,7 +190,95 @@ class ScheduleAdapter(private val scheduleItems: List<ScheduleData>, private val
                 handler.post(updateTimeRunnable)
             }
 
-        }
+            // Function to parse the timestamp and calculate the remaining time
+            fun calculateTimeRemaining(targetTimestamp: String): String {
+                // Define the formatter for parsing the timestamp
+                val formatter = java.time.format.DateTimeFormatter.ISO_DATE_TIME.withZone(ZoneId.of("UTC"))
+
+                // Parse the timestamp into a ZonedDateTime object
+                val targetTime = ZonedDateTime.parse(targetTimestamp, formatter)
+
+                // Get the current time
+                val now = ZonedDateTime.now(ZoneId.of("UTC"))
+
+                // Calculate the duration between the current time and the target time
+                val duration = Duration.between(now, targetTime)
+
+                // Handle cases where the target time is in the past
+                if (duration.isNegative) {
+                    return "Time's up!"
+                }
+
+                val hours = duration.toHours()
+                val minutes = duration.toMinutes() % 60
+                val seconds = duration.toSeconds() % 60
+
+                // Format the remaining time as a string
+                return String.format("Time Remaining: %02d:%02d:%02d", hours, minutes, seconds)
+            }
+
+            private fun startCountdownTimer(targetTimestamp: String, textView: TextView) { // Define UTC and IST zones
+                val utcZone = ZoneId.of("UTC")
+                val istZone = ZoneId.of("Asia/Kolkata")
+
+                // Parse the target timestamp into a ZonedDateTime object in UTC
+                val targetTimeUtc = ZonedDateTime.parse(targetTimestamp, DateTimeFormatter.ISO_DATE_TIME.withZone(utcZone))
+
+                // Convert target time to IST
+                val targetTimeIst = targetTimeUtc.withZoneSameInstant(istZone)
+
+                // Calculate initial duration in milliseconds from current time in IST
+                val nowInIst = ZonedDateTime.now(istZone)
+                val initialDuration = Duration.between(nowInIst, targetTimeIst).toMillis()
+
+                // Initialize the countdown timer
+                val timer = object : CountDownTimer(initialDuration, 1000) {
+                    override fun onTick(millisUntilFinished: Long) {
+                        val secondsRemaining = millisUntilFinished / 1000
+                        val days = secondsRemaining / 86400 // 60*60*24
+                        val hours = (secondsRemaining % 86400) / 3600
+                        val minutes = (secondsRemaining % 3600) / 60
+                        val seconds = secondsRemaining % 60
+                        binding.tvHoursRemaining.text = "$hours"
+                        binding.tvMinRemaining.text = "$minutes"
+                        binding.tvSecRemaining.text = "$seconds"
+                        // Update the TextView on the main thread
+                        textView.post {
+                            textView.text = String.format("Time Remaining: %d days %02d:%02d:%02d", days, hours, minutes, seconds)
+                        }
+                    }
+
+                    override fun onFinish() {
+                        val nowInIst = ZonedDateTime.now(istZone)
+                        val durationSinceEnd = Duration.between(targetTimeIst, nowInIst)
+                        val daysPassed = durationSinceEnd.toDays()
+                        val hoursPassed = durationSinceEnd.toHours() % 24
+                        val minutesPassed = durationSinceEnd.toMinutes() % 60
+
+
+                        // Build the message based on the duration
+                        val timePassedMessage = when {
+                            daysPassed > 0 ->binding.tvClassStartedStatus.text = String.format("Started %d days ago", daysPassed)
+                            hoursPassed > 0 -> binding.tvClassStartedStatus.text =String.format("Started %d hours ago", hoursPassed)
+                            else -> binding.tvClassStartedStatus.text = String.format("Started %d minutes ago", minutesPassed)
+                        }
+                        binding.clLectureTimer.visibility = View.GONE
+                        binding.clJoinLecture.visibility = View.VISIBLE
+                        binding.btnJoinLecture.setOnClickListener {
+                          //  toolbarListener.onCustomizeToolbar("New Title", true)
+                        }
+                    //    binding.tvClassStartedStatus.text = String.format("Started %d hours and %d minutes ago", hoursPassed, minutesPassed)
+
+
+                    }
+                }
+
+                timer.start()}
+
+
+
     }
+    }
+
 
 }

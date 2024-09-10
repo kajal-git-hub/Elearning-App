@@ -6,8 +6,8 @@ import com.student.competishun.curator.GetAllCourseCategoriesQuery
 import com.student.competishun.curator.MyCoursesQuery
 import com.student.competishun.data.model.TopicTypeModel
 
-interface OnLectureCountRequestedListener {
-    fun onLectureCountRequested(courseId: String, position: Int)
+interface ToolbarCustomizationListener {
+    fun onCustomizeToolbar(title: String, isBackEnabled: Boolean)
 }
 
 interface OnCourseItemClickListener {
