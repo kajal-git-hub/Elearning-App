@@ -31,6 +31,7 @@ import java.time.ZoneId
 import java.util.Locale
 import java.time.ZonedDateTime
 import java.time.Duration
+import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Calendar
 
@@ -67,7 +68,7 @@ class ScheduleFragment : Fragment() {
                 scrollToDate(calendarDate)
             }
         )
-        Log.e("schedule57 $scheduleTime", convertIST(scheduleTime).month.toString() )
+        //Log.e("schedule57 $scheduleTime", convertIST(scheduleTime).month.toString() )
         binding.tvCalenderCurrentMonth.text = "${convertIST(scheduleData.toString()).month} ${convertIST(scheduleData.toString()).year} "
 
         calendarSetUp.setUpCalendarPrevNextClickListener(
@@ -76,13 +77,16 @@ class ScheduleFragment : Fragment() {
             binding.arrowLeftCalender,
             requireContext(),
             { newMonth ->
-                binding.tvCalenderCurrentMonth.text = newMonth
+              //  binding.tvCalenderCurrentMonth.text = newMonth
             },
             { calendarDate ->
-                scrollToDate(calendarDate)
+              //  scrollToDate(calendarDate)
             }
         )
-        calendarSetUp.scrollToSpecificDate(binding.rvCalenderDates, convertIST(scheduleTime))
+        val today = LocalDate.now() // Get current date without time
+
+        calendarSetUp.scrollToSpecificDate(binding.rvCalenderDates, today.atStartOfDay(ZoneId.systemDefault())
+        )
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -146,12 +150,13 @@ class ScheduleFragment : Fragment() {
                 data.findAllCourseFolderContentByScheduleTime.forEach { schedulecontent->
                 // Log.e("timea",schedulecontent.s.toString())
                  schedulecontent.content.scheduled_time.let {
-                     setupCalendar(it.toString())
+                     val currentDate = ZonedDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+                       //  setupCalendar(it.toString())
+                     setupCalendar(currentDate)
 
                  }
                     Log.e("schedule57 $scheduleData", convertIST(scheduleData.toString()).toString())
                     binding.tvCalenderCurrentMonth.text = "${convertIST(scheduleData.toString()).month} ${convertIST(scheduleData.toString()).year}"
-
                 }
 
             }.onFailure { exception ->
@@ -295,8 +300,8 @@ class ScheduleFragment : Fragment() {
 
     fun getDateAfterDays(endDate: String, daysAfter: Int): String {
         Log.e("startendd",endDate.toString())
-        val inputFormat = SimpleDateFormat("MM-dd-yyyy", Locale.getDefault())
-        val outputFormat = SimpleDateFormat("MM-dd-yyyy", Locale.getDefault())
+        val inputFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
+        val outputFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
 
         return try {
             val parsedDate = inputFormat.parse(endDate) ?: return "-"
