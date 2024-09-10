@@ -23,6 +23,7 @@ query FindCourseFolderProgress($findCourseFolderProgressId: String!) {
                 id
                 scheduled_time
                 file_url
+                video_duration
                 file_type
                 file_name
             }
