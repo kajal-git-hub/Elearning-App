@@ -15,7 +15,7 @@ import com.student.competishun.databinding.ExploreCourseItemBinding
 class ExploreCourseAdapter(
     private val courses: List<MyCoursesQuery.Course>,
     private val progressList: List<MyCoursesQuery.Progress>, // List to hold progress information
-    private val onItemClicked: (MyCoursesQuery.Course, List<String>, List<String>, List<Double>,List<String>) -> Unit// Updated callback
+    private val onItemClicked: (MyCoursesQuery.Course,List<MyCoursesQuery.Folder1?>, List<Double>, ) -> Unit// Updated callback
 ) : RecyclerView.Adapter<ExploreCourseAdapter.ExploreCourseViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExploreCourseViewHolder {
@@ -36,27 +36,30 @@ class ExploreCourseAdapter(
             .into(holder.binding.ivPurchased)
 
         holder.itemView.setOnClickListener {
-            val completionPercentages = progress.subfolderDurations
+            val subFolder = progress.subfolderDurations
+                ?.map { it.folder } ?: emptyList()
+            val subFolderCompletionPercentages = progress.subfolderDurations
                 ?.map { it.completionPercentage } ?: emptyList()
-            val folderIds = course.folder
-                ?.filter { it.parent_folder_id == null && !it.name.startsWith("Free", ignoreCase = true) }
-                ?.map { it.id } ?: emptyList()
-            val folderCounts = course.folder
-                ?.filter { it.parent_folder_id == null && !it.name.startsWith("Free", ignoreCase = true) }
-                ?.map { it.folder_count?:"" } ?: emptyList()
+            val subFolders = progress.subfolderDurations
+                ?.map { it.folder } ?: emptyList()
+            val folderperc = progress.subfolderDurations
+                ?.map { it.folder?.id } ?: emptyList()
+            val folderCounts = progress.subfolderDurations
+                ?.map { it.folder?.folder_count?:"" } ?: emptyList()
 
-            val folderNames = course.folder
-                ?.filter { it.parent_folder_id == null && !it.name.startsWith("Free", ignoreCase = true) }
-                ?.map { it.name } ?: emptyList()
+            val folderNames = progress.subfolderDurations
+                ?.map { it.folder?.name?:"" } ?: emptyList()
+            val progresPercentage = progress.completionPercentage?:0.0
+
+
             onItemClicked(
                 course,
-                folderIds,
-                folderNames,
-                completionPercentages,
-               folderCounts
+                subFolders,
+                subFolderCompletionPercentages,
+
             )
-            Log.e("folder_Idada:", folderIds.toString())
-            Log.e("folder_Name:", folderNames.toString())
+            Log.e("folder_Id $folderperc: cont $folderCounts", folderNames.toString())
+            Log.e("percentagess $progresPercentage:", subFolderCompletionPercentages.toString())
         }
     }
 

@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.gson.Gson
 import com.student.competishun.R
 import com.student.competishun.curator.MyCoursesQuery
 import com.student.competishun.curator.MyCoursesQuery.Folder
@@ -25,6 +26,7 @@ import com.student.competishun.ui.viewmodel.MyCoursesViewModel
 import com.student.competishun.ui.viewmodel.OrdersViewModel
 import com.student.competishun.utils.SharedPreferencesManager
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.ArrayList
 
 
 @AndroidEntryPoint
@@ -35,7 +37,7 @@ class CourseEmptyFragment : Fragment() {
     lateinit var sharedPreferencesManager: SharedPreferencesManager
     private val ordersViewModel: OrdersViewModel by viewModels()
     private val viewModel: MyCoursesViewModel by viewModels()
-    private var coursepercent=0
+    private var coursePercent=0
     private var currentCourseId=""
     private var folderId=""
     private val getCourseByIDViewModel: GetCourseByIDViewModel by viewModels()
@@ -196,7 +198,6 @@ class CourseEmptyFragment : Fragment() {
                             course_end_date = course.course_end_date,
                             course_start_date = course.course_start_date
                         )
-
                         val selectedProgress = MyCoursesQuery.Progress(
                             completionPercentage = progress?.completionPercentage ?: 0.0,
                             subfolderDurations = progress?.subfolderDurations,
@@ -208,20 +209,26 @@ class CourseEmptyFragment : Fragment() {
                         progressList.add(selectedProgress)
                     }
 
+
                     // Create adapter with course and progress lists
-                    val adapter = ExploreCourseAdapter(courseList, progressList) { course, folderIds, folderNames, subfolderDurations, folderCounts  ->
+                    val adapter = ExploreCourseAdapter(courseList, progressList) { course, folders, progressPercentage  ->
                         // Handle the course click and navigate
-                        Log.d("CourseClick", "Course: ${course.name}, FolderIds: $folderIds, FolderNames: $folderNames, Progress: $folderCounts $subfolderDurations")
-                        val completionPercentagesArray = subfolderDurations.toDoubleArray()
+                        val gson = Gson()
+                        val folderJson = gson.toJson(folders)
+                        val courseJson = gson.toJson(course)
+                        val progressPercentages = gson.toJson(progressPercentage)
+                        Log.d("CourseClick", "Course: ${course.name}, Folders: $folders, FolderNames: $progressPercentage")
+
                         val bundle = Bundle().apply {
-                            putStringArrayList("folder_ids", ArrayList(folderIds))
-                            putStringArrayList("folder_names", ArrayList(folderNames))
-                            putString("courseName", course.name)
-                            putString("courseId", course.id)
-                            putString("courseStart",course.course_start_date.toString())
-                            putString("courseEnd",course.course_end_date.toString())
-                            putDoubleArray("completionPercentages", completionPercentagesArray)
-                            putStringArrayList("folderCounts", ArrayList(folderCounts))
+//
+                            putString("folderJson", folderJson)
+                            putString("courseJson", courseJson)
+                           putString("courseName", course.name)
+//                            putString("courseId", course.id)
+//                            putString("courseStart",course.course_start_date.toString())
+//                            putString("courseEnd",course.course_end_date.toString())
+                            putString("completionPercentages", progressPercentages)
+
                         }
 
                         findNavController().navigate(R.id.action_courseEmptyFragment_to_ResumeCourseFragment, bundle)
