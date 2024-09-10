@@ -203,6 +203,15 @@ class AllDemoResourcesFree : Fragment() {
         val contentCount = folderProgressContent?.size ?: 0
         val durationPerContent = if (contentCount > 0) totalDuration / contentCount else 0.0
         // Map folderContents to FreeDemoItem
+        val hours = (durationPerContent / 60).toInt()
+        val minutes = (durationPerContent % 60).toInt()
+
+        val durationString = if (hours > 0) {
+            "${hours}h ${minutes} mins"
+        } else {
+            "${minutes} mins"
+        }
+
         val freeItems = folderProgressContent?.map { folderContent ->
             val fileName = folderContent.content?.course_track ?: "Unknown"
             val duration = "${durationPerContent.toInt()} mins"
@@ -211,7 +220,7 @@ class AllDemoResourcesFree : Fragment() {
                 id = folderContent.content?.id.toString(),
                 playIcon = if(folderContent.content?.file_type == FileType.PDF ){ R.drawable.pdf_bg} else {R.drawable.frame_1707480717}, //static icon
                 titleDemo = folderContent.content?.file_name.toString(),
-                timeDemo = if(folderContent.content?.file_type == FileType.PDF ){ ""} else {duration},
+                timeDemo = if(folderContent.content?.file_type == FileType.PDF ){ ""} else { durationString},
                 fileUrl = folderContent.content?.file_url.toString(),
                 fileType = folderContent.content?.file_type?.name.toString(),
                 videoCount = "",

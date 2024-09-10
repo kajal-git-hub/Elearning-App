@@ -312,10 +312,16 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
 
             result.onSuccess { data ->
 
-
                 Log.e("CartItems", data.findAllCartItems.toString())
                 var complementryId = ""
                 val cartItems = data.findAllCartItems.map { cartItemData ->
+                    if(cartItemData.course.with_installment_price!=0){
+                        binding.clSecondbottomInstallement.visibility = View.VISIBLE
+                    }else{
+                        binding.clSecondbottomInstallement.visibility = View.GONE
+                        binding.clNotApplicable.visibility = View.GONE
+                    }
+
                     binding.clEmptyCart.visibility = View.GONE
                     binding.parentData.visibility = View.VISIBLE
                     binding.clPaymentSummary.visibility = View.VISIBLE
