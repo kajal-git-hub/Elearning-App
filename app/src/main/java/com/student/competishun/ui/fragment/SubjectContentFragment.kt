@@ -7,12 +7,15 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.student.competishun.R
 import com.student.competishun.curator.FindCourseFolderProgressQuery
 import com.student.competishun.curator.type.FileType
@@ -60,9 +63,15 @@ class SubjectContentFragment : Fragment() {
         (activity as? HomeActivity)?.showBottomNavigationView(false)
         (activity as? HomeActivity)?.showFloatingButton(false)
 
+        val moreInfoLec: ImageView = view.findViewById(R.id.iv_MoreInfoLec)
+
+        moreInfoLec.setOnClickListener {
+            showBottomSheetDialog()
+        }
 
 
-       // val folderId = arguments?.getString("folderId")
+
+        // val folderId = arguments?.getString("folderId")
 
 
 
@@ -133,6 +142,27 @@ class SubjectContentFragment : Fragment() {
 //
 //
 //        }
+    }
+
+    private fun showBottomSheetDialog() {
+        val bottomSheetDialog = BottomSheetDialog(requireContext())
+        val bottomSheetView = layoutInflater.inflate(R.layout.bottom_sheet_more_options, null)
+
+        bottomSheetDialog.setContentView(bottomSheetView)
+
+        // Handle click events in the bottom sheet
+        val bookmarkTextView: TextView = bottomSheetView.findViewById(R.id.tv_bookmark)
+        val downloadTextView: TextView = bottomSheetView.findViewById(R.id.tv_download)
+
+        bookmarkTextView.setOnClickListener {
+            bottomSheetDialog.dismiss()
+        }
+
+        downloadTextView.setOnClickListener {
+            bottomSheetDialog.dismiss()
+        }
+
+        bottomSheetDialog.show()
     }
 
 
@@ -345,12 +375,7 @@ class SubjectContentFragment : Fragment() {
         })
     }
 
-    private fun openPdf(pdfUrl: String) {
-        val bundle = Bundle().apply {
-            putString("pdf_url", pdfUrl)
-        }
-        findNavController().navigate(R.id.PDFViewFragment, bundle) // Navigate to PDF viewer fragment
-    }
+
 
 
 
