@@ -79,7 +79,7 @@ class TopicTypeContentFragment : Fragment() {
                 subjectIcon = if (content.content?.file_type?.name == "PDF") R.drawable.content_bg else R.drawable.group_1707478994,
                 id = content.content?.id ?: "",
                 playIcon = if (content.content?.file_type?.name == "VIDEO") R.drawable.video_bg else 0,
-                lecture = "Lecture",
+                lecture = if (content.content?.file_type?.name == "VIDEO") "Lecture" else "Study Material",
                 lecturerName = "Ashok",
                 topicName = content.content?.file_name ?: "",
                 topicDescription = content.content?.description.toString(),

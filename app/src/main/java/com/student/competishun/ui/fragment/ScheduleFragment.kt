@@ -64,7 +64,7 @@ class ScheduleFragment : Fragment() {
             binding.rvCalenderDates,
             requireContext(),
             onDateSelected = { calendarDate ->
-              //  scrollToDate(calendarDate)
+                scrollToDate(calendarDate)
             }
         )
         Log.e("schedule57 $scheduleTime", convertIST(scheduleTime).month.toString() )
@@ -76,10 +76,10 @@ class ScheduleFragment : Fragment() {
             binding.arrowLeftCalender,
             requireContext(),
             { newMonth ->
-              //  binding.tvCalenderCurrentMonth.text = newMonth
+                binding.tvCalenderCurrentMonth.text = newMonth
             },
             { calendarDate ->
-              //  scrollToDate(calendarDate)
+                scrollToDate(calendarDate)
             }
         )
         calendarSetUp.scrollToSpecificDate(binding.rvCalenderDates, convertIST(scheduleTime))
