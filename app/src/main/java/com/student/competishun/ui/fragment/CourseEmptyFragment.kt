@@ -225,9 +225,9 @@ class CourseEmptyFragment : Fragment() {
                             putString("folderJson", folderJson)
                             putString("courseJson", courseJson)
                            putString("courseName", course.name)
-//                            putString("courseId", course.id)
-//                            putString("courseStart",course.course_start_date.toString())
-//                            putString("courseEnd",course.course_end_date.toString())
+                            putString("courseId", course.id)
+                            putString("courseStart",course.course_start_date.toString())
+                            putString("courseEnd",course.course_end_date.toString())
                             putString("completionPercentages", progressPercentages)
 
                         }

@@ -62,13 +62,16 @@ class ResumeCourseFragment : Fragment() {
         val courses =  arguments?.getString("courseJson")
         val coursesName =  arguments?.getString("courseName")
         val folders = arguments?.getString("folderJson")
+        val CourseId = arguments?.getString("courseId")
+        val courseStart =  arguments?.getString("courseStart")
+        val CourseEnd =  arguments?.getString("courseEnd")
+
         binding.courseNameResumeCourse.text = coursesName
-        Log.d("resumename ", "folderIds: $folderCounts")
-        Log.e("ffoldername", "folders: $folders")
-        Log.d("resumecourse name", "courseId: $courses")
         binding.backIcon.setOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed() }
         val bundle = Bundle().apply {
-            putString("courseId", courses)
+            putString("courseId", CourseId)
+            putString("courseStart",courseStart)
+            putString("courseEnd",CourseEnd)
         }
         if (folders!=null && courses !=null && folderCounts!=null){
         dataBind(folders,courses,folderCounts)}

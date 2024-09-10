@@ -12,7 +12,10 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.student.competishun.curator.FindAllCourseFolderContentByScheduleTimeQuery
+import com.student.competishun.curator.FindCourseFolderProgressQuery
 import com.student.competishun.data.model.CalendarDate
 import com.student.competishun.data.model.ScheduleData
 import com.student.competishun.databinding.FragmentScheduleBinding
@@ -37,6 +40,7 @@ class ScheduleFragment : Fragment() {
     private lateinit var calendarSetUp: HorizontalCalendarSetUp
     private lateinit var scheduleAdapter: ScheduleAdapter
     private lateinit var helperFunctions: HelperFunctions
+    val gson = Gson()
     private val myCourseViewModel: MyCoursesViewModel by viewModels()
     lateinit var scheduleData:ZonedDateTime
     @RequiresApi(Build.VERSION_CODES.O)
@@ -138,6 +142,7 @@ class ScheduleFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     fun FindAllCourseFolderContentByScheduleTimeQuery(){
         myCourseViewModel.courseFolderContent.observe(viewLifecycleOwner) { result ->
+            Log.e("getdatafschedr",result.toString())
             result.onSuccess { data ->
                 Log.e("getdatafolder",data.toString())
                 if (data.findAllCourseFolderContentByScheduleTime.isEmpty()){
@@ -165,7 +170,7 @@ class ScheduleFragment : Fragment() {
                 Toast.makeText(context, "Error: ${exception.message}", Toast.LENGTH_SHORT).show()
             }
         }
-        myCourseViewModel.getCourseFolderContent("08-27-2024", "10-30-2025", "31296a0b-6dea-42e5-b273-668744bf34a4")
+      //  myCourseViewModel.getCourseFolderContent("08-27-2024", "10-30-2025", "31296a0b-6dea-42e5-b273-668744bf34a4")
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -185,8 +190,10 @@ class ScheduleFragment : Fragment() {
         val courseId  =  arguments?.getString("courseId")?:""
         val courseStart  =  arguments?.getString("courseStart")
         val courseEnd  =  arguments?.getString("courseEnd")
+        val courses =  arguments?.getString("courses")
         var start = helperFunctions.formatCourseDate(courseStart)
         var end = helperFunctions.formatCourseDate(courseEnd)
+        Log.e("dataschec",dateFormate(start.toString()) + dateFormate(end.toString()) + courseId)
         scheduleData = ZonedDateTime.now()
         binding.backIconSchedule.setOnClickListener {
             requireActivity().onBackPressedDispatcher.onBackPressed()
