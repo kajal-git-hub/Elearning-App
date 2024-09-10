@@ -63,7 +63,7 @@ class BottomsheetCourseTopicTypeFragment : BottomSheetDialogFragment() {
 
 
         // Initialize the adapter and set it to the RecyclerView
-        topicTypeAdapter = TopicTypeAdapter(topicTypeList) { selectedTopic ->
+        topicTypeAdapter = TopicTypeAdapter(topicTypeList,null) { selectedTopic ->
             listener?.onTopicTypeSelected(selectedTopic)
             dismiss()
 
