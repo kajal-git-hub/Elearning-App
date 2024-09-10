@@ -79,9 +79,13 @@ class ExploreCourseAdapter(
             }
 
             binding.tvTag3ExploreCourse.text = course.target_year.toString()
-            binding.tvOngoing.text = course.status.toString()
+            var coursePercen = progress?.completionPercentage?.toInt()?:0
+            Log.e("coursefef",coursePercen.toString())
+            binding.tvOngoing.text = if( coursePercen > 0){ "Ongoing"} else if (coursePercen > 100){"Completed"}else {"Not Started"}
+
             binding.tvPercentCompleted.text = buildString {
-                append(String.format("%.2f", progress?.completionPercentage))
+                append(String.format("%d", progress?.completionPercentage?.
+                toInt() ?: 0))
                 append("%")
             }
 
