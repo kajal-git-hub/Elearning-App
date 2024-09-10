@@ -32,6 +32,7 @@ import java.util.Locale
 import java.time.ZonedDateTime
 import java.time.Duration
 import java.time.format.DateTimeFormatter
+import java.util.Calendar
 
 @AndroidEntryPoint
 class ScheduleFragment : Fragment() {
@@ -198,13 +199,15 @@ class ScheduleFragment : Fragment() {
         val courses =  arguments?.getString("courses")
         var start = helperFunctions.formatCourseDate(courseStart)
         var end = helperFunctions.formatCourseDate(courseEnd)
-        Log.e("dataschec",dateFormate(start.toString()) + dateFormate(end.toString()) + courseId)
+        Log.e("dataschec",dateFormate(start.toString()) + dateFormate(end.toString())  + courseId)
         scheduleData = ZonedDateTime.now()
         binding.backIconSchedule.setOnClickListener {
             requireActivity().onBackPressedDispatcher.onBackPressed()
         }
         binding.clEmptySchedule.visibility = View.VISIBLE
-        myCourseViewModel.getCourseFolderContent(dateFormate(start), dateFormate(end), courseId)
+        var starts = getDateBeforeDays(dateFormate(start),7)
+        var ends = getDateAfterDays(dateFormate(end),7)
+        myCourseViewModel.getCourseFolderContent(starts,ends, courseId)
         FindAllCourseFolderContentByScheduleTimeQuery()
     }
 
@@ -272,7 +275,41 @@ class ScheduleFragment : Fragment() {
         return zonedDateTime.format(formatter)
     }
 
+    fun getDateBeforeDays(startDate: String, daysBefore: Int): String {
+        Log.e("starteddate",startDate.toString())
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val outputFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
 
+        return try {
+            val parsedDate = inputFormat.parse(startDate) ?: return "-"
+            val calendar = Calendar.getInstance().apply {
+                time = parsedDate
+                add(Calendar.DAY_OF_MONTH, -daysBefore) // Subtract 7 days
+            }
+            outputFormat.format(calendar.time) // Return the new date formatted
+        } catch (e: Exception) {
+            e.printStackTrace()
+            "-"
+        }
+    }
+
+    fun getDateAfterDays(endDate: String, daysAfter: Int): String {
+        Log.e("startendd",endDate.toString())
+        val inputFormat = SimpleDateFormat("MM-dd-yyyy", Locale.getDefault())
+        val outputFormat = SimpleDateFormat("MM-dd-yyyy", Locale.getDefault())
+
+        return try {
+            val parsedDate = inputFormat.parse(endDate) ?: return "-"
+            val calendar = Calendar.getInstance().apply {
+                time = parsedDate
+                add(Calendar.DAY_OF_MONTH, daysAfter) // Add 7 days
+            }
+            outputFormat.format(calendar.time) // Return the new date formatted
+        } catch (e: Exception) {
+            e.printStackTrace()
+            "-"
+        }
+    }
 
 
 }
