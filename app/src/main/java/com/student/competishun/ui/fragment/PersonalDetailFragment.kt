@@ -75,6 +75,18 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
         Log.d("fieldsToVisible", fieldsToVisible.toString())
 
         sharedPreferencesManager = SharedPreferencesManager(requireContext())
+
+
+        binding.etFullName.setText(sharedPreferencesManager.name?:"")
+        binding.etFathersName.setText(sharedPreferencesManager.fatherName ?: "")
+        binding.etWhatsappNumber.setText(sharedPreferencesManager.whatsUpNo ?: "")
+        tShirtSize = sharedPreferencesManager.shirtSize ?: ""
+        if (tShirtSize.isNotEmpty()) {
+            binding.spinnerTshirtSize.text = tShirtSize
+            isTshirtSizeSelected = true
+        }
+
+
         val bottomSheetDescriptionFragment = BottomSheetPersonalDetailsFragment()
         bottomSheetDescriptionFragment.show(childFragmentManager, "BottomSheetDescriptionFragment")
 
@@ -161,8 +173,12 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
     private fun isFormValid(): Boolean {
         val fullName = binding.etFullName.text.toString().trim()
         fatherName = binding.etFathersName.text.toString().trim()
+        sharedPreferencesManager.fatherName = fatherName
         whatsappNumber = binding.etWhatsappNumber.text.toString().trim()
+        sharedPreferencesManager.whatsUpNo = whatsappNumber
         tShirtSize = binding.spinnerTshirtSize.text.toString().trim()
+
+        sharedPreferencesManager.shirtSize = tShirtSize
         binding.etWhatsappNumber.filters = arrayOf<InputFilter>(InputFilter.LengthFilter(10))
 
         // Only check fields that are visible

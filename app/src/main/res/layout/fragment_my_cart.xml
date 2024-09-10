@@ -565,6 +565,7 @@
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/cl_NotApplicable"
                         android:layout_width="match_parent"
                         android:layout_height="200dp"
                         android:visibility="gone"

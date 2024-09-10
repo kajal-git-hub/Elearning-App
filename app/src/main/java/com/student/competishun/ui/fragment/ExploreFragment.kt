@@ -434,10 +434,10 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
 
 
             val teacherItems = listOf(
-                TeacherItem(R.drawable.teacher_bg, "ALOK KUMAR", "CHEMISTRY (P/I)"),
-                TeacherItem(R.drawable.teacher_bg, "NEERAJ SAINI", "CHEMISTRY (ORG)"),
-                TeacherItem(R.drawable.teacher_bg, "MOHIT TYAGI", "MATHEMATICS"),
-                TeacherItem(R.drawable.teacher_bg, "AMIT BIJARNIA", "PHYSICS"),
+                TeacherItem(R.drawable.alok, "ALOK KUMAR", "CHEMISTRY (P/I)"),
+                TeacherItem(R.drawable.neeraj, "NEERAJ SAINI", "CHEMISTRY (ORG)"),
+                TeacherItem(R.drawable.mohit, "MOHIT TYAGI", "MATHEMATICS"),
+                TeacherItem(R.drawable.amit, "AMIT BIJARNIA", "PHYSICS"),
             )
             val teacherAdapter = TeacherAdapter(teacherItems)
             binding.rvMeetTeachers.apply {
