@@ -164,15 +164,16 @@ class CourseEmptyFragment : Fragment() {
 
     fun myCoursesBind() {
         binding.progressBar.visibility = View.VISIBLE
-        binding.clEmptyMyCourse?.visibility = View.GONE
+        binding.clEmptyMyCourse?.visibility = View.VISIBLE
         val courseDetailsList = mutableListOf<ExploreCourse>()
         viewModel.myCourses.observe(viewLifecycleOwner) { result ->
             binding.progressBar?.visibility = View.GONE
             Log.e("getMyresule", result.toString())
             result.onSuccess { data ->
-                binding.clEmptyMyCourse.visibility = View.GONE
-                binding.rvExploreCourses.visibility = View.VISIBLE
+
                 if (data.myCourses.isNotEmpty()) {
+                    binding.clEmptyMyCourse.visibility = View.GONE
+                    binding.rvExploreCourses.visibility = View.VISIBLE
                     // Create lists to hold courses and progress
                     val courseList = mutableListOf<MyCoursesQuery.Course>()
                     val progressList = mutableListOf<MyCoursesQuery.Progress>()
