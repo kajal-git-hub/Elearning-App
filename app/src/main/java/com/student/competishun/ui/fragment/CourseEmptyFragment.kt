@@ -73,9 +73,10 @@ class CourseEmptyFragment : Fragment() {
         myCoursesBind()
         var userId = arguments?.getString("user_id").toString()
         if (!sharedPreferencesManager.name.isNullOrEmpty()) {
-            binding.welcomeUserTxt.text = "Hello, " + sharedPreferencesManager.name
+            val fullName = sharedPreferencesManager.name
+            val firstName = fullName?.split(" ")?.firstOrNull() ?: ""
+            binding.welcomeUserTxt.text = "Hello, $firstName"
         }
-
 
        binding.profileIcon.setOnClickListener {
            findNavController().navigate(R.id.action_courseEmptyFragment_to_ProfileFragment)
