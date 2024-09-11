@@ -3,6 +3,7 @@ query GetAllBanners($filters: FindAllBannersInput) {
         banners {
             mobile_banner_image
             redirect_link
+            course_id
         }
         count
     }

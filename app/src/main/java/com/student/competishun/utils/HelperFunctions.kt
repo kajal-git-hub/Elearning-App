@@ -80,23 +80,21 @@ class HelperFunctions {
         if (price <= 0) {
             throw IllegalArgumentException("Price must be greater than 0")
         }
-        return String.format("%.2f", ((price - discountPrice).toDouble() / price) * 100).toDouble()
+        return ((price - discountPrice).toDouble() / price) * 100
     }
 
 
 
-    fun calculateDiscountDetails(originalPrice: Double, discountPrice: Double): Pair<Double, Double> {
-        val discountPercentage = ((discountPrice / originalPrice) * 100)
-        val realPriceAfterDiscount = originalPrice - discountPrice
 
-        // Round to two decimal places
-        val roundedDiscountPercentage = String.format("%.2f", discountPercentage).toDouble()
-        val roundedRealPriceAfterDiscount = String.format("%.2f", realPriceAfterDiscount).toDouble()
+    fun calculateDiscountDetails(originalPrice: Double, discountPrice: Double): Pair<Int, Int> {
+        val discountPercentage = ((discountPrice / originalPrice) * 100).toInt()
+        val realPriceAfterDiscount = (originalPrice - discountPrice).toInt()
 
-        return Pair(roundedDiscountPercentage, roundedRealPriceAfterDiscount)
+        return Pair(discountPercentage, realPriceAfterDiscount)
     }
 
-     fun downloadPdf(context: Context,fileUrl: String, title: String) {
+
+    fun downloadPdf(context: Context,fileUrl: String, title: String) {
          val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
          val request = DownloadManager.Request(Uri.parse(fileUrl))
              .setTitle(title)

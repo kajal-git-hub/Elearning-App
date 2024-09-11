@@ -275,5 +275,11 @@
         tools:layout="@layout/fragment_about_us">
     </fragment>
 
+    <fragment
+        android:id="@+id/PDFViewFragment"
+        android:name="com.student.competishun.ui.fragment.PdfViewFragment"
+        tools:layout="@layout/fragment_pdf_veiw">
+    </fragment>
+
 
 </navigation>

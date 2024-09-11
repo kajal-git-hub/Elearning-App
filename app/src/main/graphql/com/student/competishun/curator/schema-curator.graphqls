@@ -103,6 +103,8 @@ type Course {
 
   banner_image: String
 
+  banner_image_name: String
+
   category_id: String
 
   category_name: String
@@ -173,6 +175,8 @@ type Course {
 
   planner_pdf: String
 
+  planner_pdf_name: String
+
   price: Int
 
   status: CourseStatus!
@@ -186,6 +190,8 @@ type Course {
   updated_by: String!
 
   video_thumbnail: String
+
+  video_thumbnail_name: String
 
   with_installment_price: Int
 }
@@ -348,6 +354,18 @@ type CourseLectureCount {
   total_video_duration: Float!
 }
 
+type CourseParentFolderProgress {
+  completedDuration: Float
+
+  completionPercentage: Float
+
+  folder: CourseFolder
+
+  subfolderProgress: [SubfolderProgress!]
+
+  videoDuration: Float
+}
+
 type CourseProgressResponseDto {
   complementaryAssociationFlag: String
 
@@ -450,6 +468,8 @@ input CreateCourseInput {
   download_pdf: Boolean
 
   exam_type: ExamType
+
+  final_status: CourseStatus
 
   is_recommended: Boolean
 
@@ -694,11 +714,13 @@ enum OtherRequirements {
 }
 
 type Query {
+  courseListFromIds(courseIds: [String!]!): [Course!]!
+
   findAllBookmarks(fileType: String): [Bookmark!]!
 
   findAllCartItems: [CartResponseDto!]!
 
-  findAllCourseFolderContentByScheduleTime(course_id: String, endDate: DateTime!, startDate: DateTime!): [CourseFolderContent!]!
+  findAllCourseFolderContentByScheduleTime(course_id: String, endDate: DateTime!, startDate: DateTime!): [ScheduleContentResponseDto!]!
 
   findBookmark(id: String!): Bookmark!
 
@@ -709,6 +731,8 @@ type Query {
   findCourseFolderByParentId(parentFolderId: String!): [CourseFolder!]!
 
   findCourseFolderProgress(id: String!): CourseFolderLectureCount!
+
+  findCourseParentFolderProgress(courseId: String!): CourseParentFolderProgress!
 
   findOne(id: String!): Cart!
 
@@ -736,7 +760,7 @@ type Query {
 
   getVideoProgress(courseFolderContentId: String!): Float!
 
-  getVideoStreamDataSignedUrl(courseFolderContentId: String!, format: String!): VideoStreamData!
+  getVideoStreamDataSignedUrl(courseFolderContentId: String!, format: String): VideoStreamData!
 
   getbannerById(id: String!): Banner!
 
@@ -745,6 +769,14 @@ type Query {
   myCoursesForAdmin(userId: String!): [CourseProgressResponseDto!]!
 
   relatedCourses(categoryName: String!): [Course!]!
+}
+
+type ScheduleContentResponseDto {
+  content: CourseFolderContent!
+
+  parentFolderName: String
+
+  studentTrack: StudentCourseTrack
 }
 
 type StudentCourseTrack {
@@ -770,6 +802,24 @@ type StudentCourseTrack {
 }
 
 type SubfolderDuration {
+  completedDuration: Float
+
+  completionPercentage: Float!
+
+  folder: CourseFolder
+
+  folderContents: [FolderContentWithCompletion!]
+
+  folderCount: Float
+
+  pdfCount: Float
+
+  videoCount: Float
+
+  videoDuration: Float
+}
+
+type SubfolderProgress {
   completedDuration: Float
 
   completionPercentage: Float!
@@ -861,6 +911,8 @@ input UpdateCourseInput {
   download_pdf: Boolean
 
   exam_type: ExamType
+
+  final_status: CourseStatus
 
   is_recommended: Boolean
 

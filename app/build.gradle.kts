@@ -71,6 +71,7 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.play.services.drive)
+    implementation(libs.androidx.core.i18n)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -100,6 +101,7 @@ dependencies {
     implementation(libs.razorpay.checkout)
     implementation(libs.play.services.wallet)
     implementation (libs.github.glide)
+
 
     implementation (libs.exoplayer)
 

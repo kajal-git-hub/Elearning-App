@@ -188,7 +188,6 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
                         binding.clSecondbottomInstallement.visibility = View.GONE
                     }
                     1 ->{ paymentType = "partial"
-                        binding.clSecondbottomInstallement.visibility = View.VISIBLE
                         showPartialPayment()
                     }
                 }
@@ -222,18 +221,20 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
         binding.tvInstDiscountLabel.visibility = View.VISIBLE
         binding.tvInstDiscount.visibility = View.VISIBLE
         totalAmount = originalCartItems.get(0).price.toInt()
-        binding.tvInstDiscountLabel.text = "Discount (${helperFunctions.calculateDiscountPercentage(originalCartItems.get(0).price,originalCartItems.get(0).discount)}%)"
-        binding.tvInstDiscount.text = "-  ₹${originalCartItems.get(0).discount}"
+        binding.tvInstDiscountLabel.text = "Discount (${helperFunctions.calculateDiscountPercentage(originalCartItems.get(0).price, originalCartItems.get(0).discount).toInt()}%)"
+        binding.tvInstDiscount.text = "-₹${(helperFunctions.calculateDiscountDetails(originalCartItems.get(0).price.toDouble(),originalCartItems.get(0).discount.toDouble()).second)}"
          //   "- ₹${(originalCartItems.get(0).price.toDouble()).minus(originalCartItems.get(0).discount.toDouble())}"
-        fullAmount = (helperFunctions.calculateDiscountDetails(originalCartItems.get(0).price.toDouble(),originalCartItems.get(0).discount.toDouble()).second)
-        binding.tvPrice.text = "₹${(originalCartItems.get(0).price.toDouble()).minus(originalCartItems.get(0).discount.toDouble())}"
-        binding.tvInstTotalAmount.text = "₹${(helperFunctions.calculateDiscountDetails(originalCartItems.get(0).price.toDouble(),originalCartItems.get(0).discount.toDouble()).second)}"
+        fullAmount = (helperFunctions.calculateDiscountDetails(originalCartItems.get(0).price.toDouble(),originalCartItems.get(0).discount.toDouble()).second.toDouble())
+        binding.tvPrice.text = "₹${originalCartItems.get(0).discount}"
+        binding.tvInstTotalAmount.text = "₹${originalCartItems.get(0).discount}"
 
 
     }
 
     private fun showPartialPayment() {
         binding.tvOneTimePayment.text = "1st Installment"
+        binding.clSecondbottomInstallement.visibility = View.GONE
+
         val partialPaymentItems = originalCartItems.filter { it.withInstallmentPrice > 0 }
         if (partialPaymentItems.isNotEmpty()) {
             cartAdapter.updateCartItems(partialPaymentItems)
@@ -245,7 +246,9 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
             ).second)
             var firstInstallment =
                 ((originalCartItems.get(0).withInstallmentPrice.toDouble())) * 0.6
-            var secondInstallment = (originalCartItems.get(0).price.toDouble()) - firstInstallment
+            var secondInstallment = (originalCartItems.get(0).withInstallmentPrice.toDouble()) - firstInstallment
+
+
             totalAmount = originalCartItems.get(0).price
 //        var  firstInstallment = originalCartItems.get(0).withInstallmentPrice
 //        var secondInstallment = originalCartItems.get(0).price.minus(originalCartItems.get(0).withInstallmentPrice)
@@ -310,10 +313,11 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
 
             result.onSuccess { data ->
 
-
                 Log.e("CartItems", data.findAllCartItems.toString())
                 var complementryId = ""
                 val cartItems = data.findAllCartItems.map { cartItemData ->
+
+
                     binding.clEmptyCart.visibility = View.GONE
                     binding.parentData.visibility = View.VISIBLE
                     binding.clPaymentSummary.visibility = View.VISIBLE

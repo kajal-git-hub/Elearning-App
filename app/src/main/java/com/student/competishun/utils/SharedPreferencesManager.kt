@@ -29,8 +29,47 @@ class SharedPreferencesManager(context: Context) {
         private const val KEY_FULL_NAME = "full_name"
         private const val KEY_FATHER_NAME = "father_name"
         private const val KEY_USER_MOBILE_NO = "user_mob_no"
+        private const val KEY_Tshirt = "t_shirt_size"
 
     }
+
+
+    var shirtSize: String?
+        get() = sharedPreferences.getString(KEY_Tshirt, null)
+        set(value) {
+            sharedPreferences.edit().putString(KEY_Tshirt, value).apply()
+
+            Log.e("sharedPreferences token", shirtSize.toString())
+        }
+
+
+
+    var fatherName: String?
+        get() = sharedPreferences.getString(KEY_FATHER_NAME, null)
+        set(value) {
+            sharedPreferences.edit().putString(KEY_FATHER_NAME, value).apply()
+
+            Log.e("sharedPreferences token", fatherName.toString())
+        }
+
+
+    var whatsUpNo: String?
+        get() = sharedPreferences.getString(KEY_USER_MOBILE_NO, null)
+        set(value) {
+            sharedPreferences.edit().putString(KEY_USER_MOBILE_NO, value).apply()
+
+            Log.e("sharedPreferences token", whatsUpNo.toString())
+        }
+
+
+    var fullName: String?
+        get() = sharedPreferences.getString(KEY_FULL_NAME, null)
+        set(value) {
+            sharedPreferences.edit().putString(KEY_FULL_NAME, value).apply()
+
+            Log.e("sharedPreferences token", fullName.toString())
+        }
+
 
     var accessToken: String?
         get() = sharedPreferences.getString(KEY_ACCESS_TOKEN, null)

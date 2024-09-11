@@ -14,6 +14,7 @@ import com.student.competishun.utils.HelperFunctions
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.util.Date
+import com.student.competishun.di.Result
 import javax.inject.Inject
 
 @HiltViewModel
@@ -27,6 +28,22 @@ class CoursesViewModel @Inject constructor(
     init {
         this.helperFunctions = helperFunctions
     }
+
+
+    private val _courseFolderProgress = MutableLiveData<com.student.competishun.di.Result<FindCourseFolderProgressQuery.Data>>()
+    val courseFolderProgress: LiveData<com.student.competishun.di.Result<FindCourseFolderProgressQuery.Data>> = _courseFolderProgress
+
+    fun findCourseFolderProgress(findCourseFolderProgressId: String) {
+        _courseFolderProgress.value = com.student.competishun.di.Result.Loading // Set to Loading state
+
+        viewModelScope.launch {
+            val result = coursesRepository.findCourseFolderProgress(findCourseFolderProgressId)
+            _courseFolderProgress.value = result
+        }
+    }
+
+
+
     private val _courseCount = MutableLiveData<Double?>()
     val courseCount: LiveData<Double?> = _courseCount
 
@@ -37,23 +54,12 @@ class CoursesViewModel @Inject constructor(
             _courseCount.value = response?.count
         }
     }
-
-    private val _courseFolderProgress = MutableLiveData<Result<FindCourseFolderProgressQuery.Data>>()
-    val courseFolderProgress: LiveData<Result<FindCourseFolderProgressQuery.Data>> = _courseFolderProgress
-
-    fun findCourseFolderProgress(findCourseFolderProgressId: String) {
-        viewModelScope.launch {
-            val result = coursesRepository.findCourseFolderProgress(findCourseFolderProgressId)
-            _courseFolderProgress.value = result
-        }
-    }
-
    //to get date formated
     fun getFormattedCourseStartDate(date: String?): String {
         return helperFunctions.formatCourseDate(date)
     }
     //to get discount
-    fun getDiscountDetails(originalPrice: Double, discountPrice: Double): Pair<Double, Double> {
+    fun getDiscountDetails(originalPrice: Double, discountPrice: Double): Pair<Int, Int> {
         return helperFunctions.calculateDiscountDetails(originalPrice, discountPrice)
     }
 

@@ -398,24 +398,29 @@ class HomeFragment : Fragment() {
         val filtersbanner = FindAllBannersInput(
             limit = Optional.Absent
         )
+
         studentCoursesViewModel.fetchBanners(filtersbanner)
 
+        // Collect banners
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             studentCoursesViewModel.banners.collect { result ->
                 val bannerList = mutableListOf<PromoBannerModel>()
-                Log.d("bannerList",bannerList.toString())
+                Log.d("bannerList", bannerList.toString())
                 result?.forEach { bannerlist ->
                     bannerlist?.let {
-                        bannerList.add(PromoBannerModel(it.mobile_banner_image, it.redirect_link))
+                        // Assuming you have course_id in the banner data
+                        bannerList.add(PromoBannerModel(it.mobile_banner_image, it.redirect_link, it.course_id))
                     }
                 }
 
-                val adapter = PromoBannerAdapter(bannerList) { redirectLink ->
-                    if(!redirectLink.isNullOrEmpty()){
+                val adapter = PromoBannerAdapter(bannerList) { redirectLink, courseId ->
+                    if (!redirectLink.isNullOrEmpty()) {
                         openLink(redirectLink)
-                    }else{
-                        Toast.makeText(requireContext(), "Redirect not available for this banner", Toast.LENGTH_SHORT).show()
-
+                    } else if (!courseId.isNullOrEmpty()) {
+                        // Fetch the course tags from the courses list
+                        fetchCourseTagsAndNavigate(courseId)
+                    } else {
+                        Toast.makeText(requireContext(), "No redirect or course available for this banner", Toast.LENGTH_SHORT).show()
                     }
                 }
                 binding.rvpromobanner.adapter = adapter
@@ -443,6 +448,30 @@ class HomeFragment : Fragment() {
             }
         }
     }
+
+    private fun fetchCourseTagsAndNavigate(courseId: String) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            studentCoursesViewModel.courses.collect { result ->
+                result?.onSuccess { data ->
+                    val course = data.getAllCourseForStudent.courses.find { it.id == courseId }
+                    course?.let {
+                        val bannerCourseTags = it.course_tags
+
+                        Log.d("bannerCourseTags",bannerCourseTags.toString())
+
+                        val bundle = Bundle().apply {
+                            putString("course_id", courseId)
+                            putStringArrayList("course_tags", ArrayList(bannerCourseTags))
+                        }
+
+                        findNavController().navigate(R.id.exploreFragment, bundle)
+                    }
+                }
+            }
+        }
+    }
+
+
 
 
 

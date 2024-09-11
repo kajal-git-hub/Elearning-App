@@ -94,6 +94,7 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
     var firstInstallment:Int = 0
     var secondInstallment:Int = 0
     var ExploreCourseTags: MutableList<String> = mutableListOf()
+    var isVideoPlaying = false
 
 
 
@@ -115,22 +116,41 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
         arguments?.let { bundle ->
             val tags = bundle.getStringArrayList("course_tags")
             val recommendCourseTags = bundle.getStringArrayList("recommendCourseTags")
+            val bannerCourseTags = bundle.getStringArrayList("bannerCourseTag")
+
             Log.d("recommendCourseTags", recommendCourseTags.toString())
             Log.d("tags", tags.toString())
+            Log.d("bannerCourseTags", bannerCourseTags.toString())
 
+            when {
+                // If recommendCourseTags is available and not empty, use it
+                recommendCourseTags != null && recommendCourseTags.isNotEmpty() -> {
+                    ExploreCourseTags.clear()
+                    ExploreCourseTags.addAll(recommendCourseTags)
+                    Log.e("courseTags", "Received Recommend Course Tags: $ExploreCourseTags")
+                }
 
-            if (recommendCourseTags != null && recommendCourseTags.isNotEmpty()) {
-                ExploreCourseTags.clear()
-                ExploreCourseTags.addAll(recommendCourseTags)
-                Log.e("courseTags", "Received Recommend Course Tags: $ExploreCourseTags")
-            } else if (tags != null) {
-                ExploreCourseTags.clear()
-                ExploreCourseTags.addAll(tags)
-                Log.e("courseTags", "Received Course Tags: $ExploreCourseTags")
-            }else{
+                // If recommendCourseTags is null or empty, use tags if available
+                tags != null && tags.isNotEmpty() -> {
+                    ExploreCourseTags.clear()
+                    ExploreCourseTags.addAll(tags)
+                    Log.e("courseTags", "Received Course Tags: $ExploreCourseTags")
+                }
 
+                // If both recommendCourseTags and tags are null or empty, use bannerCourseTags
+                bannerCourseTags != null && bannerCourseTags.isNotEmpty() -> {
+                    ExploreCourseTags.clear()
+                    ExploreCourseTags.addAll(bannerCourseTags)
+                    Log.e("courseTags", "Received Banner Course Tags: $ExploreCourseTags")
+                }
+
+                // Handle case where all tags are null or empty
+                else -> {
+                    Log.e("courseTags", "No valid course tags received.")
+                }
             }
         }
+
 
 
         (activity as? HomeActivity)?.showBottomNavigationView(false)
@@ -200,6 +220,9 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
         }else {
             Log.e("courseID",courseId)
             getCourseByIDViewModel.fetchCourseById(courseId)
+
+            isVideoPlaying = false
+
             getCourseByIDViewModel.courseByID.observe(viewLifecycleOwner, Observer { courses ->
 
                 val imageUrl = courses?.video_thumbnail
@@ -242,12 +265,20 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
 
                 binding.overviewButton.setOnClickListener {
                     if (!videoUrl.isNullOrEmpty()) {
-                        binding.ivBannerExplore.visibility = View.GONE
-                        binding.playerView.visibility = View.VISIBLE
+                        if(isVideoPlaying){
+                            player?.pause()
+                            isVideoPlaying = false
+                        }else{
+                            binding.ivBannerExplore.visibility = View.GONE
+                            binding.playerView.visibility = View.VISIBLE
 
-
-                        initializePlayer(videoUrl)
-
+                            if(player==null){
+                                initializePlayer(videoUrl)
+                            }else{
+                                player?.play()
+                            }
+                            isVideoPlaying = true
+                        }
 
 
                         player?.addListener(object : Player.Listener {
@@ -424,10 +455,10 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
 
 
             val teacherItems = listOf(
-                TeacherItem(R.drawable.teacher_bg, "ALOK KUMAR", "CHEMISTRY (P/I)"),
-                TeacherItem(R.drawable.teacher_bg, "NEERAJ SAINI", "CHEMISTRY (ORG)"),
-                TeacherItem(R.drawable.teacher_bg, "MOHIT TYAGI", "MATHEMATICS"),
-                TeacherItem(R.drawable.teacher_bg, "AMIT BIJARNIA", "PHYSICS"),
+                TeacherItem(R.drawable.alok, "ALOK KUMAR", "CHEMISTRY (P/I)"),
+                TeacherItem(R.drawable.neeraj, "NEERAJ SAINI", "CHEMISTRY (ORG)"),
+                TeacherItem(R.drawable.mohit, "MOHIT TYAGI", "MATHEMATICS"),
+                TeacherItem(R.drawable.amit, "AMIT BIJARNIA", "PHYSICS"),
             )
             val teacherAdapter = TeacherAdapter(teacherItems)
             binding.rvMeetTeachers.apply {
@@ -716,8 +747,20 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
         findNavController().navigate(R.id.action_exploreFragment_to_allFaqFragment, bundle)
     }
 
+    private fun releasePlayer() {
+        player?.release()
+        player = null
+        isVideoPlaying = false
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
+        releasePlayer()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        player?.pause()
     }
 
     private fun mapFolderToOurContentItem(folder: GetCourseByIdQuery.Folder): OurContentItem {

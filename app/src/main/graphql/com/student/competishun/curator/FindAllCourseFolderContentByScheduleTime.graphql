@@ -1,27 +1,24 @@
 query FindAllCourseFolderContentByScheduleTime($endDate: DateTime!, $startDate: DateTime!, $courseId: String) {
     findAllCourseFolderContentByScheduleTime(endDate: $endDate, startDate: $startDate, course_id: $courseId) {
-        scheduled_time
-        course_track {
-            completed_duration
-            course_folder_content_id
-            current_duration
+        content {
             id
-            user_id
-        }
-        file_name
-        file_type
-        file_uploading_status
-        file_url
-        folder {
-            id
+            folder_id
             scheduled_time
-            name
-            parent_folder_id
-            folder_content {
-                description
-                file_name
-                scheduled_time
-            }
+            file_name
+            file_type
+            video_duration
+            #   file_uploading_statu
+            file_url
+        }
+        parentFolderName
+        studentTrack {
+            completed_duration
+            #   user_id
+            #   course_folder_content_id
+            id
+            total_duration
+            #   course_id
+            #   current_duration
         }
     }
 }

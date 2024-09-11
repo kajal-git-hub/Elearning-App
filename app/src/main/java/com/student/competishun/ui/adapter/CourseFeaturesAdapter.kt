@@ -12,7 +12,7 @@ import com.student.competishun.data.model.CourseFItem
 class CourseFeaturesAdapter(private val items: List<CourseFItem>) :
     RecyclerView.Adapter<CourseFeaturesAdapter.ViewHolder>() {
 
-    private val images = listOf(R.drawable.group_1272628766, R.drawable.course_feature)
+    private val images = listOf(R.drawable.group_1272628766, R.drawable.course_feature,R.drawable.group_1272628767,R.drawable.group_1171276792)
 
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -35,7 +35,7 @@ class CourseFeaturesAdapter(private val items: List<CourseFItem>) :
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val courseItem = items[position]
-        val imageResId = images[position%2]
+        val imageResId = images[position%4]
         holder.bind(courseItem,imageResId)
     }
 

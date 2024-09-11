@@ -3,6 +3,7 @@ package com.student.competishun.ui.fragment
 import com.student.competishun.utils.HorizontalCalendarSetUp
 import android.os.Build
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -12,7 +13,10 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.student.competishun.curator.FindAllCourseFolderContentByScheduleTimeQuery
+import com.student.competishun.curator.FindCourseFolderProgressQuery
 import com.student.competishun.data.model.CalendarDate
 import com.student.competishun.data.model.ScheduleData
 import com.student.competishun.databinding.FragmentScheduleBinding
@@ -22,10 +26,13 @@ import com.student.competishun.ui.viewmodel.MyCoursesViewModel
 import com.student.competishun.utils.HelperFunctions
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
+import java.time.LocalTime
 import java.time.ZoneId
-import java.time.ZonedDateTime
-import java.time.format.DateTimeFormatter
 import java.util.Locale
+import java.time.ZonedDateTime
+import java.time.Duration
+import java.time.format.DateTimeFormatter
+import java.util.Calendar
 
 @AndroidEntryPoint
 class ScheduleFragment : Fragment() {
@@ -37,6 +44,7 @@ class ScheduleFragment : Fragment() {
     private lateinit var calendarSetUp: HorizontalCalendarSetUp
     private lateinit var scheduleAdapter: ScheduleAdapter
     private lateinit var helperFunctions: HelperFunctions
+    val gson = Gson()
     private val myCourseViewModel: MyCoursesViewModel by viewModels()
     lateinit var scheduleData:ZonedDateTime
     @RequiresApi(Build.VERSION_CODES.O)
@@ -56,7 +64,7 @@ class ScheduleFragment : Fragment() {
             binding.rvCalenderDates,
             requireContext(),
             onDateSelected = { calendarDate ->
-              //  scrollToDate(calendarDate)
+                scrollToDate(calendarDate)
             }
         )
         Log.e("schedule57 $scheduleTime", convertIST(scheduleTime).month.toString() )
@@ -68,10 +76,10 @@ class ScheduleFragment : Fragment() {
             binding.arrowLeftCalender,
             requireContext(),
             { newMonth ->
-              //  binding.tvCalenderCurrentMonth.text = newMonth
+                binding.tvCalenderCurrentMonth.text = newMonth
             },
             { calendarDate ->
-              //  scrollToDate(calendarDate)
+                scrollToDate(calendarDate)
             }
         )
         calendarSetUp.scrollToSpecificDate(binding.rvCalenderDates, convertIST(scheduleTime))
@@ -83,27 +91,8 @@ class ScheduleFragment : Fragment() {
         var courseDate:CalendarDate = CalendarDate("","","",null)
 
 
-        val sampleData =
-
-          contentList.map { content ->
-
-              Log.e("coursefolderntent" ,convertCalender(content.folder.scheduled_time.toString()).toString())
-                Log.e("courseDatentent" ,courseDate.toString())
-            ScheduleData(
-                convertIST(content.folder.scheduled_time.toString()).dayOfWeek.toString().take(3), convertIST(content.folder.scheduled_time.toString()).dayOfMonth.toString(),
-                contentList.map { content ->
-                    courseDate = convertCalender(content.folder.scheduled_time.toString())
-                    ScheduleData.InnerScheduleItem(
-                        content.folder.name,
-                        content.file_name,
-                       formatTime(convertIST(content.scheduled_time.toString())),
-                        "11:00 AM",
-                    )
-                }
-            )
-   }
         val scheduleDataList = contentList.groupBy {
-            val scheduledTime = convertIST(it.folder.scheduled_time.toString())
+            val scheduledTime = convertIST(it.content.scheduled_time.toString())
             scheduledTime.dayOfWeek.toString().take(3) to scheduledTime.dayOfMonth.toString()
         }.map { (dateInfo, groupedContentList) ->
             val (dayOfWeek, dayOfMonth) = dateInfo
@@ -112,10 +101,13 @@ class ScheduleFragment : Fragment() {
                 dayOfMonth,
                 groupedContentList.map { content ->
                     ScheduleData.InnerScheduleItem(
-                        content.folder.name,
-                        content.file_name,
-                        formatTime(convertIST(content.folder.scheduled_time.toString())),
-                        content.scheduled_time.toString()
+                        content.parentFolderName?:"",
+                        content.content.file_name,
+                        formatTime(convertIST(content.content.scheduled_time.toString())),
+                        convertLastDuration(formatTime(convertIST(content.content.scheduled_time.toString())),content.content.video_duration?.toLong()?:0),
+                        content.content.file_type.name,
+                        content.content.scheduled_time.toString()
+
                     )
                 }
             )
@@ -138,6 +130,7 @@ class ScheduleFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     fun FindAllCourseFolderContentByScheduleTimeQuery(){
         myCourseViewModel.courseFolderContent.observe(viewLifecycleOwner) { result ->
+            Log.e("getdatafschedr",result.toString())
             result.onSuccess { data ->
                 Log.e("getdatafolder",data.toString())
                 if (data.findAllCourseFolderContentByScheduleTime.isEmpty()){
@@ -148,11 +141,11 @@ class ScheduleFragment : Fragment() {
                 }
                 Log.e("timesize",data.findAllCourseFolderContentByScheduleTime.size.toString())
                 data.findAllCourseFolderContentByScheduleTime.forEachIndexed { index, scheduleContent ->
-                    Log.e("timea $index", scheduleContent.folder.scheduled_time.toString())
+                    Log.e("timea $index", scheduleContent.content.scheduled_time.toString())
                 }
                 data.findAllCourseFolderContentByScheduleTime.forEach { schedulecontent->
                 // Log.e("timea",schedulecontent.s.toString())
-                 schedulecontent.folder.scheduled_time.let {
+                 schedulecontent.content.scheduled_time.let {
                      setupCalendar(it.toString())
 
                  }
@@ -165,7 +158,7 @@ class ScheduleFragment : Fragment() {
                 Toast.makeText(context, "Error: ${exception.message}", Toast.LENGTH_SHORT).show()
             }
         }
-        myCourseViewModel.getCourseFolderContent("08-27-2024", "10-30-2025", "31296a0b-6dea-42e5-b273-668744bf34a4")
+      //  myCourseViewModel.getCourseFolderContent("08-27-2024", "10-30-2025", "31296a0b-6dea-42e5-b273-668744bf34a4")
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -174,25 +167,47 @@ class ScheduleFragment : Fragment() {
         return zonedDateTime.withZoneSameInstant(ZoneId.of("Asia/Kolkata"))
     }
 
+    fun convertLastDuration(timeString: String, secondsToAdd: Long): String {
+        Log.e("getSWtring",timeString)
+
+        // Define the formatter for formatting the output
+        val formatter = DateTimeFormatter.ofPattern("hh:mm a")
+
+        // Parse the input time
+        val localTime = LocalTime.parse(timeString, formatter)
+
+        // Add the specified number of seconds
+        val updatedLocalTime = localTime.plusSeconds(secondsToAdd)
+
+        // Return the updated time in the same format
+        return updatedLocalTime.format(formatter)
+
+    }
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-      helperFunctions = HelperFunctions()
+
         (activity as? HomeActivity)?.showBottomNavigationView(false)
         (activity as? HomeActivity)?.showFloatingButton(false)
+        helperFunctions = HelperFunctions()
         val courseName  =  arguments?.getString("courseName")
         val courseId  =  arguments?.getString("courseId")?:""
         val courseStart  =  arguments?.getString("courseStart")
         val courseEnd  =  arguments?.getString("courseEnd")
+        val courses =  arguments?.getString("courses")
         var start = helperFunctions.formatCourseDate(courseStart)
         var end = helperFunctions.formatCourseDate(courseEnd)
+        Log.e("dataschec",dateFormate(start.toString()) + dateFormate(end.toString())  + courseId)
         scheduleData = ZonedDateTime.now()
         binding.backIconSchedule.setOnClickListener {
             requireActivity().onBackPressedDispatcher.onBackPressed()
         }
         binding.clEmptySchedule.visibility = View.VISIBLE
-        myCourseViewModel.getCourseFolderContent(dateFormate(start), dateFormate(end), courseId)
+        var starts = getDateBeforeDays(dateFormate(start),7)
+        var ends = getDateAfterDays(dateFormate(end),7)
+        myCourseViewModel.getCourseFolderContent(starts,ends, courseId)
         FindAllCourseFolderContentByScheduleTimeQuery()
     }
 
@@ -259,6 +274,44 @@ class ScheduleFragment : Fragment() {
         val formatter = DateTimeFormatter.ofPattern("hh:mm a")
         return zonedDateTime.format(formatter)
     }
+
+    fun getDateBeforeDays(startDate: String, daysBefore: Int): String {
+        Log.e("starteddate",startDate.toString())
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val outputFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
+
+        return try {
+            val parsedDate = inputFormat.parse(startDate) ?: return "-"
+            val calendar = Calendar.getInstance().apply {
+                time = parsedDate
+                add(Calendar.DAY_OF_MONTH, -daysBefore) // Subtract 7 days
+            }
+            outputFormat.format(calendar.time) // Return the new date formatted
+        } catch (e: Exception) {
+            e.printStackTrace()
+            "-"
+        }
+    }
+
+    fun getDateAfterDays(endDate: String, daysAfter: Int): String {
+        Log.e("startendd",endDate.toString())
+        val inputFormat = SimpleDateFormat("MM-dd-yyyy", Locale.getDefault())
+        val outputFormat = SimpleDateFormat("MM-dd-yyyy", Locale.getDefault())
+
+        return try {
+            val parsedDate = inputFormat.parse(endDate) ?: return "-"
+            val calendar = Calendar.getInstance().apply {
+                time = parsedDate
+                add(Calendar.DAY_OF_MONTH, daysAfter) // Add 7 days
+            }
+            outputFormat.format(calendar.time) // Return the new date formatted
+        } catch (e: Exception) {
+            e.printStackTrace()
+            "-"
+        }
+    }
+
+
 }
 
 

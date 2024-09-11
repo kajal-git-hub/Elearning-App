@@ -38,23 +38,23 @@ class CoursesRepository @Inject constructor(@Curator private val apolloClient: A
 
 
 
-    suspend fun findCourseFolderProgress(findCourseFolderProgressId: String): Result<FindCourseFolderProgressQuery.Data> {
+    suspend fun findCourseFolderProgress(findCourseFolderProgressId: String): com.student.competishun.di.Result<FindCourseFolderProgressQuery.Data> {
         return try {
             val response = apolloClient.query(FindCourseFolderProgressQuery(findCourseFolderProgressId)).execute()
-
             if (response.hasErrors()) {
-                Result.failure(Exception(response.errors?.firstOrNull()?.message))
+                com.student.competishun.di.Result.Failure(Exception(response.errors?.firstOrNull()?.message))
             } else {
                 val data = response.data
                 if (data != null) {
-                    Result.success(data)
+                    com.student.competishun.di.Result.Success(data)
                 } else {
-                    Result.failure(Exception("No data returned from the server"))
+                    com.student.competishun.di.Result.Failure(Exception("No data returned from the server"))
                 }
             }
         } catch (e: Exception) {
-            Result.failure(e)
+            com.student.competishun.di.Result.Failure(e)
         }
     }
+
 
 }

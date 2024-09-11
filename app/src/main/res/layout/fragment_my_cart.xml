@@ -564,6 +564,28 @@
                             app:layout_constraintTop_toTopOf="@id/tvInstTotalAmountLabel" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/cl_NotApplicable"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        android:visibility="gone"
+                        app:layout_constraintTop_toBottomOf="@+id/tabLayoutContainer"
+                        app:layout_constraintStart_toStartOf="@+id/tabLayoutContainer"
+                        >
+
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Not Applicable!"
+                            android:textStyle="bold"
+                            android:fontFamily="@font/nunito"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"/>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -627,7 +649,7 @@
             android:id="@+id/cl_proccedToPay"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="visible"
+            android:visibility="gone"
             android:background="@color/white"
             android:padding="16dp"
             app:layout_constraintBottom_toBottomOf="parent">
