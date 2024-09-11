@@ -7,7 +7,7 @@ import com.student.competishun.curator.MyCoursesQuery
 import com.student.competishun.data.model.TopicTypeModel
 
 interface ToolbarCustomizationListener {
-    fun onCustomizeToolbar(title: String, isBackEnabled: Boolean)
+    fun onCustomizeToolbar(fileurl: String, fileType: String,ContentId:String)
 }
 
 interface OnCourseItemClickListener {
