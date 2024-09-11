@@ -179,7 +179,7 @@ class HomeFragment : Fragment() {
 
         _binding?.progressBar?.visibility = View.VISIBLE
         _binding?.rvOurCourses?.visibility = View.GONE
-
+        binding.clRecommendedCourses.visibility = View.GONE
         coursesCategoryViewModel.coursesCategory.observe(viewLifecycleOwner, Observer { category ->
             _binding?.progressBar?.visibility = View.GONE
 
@@ -205,6 +205,7 @@ class HomeFragment : Fragment() {
         })
         coursesCategoryViewModel.fetchCoursesCategory()
         getMyDetails()
+        getAllCoursesForStudent("")
 
 
         listWhyCompetishun = Constants.listWhyCompetishun
@@ -325,9 +326,10 @@ class HomeFragment : Fragment() {
         studentCoursesViewModel.fetchCourses(filters)
 
         binding.progressBarRec.visibility = View.VISIBLE
-        binding.clRecommendedCourses.visibility = View.GONE
+
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             studentCoursesViewModel.courses.collect { result ->
+                Log.e("TotalStudentCours", result.toString())
                 result?.onSuccess { data ->
                     Log.e("TotalStudentCourses", data.toString())
                     val courses = data.getAllCourseForStudent.courses.map { course ->
