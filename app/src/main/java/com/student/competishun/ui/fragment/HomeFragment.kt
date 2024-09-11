@@ -74,7 +74,7 @@ class HomeFragment : Fragment() {
     private lateinit var dotsIndicatorOurCourses: LinearLayout
     private lateinit var adapterOurCourses: OurCoursesAdapter
     private var listOurCoursesItem: List<GetAllCourseCategoriesQuery.GetAllCourseCategory>? = null
-    val lectureCounts = mutableMapOf<String, Int>()
+    private val lectureCounts = mutableMapOf<String, Int>()
     private lateinit var recommendedCourseList: List<RecommendedCourseDataModel>
 
     private lateinit var helperFunctions: HelperFunctions
@@ -176,54 +176,6 @@ class HomeFragment : Fragment() {
         dotsIndicatorTestimonials = view.findViewById(R.id.llDotsIndicator)
         dotsIndicatorWhyCompetishun = view.findViewById(R.id.llDotsIndicatorWhyCompetishun)
 
-//        coursesViewModel.courses.observe(viewLifecycleOwner, Observer { courses ->
-//
-//
-//            val bannerList = mutableListOf<PromoBannerModel>()
-//
-//            courses?.forEach { course ->
-//                Log.e("Course", course.toString())
-//                bannerList.add(PromoBannerModel(course.banner_image))
-//            }
-//
-//            binding.rvpromobanner.adapter = PromoBannerAdapter(bannerList)
-//            binding.rvpromobanner.layoutManager =
-//                LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-//            helperFunctions.setupDotsIndicator(requireContext(),bannerList.size, binding.llDotsIndicatorPromoBanner)
-//            binding.rvpromobanner.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-//                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-//                    super.onScrolled(recyclerView, dx, dy)
-//                    helperFunctions.updateDotsIndicator(recyclerView, binding.llDotsIndicatorPromoBanner)
-//                }
-//            })
-//
-//            binding.rvRecommendedCourses.adapter = courses?.let { courseList ->
-//                com.student.competishun.ui.adapter.RecommendedCoursesAdapter(courseList) { selectedCourse ->
-//                    val bundle = Bundle().apply {
-//                        putString("course_id", selectedCourse.id)
-//                    }
-//                    findNavController().navigate(R.id.exploreFragment,bundle)
-//                }
-//            }
-//            binding.rvRecommendedCourses.layoutManager =
-//                LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-//            recommendedCourseList = Constants.recommendedCourseList
-//            helperFunctions.setupDotsIndicator(
-//                requireContext(),
-//                recommendedCourseList.size,
-//                binding.llDotsIndicatorRecommendedCourses
-//            )
-//            binding.rvRecommendedCourses.addOnScrollListener(object :
-//                RecyclerView.OnScrollListener() {
-//                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-//                    super.onScrolled(recyclerView, dx, dy)
-//                    helperFunctions.updateDotsIndicator(
-//                        recyclerView,
-//                        binding.llDotsIndicatorRecommendedCourses
-//                    )
-//                }
-//            })
-//        })
 
         _binding?.progressBar?.visibility = View.VISIBLE
         _binding?.rvOurCourses?.visibility = View.GONE
@@ -254,14 +206,6 @@ class HomeFragment : Fragment() {
         coursesCategoryViewModel.fetchCoursesCategory()
         getMyDetails()
 
-//        val filters = FindAllCourseInput(
-//            exam_type = Optional.Absent,
-//            is_recommended = Optional.present(true),
-//            course_status = Optional.present(listOf(CourseStatus.PUBLISHED)),
-//            limit = Optional.present(20)
-//        )
-//
-//        coursesViewModel.fetchCourses(filters)
 
         listWhyCompetishun = Constants.listWhyCompetishun
         testimonials = Constants.testimonials
@@ -298,7 +242,6 @@ class HomeFragment : Fragment() {
                 helperFunctions.updateDotsIndicator(recyclerView, dotsIndicatorWhyCompetishun)
             }
         })
-        setupClickListeners(view)
 
 
         val navigationView: NavigationView = view.findViewById(R.id.nv_navigationView)
@@ -311,97 +254,12 @@ class HomeFragment : Fragment() {
 
     }
 
-    private fun setupClickListeners(view: View) {
-        val clickableLayouts = listOf(
-            R.id.clFYCourse to getString(R.string.full_year_courses),
-//            R.id.clTestSeries to getString(R.string.test_series),
-//            R.id.clRevisionCourses to getString(R.string.revision_courses),
-//            R.id.clCrashCourses to getString(R.string.crash_courses),
-//            R.id.clDistanceLearning to getString(R.string.distance_learning),
-//            R.id.clDigitalBook to getString(R.string.digital_book),
-        )
-
-//        clickableLayouts.forEach { (id, logMessage) ->
-//            view.findViewById<ConstraintLayout>(id).setOnClickListener {
-//                val bundle = Bundle().apply {
-//                    putString("clicked_view", logMessage)
-//                }
-//                Log.d("HomeFragment", logMessage)
-//                findNavController().navigate(R.id.action_homeFragment_to_coursesFragment,bundle)
-//            }
-//        }
-
-//        val clFYCourse = view.findViewById<ConstraintLayout>(R.id.clFYCourse)
-//        clFYCourse.setOnClickListener {
-//            Log.d("HomeFragment", "clFYCourse clicked")
-//            findNavController().navigate(R.id.action_homeFragment_to_coursesFragment)
-//        }
-
-//        val clExploreCourse = view.findViewById<ConstraintLayout>(R.id.ctRecommendedCourse)
-//        clExploreCourse.setOnClickListener {
-//            findNavController().navigate(R.id.action_homeFragment_to_exploreFragment)
-//        }
-    }
-
-    private fun setupDotsIndicator(
-        itemCount: Int,
-        dotsIndicator: LinearLayout,
-        spanCount: Int = 6
-    ) {
-        val pageCount = (itemCount + spanCount - 1) / spanCount
-        dotsIndicator.removeAllViews()
-        for (i in 0 until pageCount) {
-            val dot = ImageView(requireContext())
-            dot.setImageResource(R.drawable.dot_inactive)
-            val params = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            )
-            params.setMargins(4, 0, 4, 0)
-            dot.layoutParams = params
-            dotsIndicator.addView(dot)
-        }
-        updateDotsIndicator(null, dotsIndicator, spanCount)
-    }
-
-
-    private fun updateDotsIndicator(
-        recyclerView: RecyclerView?,
-        dotsIndicator: LinearLayout,
-        spanCount: Int = 6
-    ) {
-        recyclerView?.let {
-            val visiblePageIndex =
-                (it.layoutManager as? GridLayoutManager)?.findFirstVisibleItemPosition()
-                    ?.div(spanCount) ?: 0
-
-            for (i in 0 until dotsIndicator.childCount) {
-                val dot = dotsIndicator.getChildAt(i) as ImageView
-                dot.setImageResource(
-                    if (i == visiblePageIndex) R.drawable.dot_active
-                    else R.drawable.dot_inactive
-                )
-            }
-        }
-    }
-
-//    override fun onCourseItemClick(course: GetAllCourseCategoriesQuery.GetAllCourseCategory) {
-//        val bundle = Bundle().apply {
-//            putString("course_name", course.name)
-//            putString("category_id", course.id)
-//
-//        }
-//        findNavController().navigate(R.id.action_homeFragment_to_coursesFragment, bundle)
-//    }
-
     fun getAllBanners() {
         val filtersbanner = FindAllBannersInput(
             limit = Optional.Absent
         )
-
         studentCoursesViewModel.fetchBanners(filtersbanner)
 
-        // Collect banners
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             studentCoursesViewModel.banners.collect { result ->
                 val bannerList = mutableListOf<PromoBannerModel>()
@@ -417,8 +275,10 @@ class HomeFragment : Fragment() {
                     if (!redirectLink.isNullOrEmpty()) {
                         openLink(redirectLink)
                     } else if (!courseId.isNullOrEmpty()) {
-                        // Fetch the course tags from the courses list
-                        fetchCourseTagsAndNavigate(courseId)
+                        val bundle = Bundle().apply {
+                            putString("course_id", courseId)
+                        }
+                        findNavController().navigate(R.id.exploreFragment, bundle)
                     } else {
                         Toast.makeText(requireContext(), "No redirect or course available for this banner", Toast.LENGTH_SHORT).show()
                     }
@@ -448,31 +308,6 @@ class HomeFragment : Fragment() {
             }
         }
     }
-
-    private fun fetchCourseTagsAndNavigate(courseId: String) {
-        viewLifecycleOwner.lifecycleScope.launch {
-            studentCoursesViewModel.courses.collect { result ->
-                result?.onSuccess { data ->
-                    val course = data.getAllCourseForStudent.courses.find { it.id == courseId }
-                    course?.let {
-                        val bannerCourseTags = it.course_tags
-
-                        Log.d("bannerCourseTags",bannerCourseTags.toString())
-
-                        val bundle = Bundle().apply {
-                            putString("course_id", courseId)
-                            putStringArrayList("course_tags", ArrayList(bannerCourseTags))
-                        }
-
-                        findNavController().navigate(R.id.exploreFragment, bundle)
-                    }
-                }
-            }
-        }
-    }
-
-
-
 
 
     fun getAllCoursesForStudent(courseType: String) {
@@ -608,6 +443,51 @@ class HomeFragment : Fragment() {
             }
         }
     }
+
+
+    private fun setupDotsIndicator(
+        itemCount: Int,
+        dotsIndicator: LinearLayout,
+        spanCount: Int = 6
+    ) {
+        val pageCount = (itemCount + spanCount - 1) / spanCount
+        dotsIndicator.removeAllViews()
+        for (i in 0 until pageCount) {
+            val dot = ImageView(requireContext())
+            dot.setImageResource(R.drawable.dot_inactive)
+            val params = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            params.setMargins(4, 0, 4, 0)
+            dot.layoutParams = params
+            dotsIndicator.addView(dot)
+        }
+        updateDotsIndicator(null, dotsIndicator, spanCount)
+    }
+
+
+    private fun updateDotsIndicator(
+        recyclerView: RecyclerView?,
+        dotsIndicator: LinearLayout,
+        spanCount: Int = 6
+    ) {
+        recyclerView?.let {
+            val visiblePageIndex =
+                (it.layoutManager as? GridLayoutManager)?.findFirstVisibleItemPosition()
+                    ?.div(spanCount) ?: 0
+
+            for (i in 0 until dotsIndicator.childCount) {
+                val dot = dotsIndicator.getChildAt(i) as ImageView
+                dot.setImageResource(
+                    if (i == visiblePageIndex) R.drawable.dot_active
+                    else R.drawable.dot_inactive
+                )
+            }
+        }
+    }
+
+
     private fun openLink(redirectLink: String) {
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(redirectLink))
         startActivity(intent)

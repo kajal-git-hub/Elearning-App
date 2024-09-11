@@ -24,6 +24,18 @@
             android:layout_margin="16dp"
             android:src="@drawable/arrow_left_white" />
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_speed_control"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|end"
+            android:layout_margin="16dp"
+            android:backgroundTint="@color/transparent"
+            app:cornerRadius="@dimen/_5dp"
+            android:text="1.75x"
+            android:textColor="@color/white"
+            />
+
     </FrameLayout>
 
 </layout>

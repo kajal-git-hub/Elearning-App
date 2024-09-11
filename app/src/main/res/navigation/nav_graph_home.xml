@@ -269,17 +269,14 @@
         tools:layout="@layout/fragment_contact_us">
     </fragment>
 
-    <fragment
-        android:id="@+id/AboutUs"
-        android:name="com.student.competishun.ui.fragment.AboutUsFragment"
-        tools:layout="@layout/fragment_about_us">
-    </fragment>
 
     <fragment
-        android:id="@+id/PDFViewFragment"
-        android:name="com.student.competishun.ui.fragment.PdfViewFragment"
-        tools:layout="@layout/fragment_pdf_veiw">
+        android:id="@+id/DownloadFragment"
+        android:name="com.student.competishun.ui.fragment.DownloadFragment"
+        tools:layout="@layout/fragment_download">
     </fragment>
+
+
 
 
 </navigation>

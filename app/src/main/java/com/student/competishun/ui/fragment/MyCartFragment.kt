@@ -87,7 +87,7 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
         binding.parentData.visibility = View.GONE
 
         binding.clEmptyCart.setOnClickListener {
-            findNavController().navigate(R.id.homeFragment)
+            findNavController().navigate(R.id.action_mycartFragment_to_homeFragment)
         }
 
       //  binding.clrvContainer.visibility = View.GONE
@@ -202,9 +202,6 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
         Log.e("cartitemss",cartItem.price.toString())
 
     }
-
-
-
 
     private fun showFullPayment() {
         binding.tvOneTimePayment.text = "One-Time Payment"
@@ -411,6 +408,18 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
     }
 
 
+    override fun onCartItemRemoved() {
+        binding.tvCartCount.text = "(0)"
+        binding.cartBadge.text = "0"
+        binding.clPaymentSummary.visibility = View.GONE
+        binding.clProccedToPay.visibility = View.GONE
+        binding.clEmptyCart.visibility = View.VISIBLE
+        binding.clrvContainer.visibility = View.GONE
+        //   Toast.makeText(requireContext(), "Cart item removed", Toast.LENGTH_SHORT).show()
+    }
+
+
+
     fun calculateDiscountedPrice(price: Double, withInstallmentPrice: Double, discountPrice: Double): Double {
         val totalPrice = price + withInstallmentPrice
 
@@ -479,15 +488,6 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
     }
 
 
-    override fun onCartItemRemoved() {
-        binding.tvCartCount.text = "(0)"
-        binding.cartBadge.text = "0"
-        binding.clPaymentSummary.visibility = View.GONE
-        binding.clProccedToPay.visibility = View.GONE
-        binding.clEmptyCart.visibility = View.VISIBLE
-        binding.clrvContainer.visibility = View.GONE
-     //   Toast.makeText(requireContext(), "Cart item removed", Toast.LENGTH_SHORT).show()
-    }
 
 }
 

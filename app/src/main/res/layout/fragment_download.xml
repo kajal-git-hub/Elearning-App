@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F6F6FF"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.fragment.DownloadsFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/TopView_Downloads"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="@dimen/_4dp"
+        android:background="@drawable/gradiant_bg_downloads"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/back_icon_downloads"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_16dp"
+            android:layout_marginVertical="@dimen/_20dp"
+            android:src="@drawable/arrow_left_white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Downloads"
+            android:fontFamily="@font/nunito"
+            android:textStyle="bold"
+            android:textSize="@dimen/_18sp"
+            android:textColor="#ffffff"
+            android:layout_marginStart="12dp"
+            android:layout_marginVertical="@dimen/_16dp"
+            app:layout_constraintStart_toEndOf="@id/back_icon_downloads"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+
+        <ImageView
+            android:id="@+id/search_icon_downloads"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/search_normal_white"
+            android:layout_marginEnd="@dimen/_20dp"
+            android:layout_marginVertical="@dimen/_20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_tabLayout_downloads"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        app:layout_constraintTop_toBottomOf="@id/TopView_Downloads"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/studentTabLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_16dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tabMode="fixed"
+            android:background="@color/white"
+            app:tabTextColor="#5A5555"
+            app:tabRippleColor="@null"
+            app:tabIndicatorColor="#3E3EF7"
+            app:tabIndicatorHeight="1dp"
+            app:tabIndicatorFullWidth="true"
+            app:tabSelectedTextColor="#3E3EF7">
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/optedTab"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="PDFs (04)"
+                style="@style/TabLayoutStyleDownloads"
+                android:textAllCaps="false"/>
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/notOptedTab"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Videos (04)"/>
+        </com.google.android.material.tabs.TabLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_downloads"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        tools:itemCount="2"
+        tools:listitem="@layout/downloads_item_pdfs"
+        app:layout_constraintTop_toBottomOf="@id/cl_tabLayout_downloads"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="@dimen/_10dp" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_empty_downloads"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/cl_tabLayout_downloads"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <pl.droidsonroids.gif.GifImageView
+            android:id="@+id/GifEmptyDownloads"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="4dp"
+            android:background="@drawable/empty_download"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_no_pdfs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="No PDFs Found!"
+            android:fontFamily="@font/nunito"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:textColor="#2B2829"
+            app:layout_constraintTop_toBottomOf="@id/GifEmptyDownloads"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="32dp"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_not_downloaded_anything"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="You’ve not downloaded any pdfs yet."
+            android:fontFamily="@font/nunito"
+            android:textStyle="bold"
+            android:textSize="@dimen/_14sp"
+            android:textColor="#5A5555"
+            app:layout_constraintTop_toBottomOf="@id/tv_no_pdfs"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="9dp"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_note"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_16dp"
+        android:layout_marginBottom="32dp"
+        android:visibility="visible"
+        android:background="@drawable/gradiant_bg_note"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_note"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Note:"
+            android:fontFamily="@font/nunito"
+            android:textStyle="bold"
+            android:textSize="@dimen/_12sp"
+            android:textColor="#2B2829"
+            android:layout_marginStart="@dimen/_16dp"
+            android:layout_marginTop="12dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <ImageView
+            android:id="@+id/iv_info_circle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/info_circle_note"
+            android:layout_marginStart="@dimen/_16dp"
+            android:layout_marginTop="@dimen/_8dp"
+            app:layout_constraintTop_toBottomOf="@id/tv_note"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/note_txt"
+            android:fontFamily="@font/nunito"
+            android:textStyle="bold"
+            android:textSize="@dimen/_12sp"
+            android:textColor="#433E3F"
+            android:layout_marginTop="@dimen/_4dp"
+            android:layout_marginStart="@dimen/_8dp"
+            android:layout_marginEnd="@dimen/_16dp"
+            android:layout_marginBottom="12dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_note"
+            app:layout_constraintStart_toEndOf="@id/iv_info_circle"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
