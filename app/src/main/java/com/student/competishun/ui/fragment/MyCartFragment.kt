@@ -188,7 +188,6 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
                         binding.clSecondbottomInstallement.visibility = View.GONE
                     }
                     1 ->{ paymentType = "partial"
-                        binding.clSecondbottomInstallement.visibility = View.VISIBLE
                         showPartialPayment()
                     }
                 }
@@ -234,6 +233,8 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
 
     private fun showPartialPayment() {
         binding.tvOneTimePayment.text = "1st Installment"
+        binding.clSecondbottomInstallement.visibility = View.GONE
+
         val partialPaymentItems = originalCartItems.filter { it.withInstallmentPrice > 0 }
         if (partialPaymentItems.isNotEmpty()) {
             cartAdapter.updateCartItems(partialPaymentItems)
@@ -315,12 +316,7 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
                 Log.e("CartItems", data.findAllCartItems.toString())
                 var complementryId = ""
                 val cartItems = data.findAllCartItems.map { cartItemData ->
-                    if(cartItemData.course.with_installment_price!=0){
-                        binding.clSecondbottomInstallement.visibility = View.VISIBLE
-                    }else{
-                        binding.clSecondbottomInstallement.visibility = View.GONE
-                        binding.clNotApplicable.visibility = View.GONE
-                    }
+
 
                     binding.clEmptyCart.visibility = View.GONE
                     binding.parentData.visibility = View.VISIBLE

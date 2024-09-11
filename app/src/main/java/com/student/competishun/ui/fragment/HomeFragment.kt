@@ -398,8 +398,10 @@ class HomeFragment : Fragment() {
         val filtersbanner = FindAllBannersInput(
             limit = Optional.Absent
         )
+
         studentCoursesViewModel.fetchBanners(filtersbanner)
 
+        // Collect banners
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             studentCoursesViewModel.banners.collect { result ->
                 val bannerList = mutableListOf<PromoBannerModel>()
@@ -415,10 +417,8 @@ class HomeFragment : Fragment() {
                     if (!redirectLink.isNullOrEmpty()) {
                         openLink(redirectLink)
                     } else if (!courseId.isNullOrEmpty()) {
-                        val bundle = Bundle().apply {
-                            putString("course_id", courseId)
-                        }
-                        findNavController().navigate(R.id.exploreFragment, bundle)
+                        // Fetch the course tags from the courses list
+                        fetchCourseTagsAndNavigate(courseId)
                     } else {
                         Toast.makeText(requireContext(), "No redirect or course available for this banner", Toast.LENGTH_SHORT).show()
                     }
@@ -448,6 +448,29 @@ class HomeFragment : Fragment() {
             }
         }
     }
+
+    private fun fetchCourseTagsAndNavigate(courseId: String) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            studentCoursesViewModel.courses.collect { result ->
+                result?.onSuccess { data ->
+                    val course = data.getAllCourseForStudent.courses.find { it.id == courseId }
+                    course?.let {
+                        val bannerCourseTags = it.course_tags
+
+                        Log.d("bannerCourseTags",bannerCourseTags.toString())
+
+                        val bundle = Bundle().apply {
+                            putString("course_id", courseId)
+                            putStringArrayList("course_tags", ArrayList(bannerCourseTags))
+                        }
+
+                        findNavController().navigate(R.id.exploreFragment, bundle)
+                    }
+                }
+            }
+        }
+    }
+
 
 
 
