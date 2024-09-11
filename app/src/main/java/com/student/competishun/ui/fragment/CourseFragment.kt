@@ -98,10 +98,10 @@ class CourseFragment : Fragment(), StudentCourseItemClickListener {
         val categoryName = arguments?.getString("category_name")
         val examType = arguments?.getString("exam_type")
         val filters = FindAllCourseInputStudent(
-            Optional.present(categoryName),
-            Optional.present(courseClass),
-            Optional.present(examType),
-            Optional.present(null)
+            category_name = Optional.present(categoryName),
+            course_class = Optional.present(courseClass),
+            exam_type = Optional.present(examType),
+            is_recommended = Optional.present(false)
         )
         setupTabLayout()
         courseViewModel.fetchCourses(filters)

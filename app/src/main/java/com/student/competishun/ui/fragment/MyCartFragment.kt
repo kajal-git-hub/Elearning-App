@@ -36,11 +36,10 @@ import org.json.JSONObject
 
 @AndroidEntryPoint
 class MyCartFragment : Fragment(), OnCartItemRemovedListener {
-    private var _binding: FragmentMyCartBinding? = null
+    private lateinit var binding :  FragmentMyCartBinding
     private val orderViewModel: OrderViewModel by viewModels()
     private val userViewModel: UserViewModel by viewModels()
     private val getCourseByIDViewModel: GetCourseByIDViewModel by viewModels()
-    private val binding get() = _binding!!
     private lateinit var sharedPreferencesManager: SharedPreferencesManager
     private val cartViewModel: CreateCartViewModel by viewModels()
     private lateinit var paymentsClient: PaymentsClient
@@ -69,7 +68,7 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentMyCartBinding.inflate(inflater, container, false)
+        binding = FragmentMyCartBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -86,7 +85,7 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
         helperFunctions = HelperFunctions()
         binding.parentData.visibility = View.GONE
 
-        binding.clEmptyCart.setOnClickListener {
+        binding.MyCartNavigateToCourses.setOnClickListener {
             findNavController().navigate(R.id.action_mycartFragment_to_homeFragment)
         }
 
@@ -315,7 +314,7 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
                 val cartItems = data.findAllCartItems.map { cartItemData ->
 
 
-                    binding.clEmptyCart.visibility = View.GONE
+//                    binding.clEmptyCart.visibility = View.GONE
                     binding.parentData.visibility = View.VISIBLE
                     binding.clPaymentSummary.visibility = View.VISIBLE
                     binding.rvAllCart.visibility = View.VISIBLE
@@ -484,7 +483,6 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
     }
 
 

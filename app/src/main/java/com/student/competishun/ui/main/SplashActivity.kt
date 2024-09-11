@@ -29,18 +29,43 @@ class SplashActivity : AppCompatActivity() {
         binding = ActivitySplashBinding.inflate(layoutInflater)
         setContentView(binding.root)
         sharedPreferencesManager = SharedPreferencesManager(this)
+
+
+        if (isFreshInstall()) {
+            sharedPreferencesManager.clearUserData()
+            Log.d("SplashActivity", "Fresh install detected, clearing user data.")
+        }
+
         Handler(Looper.getMainLooper()).postDelayed({
             setContentView(R.layout.welcome_screen)
             Handler(Looper.getMainLooper()).postDelayed({
                 val token = sharedPreferencesManager.accessToken
                 Log.e("token ", token.toString())
-                if (!token.isNullOrEmpty()) {
+                Log.d("userdata",checkUserData().toString())
+                if (!token.isNullOrEmpty() && checkUserData()) {
                     startActivity(Intent(this, HomeActivity::class.java))
-                } else {
+                }
+                else
+                {
                     startActivity(Intent(this, MainActivity::class.java))
                 }
             }, 2000)
         }, 2000)
 
+    }
+
+    private fun checkUserData(): Boolean {
+        return if (sharedPreferencesManager.name.isNullOrEmpty() || sharedPreferencesManager.city.isNullOrEmpty() || sharedPreferencesManager.reference.isNullOrEmpty() || sharedPreferencesManager.preparingFor.isNullOrEmpty() || sharedPreferencesManager.targetYear == 0) {
+            false
+        } else{
+            true
+        }
+    }
+    private fun isFreshInstall(): Boolean {
+        val isFirstInstall = sharedPreferencesManager.isFirstInstall
+        if (isFirstInstall) {
+            sharedPreferencesManager.isFirstInstall = false
+        }
+        return isFirstInstall
     }
 }

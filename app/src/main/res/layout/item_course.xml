@@ -58,14 +58,15 @@
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tvRecommendedCourseName"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
+                android:maxLines="2"
                 android:layout_marginTop="16dp"
                 android:hint="Prakhar Integrated (Fast \nLane-2) 2024-25"
                 android:textColor="#2B2829"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="@+id/tvTag3"
+                app:layout_constraintEnd_toEndOf="@+id/tvTag4"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 

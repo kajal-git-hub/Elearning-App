@@ -294,11 +294,6 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
                     }
                 }
 
-
-
-
-
-
                 Log.e("listcourses", courses.toString())
                 binding.progressBar.visibility = View.GONE
                 binding.ExpireValidity.text = "Validity: "+ helperFunctions.formatCourseDate(courses?.course_validity_end_date.toString())

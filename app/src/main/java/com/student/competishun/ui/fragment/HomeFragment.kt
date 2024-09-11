@@ -427,7 +427,7 @@ class HomeFragment : Fragment() {
         }
     }
 
-    fun getAllLectureCount(courseId: String, callback: (String, Int) -> Unit){
+        fun getAllLectureCount(courseId: String, callback: (String, Int) -> Unit){
 
         studentCoursesViewModel.fetchLectures(courseId)
         Log.e("getcourseIds",courseId)
