@@ -197,30 +197,24 @@ class AllDemoResourcesFree : Fragment() {
         val folderProgressFolder = data.findCourseFolderProgress.folder
         Log.e("insideFile",folderProgressFolder.toString())
         val folderName = folderProgressFolder?.name
+            val totalDuration = data.findCourseFolderProgress.videoDuration?.toInt() ?: 0 // Ensure totalDuration is an Int
 
-        val totalDuration = data.findCourseFolderProgress.videoDuration ?: 0.0
-        // Calculate duration per item or use a static value
-        val contentCount = folderProgressContent?.size ?: 0
-        val durationPerContent = if (contentCount > 0) totalDuration / contentCount else 0.0
-        // Map folderContents to FreeDemoItem
-        val hours = (durationPerContent / 60).toInt()
-        val minutes = (durationPerContent % 60).toInt()
 
-        val durationString = if (hours > 0) {
-            "${hours}h ${minutes} mins"
-        } else {
-            "${minutes} mins"
-        }
+
+        Log.d("totalDuration",totalDuration.toString())
+
+        val durationString = formatTimeDuration(totalDuration)
 
         val freeItems = folderProgressContent?.map { folderContent ->
             val fileName = folderContent.content?.course_track ?: "Unknown"
-            val duration = "${durationPerContent.toInt()} mins"
+            val videoDuration = folderContent.content?.video_duration?.toInt()
+//            val duration = formatTimeDuration(durationPerContent)
 
             FreeDemoItem(
                 id = folderContent.content?.id.toString(),
                 playIcon = if(folderContent.content?.file_type == FileType.PDF ){ R.drawable.pdf_bg} else {R.drawable.frame_1707480717}, //static icon
                 titleDemo = folderContent.content?.file_name.toString(),
-                timeDemo = if(folderContent.content?.file_type == FileType.PDF ){ ""} else { durationString},
+                timeDemo = if(folderContent.content?.file_type == FileType.PDF ){""}else videoDuration?.let { formatTimeDuration(it) }.toString(),
                 fileUrl = folderContent.content?.file_url.toString(),
                 fileType = folderContent.content?.file_type?.name.toString(),
                 videoCount = "",
@@ -250,6 +244,25 @@ class AllDemoResourcesFree : Fragment() {
             adapter = freeDemoAdapter
         }
     }
+
+    private fun formatTimeDuration(totalDuration: Int): String {
+        return when {
+            totalDuration < 60 -> "${totalDuration} sec"
+            totalDuration == 60 -> "1h"
+            else -> {
+                val hours = totalDuration / 3600
+                val minutes = (totalDuration % 3600) / 60
+                val seconds = totalDuration % 60
+
+                val hourString = if (hours > 0) "${hours} hr${if (hours > 1) "s" else ""}" else ""
+                val minuteString = if (minutes > 0) "${minutes} min${if (minutes > 1) "s" else ""}" else ""
+                val secondString = if (seconds > 0) "${seconds} sec" else ""
+
+                listOf(hourString, minuteString, secondString).filter { it.isNotEmpty() }.joinToString(" ").trim()
+            }
+        }
+    }
+
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onResume() {

@@ -73,28 +73,36 @@ class RecommendViewAllAdapter(
         return object : Filter() {
             override fun performFiltering(constraint: CharSequence?): FilterResults {
                 val query = constraint?.toString()?.lowercase(Locale.getDefault()) ?: ""
+
+                // Filter the list based on the course name
                 val filteredList = if (query.isEmpty()) {
+                    // Return all items if query is empty
                     items
                 } else {
+                    // Filter the items based on the course name
                     items.filter {
                         it.name.lowercase(Locale.getDefault()).contains(query)
                     }
                 }
+
+                // Create FilterResults object to hold the filtered results
                 val results = FilterResults()
                 results.values = filteredList
                 return results
             }
 
             override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
-                filteredItems = if (results?.values is List<*>) {
-                    (results.values as List<GetAllCourseQuery.Course>).toMutableList()
-                } else {
-                    mutableListOf()
+                // Update filteredItems based on results from performFiltering
+                filteredItems.clear()
+                if (results?.values is List<*>) {
+                    filteredItems.addAll(results.values as List<GetAllCourseQuery.Course>)
                 }
+                // Notify the adapter of the changes
                 notifyDataSetChanged()
             }
         }
     }
+
 
     class CourseViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val courseName: TextView = view.findViewById(R.id.tvRecommendedCourseName)

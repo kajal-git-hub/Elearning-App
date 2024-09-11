@@ -234,6 +234,8 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
 
     private fun showPartialPayment() {
         binding.tvOneTimePayment.text = "1st Installment"
+        binding.clSecondbottomInstallement.visibility = View.GONE
+
         val partialPaymentItems = originalCartItems.filter { it.withInstallmentPrice > 0 }
         if (partialPaymentItems.isNotEmpty()) {
             cartAdapter.updateCartItems(partialPaymentItems)
@@ -335,7 +337,7 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
                     Log.e("coureseIDd", course.id)
                     instAmountpaid = ((course.price ?: 0) + (course.with_installment_price ?: 0) * 0.6)
                     CartItem(
-                        profileImageResId = course.banner_image ?: "",
+                        profileImageResId = course.banner_image ?: "", // Replace with actual logic for image
                         name = course.name,
                         viewDetails = "View Details",
                         forwardDetails = R.drawable.cart_arrow_right,

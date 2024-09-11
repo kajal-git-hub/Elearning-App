@@ -114,22 +114,41 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
         arguments?.let { bundle ->
             val tags = bundle.getStringArrayList("course_tags")
             val recommendCourseTags = bundle.getStringArrayList("recommendCourseTags")
+            val bannerCourseTags = bundle.getStringArrayList("bannerCourseTag")
+
             Log.d("recommendCourseTags", recommendCourseTags.toString())
             Log.d("tags", tags.toString())
+            Log.d("bannerCourseTags", bannerCourseTags.toString())
 
+            when {
+                // If recommendCourseTags is available and not empty, use it
+                recommendCourseTags != null && recommendCourseTags.isNotEmpty() -> {
+                    ExploreCourseTags.clear()
+                    ExploreCourseTags.addAll(recommendCourseTags)
+                    Log.e("courseTags", "Received Recommend Course Tags: $ExploreCourseTags")
+                }
 
-            if (recommendCourseTags != null && recommendCourseTags.isNotEmpty()) {
-                ExploreCourseTags.clear()
-                ExploreCourseTags.addAll(recommendCourseTags)
-                Log.e("courseTags", "Received Recommend Course Tags: $ExploreCourseTags")
-            } else if (tags != null) {
-                ExploreCourseTags.clear()
-                ExploreCourseTags.addAll(tags)
-                Log.e("courseTags", "Received Course Tags: $ExploreCourseTags")
-            }else{
+                // If recommendCourseTags is null or empty, use tags if available
+                tags != null && tags.isNotEmpty() -> {
+                    ExploreCourseTags.clear()
+                    ExploreCourseTags.addAll(tags)
+                    Log.e("courseTags", "Received Course Tags: $ExploreCourseTags")
+                }
 
+                // If both recommendCourseTags and tags are null or empty, use bannerCourseTags
+                bannerCourseTags != null && bannerCourseTags.isNotEmpty() -> {
+                    ExploreCourseTags.clear()
+                    ExploreCourseTags.addAll(bannerCourseTags)
+                    Log.e("courseTags", "Received Banner Course Tags: $ExploreCourseTags")
+                }
+
+                // Handle case where all tags are null or empty
+                else -> {
+                    Log.e("courseTags", "No valid course tags received.")
+                }
             }
         }
+
 
 
         (activity as? HomeActivity)?.showBottomNavigationView(false)
