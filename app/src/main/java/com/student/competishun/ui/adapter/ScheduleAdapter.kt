@@ -82,13 +82,14 @@ class ScheduleAdapter(private val scheduleItems: List<ScheduleData>, private val
 
                 binding.tvSubjectName.text = innerItem.subject_name
                 binding.tvTopicName.text = innerItem.topic_name
-                startCountdownTimer(innerItem.scheduleTimer, innerItem.fileType, innerItem.file_url,innerItem.contentId)
+                startCountdownTimer(innerItem.scheduleTimer,innerItem.file_url , innerItem.fileType,innerItem.contentId)
                 if (innerItem.fileType=="VIDEO") {
 
                     binding.tvClassTimings.text = "${innerItem.lecture_start_time+"-"+innerItem.lecture_end_time}"
                     binding.tvHoursRemaining.text = ""
                   //  binding.videoIV.setImageResource(R.drawable.pdf_bg)
                 }else if (innerItem.fileType=="PDF"){
+                 //   startCountdownTimer(innerItem.scheduleTimer, innerItem.file_url, "PDF",innerItem.contentId)
                     binding.videoIV.setImageResource(R.drawable.pdf_bg)
                     binding.tvClassTimings.text = "${innerItem.lecture_start_time}"
                 }
@@ -217,7 +218,7 @@ class ScheduleAdapter(private val scheduleItems: List<ScheduleData>, private val
                 return String.format("Time Remaining: %02d:%02d:%02d", hours, minutes, seconds)
             }
 
-            private fun startCountdownTimer(targetTimestamp: String, fileType: String,fileUrl:String,ContentId:String) { // Define UTC and IST zones
+            private fun startCountdownTimer(targetTimestamp: String, fileUrl: String,fileType:String,ContentId:String) { // Define UTC and IST zones
                 val utcZone = ZoneId.of("UTC")
                 val istZone = ZoneId.of("Asia/Kolkata")
 
@@ -263,7 +264,7 @@ class ScheduleAdapter(private val scheduleItems: List<ScheduleData>, private val
                         binding.clLectureTimer.visibility = View.GONE
                         binding.clJoinLecture.visibility = View.VISIBLE
                         binding.btnJoinLecture.setOnClickListener {
-                            Log.e("fileypee","$fileUrl $fileType")
+                            Log.e("fileypee","$fileUrl ftyp:- $fileType Id $ContentId")
                             toolbarListener.onCustomizeToolbar(fileUrl, fileType,ContentId)
                         }
                     //    binding.tvClassStartedStatus.text = String.format("Started %d hours and %d minutes ago", hoursPassed, minutesPassed)

@@ -115,9 +115,9 @@ class ScheduleFragment : Fragment(), ToolbarCustomizationListener {
                         content.content.file_name,
                         formatTime(convertIST(content.content.scheduled_time.toString())),
                         convertLastDuration(formatTime(convertIST(content.content.scheduled_time.toString())),content.content.video_duration?.toLong()?:0),
+                        content.content.file_url.toString(),
                         content.content.file_type.name,
                         content.content.id,
-                        content.content.file_url.toString(),
                         content.content.scheduled_time.toString()
 
                     )
@@ -327,8 +327,9 @@ class ScheduleFragment : Fragment(), ToolbarCustomizationListener {
     }
 
     override fun onCustomizeToolbar(fileurl: String, fileType: String,contentId:String) {
-
-        if (fileType == "VIDE0"){
+        Log.e("fileuodld",fileurl.toString() + fileType.toString())
+        if (fileType == "VIDEO"){
+            Log.e("fileuodldd",fileType.toString())
             videoUrlApi(videourlViewModel,contentId)
         }else if (fileType == "PDF"){
             val intent = Intent(context, PdfViewerActivity::class.java).apply {
@@ -341,7 +342,7 @@ class ScheduleFragment : Fragment(), ToolbarCustomizationListener {
     fun videoUrlApi(viewModel: VideourlViewModel, folderContentId: String) {
 
         viewModel.fetchVideoStreamUrl(folderContentId, "360p")
-
+         Log.e("foldfdfd",folderContentId)
         viewModel.videoStreamUrl.observe(viewLifecycleOwner, { signedUrl ->
             Log.d("Videourl", "Signed URL: $signedUrl")
             if (signedUrl != null) {
