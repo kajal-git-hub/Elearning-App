@@ -26,12 +26,14 @@ import com.student.competishun.ui.fragment.AdditionalDetailsFragment
 import com.student.competishun.ui.fragment.AddressDetailsFragment
 import com.student.competishun.ui.fragment.AllDemoResourcesFree
 import com.student.competishun.ui.fragment.AllFaqFragment
+import com.student.competishun.ui.fragment.BookMarkFragment
 import com.student.competishun.ui.fragment.BottomSheetDescriptionFragment
 import com.student.competishun.ui.fragment.BottomSheetPersonalDetailsFragment
 import com.student.competishun.ui.fragment.BottomSheetTSizeFragment
 import com.student.competishun.ui.fragment.CourseEmptyFragment
 import com.student.competishun.ui.fragment.CourseFragment
 import com.student.competishun.ui.fragment.CoursesFragment
+import com.student.competishun.ui.fragment.DownloadFragment
 import com.student.competishun.ui.fragment.ExploreFragment
 import com.student.competishun.ui.fragment.InstallmentDetailsBottomSheet
 import com.student.competishun.ui.fragment.MediaPlayerFragment
@@ -72,6 +74,10 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
         setContentView(binding.root)
 
         sharedPreferencesManager = SharedPreferencesManager(this)
+
+
+
+
 
         binding.clStartCall.setOnClickListener {
             val phoneNumber = "8888000021"
@@ -208,6 +214,20 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
 //        if (currentFragment != null) {
 //            updateUiVisibility(currentFragment)
 //        }
+    }
+
+    fun navigateToBookmarkFragment() {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragmentNavigation, BookMarkFragment())
+            .addToBackStack(null)
+            .commit()
+    }
+
+    fun navigateToDownloadFragment() {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragmentNavigation, DownloadFragment())
+            .addToBackStack(null)
+            .commit()
     }
 
 

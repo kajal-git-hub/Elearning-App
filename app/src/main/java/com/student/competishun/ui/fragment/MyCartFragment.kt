@@ -86,6 +86,7 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
         binding.parentData.visibility = View.GONE
 
         binding.MyCartNavigateToCourses.setOnClickListener {
+
             findNavController().navigate(R.id.action_mycartFragment_to_homeFragment)
         }
 

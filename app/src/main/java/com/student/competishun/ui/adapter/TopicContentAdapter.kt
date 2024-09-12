@@ -9,12 +9,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.student.competishun.R
 import com.student.competishun.data.model.TopicContentModel
 import com.student.competishun.databinding.ItemTopicTypeContentBinding
+import com.student.competishun.ui.fragment.BottomSheetDownloadBookmark
+import com.student.competishun.ui.fragment.BottomSheetTSizeFragment
 
-class TopicContentAdapter(private val topicContents: List<TopicContentModel>, private val folderContentId: String,private val onItemClick: (TopicContentModel, String) -> Unit) :
+class TopicContentAdapter(private val topicContents: List<TopicContentModel>, private val folderContentId: String, private val fragmentActivity: FragmentActivity, private val onItemClick: (TopicContentModel, String) -> Unit) :
     RecyclerView.Adapter<TopicContentAdapter.TopicContentViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TopicContentViewHolder {
@@ -27,7 +30,7 @@ class TopicContentAdapter(private val topicContents: List<TopicContentModel>, pr
     override fun onBindViewHolder(holder: TopicContentViewHolder, position: Int) {
 
         val topicContent = topicContents[position]
-        holder.bind(topicContents[position])
+        holder.bind(topicContents[position],fragmentActivity)
 
         holder.itemView.setOnClickListener {
             onItemClick(topicContent,folderContentId)
@@ -39,8 +42,13 @@ class TopicContentAdapter(private val topicContents: List<TopicContentModel>, pr
     class TopicContentViewHolder(private val binding: ItemTopicTypeContentBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(topicContent: TopicContentModel) {
+        fun bind(topicContent: TopicContentModel, fragmentActivity: FragmentActivity) {
             binding.ivSubjectBookIcon.setImageResource(topicContent.subjectIcon)
+
+            binding.ivMoreInfoLec.setOnClickListener {
+                val bottomSheet = BottomSheetDownloadBookmark()
+                bottomSheet.show(fragmentActivity.supportFragmentManager, bottomSheet.tag)
+            }
 
             if (topicContent.playIcon != 0) {
                 binding.videoicon.setImageResource(topicContent.playIcon)

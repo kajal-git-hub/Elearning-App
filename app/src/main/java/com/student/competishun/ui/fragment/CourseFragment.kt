@@ -140,7 +140,7 @@ class CourseFragment : Fragment(), StudentCourseItemClickListener {
     }
 
     override fun onCourseItemClicked(course: AllCourseForStudentQuery.Course,bundle: Bundle) {
-        val courseTags = bundle.getStringArrayList("course_tags")
+        val courseTags = bundle.getStringArrayList("course_tags")?: arrayListOf()
 
 
         Log.e(TAG, course.id.toString())

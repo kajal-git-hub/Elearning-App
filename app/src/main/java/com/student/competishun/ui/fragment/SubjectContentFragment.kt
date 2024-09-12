@@ -212,7 +212,8 @@ class SubjectContentFragment : Fragment() {
 
                             binding.rvSubjectContent.adapter = TopicContentAdapter(
                                 subjectContentList,
-                                folderId
+                                folderId,
+                                requireActivity()
                             ) { topicContent, folderContentId ->
                                 when (topicContent.fileType) {
                                     "VIDEO" -> {
