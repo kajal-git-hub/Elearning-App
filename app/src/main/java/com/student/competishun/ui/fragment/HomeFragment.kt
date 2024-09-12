@@ -381,6 +381,7 @@ class HomeFragment : Fragment() {
                             course_primary_teachers = course.course_primary_teachers,
                             course_support_teachers = course.course_support_teachers,
                             course_type = course.course_type,
+                            live_date = course.live_date,
                             entity_type = course.entity_type,
                             exam_type = course.exam_type,
                             planner_description = course.planner_description,

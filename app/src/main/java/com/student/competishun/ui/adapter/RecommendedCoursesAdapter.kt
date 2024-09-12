@@ -76,7 +76,7 @@ class RecommendedCoursesAdapter(
             holder.percentConstraint.visibility = View.GONE
         }
         holder.targetYear.text = "Target ${course.target_year}"
-        holder.startDate.text = "Starts On: "+helperFunctions.formatCourseDate(course.course_start_date.toString())
+        holder.startDate.text = "Starts On: "+helperFunctions.formatCourseDate(course.live_date.toString())
         holder.endDate.text = "Ends On: "+helperFunctions.formatCourseDate(course.course_end_date.toString())
         holder.lectureCount.text = "Lectures: ${lectureCounts[course.id] ?: 0}"
         holder.quizCount.text = "Validity: "+helperFunctions.formatCourseDate(course.course_validity_end_date.toString())

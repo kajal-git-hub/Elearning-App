@@ -170,6 +170,7 @@ class NEETFragment : Fragment(), StudentCourseItemClickListener {
             course_type = this.course_type,
             entity_type = this.entity_type,
             exam_type = this.exam_type,
+            live_date = this.live_date,
             planner_description = this.planner_description,
             with_installment_price = this.with_installment_price,
             course_end_date = this.course_end_date,

@@ -16,17 +16,14 @@ import com.apollographql.apollo3.api.Optional
 import com.student.competishun.R
 import com.student.competishun.databinding.FragmentRecommendViewDetailBinding
 import dagger.hilt.android.AndroidEntryPoint
-
 import androidx.appcompat.widget.SearchView
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import com.student.competishun.curator.AllCourseForStudentQuery
 import com.student.competishun.curator.type.FindAllCourseInputStudent
-import com.student.competishun.data.model.PromoBannerModel
 import com.student.competishun.ui.main.HomeActivity
 import com.student.competishun.ui.viewmodel.StudentCoursesViewModel
 import com.student.competishun.ui.viewmodel.UserViewModel
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -34,11 +31,11 @@ class RecommendViewDetail : Fragment() {
 
     private val userViewModel: UserViewModel by viewModels()
     private val studentCoursesViewModel: StudentCoursesViewModel by viewModels()
-    private var courseType:String = ""
+    private var courseType: String = ""
     private var _binding: FragmentRecommendViewDetailBinding? = null
     private val binding get() = _binding!!
     private lateinit var adapter: RecommendViewAllAdapter
-    val lectureCounts = mutableMapOf<String, Int>()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -50,72 +47,47 @@ class RecommendViewDetail : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-
         (activity as? HomeActivity)?.showBottomNavigationView(false)
         (activity as? HomeActivity)?.showFloatingButton(false)
 
-        adapter = RecommendViewAllAdapter(emptyList()) { selectedCourse ->
+        adapter = RecommendViewAllAdapter(emptyList()) { selectedCourse, recommendCourseTags ->
             val bundle = Bundle().apply {
                 putString("course_id", selectedCourse.id)
+                putStringArrayList("recommendCourseTags", ArrayList(recommendCourseTags))
             }
             findNavController().navigate(R.id.exploreFragment, bundle)
         }
 
+        binding.rvRecommendedCourses.layoutManager = LinearLayoutManager(context)
+        binding.rvRecommendedCourses.adapter = adapter
+
+        setupToolbar()
+
+        getMyDetails()
+        getAllCoursesForStudent(courseType)
+
         binding.appbar.setNavigationOnClickListener {
             findNavController().navigateUp()
         }
-        getMyDetails()
-        setupToolbar()
-        getAllCoursesForStudent(courseType)
-
-
-//
-//        binding.rvRecommendedCourses.adapter = adapter
-//        binding.rvRecommendedCourses.layoutManager =
-//            LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-//
-//        coursesViewModel.courses.observe(viewLifecycleOwner, Observer { courses ->
-//            if (courses != null) {
-//                adapter.updateData(courses)
-//            }
-//        })
-//
-//        val filters = FindAllCourseInput(
-//            exam_type = Optional.Absent,
-//            is_recommended = Optional.present(true),
-//            course_status = Optional.present(listOf(CourseStatus.PUBLISHED)),
-//            limit = Optional.present(20)
-//        )
-//        coursesViewModel.fetchCourses(filters)
     }
 
-    fun getAllCoursesForStudent(courseType: String) {
-        var courseTypes = courseType
-        if (courseType!="IIT-JEE"|| courseType!="NEET" ){
-            courseTypes ="IIT-JEE"
-        }
-        val filters = FindAllCourseInputStudent(Optional.Absent,Optional.Absent, Optional.Absent,Optional.present(true))
+    private fun getAllCoursesForStudent(courseType: String) {
+        val filters = FindAllCourseInputStudent(Optional.Absent, Optional.Absent, Optional.Absent, Optional.present(true))
         studentCoursesViewModel.fetchCourses(filters)
         binding.progressBarRec.visibility = View.VISIBLE
         binding.rvRecommendedCourses.visibility = View.GONE
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+
+        viewLifecycleOwner.lifecycleScope.launch {
             studentCoursesViewModel.courses.collect { result ->
                 result?.onSuccess { data ->
-                    Log.e("gettiStudent",data.toString())
+                    Log.d("Getting Student Courses", data.toString())
                     val courses = data.getAllCourseForStudent.courses.map { course ->
-                        binding.progressBarRec.visibility = View.GONE
-                        binding.rvRecommendedCourses.visibility = View.VISIBLE
-                        getAllLectureCount(course.id) { courseId, lectureCount ->
-                            lectureCounts[courseId] = lectureCount
-                            binding.rvRecommendedCourses.adapter?.notifyDataSetChanged()
-                        }
                         AllCourseForStudentQuery.Course(
                             discount = course.discount,
                             name = course.name,
                             course_start_date = course.course_start_date,
                             course_validity_end_date = course.course_validity_end_date,
-                            price =course.price,
+                            price = course.price,
                             target_year = course.target_year,
                             id = course.id,
                             academic_year = course.academic_year,
@@ -132,45 +104,33 @@ class RecommendViewDetail : Fragment() {
                             course_type = course.course_type,
                             entity_type = course.entity_type,
                             exam_type = course.exam_type,
+                            live_date = course.live_date,
                             planner_description = course.planner_description,
                             with_installment_price = course.with_installment_price,
                             course_end_date = course.course_end_date,
                         )
-                    } ?: emptyList()
-
-
-                    binding.rvRecommendedCourses.adapter = courses?.let { courseList ->
-                        Log.d("recommendedList",courseList.toString())
-                        RecommendedCoursesAdapter(courseList, lectureCounts) { selectedCourse,recommendCourseTags ->
-                            val lectureCount = lectureCounts[selectedCourse.id]?.toString() ?: "0"
-                            val bundle = Bundle().apply {
-                                putString("course_id", selectedCourse.id)
-                                putString("LectureCount", lectureCount)
-                                putStringArrayList("recommendCourseTags", ArrayList(recommendCourseTags)) // Pass the tags
-
-                            }
-                            findNavController().navigate(R.id.exploreFragment, bundle)
-                        }
                     }
-                    binding.rvRecommendedCourses.layoutManager =
-                        LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+
+                    // Update the adapter with the fetched courses
+                    adapter.updateData(courses)
+
+                    // Update visibility
+                    binding.progressBarRec.visibility = View.GONE
+                    binding.rvRecommendedCourses.visibility = View.VISIBLE
 
                 }?.onFailure { exception ->
-                    Log.e("gettiStudentfaik",exception.toString())
+                    Log.e("Student Courses Failed", exception.toString())
+                    Toast.makeText(requireContext(), "Error fetching courses: ${exception.message}", Toast.LENGTH_LONG).show()
                 }
             }
         }
     }
 
-
     private fun setupToolbar() {
         val searchView = binding.appbar.menu.findItem(R.id.action_search)?.actionView as? SearchView
-
         searchView?.queryHint = "Search Courses"
         searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                return false
-            }
+            override fun onQueryTextSubmit(query: String?): Boolean = false
 
             override fun onQueryTextChange(newText: String?): Boolean {
                 adapter.filter.filter(newText)
@@ -178,37 +138,22 @@ class RecommendViewDetail : Fragment() {
             }
         })
     }
-    fun getAllLectureCount(courseId: String, callback: (String, Int) -> Unit){
 
-        studentCoursesViewModel.fetchLectures(courseId)
-        Log.e("getcourseIds",courseId)
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                studentCoursesViewModel.lectures.collect { result ->
-                    result?.onSuccess { lecture ->
-                        val count = lecture.getAllCourseLecturesCount.lecture_count.toInt()
-                        Log.e("lectureCount",count.toString())
-                        callback(courseId, count)
-                    }?.onFailure { exception ->
-                        Log.e("LectureException", exception.toString())
-                    }
-                }
-            }
-        }
-    }
-    fun getMyDetails() {
+    private fun getMyDetails() {
         userViewModel.fetchUserDetails()
         userViewModel.userDetails.observe(viewLifecycleOwner) { result ->
             result.onSuccess { data ->
                 val userDetails = data.getMyDetails
-                courseType = userDetails.userInformation.preparingFor?:""
-
-                Log.e("courseeTypehome",courseType)
-
+                courseType = userDetails.userInformation.preparingFor ?: ""
+                Log.d("CourseType Retrieved", courseType)
             }.onFailure { exception ->
                 Toast.makeText(requireContext(), "Error fetching details: ${exception.message}", Toast.LENGTH_LONG).show()
             }
         }
     }
-}
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null // Prevent memory leaks
+    }
+}

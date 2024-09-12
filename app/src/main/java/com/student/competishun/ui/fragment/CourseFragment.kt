@@ -169,6 +169,7 @@ class CourseFragment : Fragment(), StudentCourseItemClickListener {
             course_class = this.course_class,
             course_tags = this.course_tags,
             banner_image = this.banner_image,
+            live_date = this.live_date,
             status = this.status,
             category_id = this.category_id,
             category_name = this.category_name,

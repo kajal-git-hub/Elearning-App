@@ -538,6 +538,7 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
                                 price = course.price,
                                 target_year = course.target_year,
                                 id = course.id,
+                                live_date = course.live_date,
                                 academic_year = course.academic_year,
                                 complementary_course = course.complementary_course,
                                 course_features = course.course_features,
@@ -555,6 +556,7 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
                                 planner_description = course.planner_description,
                                 with_installment_price = course.with_installment_price,
                                 course_end_date = course.course_end_date
+
                             )
                         } ?: emptyList()
                         binding.rvRelatedCourses.adapter =

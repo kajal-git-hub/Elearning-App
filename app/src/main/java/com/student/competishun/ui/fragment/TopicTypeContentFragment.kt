@@ -92,13 +92,12 @@ class TopicTypeContentFragment : Fragment() {
         } ?: emptyList()
         val adapter = TopicContentAdapter(topicContents, folderId,requireActivity()) { topicContent, folderContentId ->
             when (topicContent.fileType) {
-                "VIDEO" -> videoUrlApi(videourlViewModel, topicContent.id)
-                "PDF" -> {
-                    val intent = Intent(context, PdfViewerActivity::class.java).apply {
-                        putExtra("PDF_URL", topicContent.url)
-                    }
-                    context?.startActivity(intent)
-                }
+                "VIDEO" -> videoUrlApi(videourlViewModel, topicContent.id,topicContent.topicName)
+                "PDF" -> helperFunctions.showDownloadDialog(
+                    requireContext(),
+                    topicContent.url,
+                    topicContent.topicName
+                )
                 "FOLDER" -> "Folders"
                 else -> Log.d("TopicContentAdapter", "File type is not VIDEO: ${topicContent.fileType}")
             }
@@ -142,13 +141,12 @@ class TopicTypeContentFragment : Fragment() {
 
                     val adapter = TopicContentAdapter(topicContents, folderId,requireActivity()) { topicContent, folderContentId ->
                         when (topicContent.fileType) {
-                            "VIDEO" -> videoUrlApi(videourlViewModel, topicContent.id)
-                            "PDF" -> {
-                                val intent = Intent(context, PdfViewerActivity::class.java).apply {
-                                    putExtra("PDF_URL", topicContent.url)
-                                }
-                                context?.startActivity(intent)
-                            }
+                            "VIDEO" -> videoUrlApi(videourlViewModel, topicContent.id,topicContent.topicName)
+                            "PDF" -> helperFunctions.showDownloadDialog(
+                                requireContext(),
+                                topicContent.url,
+                                topicContent.topicName
+                            )
                             else -> Log.d("TopicContentAdapter", "File type is not VIDEO: ${topicContent.fileType}")
                         }
                     }

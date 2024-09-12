@@ -156,6 +156,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="10dp"
+        android:visibility="gone"
         android:drawableStart="@drawable/video_play__1_"
         android:drawablePadding="6dp"
         android:fontFamily="@font/nunito"
