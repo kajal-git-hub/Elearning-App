@@ -77,8 +77,8 @@ class ProfileFragment : Fragment() {
             sharedPreferencesManager.clearRefreshToken()
 
             val intent = Intent(requireContext(), MainActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             intent.putExtra("navigateToLogin", true)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
             requireActivity().finish()
         }
@@ -101,7 +101,7 @@ class ProfileFragment : Fragment() {
                     binding.ProfileUserName.setText(name)
                 }
                 if (target != 0) {
-                        binding.tvYear.setText(" | "+target.toString())
+                    binding.tvYear.setText(" | "+target.toString())
                 }
             }.onFailure { exception ->
                 Toast.makeText(requireContext(), "Error fetching details: ${exception.message}", Toast.LENGTH_LONG).show()

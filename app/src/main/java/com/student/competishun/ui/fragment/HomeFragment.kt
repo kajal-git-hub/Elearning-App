@@ -47,9 +47,11 @@ import com.student.competishun.ui.main.MainActivity
 import com.student.competishun.ui.viewmodel.CoursesCategoryViewModel
 import com.student.competishun.ui.viewmodel.StudentCoursesViewModel
 import com.student.competishun.ui.viewmodel.UserViewModel
+import com.student.competishun.ui.viewmodel.VerifyOtpViewModel
 import com.student.competishun.utils.Constants
 import com.student.competishun.utils.HelperFunctions
 import com.student.competishun.utils.OnCourseItemClickListener
+import com.student.competishun.utils.SharedPreferencesManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -66,6 +68,7 @@ class HomeFragment : Fragment() {
     private lateinit var testimonials: List<Testimonial>
     private lateinit var listWhyCompetishun: List<WhyCompetishun>
     private lateinit var drawerLayout: DrawerLayout
+  private lateinit var sharedPreferencesManager :SharedPreferencesManager
     private lateinit var bottomNav: BottomNavigationView
     private lateinit var toggle: ActionBarDrawerToggle
     private val coursesCategoryViewModel: CoursesCategoryViewModel by viewModels()
@@ -79,7 +82,7 @@ class HomeFragment : Fragment() {
 
     private lateinit var helperFunctions: HelperFunctions
 
-
+    private  val verifyOtpViewModel : VerifyOtpViewModel by viewModels()
     private lateinit var contactImage: ImageView
 
 
@@ -105,6 +108,15 @@ class HomeFragment : Fragment() {
         (activity as? HomeActivity)?.showBottomNavigationView(true)
         (activity as? HomeActivity)?.showFloatingButton(true)
 
+        sharedPreferencesManager = SharedPreferencesManager(requireContext())
+
+
+        verifyOtpViewModel.verifyOtpResult.observe(viewLifecycleOwner) { result ->
+            if (result==null)
+            {
+                findNavController().navigate(R.id.loginFragment)
+            }
+        }
 
         getAllBanners()
 
@@ -412,6 +424,11 @@ class HomeFragment : Fragment() {
             result.onSuccess { data ->
                 val userDetails = data.getMyDetails
                 Log.e("courseeTypehome", userDetails.userInformation.address.toString())
+                sharedPreferencesManager.name=userDetails.fullName
+                sharedPreferencesManager.city=userDetails.userInformation.address?.city
+                sharedPreferencesManager.reference=userDetails.userInformation.reference
+                sharedPreferencesManager.preparingFor=userDetails.userInformation.preparingFor
+                sharedPreferencesManager.targetYear=userDetails.userInformation.targetYear
                 var courseType = userDetails.userInformation.preparingFor ?: ""
                 getAllCoursesForStudent(courseType)
                 Log.e("courseeTypehome", courseType)
