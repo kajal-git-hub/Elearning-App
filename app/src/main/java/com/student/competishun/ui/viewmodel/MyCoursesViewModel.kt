@@ -1,5 +1,6 @@
 package com.student.competishun.ui.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -28,6 +29,7 @@ class MyCoursesViewModel@Inject constructor(private val repository: MyCoursesRep
     }
 
   fun getCourseFolderContent(startDate: String, endDate: String, courseId: String) {
+      Log.e("scheduleapi","$startDate $endDate cous $courseId")
         viewModelScope.launch {
             val result = repository.findAllCourseFolderContentByScheduleTime(startDate, endDate, courseId)
             _courseFolderContent.postValue(result)

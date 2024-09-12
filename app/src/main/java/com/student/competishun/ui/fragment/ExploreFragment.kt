@@ -379,7 +379,7 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
             binding.clInstallmentOptionView.visibility = View.GONE
 
         }else{
-            Log.d("firstInstallment",firstInstallment.toString())
+            Log.d("firstInstallmentt",firstInstallment.toString())
             binding.clInstallmentOptionView.visibility = View.VISIBLE
             binding.clInstallmentOptionView.setOnClickListener {
 

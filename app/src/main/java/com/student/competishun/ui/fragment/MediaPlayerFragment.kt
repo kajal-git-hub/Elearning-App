@@ -95,12 +95,9 @@ class MediaPlayerFragment : Fragment() {
         sharedViewModel = ViewModelProvider(requireActivity()).get(SharedVM::class.java)
 
         // Handle back press
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                player.release() // Release player
-                findNavController().navigateUp()
-            }
-        })
+        binding.backBtn.setOnClickListener {
+            requireActivity().onBackPressedDispatcher.onBackPressed()
+        }
 
         val url = arguments?.getString("url") ?: return
         courseFolderContentId = arguments?.getString("ContentId") ?: return

@@ -30,7 +30,7 @@ import androidx.navigation.fragment.findNavController
 import com.student.competishun.ui.viewmodel.VideourlViewModel
 import com.student.competishun.utils.ToolbarCustomizationListener
 
-class ScheduleAdapter(private val scheduleItems: List<ScheduleData>, private val context: Context) : RecyclerView.Adapter<ScheduleAdapter.ScheduleViewHolder>() {
+class ScheduleAdapter(private val scheduleItems: List<ScheduleData>, private val context: Context,private val toolbarListener: ToolbarCustomizationListener) : RecyclerView.Adapter<ScheduleAdapter.ScheduleViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScheduleViewHolder {
         val binding = ItemCurrentSchedulesBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -53,13 +53,12 @@ class ScheduleAdapter(private val scheduleItems: List<ScheduleData>, private val
             binding.tvDay.text = scheduleItem.day
             binding.tvDate.text = scheduleItem.date
 
-            val innerAdapter = InnerScheduleAdapter(scheduleItem.innerItems)
+            val innerAdapter = InnerScheduleAdapter(scheduleItem.innerItems,toolbarListener)
             binding.rvScheduleInnerItem.adapter = innerAdapter
             binding.rvScheduleInnerItem.layoutManager = LinearLayoutManager(binding.root.context, LinearLayoutManager.VERTICAL, false)
         }
     }
-
-    inner class InnerScheduleAdapter(private val innerItems: List<ScheduleData.InnerScheduleItem>) : RecyclerView.Adapter<InnerScheduleAdapter.InnerViewHolder>() {
+    inner class InnerScheduleAdapter(private val innerItems: List<ScheduleData.InnerScheduleItem>, private val toolbarListener: ToolbarCustomizationListener) : RecyclerView.Adapter<InnerScheduleAdapter.InnerViewHolder>() {
 
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): InnerViewHolder {
@@ -83,12 +82,14 @@ class ScheduleAdapter(private val scheduleItems: List<ScheduleData>, private val
 
                 binding.tvSubjectName.text = innerItem.subject_name
                 binding.tvTopicName.text = innerItem.topic_name
-                 startCountdownTimer(innerItem.scheduleTimer, binding.tvHoursRemaining)
+                startCountdownTimer(innerItem.scheduleTimer,innerItem.file_url , innerItem.fileType,innerItem.contentId)
                 if (innerItem.fileType=="VIDEO") {
+
                     binding.tvClassTimings.text = "${innerItem.lecture_start_time+"-"+innerItem.lecture_end_time}"
                     binding.tvHoursRemaining.text = ""
                   //  binding.videoIV.setImageResource(R.drawable.pdf_bg)
                 }else if (innerItem.fileType=="PDF"){
+                 //   startCountdownTimer(innerItem.scheduleTimer, innerItem.file_url, "PDF",innerItem.contentId)
                     binding.videoIV.setImageResource(R.drawable.pdf_bg)
                     binding.tvClassTimings.text = "${innerItem.lecture_start_time}"
                 }
@@ -217,7 +218,7 @@ class ScheduleAdapter(private val scheduleItems: List<ScheduleData>, private val
                 return String.format("Time Remaining: %02d:%02d:%02d", hours, minutes, seconds)
             }
 
-            private fun startCountdownTimer(targetTimestamp: String, textView: TextView) { // Define UTC and IST zones
+            private fun startCountdownTimer(targetTimestamp: String, fileUrl: String,fileType:String,ContentId:String) { // Define UTC and IST zones
                 val utcZone = ZoneId.of("UTC")
                 val istZone = ZoneId.of("Asia/Kolkata")
 
@@ -239,13 +240,13 @@ class ScheduleAdapter(private val scheduleItems: List<ScheduleData>, private val
                         val hours = (secondsRemaining % 86400) / 3600
                         val minutes = (secondsRemaining % 3600) / 60
                         val seconds = secondsRemaining % 60
+                        binding.clJoinLecture.visibility = View.GONE
+                        binding.clLectureTimer.visibility = View.VISIBLE
                         binding.tvHoursRemaining.text = "$hours"
                         binding.tvMinRemaining.text = "$minutes"
                         binding.tvSecRemaining.text = "$seconds"
                         // Update the TextView on the main thread
-                        textView.post {
-                            textView.text = String.format("Time Remaining: %d days %02d:%02d:%02d", days, hours, minutes, seconds)
-                        }
+
                     }
 
                     override fun onFinish() {
@@ -265,7 +266,8 @@ class ScheduleAdapter(private val scheduleItems: List<ScheduleData>, private val
                         binding.clLectureTimer.visibility = View.GONE
                         binding.clJoinLecture.visibility = View.VISIBLE
                         binding.btnJoinLecture.setOnClickListener {
-                          //  toolbarListener.onCustomizeToolbar("New Title", true)
+                            Log.e("fileypee","$fileUrl ftyp:- $fileType Id $ContentId")
+                            toolbarListener.onCustomizeToolbar(fileUrl, fileType,ContentId)
                         }
                     //    binding.tvClassStartedStatus.text = String.format("Started %d hours and %d minutes ago", hoursPassed, minutesPassed)
 

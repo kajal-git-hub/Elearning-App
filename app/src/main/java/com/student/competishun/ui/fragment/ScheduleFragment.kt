@@ -1,5 +1,6 @@
 package com.student.competishun.ui.fragment
 
+import android.content.Intent
 import com.student.competishun.utils.HorizontalCalendarSetUp
 import android.os.Build
 import android.os.Bundle
@@ -12,9 +13,11 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.student.competishun.R
 import com.student.competishun.curator.FindAllCourseFolderContentByScheduleTimeQuery
 import com.student.competishun.curator.FindCourseFolderProgressQuery
 import com.student.competishun.data.model.CalendarDate
@@ -22,8 +25,11 @@ import com.student.competishun.data.model.ScheduleData
 import com.student.competishun.databinding.FragmentScheduleBinding
 import com.student.competishun.ui.adapter.ScheduleAdapter
 import com.student.competishun.ui.main.HomeActivity
+import com.student.competishun.ui.main.PdfViewerActivity
 import com.student.competishun.ui.viewmodel.MyCoursesViewModel
+import com.student.competishun.ui.viewmodel.VideourlViewModel
 import com.student.competishun.utils.HelperFunctions
+import com.student.competishun.utils.ToolbarCustomizationListener
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.time.LocalTime
@@ -36,12 +42,12 @@ import java.time.format.DateTimeFormatter
 import java.util.Calendar
 
 @AndroidEntryPoint
-class ScheduleFragment : Fragment() {
+class ScheduleFragment : Fragment(), ToolbarCustomizationListener {
 
     private val binding by lazy {
         FragmentScheduleBinding.inflate(layoutInflater)
     }
-
+    private val videourlViewModel: VideourlViewModel by viewModels()
     private lateinit var calendarSetUp: HorizontalCalendarSetUp
     private lateinit var scheduleAdapter: ScheduleAdapter
     private lateinit var helperFunctions: HelperFunctions
@@ -109,7 +115,9 @@ class ScheduleFragment : Fragment() {
                         content.content.file_name,
                         formatTime(convertIST(content.content.scheduled_time.toString())),
                         convertLastDuration(formatTime(convertIST(content.content.scheduled_time.toString())),content.content.video_duration?.toLong()?:0),
+                        content.content.file_url.toString(),
                         content.content.file_type.name,
+                        content.content.id,
                         content.content.scheduled_time.toString()
 
                     )
@@ -118,7 +126,7 @@ class ScheduleFragment : Fragment() {
         }
 
 
-        scheduleAdapter = ScheduleAdapter(scheduleDataList, requireContext())
+        scheduleAdapter = ScheduleAdapter(scheduleDataList, requireContext(),this)
         binding.rvCalenderSchedule.adapter = scheduleAdapter
         binding.rvCalenderSchedule.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         scrollToDate(courseDate)
@@ -282,8 +290,9 @@ class ScheduleFragment : Fragment() {
 
     fun getDateBeforeDays(startDate: String, daysBefore: Int): String {
         Log.e("starteddate",startDate.toString())
-        val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-        val outputFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
+        val inputFormat = SimpleDateFormat("MM-dd-yyyy", Locale.getDefault())
+        val outputFormat = SimpleDateFormat("MM-dd-yyyy", Locale.getDefault())
+
 
         return try {
             val parsedDate = inputFormat.parse(startDate) ?: return "-"
@@ -300,8 +309,9 @@ class ScheduleFragment : Fragment() {
 
     fun getDateAfterDays(endDate: String, daysAfter: Int): String {
         Log.e("startendd",endDate.toString())
-        val inputFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
-        val outputFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
+        val inputFormat = SimpleDateFormat("MM-dd-yyyy", Locale.getDefault())
+        val outputFormat = SimpleDateFormat("MM-dd-yyyy", Locale.getDefault())
+
 
         return try {
             val parsedDate = inputFormat.parse(endDate) ?: return "-"
@@ -314,6 +324,38 @@ class ScheduleFragment : Fragment() {
             e.printStackTrace()
             "-"
         }
+    }
+
+    override fun onCustomizeToolbar(fileurl: String, fileType: String,contentId:String) {
+        Log.e("fileuodld",fileurl.toString() + fileType.toString())
+        if (fileType == "VIDEO"){
+            Log.e("fileuodldd",fileType.toString())
+            videoUrlApi(videourlViewModel,contentId)
+        }else if (fileType == "PDF"){
+            val intent = Intent(context, PdfViewerActivity::class.java).apply {
+                putExtra("PDF_URL", fileurl)
+            }
+            context?.startActivity(intent)
+        }
+
+    }
+    fun videoUrlApi(viewModel: VideourlViewModel, folderContentId: String) {
+
+        viewModel.fetchVideoStreamUrl(folderContentId, "360p")
+         Log.e("foldfdfd",folderContentId)
+        viewModel.videoStreamUrl.observe(viewLifecycleOwner, { signedUrl ->
+            Log.d("Videourl", "Signed URL: $signedUrl")
+            if (signedUrl != null) {
+                val bundle = Bundle().apply {
+                    putString("url", signedUrl)
+                    putString("ContentId", folderContentId)
+                }
+                findNavController().navigate(R.id.mediaFragment, bundle)
+
+            } else {
+                // Handle error or null URL
+            }
+        })
     }
 
 

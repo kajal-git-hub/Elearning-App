@@ -187,6 +187,7 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
                         binding.clSecondbottomInstallement.visibility = View.GONE
                     }
                     1 ->{ paymentType = "partial"
+                        binding.clSecondbottomInstallement.visibility = View.VISIBLE
                         showPartialPayment()
                     }
                 }
@@ -311,8 +312,13 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
 
                 Log.e("CartItems", data.findAllCartItems.toString())
                 var complementryId = ""
-                val cartItems = data.findAllCartItems.map { cartItemData ->
-
+                var cartItems = data.findAllCartItems.map { cartItemData ->
+                    if(cartItemData.course.with_installment_price!=0){
+                        binding.clSecondbottomInstallement.visibility = View.VISIBLE
+                    }else{
+                        binding.clSecondbottomInstallement.visibility = View.GONE
+                        binding.clNotApplicable.visibility = View.GONE
+                    }
 
 //                    binding.clEmptyCart.visibility = View.GONE
                     binding.parentData.visibility = View.VISIBLE
@@ -343,6 +349,8 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
                 binding.tvCartCount.text = "(${cartItems.size})"
                 binding.cartBadge.text = cartItems.size.toString()
                 // Ensure this observer is only added once
+                if (complementryId != null) {
+                getCourseByIDViewModel.fetchCourseById(complementryId)
                 if (getCourseByIDViewModel.courseByID.hasActiveObservers().not()) {
                     getCourseByIDViewModel.courseByID.observe(viewLifecycleOwner, Observer { course ->
                         Log.e("listcourses", course.toString())
@@ -369,34 +377,23 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
                                 Log.e("FLKJ", freeCourseItem.toString())
                                 updatedCartItems.add(freeCourseItem)
                                 cartAdapter.updateCartItems(updatedCartItems)
+                                cartItems = updatedCartItems
                             }
                         }
                             cartAdapter.updateCartItems(cartItems)
                             originalCartItems = cartItems
-
+                          updateCartVisibility(cartItems)
                             Log.e("orfafaf",originalCartItems.toString())
-                            cartAdapter.updateCartItems(originalCartItems)
-                            if (cartItems.isNotEmpty()) {
-                                Log.e("lkkajlfa","dfafa")
-                                originalCartItems = cartItems
-                                cartAdapter.updateCartItems(cartItems)
-                                binding.clrvContainer.visibility = View.VISIBLE
-                                binding.CartTabLayout.visibility = View.VISIBLE
-                                binding.rvAllCart.visibility = View.VISIBLE
-                                binding.btnProceedToPay.visibility = View.VISIBLE
+                        //    cartAdapter.updateCartItems(originalCartItems)
 
-                                showFullPayment()
-                            } else {
-                                Toast.makeText(
-                                    requireContext(),
-                                    "No items available in the cart",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
 
                     })
                 }
-                getCourseByIDViewModel.fetchCourseById(complementryId)
+                }else{
+                    cartAdapter.updateCartItems(cartItems)
+                    originalCartItems = cartItems
+                    updateCartVisibility(cartItems)
+                }
 
             }.onFailure { exception ->
                 Log.e("exception in cart", exception.toString())
@@ -406,6 +403,21 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
         })
     }
 
+    fun updateCartVisibility(cartItems: List<CartItem>) {
+        if (cartItems.isNotEmpty()) {
+            Log.e("lkkajlfa", "Cart has items")
+            binding.clrvContainer.visibility = View.VISIBLE
+            binding.CartTabLayout.visibility = View.VISIBLE
+            binding.rvAllCart.visibility = View.VISIBLE
+            binding.btnProceedToPay.visibility = View.VISIBLE
+
+            // Show payment options if cart has items
+            showFullPayment()
+        } else {
+            // Notify the user that no items are in the cart
+            Toast.makeText(requireContext(), "No items available in the cart", Toast.LENGTH_SHORT).show()
+        }
+    }
 
     override fun onCartItemRemoved() {
         binding.tvCartCount.text = "(0)"
