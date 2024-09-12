@@ -59,6 +59,7 @@ class HelperFunctions {
     }
 
 
+
     fun formatCourseDate(date: String?): String {
         val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault()).apply {
             timeZone = TimeZone.getTimeZone("UTC") // Assuming the input date is in UTC

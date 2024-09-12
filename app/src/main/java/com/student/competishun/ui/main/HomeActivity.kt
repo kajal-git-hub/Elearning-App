@@ -16,6 +16,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.ObservableField
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -52,6 +53,7 @@ import com.student.competishun.ui.fragment.ScheduleFragment
 import com.student.competishun.ui.fragment.SubjectContentFragment
 import com.student.competishun.ui.fragment.TopicTypeContentFragment
 import com.student.competishun.ui.viewmodel.UserViewModel
+import com.student.competishun.ui.viewmodel.VerifyOtpViewModel
 import com.student.competishun.utils.SharedPreferencesManager
 import dagger.hilt.android.AndroidEntryPoint
 

@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -61,6 +62,7 @@ class HomeFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var testimonial_recyclerView: RecyclerView
     private lateinit var rvWhyCompetishun: RecyclerView
+    private val verifyOtpViewModel: VerifyOtpViewModel by viewModels()
     private lateinit var dotsIndicatorTestimonials: LinearLayout
     private lateinit var dotsIndicatorWhyCompetishun: LinearLayout
     private lateinit var adapter: TestimonialsAdapter
@@ -80,6 +82,8 @@ class HomeFragment : Fragment() {
     private val lectureCounts = mutableMapOf<String, Int>()
     private lateinit var recommendedCourseList: List<RecommendedCourseDataModel>
 
+
+    private lateinit var sharedPreferencesManager : SharedPreferencesManager
     private lateinit var helperFunctions: HelperFunctions
 
     private  val verifyOtpViewModel : VerifyOtpViewModel by viewModels()
@@ -118,7 +122,15 @@ class HomeFragment : Fragment() {
             }
         }
 
+        sharedPreferencesManager= SharedPreferencesManager(requireContext())
         getAllBanners()
+
+        verifyOtpViewModel.verifyOtpResult.observe(viewLifecycleOwner) { result ->
+            if (result==null)
+            {
+                findNavController().navigate(R.id.loginFragment)
+            }
+        }
 
         binding.tvRecommendViewAll.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_RecommendDetailFragment)
@@ -430,6 +442,11 @@ class HomeFragment : Fragment() {
                 sharedPreferencesManager.preparingFor=userDetails.userInformation.preparingFor
                 sharedPreferencesManager.targetYear=userDetails.userInformation.targetYear
                 var courseType = userDetails.userInformation.preparingFor ?: ""
+                sharedPreferencesManager.name=userDetails.fullName
+                sharedPreferencesManager.city=userDetails.userInformation.address?.city
+                sharedPreferencesManager.reference=userDetails.userInformation.reference
+                sharedPreferencesManager.preparingFor=userDetails.userInformation.preparingFor
+                sharedPreferencesManager.targetYear=userDetails.userInformation.targetYear
                 getAllCoursesForStudent(courseType)
                 Log.e("courseeTypehome", courseType)
 
