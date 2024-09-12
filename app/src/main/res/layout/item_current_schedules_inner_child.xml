@@ -34,7 +34,7 @@
             android:id="@+id/tv_topic_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Introduction to Thermodynamics"
+            android:text=""
             android:textColor="#2B2829"
             android:fontFamily="@font/nunito"
             android:textStyle="bold"
@@ -43,6 +43,7 @@
             android:ellipsize="end"
             android:layout_marginTop="@dimen/_6dp"
             android:layout_marginStart="@dimen/_16dp"
+            app:layout_constraintEnd_toStartOf="@id/videoIV"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_subject_name"/>
 
@@ -114,7 +115,7 @@
         android:id="@+id/cl_lecture_timer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@id/dotted_line"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
