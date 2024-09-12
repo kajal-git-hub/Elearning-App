@@ -39,8 +39,6 @@ class MainActivity : AppCompatActivity() {
         sharedPreferencesManager = SharedPreferencesManager(this)
         userInput = UpdateUserInput()
 
-        getUserInfo()
-
         val shouldNavigateToLogin = intent.getBooleanExtra("navigateToLogin", false)
         if (shouldNavigateToLogin) {
             navigateToLoginFragment()
@@ -68,7 +66,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun directLoginFlow() {
-        Log.d("insidedirectlogin","true1")
+        Log.d("insidedirectlogin","directlogin")
         val navGraph = navController.navInflater.inflate(R.navigation.nav_graph)
         val startDestination = R.id.loginFragment
 
@@ -79,7 +77,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun onWelcomeFlow() {
-        Log.d("insidedirectlogin","false1")
+        Log.d("insideonwelcome","onwelcome")
         val navGraph = navController.navInflater.inflate(R.navigation.nav_graph)
         val startDestination = R.id.onWelcomeFragment
 
@@ -94,24 +92,6 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         userViewModel.fetchUserDetails()
-    }
-
-    private fun isUserDataComplete(): Boolean {
-        Log.e("mainActivity",sharedPreferencesManager.mobileNo.toString())
-        Log.e("mainActivity",sharedPreferencesManager.name.toString())
-        Log.e("mainActivity",sharedPreferencesManager.userId.toString())
-        Log.e("mainActivity",sharedPreferencesManager.city.toString())
-        Log.e("mainActivity",sharedPreferencesManager.reference.toString())
-        Log.e("mainActivity",sharedPreferencesManager.preparingFor.toString())
-        Log.e("mainActivity",sharedPreferencesManager.targetYear.toString())
-
-        return sharedPreferencesManager.mobileNo?.isNotEmpty() == true &&
-                sharedPreferencesManager.name?.isNotEmpty() == true &&
-                sharedPreferencesManager.userId?.isNotEmpty() == true &&
-                sharedPreferencesManager.city?.isNotBlank() == true &&
-                sharedPreferencesManager.reference?.isNotEmpty() == true &&
-                sharedPreferencesManager.preparingFor?.isNotEmpty() == true &&
-                sharedPreferencesManager.targetYear != 0
     }
 
     private fun navigateToHomeActivity(userId:String) {

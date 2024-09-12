@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -47,9 +48,11 @@ import com.student.competishun.ui.main.MainActivity
 import com.student.competishun.ui.viewmodel.CoursesCategoryViewModel
 import com.student.competishun.ui.viewmodel.StudentCoursesViewModel
 import com.student.competishun.ui.viewmodel.UserViewModel
+import com.student.competishun.ui.viewmodel.VerifyOtpViewModel
 import com.student.competishun.utils.Constants
 import com.student.competishun.utils.HelperFunctions
 import com.student.competishun.utils.OnCourseItemClickListener
+import com.student.competishun.utils.SharedPreferencesManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -59,6 +62,7 @@ class HomeFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var testimonial_recyclerView: RecyclerView
     private lateinit var rvWhyCompetishun: RecyclerView
+    private val verifyOtpViewModel: VerifyOtpViewModel by viewModels()
     private lateinit var dotsIndicatorTestimonials: LinearLayout
     private lateinit var dotsIndicatorWhyCompetishun: LinearLayout
     private lateinit var adapter: TestimonialsAdapter
@@ -77,6 +81,8 @@ class HomeFragment : Fragment() {
     val lectureCounts = mutableMapOf<String, Int>()
     private lateinit var recommendedCourseList: List<RecommendedCourseDataModel>
 
+
+    private lateinit var sharedPreferencesManager : SharedPreferencesManager
     private lateinit var helperFunctions: HelperFunctions
 
 
@@ -106,7 +112,15 @@ class HomeFragment : Fragment() {
         (activity as? HomeActivity)?.showFloatingButton(true)
 
 
+        sharedPreferencesManager= SharedPreferencesManager(requireContext())
         getAllBanners()
+
+        verifyOtpViewModel.verifyOtpResult.observe(viewLifecycleOwner) { result ->
+            if (result==null)
+            {
+                findNavController().navigate(R.id.loginFragment)
+            }
+        }
 
         binding.tvRecommendViewAll.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_RecommendDetailFragment)
@@ -576,6 +590,11 @@ class HomeFragment : Fragment() {
                 val userDetails = data.getMyDetails
                 Log.e("courseeTypehome", userDetails.userInformation.address.toString())
                 var courseType = userDetails.userInformation.preparingFor ?: ""
+                sharedPreferencesManager.name=userDetails.fullName
+                sharedPreferencesManager.city=userDetails.userInformation.address?.city
+                sharedPreferencesManager.reference=userDetails.userInformation.reference
+                sharedPreferencesManager.preparingFor=userDetails.userInformation.preparingFor
+                sharedPreferencesManager.targetYear=userDetails.userInformation.targetYear
                 getAllCoursesForStudent(courseType)
                 Log.e("courseeTypehome", courseType)
 
