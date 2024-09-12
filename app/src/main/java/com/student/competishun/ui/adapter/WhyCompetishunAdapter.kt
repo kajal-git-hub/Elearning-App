@@ -27,16 +27,17 @@ class WhyCompetishunAdapter(private val listWhyCompetishun: List<WhyCompetishun>
         holder.tvtag1.text = itemWhyCompetishun.tag1
         holder.tvtag2.text = itemWhyCompetishun.tag2
         holder.itemplay.setOnClickListener{
-            goToPlayerPage(holder.itemView.findNavController(), itemWhyCompetishun.videourl)
+            goToPlayerPage(holder.itemView.findNavController(), itemWhyCompetishun.videourl,"About this Course")
         }
     }
 
-    private fun goToPlayerPage(navController: NavController, videourl: String) {
+    private fun goToPlayerPage(navController: NavController, videourl: String,name:String) {
         val bundle = Bundle().apply {
             putString("url", videourl)
+            putString("url_name", name)
         }
         Log.d("Navigating to Explore","Navigating")
-        navController.navigate(R.id.action_homeFragment_to_mediaFragment,bundle)
+        navController.navigate(R.id.mediaFragment,bundle)
     }
 
     override fun getItemCount(): Int {

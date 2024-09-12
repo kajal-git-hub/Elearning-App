@@ -91,8 +91,9 @@ class ScheduleFragment : Fragment(), ToolbarCustomizationListener {
         )
         val today = LocalDate.now() // Get current date without time
 
-        calendarSetUp.scrollToSpecificDate(binding.rvCalenderDates, today.atStartOfDay(ZoneId.systemDefault())
-        )
+        calendarSetUp.scrollToSpecificDate(binding.rvCalenderDates, convertIST(scheduleTime))
+
+      //  calendarSetUp.scrollToSpecificDate(binding.rvCalenderDates, convertIST(scheduleTime))
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -158,9 +159,10 @@ class ScheduleFragment : Fragment(), ToolbarCustomizationListener {
                 data.findAllCourseFolderContentByScheduleTime.forEach { schedulecontent->
                 // Log.e("timea",schedulecontent.s.toString())
                  schedulecontent.content.scheduled_time.let {
+
                      val currentDate = ZonedDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
-                       //  setupCalendar(it.toString())
-                     setupCalendar(currentDate)
+                     if (currentDate != it)
+                         setupCalendar(it.toString()) else setupCalendar(currentDate)
 
                  }
                     Log.e("schedule57 $scheduleData", convertIST(scheduleData.toString()).toString())
@@ -180,6 +182,7 @@ class ScheduleFragment : Fragment(), ToolbarCustomizationListener {
         return zonedDateTime.withZoneSameInstant(ZoneId.of("Asia/Kolkata"))
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun convertLastDuration(timeString: String, secondsToAdd: Long): String {
         Log.e("getSWtring",timeString)
 
@@ -330,7 +333,7 @@ class ScheduleFragment : Fragment(), ToolbarCustomizationListener {
         Log.e("fileuodld",fileurl.toString() + fileType.toString())
         if (fileType == "VIDEO"){
             Log.e("fileuodldd",fileType.toString())
-            videoUrlApi(videourlViewModel,contentId)
+            videoUrlApi(videourlViewModel,contentId,"About this Course")
         }else if (fileType == "PDF"){
             val intent = Intent(context, PdfViewerActivity::class.java).apply {
                 putExtra("PDF_URL", fileurl)
@@ -339,7 +342,7 @@ class ScheduleFragment : Fragment(), ToolbarCustomizationListener {
         }
 
     }
-    fun videoUrlApi(viewModel: VideourlViewModel, folderContentId: String) {
+    fun videoUrlApi(viewModel: VideourlViewModel, folderContentId: String,name: String) {
 
         viewModel.fetchVideoStreamUrl(folderContentId, "360p")
          Log.e("foldfdfd",folderContentId)
@@ -348,6 +351,7 @@ class ScheduleFragment : Fragment(), ToolbarCustomizationListener {
             if (signedUrl != null) {
                 val bundle = Bundle().apply {
                     putString("url", signedUrl)
+                    putString("url_name", name)
                     putString("ContentId", folderContentId)
                 }
                 findNavController().navigate(R.id.mediaFragment, bundle)

@@ -169,7 +169,7 @@ class TopicTypeContentFragment : Fragment() {
         }
 
     }
-    fun videoUrlApi(viewModel: VideourlViewModel, folderContentId:String){
+    fun videoUrlApi(viewModel: VideourlViewModel, folderContentId:String,name:String){
 
         viewModel.fetchVideoStreamUrl(folderContentId, "360p")
 
@@ -178,6 +178,7 @@ class TopicTypeContentFragment : Fragment() {
             if (signedUrl != null) {
                 val bundle = Bundle().apply {
                     putString("url", signedUrl)
+                    putString("url_name", name)
                 }
                 findNavController().navigate(R.id.mediaFragment,bundle)
 

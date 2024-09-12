@@ -217,7 +217,7 @@ class SubjectContentFragment : Fragment() {
                             ) { topicContent, folderContentId ->
                                 when (topicContent.fileType) {
                                     "VIDEO" -> {
-                                        videoUrlApi(videourlViewModel, topicContent.id)
+                                        videoUrlApi(videourlViewModel, topicContent.id,topicContent.topicName)
                                     }
                                     "PDF" -> {
                                         val intent = Intent(context, PdfViewerActivity::class.java).apply {
@@ -283,15 +283,16 @@ class SubjectContentFragment : Fragment() {
 
     }
 
-    fun videoUrlApi(viewModel: VideourlViewModel, folderContentId: String) {
+    fun videoUrlApi(viewModel: VideourlViewModel, folderContentId: String,name:String) {
 
-        viewModel.fetchVideoStreamUrl(folderContentId, "360p")
+        viewModel.fetchVideoStreamUrl(folderContentId, "480p")
 
         viewModel.videoStreamUrl.observe(viewLifecycleOwner, { signedUrl ->
             Log.d("Videourl", "Signed URL: $signedUrl")
             if (signedUrl != null) {
                 val bundle = Bundle().apply {
                     putString("url", signedUrl)
+                    putString("url_name", name)
                     putString("ContentId", folderContentId)
                 }
                 findNavController().navigate(R.id.mediaFragment, bundle)

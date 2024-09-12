@@ -18,17 +18,20 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.OptIn
+import androidx.appcompat.app.AlertDialog
 import androidx.core.view.GestureDetectorCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.media3.common.C
+import androidx.media3.common.Format
 import androidx.media3.common.MediaItem
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.exoplayer.trackselection.DefaultTrackSelector
 import androidx.media3.ui.PlayerControlView
 import androidx.navigation.fragment.findNavController
 import com.otaliastudios.zoom.ZoomApi
@@ -99,12 +102,19 @@ class MediaPlayerFragment : Fragment() {
             requireActivity().onBackPressedDispatcher.onBackPressed()
         }
 
+
         val url = arguments?.getString("url") ?: return
+        val tittle = arguments?.getString("url_name") ?: return
+        if (tittle!=null){
+            binding.tittleBtn.visibility = View.VISIBLE
+            binding.tittleBtn.text = tittle
+        }
         courseFolderContentId = arguments?.getString("ContentId") ?: return
         Log.e("VideoUrl", url)
 
         // Initialize ExoPlayer
         player = ExoPlayer.Builder(requireContext()).build()
+
         binding.playerView.player = player
 
         // Setup video progress update task
@@ -133,6 +143,10 @@ class MediaPlayerFragment : Fragment() {
             Log.e("PlayerSetup", "Failed to initialize player", e)
         }
 
+        binding.qualityButton.setOnClickListener {
+            showQualityDialog(player)
+        }
+
         // Set up double-tap gesture for playback control
         gestureDetector = GestureDetector(requireContext(), DoubleTapGestureListener())
         binding.playerView.setOnTouchListener { _, event ->
@@ -145,6 +159,81 @@ class MediaPlayerFragment : Fragment() {
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
+        }
+    }
+
+    @OptIn(UnstableApi::class)
+    private fun showQualityDialog(  player: ExoPlayer) {
+        val qualities = getAvailableQualities(player)
+
+        // If no qualities found, show an error or return
+        if (qualities.isEmpty()) {
+            Toast.makeText(requireContext(), "No video qualities available", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        // Extract quality labels (e.g., 480p, 720p, 1080p)
+        val qualityLabels = qualities.map { it.first }.toTypedArray()
+
+        // Show dialog with quality options
+        AlertDialog.Builder(requireContext())
+            .setTitle("Select Video Quality")
+            .setItems(qualityLabels) { _, which ->
+                val selectedQuality = qualities[which].second
+                switchToQuality(selectedQuality)
+            }
+            .show()
+    }
+
+
+    @OptIn(UnstableApi::class)
+    fun getAvailableQualities(player: ExoPlayer): List<Pair<String, DefaultTrackSelector.SelectionOverride>> {
+        val qualities = mutableListOf<Pair<String, DefaultTrackSelector.SelectionOverride>>()
+
+        val trackSelector = player.trackSelector as DefaultTrackSelector
+        val mappedTrackInfo = trackSelector.currentMappedTrackInfo ?: return qualities
+
+        for (rendererIndex in 0 until mappedTrackInfo.rendererCount) {
+            if (player.getRendererType(rendererIndex) == C.TRACK_TYPE_VIDEO) {
+                val trackGroups = mappedTrackInfo.getTrackGroups(rendererIndex)
+
+                for (groupIndex in 0 until trackGroups.length) {
+                    val trackGroup = trackGroups[groupIndex]
+
+                    for (trackIndex in 0 until trackGroup.length) {
+                        val format = trackGroup.getFormat(trackIndex)
+
+                        // Filter only tracks with a valid height (resolution)
+                        if (format.height != Format.NO_VALUE) {
+                            val resolutionLabel = "${format.height}p"
+                            Log.d("AvailableQualities", "TrackIndex: $trackIndex, Resolution: ${format.height}p, Bitrate: ${format.bitrate}, MimeType: ${format.sampleMimeType}")
+
+                            // Add available quality option
+                            val selectionOverride = DefaultTrackSelector.SelectionOverride(groupIndex, trackIndex)
+                            qualities.add(Pair(resolutionLabel, selectionOverride))
+                        }
+                    }
+                }
+            }
+        }
+        return qualities
+    }
+
+
+
+    @OptIn(UnstableApi::class)
+    private fun switchToQuality(selectionOverride: DefaultTrackSelector.SelectionOverride) {
+        val trackSelector = player.trackSelector as DefaultTrackSelector
+        val mappedTrackInfo = trackSelector.currentMappedTrackInfo ?: return
+
+        // Apply the selected quality override
+        for (i in 0 until mappedTrackInfo.rendererCount) {
+            if (player.getRendererType(i) == C.TRACK_TYPE_VIDEO) {
+                val parametersBuilder = trackSelector.parameters.buildUpon()
+                parametersBuilder.setSelectionOverride(i, mappedTrackInfo.getTrackGroups(i), selectionOverride)
+                trackSelector.setParameters(parametersBuilder)
+                break
+            }
         }
     }
 
