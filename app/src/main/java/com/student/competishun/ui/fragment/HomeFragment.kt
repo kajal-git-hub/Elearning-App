@@ -83,10 +83,8 @@ class HomeFragment : Fragment() {
     private lateinit var recommendedCourseList: List<RecommendedCourseDataModel>
 
 
-    private lateinit var sharedPreferencesManager : SharedPreferencesManager
     private lateinit var helperFunctions: HelperFunctions
 
-    private  val verifyOtpViewModel : VerifyOtpViewModel by viewModels()
     private lateinit var contactImage: ImageView
 
 
