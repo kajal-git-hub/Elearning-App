@@ -90,7 +90,7 @@ class TopicTypeContentFragment : Fragment() {
         } ?: emptyList()
         val adapter = TopicContentAdapter(topicContents, folderId) { topicContent, folderContentId ->
             when (topicContent.fileType) {
-                "VIDEO" -> videoUrlApi(videourlViewModel, topicContent.id)
+                "VIDEO" -> videoUrlApi(videourlViewModel, topicContent.id,topicContent.topicName)
                 "PDF" -> helperFunctions.showDownloadDialog(
                     requireContext(),
                     topicContent.url,
@@ -139,7 +139,7 @@ class TopicTypeContentFragment : Fragment() {
 
                     val adapter = TopicContentAdapter(topicContents, folderId) { topicContent, folderContentId ->
                         when (topicContent.fileType) {
-                            "VIDEO" -> videoUrlApi(videourlViewModel, topicContent.id)
+                            "VIDEO" -> videoUrlApi(videourlViewModel, topicContent.id,topicContent.topicName)
                             "PDF" -> helperFunctions.showDownloadDialog(
                                 requireContext(),
                                 topicContent.url,
@@ -165,7 +165,7 @@ class TopicTypeContentFragment : Fragment() {
         }
 
     }
-    fun videoUrlApi(viewModel: VideourlViewModel, folderContentId:String){
+    fun videoUrlApi(viewModel: VideourlViewModel, folderContentId:String,name:String){
 
         viewModel.fetchVideoStreamUrl(folderContentId, "360p")
 
@@ -174,6 +174,7 @@ class TopicTypeContentFragment : Fragment() {
             if (signedUrl != null) {
                 val bundle = Bundle().apply {
                     putString("url", signedUrl)
+                    putString("url_name", name)
                 }
                 findNavController().navigate(R.id.mediaFragment,bundle)
 

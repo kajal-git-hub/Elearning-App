@@ -333,7 +333,7 @@ class ScheduleFragment : Fragment(), ToolbarCustomizationListener {
         Log.e("fileuodld",fileurl.toString() + fileType.toString())
         if (fileType == "VIDEO"){
             Log.e("fileuodldd",fileType.toString())
-            videoUrlApi(videourlViewModel,contentId,)
+            videoUrlApi(videourlViewModel,contentId,"About this Course")
         }else if (fileType == "PDF"){
             val intent = Intent(context, PdfViewerActivity::class.java).apply {
                 putExtra("PDF_URL", fileurl)
@@ -342,7 +342,7 @@ class ScheduleFragment : Fragment(), ToolbarCustomizationListener {
         }
 
     }
-    fun videoUrlApi(viewModel: VideourlViewModel, folderContentId: String) {
+    fun videoUrlApi(viewModel: VideourlViewModel, folderContentId: String,name: String) {
 
         viewModel.fetchVideoStreamUrl(folderContentId, "360p")
          Log.e("foldfdfd",folderContentId)
@@ -351,6 +351,7 @@ class ScheduleFragment : Fragment(), ToolbarCustomizationListener {
             if (signedUrl != null) {
                 val bundle = Bundle().apply {
                     putString("url", signedUrl)
+                    putString("url_name", name)
                     putString("ContentId", folderContentId)
                 }
                 findNavController().navigate(R.id.mediaFragment, bundle)
