@@ -1,5 +1,6 @@
 package com.student.competishun.ui.viewmodel
 
+import android.graphics.Bitmap
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -22,15 +23,19 @@ class UpdateUserViewModel @Inject constructor(
 
     fun updateUser(
         updateUserInput: UpdateUserInput,
-        documentPhoto: File? = null,
-        passportPhoto: File? = null
+        documentPhoto: String?,
+        passportPhoto: String?
     ) {
         viewModelScope.launch {
-            _updateUserResult.value = updateUserRepository.updateUser(
-                updateUserInput,
-                documentPhoto,
-                passportPhoto
-            )
+            _updateUserResult.value = documentPhoto?.let {
+                passportPhoto?.let { it1 ->
+                    updateUserRepository.updateUser(
+                        updateUserInput,
+                        it,
+                        it1
+                    )
+                }
+            }
         }
     }
 }

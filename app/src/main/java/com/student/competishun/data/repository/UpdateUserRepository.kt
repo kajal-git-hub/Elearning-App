@@ -1,5 +1,6 @@
 package com.student.competishun.data.repository
 
+import android.graphics.Bitmap
 import android.util.Log
 import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.api.Optional
@@ -24,15 +25,13 @@ class UpdateUserRepository @Inject constructor(@Gatekeeper private val apolloCli
 
     suspend fun updateUser(
         updateUserInput: UpdateUserInput,
-        documentPhoto: File?,
-        passportPhoto: File?
+        documentPhoto: String,
+        passportPhoto: String
     ): UpdateUserResponse? {
-        val documentPhotoContentType = "image/jpeg" // Adjust based on the actual content type
-        val passportPhotoContentType = "image/jpeg"
         val mutation = UpdateUserMutation(
             updateUserInput = updateUserInput,
-            documentPhoto = Optional.present(documentPhoto?.toUpload(documentPhotoContentType))?:Optional.absent(),
-            passportPhoto = Optional.present(passportPhoto?.toUpload(passportPhotoContentType))?:Optional.absent()
+            documentPhoto = Optional.present(documentPhoto)?:Optional.absent(),
+            passportPhoto = Optional.present(passportPhoto)?:Optional.absent()
         )
 
         return try {
