@@ -28,10 +28,20 @@ class CreateCartViewModel @Inject constructor(private val cartRepository: Create
     private val _removeCartResult = MutableLiveData<Result<Unit>>()
     val removeCartResult: LiveData<Result<Unit>> = _removeCartResult
 
+    private val _removeCartItemResult = MutableLiveData<Result<Unit>>()
+    val removeCartItemResult: LiveData<Result<Unit>> = _removeCartItemResult
+
     fun removeCart(removeCartId: String) {
         viewModelScope.launch {
             val result = cartRepository.removeCart(removeCartId)
             _removeCartResult.value = result
+        }
+    }
+
+    fun removeCartItem(removeCartItemId: String) {
+        viewModelScope.launch {
+            val result = cartRepository.removeCartItem(removeCartItemId)
+            _removeCartItemResult.value = result
         }
     }
 

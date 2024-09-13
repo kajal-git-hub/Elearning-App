@@ -69,13 +69,13 @@ class MyCartAdapter(
             etCartNameText.text = currentItem.name
             etCartViewDetails.text = currentItem.viewDetails
             igDeleteIcon.setOnClickListener {
-                removeCourse(holder.itemView.context,currentItem.cartId,position)
+                removeCourse(holder.itemView.context,currentItem.cartId,currentItem.cartItemId,position)
             }
 
         }
     }
 
-    private fun removeCourse(context: Context, cartId: String, position: Int){
+    private fun removeCourse(context: Context, cartId: String,cartItemId:String, position: Int){
         cartViewModel.removeCart(cartId)
         cartViewModel.removeCartResult.observe(lifecycleOwner) { result ->
             result.onSuccess {

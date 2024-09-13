@@ -244,7 +244,9 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
     private fun showPartialPayment() {
         binding.tvOneTimePayment.text = "1st Installment"
         binding.clSecondbottomInstallement.visibility = View.VISIBLE
-        binding.etInstallmentbelowDetails.text =  "2nd Installment On: "+secondInstallment()
+        binding.etInstallmentbelowDetails.text =  "2nd Installment On: "
+        binding.secondText.text = secondInstallment()
+
         val partialPaymentItems = originalCartItems.filter { it.withInstallmentPrice > 0 }
         if (partialPaymentItems.isNotEmpty()) {
             cartAdapter.updateCartItems(partialPaymentItems)
@@ -356,6 +358,7 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
                         forwardDetails = R.drawable.cart_arrow_right,
                         discount = course.discount ?: 0,
                         price = course.price ?: 0,
+                        cartItemId = cartItemData.cartItem.id,
                         entityId = cartItemData.cartItem.entity_id,
                         cartId = cartItemData.cartItem.cart_id,
                         courseId = course.id,
@@ -381,6 +384,7 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
                                 forwardDetails = R.drawable.cart_arrow_right,
                                 discount = course.discount ?: 0,
                                 price = course.price ?: 0,
+                                cartItemId = "",
                                 entityId = course.id,
                                 cartId = "", // Assuming this will be a new cart item
                                 courseId = course.id,
@@ -479,6 +483,7 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
                         forwardDetails = R.drawable.cart_arrow_right,
                         discount = course.discount ?: 0,
                         price = course.price ?: 0,
+                        cartItemId = cartItemData.cartItem.id,
                         entityId = cartItemData.cartItem.entity_id,
                         cartId = cartItemData.cartItem.cart_id,
                         courseId = course.id,
