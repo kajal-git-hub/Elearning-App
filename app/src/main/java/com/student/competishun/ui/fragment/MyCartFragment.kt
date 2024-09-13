@@ -33,6 +33,9 @@ import com.student.competishun.utils.SharedPreferencesManager
 import dagger.hilt.android.AndroidEntryPoint
 import org.json.JSONException
 import org.json.JSONObject
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 @AndroidEntryPoint
 class MyCartFragment : Fragment(), OnCartItemRemovedListener {
@@ -208,6 +211,7 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
 
 
     private fun showFullPayment() {
+        binding.clSecondbottomInstallement.visibility = View.GONE
         binding.tvOneTimePayment.text = "One-Time Payment"
         cartAdapter.updateCartItems(originalCartItems)
         Log.e("getpaymentd",originalCartItems.get(0).toString())
@@ -232,10 +236,19 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
 
     }
 
+    fun secondInstallment():String{
+        val calendar = Calendar.getInstance() // Get current date
+        calendar.add(Calendar.DAY_OF_YEAR, 45) // Add 45 days
+
+        val dateFormat = SimpleDateFormat("dd MMM, yyyy", Locale.getDefault())
+        val newDate = dateFormat.format(calendar.time)
+         return newDate
+    }
+
     private fun showPartialPayment() {
         binding.tvOneTimePayment.text = "1st Installment"
-        binding.clSecondbottomInstallement.visibility = View.GONE
-
+        binding.clSecondbottomInstallement.visibility = View.VISIBLE
+        binding.etInstallmentbelowDetails.text =  "2nd Installment On: "+secondInstallment()
         val partialPaymentItems = originalCartItems.filter { it.withInstallmentPrice > 0 }
         if (partialPaymentItems.isNotEmpty()) {
             cartAdapter.updateCartItems(partialPaymentItems)

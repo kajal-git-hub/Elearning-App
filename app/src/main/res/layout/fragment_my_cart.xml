@@ -625,7 +625,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_8dp"
-                android:text="2nd Installment On:"
+                android:text=""
                 android:textColor="@color/_2b2829"
                 android:textSize="12sp"
                 app:layout_constraintBottom_toBottomOf="parent"

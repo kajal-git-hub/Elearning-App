@@ -81,7 +81,7 @@ class AdditionalDetailsFragment : Fragment() {
 
                 val documentPhotoFile: File? = uploadedIdUri?.let { getFileFromUri(requireContext(), it) }
                 val passportPhotoFile: File? = uploadedPhotoUri?.let { getFileFromUri(requireContext(), it) }
-                userUpdate(updateUserInput,null,null)
+                userUpdate(updateUserInput,documentPhotoFile,passportPhotoFile)
             }.onFailure { exception ->
                 Toast.makeText(
                     requireContext(),

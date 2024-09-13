@@ -224,6 +224,9 @@ class SubjectContentFragment : Fragment() {
                                         }
                                         context?.startActivity(intent)
                                     }
+                                    "FOLDER" -> {
+                                        Log.e("typeofget",topicContent.fileType)
+                                    }
                                     else -> {
                                         Log.d(
                                             "TopicContentAdapter",
