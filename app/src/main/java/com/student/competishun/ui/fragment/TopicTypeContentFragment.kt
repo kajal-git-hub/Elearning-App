@@ -126,7 +126,7 @@ class TopicTypeContentFragment : Fragment() {
                         TopicContentModel(
                             subjectIcon = R.drawable.group_1707478994, // Replace with dynamic icon if needed
                             id = content.content?.id.orEmpty(),
-                            playIcon = R.drawable.play_video_icon, // Replace with dynamic icon if needed
+                            playIcon = R.drawable.video_bg, // Replace with dynamic icon if needed
                             lecture = "Lecture", // Replace with dynamic data if available
                             lecturerName = content.content?.file_name.orEmpty(),
                             topicName = content.content?.file_name.orEmpty(),
