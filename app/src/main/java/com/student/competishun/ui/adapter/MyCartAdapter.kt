@@ -72,7 +72,7 @@ class MyCartAdapter(
                 igDeleteIcon.isEnabled = false
 
                 if (position != RecyclerView.NO_POSITION && position < cartItems.size) {
-                    removeCourse(holder.itemView.context, currentItem.cartId, position)
+                    removeCourse(holder.itemView.context, currentItem.cartId, currentItem.cartItemId, position)
                 }
                 igDeleteIcon.postDelayed({ igDeleteIcon.isEnabled = true }, 500)
             }
