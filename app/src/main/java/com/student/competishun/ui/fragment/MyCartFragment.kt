@@ -229,8 +229,9 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
         binding.tvInstDiscountLabel.text = "Discount (${helperFunctions.calculateDiscountPercentage(originalCartItems.get(0).price, originalCartItems.get(0).discount).toInt()}%)"
         binding.tvInstDiscount.text = "-₹${(helperFunctions.calculateDiscountDetails(originalCartItems.get(0).price.toDouble(),originalCartItems.get(0).discount.toDouble()).second)}"
          //   "- ₹${(originalCartItems.get(0).price.toDouble()).minus(originalCartItems.get(0).discount.toDouble())}"
-        fullAmount = (helperFunctions.calculateDiscountDetails(originalCartItems.get(0).price.toDouble(),originalCartItems.get(0).discount.toDouble()).second.toDouble())
+       // fullAmount = (helperFunctions.calculateDiscountDetails(originalCartItems.get(0).price.toDouble(),originalCartItems.get(0).discount.toDouble()).second.toDouble())
         binding.tvPrice.text = "₹${originalCartItems.get(0).discount}"
+        fullAmount = originalCartItems.get(0).discount.toDouble()
         binding.tvInstTotalAmount.text = "₹${originalCartItems.get(0).discount}"
 
 
