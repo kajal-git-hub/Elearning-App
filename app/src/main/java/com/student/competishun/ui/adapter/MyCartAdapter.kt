@@ -69,7 +69,12 @@ class MyCartAdapter(
             etCartNameText.text = currentItem.name
             etCartViewDetails.text = currentItem.viewDetails
             igDeleteIcon.setOnClickListener {
-                removeCourse(holder.itemView.context,currentItem.cartId,position)
+                igDeleteIcon.isEnabled = false
+
+                if (position != RecyclerView.NO_POSITION && position < cartItems.size) {
+                    removeCourse(holder.itemView.context, currentItem.cartId, position)
+                }
+                igDeleteIcon.postDelayed({ igDeleteIcon.isEnabled = true }, 500)
             }
 
         }
