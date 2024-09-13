@@ -37,6 +37,7 @@ class SplashActivity : AppCompatActivity() {
                 Log.d("userdata",checkUserData().toString())
                 if (!token.isNullOrEmpty() && checkUserData()) {
                     startActivity(Intent(this, HomeActivity::class.java))
+                    finish()
                 }
                 else
                 {

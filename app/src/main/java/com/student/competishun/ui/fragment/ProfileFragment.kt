@@ -73,8 +73,9 @@ class ProfileFragment : Fragment() {
         binding.llLogout.setOnClickListener {
             // Clear the user session
 
-            sharedPreferencesManager.clearAccessToken()
-            sharedPreferencesManager.clearRefreshToken()
+//            sharedPreferencesManager.clearAccessToken()
+//            sharedPreferencesManager.clearRefreshToken()
+            sharedPreferencesManager.clearUserData()
 
             val intent = Intent(requireContext(), MainActivity::class.java)
             intent.putExtra("navigateToLogin", true)

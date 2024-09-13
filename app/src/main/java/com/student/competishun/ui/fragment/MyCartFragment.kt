@@ -85,10 +85,8 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
         helperFunctions = HelperFunctions()
         binding.parentData.visibility = View.GONE
 
-        binding.MyCartNavigateToCourses.setOnClickListener {
 
-            findNavController().navigate(R.id.action_mycartFragment_to_homeFragment)
-        }
+
 
       //  binding.clrvContainer.visibility = View.GONE
         sharedPreferencesManager = SharedPreferencesManager(requireContext())
@@ -188,7 +186,7 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
                         binding.clSecondbottomInstallement.visibility = View.GONE
                     }
                     1 ->{ paymentType = "partial"
-                        binding.clSecondbottomInstallement.visibility = View.VISIBLE
+                        binding.clSecondbottomInstallement.visibility = View.GONE
                         showPartialPayment()
                     }
                 }
@@ -305,6 +303,10 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
         binding.clPaymentSummary.visibility = View.GONE
         binding.rvAllCart.visibility = View.GONE
         binding.clEmptyCart.visibility = View.VISIBLE
+        binding.MyCartNavigateToCourses.setOnClickListener {
+
+            findNavController().navigate(R.id.action_mycartFragment_to_homeFragment)
+        }
         cartViewModel.findAllCartItems(userId)
         cartViewModel.findAllCartItemsResult.observe(viewLifecycleOwner, Observer { result ->
 
@@ -315,13 +317,13 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
                 var complementryId = ""
                 var cartItems = data.findAllCartItems.map { cartItemData ->
                     if(cartItemData.course.with_installment_price!=0){
-                        binding.clSecondbottomInstallement.visibility = View.VISIBLE
+                        binding.clSecondbottomInstallement.visibility = View.GONE
                     }else{
                         binding.clSecondbottomInstallement.visibility = View.GONE
                         binding.clNotApplicable.visibility = View.GONE
                     }
 
-//                    binding.clEmptyCart.visibility = View.GONE
+                    binding.clEmptyCart.visibility = View.GONE
                     binding.parentData.visibility = View.VISIBLE
                     binding.clPaymentSummary.visibility = View.VISIBLE
                     binding.rvAllCart.visibility = View.VISIBLE
@@ -426,6 +428,9 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
         binding.clPaymentSummary.visibility = View.GONE
         binding.clProccedToPay.visibility = View.GONE
         binding.clEmptyCart.visibility = View.VISIBLE
+        binding.MyCartNavigateToCourses.setOnClickListener {
+            findNavController().navigate(R.id.action_mycartFragment_to_homeFragment)
+        }
         binding.clrvContainer.visibility = View.GONE
         //   Toast.makeText(requireContext(), "Cart item removed", Toast.LENGTH_SHORT).show()
     }
