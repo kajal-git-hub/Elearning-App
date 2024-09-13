@@ -19,6 +19,7 @@ import com.student.competishun.data.model.TopicContentModel
 import com.student.competishun.databinding.FragmentTopicTypeContentBinding
 import com.student.competishun.ui.adapter.TopicContentAdapter
 import com.student.competishun.ui.main.HomeActivity
+import com.student.competishun.ui.main.PdfViewerActivity
 import com.student.competishun.ui.viewmodel.CoursesViewModel
 import com.student.competishun.ui.viewmodel.VideourlViewModel
 import com.student.competishun.utils.HelperFunctions
@@ -86,14 +87,15 @@ class TopicTypeContentFragment : Fragment() {
                 fileType = content.content?.file_type?.name ?: ""
             )
         } ?: emptyList()
-        val adapter = TopicContentAdapter(topicContents, folderId) { topicContent, folderContentId ->
+        val adapter = TopicContentAdapter(topicContents, folderId,requireActivity()) { topicContent, folderContentId ->
             when (topicContent.fileType) {
                 "VIDEO" -> videoUrlApi(videourlViewModel, topicContent.id,topicContent.topicName)
-                "PDF" -> helperFunctions.showDownloadDialog(
-                    requireContext(),
-                    topicContent.url,
-                    topicContent.topicName
-                )
+                "PDF" -> {
+                    val intent = Intent(context, PdfViewerActivity::class.java).apply {
+                        putExtra("PDF_URL", topicContent.url)
+                    }
+                    context?.startActivity(intent)
+                }
                 "FOLDER" -> "Folders"
                 else -> Log.d("TopicContentAdapter", "File type is not VIDEO: ${topicContent.fileType}")
             }
@@ -135,14 +137,15 @@ class TopicTypeContentFragment : Fragment() {
                         )
                     } ?: emptyList()
 
-                    val adapter = TopicContentAdapter(topicContents, folderId) { topicContent, folderContentId ->
+                    val adapter = TopicContentAdapter(topicContents, folderId,requireActivity()) { topicContent, folderContentId ->
                         when (topicContent.fileType) {
                             "VIDEO" -> videoUrlApi(videourlViewModel, topicContent.id,topicContent.topicName)
-                            "PDF" -> helperFunctions.showDownloadDialog(
-                                requireContext(),
-                                topicContent.url,
-                                topicContent.topicName
-                            )
+                            "PDF" -> {
+                                val intent = Intent(context, PdfViewerActivity::class.java).apply {
+                                    putExtra("PDF_URL", topicContent.url)
+                                }
+                                context?.startActivity(intent)
+                            }
                             else -> Log.d("TopicContentAdapter", "File type is not VIDEO: ${topicContent.fileType}")
                         }
                     }

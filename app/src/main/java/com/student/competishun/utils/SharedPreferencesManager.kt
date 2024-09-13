@@ -30,6 +30,8 @@ class SharedPreferencesManager(context: Context) {
         private const val KEY_FATHER_NAME = "father_name"
         private const val KEY_USER_MOBILE_NO = "user_mob_no"
         private const val KEY_Tshirt = "t_shirt_size"
+        private const val IS_FIRST_INSTALL = "is_first_install"
+
 
     }
 
@@ -150,6 +152,9 @@ class SharedPreferencesManager(context: Context) {
         get() = sharedPreferences.getBoolean("isReferenceSelectionInProgress", false)
         set(value) = sharedPreferences.edit().putBoolean("isReferenceSelectionInProgress", value).apply()
 
+    var isFirstInstall: Boolean
+        get() = sharedPreferences.getBoolean(IS_FIRST_INSTALL, true)
+        set(value) = sharedPreferences.edit().putBoolean(IS_FIRST_INSTALL, value).apply()
 
     fun putBoolean(key: String, value: Boolean) {
         sharedPreferences.edit().putBoolean(key, value).apply()
@@ -164,5 +169,9 @@ class SharedPreferencesManager(context: Context) {
     }
     fun clearRefreshToken() {
         sharedPreferences.edit().remove(KEY_REFRESH_TOKEN).apply()
+    }
+
+    fun clearUserData() {
+        sharedPreferences.edit().clear().apply()
     }
 }

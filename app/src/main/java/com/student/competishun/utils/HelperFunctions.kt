@@ -58,6 +58,26 @@ class HelperFunctions {
         }
     }
 
+    //    fun getAllLectureCount(courseId: String, callback: (String, Int) -> Unit){
+//
+//        studentCoursesViewModel.fetchLectures(courseId)
+//        Log.e("getcourseIds",courseId)
+//        viewLifecycleOwner.lifecycleScope.launch {
+//            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+//                studentCoursesViewModel.lectures.collect { result ->
+//                    result?.onSuccess { lecture ->
+//                        val count = lecture.getAllCourseLecturesCount.lecture_count.toInt()
+//                        Log.e("lectureCount",count.toString())
+//                        callback(courseId, count)
+//                    }?.onFailure { exception ->
+//                        Log.e("LectureException", exception.toString())
+//                    }
+//                }
+//            }
+//        }
+//    }
+
+
 
     fun formatCourseDate(date: String?): String {
         val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault()).apply {

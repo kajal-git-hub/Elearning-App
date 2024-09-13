@@ -1,290 +1,275 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/item_course"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="15dp">
+    android:layout_marginTop="15dp"
+    android:background="@drawable/card_bg"
+    android:paddingBottom="@dimen/_10dp"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent">
 
-
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/first"
-        android:layout_width="0dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_percentOffInner"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/card_bg"
-        android:backgroundTint="@null"
-        android:paddingBottom="@dimen/_10dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/frame_370005011__1_"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/item_course"
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/disc_Per"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
+            android:layout_height="match_parent"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="3dp"
+            android:layout_marginBottom="12dp"
+            android:hint="11% OFF"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:fontFamily="@font/nunito"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/cl_percentOffInner"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:background="@drawable/frame_370005011__1_"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/disc_Per"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginEnd="3dp"
-                    android:layout_marginBottom="12dp"
-                    android:hint="11% OFF"
-                    android:textColor="@color/white"
-                    android:textSize="12sp"
-                    android:textStyle="bold"
-                    app:fontFamily="@font/nunito"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tvRecommendedCourseName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:hint="Prakhar Integrated (Fast \nLane-2) 2024-25"
+        android:maxLines="2"
+        android:fontFamily="@font/nunito"
+        android:textColor="#2B2829"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/cl_percentOffInner"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tvTag1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/card_bg"
+        android:gravity="center"
+        android:hint="12th Class"
+        android:padding="6dp"
+        android:textColor="#5A5555"
+        android:textSize="12sp"
+        app:fontFamily="@font/nunito"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvRecommendedCourseName" />
 
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/tvRecommendedCourseName"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:hint="Prakhar Integrated (Fast \nLane-2) 2024-25"
-                android:textColor="#2B2829"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="@+id/tvTag3"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tvTag2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="6dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/card_bg"
+        android:gravity="center"
+        android:hint="Full-Year"
+        android:padding="6dp"
+        android:textColor="#5A5555"
+        android:textSize="12sp"
+        app:fontFamily="@font/nunito"
+        app:layout_constraintStart_toEndOf="@id/tvTag1"
+        app:layout_constraintTop_toBottomOf="@id/tvRecommendedCourseName" />
 
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/tvTag1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="12dp"
-                android:background="@drawable/card_bg"
-                android:gravity="center"
-                android:hint="12th Class"
-                android:padding="6dp"
-                android:textColor="#5A5555"
-                android:textSize="12sp"
-                app:fontFamily="@font/nunito"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tvRecommendedCourseName" />
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tvTag3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="6dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/card_bg"
+        android:hint="Target 2025"
+        android:padding="6dp"
+        android:textColor="#5A5555"
+        android:textSize="12sp"
+        app:fontFamily="@font/nunito"
+        app:layout_constraintStart_toEndOf="@id/tvTag2"
+        app:layout_constraintTop_toBottomOf="@id/tvRecommendedCourseName" />
 
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/tvTag2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="6dp"
-                android:layout_marginTop="12dp"
-                android:background="@drawable/card_bg"
-                android:gravity="center"
-                android:hint="Full-Year"
-                android:padding="6dp"
-                android:textColor="#5A5555"
-                android:textSize="12sp"
-                app:fontFamily="@font/nunito"
-                app:layout_constraintStart_toEndOf="@id/tvTag1"
-                app:layout_constraintTop_toBottomOf="@id/tvRecommendedCourseName" />
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tvTag4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="6dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/card_bg"
+        android:gravity="center"
+        android:padding="6dp"
+        android:textColor="#5A5555"
+        android:textSize="12sp"
+        app:fontFamily="@font/nunito"
+        app:layout_constraintStart_toEndOf="@id/tvTag3"
+        app:layout_constraintTop_toBottomOf="@id/tvRecommendedCourseName" />
 
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/tvTag3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="6dp"
-                android:layout_marginTop="12dp"
-                android:background="@drawable/card_bg"
-                android:hint="Target 2025"
-                android:padding="6dp"
-                android:textColor="#5A5555"
-                android:textSize="12sp"
-                app:fontFamily="@font/nunito"
-                app:layout_constraintStart_toEndOf="@id/tvTag2"
-                app:layout_constraintTop_toBottomOf="@id/tvRecommendedCourseName" />
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tvStartDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="17dp"
+        android:drawableStart="@drawable/clock"
+        android:drawablePadding="6dp"
+        android:fontFamily="@font/nunito"
+        android:hint="Starts On: "
+        android:textColor="#726C6C"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvTag1" />
 
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/tvTag4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="6dp"
-                android:layout_marginTop="12dp"
-                android:background="@drawable/card_bg"
-                android:gravity="center"
-                android:padding="6dp"
-                android:textColor="#5A5555"
-                android:textSize="12sp"
-                app:fontFamily="@font/nunito"
-                app:layout_constraintStart_toEndOf="@id/tvTag3"
-                app:layout_constraintTop_toBottomOf="@id/tvRecommendedCourseName" />
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tvEndDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="10dp"
+        android:drawableStart="@drawable/clock"
+        android:drawablePadding="6dp"
+        android:fontFamily="@font/nunito"
+        android:hint="Expiry Date: 31 Jul, 24"
+        android:textColor="#726C6C"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvStartDate" />
 
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/tvStartDate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="17dp"
-                android:drawableStart="@drawable/clock"
-                android:drawablePadding="6dp"
-                android:fontFamily="@font/nunito"
-                android:hint="Starts On: "
-                android:textColor="#726C6C"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tvTag1" />
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tvLectureNo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="10dp"
+        android:drawableStart="@drawable/video_play__1_"
+        android:drawablePadding="6dp"
+        android:fontFamily="@font/nunito"
+        android:hint="Lectures: 0"
+        android:visibility="gone"
+        android:textColor="#726C6C"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvEndDate" />
 
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/tvEndDate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="10dp"
-                android:drawableStart="@drawable/clock"
-                android:drawablePadding="6dp"
-                android:fontFamily="@font/nunito"
-                android:hint="Expiry Date: 31 Jul, 24"
-                android:textColor="#726C6C"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tvStartDate" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/tvLectureNo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="10dp"
-                android:drawableStart="@drawable/video_play__1_"
-                android:drawablePadding="6dp"
-                android:fontFamily="@font/nunito"
-                android:hint="Lectures: 0"
-                android:textColor="#726C6C"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tvEndDate" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/tvQuizTests"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="10dp"
-                android:drawableStart="@drawable/document_normal"
-                android:drawablePadding="6dp"
-                android:fontFamily="@font/nunito"
-                android:hint=""
-                android:textColor="#726C6C"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tvLectureNo" />
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tvQuizTests"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="10dp"
+        android:drawableStart="@drawable/document_normal"
+        android:drawablePadding="6dp"
+        android:fontFamily="@font/nunito"
+        android:hint=""
+        android:textColor="#726C6C"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvLectureNo" />
 
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/clPriceDetails"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginVertical="12dp"
-                android:background="@drawable/frame_1353"
-                android:paddingHorizontal="18sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tvQuizTests">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/clPriceDetails"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="12dp"
+        android:background="@drawable/frame_1353"
+        android:paddingHorizontal="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvQuizTests">
 
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/dicountPrice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginVertical="6sp"
-                    android:text="35000"
-                    android:textColor="#FF7A28"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    app:fontFamily="@font/nunito"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/dicountPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="6sp"
+            android:text="35000"
+            android:textColor="#FF7A28"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:fontFamily="@font/nunito"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/orgPrice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/_5dp"
-                    android:text="15000"
-                    android:textColor="#726C6C"
-                    android:textSize="12sp"
-                    app:fontFamily="@font/nunito"
-                    app:layout_constraintBottom_toBottomOf="@+id/dicountPrice"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/dicountPrice"
-                    app:layout_constraintTop_toTopOf="@+id/dicountPrice" />
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/orgPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_5dp"
+            android:text="15000"
+            android:textColor="#726C6C"
+            android:textSize="12sp"
+            app:fontFamily="@font/nunito"
+            app:layout_constraintBottom_toBottomOf="@+id/dicountPrice"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/dicountPrice"
+            app:layout_constraintTop_toTopOf="@+id/dicountPrice" />
 
-                <View
-                    android:id="@+id/view"
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_marginVertical="12dp"
-                    android:background="#726C6C"
-                    app:layout_constraintBottom_toBottomOf="@+id/orgPrice"
-                    app:layout_constraintEnd_toEndOf="@id/orgPrice"
-                    app:layout_constraintStart_toStartOf="@id/orgPrice"
-                    app:layout_constraintTop_toTopOf="@+id/orgPrice" />
+        <View
+            android:id="@+id/view"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginVertical="12dp"
+            android:background="#726C6C"
+            app:layout_constraintBottom_toBottomOf="@+id/orgPrice"
+            app:layout_constraintEnd_toEndOf="@id/orgPrice"
+            app:layout_constraintStart_toStartOf="@id/orgPrice"
+            app:layout_constraintTop_toTopOf="@+id/orgPrice" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
-                android:layout_marginBottom="1dp"
-                android:background="@drawable/rectangle_1072"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent">
-
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:id="@+id/iv_image"
-                    android:layout_width="@dimen/_108dp"
-                    android:layout_height="158dp"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/rectangle_1072"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:shapeAppearanceOverlay="@style/CustomImageShape" />
-
-                <!--                <com.google.android.material.imageview.ShapeableImageView-->
-                <!--                    android:id="@+id/recommendbanner"-->
-                <!--                    android:layout_width="@dimen/_108dp"-->
-                <!--                    android:layout_height="158dp"-->
-                <!--                    android:layout_marginEnd="10dp"-->
-                <!--                    android:scaleType="fitXY"-->
-                <!--                    android:src="@drawable/rectangle_1072"-->
-                <!--                    app:layout_constraintEnd_toEndOf="parent"-->
-                <!--                    app:layout_constraintBottom_toBottomOf="parent"-->
-                <!--                    app:shapeAppearanceOverlay="@style/CustomImageShape" -->
-                <!--                    />-->
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </com.google.android.material.card.MaterialCardView>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="1dp"
+        android:background="@drawable/rectangle_1072"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/iv_image"
+            android:layout_width="@dimen/_108dp"
+            android:layout_height="158dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/rectangle_1072"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:shapeAppearanceOverlay="@style/CustomImageShape" />
+
+        <!--                <com.google.android.material.imageview.ShapeableImageView-->
+        <!--                    android:id="@+id/recommendbanner"-->
+        <!--                    android:layout_width="@dimen/_108dp"-->
+        <!--                    android:layout_height="158dp"-->
+        <!--                    android:layout_marginEnd="10dp"-->
+        <!--                    android:scaleType="fitXY"-->
+        <!--                    android:src="@drawable/rectangle_1072"-->
+        <!--                    app:layout_constraintEnd_toEndOf="parent"-->
+        <!--                    app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--                    app:shapeAppearanceOverlay="@style/CustomImageShape" -->
+        <!--                    />-->
 
 
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

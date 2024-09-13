@@ -165,6 +165,7 @@ class VerifyOTPFragment : Fragment() {
             putExtra("userId", userId)
         }
         startActivity(intent)
+        requireActivity().finish()
     }
 
     private fun navigateToHome() {

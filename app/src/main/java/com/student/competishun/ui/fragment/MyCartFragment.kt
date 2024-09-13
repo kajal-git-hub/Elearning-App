@@ -39,11 +39,10 @@ import java.util.Locale
 
 @AndroidEntryPoint
 class MyCartFragment : Fragment(), OnCartItemRemovedListener {
-    private var _binding: FragmentMyCartBinding? = null
+    private lateinit var binding :  FragmentMyCartBinding
     private val orderViewModel: OrderViewModel by viewModels()
     private val userViewModel: UserViewModel by viewModels()
     private val getCourseByIDViewModel: GetCourseByIDViewModel by viewModels()
-    private val binding get() = _binding!!
     private lateinit var sharedPreferencesManager: SharedPreferencesManager
     private val cartViewModel: CreateCartViewModel by viewModels()
     private lateinit var paymentsClient: PaymentsClient
@@ -72,7 +71,7 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentMyCartBinding.inflate(inflater, container, false)
+        binding = FragmentMyCartBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -89,9 +88,8 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
         helperFunctions = HelperFunctions()
         binding.parentData.visibility = View.GONE
 
-        binding.clEmptyCart.setOnClickListener {
-            findNavController().navigate(R.id.homeFragment)
-        }
+
+
 
       //  binding.clrvContainer.visibility = View.GONE
         sharedPreferencesManager = SharedPreferencesManager(requireContext())
@@ -191,7 +189,7 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
                         binding.clSecondbottomInstallement.visibility = View.GONE
                     }
                     1 ->{ paymentType = "partial"
-                        binding.clSecondbottomInstallement.visibility = View.VISIBLE
+                        binding.clSecondbottomInstallement.visibility = View.GONE
                         showPartialPayment()
                     }
                 }
@@ -206,9 +204,6 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
         Log.e("cartitemss",cartItem.price.toString())
 
     }
-
-
-
 
     private fun showFullPayment() {
         binding.clSecondbottomInstallement.visibility = View.GONE
@@ -322,6 +317,10 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
         binding.clPaymentSummary.visibility = View.GONE
         binding.rvAllCart.visibility = View.GONE
         binding.clEmptyCart.visibility = View.VISIBLE
+        binding.MyCartNavigateToCourses.setOnClickListener {
+
+            findNavController().navigate(R.id.action_mycartFragment_to_homeFragment)
+        }
         cartViewModel.findAllCartItems(userId)
         cartViewModel.findAllCartItemsResult.observe(viewLifecycleOwner, Observer { result ->
 
@@ -332,7 +331,7 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
                 var complementryId = ""
                 var cartItems = data.findAllCartItems.map { cartItemData ->
                     if(cartItemData.course.with_installment_price!=0){
-                        binding.clSecondbottomInstallement.visibility = View.VISIBLE
+                        binding.clSecondbottomInstallement.visibility = View.GONE
                     }else{
                         binding.clSecondbottomInstallement.visibility = View.GONE
                         binding.clNotApplicable.visibility = View.GONE
@@ -437,6 +436,21 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
         }
     }
 
+    override fun onCartItemRemoved() {
+        binding.tvCartCount.text = "(0)"
+        binding.cartBadge.text = "0"
+        binding.clPaymentSummary.visibility = View.GONE
+        binding.clProccedToPay.visibility = View.GONE
+        binding.clEmptyCart.visibility = View.VISIBLE
+        binding.MyCartNavigateToCourses.setOnClickListener {
+            findNavController().navigate(R.id.action_mycartFragment_to_homeFragment)
+        }
+        binding.clrvContainer.visibility = View.GONE
+        //   Toast.makeText(requireContext(), "Cart item removed", Toast.LENGTH_SHORT).show()
+    }
+
+
+
     fun calculateDiscountedPrice(price: Double, withInstallmentPrice: Double, discountPrice: Double): Double {
         val totalPrice = price + withInstallmentPrice
 
@@ -501,19 +515,9 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
     }
 
 
-    override fun onCartItemRemoved() {
-        binding.tvCartCount.text = "(0)"
-        binding.cartBadge.text = "0"
-        binding.clPaymentSummary.visibility = View.GONE
-        binding.clProccedToPay.visibility = View.GONE
-        binding.clEmptyCart.visibility = View.VISIBLE
-        binding.clrvContainer.visibility = View.GONE
-     //   Toast.makeText(requireContext(), "Cart item removed", Toast.LENGTH_SHORT).show()
-    }
 
 }
 

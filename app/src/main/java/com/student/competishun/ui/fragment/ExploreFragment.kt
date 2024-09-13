@@ -17,6 +17,7 @@ import android.widget.MediaController
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.addCallback
+import androidx.activity.enableEdgeToEdge
 import androidx.fragment.app.Fragment
 import androidx.core.widget.NestedScrollView
 import androidx.databinding.ObservableField
@@ -96,7 +97,8 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
     var isVideoPlaying = false
 
 
-        override fun onCreateView(
+
+    override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         binding = FragmentExploreBinding.inflate(inflater, container, false).apply {
@@ -293,11 +295,6 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
                         Log.d("CourseVideoError", "Video URL is empty")
                     }
                 }
-
-
-
-
-
 
                 Log.e("listcourses", courses.toString())
                 binding.progressBar.visibility = View.GONE
@@ -541,6 +538,7 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
                                 price = course.price,
                                 target_year = course.target_year,
                                 id = course.id,
+                                live_date = course.live_date,
                                 academic_year = course.academic_year,
                                 complementary_course = course.complementary_course,
                                 course_features = course.course_features,
@@ -558,6 +556,7 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
                                 planner_description = course.planner_description,
                                 with_installment_price = course.with_installment_price,
                                 course_end_date = course.course_end_date
+
                             )
                         } ?: emptyList()
                         binding.rvRelatedCourses.adapter =
