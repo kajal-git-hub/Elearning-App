@@ -12,6 +12,8 @@ query MyDetails {
             address {
                 city
             }
+            passportPhoto
+            documentPhoto
         }
         countryCode
     }

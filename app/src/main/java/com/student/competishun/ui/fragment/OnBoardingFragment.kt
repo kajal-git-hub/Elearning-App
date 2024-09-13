@@ -86,7 +86,7 @@ class OnBoardingFragment : Fragment() {
                     city = Optional.Present(sharedPreferencesManager.city),
                     fullName = Optional.Present(sharedPreferencesManager.name),
                     )
-                updateUserViewModel.updateUser(updateUserInput)
+                updateUserViewModel.updateUser(updateUserInput,null,null)
 
                 findNavController().navigate(R.id.action_OnBoardingFragment_to_prepForFragment)
             } else {

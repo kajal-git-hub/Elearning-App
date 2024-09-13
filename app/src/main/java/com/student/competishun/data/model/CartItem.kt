@@ -7,6 +7,7 @@ data class CartItem(
     val forwardDetails: Int, // Assuming a drawable resource ID for the arrow icon
     val discount: Int,
     val price: Int,
+    val cartItemId:String,
     val entityId: String,
     val cartId: String,
     val courseId: String,

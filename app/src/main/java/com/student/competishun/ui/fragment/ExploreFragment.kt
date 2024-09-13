@@ -787,7 +787,7 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
         createCartViewModel.cartItemsResult.observe(viewLifecycleOwner, Observer { result ->
             result.onSuccess {
 
-                findNavController().navigate(R.id.action_exploreFragment_to_myCartFragment)
+                findNavController().navigate(R.id.myCartFragment)
             }.onFailure { exception ->
                 Log.e("createCart",exception.message.toString())
                 // Handle error, e.g., show a toast or dialog

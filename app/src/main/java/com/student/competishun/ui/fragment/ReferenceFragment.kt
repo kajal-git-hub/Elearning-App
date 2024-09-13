@@ -96,7 +96,7 @@ class ReferenceFragment : Fragment() {
                     targetYear = Optional.Present(sharedPreferencesManager.targetYear)
                 )
 
-                updateUserViewModel.updateUser(updateUserInput)
+                updateUserViewModel.updateUser(updateUserInput,null,null)
             } else {
                 Toast.makeText(context, "Please select an option", Toast.LENGTH_SHORT).show()
             }

@@ -1,7 +1,10 @@
 package com.student.competishun.ui.fragment
 
 
+import android.graphics.Bitmap
+import android.os.Build
 import android.os.Bundle
+import java.util.Base64
 import android.text.Editable
 import android.text.InputFilter
 import android.text.TextWatcher
@@ -10,6 +13,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -28,6 +32,7 @@ import com.student.competishun.ui.viewmodel.UpdateUserViewModel
 import com.student.competishun.ui.viewmodel.UserViewModel
 import com.student.competishun.utils.SharedPreferencesManager
 import dagger.hilt.android.AndroidEntryPoint
+import java.io.ByteArrayOutputStream
 import java.io.File
 
 @AndroidEntryPoint
@@ -152,7 +157,7 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
         }
     }
 
-    fun userUpdate(updateUserInput: UpdateUserInput?, documentPhotoFile: File?, passportPhotoFile: File?) {
+    fun userUpdate(updateUserInput: UpdateUserInput?, documentPhotoFile:String?, passportPhotoFile: String?) {
         if (updateUserInput != null) {
             updateUserViewModel.updateUser(updateUserInput, documentPhotoFile, passportPhotoFile)
         }
@@ -269,6 +274,8 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
 
         updateButtonState()
     }
+
+
 
     override fun onDestroyView() {
         super.onDestroyView()

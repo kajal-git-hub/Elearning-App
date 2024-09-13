@@ -4,6 +4,7 @@ import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.exception.ApolloException
 import com.student.competishun.curator.CreateCartItemsMutation
 import com.student.competishun.curator.FindAllCartItemsQuery
+import com.student.competishun.curator.RemoveCartItemMutation
 import com.student.competishun.curator.RemoveCartMutation
 import com.student.competishun.curator.type.CreateCartItemDto
 import com.student.competishun.curator.type.CreateCartItemsDto
@@ -29,6 +30,20 @@ class CreateCartRepository@Inject constructor(@Curator private val apolloClient:
     suspend fun removeCart(removeCartId: String): Result<Unit> {
         return try {
             val response = apolloClient.mutation(RemoveCartMutation(removeCartId)).execute()
+
+            if (response.hasErrors()) {
+                Result.failure(Exception(response.errors?.firstOrNull()?.message))
+            } else {
+                Result.success(Unit) // Return success without any data
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun removeCartItem(removeCartItemId: String): Result<Unit> {
+        return try {
+            val response = apolloClient.mutation(RemoveCartItemMutation(removeCartItemId)).execute()
 
             if (response.hasErrors()) {
                 Result.failure(Exception(response.errors?.firstOrNull()?.message))

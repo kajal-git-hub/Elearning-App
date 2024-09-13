@@ -35,6 +35,7 @@ query FindCourseFolderProgress($findCourseFolderProgressId: String!) {
                 folder_count
                 video_count
                 pdf_count
+                description
                 scheduled_time
             }
             folderCount

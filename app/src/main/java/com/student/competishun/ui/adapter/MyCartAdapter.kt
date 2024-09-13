@@ -80,7 +80,7 @@ class MyCartAdapter(
         }
     }
 
-    private fun removeCourse(context: Context, cartId: String, position: Int){
+    private fun removeCourse(context: Context, cartId: String,cartItemId:String, position: Int){
         cartViewModel.removeCart(cartId)
         cartViewModel.removeCartResult.observe(lifecycleOwner) { result ->
             result.onSuccess {

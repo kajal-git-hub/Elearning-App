@@ -4,7 +4,12 @@ import android.content.Context
 import android.content.Intent
 import android.database.Cursor
 import android.net.Uri
+import android.content.ContentResolver
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.os.Build
 import android.os.Bundle
+import java.io.ByteArrayOutputStream
 import android.provider.OpenableColumns
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -12,12 +17,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.apollographql.apollo3.api.Optional
+import com.apollographql.apollo3.api.Upload
 import com.google.android.gms.common.util.IOUtils.copyStream
 import com.google.android.material.snackbar.Snackbar
 import com.student.competishun.R
@@ -27,10 +34,13 @@ import com.student.competishun.ui.main.HomeActivity
 import com.student.competishun.ui.viewmodel.UpdateUserViewModel
 import com.student.competishun.ui.viewmodel.UserViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import java.io.ByteArrayInputStream
 import java.io.File
 import java.io.FileOutputStream
+import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
+import java.util.Base64
 
 @AndroidEntryPoint
 class AdditionalDetailsFragment : Fragment() {
@@ -47,7 +57,8 @@ class AdditionalDetailsFragment : Fragment() {
         private const val MAX_FILE_SIZE_MB = 5
         private var currentFileType: String = ""
     }
-
+    private  var  byteArrayAdhar: ByteArray? = null
+    private  var  byteArrayPassPort: ByteArray? = null
     private var uploadedIdUri: Uri? = null
     private var uploadedPhotoUri: Uri? = null
 
@@ -59,6 +70,7 @@ class AdditionalDetailsFragment : Fragment() {
         return binding.root
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -66,30 +78,7 @@ class AdditionalDetailsFragment : Fragment() {
         (activity as? HomeActivity)?.showBottomNavigationView(false)
         (activity as? HomeActivity)?.showFloatingButton(false)
 
-        userViewModel.userDetails.observe(viewLifecycleOwner) { result ->
-            result.onSuccess { data ->
-                val userDetails = data.getMyDetails
-                Log.e("userDetails",userDetails.toString())
-                val updateUserInput = UpdateUserInput(
-                    city = Optional.Present(userDetails.userInformation.city),
-                    fullName = Optional.Present(userDetails.fullName),
-                    preparingFor = Optional.Present(userDetails.userInformation.preparingFor),
-                    reference = Optional.Present(userDetails.userInformation.reference),
-                    targetYear = Optional.Present(userDetails.userInformation.targetYear),
-                    waCountryCode = Optional.Present("+91"),
-                )
 
-                val documentPhotoFile: File? = uploadedIdUri?.let { getFileFromUri(requireContext(), it) }
-                val passportPhotoFile: File? = uploadedPhotoUri?.let { getFileFromUri(requireContext(), it) }
-                userUpdate(updateUserInput,null,null)
-            }.onFailure { exception ->
-                Toast.makeText(
-                    requireContext(),
-                    "Error fetching details: ${exception.message}",
-                    Toast.LENGTH_LONG
-                ).show()
-            }
-        }
         binding.etBTHomeAddress.setOnClickListener {
             findNavController().navigate(R.id.PersonalDetailsFragment)
         }
@@ -106,7 +95,41 @@ class AdditionalDetailsFragment : Fragment() {
 
 
         binding.btnAddaddressDetails.setOnClickListener {
-            findNavController().navigate(R.id.action_AdditionalDetail_to_AddressDetail)
+            userViewModel.fetchUserDetails()
+            userViewModel.userDetails.observe(viewLifecycleOwner) { result ->
+                result.onSuccess { data ->
+                    val userDetails = data.getMyDetails
+                    Log.e("userDeta",data.toString())
+                    Log.e("userDetails",userDetails.toString())
+                    val updateUserInput = UpdateUserInput(
+                        city = Optional.Present(userDetails.userInformation.city),
+                        fullName = Optional.Present(userDetails.fullName),
+                        preparingFor = Optional.Present(userDetails.userInformation.preparingFor),
+                        reference = Optional.Present(userDetails.userInformation.reference),
+                        targetYear = Optional.Present(userDetails.userInformation.targetYear),
+                        waCountryCode = Optional.Present("+91"),
+                    )
+                    userUpdate(updateUserInput, null, null)
+                    val bitmapdocumentPhotoFile = byteArrayAdhar?.let { byteArrayToBitmap(it) }
+                    val passportPhotoFile = byteArrayPassPort?.let { byteArrayToBitmap(it) }
+                    Log.e("printvalue $passportPhotoFile",
+                        bitmapdocumentPhotoFile?.let { it1 -> encodeBitmapToBase64(it1) }.toString()
+                    )
+                    bitmapdocumentPhotoFile?.let { it1 -> encodeBitmapToBase64(it1) }?.let { it2 ->
+                        passportPhotoFile?.let { it1 -> encodeBitmapToBase64(it1) }?.let { it3 ->
+                          //  userUpdate(updateUserInput, it2, it3)
+                        }
+                    }
+                    findNavController().navigate(R.id.action_AdditionalDetail_to_AddressDetail)
+                }.onFailure { exception ->
+                    Toast.makeText(
+                        requireContext(),
+                        "Error fetching details: ${exception.message}",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+
         }
 
         binding.closeButton.setOnClickListener {
@@ -196,7 +219,9 @@ class AdditionalDetailsFragment : Fragment() {
                     ).show()
                 } else {
                     val fileSizeFormatted = getFileSizeFormatted(uri)
+                    Log.e("fileupdadlo", uri.toString())
                     displaySelectedFile(uri, fileSizeFormatted)
+
                 }
             }
         }
@@ -211,12 +236,14 @@ class AdditionalDetailsFragment : Fragment() {
             binding.fileName.text = fileName
             binding.fileSize.text = fileSize
             uploadedIdUri = uri
+             byteArrayAdhar = getByteArrayFromUri(requireContext(), uploadedIdUri!!)
         } else if (currentFileType == "PHOTO") {
             binding.clUploadPhoto.visibility = View.GONE
             binding.clUploadedPassport.visibility = View.VISIBLE
             binding.fileNamePass.text = fileName
             binding.fileSizePass.text = fileSize
             uploadedPhotoUri = uri
+             byteArrayPassPort = getByteArrayFromUri(requireContext(), uploadedPhotoUri!!)
         }
         updateButtonState()
     }
@@ -229,6 +256,7 @@ class AdditionalDetailsFragment : Fragment() {
                     R.color.blue_3E3EF7
                 )
             )
+
             binding.btnAddaddressDetails.isEnabled = true
         } else {
             binding.btnAddaddressDetails.setBackgroundColor(
@@ -306,9 +334,11 @@ class AdditionalDetailsFragment : Fragment() {
     }
 
 
-    fun userUpdate(updateUserInput: UpdateUserInput, documentPhotoFile: File?, passportPhotoFile: File?){
+    fun userUpdate(updateUserInput: UpdateUserInput, documentPhotoFile: String?, passportPhotoFile: String?){
+        Log.e("gettingUserge $passportPhotoFile", documentPhotoFile.toString())
         updateUserViewModel.updateUser(updateUserInput,documentPhotoFile,passportPhotoFile)
         updateUserViewModel.updateUserResult.observe(viewLifecycleOwner, Observer { result ->
+            Log.e("gettingUserget", result.toString())
             if (result?.user != null) {
                 Log.e("gettingUserUpdateTarget", result.user.userInformation.targetYear.toString())
                 Log.e("gettingUserUpdaterefer", result.user.userInformation.reference.toString())
@@ -320,5 +350,29 @@ class AdditionalDetailsFragment : Fragment() {
                 Toast.makeText(context, "Update failed", Toast.LENGTH_SHORT).show()
             }
         })
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun encodeBitmapToBase64(bitmap: Bitmap): String {
+        val outputStream = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
+        val byteArray = outputStream.toByteArray()
+        return Base64.getEncoder().encodeToString(byteArray)
+    }
+
+    fun getByteArrayFromUri(context: Context, uri: Uri): ByteArray? {
+        return try {
+
+            context.contentResolver.openInputStream(uri)?.use { inputStream ->
+                inputStream.readBytes()
+            }
+        } catch (e: IOException) {
+            e.printStackTrace()
+            null
+        }
+    }
+
+    fun byteArrayToBitmap(byteArray: ByteArray): Bitmap? {
+        return BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
     }
 }
