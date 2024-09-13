@@ -55,6 +55,7 @@ class SubjectContentFragment : Fragment() {
         return binding.root
     }
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.backIconSubjectContent.setOnClickListener {
@@ -74,12 +75,6 @@ class SubjectContentFragment : Fragment() {
             gson.fromJson(subFolders, subFolderList)
         Log.e("subdaaf", subFoldersList.toString())
 
-        if (subFoldersList[0].folder?.id != null && isFirstTimeLoading) {
-            var id = subFoldersList[0].folder?.id ?: ""
-            binding.tvTopicType.text = subFoldersList[0].folder?.name
-            folderProgress(id)
-            isFirstTimeLoading = false
-        }
 
         sharedViewModel = ViewModelProvider(requireActivity()).get(SharedVM::class.java)
         sharedViewModel.watchedDuration.observe(viewLifecycleOwner, Observer { duration ->
@@ -91,6 +86,13 @@ class SubjectContentFragment : Fragment() {
         Log.e("folderNames", subFolders.toString())
         binding.rvSubjectContent.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+
+        if (subFoldersList[0].folder?.id != null) {
+            var id = subFoldersList[0].folder?.id ?: ""
+            binding.tvTopicType.text = subFoldersList[0].folder?.name
+            folderProgress(id)
+            // isFirstTimeLoading = false
+        }
         binding.clTopicType.setOnClickListener {
             val bundle = Bundle().apply {
                 putString("subFolders", subFolders)
@@ -98,9 +100,13 @@ class SubjectContentFragment : Fragment() {
                 putString("folder_Count", folder_Count)
             }
             Log.e("clickevent", subFolders.toString())
+
+
+
             val bottomSheet = BottomsheetCourseTopicTypeFragment().apply {
                 arguments = bundle
             }
+
             bottomSheet.setOnTopicTypeSelectedListener(object : OnTopicTypeSelectedListener {
                 override fun onTopicTypeSelected(selectedTopic: TopicTypeModel) {
                     selectedTopic
@@ -155,27 +161,29 @@ class SubjectContentFragment : Fragment() {
                         !subfolderDurationFolders.isNullOrEmpty() -> {
                             Log.e("subfolderDurationszs", subfolderDurationFolders.toString())
                             val folderIds = subfolderDurationFolders.mapNotNull { it.folder?.id }
-                            val folderNames =
-                                subfolderDurationFolders.mapNotNull { it.folder?.name }
+                            val folders =
+                                subfolderDurationFolders.mapNotNull { it.folder }
+
                             val folderCounts =
                                 subfolderDurationFolders.mapNotNull { it.folder?.folder_count ?: 0 }
                             val scheduledTimes = subfolderDurationFolders?.mapNotNull {
-                                it.folder?.scheduled_time ?: 0
+                               it.completionPercentage
                             }
 
                             binding.tvContentCount.text = "(${folderCounts.joinToString()})"
 
-                            val subjectContentList = folderNames.mapIndexed { index, name ->
-                                Log.e("folderContentLog", name)
-                                val id = folderIds[index]
-                                val date = scheduledTimes?.get(index).toString()
+                            val subjectContentList = folders.mapIndexed { index, folders ->
+                                Log.e("folderContentLog", folders.id)
+                                val id = folders.id
+                                val date = folders.scheduled_time.toString()
                                 val time = helperFunctions.formatCourseDate(date)
                                 SubjectContentItem(
                                     id = id,
                                     chapterNumber = index + 1,
-                                    topicName = name,
-                                    topicDescription = "Description for $name",
-                                    locktime = time
+                                    topicName = folders.name,
+                                    topicDescription = folders.folder_count?:"0",
+                                    locktime = time,
+                                    progressPer = subfolderDurationFolders[index].completionPercentage.toInt()
                                 )
                             }
 
@@ -185,6 +193,9 @@ class SubjectContentFragment : Fragment() {
                                         selectedItem.id,
                                         currentDuration = VwatchedDuration
                                     )
+                                     FileProgress(selectedItem.id,selectedItem.topicName,"")
+
+
                                 }
 
                         }
@@ -304,6 +315,75 @@ class SubjectContentFragment : Fragment() {
             }
         })
     }
+
+    private fun FileProgress(folderId: String, folderNames: String,folderCount: String){
+
+        Log.e("foldessss $folderNames",folderId)
+        val free = arguments?.getBoolean("free")
+        if (folderId != null) {
+            // Trigger the API call
+            coursesViewModel.findCourseFolderProgress(folderId)
+        }
+        coursesViewModel.courseFolderProgress.observe(viewLifecycleOwner) { result ->
+            when (result) {
+                is com.student.competishun.di.Result.Success -> {
+                    val data = result.data
+                    Log.e("GetFolderdata", data.toString())
+                    Log.e("GetFolders", data.findCourseFolderProgress.folder.toString())
+
+                    val folderProgressFolder = data.findCourseFolderProgress.folder
+                    val folderProgressContent = data.findCourseFolderProgress.folderContents
+                    val subfolderDurationFolders = data.findCourseFolderProgress.subfolderDurations
+                    Log.e("subFolderdata", subfolderDurationFolders.toString())
+                    val name = folderNames // Ensure folderNames is correctly assigned before using
+
+                    if (folderProgressFolder != null) {
+                        if (!subfolderDurationFolders.isNullOrEmpty()) {
+                            // Process subfolder durations
+                            Log.e("subfolderDurationszs", subfolderDurationFolders.toString())
+
+                            val gson = Gson()
+                            val subFoldersJson = gson.toJson(subfolderDurationFolders)
+                            Log.e("folderNamesss $name", subFoldersJson)
+
+                            val bundle = Bundle().apply {
+                                putString("subFolders", subFoldersJson)
+                                putString("folder_Name", name)
+                            }
+                            findNavController().navigate(R.id.SubjectContentFragment, bundle)
+                        } else if (!folderProgressContent.isNullOrEmpty()) {
+                            // Process folder contents
+                            Log.e("folderContentsss", folderProgressContent.toString())
+
+                            val gson = Gson()
+                            val folderContentsJson = gson.toJson(folderProgressContent)
+
+                            val bundle = Bundle().apply {
+
+                                putString("folderContents", folderContentsJson)
+                                putString("folder_Id", folderId)
+                                putString("folderName", folderNames)
+
+                            }
+                            findNavController().navigate(R.id.TopicTYPEContentFragment, bundle)
+                        }
+                    }
+                }
+                is com.student.competishun.di.Result.Failure -> {
+                    // Handle errors
+                    Log.e("AllDemoResourcesFree", result.exception.message.toString())
+                }
+                is com.student.competishun.di.Result.Loading -> {
+                    // Optionally handle loading state
+                    Log.e("LoadingState", "Data is loading...")
+                }
+            }
+        }
+
+
+    }
+
+
 
 
 }

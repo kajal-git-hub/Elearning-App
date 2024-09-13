@@ -1,5 +1,6 @@
 package com.student.competishun.ui.fragment
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -39,9 +40,13 @@ class TopicTypeContentFragment : Fragment() {
         return binding.root
     }
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.backIcon.setOnClickListener {
 
+                requireActivity().onBackPressedDispatcher.onBackPressed()
+        }
         val gson = Gson()
         (activity as? HomeActivity)?.showBottomNavigationView(false)
         (activity as? HomeActivity)?.showFloatingButton(false)
@@ -56,18 +61,11 @@ class TopicTypeContentFragment : Fragment() {
             newContent(subContentsList,folderId)
           //  folderProgress(subContentsList.forEach { it.content })
         }
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                // Perform any action before going back, if necessary
-                requireActivity().supportFragmentManager.popBackStack() // or any custom back handling logic
-            }
-        })
+
 
         helperFunctions = HelperFunctions()
         binding.tvTopicTypeName.text = folder_Name?:""
-        binding.backIcon.setOnClickListener {
-            requireActivity().onBackPressedDispatcher.onBackPressed()
-        }
+
         binding.tvTopicContentCount.text = "0${subContentsList.size}"
 
     }

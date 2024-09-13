@@ -121,7 +121,7 @@
             android:layout_marginVertical="@dimen/_12sp"
             android:fontFamily="@font/nunito"
             android:textColor="#2B2829"
-            android:text="Live Sessions"
+            android:text=""
             android:textSize="@dimen/_14sp"
             android:textStyle="bold"
             android:visibility="visible"
