@@ -17,11 +17,6 @@
             type="com.student.competishun.ui.viewmodel.CoursesCategoryViewModel" />
     </data>
 
-    <androidx.drawerlayout.widget.DrawerLayout
-
-        android:id="@+id/drwaer_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
 
@@ -720,29 +715,7 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <com.google.android.material.navigation.NavigationView
-            android:id="@+id/nv_navigationView"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="start"
-            android:backgroundTint="@color/white"
-            android:visibility="visible"
-            app:headerLayout="@layout/navgation_header"
-            app:itemIconPadding="30dp"
-            app:itemTextAppearance="@style/NavDrawerTextAppearance"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:menu="@menu/navigation_drawer">
 
-            <include
-                android:id="@+id/navigation_footer"
-                layout="@layout/navigation_footer"
-                android:layout_gravity="bottom" />
-
-        </com.google.android.material.navigation.NavigationView>
-
-
-    </androidx.drawerlayout.widget.DrawerLayout>
 </layout>
 
 

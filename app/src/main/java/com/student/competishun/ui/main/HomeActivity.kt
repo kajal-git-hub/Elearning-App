@@ -10,16 +10,19 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.ObservableField
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.navigation.NavigationView
 import com.razorpay.PaymentResultListener
 import com.student.competishun.R
 import com.student.competishun.databinding.ActivityHomeBinding
@@ -65,6 +68,9 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
     private lateinit var bottomNavigationView: BottomNavigationView
     private lateinit var callIcon: ImageView
     private var isCallingSupportVisible = ObservableField(true)
+    private lateinit var drawerLayout: DrawerLayout
+    private lateinit var navigationView: NavigationView
+    private lateinit var toggle: ActionBarDrawerToggle
     lateinit var sharedPreferencesManager: SharedPreferencesManager
     var courseType:String = ""
      var userId:String = ""
@@ -74,6 +80,9 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        drawerLayout = findViewById(R.id.drwaer_layout)
+        navigationView = findViewById(R.id.nv_navigationView)
 
         sharedPreferencesManager = SharedPreferencesManager(this)
 

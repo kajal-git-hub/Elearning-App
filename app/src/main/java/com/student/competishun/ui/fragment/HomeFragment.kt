@@ -147,7 +147,7 @@ class HomeFragment : Fragment() {
 
         helperFunctions = HelperFunctions()
 
-        drawerLayout = view.findViewById(R.id.drwaer_layout)
+        drawerLayout = (activity as HomeActivity).findViewById(R.id.drwaer_layout)
         bottomNav = requireActivity().findViewById(R.id.bottomNav)
         val toolbar: MaterialToolbar = view.findViewById(R.id.topAppBar)
         contactImage = requireActivity().findViewById(R.id.ig_ContactImage)
@@ -267,7 +267,7 @@ class HomeFragment : Fragment() {
         })
 
 
-        val navigationView: NavigationView = view.findViewById(R.id.nv_navigationView)
+        val navigationView: NavigationView = (activity as HomeActivity).findViewById(R.id.nv_navigationView)
         val headerView = navigationView.getHeaderView(0)
         val igClose: ImageView = headerView.findViewById(R.id.ig_close)
 

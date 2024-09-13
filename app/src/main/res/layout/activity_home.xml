@@ -8,6 +8,19 @@
     android:background="#F6F6FF"
     tools:context=".ui.main.HomeActivity">
 
+
+    <androidx.drawerlayout.widget.DrawerLayout
+
+        android:id="@+id/drwaer_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#DFF2FB">
+
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragmentNavigation"
         android:name="androidx.navigation.fragment.NavHostFragment"
@@ -133,5 +146,36 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/bottom_nav" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+        <com.google.android.material.navigation.NavigationView
+            android:id="@+id/nv_navigationView"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:backgroundTint="@color/white"
+            android:visibility="visible"
+            app:headerLayout="@layout/navgation_header"
+            app:itemIconPadding="30dp"
+            app:itemTextAppearance="@style/NavDrawerTextAppearance"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:menu="@menu/navigation_drawer">
+
+            <include
+                android:id="@+id/navigation_footer"
+                layout="@layout/navigation_footer"
+                android:layout_gravity="bottom" />
+
+        </com.google.android.material.navigation.NavigationView>
+
+
+
+    </androidx.drawerlayout.widget.DrawerLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
