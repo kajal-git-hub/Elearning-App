@@ -13,6 +13,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import com.google.gson.Gson
 import com.student.competishun.R
@@ -83,7 +84,12 @@ class CourseEmptyFragment : Fragment() {
         }
 
 
+//        binding.btnExploreCoursesEmpty.setOnClickListener {
+//            findNavController().navigate(R.id.homeFragment)
+//        }
+
         binding.btnExploreCoursesEmpty.setOnClickListener {
+            (activity as? HomeActivity)?.findViewById<BottomNavigationView>(R.id.bottomNav)?.selectedItemId = R.id.home
             findNavController().navigate(R.id.homeFragment)
         }
 

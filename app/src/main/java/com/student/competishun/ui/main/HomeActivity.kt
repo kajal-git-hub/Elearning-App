@@ -217,29 +217,4 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
             }
         }, 2000)
     }
-
-
-    override fun onStart() {
-        super.onStart()
-//        val currentFragment = supportFragmentManager.findFragmentById(R.id.fragmentNavigation)
-//        if (currentFragment != null) {
-//            updateUiVisibility(currentFragment)
-//        }
-    }
-
-    fun navigateToBookmarkFragment() {
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.fragmentNavigation, BookMarkFragment())
-            .addToBackStack(null)
-            .commit()
-    }
-
-    fun navigateToDownloadFragment() {
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.fragmentNavigation, DownloadFragment())
-            .addToBackStack(null)
-            .commit()
-    }
-
-
 }

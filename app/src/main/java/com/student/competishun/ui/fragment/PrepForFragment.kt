@@ -57,12 +57,16 @@ class PrepForFragment : Fragment() {
 
         restoreSelectedItem()
 
+        binding.etContent.setText(sharedPreferencesManager.descriptionText)
+
+
         binding.PrepBack.setOnClickListener {
             findNavController().navigate(R.id.onboardingFragment)
         }
 
         binding.PrepNext.setOnClickListener {
             if (isItemSelected) {
+                sharedPreferencesManager.descriptionText = binding.etContent.text.toString()
                 findNavController().navigate(R.id.action_PrepForFragment_to_TargetFragment)
             } else {
                 Toast.makeText(context, "Please select an option", Toast.LENGTH_SHORT).show()
@@ -123,6 +127,8 @@ class PrepForFragment : Fragment() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val charCount = s?.length ?: 0
                 binding.tvCharCounter.text = "$charCount/100"
+
+                sharedPreferencesManager.descriptionText = s.toString()
 
                 if (charCount > 100) {
                     Toast.makeText(requireContext(), "Character limit exceeded. Maximum 100 characters allowed.", Toast.LENGTH_SHORT).show()

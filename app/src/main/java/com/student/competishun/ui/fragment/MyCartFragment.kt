@@ -57,6 +57,7 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
     var userId: String = ""
     var userName:String = ""
     var courseName:String = ""
+   private lateinit var tabLayout : TabLayout
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         paymentsClient = Wallet.getPaymentsClient(
@@ -81,6 +82,10 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
 
         (activity as? HomeActivity)?.showBottomNavigationView(false)
         (activity as? HomeActivity)?.showFloatingButton(false)
+
+
+        tabLayout = view.findViewById(R.id.CartTabLayout)
+
 
 
 
@@ -332,8 +337,9 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
                 Log.e("CartItems", data.findAllCartItems.toString())
                 var complementryId = ""
                 var cartItems = data.findAllCartItems.map { cartItemData ->
-                    if(cartItemData.course.with_installment_price!=0){
+                    if(cartItemData.course.with_installment_price==null){
                         binding.clSecondbottomInstallement.visibility = View.GONE
+                        tabLayout.removeTabAt(1)
                     }else{
                         binding.clSecondbottomInstallement.visibility = View.GONE
                         binding.clNotApplicable.visibility = View.GONE
@@ -446,6 +452,7 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
         binding.clPaymentSummary.visibility = View.GONE
         binding.clProccedToPay.visibility = View.GONE
         binding.clEmptyCart.visibility = View.VISIBLE
+        binding.clSecondbottomInstallement.visibility = View.GONE
         binding.MyCartNavigateToCourses.setOnClickListener {
             findNavController().navigate(R.id.action_mycartFragment_to_homeFragment)
         }

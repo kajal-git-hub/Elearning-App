@@ -66,6 +66,10 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
         binding.spinnerTshirtSize.text = size
         tShirtSize = size
         isTshirtSizeSelected = true
+
+        sharedPreferencesManager.shirtSize = tShirtSize
+
+
         updateButtonState()
     }
 
@@ -183,7 +187,7 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
         sharedPreferencesManager.whatsUpNo = whatsappNumber
         tShirtSize = binding.spinnerTshirtSize.text.toString().trim()
 
-        sharedPreferencesManager.shirtSize = tShirtSize
+//        sharedPreferencesManager.shirtSize = tShirtSize
         binding.etWhatsappNumber.filters = arrayOf<InputFilter>(InputFilter.LengthFilter(10))
 
         // Only check fields that are visible

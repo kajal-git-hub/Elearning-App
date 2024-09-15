@@ -240,6 +240,8 @@
                             app:layout_constraintTop_toTopOf="parent"
                             app:tabBackground="@drawable/carttab_background_selector"
                             app:tabIndicatorHeight="0dp"
+                            app:tabMode="fixed"
+                            app:tabGravity="fill"
                             app:tabSelectedTextColor="#E67F00"
                             app:tabTextColor="#5A5555">
 

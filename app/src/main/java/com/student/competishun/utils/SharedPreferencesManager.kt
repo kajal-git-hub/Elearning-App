@@ -24,6 +24,7 @@ class SharedPreferencesManager(context: Context) {
         private const val KEY_CITY = "city"
         private const val KEY_USER_ID = "userId"
         private const val KEY_PREPARATION_FOR = "preparingFor"
+        private const val KEY_OTHER_PREP_FOR = "OtherFor"
         private const val KEY_TARGET_YEAR = "targetYear"
         private const val KEY_REFERENCE = "reference"
         private const val KEY_FULL_NAME = "full_name"
@@ -112,6 +113,12 @@ class SharedPreferencesManager(context: Context) {
         set(value){
             sharedPreferences.edit().putString(KEY_PREPARATION_FOR, value).apply()
             Log.e("sharedPrefpreparing sa", preparingFor.toString() )
+        }
+    var descriptionText:String?
+        get() = sharedPreferences.getString(KEY_OTHER_PREP_FOR, null)
+        set(value){
+            sharedPreferences.edit().putString(KEY_OTHER_PREP_FOR, value).apply()
+            Log.e("sharedPrefpreparing sa", descriptionText.toString() )
         }
     var targetYear: Int?
         get() = sharedPreferences.getInt(KEY_TARGET_YEAR, 0)
