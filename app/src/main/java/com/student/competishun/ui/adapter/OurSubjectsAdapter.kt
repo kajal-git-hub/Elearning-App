@@ -1,5 +1,6 @@
 package com.student.competishun.ui.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,9 +10,10 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.textview.MaterialTextView
 import com.student.competishun.R
+import com.student.competishun.curator.FindCourseParentFolderProgressQuery
 import com.student.competishun.curator.MyCoursesQuery
 
-class OurSubjectsAdapter(private val listOurSubjectItem:List<MyCoursesQuery.Folder1> ,private val progress: List<MyCoursesQuery.SubfolderDuration> , private val onItemClicked: (String,String,String ) -> Unit
+class OurSubjectsAdapter(private val listOurSubjectItem:List<FindCourseParentFolderProgressQuery. Folder?>, private val progress: List<Double>, private val onItemClicked: (String, String, String ) -> Unit
 ): RecyclerView.Adapter<OurSubjectsAdapter.OurSubjectViewHolder>() {
     private val images = listOf(
         R.drawable.layer_1__1_,
@@ -29,15 +31,15 @@ class OurSubjectsAdapter(private val listOurSubjectItem:List<MyCoursesQuery.Fold
     override fun onBindViewHolder(holder: OurSubjectViewHolder, position: Int) {
         val itemOurSubject = listOurSubjectItem[position]
         val duration = progress[position] as Double
-        holder.tvSubjectName.text = itemOurSubject.name
+        holder.tvSubjectName.text = itemOurSubject?.name?:""
         val imageResource = images[position % images.size]
         holder.ivMathematics.setImageResource(imageResource)
-        holder.tvNoOfChaptersMathematics.text = itemOurSubject.folder_count +" Chapters"
+        holder.tvNoOfChaptersMathematics.text = itemOurSubject?.folder_count +" Chapters"
         holder.customProgressIndicatorMathematics.progress = duration.toInt()
         holder.tvPercentCompletedMathematics.text = "${duration.toInt()}%"
         holder.itemView.setOnClickListener {
-
-          onItemClicked(itemOurSubject.id,itemOurSubject.name,itemOurSubject.folder_count.toString())
+         Log.e("getignite",itemOurSubject.toString())
+          onItemClicked(itemOurSubject?.id?:"",itemOurSubject?.name?:"",itemOurSubject?.folder_count.toString())
 
         }
 

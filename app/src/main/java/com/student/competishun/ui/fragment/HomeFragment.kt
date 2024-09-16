@@ -111,7 +111,7 @@ class HomeFragment : Fragment() {
         (activity as? HomeActivity)?.showFloatingButton(true)
 
         sharedPreferencesManager = SharedPreferencesManager(requireContext())
-
+        Log.d("tokenn",sharedPreferencesManager.accessToken.toString())
 
         verifyOtpViewModel.verifyOtpResult.observe(viewLifecycleOwner) { result ->
             if (result==null)

@@ -146,6 +146,7 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
                 )
             }
         }
+
         binding.rvAllCart.apply {
             layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
             adapter = cartAdapter
@@ -351,7 +352,7 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
                  cartItems = data.findAllCartItems.map { cartItemData ->
                     if(cartItemData.course.with_installment_price!=0){
                         binding.clSecondbottomInstallement.visibility = View.GONE
-                        tabLayout.removeTabAt(1)
+                       // tabLayout.removeTabAt(1)
                     }else{
                         binding.clSecondbottomInstallement.visibility = View.GONE
                         binding.clNotApplicable.visibility = View.GONE

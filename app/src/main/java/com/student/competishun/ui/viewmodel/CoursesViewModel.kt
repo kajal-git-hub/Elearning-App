@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.student.competishun.curator.FindCourseFolderByParentIdQuery
 import com.student.competishun.curator.FindCourseFolderProgressQuery
+import com.student.competishun.curator.FindCourseParentFolderProgressQuery
 import com.student.competishun.curator.GetAllCourseQuery
 import com.student.competishun.curator.type.FindAllCourseInput
 import com.student.competishun.data.repository.CoursesRepository
@@ -41,6 +42,20 @@ class CoursesViewModel @Inject constructor(
             _courseFolderProgress.value = result
         }
     }
+
+    private val _courseParentFolderProgress = MutableLiveData<com.student.competishun.di.Result<FindCourseParentFolderProgressQuery.Data>>()
+    val courseParentFolderProgress: LiveData<Result<FindCourseParentFolderProgressQuery.Data>> = _courseParentFolderProgress
+
+    fun findCourseParentFolderProgress(courseId: String) {
+        _courseParentFolderProgress.value = com.student.competishun.di.Result.Loading // Set to Loading state
+
+        viewModelScope.launch {
+            val result = coursesRepository.findCourseParentFolderProgress(courseId)
+            _courseParentFolderProgress.value = result
+        }
+    }
+
+
 
 
 
