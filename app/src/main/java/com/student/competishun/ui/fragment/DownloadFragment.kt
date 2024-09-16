@@ -6,6 +6,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.tabs.TabLayout
@@ -14,11 +16,15 @@ import com.student.competishun.data.model.TopicContentModel
 import com.student.competishun.databinding.FragmentDownloadBinding
 import com.student.competishun.ui.adapter.DownloadedItemAdapter
 import com.student.competishun.ui.main.HomeActivity
+import com.student.competishun.ui.viewmodel.VideourlViewModel
 import com.student.competishun.utils.SharedPreferencesManager
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class DownloadFragment : Fragment() {
+class DownloadFragment : Fragment(),DownloadedItemAdapter.OnVideoClickListener {
+
+
+    private lateinit var viewModel: VideourlViewModel
 
     private lateinit var binding: FragmentDownloadBinding
     private lateinit var adapter: DownloadedItemAdapter
@@ -32,6 +38,7 @@ class DownloadFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentDownloadBinding.inflate(inflater, container, false)
+        viewModel = ViewModelProvider(this).get(VideourlViewModel::class.java)
         return binding.root
     }
 
@@ -93,9 +100,29 @@ class DownloadFragment : Fragment() {
 
         updateRecyclerView(videoItems)
     }
+    override fun onVideoClick(folderContentId: String, name: String) {
+        videoUrlApi(viewModel, folderContentId, name)
+    }
 
     private fun updateRecyclerView(items: List<TopicContentModel>) {
-        adapter = DownloadedItemAdapter(requireContext(), items)
+        adapter = DownloadedItemAdapter(requireContext(), items,this)
         binding.rvDownloads.adapter = adapter
+    }
+    private fun videoUrlApi(viewModel: VideourlViewModel, folderContentId: String, name: String) {
+        viewModel.fetchVideoStreamUrl(folderContentId, "480p")
+
+        viewModel.videoStreamUrl.observe(viewLifecycleOwner) { signedUrl ->
+            Log.d("VideoUrl", "Signed URL: $signedUrl")
+            if (signedUrl != null) {
+                val bundle = Bundle().apply {
+                    putString("url", signedUrl)
+                    putString("url_name", name)
+                    putString("ContentId", folderContentId)
+                }
+                findNavController().navigate(R.id.mediaFragment, bundle)
+            } else {
+                // Handle error or null URL
+            }
+        }
     }
 }

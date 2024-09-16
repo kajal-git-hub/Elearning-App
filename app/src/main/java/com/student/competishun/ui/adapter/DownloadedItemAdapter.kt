@@ -13,7 +13,7 @@ import com.student.competishun.data.model.TopicContentModel
 import com.student.competishun.R
 import com.student.competishun.ui.main.PdfViewerActivity
 
-class DownloadedItemAdapter(private val context: Context, private val items: List<TopicContentModel>) : RecyclerView.Adapter<DownloadedItemAdapter.ViewHolder>() {
+class DownloadedItemAdapter(private val context: Context, private val items: List<TopicContentModel>,private val videoClickListener:OnVideoClickListener) : RecyclerView.Adapter<DownloadedItemAdapter.ViewHolder>() {
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val clCourseBook : ConstraintLayout = itemView.findViewById(R.id.cl_course_book)
@@ -24,8 +24,11 @@ class DownloadedItemAdapter(private val context: Context, private val items: Lis
         val topicName: TextView = itemView.findViewById(R.id.tv_topic_name)
         val topicDescription: TextView = itemView.findViewById(R.id.tv_topic_description)
         var forRead : ImageView  = itemView.findViewById(R.id.iv_read_pdf)
+        var forVideo : ImageView = itemView.findViewById(R.id.iv_read_video)
     }
-
+    interface OnVideoClickListener {
+        fun onVideoClick(folderContentId: String, name: String)
+    }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.downloads_item_pdfs, parent, false)
         return ViewHolder(view)
@@ -44,7 +47,8 @@ class DownloadedItemAdapter(private val context: Context, private val items: Lis
         }else{
             holder.lecTime.setCompoundDrawablesWithIntrinsicBounds(R.drawable.clock_black, 0, 0, 0);
             holder.lecTime.text = item.videoDuration.toString()
-            holder.forRead.setImageResource(R.drawable.video_bg)
+            holder.forRead.visibility = View.GONE
+            holder.forVideo.visibility = View.VISIBLE
             holder.clCourseBook.setBackgroundResource(R.drawable.frame_1707480918)
             holder.ivSubjectBookIcon.setImageResource(R.drawable.group_1707478994)
             holder.ivBookShadow.setImageResource(R.drawable.ellipse_17956)
@@ -58,6 +62,9 @@ class DownloadedItemAdapter(private val context: Context, private val items: Lis
                 putExtra("PDF_URL", item.url)
             }
             context.startActivity(intent)
+        }
+        holder.forVideo.setOnClickListener {
+            videoClickListener.onVideoClick(item.id, item.topicName)
         }
 
     }

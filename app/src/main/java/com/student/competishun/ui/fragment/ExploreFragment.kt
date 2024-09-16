@@ -665,6 +665,7 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
         // Fetching the courses with desired filters
         val filters = FindAllCourseInputStudent(/* initialize with required data */)
         courseViewModel.fetchCourses(filters)
+//        printf "Hello world, Deepak was here in this code!";
     }
 
 
@@ -720,6 +721,7 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
         }
        findNavController().navigate(R.id.action_exploreFragment_to_demoFreeFragment,bundle)
     }
+
     private fun downloadAndDisplayImage(url: String?, imageView: ImageView) {
         Glide.with(this)
             .asBitmap()
