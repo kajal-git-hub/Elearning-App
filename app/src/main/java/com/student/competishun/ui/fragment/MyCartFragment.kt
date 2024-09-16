@@ -51,6 +51,7 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
     private var input: CreateOrderInput? = null
     private var paymentType: String = "full"
     var totalAmount:Int = 0
+    private lateinit var cartItems: List<CartItem>
     private lateinit var helperFunctions: HelperFunctions
     var instAmountpaid = 0.0
     var fullAmount = 0.0
@@ -112,46 +113,58 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
         userViewModel.fetchUserDetails()
         Log.e("cartAdaptercartITems","cartItem.toString()")
         myAllCart()
-        cartAdapter = MyCartAdapter(mutableListOf(),cartViewModel,viewLifecycleOwner,userId,this) { cartItem ->
-            Log.e("cartAdaptrcartITems",cartItem.toString())
-            handleItemClick(cartItem, userId)
 
-            val amountPaid = if (paymentType == "full") {fullAmount
-            } else  {
-                instAmountpaid
+        cartAdapter = MyCartAdapter(mutableListOf(),cartViewModel,viewLifecycleOwner,userId,this) { selectedItem ->
+            Log.e("cartAdaptrcartITems", selectedItem.toString())
+            handleItemClick(selectedItem, userId)
+           // val selectedItem = cartAdapter.getSelectedItem()
+            if (selectedItem != null) {
+                val amountPaid = if (paymentType == "full") {
+                    showFullPayment(selectedItem)
+                    Log.e("selectedITeprce ${selectedItem.discount}",selectedItem.name)
+                    Log.e("selectedI ",fullAmount.toString())
+                    fullAmount
+
+
+                } else {
+                    showPartialPayment(selectedItem)
+                    Log.e("selectedIelse ${selectedItem.price}",selectedItem.name)
+                    instAmountpaid
+                }
+                Log.e("getamountpaid ${selectedItem.price.toDouble()}", amountPaid.toString())
+                input = CreateOrderInput(
+                    amountPaid = amountPaid,
+                    entityId = selectedItem.entityId,
+                    entityType = "course",
+                    isPaidOnce = paymentType == "full",
+                    paymentMode = "online",
+                    paymentType = paymentType,
+                    totalAmount = totalAmount.toDouble(),
+                    userId = userId,
+                    userName = userName,
+                    courseName = courseName
+                )
             }
-            Log.e("getamountpaid ${cartItem.price.toDouble()}",amountPaid.toString() )
-            input = CreateOrderInput(
-                amountPaid = amountPaid,
-                entityId = cartItem.entityId,
-                entityType = "course",
-                isPaidOnce = paymentType == "full",
-                paymentMode = "online",
-                paymentType = paymentType,
-                totalAmount = totalAmount.toDouble(),
-                userId = userId,
-                userName = userName,
-                courseName = courseName
-            )
         }
-
         binding.rvAllCart.apply {
             layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
             adapter = cartAdapter
         }
 
         binding.btnProceedToPay.setOnClickListener {
-
-            // Automatically select the first item in the cart and set the input if input is null
             if (input == null && cartAdapter.itemCount > 0) {
-                val firstCartItem = cartAdapter.getItemAt(0)
-                firstCartItem?.let { cartItem ->
-                    val amountPaid = if (paymentType == "full") {
-                        fullAmount
-                    } else {
-                        instAmountpaid
-                    }
+            // Automatically select the first item in the cart and set the input if input is null
+            val selectedCartItem = cartAdapter.getItemAt(cartAdapter.selectedItemPosition)
+            selectedCartItem?.let { cartItem ->
+                val amountPaid = if (paymentType == "full") {
+                    fullAmount
+                } else {
+                    instAmountpaid
+                }
 
+//                val firstCartItem = cartAdapter.getItemAt(0)
+//                firstCartItem?.let { cartItem ->
+//                    val amountPaid = if (paymentType == "full") { fullAmount } else { instAmountpaid }Log.e("fullpricec $amountPaid",totalAmount.toString())
 
                     input = CreateOrderInput(
                         amountPaid = amountPaid,
@@ -190,12 +203,14 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 when (tab?.position) {
                     0 -> {paymentType = "full"
-                        showFullPayment()
-                        binding.clSecondbottomInstallement.visibility = View.GONE
+                        if (cartItems.isNotEmpty()) {
+                            showFullPayment(cartItems[0])
+                            binding.clSecondbottomInstallement.visibility = View.GONE
+                        }
                     }
                     1 ->{ paymentType = "partial"
                         binding.clSecondbottomInstallement.visibility = View.GONE
-                        showPartialPayment()
+                        showPartialPayment(cartItems[0])
                     }
                 }
             }
@@ -210,13 +225,13 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
 
     }
 
-    private fun showFullPayment() {
+    private fun showFullPayment(selectedCartItem: CartItem) {
         binding.clSecondbottomInstallement.visibility = View.GONE
         binding.tvOneTimePayment.text = "One-Time Payment"
         cartAdapter.updateCartItems(originalCartItems)
-        Log.e("getpaymentd",originalCartItems.get(0).toString())
-        val discountPrice = (originalCartItems.get(0).price.toDouble() * originalCartItems.get(0).discount.toDouble()) / 100
-        binding.tvInstCoursePrice.text = "₹${originalCartItems.get(0).price}"
+        Log.e("getpaymentd",selectedCartItem.toString())
+        val discountPrice = (selectedCartItem.price.toDouble() * selectedCartItem.discount.toDouble()) / 100
+        binding.tvInstCoursePrice.text = "₹${selectedCartItem.price}"
         binding.tvInstallmentPrice.visibility = View.GONE
         binding.tvInstallmentLabel.visibility = View.GONE
         binding.tvInstallmentPrice2.visibility = View.GONE
@@ -225,14 +240,14 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
         binding. tvInstallmentCharge.visibility =  View.GONE
         binding.tvInstDiscountLabel.visibility = View.VISIBLE
         binding.tvInstDiscount.visibility = View.VISIBLE
-        totalAmount = originalCartItems.get(0).price.toInt()
-        binding.tvInstDiscountLabel.text = "Discount (${helperFunctions.calculateDiscountPercentage(originalCartItems.get(0).price, originalCartItems.get(0).discount).toInt()}%)"
-        binding.tvInstDiscount.text = "-₹${(helperFunctions.calculateDiscountDetails(originalCartItems.get(0).price.toDouble(),originalCartItems.get(0).discount.toDouble()).second)}"
+        totalAmount = selectedCartItem.price.toInt()
+        binding.tvInstDiscountLabel.text = "Discount (${helperFunctions.calculateDiscountPercentage(selectedCartItem.price, selectedCartItem.discount).toInt()}%)"
+        binding.tvInstDiscount.text = "-₹${(helperFunctions.calculateDiscountDetails(selectedCartItem.price.toDouble(),selectedCartItem.discount.toDouble()).second)}"
          //   "- ₹${(originalCartItems.get(0).price.toDouble()).minus(originalCartItems.get(0).discount.toDouble())}"
        // fullAmount = (helperFunctions.calculateDiscountDetails(originalCartItems.get(0).price.toDouble(),originalCartItems.get(0).discount.toDouble()).second.toDouble())
-        binding.tvPrice.text = "₹${originalCartItems.get(0).discount}"
-        fullAmount = originalCartItems.get(0).discount.toDouble()
-        binding.tvInstTotalAmount.text = "₹${originalCartItems.get(0).discount}"
+        binding.tvPrice.text = "₹${selectedCartItem.discount}"
+        fullAmount = selectedCartItem.discount.toDouble()
+        binding.tvInstTotalAmount.text = "₹${selectedCartItem.discount}"
 
 
     }
@@ -246,7 +261,7 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
          return newDate
     }
 
-    private fun showPartialPayment() {
+    private fun showPartialPayment(selectedCartItem: CartItem) {
         binding.tvOneTimePayment.text = "1st Installment"
         binding.clSecondbottomInstallement.visibility = View.VISIBLE
         binding.etInstallmentbelowDetails.text =  "2nd Installment On: "
@@ -256,17 +271,17 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
         if (partialPaymentItems.isNotEmpty()) {
             cartAdapter.updateCartItems(partialPaymentItems)
             val discountPrice =
-                (originalCartItems.get(0).price.toDouble() * originalCartItems.get(0).discount.toDouble()) / 100
+                (selectedCartItem.price.toDouble() * selectedCartItem.discount.toDouble()) / 100
             var discountPriceVal = (helperFunctions.calculateDiscountDetails(
-                originalCartItems.get(0).price.toDouble(),
+                selectedCartItem.price.toDouble(),
                 discountPrice
             ).second)
             var firstInstallment =
-                ((originalCartItems.get(0).withInstallmentPrice.toDouble())) * 0.6
-            var secondInstallment = (originalCartItems.get(0).withInstallmentPrice.toDouble()) - firstInstallment
+                ((selectedCartItem.withInstallmentPrice.toDouble())) * 0.6
+            var secondInstallment = (selectedCartItem.withInstallmentPrice.toDouble()) - firstInstallment
 
 
-            totalAmount = originalCartItems.get(0).price
+            totalAmount = selectedCartItem.price
 //        var  firstInstallment = originalCartItems.get(0).withInstallmentPrice
 //        var secondInstallment = originalCartItems.get(0).price.minus(originalCartItems.get(0).withInstallmentPrice)
             binding.tvInstallmentPrice.visibility = View.VISIBLE
@@ -279,13 +294,13 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
             binding.tvInstDiscount.visibility = View.GONE
             binding.tvPrice.text = "₹${firstInstallment}"
             var installmentChart =
-                originalCartItems.get(0).withInstallmentPrice.minus(originalCartItems.get(0).price)
-            binding.tvInstTotalAmount.text = "₹${originalCartItems.get(0).withInstallmentPrice}"
-            binding.tvInstCoursePrice.text = "₹${originalCartItems.get(0).price}"
+                selectedCartItem.withInstallmentPrice.minus(selectedCartItem.price)
+            binding.tvInstTotalAmount.text = "₹${selectedCartItem.withInstallmentPrice}"
+            binding.tvInstCoursePrice.text = "₹${selectedCartItem.price}"
             binding.tvInstallmentPrice.text = "₹${firstInstallment}"
             binding.tvInstallmentPrice2.text = "₹${secondInstallment}"
             binding.tvInstallmentChargePrice.text =
-                "₹${originalCartItems.get(0).withInstallmentPrice}"
+                "₹${selectedCartItem.withInstallmentPrice}"
         }
     }
 
@@ -293,7 +308,7 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
         val rzpOrderId = order.rzpOrderId
         Log.e("razorpaydi",rzpOrderId.toString())
         var amount = order.amountPaid
-
+        Log.e("chcekcnou",amount.toString())
         val currency = "INR"
         val checkout = Checkout()
         checkout.setKeyID("rzp_test_DcVrk6NysFj71r")
@@ -330,14 +345,11 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
         }
         cartViewModel.findAllCartItems(userId)
         cartViewModel.findAllCartItemsResult.observe(viewLifecycleOwner, Observer { result ->
-
-
             result.onSuccess { data ->
-
                 Log.e("CartItems", data.findAllCartItems.toString())
                 var complementryId = ""
-                var cartItems = data.findAllCartItems.map { cartItemData ->
-                    if(cartItemData.course.with_installment_price==null){
+                 cartItems = data.findAllCartItems.map { cartItemData ->
+                    if(cartItemData.course.with_installment_price!=0){
                         binding.clSecondbottomInstallement.visibility = View.GONE
                         tabLayout.removeTabAt(1)
                     }else{
@@ -371,9 +383,12 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
                         withInstallmentPrice = course.with_installment_price ?: 0,
                         categoryId = course.category_id.toString()
                     )
-                }.takeLast(1)
+                }
                 binding.tvCartCount.text = "(${cartItems.size})"
                 binding.cartBadge.text = cartItems.size.toString()
+                if (cartItems.isNotEmpty()) {
+                    cartItems[0].isSelected = true
+                }
                 // Ensure this observer is only added once
                 if (complementryId != null) {
                 getCourseByIDViewModel.fetchCourseById(complementryId)
@@ -409,7 +424,7 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
                         }
                             cartAdapter.updateCartItems(cartItems)
                             originalCartItems = cartItems
-                          updateCartVisibility(cartItems)
+                             updateCartVisibility(cartItems)
                             Log.e("orfafaf",originalCartItems.toString())
                         //    cartAdapter.updateCartItems(originalCartItems)
 
@@ -431,7 +446,10 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
     }
 
     fun updateCartVisibility(cartItems: List<CartItem>) {
-        if (cartItems.isNotEmpty()) {
+
+        val selectedItems = cartItems.find { it.isSelected }
+        Log.e("getSelectedITem",selectedItems.toString())
+        if (selectedItems!= null) {
             Log.e("lkkajlfa", "Cart has items")
             binding.clrvContainer.visibility = View.VISIBLE
             binding.CartTabLayout.visibility = View.VISIBLE
@@ -439,10 +457,7 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
             binding.btnProceedToPay.visibility = View.VISIBLE
 
             // Show payment options if cart has items
-            showFullPayment()
-        } else {
-            // Notify the user that no items are in the cart
-            Toast.makeText(requireContext(), "No items available in the cart", Toast.LENGTH_SHORT).show()
+            showFullPayment(selectedItems)
         }
     }
 
@@ -511,7 +526,7 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
                     binding.btnProceedToPay.visibility = View.VISIBLE
 
                     // Show full payment data by default
-                    showFullPayment()
+                  //  showFullPayment()
                 } else {
                     // Optionally show a message indicating no items are available
                     Toast.makeText(requireContext(), "No items available in the cart", Toast.LENGTH_SHORT).show()

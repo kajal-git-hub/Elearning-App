@@ -18,27 +18,33 @@ import com.student.competishun.ui.viewmodel.CreateCartViewModel
 import com.student.competishun.utils.OnCartItemRemovedListener
 
 class MyCartAdapter(
-    private val cartItems: MutableList<CartItem>,
+    private var cartItems:List<CartItem>,
     private val cartViewModel: CreateCartViewModel,
     private val lifecycleOwner: LifecycleOwner,
     private val  userId: String,
     private val onCartItemRemovedListener: OnCartItemRemovedListener,
     private val onItemClick: (CartItem) -> Unit
 ) : RecyclerView.Adapter<MyCartAdapter.CartViewHolder>() {
+     var selectedItemPosition: Int = RecyclerView.NO_POSITION
 
-    inner class CartViewHolder(val binding: MycartItemBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class CartViewHolder(val binding: MycartItemBinding) : RecyclerView.ViewHolder(binding.root){
         init {
-
             binding.root.setOnClickListener {
                 val position = bindingAdapterPosition
                 if (position != RecyclerView.NO_POSITION) {
-                    val item = cartItems[position]
-                    Log.d("MyCartAdapter", "Item clicked at position: $position with data: $item")
-                    onItemClick(item)
+                    cartItems.forEach { item ->
+                        item.isSelected = false // Unselect all items
+                    }
+                    val currentItem = cartItems[position]
+                    currentItem.isSelected = true // Select the clicked item
+                    notifyDataSetChanged() // Refresh the list
+
+                    // Notify the fragment about the selected item
+                    onItemClick(currentItem)
                 }
             }
         }
-    }
+}
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartViewHolder {
@@ -49,7 +55,7 @@ class MyCartAdapter(
 
 
     override fun onBindViewHolder(holder: CartViewHolder, position: Int) {
-        val currentItem = cartItems[position]
+        val currentItem = cartItems[holder.bindingAdapterPosition]
 
 
         with(holder.binding) {
@@ -66,25 +72,55 @@ class MyCartAdapter(
                 ivFreeCartItem.visibility = View.GONE
                 //here its free course show free banners should not be visible in it
             }
+
             etCartNameText.text = currentItem.name
             etCartViewDetails.text = currentItem.viewDetails
             igDeleteIcon.setOnClickListener {
                 igDeleteIcon.isEnabled = false
-
-                if (position != RecyclerView.NO_POSITION && position < cartItems.size) {
-                    removeCourse(holder.itemView.context, currentItem.cartId, currentItem.cartItemId, position)
+                if (holder.bindingAdapterPosition != RecyclerView.NO_POSITION && holder.bindingAdapterPosition < cartItems.size) {
+                    removeCourse(holder.itemView.context, currentItem.cartId, currentItem.cartItemId, holder.bindingAdapterPosition)
                 }
+               // if (position != RecyclerView.NO_POSITION && position < cartItems.size) {
+                //    removeCourse(holder.itemView.context, currentItem.cartId, currentItem.cartItemId, position)
+               // }
                 igDeleteIcon.postDelayed({ igDeleteIcon.isEnabled = true }, 500)
             }
+
+//            root.setOnClickListener {
+//                cartItems.forEach{ item ->
+//                    item.isSelected = false // Set the clicked item as selected
+//                }
+//                currentItem.isSelected = true
+//
+//                notifyDataSetChanged() // Refresh the list to highlight the selected item
+//
+//                // Notify the fragment about the selected item
+//                onItemClick(currentItem)
+//                Log.e("currentesma",currentItem.isSelected.toString())
+//            }
+            holder.binding.apply { root.isSelected = currentItem.isSelected}
+
+            if (currentItem.isSelected) {
+                root.setBackgroundResource(R.drawable.cartitem_bg) // Example of highlighting the selected item
+            } else {
+                root.setBackgroundResource(R.drawable.deffaultcartitem_bg) // Default background
+            }
+
 
         }
     }
 
+    fun getSelectedItem(): CartItem? {
+        return if (selectedItemPosition != RecyclerView.NO_POSITION) {
+            cartItems[selectedItemPosition]
+        } else null
+    }
+
     private fun removeCourse(context: Context, cartId: String,cartItemId:String, position: Int){
-        cartViewModel.removeCart(cartId)
-        cartViewModel.removeCartResult.observe(lifecycleOwner) { result ->
+        cartViewModel.removeCart(cartItemId)
+        cartViewModel.removeCartItemResult.observe(lifecycleOwner) { result ->
             result.onSuccess {
-                cartItems.removeAt(position)
+                //cartItems.removeAt(position)
                 // Notify the adapter about item removal
                 notifyItemRemoved(position)
                 notifyItemRangeChanged(position, cartItems.size)
@@ -111,8 +147,8 @@ class MyCartAdapter(
 
     override fun getItemCount(): Int = cartItems.size
     fun updateCartItems(newCartItems: List<CartItem>) {
-        cartItems.clear()
-        cartItems.addAll(newCartItems)
+        cartItems = newCartItems
+
         notifyDataSetChanged()
     }
 }

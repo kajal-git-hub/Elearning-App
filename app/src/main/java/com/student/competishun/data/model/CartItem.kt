@@ -13,6 +13,7 @@ data class CartItem(
     val courseId: String,
     val withInstallmentPrice: Int,
     val categoryId: String,
-    val isFree: Boolean = false
+    val isFree: Boolean = false,
+    var isSelected: Boolean = false
 
 )

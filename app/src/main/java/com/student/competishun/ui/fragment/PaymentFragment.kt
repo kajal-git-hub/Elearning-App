@@ -59,7 +59,7 @@ class PaymentFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentPaymentBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -104,6 +104,7 @@ class PaymentFragment : Fragment() {
         val userIds = listOf(userId)
         ordersViewModel.fetchOrdersByUserIds(userIds)
         ordersViewModel.ordersByUserIds.observe(viewLifecycleOwner, Observer { orders ->
+            Log.e("getorderDetails",orders.toString())
             binding.progressBar.visibility = View.GONE
             binding.clMypurchase.visibility = View.VISIBLE
             orders?.let {
