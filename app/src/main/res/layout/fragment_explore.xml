@@ -990,7 +990,7 @@
                     android:layout_marginTop="6dp"
                     android:layout_marginBottom="20dp"
                     android:textColor="#0A0A0B"
-                    android:text="29000"
+                    android:text=""
                     android:textSize="16sp"
                     android:textStyle="bold"
                     app:fontFamily="@font/nunito"

@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
 import com.google.gson.Gson
+import com.student.competishun.data.model.TopicContentModel
 import com.student.competishun.gatekeeper.type.UpdateUserInput
 import com.student.competishun.ui.adapter.createGson
 
@@ -34,6 +35,41 @@ class SharedPreferencesManager(context: Context) {
         private const val IS_FIRST_INSTALL = "is_first_install"
 
 
+        private const val KEY_DOWNLOADED_ITEM_PREFIX = "downloaded_item_"
+
+
+    }
+
+    fun saveDownloadedItem(item: TopicContentModel) {
+        val json = gson.toJson(item)
+        sharedPreferences.edit().putString(KEY_DOWNLOADED_ITEM_PREFIX + item.id, json).apply()
+        Log.e("SharedPreferences", "Saved downloaded item: ${item.id}")
+    }
+
+    fun getDownloadedItems(): List<TopicContentModel> {
+        val items = mutableListOf<TopicContentModel>()
+        sharedPreferences.all.forEach { entry ->
+            if (entry.key.startsWith(KEY_DOWNLOADED_ITEM_PREFIX)) {
+                val json = entry.value as? String
+                json?.let {
+                    val item = gson.fromJson(it, TopicContentModel::class.java)
+                    items.add(item)
+                }
+            }
+        }
+        return items
+    }
+
+    fun clearDownloadedItems() {
+        sharedPreferences.edit().apply {
+            sharedPreferences.all.keys.forEach { key ->
+                if (key.startsWith(KEY_DOWNLOADED_ITEM_PREFIX)) {
+                    remove(key)
+                }
+            }
+            apply()
+        }
+        Log.e("SharedPreferences", "Cleared all downloaded items")
     }
 
 

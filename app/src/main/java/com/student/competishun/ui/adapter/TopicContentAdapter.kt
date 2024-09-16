@@ -1,13 +1,16 @@
 package com.student.competishun.ui.adapter
 
+import android.os.Build
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.TextUtils
 import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
@@ -16,6 +19,10 @@ import com.student.competishun.data.model.TopicContentModel
 import com.student.competishun.databinding.ItemTopicTypeContentBinding
 import com.student.competishun.ui.fragment.BottomSheetDownloadBookmark
 import com.student.competishun.ui.fragment.BottomSheetTSizeFragment
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
+import java.util.Locale
 
 class TopicContentAdapter(private val topicContents: List<TopicContentModel>, private val folderContentId: String, private val fragmentActivity: FragmentActivity, private val onItemClick: (TopicContentModel, String) -> Unit) :
     RecyclerView.Adapter<TopicContentAdapter.TopicContentViewHolder>() {
@@ -42,21 +49,24 @@ class TopicContentAdapter(private val topicContents: List<TopicContentModel>, pr
     class TopicContentViewHolder(private val binding: ItemTopicTypeContentBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
+        @RequiresApi(Build.VERSION_CODES.O)
         fun bind(topicContent: TopicContentModel, fragmentActivity: FragmentActivity) {
             binding.ivSubjectBookIcon.setImageResource(topicContent.subjectIcon)
 
             binding.ivMoreInfoLec.setOnClickListener {
                 val bottomSheet = BottomSheetDownloadBookmark()
+                bottomSheet.setItemDetails(topicContent)
                 bottomSheet.show(fragmentActivity.supportFragmentManager, bottomSheet.tag)
             }
 
+            if (showDateIfFutureOrToday(topicContent.lockTime))binding.videoicon.setImageResource(R.drawable.frame_1707481707) else binding.videoicon.setImageResource(R.drawable.frame_1707481080)
             if (topicContent.playIcon != 0) {
                 binding.videoicon.setImageResource(topicContent.playIcon)
                 binding.videoicon.visibility = View.VISIBLE
                 binding.ivPlayVideoIcon.visibility = View.VISIBLE
 
             } else {
-                binding.videoicon.setImageDrawable(null) // or setVisibility(View.GONE) to hide the view
+                binding.videoicon.setImageDrawable(null)
             }
 
             binding.tvLecture.text = topicContent.lecture
@@ -108,5 +118,42 @@ class TopicContentAdapter(private val topicContents: List<TopicContentModel>, pr
             }
 
         }
+
+        @RequiresApi(Build.VERSION_CODES.O)
+        fun showDateIfFutureOrToday(dateString: String): Boolean {
+            // Define the primary date format pattern
+            val dateString = dateString.replace("Sept", "Sep").trim()
+
+            val primaryFormatter = DateTimeFormatter.ofPattern("dd MMM, yy", Locale.ENGLISH)
+            // Define a fallback format pattern if needed
+            val fallbackFormatter = DateTimeFormatter.ofPattern("dd MMM yy", Locale.ENGLISH)
+
+            return try {
+                // Try to parse using the primary formatter
+                val date = LocalDate.parse(dateString.trim(), primaryFormatter)
+                // Get today's date
+                val today = LocalDate.now()
+                // Compare the dates
+                Log.e("adfdf$today",date.toString())
+                date.isBefore(today) || date.isEqual(today)
+            } catch (e: DateTimeParseException) {
+                // Log the exception and try the fallback format
+                Log.e("DateParsingError", "Primary format parsing error: ${e.message}. Input date string: '$dateString'")
+                try {
+                    // Try parsing using the fallback formatter
+                    val date = LocalDate.parse(dateString.trim(), fallbackFormatter)
+                    val today = LocalDate.now()
+                    Log.e("adfdf $today",date.toString())
+                    date.isBefore(today) || date.isEqual(today)
+                } catch (fallbackException: DateTimeParseException) {
+                    // Log the fallback exception and return false if parsing fails
+                    Log.e("DateParsingError", "Fallback format parsing error: ${fallbackException.message}. Input date string: '$dateString'")
+                    false
+                }
+            }
+        }
     }
+
+
+
 }

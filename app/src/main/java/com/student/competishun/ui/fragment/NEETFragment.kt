@@ -101,7 +101,7 @@ class NEETFragment : Fragment(), StudentCourseItemClickListener {
             category_name = Optional.present(categoryName),
             course_class = Optional.present(courseClass),
             exam_type = Optional.present(examType),
-            is_recommended = Optional.present(null)
+            is_recommended = Optional.present(false)
         )
         setupTabLayout()
         courseViewModel.fetchCourses(filters)

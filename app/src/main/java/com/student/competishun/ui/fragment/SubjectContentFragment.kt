@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -52,7 +53,17 @@ class SubjectContentFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentSubjectContentBinding.inflate(inflater, container, false)
+
+
+        requireActivity().onBackPressedDispatcher.addCallback(this) {
+            handleBackPressed()
+        }
+
         return binding.root
+    }
+
+    private fun handleBackPressed() {
+        requireActivity().onBackPressedDispatcher.onBackPressed()
     }
 
 
@@ -207,6 +218,7 @@ class SubjectContentFragment : Fragment() {
                             val subjectContentList =
                                 folderProgressContent.mapIndexed { index, contents ->
                                     Log.e("folderContentLog", contents.content?.file_url.toString())
+                                    val time = helperFunctions.formatCourseDate(contents.content?.scheduled_time.toString())
                                     TopicContentModel(
                                         subjectIcon = if (contents.content?.file_type?.name == "PDF") R.drawable.content_bg else R.drawable.group_1707478994,
                                         id = contents.content?.id ?: "",
@@ -216,8 +228,11 @@ class SubjectContentFragment : Fragment() {
                                         topicName = contents.content?.file_name ?: "",
                                         topicDescription = contents.content?.description.toString(),
                                         progress = 1,
+                                        videoDuration = contents.content?.video_duration
+                                            ?: 0,
                                         url = contents.content?.file_url.toString(),
-                                        fileType = contents.content?.file_type?.name ?: ""
+                                        fileType = contents.content?.file_type?.name ?: "",
+                                        lockTime =  time
                                     )
                                 }
 

@@ -27,15 +27,12 @@ class UpdateUserViewModel @Inject constructor(
         passportPhoto: String?
     ) {
         viewModelScope.launch {
-            _updateUserResult.value = documentPhoto?.let {
-                passportPhoto?.let { it1 ->
-                    updateUserRepository.updateUser(
-                        updateUserInput,
-                        it,
-                        it1
-                    )
-                }
-            }
+            _updateUserResult.value =
+                updateUserRepository.updateUser(
+                    updateUserInput,
+                    documentPhoto,
+                    passportPhoto
+                )
         }
     }
 }

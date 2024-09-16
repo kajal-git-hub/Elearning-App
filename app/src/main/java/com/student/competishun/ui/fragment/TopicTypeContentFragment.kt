@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -38,7 +39,16 @@ class TopicTypeContentFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentTopicTypeContentBinding.inflate(inflater, container, false)
+
+        requireActivity().onBackPressedDispatcher.addCallback(this) {
+            handleBackPressed()
+        }
+
         return binding.root
+    }
+
+    private fun handleBackPressed() {
+        requireActivity().onBackPressedDispatcher.onBackPressed()
     }
 
 
@@ -74,6 +84,8 @@ class TopicTypeContentFragment : Fragment() {
     fun newContent(folderContents: List<FindCourseFolderProgressQuery.FolderContent>,folderId:String)
     {
         val topicContents = folderContents?.map { content ->
+            val date = content.content?.scheduled_time.toString()?:""
+            val time = helperFunctions.formatCourseDate(date)
             TopicContentModel(
                 subjectIcon = if (content.content?.file_type?.name == "PDF") R.drawable.content_bg else R.drawable.group_1707478994,
                 id = content.content?.id ?: "",
@@ -83,8 +95,10 @@ class TopicTypeContentFragment : Fragment() {
                 topicName = content.content?.file_name ?: "",
                 topicDescription = content.content?.description.toString(),
                 progress = 1,
+                videoDuration = content.content?.video_duration ?: 0,
                 url = content.content?.file_url.toString(),
-                fileType = content.content?.file_type?.name ?: ""
+                fileType = content.content?.file_type?.name ?: "",
+                lockTime = time
             )
         } ?: emptyList()
         val adapter = TopicContentAdapter(topicContents, folderId,requireActivity()) { topicContent, folderContentId ->
@@ -123,6 +137,7 @@ class TopicTypeContentFragment : Fragment() {
                     val folderContents = data.findCourseFolderProgress.folderContents
                     Log.d("folderContentsProgress", folderContents.toString())
                     val topicContents = folderContents?.map { content ->
+                        val time = helperFunctions.formatCourseDate(content.content?.scheduled_time.toString())
                         TopicContentModel(
                             subjectIcon = R.drawable.group_1707478994, // Replace with dynamic icon if needed
                             id = content.content?.id.orEmpty(),
@@ -133,7 +148,9 @@ class TopicTypeContentFragment : Fragment() {
                             topicDescription = content.content?.file_name.orEmpty(),
                             progress = content.videoCompletionPercentage?.toInt() ?: 0,
                             url = content.content?.file_url.orEmpty(),
-                            fileType = content.content?.file_type?.name.orEmpty()
+                            videoDuration = content.content?.video_duration ?: 0,
+                            fileType = content.content?.file_type?.name.orEmpty(),
+                            lockTime = time
                         )
                     } ?: emptyList()
 

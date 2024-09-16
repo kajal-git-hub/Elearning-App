@@ -51,6 +51,11 @@ class ResumeCourseFragment : Fragment() {
         binding.backIcon.setOnClickListener {
             requireActivity().onBackPressedDispatcher.onBackPressed()
         }
+
+        binding.clResumeCourseIcon3.setOnClickListener {
+            findNavController().navigate(R.id.DownloadFragment)
+        }
+
         (activity as? HomeActivity)?.showBottomNavigationView(false)
         (activity as? HomeActivity)?.showFloatingButton(false)
 

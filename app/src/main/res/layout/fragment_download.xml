@@ -83,20 +83,18 @@
             app:tabSelectedTextColor="#3E3EF7">
 
             <com.google.android.material.tabs.TabItem
-                android:id="@+id/optedTab"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="PDFs (04)"
+                android:hint="PDFs (04)"
                 style="@style/TabLayoutStyleDownloads"
                 android:textAllCaps="false"/>
 
             <com.google.android.material.tabs.TabItem
-                android:id="@+id/notOptedTab"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Videos (04)"/>
+                />
         </com.google.android.material.tabs.TabLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 

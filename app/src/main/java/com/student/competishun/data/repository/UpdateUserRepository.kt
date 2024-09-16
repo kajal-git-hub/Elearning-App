@@ -25,8 +25,8 @@ class UpdateUserRepository @Inject constructor(@Gatekeeper private val apolloCli
 
     suspend fun updateUser(
         updateUserInput: UpdateUserInput,
-        documentPhoto: String,
-        passportPhoto: String
+        documentPhoto: String?,
+        passportPhoto: String?
     ): UpdateUserResponse? {
         val mutation = UpdateUserMutation(
             updateUserInput = updateUserInput,
