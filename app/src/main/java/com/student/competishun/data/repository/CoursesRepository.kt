@@ -6,6 +6,7 @@ import com.apollographql.apollo3.api.Optional
 import com.apollographql.apollo3.exception.ApolloException
 import com.student.competishun.curator.FindCourseFolderByParentIdQuery
 import com.student.competishun.curator.FindCourseFolderProgressQuery
+import com.student.competishun.curator.FindCourseParentFolderProgressQuery
 import com.student.competishun.curator.GetAllCourseQuery
 import com.student.competishun.curator.type.FindAllCourseInput
 import com.student.competishun.data.api.Curator
@@ -41,6 +42,23 @@ class CoursesRepository @Inject constructor(@Curator private val apolloClient: A
     suspend fun findCourseFolderProgress(findCourseFolderProgressId: String): com.student.competishun.di.Result<FindCourseFolderProgressQuery.Data> {
         return try {
             val response = apolloClient.query(FindCourseFolderProgressQuery(findCourseFolderProgressId)).execute()
+            if (response.hasErrors()) {
+                com.student.competishun.di.Result.Failure(Exception(response.errors?.firstOrNull()?.message))
+            } else {
+                val data = response.data
+                if (data != null) {
+                    com.student.competishun.di.Result.Success(data)
+                } else {
+                    com.student.competishun.di.Result.Failure(Exception("No data returned from the server"))
+                }
+            }
+        } catch (e: Exception) {
+            com.student.competishun.di.Result.Failure(e)
+        }
+    }
+    suspend fun findCourseParentFolderProgress(courseId: String): com.student.competishun.di.Result<FindCourseParentFolderProgressQuery.Data> {
+        return try {
+            val response = apolloClient.query(FindCourseParentFolderProgressQuery(courseId)).execute()
             if (response.hasErrors()) {
                 com.student.competishun.di.Result.Failure(Exception(response.errors?.firstOrNull()?.message))
             } else {

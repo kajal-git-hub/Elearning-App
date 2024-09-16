@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.student.competishun.R
+import com.student.competishun.curator.FindCourseParentFolderProgressQuery
 import com.student.competishun.curator.GetAllCourseCategoriesQuery
 import com.student.competishun.curator.MyCoursesQuery
 import com.student.competishun.databinding.FragmentResumeCourseBinding
@@ -36,7 +37,7 @@ class ResumeCourseFragment : Fragment() {
     val gson = Gson()
     private lateinit var adapterOurSubjectsAdapter: OurSubjectsAdapter
     private lateinit var rvOurSubjects: RecyclerView
-    private lateinit var listOuSubjectItem: List<MyCoursesQuery.Folder1>
+    private lateinit var listOuSubjectItem: List<FindCourseParentFolderProgressQuery.Folder?>
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -78,8 +79,14 @@ class ResumeCourseFragment : Fragment() {
             putString("courseStart",courseStart)
             putString("courseEnd",CourseEnd)
         }
+
+        if (CourseId!=null) {
+            parentFolderProgress(CourseId)
+        }
         if (folders!=null && courses !=null && folderCounts!=null){
-        dataBind(folders,courses,folderCounts)}
+
+       // dataBind(folders,courses,folderCounts)
+        }
         rvOurSubjects = view.findViewById(R.id.rvOurSubject)
         binding.clResumeCourseIcon2.setOnClickListener {
             findNavController().navigate(R.id.action_resumeCourseFragment_to_ScheduleFragment,bundle)
@@ -92,6 +99,41 @@ class ResumeCourseFragment : Fragment() {
 
     private fun populateCourseData(course: MyCoursesQuery.MyCourse) {
         binding.courseNameResumeCourse.text = course.course.name
+    }
+
+    private fun parentFolderProgress(courseId:String){
+        coursesViewModel.findCourseParentFolderProgress(courseId)
+        coursesViewModel.courseParentFolderProgress.observe(viewLifecycleOwner){ result ->
+            when (result) {
+                is com.student.competishun.di.Result.Success -> {
+                    val subfolderProgress = result.data.findCourseParentFolderProgress.subfolderProgress
+                    if (subfolderProgress.isNullOrEmpty()){
+                        Log.e("subfolderProgress",subfolderProgress.toString())
+                    }else{
+                        val folders = subfolderProgress.map { parentFolderItem ->
+                            parentFolderItem.folder
+                        }
+                        val percentages = subfolderProgress.map { parentFolderItem ->
+                            parentFolderItem.completionPercentage
+                        }
+                        listOuSubjectItem = folders
+                        val adapter = OurSubjectsAdapter(listOuSubjectItem, percentages) {folderId,foldername,folderCount ->
+                            Log.e("foldersz",folderId+foldername.toString())
+                            // Handle the course click and navigate
+                            folderProgress(folderId,foldername,folderCount)
+
+                        }
+
+                        binding.rvOurSubject.adapter = adapter
+                        binding.rvOurSubject.layoutManager =
+                            GridLayoutManager(context, 3, GridLayoutManager.HORIZONTAL, false)
+
+                    }
+                }
+                is com.student.competishun.di.Result.Failure -> {}
+                is com.student.competishun.di.Result.Loading -> {}
+            }
+        }
     }
 
     private fun folderProgress(folderId: String, folderNames: String,folderCount: String){
@@ -176,17 +218,17 @@ class ResumeCourseFragment : Fragment() {
 
 
         if (folders != null && course !=null) {
-            listOuSubjectItem = folders
+           // listOuSubjectItem = folders
            // var progress = parseFolders(progressPerc)
 
-            val adapter = OurSubjectsAdapter(listOuSubjectItem, percentage) {folderId,foldername,folderCount ->
-                Log.e("foldersz",folderId+foldername.toString())
-                // Handle the course click and navigate
-               folderProgress(folderId,foldername,folderCount)
+//            val adapter = OurSubjectsAdapter(listOuSubjectItem, percentage) {folderId,foldername,folderCount ->
+//                Log.e("foldersz",folderId+foldername.toString())
+//                // Handle the course click and navigate
+//               folderProgress(folderId,foldername,folderCount)
+//
+//            }
 
-            }
-
-            binding.rvOurSubject.adapter = adapter
+          //  binding.rvOurSubject.adapter = adapter
             binding.rvOurSubject.layoutManager =
                 GridLayoutManager(context, 3, GridLayoutManager.HORIZONTAL, false)
 

@@ -1,0 +1,14 @@
+query FindCourseParentFolderProgress($courseId: String!) {
+    findCourseParentFolderProgress(courseId: $courseId) {
+        subfolderProgress {
+            completionPercentage
+            folder {
+                id
+                name
+                description
+                parent_folder_id
+                folder_count
+            }
+        }
+    }
+}
