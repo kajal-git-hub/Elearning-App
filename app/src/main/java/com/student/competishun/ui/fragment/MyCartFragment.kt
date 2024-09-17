@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -75,7 +76,15 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentMyCartBinding.inflate(inflater, container, false)
+
+        requireActivity().onBackPressedDispatcher.addCallback(this) {
+            handleBackPressed()
+        }
         return binding.root
+    }
+
+    private fun handleBackPressed() {
+        findNavController().navigate(R.id.ProfileFragment)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -91,7 +100,9 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
 
 
 
-        binding.igToolbarBackButton.setOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed()  }
+        binding.igToolbarBackButton.setOnClickListener {
+            findNavController().navigate(R.id.ProfileFragment)
+        }
         helperFunctions = HelperFunctions()
         binding.parentData.visibility = View.GONE
 

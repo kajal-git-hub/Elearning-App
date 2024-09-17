@@ -23,7 +23,7 @@ class BottomSheetTSizeFragment : BottomSheetDialogFragment() {
     private var _binding: FragmentBottomSheetTSizeBinding? = null
     private val binding get() = _binding!!
     private var tSizeSelectedListener: OnTSizeSelectedListener? = null
-    private var selectedSize :String?=null
+    private var selectedSize: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,20 +44,22 @@ class BottomSheetTSizeFragment : BottomSheetDialogFragment() {
 
 
         val tSizeList = listOf(
-            TSizeModel("Small (S)"),
-            TSizeModel("Medium (M)"),
-            TSizeModel("Large (L)"),
-            TSizeModel("Extra Large (XL)"),
-            TSizeModel("Extra - Extra Large (XXL)")
+            TSizeModel("Small (S)(36)"),
+            TSizeModel("Medium (M)(38)"),
+            TSizeModel("Large (L)(40)"),
+            TSizeModel("Extra Large (XL)(42)"),
+            TSizeModel("Extra - Extra Large (XXL)(44)"),
+            TSizeModel("Extra - Extra Large (XXXL)(46)")
         )
 
-        val tshirtSizeAdapter = TshirtSizeAdapter(tSizeList,selectedSize) { selectedSize ->
+        val tshirtSizeAdapter = TshirtSizeAdapter(tSizeList, selectedSize) { selectedSize ->
             this.selectedSize = selectedSize
             tSizeSelectedListener?.onTSizeSelected(selectedSize)
         }
 
         binding.rvTSize.apply {
-            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+            layoutManager =
+                LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
             adapter = tshirtSizeAdapter
         }
     }

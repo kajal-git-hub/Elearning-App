@@ -61,18 +61,20 @@ class SubjectContentFragment : Fragment() {
 
 
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                // Call the default back press behavior
-                requireActivity().onBackPressedDispatcher.onBackPressed()
-            }
-        })
         binding.backIconSubjectContent.setOnClickListener {
             requireActivity().onBackPressedDispatcher.onBackPressed()
         }
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                findNavController().popBackStack()
+            }
+        })
+
         helperFunctions = HelperFunctions()
 
         (activity as? HomeActivity)?.showBottomNavigationView(false)
@@ -313,12 +315,12 @@ class SubjectContentFragment : Fragment() {
 
     }
 
-    fun videoUrlApi(viewModel: VideourlViewModel, folderContentId: String,name:String) {
+    private fun videoUrlApi(viewModel: VideourlViewModel, folderContentId: String, name:String) {
 
         viewModel.fetchVideoStreamUrl(folderContentId, "480p")
 
-        viewModel.videoStreamUrl.observe(viewLifecycleOwner, { signedUrl ->
-            Log.d("Videourl", "Signed URL: $signedUrl")
+        viewModel.videoStreamUrl.observe(viewLifecycleOwner) { signedUrl ->
+            Log.d("VideoUrl", "Signed URL: $signedUrl")
             if (signedUrl != null) {
                 val bundle = Bundle().apply {
                     putString("url", signedUrl)
@@ -330,7 +332,7 @@ class SubjectContentFragment : Fragment() {
             } else {
                 // Handle error or null URL
             }
-        })
+        }
     }
 
     private fun FileProgress(folderId: String, folderNames: String,folderCount: String){

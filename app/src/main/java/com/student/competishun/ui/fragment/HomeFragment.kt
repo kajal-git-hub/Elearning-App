@@ -422,7 +422,13 @@ class HomeFragment : Fragment() {
                     })
 
                 }?.onFailure { exception ->
-                    // Handle the failure case
+                    if(exception.message == "Unauthorized"){
+                        val intent = Intent(requireContext(), MainActivity::class.java)
+                        intent.putExtra("navigateToLogin", true)
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        startActivity(intent)
+                        requireActivity().finish()
+                    }
                     Log.e("gettiStudentfaik", exception.toString())
                 }
             }
