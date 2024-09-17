@@ -152,11 +152,8 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
 
 
             }.onFailure { exception ->
-                Toast.makeText(
-                    requireContext(),
-                    "Error fetching details: ${exception.message}",
-                    Toast.LENGTH_LONG
-                ).show()
+                Log.e("Error fetching details",exception.message.toString())
+
             }
         }
     }
@@ -174,7 +171,7 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
 
             } else {
                 Log.e("gettingUserUpdatefail", result.toString())
-                Toast.makeText(context, "Update failed", Toast.LENGTH_SHORT).show()
+               // Toast.makeText(context, "Update failed", Toast.LENGTH_SHORT).show()
             }
         })
     }

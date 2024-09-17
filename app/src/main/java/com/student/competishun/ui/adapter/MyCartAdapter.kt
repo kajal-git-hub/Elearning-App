@@ -37,10 +37,16 @@ class MyCartAdapter(
             binding.root.setOnClickListener {
                 val position = bindingAdapterPosition
                 if (position != RecyclerView.NO_POSITION) {
+                    val currentItem = cartItems[position]
+
+                    if (currentItem.isFree) {
+                        Toast.makeText(it.context, "Free items cannot be selected", Toast.LENGTH_SHORT).show()
+                        return@setOnClickListener // Don't proceed if it's a free item
+                    }
+
                     cartItems.forEach { item ->
                         item.isSelected = false // Unselect all items
                     }
-                    val currentItem = cartItems[position]
                     currentItem.isSelected = true // Select the clicked item // Refresh the list
                     // Notify the fragment about the selected item
                     onItemClick(currentItem)
@@ -70,6 +76,7 @@ class MyCartAdapter(
             if (currentItem.isFree) {
                igDeleteIcon.visibility = View.GONE
                 ivFreeCartItem.visibility = View.VISIBLE
+
                 //here its free course show free banners in it
             }else{
                 igDeleteIcon.visibility = View.VISIBLE
@@ -82,6 +89,7 @@ class MyCartAdapter(
             etCartViewDetails.setOnClickListener{
                 onCartItemClickListener.onCartItemClicked(currentItem)
             }
+
             igDeleteIcon.setOnClickListener {
                 igDeleteIcon.isEnabled = false
                 if (holder.bindingAdapterPosition != RecyclerView.NO_POSITION && holder.bindingAdapterPosition < cartItems.size) {
