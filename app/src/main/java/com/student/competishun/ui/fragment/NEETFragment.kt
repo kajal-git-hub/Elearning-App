@@ -140,8 +140,11 @@ class NEETFragment : Fragment(), StudentCourseItemClickListener {
     }
 
     override fun onCourseItemClicked(course: AllCourseForStudentQuery.Course,bundle: Bundle) {
+        val courseTags = bundle.getStringArrayList("course_tags")?: arrayListOf()
         val bundle = Bundle().apply {
             putString("course_id", course.id)
+            putStringArrayList("course_tags", courseTags)
+
         }
         Log.e(TAG, course.id.toString())
         findNavController().navigate(R.id.action_coursesFragment_to_ExploreFragment, bundle)
