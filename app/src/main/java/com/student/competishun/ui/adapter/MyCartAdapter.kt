@@ -23,9 +23,14 @@ class MyCartAdapter(
     private val lifecycleOwner: LifecycleOwner,
     private val  userId: String,
     private val onCartItemRemovedListener: OnCartItemRemovedListener,
+    private val onCartItemClickListener: OnCartItemClickListener,
     private val onItemClick: (CartItem) -> Unit
 ) : RecyclerView.Adapter<MyCartAdapter.CartViewHolder>() {
      var selectedItemPosition: Int = RecyclerView.NO_POSITION
+
+    interface OnCartItemClickListener {
+        fun onCartItemClicked(cartItem: CartItem)
+    }
 
     inner class CartViewHolder(val binding: MycartItemBinding) : RecyclerView.ViewHolder(binding.root){
         init {
@@ -74,6 +79,9 @@ class MyCartAdapter(
 
             etCartNameText.text = currentItem.name
             etCartViewDetails.text = currentItem.viewDetails
+            etCartViewDetails.setOnClickListener{
+                onCartItemClickListener.onCartItemClicked(currentItem)
+            }
             igDeleteIcon.setOnClickListener {
                 igDeleteIcon.isEnabled = false
                 if (holder.bindingAdapterPosition != RecyclerView.NO_POSITION && holder.bindingAdapterPosition < cartItems.size) {

@@ -40,7 +40,7 @@ import java.util.Calendar
 import java.util.Locale
 
 @AndroidEntryPoint
-class MyCartFragment : Fragment(), OnCartItemRemovedListener {
+class MyCartFragment : Fragment(), OnCartItemRemovedListener,MyCartAdapter.OnCartItemClickListener {
     private lateinit var binding :  FragmentMyCartBinding
     private val orderViewModel: OrderViewModel by viewModels()
     private val userViewModel: UserViewModel by viewModels()
@@ -126,7 +126,7 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
         Log.e("cartAdaptercartITems","cartItem.toString()")
         myAllCart()
 
-        cartAdapter = MyCartAdapter(mutableListOf(),cartViewModel,viewLifecycleOwner,userId,this) { selectedItem ->
+        cartAdapter = MyCartAdapter(mutableListOf(),cartViewModel,viewLifecycleOwner,userId,this,this) { selectedItem ->
             Log.e("cartAdaptrcartITems", selectedItem.toString())
             handleItemClick(selectedItem, userId)
            // val selectedItem = cartAdapter.getSelectedItem()
@@ -576,6 +576,12 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
         super.onDestroyView()
     }
 
+    override fun onCartItemClicked(cartItem: CartItem) {
+        val bundle = Bundle().apply {
+            putString("course_id", cartItem.courseId)
+        }
+        findNavController().navigate(R.id.exploreFragment,bundle)
+    }
 
 
 }
