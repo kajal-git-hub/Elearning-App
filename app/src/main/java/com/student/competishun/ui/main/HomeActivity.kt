@@ -1,6 +1,7 @@
 package com.student.competishun.ui.main
 
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
@@ -80,6 +81,8 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+
 
         drawerLayout = findViewById(R.id.drwaer_layout)
         navigationView = findViewById(R.id.nv_navigationView)
