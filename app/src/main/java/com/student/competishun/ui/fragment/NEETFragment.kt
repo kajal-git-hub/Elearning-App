@@ -122,11 +122,11 @@ class NEETFragment : Fragment(), StudentCourseItemClickListener {
                         }
                         val courseClass = course.course_class?.name?:""
                        Log.e("NEETcouseacal",helperFunctions.toDisplayString(courseClass))
-                        when (helperFunctions.toDisplayString(courseClass)) {
-                            "11th" -> updateTabText(0, courseSize)
-                            "12th" -> updateTabText(1, courseSize)
-                            "12+" -> updateTabText(2, courseSize)
-                        }
+//                        when (helperFunctions.toDisplayString(courseClass)) {
+//                            "11th" -> updateTabText(0, courseSize)
+//                            "12th" -> updateTabText(1, courseSize)
+//                            "12+" -> updateTabText(2, courseSize)
+//                        }
                         course.toCourse()
                     } ?: emptyList()
                     Log.d("NEETFragment", courses.toString())
