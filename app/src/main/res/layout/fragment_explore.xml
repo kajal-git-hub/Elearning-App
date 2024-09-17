@@ -242,7 +242,7 @@
                         android:layout_marginTop="20dp"
                         android:ellipsize="end"
                         android:lineHeight="21sp"
-                        android:maxLines="2"
+                        android:maxLines="3"
                         android:text="@{courseByIDViewModel.courseByID != null ? courseByIDViewModel.courseByID.description : ` `}"
                         android:textColor="#726C6C"
                         android:textSize="14sp"

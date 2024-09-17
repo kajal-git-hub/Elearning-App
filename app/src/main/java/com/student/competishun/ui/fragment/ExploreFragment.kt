@@ -398,8 +398,19 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
 
             helperFunctions = HelperFunctions()
 
+
+
+        binding.tvCourseDescription.viewTreeObserver.addOnGlobalLayoutListener {
+            if (binding.tvCourseDescription.lineCount <= 2) {
+                binding.tvReadMore.visibility = View.GONE
+            } else {
+                binding.tvReadMore.visibility = View.VISIBLE
+            }
+        }
+
+
             binding.tvReadMore.setOnClickListener {
-                if (binding.tvCourseDescription.maxLines == 2) {
+                if (binding.tvCourseDescription.maxLines == 3) {
                     binding.tvCourseDescription.maxLines = Integer.MAX_VALUE
                     binding.tvCourseDescription.ellipsize = null
                     binding.tvReadMore.text = "Read Less"
@@ -407,14 +418,25 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
                         0, 0, R.drawable.arrow_up_explore, 0
                     )
                 } else {
-                    binding.tvCourseDescription.maxLines = 2
+                    binding.tvCourseDescription.maxLines = 3
                     binding.tvCourseDescription.ellipsize = android.text.TextUtils.TruncateAt.END
                     binding.tvReadMore.text = "Read More"
+                    binding.tvReadMore.visibility = View.VISIBLE
                     binding.tvReadMore.setCompoundDrawablesWithIntrinsicBounds(
                         0, 0, R.drawable.arrow_down, 0
                     )
                 }
             }
+
+        binding.tvCoursePlannerDescription.viewTreeObserver.addOnGlobalLayoutListener {
+            if (binding.tvCoursePlannerDescription.lineCount <= 2) {
+                binding.tvPlannerReadMore.visibility = View.GONE
+            } else {
+                binding.tvPlannerReadMore.visibility = View.VISIBLE
+            }
+        }
+
+
             binding.tvPlannerReadMore.setOnClickListener {
             if (binding.tvCoursePlannerDescription.maxLines == 3) {
                 binding.tvCoursePlannerDescription.maxLines = Integer.MAX_VALUE
@@ -427,6 +449,7 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
                 binding.tvCoursePlannerDescription.maxLines = 3
                 binding.tvCoursePlannerDescription.ellipsize = android.text.TextUtils.TruncateAt.END
                 binding.tvPlannerReadMore.text = "Read More"
+                binding.tvPlannerReadMore.visibility = View.VISIBLE
                 binding.tvPlannerReadMore.setCompoundDrawablesWithIntrinsicBounds(
                     0, 0, R.drawable.arrow_down, 0
                 )
