@@ -1,6 +1,7 @@
 package com.student.competishun.ui.adapter
 
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -26,9 +27,11 @@ import java.time.format.DateTimeFormatter
 import java.time.ZoneId
 import android.os.CountDownTimer
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.navigation.fragment.findNavController
 import com.student.competishun.ui.viewmodel.VideourlViewModel
 import com.student.competishun.utils.ToolbarCustomizationListener
+import java.time.LocalDate
 
 class ScheduleAdapter(private val scheduleItems: List<ScheduleData>, private val context: Context,private val toolbarListener: ToolbarCustomizationListener) : RecyclerView.Adapter<ScheduleAdapter.ScheduleViewHolder>() {
 
@@ -37,8 +40,13 @@ class ScheduleAdapter(private val scheduleItems: List<ScheduleData>, private val
         return ScheduleViewHolder(binding)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun findPositionByDate(date: String): Int {
-        return scheduleItems.indexOfFirst { it.date == date }
+        val today = LocalDate.now().toString() // Convert today's date to string format
+        val todayIndex = scheduleItems.indexOfFirst { it.date == today }
+        if (todayIndex != -1) {
+            return todayIndex
+        } else {return scheduleItems.indexOfFirst { it.date == date }}
     }
 
     override fun onBindViewHolder(holder: ScheduleViewHolder, position: Int) {

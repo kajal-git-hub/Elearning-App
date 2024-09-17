@@ -47,19 +47,20 @@ class ScheduleFragment : Fragment(), ToolbarCustomizationListener {
     private val binding by lazy {
         FragmentScheduleBinding.inflate(layoutInflater)
     }
+    var foundMatchingDate = false
     private val videourlViewModel: VideourlViewModel by viewModels()
     private lateinit var calendarSetUp: HorizontalCalendarSetUp
     private lateinit var scheduleAdapter: ScheduleAdapter
     private lateinit var helperFunctions: HelperFunctions
-    val gson = Gson()
     private val myCourseViewModel: MyCoursesViewModel by viewModels()
     lateinit var scheduleData:ZonedDateTime
+    var matchingPosition: Int? = null
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-       // setupCalendar()
+    ): View {
         return binding.root
     }
 
@@ -100,7 +101,7 @@ class ScheduleFragment : Fragment(), ToolbarCustomizationListener {
     private fun setupRecyclerView(contentList: List<FindAllCourseFolderContentByScheduleTimeQuery.FindAllCourseFolderContentByScheduleTime>) {
     Log.e("foldevontent" ,contentList.toString())
         var courseDate:CalendarDate = CalendarDate("","","",null)
-
+        Log.e("foldevonten" ,courseDate.toString())
 
         val scheduleDataList = contentList.groupBy {
             val scheduledTime = convertIST(it.content.scheduled_time.toString())
@@ -156,13 +157,29 @@ class ScheduleFragment : Fragment(), ToolbarCustomizationListener {
                 data.findAllCourseFolderContentByScheduleTime.forEachIndexed { index, scheduleContent ->
                     Log.e("timea $index", scheduleContent.content.scheduled_time.toString())
                 }
-                data.findAllCourseFolderContentByScheduleTime.forEach { schedulecontent->
+                data.findAllCourseFolderContentByScheduleTime.forEachIndexed {index, schedulecontent->
                 // Log.e("timea",schedulecontent.s.toString())
                  schedulecontent.content.scheduled_time.let {
-
+                    Log.e("scheduletimess", convertIST(it.toString()).toString())
                      val currentDate = ZonedDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
-                     if (currentDate != it)
-                         setupCalendar(it.toString()) else setupCalendar(currentDate)
+                     val regex = Regex("""(\d{4}-\d{2}-\d{2})""")
+                     val matchResult = regex.find(it.toString())
+                     val extractedDate = matchResult?.value ?: "Invalid date"
+                     Log.e("scheduletimecu ","$extractedDate $it")
+                     if (!foundMatchingDate){
+                         setupCalendar(it.toString())
+                     }
+                     if (currentDate == extractedDate){
+                         matchingPosition = index
+                         Log.e("datematching $matchingPosition",it.toString())
+                         foundMatchingDate = true
+                         binding.rvCalenderSchedule.scrollToPosition(index-2)
+                         setupCalendar(it.toString())
+                         return@forEachIndexed
+                     }
+
+//                     if (currentDate != it)
+//                         setupCalendar(it.toString()) else setupCalendar(currentDate)
 
                  }
                     Log.e("schedule57 $scheduleData", convertIST(scheduleData.toString()).toString())
@@ -261,8 +278,10 @@ class ScheduleFragment : Fragment(), ToolbarCustomizationListener {
 
 
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun scrollToDate(calendarDate: CalendarDate) {
         val position = scheduleAdapter.findPositionByDate(calendarDate.date)
+        Log.e("scrollpostions $matchingPosition",position.toString())
         if (position != -1) {
             binding.rvCalenderSchedule.scrollToPosition(position)
         }
