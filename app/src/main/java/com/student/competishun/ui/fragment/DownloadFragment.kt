@@ -45,6 +45,10 @@ class DownloadFragment : Fragment(),DownloadedItemAdapter.OnVideoClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+       binding.backIconDownloads.setOnClickListener {
+           requireActivity().onBackPressedDispatcher.onBackPressed()
+       }
+
 
         (activity as? HomeActivity)?.showBottomNavigationView(false)
         (activity as? HomeActivity)?.showFloatingButton(false)
