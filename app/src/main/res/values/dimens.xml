@@ -37,4 +37,8 @@
     <dimen name="_234dp">234dp</dimen>
     <dimen name="_12dp">12dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="_88dp">88dp</dimen>
+    <dimen name="_65dp">65dp</dimen>
+    <dimen name="_92dp">92dp</dimen>
+    <dimen name="_70dp">70dp</dimen>
 </resources>

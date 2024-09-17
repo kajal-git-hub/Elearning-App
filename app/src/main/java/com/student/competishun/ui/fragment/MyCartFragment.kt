@@ -18,6 +18,7 @@ import com.student.competishun.databinding.FragmentMyCartBinding
 import com.student.competishun.ui.adapter.MyCartAdapter
 import com.student.competishun.ui.viewmodel.CreateCartViewModel
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.wallet.PaymentsClient
 import com.google.android.gms.wallet.Wallet
 import com.google.android.gms.wallet.WalletConstants
@@ -130,6 +131,20 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
             handleItemClick(selectedItem, userId)
            // val selectedItem = cartAdapter.getSelectedItem()
             if (selectedItem != null) {
+
+                if (tabLayout.tabCount == 1) {
+                    val secondTab = tabLayout.newTab().setText("Pay In Installments")
+                    tabLayout.addTab(secondTab)
+                }
+
+                if(selectedItem.withInstallmentPrice==0 &&selectedItem.withInstallmentPrice==null ){
+                    Log.e("selectedItem",selectedItem.withInstallmentPrice.toString())
+                    binding.clSecondbottomInstallement.visibility = View.GONE
+                    tabLayout.removeTabAt(1)
+                }else{
+                    binding.clSecondbottomInstallement.visibility = View.GONE
+                    binding.clNotApplicable.visibility = View.GONE
+                }
                 val amountPaid = if (paymentType == "full") {
                     showFullPayment(selectedItem)
                     Log.e("selectedITeprce ${selectedItem.discount}",selectedItem.name)
@@ -166,7 +181,15 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
         binding.btnProceedToPay.setOnClickListener {
             if (input == null && cartAdapter.itemCount > 0) {
             // Automatically select the first item in the cart and set the input if input is null
-            val selectedCartItem = cartAdapter.getItemAt(cartAdapter.selectedItemPosition)
+            val selectedCartItem = if (cartAdapter.selectedItemPosition == RecyclerView.NO_POSITION) {
+                // Automatically select the first item if none is selected
+               // cartAdapter.setSelectedItemPosition(0)
+                cartAdapter.getItemAt(0) // Get the first item in the cart
+            } else {
+                // Use the already selected item
+                cartAdapter.getItemAt(cartAdapter.selectedItemPosition)
+            }
+
             selectedCartItem?.let { cartItem ->
                 val amountPaid = if (paymentType == "full") {
                     fullAmount
@@ -361,13 +384,7 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
                 Log.e("CartItems", data.findAllCartItems.toString())
                 var complementryId = ""
                  cartItems = data.findAllCartItems.map { cartItemData ->
-                    if(cartItemData.course.with_installment_price!=0){
-                        binding.clSecondbottomInstallement.visibility = View.GONE
-                       // tabLayout.removeTabAt(1)
-                    }else{
-                        binding.clSecondbottomInstallement.visibility = View.GONE
-                        binding.clNotApplicable.visibility = View.GONE
-                    }
+
 
                     binding.clEmptyCart.visibility = View.GONE
                     binding.parentData.visibility = View.VISIBLE
@@ -379,6 +396,7 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
                     if (!course.complementary_course.isNullOrEmpty())
                         complementryId = course.complementary_course
                     Log.e("complementryIDd", complementryId)
+                     Log.e("kajal ${course.name}", course.with_installment_price.toString())
                     Log.e("coureseIDd", course.id)
                     instAmountpaid = ((course.price ?: 0) + (course.with_installment_price ?: 0) * 0.6)
                     CartItem(
@@ -396,11 +414,13 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
                         categoryId = course.category_id.toString()
                     )
                 }
+
                 binding.tvCartCount.text = "(${cartItems.size})"
                 binding.cartBadge.text = cartItems.size.toString()
                 if (cartItems.isNotEmpty()) {
                     cartItems[0].isSelected = true
                 }
+
                 // Ensure this observer is only added once
                 if (complementryId != null) {
                 getCourseByIDViewModel.fetchCourseById(complementryId)
