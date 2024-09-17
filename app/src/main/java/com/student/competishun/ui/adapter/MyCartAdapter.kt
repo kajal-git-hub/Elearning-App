@@ -36,11 +36,10 @@ class MyCartAdapter(
                         item.isSelected = false // Unselect all items
                     }
                     val currentItem = cartItems[position]
-                    currentItem.isSelected = true // Select the clicked item
-                    notifyDataSetChanged() // Refresh the list
-
+                    currentItem.isSelected = true // Select the clicked item // Refresh the list
                     // Notify the fragment about the selected item
                     onItemClick(currentItem)
+                    notifyDataSetChanged()
                 }
             }
         }
@@ -117,17 +116,21 @@ class MyCartAdapter(
     }
 
     private fun removeCourse(context: Context, cartId: String,cartItemId:String, position: Int){
-        cartViewModel.removeCart(cartItemId)
+        cartViewModel.removeCartItem(cartItemId)
         cartViewModel.removeCartItemResult.observe(lifecycleOwner) { result ->
-            result.onSuccess {
-                //cartItems.removeAt(position)
-                // Notify the adapter about item removal
-                notifyItemRemoved(position)
-                notifyItemRangeChanged(position, cartItems.size)
-                onCartItemRemovedListener.onCartItemRemoved()
 
-                cartViewModel.findAllCartItems(userId)
-                Toast.makeText(context, "Cart removed successfully", Toast.LENGTH_SHORT).show()
+            result.onSuccess {
+                val mutableCartItems = cartItems.toMutableList()
+                if (position >= 0 && position < cartItems.size) {
+
+                    mutableCartItems.removeAt(position)
+                    cartItems = mutableCartItems
+                    notifyItemRemoved(position)
+                    notifyItemRangeChanged(position, cartItems.size)
+                    onCartItemRemovedListener.onCartItemRemoved()
+                    cartViewModel.findAllCartItems(userId)
+                    Toast.makeText(context, "Cart removed successfully", Toast.LENGTH_SHORT).show()
+                }
             }.onFailure {
                 // Handle failure, e.g., show an error message
               Log.e("Failed to remove cart: ",it.message.toString())
@@ -148,7 +151,6 @@ class MyCartAdapter(
     override fun getItemCount(): Int = cartItems.size
     fun updateCartItems(newCartItems: List<CartItem>) {
         cartItems = newCartItems
-
         notifyDataSetChanged()
     }
 }
