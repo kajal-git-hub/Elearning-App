@@ -23,19 +23,30 @@ class MyCartAdapter(
     private val lifecycleOwner: LifecycleOwner,
     private val  userId: String,
     private val onCartItemRemovedListener: OnCartItemRemovedListener,
+    private val onCartItemClickListener: OnCartItemClickListener,
     private val onItemClick: (CartItem) -> Unit
 ) : RecyclerView.Adapter<MyCartAdapter.CartViewHolder>() {
      var selectedItemPosition: Int = RecyclerView.NO_POSITION
+
+    interface OnCartItemClickListener {
+        fun onCartItemClicked(cartItem: CartItem)
+    }
 
     inner class CartViewHolder(val binding: MycartItemBinding) : RecyclerView.ViewHolder(binding.root){
         init {
             binding.root.setOnClickListener {
                 val position = bindingAdapterPosition
                 if (position != RecyclerView.NO_POSITION) {
+                    val currentItem = cartItems[position]
+
+                    if (currentItem.isFree) {
+                        Toast.makeText(it.context, "Free items cannot be selected", Toast.LENGTH_SHORT).show()
+                        return@setOnClickListener // Don't proceed if it's a free item
+                    }
+
                     cartItems.forEach { item ->
                         item.isSelected = false // Unselect all items
                     }
-                    val currentItem = cartItems[position]
                     currentItem.isSelected = true // Select the clicked item // Refresh the list
                     // Notify the fragment about the selected item
                     onItemClick(currentItem)
@@ -65,6 +76,7 @@ class MyCartAdapter(
             if (currentItem.isFree) {
                igDeleteIcon.visibility = View.GONE
                 ivFreeCartItem.visibility = View.VISIBLE
+
                 //here its free course show free banners in it
             }else{
                 igDeleteIcon.visibility = View.VISIBLE
@@ -74,6 +86,10 @@ class MyCartAdapter(
 
             etCartNameText.text = currentItem.name
             etCartViewDetails.text = currentItem.viewDetails
+            etCartViewDetails.setOnClickListener{
+                onCartItemClickListener.onCartItemClicked(currentItem)
+            }
+
             igDeleteIcon.setOnClickListener {
                 igDeleteIcon.isEnabled = false
                 if (holder.bindingAdapterPosition != RecyclerView.NO_POSITION && holder.bindingAdapterPosition < cartItems.size) {

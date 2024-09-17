@@ -17,7 +17,7 @@ query FindAllCartItems {
             complementary_course
             with_installment_price
             category_id
-
+            course_tags
         }
         price
     }

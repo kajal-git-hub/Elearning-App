@@ -21,6 +21,7 @@ interface StudentCourseItemClickListener {
 interface OnCartItemRemovedListener {
     fun onCartItemRemoved()
 }
+
 interface OnTopicTypeSelectedListener {
     fun onTopicTypeSelected(selectedTopic: TopicTypeModel)
 }

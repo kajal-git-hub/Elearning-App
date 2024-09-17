@@ -40,7 +40,7 @@ import java.util.Calendar
 import java.util.Locale
 
 @AndroidEntryPoint
-class MyCartFragment : Fragment(), OnCartItemRemovedListener {
+class MyCartFragment : Fragment(), OnCartItemRemovedListener,MyCartAdapter.OnCartItemClickListener {
     private lateinit var binding :  FragmentMyCartBinding
     private val orderViewModel: OrderViewModel by viewModels()
     private val userViewModel: UserViewModel by viewModels()
@@ -126,35 +126,36 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
         Log.e("cartAdaptercartITems","cartItem.toString()")
         myAllCart()
 
-        cartAdapter = MyCartAdapter(mutableListOf(),cartViewModel,viewLifecycleOwner,userId,this) { selectedItem ->
+        cartAdapter = MyCartAdapter(mutableListOf(),cartViewModel,viewLifecycleOwner,userId,this,this) { selectedItem ->
             Log.e("cartAdaptrcartITems", selectedItem.toString())
             handleItemClick(selectedItem, userId)
            // val selectedItem = cartAdapter.getSelectedItem()
             if (selectedItem != null) {
 
-                if (tabLayout.tabCount == 1) {
-                    val secondTab = tabLayout.newTab().setText("Pay In Installments")
-                    tabLayout.addTab(secondTab)
-                }
 
-                if(selectedItem.withInstallmentPrice==0 &&selectedItem.withInstallmentPrice==null ){
-                    Log.e("selectedItem",selectedItem.withInstallmentPrice.toString())
-                    binding.clSecondbottomInstallement.visibility = View.GONE
-                    tabLayout.removeTabAt(1)
-                }else{
-                    binding.clSecondbottomInstallement.visibility = View.GONE
-                    binding.clNotApplicable.visibility = View.GONE
+
+//                if(selectedItem.withInstallmentPrice==0 &&selectedItem.withInstallmentPrice==null ){
+//                    Log.e("selectedItemm",selectedItem.withInstallmentPrice.toString())
+//                    binding.clSecondbottomInstallement.visibility = View.GONE
+//                    tabLayout.removeTabAt(1)
+//                }else{
+//                    binding.clSecondbottomInstallement.visibility = View.GONE
+//                    binding.clNotApplicable.visibility = View.GONE
+//                }
+
+                if (selectedItem.withInstallmentPrice==0 || selectedItem.withInstallmentPrice==null){
+                    binding.tabLayoutContainer.visibility = View.GONE
+                }else {
+                    binding.tabLayoutContainer.visibility = View.VISIBLE
                 }
                 val amountPaid = if (paymentType == "full") {
                     showFullPayment(selectedItem)
                     Log.e("selectedITeprce ${selectedItem.discount}",selectedItem.name)
                     Log.e("selectedI ",fullAmount.toString())
-                    fullAmount
-
-
-                } else {
+                    fullAmount } else {
                     showPartialPayment(selectedItem)
                     Log.e("selectedIelse ${selectedItem.price}",selectedItem.name)
+                    Log.e("selectedInst $paymentType ",instAmountpaid.toString())
                     instAmountpaid
                 }
                 Log.e("getamountpaid ${selectedItem.price.toDouble()}", amountPaid.toString())
@@ -200,7 +201,7 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
 //                val firstCartItem = cartAdapter.getItemAt(0)
 //                firstCartItem?.let { cartItem ->
 //                    val amountPaid = if (paymentType == "full") { fullAmount } else { instAmountpaid }Log.e("fullpricec $amountPaid",totalAmount.toString())
-
+                  Log.e("exceptionscc $totalAmount",amountPaid.toString())
                     input = CreateOrderInput(
                         amountPaid = amountPaid,
                         entityId = cartItem.entityId,
@@ -217,14 +218,15 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
             }
 
             // Proceed to payment if input is not null
+            Log.e("orderAinput",input.toString())
             input?.let { orderInput ->
                 orderViewModel.createOrder(orderInput)
-
+                Log.e("orderAmountss",orderInput.toString())
                 orderViewModel.orderResult.observe(viewLifecycleOwner, Observer { result ->
                     result.onSuccess { data ->
                         processPayment(data.createOrder)
                     }.onFailure { exception ->
-                        Log.e("payemen",exception.cause.toString(),exception.cause)
+                        Log.e("payemen",exception.message.toString(),exception.cause)
                         navigatePaymentFail()
                         Toast.makeText(requireContext(), exception.message, Toast.LENGTH_SHORT).show()
                     }
@@ -242,10 +244,20 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
                             showFullPayment(cartItems[0])
                             binding.clSecondbottomInstallement.visibility = View.GONE
                         }
+
                     }
                     1 ->{ paymentType = "partial"
-                        binding.clSecondbottomInstallement.visibility = View.GONE
-                        showPartialPayment(cartItems[0])
+                        Log.e("getselected",paymentType.toString())
+                        Toast.makeText(requireContext(),"Select Course Again", Toast.LENGTH_SHORT).show()
+                        val selectedItem = cartAdapter.getSelectedItem()
+                        if (cartAdapter.selectedItemPosition != RecyclerView.NO_POSITION) {
+                           // val selectedItem = cartItems[cartAdapter.selectedItemPosition]
+                            Log.e("getselectedITem",selectedItem.toString())
+                            if (selectedItem != null) {
+                                showPartialPayment(selectedItem)
+                            }
+                        }
+
                     }
                 }
             }
@@ -261,6 +273,7 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
     }
 
     private fun showFullPayment(selectedCartItem: CartItem) {
+        paymentType = "full"
         binding.clSecondbottomInstallement.visibility = View.GONE
         binding.tvOneTimePayment.text = "One-Time Payment"
         cartAdapter.updateCartItems(originalCartItems)
@@ -297,6 +310,7 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
     }
 
     private fun showPartialPayment(selectedCartItem: CartItem) {
+        paymentType = "partial"
         binding.tvOneTimePayment.text = "1st Installment"
         binding.clSecondbottomInstallement.visibility = View.VISIBLE
         binding.etInstallmentbelowDetails.text =  "2nd Installment On: "
@@ -313,6 +327,7 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
             ).second)
             var firstInstallment =
                 ((selectedCartItem.withInstallmentPrice.toDouble())) * 0.6
+            instAmountpaid = firstInstallment
             var secondInstallment = (selectedCartItem.withInstallmentPrice.toDouble()) - firstInstallment
 
 
@@ -398,7 +413,12 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
                     Log.e("complementryIDd", complementryId)
                      Log.e("kajal ${course.name}", course.with_installment_price.toString())
                     Log.e("coureseIDd", course.id)
-                    instAmountpaid = ((course.price ?: 0) + (course.with_installment_price ?: 0) * 0.6)
+                     if (course.with_installment_price == 0){
+                         binding.tabLayoutContainer.visibility = View.GONE
+                     }else{
+                         binding.tabLayoutContainer.visibility = View.VISIBLE
+                     }
+                //    instAmountpaid = ((course.price ?: 0) + (course.with_installment_price ?: 0) * 0.6)
                     CartItem(
                         profileImageResId = course.banner_image ?: "", // Replace with actual logic for image
                         name = course.name,
@@ -411,8 +431,17 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
                         cartId = cartItemData.cartItem.cart_id,
                         courseId = course.id,
                         withInstallmentPrice = course.with_installment_price ?: 0,
-                        categoryId = course.category_id.toString()
+                        categoryId = course.category_id.toString(),
+                        recommendCourseTags = course.course_tags
                     )
+
+                }
+
+                if (cartItems[0].withInstallmentPrice==0){
+                    Log.e("cartITemsprice",cartItems[0].withInstallmentPrice.toString())
+                    binding.tabLayoutContainer.visibility = View.GONE
+                }else{
+                    binding.tabLayoutContainer.visibility = View.VISIBLE
                 }
 
                 binding.tvCartCount.text = "(${cartItems.size})"
@@ -443,7 +472,8 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
                                 courseId = course.id,
                                 withInstallmentPrice = course.with_installment_price ?: 0,
                                 categoryId = course.category_id.toString(),
-                                isFree = true
+                                isFree = true,
+                                recommendCourseTags = course.course_tags
                             )
 
                             if (freeCourseItem !in cartItems) {
@@ -542,7 +572,8 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
                         cartId = cartItemData.cartItem.cart_id,
                         courseId = course.id,
                         withInstallmentPrice = course.with_installment_price ?: 0,
-                        categoryId = course.category_id.toString()
+                        categoryId = course.category_id.toString(),
+                        recommendCourseTags = course.course_tags
                     )
 
                 }
@@ -576,6 +607,13 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener {
         super.onDestroyView()
     }
 
+    override fun onCartItemClicked(cartItem: CartItem) {
+        val bundle = Bundle().apply {
+            putStringArrayList("recommendCourseTags", ArrayList(cartItem.recommendCourseTags))
+            putString("course_id", cartItem.courseId)
+        }
+        findNavController().navigate(R.id.exploreFragment,bundle)
+    }
 
 
 }

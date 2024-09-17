@@ -1,10 +1,12 @@
 package com.student.competishun.data.model
 
+import com.student.competishun.curator.type.CourseLectureCount
+
 data class CartItem(
-    val profileImageResId: String, // Assuming a drawable resource ID
+    val profileImageResId: String,
     val name: String,
     val viewDetails: String,
-    val forwardDetails: Int, // Assuming a drawable resource ID for the arrow icon
+    val forwardDetails: Int,
     val discount: Int,
     val price: Int,
     val cartItemId:String,
@@ -14,6 +16,7 @@ data class CartItem(
     val withInstallmentPrice: Int,
     val categoryId: String,
     val isFree: Boolean = false,
-    var isSelected: Boolean = false
+    var isSelected: Boolean = false,
+    var recommendCourseTags: List<String>?
 
 )
