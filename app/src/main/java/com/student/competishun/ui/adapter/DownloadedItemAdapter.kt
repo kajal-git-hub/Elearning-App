@@ -46,7 +46,7 @@ class DownloadedItemAdapter(private val context: Context, private val items: Lis
             holder.forRead.setImageResource(R.drawable.frame_1707481707_1_)
         }else{
             holder.lecTime.setCompoundDrawablesWithIntrinsicBounds(R.drawable.clock_black, 0, 0, 0);
-            holder.lecTime.text = item.videoDuration.toString()
+            holder.lecTime.text = formatTimeDuration(item.videoDuration)
             holder.forRead.visibility = View.GONE
             holder.forVideo.visibility = View.VISIBLE
             holder.clCourseBook.setBackgroundResource(R.drawable.frame_1707480918)
@@ -72,5 +72,23 @@ class DownloadedItemAdapter(private val context: Context, private val items: Lis
 
     override fun getItemCount(): Int {
         return items.size
+    }
+
+    private fun formatTimeDuration(totalDuration: Int): String {
+        return when {
+            totalDuration < 60 -> "${totalDuration} sec"
+            totalDuration == 60 -> "1h"
+            else -> {
+                val hours = totalDuration / 3600
+                val minutes = (totalDuration % 3600) / 60
+                val seconds = totalDuration % 60
+
+                val hourString = if (hours > 0) "${hours} hr${if (hours > 1) "s" else ""}" else ""
+                val minuteString = if (minutes > 0) "${minutes} min${if (minutes > 1) "s" else ""}" else ""
+                val secondString = if (seconds > 0) "${seconds} sec" else ""
+
+                listOf(hourString, minuteString, secondString).filter { it.isNotEmpty() }.joinToString(" ").trim()
+            }
+        }
     }
 }
