@@ -967,7 +967,7 @@
                     android:layout_marginTop="20dp"
                     android:textColor="#726C6C"
                     android:textSize="12sp"
-                    android:text="35000"
+                    android:text=""
                     app:fontFamily="@font/nunito"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
