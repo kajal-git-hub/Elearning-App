@@ -40,20 +40,16 @@ class TopicTypeContentFragment : Fragment() {
     ): View? {
         binding = FragmentTopicTypeContentBinding.inflate(inflater, container, false)
 
-        requireActivity().onBackPressedDispatcher.addCallback(this) {
-            handleBackPressed()
-        }
-
         return binding.root
     }
 
-    private fun handleBackPressed() {
-        requireActivity().onBackPressedDispatcher.onBackPressed()
-    }
+
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        helperFunctions = HelperFunctions()
         binding.backIcon.setOnClickListener {
 
                 requireActivity().onBackPressedDispatcher.onBackPressed()
