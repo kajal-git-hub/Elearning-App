@@ -5,10 +5,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.student.competishun.R
 import com.student.competishun.databinding.FragmentBottomSheetDeletePDFsBinding
+import dagger.hilt.android.AndroidEntryPoint
 
-class BottomSheetDeletePDFsFragment : Fragment() {
+@AndroidEntryPoint
+class BottomSheetDeletePDFsFragment : BottomSheetDialogFragment() {
 
     private lateinit var binding : FragmentBottomSheetDeletePDFsBinding
 

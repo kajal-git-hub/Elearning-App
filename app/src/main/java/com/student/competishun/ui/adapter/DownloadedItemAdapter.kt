@@ -8,12 +8,20 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import com.student.competishun.data.model.TopicContentModel
 import com.student.competishun.R
+import com.student.competishun.ui.fragment.BottomSheetDeletePDFsFragment
+import com.student.competishun.ui.fragment.BottomSheetDeleteVideoFragment
+import com.student.competishun.ui.fragment.BottomSheetDownloadBookmark
 import com.student.competishun.ui.main.PdfViewerActivity
 
-class DownloadedItemAdapter(private val context: Context, private val items: List<TopicContentModel>,private val videoClickListener:OnVideoClickListener) : RecyclerView.Adapter<DownloadedItemAdapter.ViewHolder>() {
+class DownloadedItemAdapter(private val context: Context,
+                            private val items: List<TopicContentModel>,
+                            private val videoClickListener:OnVideoClickListener,
+                            private val fragmentManager: FragmentManager // Add this parameter
+) : RecyclerView.Adapter<DownloadedItemAdapter.ViewHolder>() {
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val clCourseBook : ConstraintLayout = itemView.findViewById(R.id.cl_course_book)
@@ -25,6 +33,7 @@ class DownloadedItemAdapter(private val context: Context, private val items: Lis
         val topicDescription: TextView = itemView.findViewById(R.id.tv_topic_description)
         var forRead : ImageView  = itemView.findViewById(R.id.iv_read_pdf)
         var forVideo : ImageView = itemView.findViewById(R.id.iv_read_video)
+        var dotExtraInfoDownload : ImageView = itemView.findViewById(R.id.dotExtraInfoDownload)
     }
     interface OnVideoClickListener {
         fun onVideoClick(folderContentId: String, name: String)
@@ -44,6 +53,10 @@ class DownloadedItemAdapter(private val context: Context, private val items: Lis
             holder.ivSubjectBookIcon.setImageResource(R.drawable.group_1707478995)
             holder.ivBookShadow.setImageResource(R.drawable.ellipse_17956)
             holder.forRead.setImageResource(R.drawable.frame_1707481707_1_)
+            holder.dotExtraInfoDownload.setOnClickListener {
+                val bottomSheet = BottomSheetDeletePDFsFragment()
+                bottomSheet.show(fragmentManager, bottomSheet.tag)
+            }
         }else{
             holder.lecTime.setCompoundDrawablesWithIntrinsicBounds(R.drawable.clock_black, 0, 0, 0);
             holder.lecTime.text = formatTimeDuration(item.videoDuration)
@@ -52,6 +65,10 @@ class DownloadedItemAdapter(private val context: Context, private val items: Lis
             holder.clCourseBook.setBackgroundResource(R.drawable.frame_1707480918)
             holder.ivSubjectBookIcon.setImageResource(R.drawable.group_1707478994)
             holder.ivBookShadow.setImageResource(R.drawable.ellipse_17956)
+            holder.dotExtraInfoDownload.setOnClickListener {
+                val bottomSheet = BottomSheetDeleteVideoFragment()
+                bottomSheet.show(fragmentManager,bottomSheet.tag)
+            }
 
         }
         holder.topicName.text = item.topicName
@@ -66,6 +83,11 @@ class DownloadedItemAdapter(private val context: Context, private val items: Lis
         holder.forVideo.setOnClickListener {
             videoClickListener.onVideoClick(item.id, item.topicName)
         }
+
+//        holder.dotExtraInfoDownload.setOnClickListener {
+//            removeItem(position)
+//        }
+
 
     }
 
@@ -91,4 +113,13 @@ class DownloadedItemAdapter(private val context: Context, private val items: Lis
             }
         }
     }
+    fun removeItem(position: Int) {
+        val updatedItems = items.toMutableList()
+        updatedItems.removeAt(position)
+        (items as MutableList).clear()
+        (items as MutableList).addAll(updatedItems)
+        notifyItemRemoved(position)
+        notifyItemRangeChanged(position, itemCount)
+    }
+
 }
