@@ -793,7 +793,7 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
             }.onFailure { exception ->
                 Log.e("createCart",exception.message.toString())
                 // Handle error, e.g., show a toast or dialog
-                Toast.makeText(requireContext(), "Existing Cart Item", Toast.LENGTH_LONG).show()
+                Toast.makeText(requireContext(), exception.message, Toast.LENGTH_LONG).show()
             }
         })
 
