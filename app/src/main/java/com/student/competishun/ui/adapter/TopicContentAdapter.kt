@@ -24,7 +24,12 @@ import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 import java.util.Locale
 
-class TopicContentAdapter(private val topicContents: List<TopicContentModel>, private val folderContentId: String, private val fragmentActivity: FragmentActivity, private val onItemClick: (TopicContentModel, String) -> Unit) :
+class TopicContentAdapter(
+    private val topicContents: List<TopicContentModel>,
+    private val folderContentId: String,
+    private val fragmentActivity: FragmentActivity,
+    private val onItemClick: (TopicContentModel, String) -> Unit
+) :
     RecyclerView.Adapter<TopicContentAdapter.TopicContentViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TopicContentViewHolder {
@@ -37,10 +42,10 @@ class TopicContentAdapter(private val topicContents: List<TopicContentModel>, pr
     override fun onBindViewHolder(holder: TopicContentViewHolder, position: Int) {
 
         val topicContent = topicContents[position]
-        holder.bind(topicContents[position],fragmentActivity)
+        holder.bind(topicContents[position], fragmentActivity)
 
         holder.itemView.setOnClickListener {
-            onItemClick(topicContent,folderContentId)
+            onItemClick(topicContent, folderContentId)
         }
     }
 
@@ -59,7 +64,9 @@ class TopicContentAdapter(private val topicContents: List<TopicContentModel>, pr
                 bottomSheet.show(fragmentActivity.supportFragmentManager, bottomSheet.tag)
             }
 
-            if (showDateIfFutureOrToday(topicContent.lockTime))binding.videoicon.setImageResource(R.drawable.frame_1707481707) else binding.videoicon.setImageResource(R.drawable.frame_1707481080)
+            if (showDateIfFutureOrToday(topicContent.lockTime)) binding.videoicon.setImageResource(R.drawable.frame_1707481707) else binding.videoicon.setImageResource(
+                R.drawable.frame_1707481080
+            )
             if (topicContent.playIcon != 0) {
                 binding.videoicon.setImageResource(topicContent.playIcon)
                 binding.videoicon.visibility = View.VISIBLE
@@ -100,7 +107,12 @@ class TopicContentAdapter(private val topicContents: List<TopicContentModel>, pr
 
                         // Set the color for "Read More"
                         spannableString.setSpan(
-                            ForegroundColorSpan(ContextCompat.getColor(binding.root.context, R.color.blue_3E3EF7)),
+                            ForegroundColorSpan(
+                                ContextCompat.getColor(
+                                    binding.root.context,
+                                    R.color.blue_3E3EF7
+                                )
+                            ),
                             spannableString.length - "Read more".length,
                             spannableString.length,
                             Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
@@ -134,26 +146,31 @@ class TopicContentAdapter(private val topicContents: List<TopicContentModel>, pr
                 // Get today's date
                 val today = LocalDate.now()
                 // Compare the dates
-                Log.e("adfdf$today",date.toString())
+                Log.e("adfdf$today", date.toString())
                 date.isBefore(today) || date.isEqual(today)
             } catch (e: DateTimeParseException) {
                 // Log the exception and try the fallback format
-                Log.e("DateParsingError", "Primary format parsing error: ${e.message}. Input date string: '$dateString'")
+                Log.e(
+                    "DateParsingError",
+                    "Primary format parsing error: ${e.message}. Input date string: '$dateString'"
+                )
                 try {
                     // Try parsing using the fallback formatter
                     val date = LocalDate.parse(dateString.trim(), fallbackFormatter)
                     val today = LocalDate.now()
-                    Log.e("adfdf $today",date.toString())
+                    Log.e("adfdf $today", date.toString())
                     date.isBefore(today) || date.isEqual(today)
                 } catch (fallbackException: DateTimeParseException) {
                     // Log the fallback exception and return false if parsing fails
-                    Log.e("DateParsingError", "Fallback format parsing error: ${fallbackException.message}. Input date string: '$dateString'")
+                    Log.e(
+                        "DateParsingError",
+                        "Fallback format parsing error: ${fallbackException.message}. Input date string: '$dateString'"
+                    )
                     false
                 }
             }
         }
     }
-
 
 
 }

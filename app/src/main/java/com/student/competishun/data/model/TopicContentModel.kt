@@ -10,7 +10,7 @@ data class TopicContentModel(
     val topicName: String,
     val topicDescription: String,
     val progress: Int,
-    val url: String,
+    var url: String,
     val fileType: String,
     val lockTime:String
 )

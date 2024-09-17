@@ -43,7 +43,7 @@ class SharedPreferencesManager(context: Context) {
     fun saveDownloadedItem(item: TopicContentModel) {
         val json = gson.toJson(item)
         sharedPreferences.edit().putString(KEY_DOWNLOADED_ITEM_PREFIX + item.id, json).apply()
-        Log.e("SharedPreferences", "Saved downloaded item: ${item.id}")
+        Log.e("SharedPreferences", "Saved downloaded item: ${item.url}")
     }
 
     fun getDownloadedItems(): List<TopicContentModel> {

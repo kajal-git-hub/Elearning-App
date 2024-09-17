@@ -126,7 +126,7 @@ class ResumeCourseFragment : Fragment() {
 
                         binding.rvOurSubject.adapter = adapter
                         binding.rvOurSubject.layoutManager =
-                            GridLayoutManager(context, 3, GridLayoutManager.HORIZONTAL, false)
+                            GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false)
 
                     }
                 }

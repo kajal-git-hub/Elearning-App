@@ -2,6 +2,8 @@ package com.student.competishun.ui.adapter
 
 import android.content.Context
 import android.content.Intent
+import android.os.Environment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +18,7 @@ import com.student.competishun.ui.fragment.BottomSheetDeletePDFsFragment
 import com.student.competishun.ui.fragment.BottomSheetDeleteVideoFragment
 import com.student.competishun.ui.fragment.BottomSheetDownloadBookmark
 import com.student.competishun.ui.main.PdfViewerActivity
+import java.io.File
 
 class DownloadedItemAdapter(private val context: Context,
                             private val items: List<TopicContentModel>,
@@ -75,10 +78,14 @@ class DownloadedItemAdapter(private val context: Context,
         holder.topicDescription.text = item.topicDescription
 
         holder.forRead.setOnClickListener {
-            val intent = Intent(context, PdfViewerActivity::class.java).apply {
-                putExtra("PDF_URL", item.url)
+            Log.d("ItemUrl",item.url)
+            val fileName = item.url.substring(item.url.lastIndexOf('/') + 1)
+            Log.d("fileName",fileName)
+            val localFile = File(context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), fileName)
+
+            if (localFile.exists()) {
+                openPdfViewer(localFile.absolutePath)
             }
-            context.startActivity(intent)
         }
         holder.forVideo.setOnClickListener {
             videoClickListener.onVideoClick(item.id, item.topicName)
@@ -91,6 +98,13 @@ class DownloadedItemAdapter(private val context: Context,
 
     }
 
+
+    private fun openPdfViewer(filePath: String) {
+        val intent = Intent(context, PdfViewerActivity::class.java).apply {
+            putExtra("PDF_URL", filePath) // Use the local file path here
+        }
+        context.startActivity(intent)
+    }
 
     override fun getItemCount(): Int {
         return items.size
