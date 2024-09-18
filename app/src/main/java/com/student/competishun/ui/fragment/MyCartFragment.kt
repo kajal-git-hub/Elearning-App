@@ -289,8 +289,24 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener,MyCartAdapter.OnCar
         binding.tvInstDiscountLabel.visibility = View.VISIBLE
         binding.tvInstDiscount.visibility = View.VISIBLE
         totalAmount = selectedCartItem.price.toInt()
-        binding.tvInstDiscountLabel.text = "Discount (${helperFunctions.calculateDiscountPercentage(selectedCartItem.price, selectedCartItem.discount).toInt()}%)"
-        binding.tvInstDiscount.text = "-₹${(helperFunctions.calculateDiscountDetails(selectedCartItem.price.toDouble(),selectedCartItem.discount.toDouble()).second)}"
+
+        if (selectedCartItem.discount!=0) {
+            binding.tvInstDiscountLabel.text = "Discount (${
+                helperFunctions.calculateDiscountPercentage(
+                    selectedCartItem.price,
+                    selectedCartItem.discount
+                ).toInt()
+            }%)"
+            binding.tvInstDiscount.text = "-₹${
+                (helperFunctions.calculateDiscountDetails(
+                    selectedCartItem.price.toDouble(),
+                    selectedCartItem.discount.toDouble()
+                ).second)
+            }"
+        }else if (selectedCartItem.discount ==0 ){
+            binding.tvInstDiscount.text = "-₹${selectedCartItem.discount}"
+            binding.tvInstDiscountLabel.text = "Discount (0)"
+        }
          //   "- ₹${(originalCartItems.get(0).price.toDouble()).minus(originalCartItems.get(0).discount.toDouble())}"
        // fullAmount = (helperFunctions.calculateDiscountDetails(originalCartItems.get(0).price.toDouble(),originalCartItems.get(0).discount.toDouble()).second.toDouble())
         binding.tvPrice.text = "₹${selectedCartItem.discount}"

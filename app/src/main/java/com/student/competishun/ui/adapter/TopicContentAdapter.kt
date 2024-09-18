@@ -41,13 +41,21 @@ class TopicContentAdapter(
         return TopicContentViewHolder(binding)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: TopicContentViewHolder, position: Int) {
 
         val topicContent = topicContents[position]
         holder.bind(topicContents[position], fragmentActivity)
 
-        holder.itemView.setOnClickListener {
-            onItemClick(topicContent, folderContentId)
+        // Disable click if locked, enable if not
+        if ( showDateIfFutureOrToday(topicContent.lockTime)) {
+            // Enable the click listener for unlocked items
+            holder.itemView.setOnClickListener {
+                onItemClick(topicContent, folderContentId)
+            }
+        } else {
+            // Disable the click listener for locked items
+            holder.itemView.setOnClickListener(null)
         }
     }
 
@@ -65,17 +73,21 @@ class TopicContentAdapter(
                 bottomSheet.setItemDetails(topicContent)
                 bottomSheet.show(fragmentActivity.supportFragmentManager, bottomSheet.tag)
             }
-
-            if (showDateIfFutureOrToday(topicContent.lockTime)) binding.videoicon.setImageResource(R.drawable.frame_1707481707) else binding.videoicon.setImageResource(
-                R.drawable.frame_1707481080
-            )
-            if (topicContent.playIcon != 0) {
-                binding.videoicon.setImageResource(topicContent.playIcon)
+          Log.e("getlocketime",topicContent.lockTime)
+//            if (showDateIfFutureOrToday(topicContent.lockTime)) binding.videoicon.setImageResource(R.drawable.frame_1707481707) else binding.videoicon.setImageResource(
+//                R.drawable.frame_1707481080
+//            )
+            if ( showDateIfFutureOrToday(topicContent.lockTime)) {
+                if (topicContent.fileType == "VIDEO")
+                {  binding.videoicon.setImageResource(R.drawable.frame_1707481707)}
+                else if (topicContent.fileType == "PDF"){ binding.videoicon.setImageResource(R.drawable.pdf_bg)}
                 binding.videoicon.visibility = View.VISIBLE
                 binding.ivPlayVideoIcon.visibility = View.VISIBLE
 
             } else {
-                binding.videoicon.setImageDrawable(null)
+                binding.videoicon.visibility = View.VISIBLE
+                binding.ivPlayVideoIcon.visibility = View.VISIBLE
+                binding.videoicon.setImageResource(R.drawable.frame_1707481080)
             }
 
             binding.tvLecture.text = topicContent.lecture
@@ -132,7 +144,6 @@ class TopicContentAdapter(
             }
 
         }
-
         @RequiresApi(Build.VERSION_CODES.O)
         fun showDateIfFutureOrToday(dateString: String): Boolean {
             // Define the primary date format pattern
@@ -172,7 +183,46 @@ class TopicContentAdapter(
                 }
             }
         }
-    }
 
+    }
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun showDateIfFutureOrToday(dateString: String): Boolean {
+        // Define the primary date format pattern
+        val dateString = dateString.replace("Sept", "Sep").trim()
+
+        val primaryFormatter = DateTimeFormatter.ofPattern("dd MMM, yy", Locale.ENGLISH)
+        // Define a fallback format pattern if needed
+        val fallbackFormatter = DateTimeFormatter.ofPattern("dd MMM yy", Locale.ENGLISH)
+
+        return try {
+            // Try to parse using the primary formatter
+            val date = LocalDate.parse(dateString.trim(), primaryFormatter)
+            // Get today's date
+            val today = LocalDate.now()
+            // Compare the dates
+            Log.e("adfdf$today", date.toString())
+            date.isBefore(today) || date.isEqual(today)
+        } catch (e: DateTimeParseException) {
+            // Log the exception and try the fallback format
+            Log.e(
+                "DateParsingError",
+                "Primary format parsing error: ${e.message}. Input date string: '$dateString'"
+            )
+            try {
+                // Try parsing using the fallback formatter
+                val date = LocalDate.parse(dateString.trim(), fallbackFormatter)
+                val today = LocalDate.now()
+                Log.e("adfdf $today", date.toString())
+                date.isBefore(today) || date.isEqual(today)
+            } catch (fallbackException: DateTimeParseException) {
+                // Log the fallback exception and return false if parsing fails
+                Log.e(
+                    "DateParsingError",
+                    "Fallback format parsing error: ${fallbackException.message}. Input date string: '$dateString'"
+                )
+                false
+            }
+        }
+    }
 
 }
