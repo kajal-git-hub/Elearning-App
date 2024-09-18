@@ -298,6 +298,9 @@ class HomeFragment : Fragment() {
                     if (!redirectLink.isNullOrEmpty()) {
                         openLink(redirectLink)
                     } else if (!courseId.isNullOrEmpty()) {
+                        val bannerCourseTag = listOf<String>()
+                        Log.d("bannerCourseTag",bannerCourseTag.toString())
+
                         val bundle = Bundle().apply {
                             putString("course_id", courseId)
                         }
@@ -331,6 +334,7 @@ class HomeFragment : Fragment() {
             }
         }
     }
+
 
 
     fun getAllCoursesForStudent(courseType: String) {

@@ -82,7 +82,7 @@ class OurContentAdapter(
         fun bind(item: GetCourseByIdQuery.Folder, listener: OnItemClickListener) {
 
             titleTextView.text = item.name
-            if (item.name.startsWith("Free")) {
+            if (item.name.startsWith("Class")) {
 
                 iconImageView.setImageResource(R.drawable.frame_1707480918)
                 freeBadgeImageView.setImageResource(R.drawable.group_1272628768)

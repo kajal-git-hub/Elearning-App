@@ -227,6 +227,9 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
 
     private val mobileNumberTextWatcher = object : TextWatcher {
         override fun afterTextChanged(s: Editable?) {
+            sharedPreferencesManager.name = binding.etFullName.text.toString().trim()
+            sharedPreferencesManager.fatherName = binding.etFathersName.text.toString().trim()
+            sharedPreferencesManager.whatsUpNo = binding.etWhatsappNumber.text.toString().trim()
             updateButtonState()
         }
 
