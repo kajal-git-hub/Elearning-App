@@ -115,6 +115,7 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
         }
 
         binding.btnAddDetails.setOnClickListener {
+            sharedPreferencesManager.isFormValid = true
             if (isFormValid()) {
                 updateUserDetails()
                 findNavController().navigate(R.id.action_PersonalDetails_to_AdditionalDetail)

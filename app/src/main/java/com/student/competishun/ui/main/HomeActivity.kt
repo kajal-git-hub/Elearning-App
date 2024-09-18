@@ -19,6 +19,7 @@ import androidx.databinding.ObservableField
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.replace
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -84,14 +85,15 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
 
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.fragmentNavigation) as NavHostFragment
+        navController = navHostFragment.navController
+
+
         drawerLayout = findViewById(R.id.drwaer_layout)
         navigationView = findViewById(R.id.nv_navigationView)
 
         sharedPreferencesManager = SharedPreferencesManager(this)
-
-
-
-
 
         binding.clStartCall.setOnClickListener {
             val phoneNumber = "8888000021"
@@ -109,11 +111,13 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
         val menu = bottomNavigationView.menu
         sharedPreferencesManager = SharedPreferencesManager(this)
 
-        val navHostFragment =
-            supportFragmentManager.findFragmentById(R.id.fragmentNavigation) as NavHostFragment
-        navController = navHostFragment.navController
-
-        Log.e("courseTu[ea",courseType)
+//
+//        if(!sharedPreferencesManager.isFormValid){
+//            supportFragmentManager.beginTransaction()
+//                .replace(R.id.nv_navigationView,PersonalDetailsFragment())
+//                .addToBackStack(null)
+//                .commit()
+//        }
 
         if (savePaymentSuccess) {
             menu.findItem(R.id.News).isVisible = false
@@ -159,12 +163,11 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
             insets
         }
         if (savedInstanceState == null) {
-
             // Ensure that HomeFragment is loaded on the first launch
             navController.navigate(R.id.homeFragment,bundle)
             bottomNavigationView.selectedItemId = R.id.home
-
         }
+
 
     }
     override fun onBackPressed() {
