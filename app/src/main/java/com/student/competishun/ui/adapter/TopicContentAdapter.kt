@@ -36,6 +36,8 @@ class TopicContentAdapter(
         val binding = ItemTopicTypeContentBinding.inflate(
             LayoutInflater.from(parent.context), parent, false
         )
+
+        Log.e("topicocwntn",topicContents.toString())
         return TopicContentViewHolder(binding)
     }
 

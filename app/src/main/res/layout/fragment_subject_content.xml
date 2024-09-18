@@ -136,7 +136,7 @@
             android:layout_marginStart="@dimen/_4dp"
             android:fontFamily="@font/nunito"
             android:text=""
-            android:visibility="visible"
+            android:visibility="gone"
             android:textColor="#2B2829"
             android:textSize="@dimen/_14sp"
             android:textStyle="bold"
@@ -170,17 +170,17 @@
         tools:listitem="@layout/item_course_content" />
 
 
+
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_topic_content"
+        android:id="@+id/rvTopicContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="@dimen/_15dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/rvSubjectContent"
-        tools:itemCount="8"
-        tools:listitem="@layout/item_topic_type_content" />
+        tools:itemCount="2"
+        tools:listitem="@layout/item_course_content" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/clRunningCourseReminder"
