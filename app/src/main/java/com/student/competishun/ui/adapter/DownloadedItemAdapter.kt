@@ -20,7 +20,6 @@ import com.student.competishun.ui.fragment.BottomSheetDeletePDFsFragment
 import com.student.competishun.ui.fragment.BottomSheetDeleteVideoFragment
 import com.student.competishun.ui.fragment.BottomSheetDownloadBookmark
 import com.student.competishun.ui.fragment.PdfViewerFragment
-import com.student.competishun.ui.main.PdfViewerActivity
 import java.io.File
 
 class DownloadedItemAdapter(private val context: Context,

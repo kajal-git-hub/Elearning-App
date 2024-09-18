@@ -69,6 +69,7 @@ import com.student.competishun.utils.HelperFunctions
 import com.student.competishun.utils.SharedPreferencesManager
 import com.student.competishun.utils.StudentCourseItemClickListener
 import dagger.hilt.android.AndroidEntryPoint
+import kotlin.math.log
 
 
 @AndroidEntryPoint
@@ -95,6 +96,8 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
     var secondInstallment: Int = 0
     var ExploreCourseTags: MutableList<String> = mutableListOf()
     var isVideoPlaying = false
+    var installmentPrice1 = 0
+    private var checkInstallOrNot = 0
 
 
     override fun onCreateView(
@@ -118,6 +121,9 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
         helperFunctions = HelperFunctions()
         combinedTabItems = listOf()
 
+        binding.backIv.setOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed() }
+
+        sharedPreferencesManager = SharedPreferencesManager(requireContext())
 
         arguments?.let { bundle ->
             val tags = bundle.getStringArrayList("course_tags")
@@ -159,11 +165,13 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
 
         getCourseTagsData()
 
+        binding.clBuynow.setOnClickListener {
+            createCart(createCartViewModel)
+        }
+
         var lectureCount = arguments?.getString("LectureCount")
-        folderlist = emptyList()
-        helperFunctions = HelperFunctions()
         courseId = arguments?.getString("course_id").toString()
-        sharedPreferencesManager = SharedPreferencesManager(requireContext())
+        folderlist = emptyList()
         getAllLectureCount(courseId)
         if (lectureCount.isNullOrEmpty()) {
             lectureCount = "0"
@@ -179,12 +187,12 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
             binding.progressBar.visibility = View.VISIBLE
         } else {
             getCourseByIDViewModel.fetchCourseById(courseId)
-
             isVideoPlaying = false
-
             getCourseByIDViewModel.courseByID.observe(viewLifecycleOwner, Observer { courses ->
 
 
+                Log.d("courseDetail",courses.toString())
+                checkInstallOrNot = courses?.with_installment_price ?: 0
                 val imageUrl = courses?.video_thumbnail
                 val videoUrl = courses?.orientation_video
 
@@ -295,8 +303,8 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
                     binding.tvOurContentNumber.text = folderlist.size.toString() + " Total"
 
                     val coursePrice = courses.price ?: 0
-                    val installmentPrice1 = courses.with_installment_price ?: 0
-
+                    installmentPrice1 = courses.with_installment_price ?: 0
+                    Log.d("installmentPrice114",installmentPrice1.toString())
                     firstInstallment = (installmentPrice1 * (0.6)).toInt()
                     secondInstallment = (coursePrice.minus(firstInstallment))
 
@@ -322,37 +330,21 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
 
             })
         }
-        // Use the courseId as needed
-        Log.d("ExploreFragmentId", "Received course ID: $courseId")
-        binding.backIv.setOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed() }
-        binding.clBuynow.setOnClickListener {
-            // Prepare data for API call
-            createCart(createCartViewModel)
 
-        }
-
-        if (firstInstallment <= 0) {
-            Log.d("firstInstallment", firstInstallment.toString())
+        if (checkInstallOrNot <= 0) {
+            Log.d("checkInstallOrNot", checkInstallOrNot.toString())
             binding.clInstallmentOptionView.visibility = View.GONE
 
         } else {
-            Log.d("firstInstallmentt", firstInstallment.toString())
+            Log.d("checkInstallOrNot", checkInstallOrNot.toString())
             binding.clInstallmentOptionView.visibility = View.VISIBLE
             binding.clInstallmentOptionView.setOnClickListener {
-
                 showInstallmentDetailsBottomSheet(
-                    firstInstallment.toInt(),
-                    secondInstallment.toInt()
+                    firstInstallment,
+                    secondInstallment
                 )
-//                val bottomSheet = InstallmentDetailsBottomSheet().apply {
-//                    setInstallmentData(firstInstallment.toInt(), secondInstallment.toInt())
-//                }
-//                bottomSheet.show(parentFragmentManager, "InstallmentDetailsBottomSheet")
             }
         }
-
-
-
 
         binding.tvCourseDescription.viewTreeObserver.addOnGlobalLayoutListener {
             if (binding.tvCourseDescription.lineCount <= 2) {
@@ -361,7 +353,6 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
                 binding.tvReadMore.visibility = View.VISIBLE
             }
         }
-
 
         binding.tvReadMore.setOnClickListener {
             if (binding.tvCourseDescription.maxLines == 3) {
@@ -390,7 +381,6 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
             }
         }
 
-
         binding.tvPlannerReadMore.setOnClickListener {
             if (binding.tvCoursePlannerDescription.maxLines == 3) {
                 binding.tvCoursePlannerDescription.maxLines = Integer.MAX_VALUE
@@ -409,8 +399,6 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
                 )
             }
         }
-
-
 
         binding.tvOurContentSeeMore.setOnClickListener {
             if (showMoreOrLess.get() == "View More") {
@@ -559,9 +547,6 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
                 }
             }
         }
-
-
-
 
         helperFunctions.setupDotsIndicator(
             requireContext(),
