@@ -1,5 +1,9 @@
 package com.student.competishun.utils
 
+import com.student.competishun.R
+import com.student.competishun.data.model.OtherContentItem
+import com.student.competishun.data.model.OurContentFirstItem
+import com.student.competishun.data.model.OurContentItem
 import com.student.competishun.data.model.RecommendedCourseDataModel
 import com.student.competishun.data.model.Testimonial
 import com.student.competishun.data.model.WhyCompetishun
@@ -144,6 +148,44 @@ object Constants {
             "IIT JEE"
         )
     )
+//    val items = mutableListOf(
+//        OurContentItem.FirstItem(
+//            OurContentFirstItem(
+//                R.drawable.frame_1707480918,
+//                "Demo Resources",
+//                R.drawable.group_1272628768
+//            )
+//        ),
+//        OurContentItem.OtherItem(
+//            OtherContentItem(
+//                R.drawable.frame_1707480918,
+//                "Preparation Mantra",
+//                R.drawable.lock
+//            )
+//        ),
+//        OurContentItem.OtherItem(
+//            OtherContentItem(
+//                R.drawable.frame_1707480918,
+//                "Lectures",
+//                R.drawable.lock
+//            )
+//        ),
+//        OurContentItem.OtherItem(
+//            OtherContentItem(
+//                R.drawable.frame_1707480918,
+//                "Tests",
+//                R.drawable.lock
+//            )
+//        ),
+//        OurContentItem.OtherItem(
+//            OtherContentItem(
+//                R.drawable.frame_1707480918,
+//                "Study Materials",
+//                R.drawable.lock
+//            )
+//        ),
+//    )
+
 
 
 }

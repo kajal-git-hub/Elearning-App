@@ -436,13 +436,20 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener,MyCartAdapter.OnCar
                     )
 
                 }
-
-                if (cartItems[0].withInstallmentPrice==0){
-                    Log.e("cartITemsprice",cartItems[0].withInstallmentPrice.toString())
-                    binding.tabLayoutContainer.visibility = View.GONE
+                if (cartItems.isNotEmpty()){
+                    if (cartItems[0].withInstallmentPrice==0){
+                        Log.e("cartITemsprice",cartItems[0].withInstallmentPrice.toString())
+                        binding.tabLayoutContainer.visibility = View.GONE
+                    }else{
+                        binding.tabLayoutContainer.visibility = View.VISIBLE
+                    }
                 }else{
-                    binding.tabLayoutContainer.visibility = View.VISIBLE
+                    // Handle empty cart case
+                    Log.e("cartItems", "Cart is empty")
+                    binding.tabLayoutContainer.visibility = View.GONE
                 }
+
+
 
                 binding.tvCartCount.text = "(${cartItems.size})"
                 binding.cartBadge.text = cartItems.size.toString()

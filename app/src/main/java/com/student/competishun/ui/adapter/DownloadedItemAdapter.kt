@@ -2,6 +2,7 @@ package com.student.competishun.ui.adapter
 
 import android.content.Context
 import android.content.Intent
+import android.os.Bundle
 import android.os.Environment
 import android.util.Log
 import android.view.LayoutInflater
@@ -9,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
@@ -17,6 +19,7 @@ import com.student.competishun.R
 import com.student.competishun.ui.fragment.BottomSheetDeletePDFsFragment
 import com.student.competishun.ui.fragment.BottomSheetDeleteVideoFragment
 import com.student.competishun.ui.fragment.BottomSheetDownloadBookmark
+import com.student.competishun.ui.fragment.PdfViewerFragment
 import com.student.competishun.ui.main.PdfViewerActivity
 import java.io.File
 
@@ -84,7 +87,10 @@ class DownloadedItemAdapter(private val context: Context,
             val localFile = File(context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), fileName)
 
             if (localFile.exists()) {
-                openPdfViewer(localFile.absolutePath)
+                openPdfInFragment(localFile.absolutePath)
+            }else{
+                Toast.makeText(context, "PDF is not downloaded. Please connect to the internet to download it.", Toast.LENGTH_SHORT).show()
+
             }
         }
         holder.forVideo.setOnClickListener {
@@ -99,11 +105,16 @@ class DownloadedItemAdapter(private val context: Context,
     }
 
 
-    private fun openPdfViewer(filePath: String) {
-        val intent = Intent(context, PdfViewerActivity::class.java).apply {
-            putExtra("PDF_URL", filePath) // Use the local file path here
+    private fun openPdfInFragment(filePath: String) {
+        val fragment = PdfViewerFragment()
+        val bundle = Bundle().apply {
+            putString("PDF_URL", filePath)
         }
-        context.startActivity(intent)
+        fragment.arguments = bundle
+        fragmentManager.beginTransaction()
+            .replace(R.id.nv_navigationView, fragment)
+            .addToBackStack(null)
+            .commit()
     }
 
     override fun getItemCount(): Int {
