@@ -55,7 +55,7 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
                 Log.d("ItemDetails",details.toString())
                 storeItemInPreferences(details)
                 dismiss()
-                downloadFile(details)
+//                downloadFile(details)
             }
         }
     }
