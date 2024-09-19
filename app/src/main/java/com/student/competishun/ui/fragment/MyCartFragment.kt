@@ -298,6 +298,9 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener,MyCartAdapter.OnCar
                     selectedCartItem.discount
                 ).toInt()
             }%)"
+            fullAmount = selectedCartItem.discount.toDouble()
+            binding.tvPrice.text = "₹${selectedCartItem.discount}"
+            binding.tvInstTotalAmount.text = "₹${selectedCartItem.discount}"
             binding.tvInstDiscount.text = "-₹${
                 (helperFunctions.calculateDiscountDetails(
                     selectedCartItem.price.toDouble(),
@@ -305,14 +308,17 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener,MyCartAdapter.OnCar
                 ).second)
             }"
         }else if (selectedCartItem.discount ==0 ){
+            fullAmount = selectedCartItem.price.toDouble()
+            binding.tvPrice.text = "₹${selectedCartItem.price}"
+            binding.tvInstTotalAmount.text = "₹${selectedCartItem.price}"
             binding.tvInstDiscount.text = "-₹${selectedCartItem.discount}"
             binding.tvInstDiscountLabel.text = "Discount (0)"
         }
          //   "- ₹${(originalCartItems.get(0).price.toDouble()).minus(originalCartItems.get(0).discount.toDouble())}"
        // fullAmount = (helperFunctions.calculateDiscountDetails(originalCartItems.get(0).price.toDouble(),originalCartItems.get(0).discount.toDouble()).second.toDouble())
-        binding.tvPrice.text = "₹${selectedCartItem.discount}"
-        fullAmount = selectedCartItem.discount.toDouble()
-        binding.tvInstTotalAmount.text = "₹${selectedCartItem.discount}"
+
+
+
 
 
     }
