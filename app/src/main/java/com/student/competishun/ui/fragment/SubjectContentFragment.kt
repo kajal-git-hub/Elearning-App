@@ -171,10 +171,9 @@ class SubjectContentFragment : Fragment() {
 
                     // Clear previous adapter to prevent issues
                     binding.rvSubjectContent.adapter = null
+                    binding.rvTopicContent.adapter = null
 
                     when {
-
-
                         !subfolderDurationFolders.isNullOrEmpty() && !folderProgressContent.isNullOrEmpty() ->
                             {
                               //  binding.tvContentCount.text = "(${folderCounts.joinToString()})"
@@ -266,6 +265,9 @@ class SubjectContentFragment : Fragment() {
 
 
                                 }
+
+//                                binding.rvSubjectContent.adapter = null
+//                                binding.rvTopicContent.adapter = null
                         }
 
                         !subfolderDurationFolders.isNullOrEmpty() -> {
