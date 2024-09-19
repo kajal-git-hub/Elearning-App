@@ -1,45 +1,99 @@
 package com.student.competishun.ui.main
 
+import android.graphics.Bitmap
+import android.graphics.pdf.PdfRenderer
 import android.os.Bundle
-import android.util.Log
-import android.view.WindowManager
-import android.webkit.WebView
-import android.webkit.WebViewClient
-import android.widget.Toast
+import android.os.ParcelFileDescriptor
+import android.widget.Button
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import com.student.competishun.R
+import java.io.File
+import java.io.FileOutputStream
+import java.net.URL
+import kotlin.concurrent.thread
 
 class PdfViewerActivity : AppCompatActivity() {
 
-    private lateinit var webView: WebView
+    private lateinit var pdfRenderer: PdfRenderer
+    private lateinit var parcelFileDescriptor: ParcelFileDescriptor
+    private lateinit var pdfPageImage: ImageView
+    private lateinit var nextPageButton: Button
+    private lateinit var previousPageButton: Button
+    private var currentPageIndex: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_pdf_viewer)
 
-        window.setFlags(
-            WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE
-        )
+        pdfPageImage = findViewById(R.id.pdfPageImage)
+        nextPageButton = findViewById(R.id.nextPageButton)
+        previousPageButton = findViewById(R.id.previousPageButton)
 
-        webView = findViewById(R.id.webView)
 
-        webView.settings.javaScriptEnabled = true
-
-        webView.webViewClient = object : WebViewClient() {
-            override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
-                view?.loadUrl(url ?: "")
-                return true
+        val pdfUrl = intent.getStringExtra("PDF_URL")
+        if (pdfUrl != null) {
+            thread {
+                val pdfFile = downloadPdfFile(pdfUrl)
+                openPdfRenderer(pdfFile)
+                runOnUiThread { showPage(currentPageIndex) }
             }
         }
 
-        val pdfUrl = intent.getStringExtra("PDF_URL")
-        Log.d("pdfUrl", pdfUrl.toString())
-
-        if (pdfUrl != null) {
-            val encodedUrl = java.net.URLEncoder.encode(pdfUrl, "UTF-8")
-            webView.loadUrl("https://docs.google.com/gview?embedded=true&url=$encodedUrl")
-        } else {
-            Toast.makeText(this, "PDF URL is missing", Toast.LENGTH_SHORT).show()
+        // Set up button listeners for pagination
+        nextPageButton.setOnClickListener {
+            if (currentPageIndex < pdfRenderer.pageCount - 1) {
+                currentPageIndex++
+                showPage(currentPageIndex)
+            }
         }
+
+        previousPageButton.setOnClickListener {
+            if (currentPageIndex > 0) {
+                currentPageIndex--
+                showPage(currentPageIndex)
+            }
+        }
+    }
+
+    private fun downloadPdfFile(pdfUrl: String): File {
+        val url = URL(pdfUrl)
+        val connection = url.openConnection()
+        connection.connect()
+
+        val inputStream = connection.getInputStream()
+        val file = File(cacheDir, "sample.pdf")
+        val outputStream = FileOutputStream(file)
+
+        inputStream.use { input ->
+            outputStream.use { output ->
+                input.copyTo(output)
+            }
+        }
+        return file
+    }
+
+    private fun openPdfRenderer(file: File) {
+        parcelFileDescriptor = ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY)
+        pdfRenderer = PdfRenderer(parcelFileDescriptor)
+    }
+
+    private fun showPage(pageIndex: Int) {
+        if (pdfRenderer.pageCount <= pageIndex) return
+        val page = pdfRenderer.openPage(pageIndex)
+        val bitmap = Bitmap.createBitmap(page.width, page.height, Bitmap.Config.ARGB_8888)
+        page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
+        pdfPageImage.setImageBitmap(bitmap)
+        page.close()
+
+        // Update the buttons based on the current page
+        nextPageButton.isEnabled = (pageIndex < pdfRenderer.pageCount - 1)
+        previousPageButton.isEnabled = (pageIndex > 0)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        pdfRenderer.close()
+        parcelFileDescriptor.close()
     }
 }
