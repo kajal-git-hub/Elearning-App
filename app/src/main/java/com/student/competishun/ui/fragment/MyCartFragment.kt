@@ -128,7 +128,8 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener,MyCartAdapter.OnCar
 
         cartAdapter = MyCartAdapter(mutableListOf(),cartViewModel,viewLifecycleOwner,userId,this,this) { selectedItem ->
             sharedPreferencesManager.putString("cartItemId", selectedItem.cartItemId)
-            Log.e("cartAdaptrcartITems", selectedItem.toString())
+
+            Log.e("cartAdaptrcar", selectedItem.toString())
             handleItemClick(selectedItem, userId)
            // val selectedItem = cartAdapter.getSelectedItem()
             if (selectedItem != null) {
@@ -181,6 +182,8 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener,MyCartAdapter.OnCar
         }
 
         binding.btnProceedToPay.setOnClickListener {
+            Log.e("clicked","procedd")
+            binding.btnProceedToPay.isEnabled = false
             if (input == null && cartAdapter.itemCount > 0) {
             // Automatically select the first item in the cart and set the input if input is null
             val selectedCartItem = if (cartAdapter.selectedItemPosition == RecyclerView.NO_POSITION) {
@@ -232,6 +235,10 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener,MyCartAdapter.OnCar
                        // Toast.makeText(requireContext(), exception.message, Toast.LENGTH_SHORT).show()
                     }
                 })
+            }?: run {
+                Log.e("clicked enable","procedd")
+                // Re-enable the button if input is null (edge case)
+                binding.btnProceedToPay.isEnabled = true
             }
         }
 
@@ -298,6 +305,9 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener,MyCartAdapter.OnCar
                     selectedCartItem.discount
                 ).toInt()
             }%)"
+            fullAmount = selectedCartItem.discount.toDouble()
+            binding.tvPrice.text = "₹${selectedCartItem.discount}"
+            binding.tvInstTotalAmount.text = "₹${selectedCartItem.discount}"
             binding.tvInstDiscount.text = "-₹${
                 (helperFunctions.calculateDiscountDetails(
                     selectedCartItem.price.toDouble(),
@@ -305,14 +315,17 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener,MyCartAdapter.OnCar
                 ).second)
             }"
         }else if (selectedCartItem.discount ==0 ){
+            fullAmount = selectedCartItem.price.toDouble()
+            binding.tvPrice.text = "₹${selectedCartItem.price}"
+            binding.tvInstTotalAmount.text = "₹${selectedCartItem.price}"
             binding.tvInstDiscount.text = "-₹${selectedCartItem.discount}"
             binding.tvInstDiscountLabel.text = "Discount (0)"
         }
          //   "- ₹${(originalCartItems.get(0).price.toDouble()).minus(originalCartItems.get(0).discount.toDouble())}"
        // fullAmount = (helperFunctions.calculateDiscountDetails(originalCartItems.get(0).price.toDouble(),originalCartItems.get(0).discount.toDouble()).second.toDouble())
-        binding.tvPrice.text = "₹${selectedCartItem.discount}"
-        fullAmount = selectedCartItem.discount.toDouble()
-        binding.tvInstTotalAmount.text = "₹${selectedCartItem.discount}"
+
+
+
 
 
     }
@@ -425,6 +438,7 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener,MyCartAdapter.OnCar
                     binding.clProccedToPay.visibility = View.VISIBLE
                     val course = cartItemData.course
                     courseName = course.name
+
                     if (!course.complementary_course.isNullOrEmpty())
                         complementryId = course.complementary_course
                     Log.e("complementryIDd", complementryId)
@@ -435,6 +449,7 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener,MyCartAdapter.OnCar
                      }else{
                          binding.tabLayoutContainer.visibility = View.VISIBLE
                      }
+                     sharedPreferencesManager.putString("cartItemId",  cartItemData.cartItem.id)
                 //    instAmountpaid = ((course.price ?: 0) + (course.with_installment_price ?: 0) * 0.6)
                     CartItem(
                         profileImageResId = course.banner_image ?: "", // Replace with actual logic for image
