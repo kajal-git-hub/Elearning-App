@@ -88,9 +88,10 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/tv_topic_name"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Applying Trig Functions to \nAngles of Rotation"
+        android:layout_marginStart="@dimen/_16dp"
         android:maxLines="2"
         android:ellipsize="end"
         android:textColor="#2B2829"
@@ -99,8 +100,7 @@
         android:textStyle="bold"
         android:lineHeight="@dimen/_20dp"
         android:textSize="@dimen/_14sp"
-        app:layout_constraintEnd_toStartOf="@+id/dotExtraInfoDownload"
-        app:layout_constraintStart_toStartOf="@+id/tv_StudyMaterial"
+        app:layout_constraintStart_toEndOf="@id/cl_course_book"
         app:layout_constraintTop_toBottomOf="@id/tv_StudyMaterial"/>
 
     <View
@@ -118,15 +118,15 @@
         android:id="@+id/tv_topic_description"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
         android:layout_marginTop="12dp"
         android:maxLines="2"
         android:text="Relations and Functions: Types of relations and types and relations.Relations and Functions: Types of relations and functions, &amp; Inverse trigonometric functions and"
         android:layout_marginBottom="@dimen/_16dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/iv_read_pdf"
+        app:layout_constraintEnd_toStartOf="@id/iv_read_pdf"
         app:layout_constraintTop_toBottomOf="@id/view_line"
-        app:layout_constraintStart_toStartOf="@+id/cl_course_book"
-        />
+        app:layout_constraintStart_toStartOf="parent"/>
 
     <ImageView
         android:id="@+id/iv_read_pdf"
@@ -136,22 +136,11 @@
         android:src="@drawable/frame_1707481707_1_"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginStart="@dimen/_20dp"
-        app:layout_constraintBottom_toBottomOf="@id/tv_topic_description"
-        app:layout_constraintTop_toTopOf="@id/tv_topic_description"/>
-    <ImageView
-        android:id="@+id/iv_read_video"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="12dp"
-        android:visibility="gone"
-        android:src="@drawable/video_bg"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginStart="@dimen/_20dp"
+        app:layout_constraintStart_toEndOf="@id/tv_topic_description"
         app:layout_constraintBottom_toBottomOf="@id/tv_topic_description"
         app:layout_constraintTop_toTopOf="@id/tv_topic_description"/>
 
     <ImageView
-        android:id="@+id/dotExtraInfoDownload"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="12dp"

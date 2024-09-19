@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="#F6F6FF"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.fragment.DownloadsFragment">
+    tools:context=".ui.fragment.DownloadFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/TopView_Downloads"
@@ -93,8 +93,8 @@
             <com.google.android.material.tabs.TabItem
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                />
+                android:layout_weight="1" />
+
         </com.google.android.material.tabs.TabLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 

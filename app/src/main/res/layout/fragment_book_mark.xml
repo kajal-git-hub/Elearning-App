@@ -1,14 +1,116 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#F6F6FF"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.fragment.BookMarkFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/TopView_Downloads"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:elevation="@dimen/_4dp"
+        android:background="@drawable/gradiant_bg_bookmark"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-</FrameLayout>
+        <ImageView
+            android:id="@+id/back_icon_bookmark"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_16dp"
+            android:layout_marginVertical="@dimen/_20dp"
+            android:src="@drawable/arrow_left_white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/screen_title_bookmark"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Bookmarks (12)"
+            android:fontFamily="@font/nunito"
+            android:textStyle="bold"
+            android:textSize="@dimen/_18sp"
+            android:textColor="#ffffff"
+            android:layout_marginStart="12dp"
+            android:layout_marginVertical="@dimen/_16dp"
+            app:layout_constraintStart_toEndOf="@id/back_icon_bookmark"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+
+        <ImageView
+            android:id="@+id/search_icon_bookmark"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/search_normal_white"
+            android:layout_marginEnd="@dimen/_20dp"
+            android:layout_marginVertical="@dimen/_20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_tabLayout_Bookmark"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        app:layout_constraintTop_toBottomOf="@id/TopView_Downloads"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/BookmarkTabLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_16dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tabMode="fixed"
+            android:background="@color/white"
+            app:tabTextColor="#5A5555"
+            app:tabRippleColor="@null"
+            app:tabIndicatorColor="#3E3EF7"
+            app:tabIndicatorHeight="1dp"
+            app:tabIndicatorFullWidth="true"
+            app:tabSelectedTextColor="#3E3EF7">
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/pdfsTab"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="PDFs (08)"
+                style="@style/TabLayoutStyleDownloads"
+                android:textAllCaps="false"/>
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/videosTab"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Videos (08)"/>
+        </com.google.android.material.tabs.TabLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_bookmark"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        tools:itemCount="2"
+        tools:listitem="@layout/bookmark_item_pdfs"
+        app:layout_constraintTop_toBottomOf="@id/cl_tabLayout_Bookmark"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="@dimen/_10dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
