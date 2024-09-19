@@ -181,7 +181,7 @@ class SubjectContentFragment : Fragment() {
                             val topicContentList =
                                 folderProgressContent.mapIndexed { index, contents ->
                                     Log.e("folderContentLog", contents.content?.file_url.toString())
-                                    val time = helperFunctions.formatCourseDate(contents.content?.scheduled_time.toString())
+                                    val time = helperFunctions.formatCourseDateTime(contents.content?.scheduled_time.toString())
                                     Log.e("foldertimes", time)
                                     TopicContentModel(
                                         subjectIcon = if (contents.content?.file_type?.name == "PDF") R.drawable.content_bg else R.drawable.group_1707478994,
@@ -245,7 +245,7 @@ class SubjectContentFragment : Fragment() {
                                 Log.e("folderContentLog", folders.id)
                                 val id = folders.id
                                 val date = folders.scheduled_time.toString()
-                                val time = helperFunctions.formatCourseDate(date)
+                                val time = helperFunctions.formatCourseDateTime(date)
                                 SubjectContentItem(
                                     id = id,
                                     chapterNumber = index + 1,
@@ -287,7 +287,7 @@ class SubjectContentFragment : Fragment() {
                                 val id = folders.id
                                 val date = folders.scheduled_time.toString()
                                 Log.e("foldertimes", date)
-                                val time = helperFunctions.formatCourseDate(date)
+                                val time = helperFunctions.formatCourseDateTime(date)
                                 SubjectContentItem(
                                     id = id,
                                     chapterNumber = index + 1,
@@ -318,7 +318,7 @@ class SubjectContentFragment : Fragment() {
                             val subjectContentList =
                                 folderProgressContent.mapIndexed { index, contents ->
                                     Log.e("folderContentLog", contents.content?.file_url.toString())
-                                    val time = helperFunctions.formatCourseDate(contents.content?.scheduled_time.toString())
+                                    val time = helperFunctions.formatCourseDateTime(contents.content?.scheduled_time.toString())
                                     Log.e("foldertime", time)
                                     TopicContentModel(
                                         subjectIcon = if (contents.content?.file_type?.name == "PDF") R.drawable.content_bg else R.drawable.group_1707478994,
@@ -492,8 +492,4 @@ class SubjectContentFragment : Fragment() {
 
 
     }
-
-
-
-
 }

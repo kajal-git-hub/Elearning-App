@@ -233,8 +233,8 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
                 val coursePrice = courses?.price ?: 0
                 installmentPrice1 = courses?.with_installment_price ?: 0
                 Log.d("installmentPrice114",installmentPrice1.toString())
-                firstInstallment = (installmentPrice1 * (0.6)).toInt()
-                secondInstallment = (coursePrice.minus(firstInstallment))
+                firstInstallment = (installmentPrice1 * 0.6).toInt()
+                secondInstallment = (installmentPrice1.minus(firstInstallment))
 
                 if (firstInstallment <= 0) {
                     Log.d("checkInstallOrNot", checkInstallOrNot.toString())

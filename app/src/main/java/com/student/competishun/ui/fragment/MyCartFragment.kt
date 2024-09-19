@@ -128,7 +128,8 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener,MyCartAdapter.OnCar
 
         cartAdapter = MyCartAdapter(mutableListOf(),cartViewModel,viewLifecycleOwner,userId,this,this) { selectedItem ->
             sharedPreferencesManager.putString("cartItemId", selectedItem.cartItemId)
-            Log.e("cartAdaptrcartITems", selectedItem.toString())
+
+            Log.e("cartAdaptrcar", selectedItem.toString())
             handleItemClick(selectedItem, userId)
            // val selectedItem = cartAdapter.getSelectedItem()
             if (selectedItem != null) {
@@ -437,6 +438,7 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener,MyCartAdapter.OnCar
                     binding.clProccedToPay.visibility = View.VISIBLE
                     val course = cartItemData.course
                     courseName = course.name
+
                     if (!course.complementary_course.isNullOrEmpty())
                         complementryId = course.complementary_course
                     Log.e("complementryIDd", complementryId)
@@ -447,6 +449,7 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener,MyCartAdapter.OnCar
                      }else{
                          binding.tabLayoutContainer.visibility = View.VISIBLE
                      }
+                     sharedPreferencesManager.putString("cartItemId",  cartItemData.cartItem.id)
                 //    instAmountpaid = ((course.price ?: 0) + (course.with_installment_price ?: 0) * 0.6)
                     CartItem(
                         profileImageResId = course.banner_image ?: "", // Replace with actual logic for image
