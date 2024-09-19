@@ -95,9 +95,15 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
             isTshirtSizeSelected = true
         }
 
+        if(!sharedPreferencesManager.isBottomSheetShown){
+            val bottomSheetDescriptionFragment = BottomSheetPersonalDetailsFragment()
+            bottomSheetDescriptionFragment.show(childFragmentManager, "BottomSheetDescriptionFragment")
 
-        val bottomSheetDescriptionFragment = BottomSheetPersonalDetailsFragment()
-        bottomSheetDescriptionFragment.show(childFragmentManager, "BottomSheetDescriptionFragment")
+            sharedPreferencesManager.isBottomSheetShown = true
+
+        }
+
+
 
         userViewModel.fetchUserDetails()
 

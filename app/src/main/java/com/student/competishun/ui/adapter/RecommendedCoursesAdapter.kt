@@ -51,7 +51,7 @@ class RecommendedCoursesAdapter(
 
 
 
-        holder.courseName.text = "${course.name}  ${course.academic_year}"
+        holder.courseName.text = "${course.name}"
 
         if (course.price != null && course.discount != null) {
             val discountPercent = helperFunctions.calculateDiscountPercentage(course.price, course.discount)

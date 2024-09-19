@@ -62,7 +62,8 @@ class MediaPlayerFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
+        val url = arguments?.getString("url")
+        Log.e("VideoUrlExplore", url ?: "URL is null")
         requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
         binding = FragmentMediaPlayerBinding.inflate(inflater, container, false)
         return binding.root
@@ -71,53 +72,36 @@ class MediaPlayerFragment : Fragment() {
 
     private val updateTask = object : Runnable {
         override fun run() {
-            // Get the watched duration
             val watchedDuration = getWatchedDuration()
-           // val watchedDurationInSeconds = convertTimeToSeconds(watchedDuration)
-             // Check if initialized
                 val watchedDurationInSeconds = (player.currentPosition / 1000).toInt()
-
                 sharedViewModel.setWatchedDuration(watchedDurationInSeconds)
-
-            // Send the watched duration to the other fragment
-           // videoProgress(courseFolderContentId, watchedDuration.toInt())
-
-            // Schedule the next update
             handler.postDelayed(this, updateInterval)
         }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Log.e("MediaPlayerFragment", "onViewCreated called") // Add this line
 
-        // Hide navigation and floating button
         (activity as? HomeActivity)?.showBottomNavigationView(false)
         (activity as? HomeActivity)?.showFloatingButton(false)
 
-        // Initialize SharedViewModel
         sharedViewModel = ViewModelProvider(requireActivity()).get(SharedVM::class.java)
-
-        // Handle back press
         binding.backBtn.setOnClickListener {
             requireActivity().onBackPressedDispatcher.onBackPressed()
         }
 
-
-        val url = arguments?.getString("url") ?: return
+        val videoUrl = arguments?.getString("url") ?: return
         val tittle = arguments?.getString("url_name") ?: return
         if (tittle!=null){
             binding.tittleBtn.visibility = View.VISIBLE
             binding.tittleBtn.text = tittle
         }
         courseFolderContentId = arguments?.getString("ContentId") ?: return
-        Log.e("VideoUrl", url)
+        Log.e("VideoUrlExplore", videoUrl)
 
-        // Initialize ExoPlayer
         player = ExoPlayer.Builder(requireContext()).build()
-
         binding.playerView.player = player
-
-        // Setup video progress update task
         handler.post(object : Runnable {
             override fun run() {
                 if (isAdded && ::player.isInitialized) {
@@ -135,9 +119,10 @@ class MediaPlayerFragment : Fragment() {
         })
 
         try {
-            val mediaItem = MediaItem.fromUri(url)
+            val mediaItem = MediaItem.fromUri(videoUrl)
             player.setMediaItem(mediaItem)
             player.prepare()
+            Log.e("MediaPlayerFragment", "Player prepared, calling play()")
             player.play()
         } catch (e: Exception) {
             Log.e("PlayerSetup", "Failed to initialize player", e)
@@ -146,15 +131,12 @@ class MediaPlayerFragment : Fragment() {
         binding.qualityButton.setOnClickListener {
             showQualityDialog(player)
         }
-
-        // Set up double-tap gesture for playback control
         gestureDetector = GestureDetector(requireContext(), DoubleTapGestureListener())
         binding.playerView.setOnTouchListener { _, event ->
             gestureDetector.onTouchEvent(event)
             true
         }
 
-        // Handle system window insets for proper layout
         ViewCompat.setOnApplyWindowInsetsListener(binding.playerView) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -165,24 +147,41 @@ class MediaPlayerFragment : Fragment() {
     @OptIn(UnstableApi::class)
     private fun showQualityDialog(  player: ExoPlayer) {
         val qualities = getAvailableQualities(player)
+        val speeds = listOf("0.5x", "1.0x", "1.5x", "1.75x", "2.0x")
 
-        // If no qualities found, show an error or return
-        if (qualities.isEmpty()) {
+
+        if (qualities.isEmpty() && speeds.isEmpty()) {
             Toast.makeText(requireContext(), "No video qualities available", Toast.LENGTH_SHORT).show()
             return
         }
 
-        // Extract quality labels (e.g., 480p, 720p, 1080p)
         val qualityLabels = qualities.map { it.first }.toTypedArray()
+        val speedLabels = speeds.toTypedArray()
 
-        // Show dialog with quality options
+        val combinedLabels = qualityLabels + speedLabels
+
+
         AlertDialog.Builder(requireContext())
-            .setTitle("Select Video Quality")
-            .setItems(qualityLabels) { _, which ->
-                val selectedQuality = qualities[which].second
-                switchToQuality(selectedQuality)
+            .setTitle("Select Video Quality or Speed")
+            .setItems(combinedLabels) { _, which ->
+                if (which < qualities.size) {
+                    // User selected a quality
+                    val selectedQuality = qualities[which].second
+                    switchToQuality(selectedQuality)
+                } else {
+                    val selectedSpeed = speeds[which - qualities.size]
+                    setPlaybackSpeed(selectedSpeed)
+                }
             }
             .show()
+    }
+    private fun setPlaybackSpeed(speed: String) {
+        try {
+            val speedValue = speed.replace("x", "").toFloat()
+            player.setPlaybackSpeed(speedValue)
+        } catch (e: NumberFormatException) {
+            Log.e("MediaPlayerFragment", "Invalid speed format: $speed", e)
+        }
     }
 
 
@@ -202,13 +201,9 @@ class MediaPlayerFragment : Fragment() {
 
                     for (trackIndex in 0 until trackGroup.length) {
                         val format = trackGroup.getFormat(trackIndex)
-
-                        // Filter only tracks with a valid height (resolution)
                         if (format.height != Format.NO_VALUE) {
                             val resolutionLabel = "${format.height}p"
                             Log.d("AvailableQualities", "TrackIndex: $trackIndex, Resolution: ${format.height}p, Bitrate: ${format.bitrate}, MimeType: ${format.sampleMimeType}")
-
-                            // Add available quality option
                             val selectionOverride = DefaultTrackSelector.SelectionOverride(groupIndex, trackIndex)
                             qualities.add(Pair(resolutionLabel, selectionOverride))
                         }
@@ -219,14 +214,11 @@ class MediaPlayerFragment : Fragment() {
         return qualities
     }
 
-
-
     @OptIn(UnstableApi::class)
     private fun switchToQuality(selectionOverride: DefaultTrackSelector.SelectionOverride) {
         val trackSelector = player.trackSelector as DefaultTrackSelector
         val mappedTrackInfo = trackSelector.currentMappedTrackInfo ?: return
 
-        // Apply the selected quality override
         for (i in 0 until mappedTrackInfo.rendererCount) {
             if (player.getRendererType(i) == C.TRACK_TYPE_VIDEO) {
                 val parametersBuilder = trackSelector.parameters.buildUpon()
@@ -237,9 +229,6 @@ class MediaPlayerFragment : Fragment() {
         }
     }
 
-
-
-    // Double-tap gesture listener for playback control
     private inner class DoubleTapGestureListener : GestureDetector.SimpleOnGestureListener() {
         override fun onDoubleTap(e: MotionEvent): Boolean {
             val x = e.x
@@ -249,7 +238,6 @@ class MediaPlayerFragment : Fragment() {
 
             when {
                 x.toInt() in centerThirdStart..centerThirdEnd -> {
-                    // Center third: Toggle play/pause
                     if (player.isPlaying) {
                         player.pause()
                         Log.d("GestureDetection", "Player paused")
@@ -259,32 +247,25 @@ class MediaPlayerFragment : Fragment() {
                     }
                 }
                 x < centerThirdStart -> {
-                    // Left third: Rewind by 10 seconds
                     seekBack()
                     Log.d("GestureDetection", "Rewind 10 seconds")
                 }
                 else -> {
-                    // Right third: Fast forward by 10 seconds
                     seekForward()
                     Log.d("GestureDetection", "Fast forward 10 seconds")
                 }
             }
             val watchedDuration = getWatchedDuration()
-
             return true
         }
     }
 
-
-
-    // Seek back by 10 seconds
     private fun seekBack() {
         val position = player.currentPosition
         val newPosition = maxOf(position - 10000, 0)
         player.seekTo(newPosition)
     }
 
-    // Seek forward by 10 seconds
     private fun seekForward() {
         val position = player.currentPosition
         val duration = player.duration
@@ -298,12 +279,8 @@ class MediaPlayerFragment : Fragment() {
         }
     findNavController().navigate(R.id.SubjectContentFragment,bundle)
 }
-
-
-
     private fun getWatchedDuration(): String {
         val currentPosition = player.currentPosition
-
         val minutes = (currentPosition / 60000).toInt()
         val seconds = ((currentPosition % 60000) / 1000).toInt()
         Log.e("watchesdd",String.format("%02d:%02d", minutes, seconds))
@@ -311,9 +288,7 @@ class MediaPlayerFragment : Fragment() {
     }
 
     fun videoProgress(courseFolderContentId:String,currentDuration:Int) {
-
         if (isAdded) {
-            // Observe the result of the updateVideoProgress mutation
             videourlViewModel.updateVideoProgressResult.observe(viewLifecycleOwner) { success ->
                 if (success) {
 
@@ -322,19 +297,8 @@ class MediaPlayerFragment : Fragment() {
                     Log.e("failed Video updated ","video not updated")
                 }
             }
-
-            // Call the mutation
             videourlViewModel.updateVideoProgress(courseFolderContentId, currentDuration)
         }
-    }
-
-    private fun convertTimeToSeconds(timeString: String): Int {
-        val timeParts = timeString.split(":")
-        if (timeParts.size != 2) return 0 // Invalid format
-
-        val minutes = timeParts[0].toIntOrNull() ?: return 0
-        val seconds = timeParts[1].toIntOrNull() ?: return 0
-        return minutes * 60 + seconds
     }
 
     override fun onDestroyView() {
@@ -344,8 +308,6 @@ class MediaPlayerFragment : Fragment() {
         }
         handler.removeCallbacks(updateTask)
         handler.removeCallbacksAndMessages(null)
-        // updateSeekBarHandler.removeCallbacks(updateSeekBarRunnable)
-        // Reset the screen orientation to the user's preference
         requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
     }
 

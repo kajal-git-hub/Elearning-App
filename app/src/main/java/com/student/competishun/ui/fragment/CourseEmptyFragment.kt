@@ -202,6 +202,7 @@ class CourseEmptyFragment : Fragment() {
             result.onSuccess { data ->
 
                 if (data.myCourses.isNotEmpty()) {
+                    sharedPreferencesManager.isBottomSheetShown = false
                     binding.clEmptyMyCourse.visibility = View.GONE
                     binding.rvExploreCourses.visibility = View.VISIBLE
                     // Create lists to hold courses and progress

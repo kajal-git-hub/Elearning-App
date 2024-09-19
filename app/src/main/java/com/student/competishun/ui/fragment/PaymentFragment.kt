@@ -118,6 +118,7 @@ class PaymentFragment : Fragment() {
                     if (order.paymentStatus.equals("paid", ignoreCase = true)) {
                         // Save the payment success status to SharedPreferences
                         sharedPreferencesManager.putBoolean("savePaymentSuccess", true)
+                        sharedPreferencesManager.isBottomSheetShown = false
                         Log.d("Order", "Payment Successful. Amount Paid: ${order.amountPaid}")
                     } else {
                         // Save the payment failure status to SharedPreferences
