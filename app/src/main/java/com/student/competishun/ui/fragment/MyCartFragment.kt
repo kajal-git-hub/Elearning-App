@@ -127,6 +127,7 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener,MyCartAdapter.OnCar
         myAllCart()
 
         cartAdapter = MyCartAdapter(mutableListOf(),cartViewModel,viewLifecycleOwner,userId,this,this) { selectedItem ->
+            sharedPreferencesManager.putString("cartItemId", selectedItem.cartItemId)
             Log.e("cartAdaptrcartITems", selectedItem.toString())
             handleItemClick(selectedItem, userId)
            // val selectedItem = cartAdapter.getSelectedItem()
