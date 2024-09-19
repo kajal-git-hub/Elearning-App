@@ -230,6 +230,28 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
 
                 }
 
+                val coursePrice = courses?.price ?: 0
+                installmentPrice1 = courses?.with_installment_price ?: 0
+                Log.d("installmentPrice114",installmentPrice1.toString())
+                firstInstallment = (installmentPrice1 * (0.6)).toInt()
+                secondInstallment = (coursePrice.minus(firstInstallment))
+
+                if (firstInstallment <= 0) {
+                    Log.d("checkInstallOrNot", checkInstallOrNot.toString())
+                    binding.clInstallmentOptionView.visibility = View.GONE
+
+                } else
+                {
+                    Log.d("checkInstallOrNot", checkInstallOrNot.toString())
+                    binding.clInstallmentOptionView.visibility = View.VISIBLE
+                    binding.clInstallmentOptionView.setOnClickListener {
+                        showInstallmentDetailsBottomSheet(
+                            firstInstallment,
+                            secondInstallment
+                        )
+                    }
+                }
+
                 binding.overviewButton.setOnClickListener {
                     if (!videoUrl.isNullOrEmpty()) {
                         if (isVideoPlaying) {
@@ -302,11 +324,6 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
                     }
                     binding.tvOurContentNumber.text = folderlist.size.toString() + " Total"
 
-                    val coursePrice = courses.price ?: 0
-                    installmentPrice1 = courses.with_installment_price ?: 0
-                    Log.d("installmentPrice114",installmentPrice1.toString())
-                    firstInstallment = (installmentPrice1 * (0.6)).toInt()
-                    secondInstallment = (coursePrice.minus(firstInstallment))
 
                     binding.tvCourseName.text = courses.name
                     val categoryName = courses.category_name?.split(" ") ?: emptyList()
@@ -329,21 +346,6 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
                 }
 
             })
-        }
-
-        if (checkInstallOrNot <= 0) {
-            Log.d("checkInstallOrNot", checkInstallOrNot.toString())
-            binding.clInstallmentOptionView.visibility = View.GONE
-
-        } else {
-            Log.d("checkInstallOrNot", checkInstallOrNot.toString())
-            binding.clInstallmentOptionView.visibility = View.VISIBLE
-            binding.clInstallmentOptionView.setOnClickListener {
-                showInstallmentDetailsBottomSheet(
-                    firstInstallment,
-                    secondInstallment
-                )
-            }
         }
 
         binding.tvCourseDescription.viewTreeObserver.addOnGlobalLayoutListener {
