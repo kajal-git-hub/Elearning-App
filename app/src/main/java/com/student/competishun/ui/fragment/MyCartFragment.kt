@@ -181,6 +181,8 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener,MyCartAdapter.OnCar
         }
 
         binding.btnProceedToPay.setOnClickListener {
+            Log.e("clicked","procedd")
+            binding.btnProceedToPay.isEnabled = false
             if (input == null && cartAdapter.itemCount > 0) {
             // Automatically select the first item in the cart and set the input if input is null
             val selectedCartItem = if (cartAdapter.selectedItemPosition == RecyclerView.NO_POSITION) {
@@ -232,6 +234,10 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener,MyCartAdapter.OnCar
                        // Toast.makeText(requireContext(), exception.message, Toast.LENGTH_SHORT).show()
                     }
                 })
+            }?: run {
+                Log.e("clicked enable","procedd")
+                // Re-enable the button if input is null (edge case)
+                binding.btnProceedToPay.isEnabled = true
             }
         }
 
