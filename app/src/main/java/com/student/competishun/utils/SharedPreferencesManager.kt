@@ -82,6 +82,11 @@ class SharedPreferencesManager(context: Context) {
         }
 
 
+    var isBottomSheetShown: Boolean
+        get() = sharedPreferences.getBoolean("isBottomSheetShown", false)
+        set(value) = sharedPreferences.edit().putBoolean("isBottomSheetShown", value).apply()
+
+
 
     var fatherName: String?
         get() = sharedPreferences.getString(KEY_FATHER_NAME, null)
