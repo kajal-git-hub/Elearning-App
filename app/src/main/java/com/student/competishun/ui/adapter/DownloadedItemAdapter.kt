@@ -2,25 +2,27 @@ package com.student.competishun.ui.adapter
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.FragmentManager
+import androidx.navigation.fragment.NavHostFragment.Companion.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.student.competishun.data.model.TopicContentModel
 import com.student.competishun.R
 import com.student.competishun.ui.fragment.BottomSheetDeletePDFsFragment
 import com.student.competishun.ui.fragment.BottomSheetDeleteVideoFragment
-import com.student.competishun.ui.fragment.BottomSheetDownloadBookmark
 import com.student.competishun.ui.fragment.PdfViewerFragment
+import okhttp3.OkHttpClient
+import okhttp3.Request
 import java.io.File
+import java.io.FileOutputStream
+import java.io.InputStream
 
 class DownloadedItemAdapter(private val context: Context,
                             private val items: List<TopicContentModel>,
@@ -51,6 +53,39 @@ class DownloadedItemAdapter(private val context: Context,
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = items[position]
         holder.studyMaterial.text = item.lecture
+
+//        val localFile = File(context.getExternalFilesDir(null), item.id + "_" + item.fileType)
+//
+//        if (localFile.exists()) {
+//            // File exists locally, open it
+//            if (item.fileType == "PDF") {
+//                holder.forRead.setOnClickListener {
+//                    openPdfFromLocalFile(localFile)
+//                }
+//            } else if (item.fileType == "VIDEO") {
+//                holder.forVideo.setOnClickListener {
+//                    openVideoFromLocalFile(localFile)
+//                }
+//            }
+//        } else {
+//            // File doesn't exist locally, download it
+//            if (item.fileType == "PDF") {
+//                holder.forRead.setOnClickListener {
+//                    val file = downloadFile(item.url, item.id + "_PDF")
+//                    file?.let {
+//                        openPdfFromLocalFile(it)
+//                    }
+//                }
+//            } else if (item.fileType == "VIDEO") {
+//                holder.forVideo.setOnClickListener {
+//                    val file = downloadFile(item.url, item.id + "_VIDEO")
+//                    file?.let {
+//                        openVideoFromLocalFile(it)
+//                    }
+//                }
+//            }
+//        }
+
         if(item.fileType == "PDF"){
             holder.lecTime.text = item.lecturerName
             holder.lecTime.setCompoundDrawablesWithIntrinsicBounds(R.drawable.download_person, 0, 0, 0);
@@ -80,17 +115,7 @@ class DownloadedItemAdapter(private val context: Context,
         holder.topicDescription.text = item.topicDescription
 
         holder.forRead.setOnClickListener {
-            Log.d("ItemUrl",item.url)
-            val fileName = item.url.substring(item.url.lastIndexOf('/') + 1)
-            Log.d("fileName",fileName)
-            val localFile = File(context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), fileName)
-
-            if (localFile.exists()) {
-                openPdfInFragment(localFile.absolutePath)
-            }else{
-                Toast.makeText(context, "PDF is not downloaded. Please connect to the internet to download it.", Toast.LENGTH_SHORT).show()
-
-            }
+            openPdfInFragment(item.url)
         }
         holder.forVideo.setOnClickListener {
             videoClickListener.onVideoClick(item.id, item.topicName)
@@ -105,16 +130,18 @@ class DownloadedItemAdapter(private val context: Context,
 
 
     private fun openPdfInFragment(filePath: String) {
-        val fragment = PdfViewerFragment()
-        val bundle = Bundle().apply {
-            putString("PDF_URL", filePath)
+        val fragment = PdfViewerFragment().apply {
+            arguments = Bundle().apply {
+                putString("PDF_URL", filePath)
+            }
         }
-        fragment.arguments = bundle
+
         fragmentManager.beginTransaction()
             .replace(R.id.nv_navigationView, fragment)
             .addToBackStack(null)
             .commit()
     }
+
 
     override fun getItemCount(): Int {
         return items.size
@@ -144,6 +171,45 @@ class DownloadedItemAdapter(private val context: Context,
         (items as MutableList).addAll(updatedItems)
         notifyItemRemoved(position)
         notifyItemRangeChanged(position, itemCount)
+    }
+
+    fun downloadFile(url: String, fileName: String): File? {
+        val client = OkHttpClient()
+        val request = Request.Builder().url(url).build()
+
+        try {
+            val response = client.newCall(request).execute()
+            if (response.isSuccessful) {
+                val file = File(context.getExternalFilesDir(null), fileName)
+                val inputStream: InputStream = response.body!!.byteStream()
+                val outputStream = FileOutputStream(file)
+
+                val buffer = ByteArray(1024)
+                var length: Int
+                while (inputStream.read(buffer).also { length = it } > 0) {
+                    outputStream.write(buffer, 0, length)
+                }
+                outputStream.close()
+                inputStream.close()
+                return file
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return null
+    }
+    private fun openPdfFromLocalFile(file: String) {
+        val intent = Intent(context, PdfViewerFragment::class.java).apply {
+            putExtra("PDF_URL", file)
+        }
+        context.startActivity(intent)
+    }
+
+    private fun openVideoFromLocalFile(file: File) {
+        val intent = Intent(Intent.ACTION_VIEW).apply {
+            setDataAndType(Uri.fromFile(file), "video/*")
+        }
+        context.startActivity(intent)
     }
 
 }

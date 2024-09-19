@@ -282,6 +282,12 @@
         tools:layout="@layout/fragment_download">
     </fragment>
 
+    <fragment
+        android:id="@+id/PdfViewerFragment"
+        android:name="com.student.competishun.ui.fragment.PdfViewerFragment"
+        tools:layout="@layout/fragment_pdf_viewer">
+    </fragment>
+
 
 
 

@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/clCourseCard"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="285dp"
     android:layout_marginTop="15dp"
     android:layout_marginEnd="@dimen/_16dp"
     android:background="@drawable/card_bg"
