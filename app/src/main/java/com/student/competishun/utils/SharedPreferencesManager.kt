@@ -208,6 +208,14 @@ class SharedPreferencesManager(context: Context) {
         get() = sharedPreferences.getBoolean(IS_FIRST_INSTALL, true)
         set(value) = sharedPreferences.edit().putBoolean(IS_FIRST_INSTALL, value).apply()
 
+    fun putString(key: String, value: String) {
+        sharedPreferences.edit().putString(key, value).apply()
+    }
+
+    fun getString(key: String,defaultValue: String): String? {
+        return sharedPreferences.getString(key,defaultValue)
+    }
+
     fun putBoolean(key: String, value: Boolean) {
         sharedPreferences.edit().putBoolean(key, value).apply()
     }

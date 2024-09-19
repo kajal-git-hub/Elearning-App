@@ -212,15 +212,13 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
 
     private fun navigateToLoaderScreen() {
     Log.e("homeuserIDload",userId.toString())
-        navController.navigate(R.id.paymentLoaderFragment)
+       // navController.navigate(R.id.paymentLoaderFragment)
         val bundle = Bundle().apply {
             putString("userId", userId)
         }
 
         Handler(Looper.getMainLooper()).postDelayed({
-            if (navController.currentDestination?.id == R.id.paymentLoaderFragment) {
-                navController.navigate(R.id.action_paymentLoaderFragment_to_paymentFragment,bundle)
-            }
+                navController.navigate(R.id.paymentFragment,bundle)
         }, 2000)
     }
 }

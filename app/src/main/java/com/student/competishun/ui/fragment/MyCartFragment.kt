@@ -127,6 +127,7 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener,MyCartAdapter.OnCar
         myAllCart()
 
         cartAdapter = MyCartAdapter(mutableListOf(),cartViewModel,viewLifecycleOwner,userId,this,this) { selectedItem ->
+            sharedPreferencesManager.putString("cartItemId", selectedItem.cartItemId)
             Log.e("cartAdaptrcartITems", selectedItem.toString())
             handleItemClick(selectedItem, userId)
            // val selectedItem = cartAdapter.getSelectedItem()
@@ -228,7 +229,7 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener,MyCartAdapter.OnCar
                     }.onFailure { exception ->
                         Log.e("payemen",exception.message.toString(),exception.cause)
                         navigatePaymentFail()
-                        Toast.makeText(requireContext(), exception.message, Toast.LENGTH_SHORT).show()
+                       // Toast.makeText(requireContext(), exception.message, Toast.LENGTH_SHORT).show()
                     }
                 })
             }
@@ -525,7 +526,7 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener,MyCartAdapter.OnCar
             }.onFailure { exception ->
                 Log.e("exception in cart", exception.toString())
 
-                Toast.makeText(requireContext(), exception.message, Toast.LENGTH_SHORT).show()
+            //    Toast.makeText(requireContext(), exception.message, Toast.LENGTH_SHORT).show()
             }
         })
     }
@@ -614,12 +615,13 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener,MyCartAdapter.OnCar
                     // Show full payment data by default
                   //  showFullPayment()
                 } else {
+                    Log.e("No items available",cartItems.toString())
                     // Optionally show a message indicating no items are available
-                    Toast.makeText(requireContext(), "No items available in the cart", Toast.LENGTH_SHORT).show()
+                  //  Toast.makeText(requireContext(), "No items available in the cart", Toast.LENGTH_SHORT).show()
                 }
             }.onFailure { exception ->
                 Log.e("exception in cart",exception.toString())
-                Toast.makeText(requireContext(), exception.message, Toast.LENGTH_SHORT).show()
+               // Toast.makeText(requireContext(), exception.message, Toast.LENGTH_SHORT).show()
             }
         })
 
