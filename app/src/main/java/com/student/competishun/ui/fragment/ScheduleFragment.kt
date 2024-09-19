@@ -232,7 +232,7 @@ class ScheduleFragment : Fragment(), ToolbarCustomizationListener {
         val courses =  arguments?.getString("courses")
         var start = helperFunctions.formatCourseDate(courseStart)
         var end = helperFunctions.formatCourseDate(courseEnd)
-        Log.e("dataschec",dateFormate(start.toString()) + dateFormate(end.toString())  + courseId)
+        Log.e("dataschec $start $end",dateFormate(start.toString()) + dateFormate(end.toString())  + courseId)
         scheduleData = ZonedDateTime.now()
         binding.backIconSchedule.setOnClickListener {
             requireActivity().onBackPressedDispatcher.onBackPressed()

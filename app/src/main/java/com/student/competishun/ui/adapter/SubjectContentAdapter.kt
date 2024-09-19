@@ -11,8 +11,10 @@ import com.student.competishun.R
 import com.student.competishun.data.model.SubjectContentItem
 import com.student.competishun.databinding.ItemCourseContentBinding
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
+import java.time.format.ResolverStyle
 import java.util.Locale
 
 class SubjectContentAdapter(
@@ -70,7 +72,29 @@ class SubjectContentAdapter(
             }
         }
     }
+    fun isDateTodayOrPast(dateString: String): Boolean {
+        // Clean up the date string
+        val cleanedDateString = dateString.replace("Sept", "Sep").trim()
+            .replace("pm".toRegex(), "PM")
+            .replace("am".toRegex(), "AM")
 
+
+        // Define the primary date format pattern
+        val formatter = DateTimeFormatter.ofPattern("dd MMM, yy hh:mm a", Locale.ENGLISH)
+            .withResolverStyle(ResolverStyle.SMART)
+
+        return try {
+            // Parse the date and time
+            val dateTime = LocalDateTime.parse(cleanedDateString, formatter)
+            // Get today's date and time
+            val now = LocalDateTime.now()
+            // Check if the date is today or in the past
+            dateTime.isBefore(now) || dateTime.isEqual(now)
+        } catch (e: DateTimeParseException) {
+            Log.e("DateParsingError", "Error parsing date: ${e.message}. Input date string: '$cleanedDateString'")
+            false
+        }
+    }
 
     override fun getItemCount(): Int = items.size
 
@@ -85,7 +109,7 @@ class SubjectContentAdapter(
             binding.tvTopicDescription.text = item.topicDescription + " Learning Material"
             binding.CustomTopicPercentCompleted.text = item.progressPer.toString() + "% Completed"
            Log.e("datead",item.locktime)
-            if (showDateIfFutureOrToday(item.locktime)) {
+            if (isDateTodayOrPast(item.locktime)) {
                 Log.e("datead True",item.locktime)
                 binding.IvlockImage.setImageResource(R.drawable.arrow_right__1_)
             }else{
