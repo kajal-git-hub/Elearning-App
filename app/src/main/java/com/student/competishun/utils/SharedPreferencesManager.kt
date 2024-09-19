@@ -195,6 +195,10 @@ class SharedPreferencesManager(context: Context) {
         get() = sharedPreferences.getBoolean("isReferenceSelectionInProgress", false)
         set(value) = sharedPreferences.edit().putBoolean("isReferenceSelectionInProgress", value).apply()
 
+    var isFormValid: Boolean
+        get() = sharedPreferences.getBoolean("isFormValid", false)
+        set(value) = sharedPreferences.edit().putBoolean("isFormValid", value).apply()
+
     var isFirstInstall: Boolean
         get() = sharedPreferences.getBoolean(IS_FIRST_INSTALL, true)
         set(value) = sharedPreferences.edit().putBoolean(IS_FIRST_INSTALL, value).apply()

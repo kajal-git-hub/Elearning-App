@@ -31,6 +31,9 @@
         <action
             android:id="@+id/action_homeFragment_to_RecommendDetailFragment"
             app:destination="@+id/RecommendViewDetail" />
+        <action
+            android:id="@+id/action_homeFragment_to_PersonalDetailFragment"
+            app:destination="@+id/PersonalDetailsFragment" />
     </fragment>
 
     <fragment
