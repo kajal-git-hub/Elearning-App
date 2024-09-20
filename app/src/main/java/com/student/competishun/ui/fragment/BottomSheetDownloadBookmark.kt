@@ -13,18 +13,30 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.gson.Gson
 import com.student.competishun.R
 import com.student.competishun.data.model.TopicContentModel
 import com.student.competishun.databinding.FragmentBottomSheetDownloadBookmarkBinding
+import com.student.competishun.ui.viewmodel.VideourlViewModel
 import com.student.competishun.utils.SharedPreferencesManager
 import dagger.hilt.android.AndroidEntryPoint
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import java.io.File
+import java.io.FileOutputStream
+import java.io.InputStream
 
 @AndroidEntryPoint
 class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
     private var itemDetails: TopicContentModel? = null
     private lateinit var binding : FragmentBottomSheetDownloadBookmarkBinding
+    private lateinit var viewModel: VideourlViewModel
+    private var pdfUrl = ""
+    private var videoUrl = ""
 
     fun setItemDetails(details: TopicContentModel) {
         this.itemDetails = details
@@ -41,11 +53,13 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentBottomSheetDownloadBookmarkBinding.inflate(inflater,container,false)
+        viewModel = ViewModelProvider(this).get(VideourlViewModel::class.java)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
 
         binding.tvBookmark.setOnClickListener {
 
@@ -53,12 +67,16 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
         binding.tvDownload.setOnClickListener {
             itemDetails?.let { details ->
                 Log.d("ItemDetails",details.toString())
+//                pdfUrl = details.url
+//                downloadFile(pdfUrl,details.topicName)
+//                videoUrl = videoUrlApi(viewModel,details.id,details.topicName).toString()
                 storeItemInPreferences(details)
+                downloadFile(details)
                 dismiss()
-//                downloadFile(details)
             }
         }
     }
+
     private fun storeItemInPreferences(item: TopicContentModel) {
         val sharedPreferencesManager = SharedPreferencesManager(requireActivity())
         sharedPreferencesManager.saveDownloadedItem(item)
@@ -99,9 +117,22 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
         }, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE), Context.RECEIVER_NOT_EXPORTED)
     }
 
+    private fun videoUrlApi(viewModel: VideourlViewModel, folderContentId: String, name: String) {
+        viewModel.fetchVideoStreamUrl(folderContentId, "480p")
 
-
-
-
+        viewModel.videoStreamUrl.observe(viewLifecycleOwner) { signedUrl ->
+            Log.d("VideoUrl", "Signed URL: $signedUrl")
+            if (signedUrl != null) {
+                val bundle = Bundle().apply {
+                    putString("url", signedUrl)
+                    putString("url_name", name)
+                    putString("ContentId", folderContentId)
+                }
+                findNavController().navigate(R.id.mediaFragment, bundle)
+            } else {
+                // Handle error or null URL
+            }
+        }
+    }
 
 }

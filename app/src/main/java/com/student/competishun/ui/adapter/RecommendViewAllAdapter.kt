@@ -51,7 +51,7 @@ class RecommendViewAllAdapter(
             visibility = if (text.isEmpty()) View.GONE else View.VISIBLE
         }
 
-        holder.courseName.text = "${course.name}  ${course.academic_year}"
+        holder.courseName.text = "${course.name}"
 
         if (course.price != null && course.discount != null) {
             val discountPercent = helperFunctions.calculateDiscountPercentage(course.price, course.discount)
