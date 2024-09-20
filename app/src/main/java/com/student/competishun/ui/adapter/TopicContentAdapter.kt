@@ -82,9 +82,14 @@ class TopicContentAdapter(
             Log.e("getlocketime ${isDateTodayOrPast(topicContent.lockTime)} ",topicContent.lockTime)
             if ( isDateTodayOrPast(topicContent.lockTime)) {
                 if (topicContent.fileType == "VIDEO")
-                {  binding.videoicon.setImageResource(R.drawable.frame_1707481707)}
+                {
+                    binding.videoicon.setImageResource(R.drawable.frame_1707481707)
+                    binding.ivPersonIdentifier.setBackgroundResource(R.drawable.clock_black)
+                }
                 else if (topicContent.fileType == "PDF"){ binding.videoicon.setImageResource(R.drawable.pdf_bg)}
                 binding.videoicon.visibility = View.VISIBLE
+                binding.ivPersonIdentifier.setBackgroundResource(R.drawable.download_person)
+
 
             } else {
                 binding.videoicon.visibility = View.VISIBLE

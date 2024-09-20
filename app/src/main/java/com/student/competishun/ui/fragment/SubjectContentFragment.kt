@@ -187,7 +187,9 @@ class SubjectContentFragment : Fragment() {
                                         id = contents.content?.id ?: "",
                                         playIcon = if (contents.content?.file_type?.name == "VIDEO") R.drawable.video_bg else 0,
                                         lecture = if (contents.content?.file_type?.name == "VIDEO") "Lecture" else "Study Material",
-                                        lecturerName = "Ashok",
+                                        lecturerName = if(contents.content?.file_type?.name == "VIDEO") formatTimeDuration(
+                                            contents.content.video_duration ?: 0
+                                        ) else "Ashok" ,
                                         topicName = contents.content?.file_name ?: "",
                                         topicDescription = contents.content?.description.toString(),
                                         progress = 1,
@@ -327,7 +329,9 @@ class SubjectContentFragment : Fragment() {
                                         id = contents.content?.id ?: "",
                                         playIcon = if (contents.content?.file_type?.name == "VIDEO") R.drawable.video_bg else 0,
                                         lecture = if (contents.content?.file_type?.name == "VIDEO") "Lecture" else "Study Material",
-                                        lecturerName = "Ashok",
+                                        lecturerName = if(contents.content?.file_type?.name == "VIDEO") formatTimeDuration(
+                                            contents.content.video_duration ?: 0
+                                        ) else "Ashok" ,
                                         topicName = contents.content?.file_name ?: "",
                                         topicDescription = contents.content?.description.toString(),
                                         progress = 1,
@@ -424,6 +428,23 @@ class SubjectContentFragment : Fragment() {
 
             } else {
                 // Handle error or null URL
+            }
+        }
+    }
+    private fun formatTimeDuration(totalDuration: Int): String {
+        return when {
+            totalDuration < 60 -> "${totalDuration} sec"
+            totalDuration == 60 -> "1h"
+            else -> {
+                val hours = totalDuration / 3600
+                val minutes = (totalDuration % 3600) / 60
+                val seconds = totalDuration % 60
+
+                val hourString = if (hours > 0) "${hours} hr${if (hours > 1) "s" else ""}" else ""
+                val minuteString = if (minutes > 0) "${minutes} min${if (minutes > 1) "s" else ""}" else ""
+                val secondString = if (seconds > 0) "${seconds} sec" else ""
+
+                listOf(hourString, minuteString, secondString).filter { it.isNotEmpty() }.joinToString(" ").trim()
             }
         }
     }

@@ -58,6 +58,7 @@
         android:id="@+id/iv_personIdentifier"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
+        android:src="@drawable/download_person"
         android:layout_marginStart="@dimen/_6dp"
         android:layout_marginTop="16dp"
         app:layout_constraintStart_toEndOf="@id/iv_vertical_line"
