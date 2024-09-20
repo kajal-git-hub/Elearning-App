@@ -363,7 +363,7 @@ class ScheduleFragment : Fragment(), ToolbarCustomizationListener {
     }
     fun videoUrlApi(viewModel: VideourlViewModel, folderContentId: String,name: String) {
 
-        viewModel.fetchVideoStreamUrl(folderContentId, "360p")
+        viewModel.fetchVideoStreamUrl(folderContentId, "480")
          Log.e("foldfdfd",folderContentId)
         viewModel.videoStreamUrl.observe(viewLifecycleOwner, { signedUrl ->
             Log.d("Videourl", "Signed URL: $signedUrl")
