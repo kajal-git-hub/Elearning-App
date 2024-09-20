@@ -81,7 +81,7 @@ class TopicTypeContentFragment : Fragment() {
     {
         val topicContents = folderContents?.map { content ->
             val date = content.content?.scheduled_time.toString()?:""
-            val time = helperFunctions.formatCourseDate(date)
+            val time = helperFunctions.formatCourseDateTime(date)
             TopicContentModel(
                 subjectIcon = if (content.content?.file_type?.name == "PDF") R.drawable.content_bg else R.drawable.group_1707478994,
                 id = content.content?.id ?: "",
@@ -133,7 +133,7 @@ class TopicTypeContentFragment : Fragment() {
                     val folderContents = data.findCourseFolderProgress.folderContents
                     Log.d("folderContentsProgress", folderContents.toString())
                     val topicContents = folderContents?.map { content ->
-                        val time = helperFunctions.formatCourseDate(content.content?.scheduled_time.toString())
+                        val time = helperFunctions.formatCourseDateTime(content.content?.scheduled_time.toString())
                         TopicContentModel(
                             subjectIcon = R.drawable.group_1707478994, // Replace with dynamic icon if needed
                             id = content.content?.id.orEmpty(),

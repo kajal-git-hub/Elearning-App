@@ -48,7 +48,7 @@ class TopicContentAdapter(
 
         val topicContent = topicContents[position]
         holder.bind(topicContents[position], fragmentActivity)
-        Log.e("valuesss ${isDateTodayOrPast(topicContent.lockTime)} ", topicContent.lockTime.toString())
+        Log.e("valuesss ${isDateTodayOrPast(topicContent.lockTime)} ", topicContent.topicName.toString())
         // Disable click if locked, enable if not
         if ( isDateTodayOrPast(topicContent.lockTime)) {
             // Enable the click listener for unlocked items
