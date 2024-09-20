@@ -95,6 +95,7 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
     var firstInstallment: Int = 0
     var secondInstallment: Int = 0
     var ExploreCourseTags: MutableList<String> = mutableListOf()
+    var bannerCourseTag : MutableList<String> = mutableListOf()
     var isVideoPlaying = false
     var installmentPrice1 = 0
     private var checkInstallOrNot = 0
@@ -190,7 +191,8 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
             isVideoPlaying = false
             getCourseByIDViewModel.courseByID.observe(viewLifecycleOwner, Observer { courses ->
 
-
+                bannerCourseTag = courses?.course_tags as MutableList<String>
+                Log.d("bannerCourseTag",bannerCourseTag.toString())
                 Log.d("courseDetail",courses.toString())
                 checkInstallOrNot = courses?.with_installment_price ?: 0
                 val imageUrl = courses?.video_thumbnail
@@ -598,10 +600,10 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
                         val data = result.onSuccess {
                             it.getAllCourseForStudent.courses.map { course ->
                                 binding.tvTag4.text = "Target ${course.target_year}"
-
-                                // Assuming ExploreCourseTags is a list or an array you already have
-                                // Make sure it is initialized before using it
-                                ExploreCourseTags?.let { tags ->
+                                if (ExploreCourseTags.isEmpty()){
+                                    ExploreCourseTags  = bannerCourseTag
+                                }
+                                ExploreCourseTags.let { tags ->
                                     binding.tvTag1.apply {
                                         val tag1 = tags.getOrNull(0) ?: ""
                                         Log.d("ExploreCourseTagsIndex", tag1)

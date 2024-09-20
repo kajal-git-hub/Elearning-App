@@ -70,7 +70,7 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
 //                pdfUrl = details.url
 //                downloadFile(pdfUrl,details.topicName)
 //                videoUrl = videoUrlApi(viewModel,details.id,details.topicName).toString()
-                storeItemInPreferences(details)
+                storeItemInPreferences(details) //except video url
                 downloadFile(details)
                 dismiss()
             }

@@ -74,6 +74,7 @@ class MediaPlayerFragment : Fragment() {
         }
 
         val videoUrl = arguments?.getString("url") ?: return
+        Log.d("videoUrlExplore",videoUrl)
         val title = arguments?.getString("url_name") ?: return
         if (title != null) {
             binding.tittleBtn.visibility = View.VISIBLE
@@ -92,6 +93,12 @@ class MediaPlayerFragment : Fragment() {
         binding.qualityButton.setOnClickListener {
             showSpeedOrQualityDialog()
         }
+        player.addListener(object : Player.Listener {
+            override fun onPlayerError(error: PlaybackException) {
+                Log.e("ExoPlayer Error", "Error: ${error.message}")
+            }
+        })
+
 
         gestureDetector = GestureDetector(requireContext(), DoubleTapGestureListener())
         binding.playerView.setOnTouchListener { _, event ->
