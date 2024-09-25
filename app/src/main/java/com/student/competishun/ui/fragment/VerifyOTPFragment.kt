@@ -130,7 +130,7 @@ class VerifyOTPFragment : Fragment() {
                     userDetailsResult.onSuccess { data ->
                         val userDetails = data.getMyDetails
 
-                        if (userDetails.userInformation.address?.city!=null && userDetails.userInformation.reference!=null && userDetails.userInformation.targetYear!=null && userDetails.userInformation.preparingFor!=null && userDetails.fullName!=null) {
+                        if (userDetails.userInformation.address?.city!=null && userDetails.userInformation.reference!=null && userDetails.userInformation.targetYear!=null && userDetails.userInformation.preparingFor!=null && userDetails.fullName!=null ) {
 
                             navigateToHomeActivity(userDetails.id)
                         } else {
