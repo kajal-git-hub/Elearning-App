@@ -36,8 +36,9 @@ class WhyCompetishunAdapter(private val listWhyCompetishun: List<WhyCompetishun>
             putString("url", videourl)
             putString("url_name", name)
         }
+        Log.d("videourl",videourl)
         Log.d("Navigating to Explore","Navigating")
-        navController.navigate(R.id.mediaFragment,bundle)
+        navController.navigate(R.id.action_homeFragment_to_mediaFragment,bundle)
     }
 
     override fun getItemCount(): Int {

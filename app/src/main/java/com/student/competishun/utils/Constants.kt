@@ -187,5 +187,64 @@ object Constants {
 //    )
 
 
+// subject content fragment bottom constraint
+//
+//    <androidx.constraintlayout.widget.ConstraintLayout
+//    android:id="@+id/clRunningCourseReminder"
+//    android:layout_width="match_parent"
+//    android:layout_height="wrap_content"
+//    android:background="@color/white"
+//    android:visibility="gone"
+//    app:layout_constraintBottom_toBottomOf="parent"
+//    app:layout_constraintEnd_toEndOf="parent"
+//    app:layout_constraintStart_toStartOf="parent">
+//
+//    <!-- Progress Bar -->
+//    <ProgressBar
+//    android:id="@+id/customProgressIndicatorRunningCourseReminder"
+//    style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+//    android:layout_width="match_parent"
+//    android:layout_height="8dp"
+//    android:max="100"
+//    android:progress="50"
+//    android:progressDrawable="@drawable/progress_bar_reminder"
+//    app:layout_constraintEnd_toEndOf="parent"
+//    app:layout_constraintStart_toStartOf="parent"
+//    app:layout_constraintTop_toTopOf="parent" />
+//
+//    <!-- Running Course Icons and Texts -->
+//    <ImageView
+//    android:id="@+id/IconRunningCourseReminder"
+//    android:layout_width="wrap_content"
+//    android:layout_height="wrap_content"
+//    android:layout_marginVertical="13dp"
+//    android:layout_marginStart="@dimen/_16dp"
+//    android:src="@drawable/layer_1"
+//    app:layout_constraintBottom_toBottomOf="parent"
+//    app:layout_constraintStart_toStartOf="parent"
+//    app:layout_constraintTop_toBottomOf="@id/customProgressIndicatorRunningCourseReminder" />
+//
+//    <com.google.android.material.textview.MaterialTextView
+//    android:id="@+id/tvRunningCourseName"
+//    android:layout_width="wrap_content"
+//    android:layout_height="wrap_content"
+//    android:layout_marginStart="12dp"
+//    android:layout_marginTop="13dp"
+//    android:fontFamily="@font/nunito"
+//    android:text="Binomial Theorem"
+//    android:textColor="#2B2829"
+//    android:textSize="14sp"
+//    android:textStyle="bold"
+//    app:layout_constraintStart_toEndOf="@+id/IconRunningCourseReminder"
+//    app:layout_constraintTop_toBottomOf="@+id/customProgressIndicatorRunningCourseReminder" />
+//
+//    <!-- Other UI elements inside the ConstraintLayout -->
+//    <!-- .... -->
+//    </androidx.constraintlayout.widget.ConstraintLayout>
+//
+//
+
+
+
 
 }

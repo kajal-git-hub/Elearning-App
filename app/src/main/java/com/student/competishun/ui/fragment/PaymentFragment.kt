@@ -25,6 +25,7 @@ import com.student.competishun.data.model.CourseFItem
 import com.student.competishun.databinding.FragmentPaymentBinding
 import com.student.competishun.ui.adapter.CourseFeaturesAdapter
 import com.student.competishun.ui.main.HomeActivity
+import com.student.competishun.ui.viewmodel.CreateCartViewModel
 import com.student.competishun.ui.viewmodel.GetCourseByIDViewModel
 import com.student.competishun.ui.viewmodel.OrdersViewModel
 import com.student.competishun.ui.viewmodel.UserViewModel
@@ -41,6 +42,7 @@ class PaymentFragment : Fragment() {
     private lateinit var binding: FragmentPaymentBinding
     private val ordersViewModel: OrdersViewModel by viewModels()
     private lateinit var  helperFunctions:HelperFunctions
+    private val cartViewModel: CreateCartViewModel by viewModels()
     private val getCourseByIDViewModel: GetCourseByIDViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -98,6 +100,21 @@ class PaymentFragment : Fragment() {
         }
     }
 
+    private fun removeCourse( cartItemId:String){
+        cartViewModel.removeCartItem(cartItemId)
+        cartViewModel.removeCartItemResult.observe(viewLifecycleOwner)
+        { result ->
+
+            result.onSuccess {
+                Log.e("SuccessfullyRemovedCart",it.toString())
+            }.onFailure {
+                // Handle failure, e.g., show an error message
+                Log.e("Failed to remove cart: ",it.message.toString())
+            }
+        }
+
+    }
+
     fun orderdetails(ordersViewModel: OrdersViewModel,userId:String
     ){
         binding.progressBar.visibility = View.VISIBLE
@@ -115,9 +132,14 @@ class PaymentFragment : Fragment() {
 
                     observeCourseById(order.entityId)
                     binding.tvPaidDate.text =  getCurrentDateString()
+                  val cartItemId =   sharedPreferencesManager.getString("cartItemId","")
+                    if (cartItemId!="" && cartItemId != null){
+                            removeCourse(cartItemId)
+                    }
                     if (order.paymentStatus.equals("paid", ignoreCase = true)) {
                         // Save the payment success status to SharedPreferences
                         sharedPreferencesManager.putBoolean("savePaymentSuccess", true)
+                        sharedPreferencesManager.isBottomSheetShown = false
                         Log.d("Order", "Payment Successful. Amount Paid: ${order.amountPaid}")
                     } else {
                         // Save the payment failure status to SharedPreferences

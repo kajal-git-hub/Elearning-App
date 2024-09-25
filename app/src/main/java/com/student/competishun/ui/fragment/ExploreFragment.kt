@@ -95,6 +95,7 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
     var firstInstallment: Int = 0
     var secondInstallment: Int = 0
     var ExploreCourseTags: MutableList<String> = mutableListOf()
+    var bannerCourseTag : MutableList<String> = mutableListOf()
     var isVideoPlaying = false
     var installmentPrice1 = 0
     private var checkInstallOrNot = 0
@@ -190,7 +191,8 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
             isVideoPlaying = false
             getCourseByIDViewModel.courseByID.observe(viewLifecycleOwner, Observer { courses ->
 
-
+                bannerCourseTag = courses?.course_tags as MutableList<String>
+                Log.d("bannerCourseTag",bannerCourseTag.toString())
                 Log.d("courseDetail",courses.toString())
                 checkInstallOrNot = courses?.with_installment_price ?: 0
                 val imageUrl = courses?.video_thumbnail
@@ -228,6 +230,28 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
                         Log.d("CourseVideoError", "Video URL is empty")
                     }
 
+                }
+
+                val coursePrice = courses?.price ?: 0
+                installmentPrice1 = courses?.with_installment_price ?: 0
+                Log.d("installmentPrice114",installmentPrice1.toString())
+                firstInstallment = (installmentPrice1 * 0.6).toInt()
+                secondInstallment = (installmentPrice1.minus(firstInstallment))
+
+                if (firstInstallment <= 0) {
+                    Log.d("checkInstallOrNot", checkInstallOrNot.toString())
+                    binding.clInstallmentOptionView.visibility = View.GONE
+
+                } else
+                {
+                    Log.d("checkInstallOrNot", checkInstallOrNot.toString())
+                    binding.clInstallmentOptionView.visibility = View.VISIBLE
+                    binding.clInstallmentOptionView.setOnClickListener {
+                        showInstallmentDetailsBottomSheet(
+                            firstInstallment,
+                            secondInstallment
+                        )
+                    }
                 }
 
                 binding.overviewButton.setOnClickListener {
@@ -302,11 +326,6 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
                     }
                     binding.tvOurContentNumber.text = folderlist.size.toString() + " Total"
 
-                    val coursePrice = courses.price ?: 0
-                    installmentPrice1 = courses.with_installment_price ?: 0
-                    Log.d("installmentPrice114",installmentPrice1.toString())
-                    firstInstallment = (installmentPrice1 * (0.6)).toInt()
-                    secondInstallment = (coursePrice.minus(firstInstallment))
 
                     binding.tvCourseName.text = courses.name
                     val categoryName = courses.category_name?.split(" ") ?: emptyList()
@@ -329,21 +348,6 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
                 }
 
             })
-        }
-
-        if (checkInstallOrNot <= 0) {
-            Log.d("checkInstallOrNot", checkInstallOrNot.toString())
-            binding.clInstallmentOptionView.visibility = View.GONE
-
-        } else {
-            Log.d("checkInstallOrNot", checkInstallOrNot.toString())
-            binding.clInstallmentOptionView.visibility = View.VISIBLE
-            binding.clInstallmentOptionView.setOnClickListener {
-                showInstallmentDetailsBottomSheet(
-                    firstInstallment,
-                    secondInstallment
-                )
-            }
         }
 
         binding.tvCourseDescription.viewTreeObserver.addOnGlobalLayoutListener {
@@ -596,10 +600,10 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
                         val data = result.onSuccess {
                             it.getAllCourseForStudent.courses.map { course ->
                                 binding.tvTag4.text = "Target ${course.target_year}"
-
-                                // Assuming ExploreCourseTags is a list or an array you already have
-                                // Make sure it is initialized before using it
-                                ExploreCourseTags?.let { tags ->
+                                if (ExploreCourseTags.isEmpty()){
+                                    ExploreCourseTags  = bannerCourseTag
+                                }
+                                ExploreCourseTags.let { tags ->
                                     binding.tvTag1.apply {
                                         val tag1 = tags.getOrNull(0) ?: ""
                                         Log.d("ExploreCourseTagsIndex", tag1)

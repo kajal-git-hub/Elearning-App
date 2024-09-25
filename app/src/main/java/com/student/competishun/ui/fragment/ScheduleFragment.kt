@@ -232,7 +232,7 @@ class ScheduleFragment : Fragment(), ToolbarCustomizationListener {
         val courses =  arguments?.getString("courses")
         var start = helperFunctions.formatCourseDate(courseStart)
         var end = helperFunctions.formatCourseDate(courseEnd)
-        Log.e("dataschec",dateFormate(start.toString()) + dateFormate(end.toString())  + courseId)
+        Log.e("dataschec $start $end",dateFormate(start.toString()) + dateFormate(end.toString())  + courseId)
         scheduleData = ZonedDateTime.now()
         binding.backIconSchedule.setOnClickListener {
             requireActivity().onBackPressedDispatcher.onBackPressed()
@@ -363,7 +363,7 @@ class ScheduleFragment : Fragment(), ToolbarCustomizationListener {
     }
     fun videoUrlApi(viewModel: VideourlViewModel, folderContentId: String,name: String) {
 
-        viewModel.fetchVideoStreamUrl(folderContentId, "360p")
+        viewModel.fetchVideoStreamUrl(folderContentId, "480")
          Log.e("foldfdfd",folderContentId)
         viewModel.videoStreamUrl.observe(viewLifecycleOwner, { signedUrl ->
             Log.d("Videourl", "Signed URL: $signedUrl")

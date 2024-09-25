@@ -20,8 +20,10 @@ import com.student.competishun.databinding.ItemTopicTypeContentBinding
 import com.student.competishun.ui.fragment.BottomSheetDownloadBookmark
 import com.student.competishun.ui.fragment.BottomSheetTSizeFragment
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
+import java.time.format.ResolverStyle
 import java.util.Locale
 
 class TopicContentAdapter(
@@ -46,9 +48,9 @@ class TopicContentAdapter(
 
         val topicContent = topicContents[position]
         holder.bind(topicContents[position], fragmentActivity)
-
+        Log.e("valuesss ${isDateTodayOrPast(topicContent.lockTime)} ", topicContent.topicName.toString())
         // Disable click if locked, enable if not
-        if ( showDateIfFutureOrToday(topicContent.lockTime)) {
+        if ( isDateTodayOrPast(topicContent.lockTime)) {
             // Enable the click listener for unlocked items
             holder.itemView.setOnClickListener {
                 onItemClick(topicContent, folderContentId)
@@ -73,20 +75,24 @@ class TopicContentAdapter(
                 bottomSheet.setItemDetails(topicContent)
                 bottomSheet.show(fragmentActivity.supportFragmentManager, bottomSheet.tag)
             }
-          Log.e("getlocketime",topicContent.lockTime)
+          Log.e("getlocketime ${topicContent.topicName}",topicContent.lockTime)
 //            if (showDateIfFutureOrToday(topicContent.lockTime)) binding.videoicon.setImageResource(R.drawable.frame_1707481707) else binding.videoicon.setImageResource(
 //                R.drawable.frame_1707481080
 //            )
-            if ( showDateIfFutureOrToday(topicContent.lockTime)) {
+            Log.e("getlocketime ${isDateTodayOrPast(topicContent.lockTime)} ",topicContent.lockTime)
+            if ( isDateTodayOrPast(topicContent.lockTime)) {
                 if (topicContent.fileType == "VIDEO")
-                {  binding.videoicon.setImageResource(R.drawable.frame_1707481707)}
+                {
+                    binding.videoicon.setImageResource(R.drawable.frame_1707481707)
+                    binding.ivPersonIdentifier.setBackgroundResource(R.drawable.clock_black)
+                }
                 else if (topicContent.fileType == "PDF"){ binding.videoicon.setImageResource(R.drawable.pdf_bg)}
                 binding.videoicon.visibility = View.VISIBLE
-                binding.ivPlayVideoIcon.visibility = View.VISIBLE
+                binding.ivPersonIdentifier.setBackgroundResource(R.drawable.download_person)
+
 
             } else {
                 binding.videoicon.visibility = View.VISIBLE
-                binding.ivPlayVideoIcon.visibility = View.VISIBLE
                 binding.videoicon.setImageResource(R.drawable.frame_1707481080)
             }
 
@@ -146,83 +152,123 @@ class TopicContentAdapter(
         }
         @RequiresApi(Build.VERSION_CODES.O)
         fun showDateIfFutureOrToday(dateString: String): Boolean {
-            // Define the primary date format pattern
-            val dateString = dateString.replace("Sept", "Sep").trim()
+            // Correct the date string if necessary
+            Log.e("dateStrings",dateString)
+            val cleanedDateString = dateString.replace("Sept", "Sep").trim()
 
-            val primaryFormatter = DateTimeFormatter.ofPattern("dd MMM, yy", Locale.ENGLISH)
-            // Define a fallback format pattern if needed
-            val fallbackFormatter = DateTimeFormatter.ofPattern("dd MMM yy", Locale.ENGLISH)
+            // Define the corrected primary date format pattern (assuming '24' refers to 2024)
+            val primaryFormatter = DateTimeFormatter.ofPattern("dd MMM, yy hh:mm a", Locale.ENGLISH)
+                .withResolverStyle(ResolverStyle.SMART) // Handle ambiguous year formats like '24'
+
+            // Define the fallback format pattern for date only
+            val fallbackFormatter = DateTimeFormatter.ofPattern("dd MMM, yy", Locale.ENGLISH)
 
             return try {
                 // Try to parse using the primary formatter
-                val date = LocalDate.parse(dateString.trim(), primaryFormatter)
+                val dateTime = LocalDateTime.parse(cleanedDateString, primaryFormatter)
                 // Get today's date
-                val today = LocalDate.now()
-                // Compare the dates
-                Log.e("adfdf$today", date.toString())
-                date.isBefore(today) || date.isEqual(today)
+                val today = LocalDateTime.now()
+                // Compare the dates (check if date is today or in the future)
+                dateTime.isAfter(today) || dateTime.isEqual(today)
             } catch (e: DateTimeParseException) {
-                // Log the exception and try the fallback format
-                Log.e(
-                    "DateParsingError",
-                    "Primary format parsing error: ${e.message}. Input date string: '$dateString'"
-                )
+                Log.e("DateParsingError", "Primary format parsing error: ${e.message}. Input date string: '$cleanedDateString'")
                 try {
-                    // Try parsing using the fallback formatter
-                    val date = LocalDate.parse(dateString.trim(), fallbackFormatter)
+                    // Try parsing using the fallback formatter (without time)
+                    val dateTime = LocalDate.parse(cleanedDateString, fallbackFormatter)
                     val today = LocalDate.now()
-                    Log.e("adfdf $today", date.toString())
-                    date.isBefore(today) || date.isEqual(today)
+                    // Compare the dates (check if date is today or in the future)
+                    dateTime.isAfter(today) || dateTime.isEqual(today)
                 } catch (fallbackException: DateTimeParseException) {
-                    // Log the fallback exception and return false if parsing fails
-                    Log.e(
-                        "DateParsingError",
-                        "Fallback format parsing error: ${fallbackException.message}. Input date string: '$dateString'"
-                    )
+                    Log.e("DateParsingError", "Fallback format parsing error: ${fallbackException.message}. Input date string: '$cleanedDateString'")
                     false
                 }
             }
         }
+        fun isDateTodayOrPast(dateString: String): Boolean {
+            // Clean up the date string
+            val cleanedDateString = dateString.replace("Sept", "Sep").trim()
+                .replace("pm".toRegex(), "PM")
+                .replace("am".toRegex(), "AM")
+
+
+            // Define the primary date format pattern
+            val formatter = DateTimeFormatter.ofPattern("dd MMM, yy hh:mm a", Locale.ENGLISH)
+                .withResolverStyle(ResolverStyle.SMART)
+
+            return try {
+                // Parse the date and time
+                val dateTime = LocalDateTime.parse(cleanedDateString, formatter)
+                // Get today's date and time
+                val now = LocalDateTime.now()
+                // Check if the date is today or in the past
+                dateTime.isBefore(now) || dateTime.isEqual(now)
+            } catch (e: DateTimeParseException) {
+                Log.e("DateParsingError", "Error parsing date: ${e.message}. Input date string: '$cleanedDateString'")
+                false
+            }
+        }
 
     }
-    @RequiresApi(Build.VERSION_CODES.O)
-    fun showDateIfFutureOrToday(dateString: String): Boolean {
-        // Define the primary date format pattern
-        val dateString = dateString.replace("Sept", "Sep").trim()
+    fun isDateTodayOrPast(dateString: String): Boolean {
+        // Clean up the date string
+        val cleanedDateString = dateString.replace("Sept", "Sep").trim()
+            .replace("pm".toRegex(), "PM")
+            .replace("am".toRegex(), "AM")
 
-        val primaryFormatter = DateTimeFormatter.ofPattern("dd MMM, yy", Locale.ENGLISH)
-        // Define a fallback format pattern if needed
-        val fallbackFormatter = DateTimeFormatter.ofPattern("dd MMM yy", Locale.ENGLISH)
+
+        // Define the primary date format pattern
+        val formatter = DateTimeFormatter.ofPattern("dd MMM, yy hh:mm a", Locale.ENGLISH)
+            .withResolverStyle(ResolverStyle.SMART)
 
         return try {
-            // Try to parse using the primary formatter
-            val date = LocalDate.parse(dateString.trim(), primaryFormatter)
-            // Get today's date
-            val today = LocalDate.now()
-            // Compare the dates
-            Log.e("adfdf$today", date.toString())
-            date.isBefore(today) || date.isEqual(today)
+            // Parse the date and time
+            val dateTime = LocalDateTime.parse(cleanedDateString, formatter)
+            // Get today's date and time
+            val now = LocalDateTime.now()
+            // Check if the date is today or in the past
+            dateTime.isBefore(now) || dateTime.isEqual(now)
         } catch (e: DateTimeParseException) {
-            // Log the exception and try the fallback format
-            Log.e(
-                "DateParsingError",
-                "Primary format parsing error: ${e.message}. Input date string: '$dateString'"
-            )
+            Log.e("DateParsingError", "Error parsing date: ${e.message}. Input date string: '$cleanedDateString'")
+            false
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun showDateIfFutureOrToday(dateString: String): Boolean {
+        // Correct the date string if necessary
+        Log.e("dateString2",dateString)
+        val cleanedDateString = dateString.replace("Sept", "Sep").trim()
+
+        // Define the corrected primary date format pattern (assuming '24' refers to 2024)
+        val primaryFormatter = DateTimeFormatter.ofPattern("dd MMM, yy hh:mm a", Locale.ENGLISH)
+            .withResolverStyle(ResolverStyle.SMART) // Handle ambiguous year formats like '24'
+
+        // Define the fallback format pattern for date only
+        val fallbackFormatter = DateTimeFormatter.ofPattern("dd MMM, yy", Locale.ENGLISH)
+        Log.e("getingtind $fallbackFormatter",primaryFormatter.toString())
+        return try {
+            // Try to parse using the primary formatter
+            val dateTime = LocalDateTime.parse(cleanedDateString, primaryFormatter)
+            // Get today's date
+            val today = LocalDateTime.now()
+            Log.e("getingtind",dateTime.toString())
+            // Compare the dates (check if date is today or in the future)
+            dateTime.isAfter(today) || dateTime.isEqual(today)
+        } catch (e: DateTimeParseException) {
+            Log.e("DateParsingError", "Primary format parsing error: ${e.message}. Input date string: '$cleanedDateString'")
             try {
-                // Try parsing using the fallback formatter
-                val date = LocalDate.parse(dateString.trim(), fallbackFormatter)
+                // Try parsing using the fallback formatter (without time)
+                val dateTime = LocalDate.parse(cleanedDateString, fallbackFormatter)
                 val today = LocalDate.now()
-                Log.e("adfdf $today", date.toString())
-                date.isBefore(today) || date.isEqual(today)
+                // Compare the dates (check if date is today or in the future)
+                dateTime.isAfter(today) || dateTime.isEqual(today)
             } catch (fallbackException: DateTimeParseException) {
-                // Log the fallback exception and return false if parsing fails
-                Log.e(
-                    "DateParsingError",
-                    "Fallback format parsing error: ${fallbackException.message}. Input date string: '$dateString'"
-                )
+                Log.e("DateParsingError", "Fallback format parsing error: ${fallbackException.message}. Input date string: '$cleanedDateString'")
                 false
             }
         }
     }
+
+
 
 }

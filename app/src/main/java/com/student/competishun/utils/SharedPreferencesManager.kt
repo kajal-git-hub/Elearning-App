@@ -82,6 +82,11 @@ class SharedPreferencesManager(context: Context) {
         }
 
 
+    var isBottomSheetShown: Boolean
+        get() = sharedPreferences.getBoolean("isBottomSheetShown", false)
+        set(value) = sharedPreferences.edit().putBoolean("isBottomSheetShown", value).apply()
+
+
 
     var fatherName: String?
         get() = sharedPreferences.getString(KEY_FATHER_NAME, null)
@@ -202,6 +207,14 @@ class SharedPreferencesManager(context: Context) {
     var isFirstInstall: Boolean
         get() = sharedPreferences.getBoolean(IS_FIRST_INSTALL, true)
         set(value) = sharedPreferences.edit().putBoolean(IS_FIRST_INSTALL, value).apply()
+
+    fun putString(key: String, value: String) {
+        sharedPreferences.edit().putString(key, value).apply()
+    }
+
+    fun getString(key: String,defaultValue: String): String? {
+        return sharedPreferences.getString(key,defaultValue)
+    }
 
     fun putBoolean(key: String, value: Boolean) {
         sharedPreferences.edit().putBoolean(key, value).apply()

@@ -51,7 +51,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/TopView">
 
-
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tv_subject_name"
             android:layout_width="wrap_content"
@@ -59,7 +58,7 @@
             android:layout_marginStart="@dimen/_16dp"
             android:layout_marginTop="@dimen/_20dp"
             android:fontFamily="@font/nunito"
-            android:text=""
+            android:text="Subject Name"
             android:textColor="#2B2829"
             android:textSize="24sp"
             android:textStyle="bold"
@@ -105,6 +104,7 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <!-- Keep cl_topic_type outside the NestedScrollView to ensure it's visible -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_topic_type"
         android:layout_width="match_parent"
@@ -117,14 +117,13 @@
             android:id="@+id/tv_topic_type"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_16dp"
             android:layout_marginVertical="@dimen/_12sp"
+            android:layout_marginStart="@dimen/_16dp"
             android:fontFamily="@font/nunito"
+            android:text="Topic Type"
             android:textColor="#2B2829"
-            android:text=""
             android:textSize="@dimen/_14sp"
             android:textStyle="bold"
-            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -135,8 +134,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_4dp"
             android:fontFamily="@font/nunito"
-            android:text=""
-            android:visibility="gone"
+            android:text="0 Content"
             android:textColor="#2B2829"
             android:textSize="@dimen/_14sp"
             android:textStyle="bold"
@@ -148,7 +146,6 @@
             android:id="@+id/down_chooseTopic"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="visible"
             android:layout_marginStart="@dimen/_6dp"
             android:src="@drawable/arrow_down_black"
             app:layout_constraintBottom_toBottomOf="@id/tv_topic_type"
@@ -157,144 +154,36 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <!-- Wrap RecyclerView content in a NestedScrollView to make it scrollable -->
     <androidx.core.widget.NestedScrollView
-        android:id="@+id/nestedScrollView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:fillViewport="true"
+        android:layout_height="0dp"
         app:layout_constraintTop_toBottomOf="@id/cl_topic_type"
-        android:scrollbars="vertical">
+        app:layout_constraintBottom_toBottomOf="parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cl_newst"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvSubjectContent"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:itemCount="2"
-        tools:listitem="@layout/item_course_content" />
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvSubjectContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                tools:itemCount="2"
+                tools:listitem="@layout/item_course_content" />
 
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvTopicContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                tools:itemCount="2"
+                tools:listitem="@layout/item_topic_type_content" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvTopicContent"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/rvSubjectContent"
-        tools:itemCount="2"
-        tools:listitem="@layout/item_course_content" />
+        </LinearLayout>
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/clRunningCourseReminder"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <ProgressBar
-            android:id="@+id/customProgressIndicatorRunningCourseReminder"
-            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="8dp"
-            android:max="100"
-            android:progress="50"
-            android:progressDrawable="@drawable/progress_bar_reminder"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageView
-            android:id="@+id/IconRunningCourseReminder"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="13dp"
-            android:layout_marginStart="@dimen/_16dp"
-            android:src="@drawable/layer_1"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/customProgressIndicatorRunningCourseReminder" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/tvRunningCourseName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="13dp"
-            android:fontFamily="@font/nunito"
-            android:text="Binomial Theorem"
-            android:textColor="#2B2829"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@+id/IconRunningCourseReminder"
-            app:layout_constraintTop_toBottomOf="@+id/customProgressIndicatorRunningCourseReminder" />
-
-        <ImageView
-            android:id="@+id/dot"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_4dp"
-            android:src="@drawable/ellipse_17940"
-            app:layout_constraintBottom_toBottomOf="@+id/tvRunningCourseName"
-            app:layout_constraintStart_toEndOf="@+id/tvRunningCourseName"
-            app:layout_constraintTop_toTopOf="@+id/tvRunningCourseName" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/tvRunningCourseStatus"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_4dp"
-            android:fontFamily="@font/nunito"
-            android:text="RESUME"
-            android:textColor="#3E3EF7"
-            android:textSize="10sp"
-            app:layout_constraintBottom_toBottomOf="@+id/tvRunningCourseName"
-            app:layout_constraintStart_toEndOf="@+id/dot"
-            app:layout_constraintTop_toTopOf="@+id/tvRunningCourseName" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/tvRunningCourseSubjectName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/nunito"
-            android:text="Maths"
-            android:textColor="#726C6C"
-            android:textSize="@dimen/_12sp"
-            app:layout_constraintStart_toStartOf="@+id/tvRunningCourseName"
-            app:layout_constraintTop_toBottomOf="@+id/tvRunningCourseName" />
-
-
-        <ImageView
-            android:id="@+id/playButtonRunningCourse"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="13dp"
-            android:layout_marginStart="@dimen/_4dp"
-            android:layout_marginEnd="@dimen/_16dp"
-            android:src="@drawable/frame_1707481080__1_"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

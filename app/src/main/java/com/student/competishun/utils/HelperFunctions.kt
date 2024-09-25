@@ -101,6 +101,22 @@ class HelperFunctions {
         }
     }
 
+    fun formatCourseDateTime(date: String?): String {
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault()).apply {
+            timeZone = TimeZone.getTimeZone("UTC") // Assuming the input date is in UTC
+        }
+        val outputFormat = SimpleDateFormat("dd MMM, yy hh:mm a", Locale.getDefault()).apply {
+            timeZone = TimeZone.getTimeZone("Asia/Kolkata") // Set the output time zone to IST
+        }
+        return try {
+            val parsedDate = inputFormat.parse(date)
+            outputFormat.format(parsedDate ?: return "-")
+        } catch (e: Exception) {
+            e.printStackTrace()
+            "-"
+        }
+    }
+
     fun calculateDiscountPercentage(price: Int, discountPrice: Int): Double {
         if (price <= 0) {
             throw IllegalArgumentException("Price must be greater than 0")
