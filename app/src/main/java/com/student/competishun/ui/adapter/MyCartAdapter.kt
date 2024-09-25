@@ -113,7 +113,7 @@ class MyCartAdapter(
 //                // Notify the fragment about the selected item
 //                onItemClick(currentItem)
 //                Log.e("currentesma",currentItem.isSelected.toString())
-//            }
+//            }]]]]
             holder.binding.apply { root.isSelected = currentItem.isSelected}
 
             if (currentItem.isSelected) {
