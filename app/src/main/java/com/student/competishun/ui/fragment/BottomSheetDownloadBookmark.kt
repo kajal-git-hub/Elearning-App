@@ -13,6 +13,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.gson.Gson
 import com.student.competishun.R
@@ -50,6 +52,7 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
         binding.tvBookmark.setOnClickListener {
 
         }
+
         binding.tvDownload.setOnClickListener {
             itemDetails?.let { details ->
                 Log.d("ItemDetails",details.toString())
@@ -59,13 +62,17 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
             }
         }
     }
+
     private fun storeItemInPreferences(item: TopicContentModel) {
         val sharedPreferencesManager = SharedPreferencesManager(requireActivity())
         sharedPreferencesManager.saveDownloadedItem(item)
     }
+
     private fun downloadFile(details: TopicContentModel) {
         val downloadManager = requireContext().getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
         val uri = Uri.parse(details.url)
+        Log.d("DownloadManager", "Downloading file: $uri")
+
         val request = DownloadManager.Request(uri)
 
         request.setTitle(details.topicName)
@@ -77,7 +84,7 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
         val downloadId = downloadManager.enqueue(request)
         Log.d("DownloadManager", "Download started with ID: $downloadId")
 
-        requireContext().registerReceiver(object : BroadcastReceiver() {
+        val receiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
                 val id = intent?.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
                 if (id == downloadId) {
@@ -90,18 +97,32 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
 
                         // Save file path to SharedPreferences
                         details.url = filePath
-                        storeItemInPreferences(details)
+                        if (isAdded) {
+                            storeItemInPreferences(details)
+                        }
                     }
                     cursor.close()
-                    dismiss()
+                    if (isAdded) {
+                        dismiss()
+                    }
                 }
             }
-        }, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE), Context.RECEIVER_NOT_EXPORTED)
+        }
+
+        // Register the broadcast receiver
+        requireContext().registerReceiver(receiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE), Context.RECEIVER_NOT_EXPORTED)
+
+        // Unregister the receiver in onDestroy to avoid memory leaks
+        viewLifecycleOwner.lifecycle.addObserver(object : DefaultLifecycleObserver {
+            override fun onDestroy(owner: LifecycleOwner) {
+                try {
+                    requireContext().unregisterReceiver(receiver)
+                } catch (e: IllegalArgumentException) {
+                    Log.e("DownloadManager", "Receiver not registered or already unregistered.")
+                }
+                super.onDestroy(owner)
+            }
+        })
     }
-
-
-
-
-
 
 }

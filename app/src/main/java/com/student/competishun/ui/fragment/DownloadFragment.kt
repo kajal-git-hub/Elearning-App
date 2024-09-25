@@ -105,6 +105,7 @@ class DownloadFragment : Fragment(),DownloadedItemAdapter.OnVideoClickListener {
 
         updateRecyclerView(videoItems)
     }
+
     override fun onVideoClick(folderContentId: String, name: String) {
         videoUrlApi(viewModel, folderContentId, name)
     }
@@ -113,6 +114,7 @@ class DownloadFragment : Fragment(),DownloadedItemAdapter.OnVideoClickListener {
         adapter = DownloadedItemAdapter(requireContext(), items,this,parentFragmentManager)
         binding.rvDownloads.adapter = adapter
     }
+
     private fun videoUrlApi(viewModel: VideourlViewModel, folderContentId: String, name: String) {
         viewModel.fetchVideoStreamUrl(folderContentId, "480p")
 

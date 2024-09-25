@@ -12,6 +12,7 @@
     android:paddingTop="12dp"
     >
 
+
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/textViewTitle"
         android:layout_width="149dp"
