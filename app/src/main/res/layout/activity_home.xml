@@ -120,7 +120,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/_16dp"
-        android:layout_marginBottom="100dp"
+        android:layout_marginBottom="90dp"
         android:background="@null"
         android:clickable="true"
         android:contextClickable="true"
