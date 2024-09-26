@@ -347,22 +347,22 @@
         android:name="com.student.competishun.ui.fragment.BookMarkFragment"
         tools:layout="@layout/fragment_book_mark">
     </fragment>
-<!--    <fragment-->
-<!--        android:id="@+id/MyPurchase"-->
-<!--        android:name="com.student.competishun.ui.fragment.MyPurchaseFragment"-->
-<!--        tools:layout="@layout/fragment_my_purchase">-->
-<!--        <action-->
-<!--            android:id="@+id/action_purchase_to_purchaseDetail"-->
-<!--            app:destination="@+id/MyPurchaseDetail"/>-->
-<!--    </fragment>-->
-<!--    <fragment-->
-<!--        android:id="@+id/MyPurchaseDetail"-->
-<!--        android:name="com.student.competishun.ui.fragment.MyPurchaseDetailsFragment"-->
-<!--        tools:layout="@layout/fragment_my_purchase_details">-->
-<!--        <action-->
-<!--            android:id="@+id/action_purchase_to_purchaseDetail"-->
-<!--            app:destination="@+id/homeFragment"/>-->
-<!--    </fragment>-->
+    <fragment
+        android:id="@+id/MyPurchase"
+        android:name="com.student.competishun.ui.fragment.MyPurchaseFragment"
+        tools:layout="@layout/fragment_my_purchase">
+        <action
+            android:id="@+id/action_purchase_to_purchaseDetail"
+            app:destination="@+id/MyPurchaseDetail"/>
+    </fragment>
+    <fragment
+        android:id="@+id/MyPurchaseDetail"
+        android:name="com.student.competishun.ui.fragment.MyPurchaseDetailsFragment"
+        tools:layout="@layout/fragment_my_purchase_details">
+        <action
+            android:id="@+id/action_purchase_to_purchaseDetail"
+            app:destination="@+id/homeFragment"/>
+    </fragment>
 
 
 </navigation>

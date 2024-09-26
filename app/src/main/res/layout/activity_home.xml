@@ -161,6 +161,8 @@
             android:visibility="visible"
             app:headerLayout="@layout/navgation_header"
             app:itemIconPadding="30dp"
+            android:fitsSystemWindows="true"
+            android:scrollbars="vertical"
             app:itemTextAppearance="@style/NavDrawerTextAppearance"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"

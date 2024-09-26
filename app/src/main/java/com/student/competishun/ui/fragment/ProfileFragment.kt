@@ -75,7 +75,7 @@ class ProfileFragment : Fragment() {
         }
 
         binding.llMyPurchase.setOnClickListener{
-//            findNavController().navigate(R.id.courseEmptyFragment)
+            findNavController().navigate(R.id.MyPurchase)
         }
         binding.llLogout.setOnClickListener {
             val bottomSheetDescriptionFragment = ProfileLogoutFragment()
