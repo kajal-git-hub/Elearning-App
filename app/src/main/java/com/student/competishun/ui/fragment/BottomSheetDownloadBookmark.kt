@@ -81,45 +81,51 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
     }
 
     private fun downloadPdf(details: TopicContentModel) {
+        Log.d("DownloadPdf", "Starting download for: ${details.url} with topic name: ${details.topicName}")
+
         lifecycleScope.launch {
             val pdfUrl = details.url // Assuming details.url contains the PDF URL
             val fileName = "${details.topicName}.${details.fileType.lowercase()}"
 
             withContext(Dispatchers.IO) {
                 try {
-                    // Create OkHttpClient and request
+                    Log.d("DownloadPdf", "File name set to: $fileName")
+
                     val client = OkHttpClient()
                     val request = Request.Builder().url(pdfUrl).build()
 
-                    // Execute the request
                     val response = client.newCall(request).execute()
-                    if (!response.isSuccessful) throw IOException("Unexpected code $response")
+                    if (!response.isSuccessful) throw IOException("Failed to download file: $response")
 
-                    // Save the PDF to internal storage
+                    Log.d("DownloadPdf", "Response received, starting file download.")
+
                     val pdfFile = File(requireContext().filesDir, fileName)
-                    Log.d("PdfFile",pdfFile.toString())
+                    Log.d("DownloadPdf", "Saving file to: ${pdfFile.absolutePath}")
+
                     val inputStream: InputStream = response.body?.byteStream() ?: return@withContext
                     val outputStream = FileOutputStream(pdfFile)
 
                     inputStream.use { input ->
                         outputStream.use { output ->
                             input.copyTo(output)
+                            Log.d("DownloadPdf", "File downloaded successfully.")
                         }
                     }
 
-                    // Notify user that PDF download is complete
                     withContext(Dispatchers.Main) {
                         if (isAdded) {
+                            Log.d("DownloadPdf", "Download success, showing toast.")
                             Toast.makeText(requireContext(), "PDF Download completed: $fileName", Toast.LENGTH_SHORT).show()
                         }
                     }
 
-                    // Update details with PDF path and save to SharedPreferences
-                    details.url = pdfFile.absolutePath // Update with PDF path
+                    details.url = pdfFile.absolutePath
                     storeItemInPreferences(details)
+                    Log.d("DownloadPdf", "File path saved to preferences: ${pdfFile.absolutePath}")
 
                 } catch (e: Exception) {
                     e.printStackTrace()
+                    Log.e("DownloadPdf", "Download failed: ${e.message}")
                     withContext(Dispatchers.Main) {
                         if (isAdded) {
                             Toast.makeText(requireContext(), "PDF Download failed: ${e.message}", Toast.LENGTH_SHORT).show()
@@ -129,6 +135,7 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
             }
         }
     }
+
 
 
     private fun downloadVideo(context: Context, videoUrl: String, name: String) {
@@ -174,18 +181,18 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
 
 
 
-    private fun videoUrlApi(folderContentId: String, name: String) {
-        viewModel.fetchVideoStreamUrl(folderContentId, "480p")
-
-        viewModel.videoStreamUrl.observe(viewLifecycleOwner) { signedUrl ->
-            Log.d("VideoUrl", "Signed URL: $signedUrl")
-            if (signedUrl != null) {
-                downloadVideo(signedUrl, name) // Download the video using the signed URL
-            } else {
-                // Handle error or null URL
-                Toast.makeText(requireContext(), "Failed to retrieve video URL", Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
+//    private fun videoUrlApi(folderContentId: String, name: String) {
+//        viewModel.fetchVideoStreamUrl(folderContentId, "480p")
+//
+//        viewModel.videoStreamUrl.observe(viewLifecycleOwner) { signedUrl ->
+//            Log.d("VideoUrl", "Signed URL: $signedUrl")
+//            if (signedUrl != null) {
+//                downloadVideo(signedUrl, name) // Download the video using the signed URL
+//            } else {
+//                // Handle error or null URL
+//                Toast.makeText(requireContext(), "Failed to retrieve video URL", Toast.LENGTH_SHORT).show()
+//            }
+//        }
+//    }
 
 }

@@ -280,7 +280,9 @@ class HomeFragment : Fragment() {
                 R.id.aboutUs ->{
                     findNavController().navigate(R.id.AboutUs)
 //                    findNavController().navigate(R.id.AboutUs, null, NavOptions.Builder().setPopUpTo(R.id.homeFragment, true).build())
-
+                }
+                R.id.download ->{
+                    findNavController().navigate(R.id.DownloadFragment)
                 }
                 R.id.ContactUs -> {
                     findNavController().navigate(R.id.ContactUs)
