@@ -1,5 +1,6 @@
 package com.student.competishun.ui.fragment
 
+import RecommendViewAllAdapter
 import com.student.competishun.ui.adapter.RecommendedCoursesAdapter
 import android.content.Intent
 import android.net.Uri
@@ -8,11 +9,14 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Filter
+import android.widget.Filterable
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.widget.SearchView
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
@@ -62,15 +66,17 @@ class HomeFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var testimonial_recyclerView: RecyclerView
     private lateinit var rvWhyCompetishun: RecyclerView
+    private lateinit var courses: List<AllCourseForStudentQuery. Course>
     private val verifyOtpViewModel: VerifyOtpViewModel by viewModels()
     private lateinit var dotsIndicatorTestimonials: LinearLayout
     private lateinit var dotsIndicatorWhyCompetishun: LinearLayout
     private lateinit var adapter: TestimonialsAdapter
     private lateinit var adapterWhyCompetishun: WhyCompetishunAdapter
     private lateinit var testimonials: List<Testimonial>
+    private lateinit var adapterRecommend: RecommendedCoursesAdapter
     private lateinit var listWhyCompetishun: List<WhyCompetishun>
     private lateinit var drawerLayout: DrawerLayout
-  private lateinit var sharedPreferencesManager :SharedPreferencesManager
+    private lateinit var sharedPreferencesManager :SharedPreferencesManager
     private lateinit var bottomNav: BottomNavigationView
     private lateinit var toggle: ActionBarDrawerToggle
     private val coursesCategoryViewModel: CoursesCategoryViewModel by viewModels()
@@ -81,6 +87,7 @@ class HomeFragment : Fragment() {
     private var listOurCoursesItem: List<GetAllCourseCategoriesQuery.GetAllCourseCategory>? = null
     private val lectureCounts = mutableMapOf<String, Int>()
     private lateinit var recommendedCourseList: List<RecommendedCourseDataModel>
+    private var filteredCourses: List<AllCourseForStudentQuery.Course> = listOf()
 
 
     private lateinit var helperFunctions: HelperFunctions
@@ -358,7 +365,7 @@ class HomeFragment : Fragment() {
                 Log.e("TotalStudentCours", result.toString())
                 result?.onSuccess { data ->
                     Log.e("TotalStudentCourses", data.toString())
-                    val courses = data.getAllCourseForStudent.courses.map { course ->
+                     courses = data.getAllCourseForStudent.courses.map { course ->
                         binding.progressBarRec.visibility = View.GONE
                         binding.clRecommendedCourses.visibility = View.VISIBLE
                         getAllLectureCount(course.id) { courseId, lectureCount ->
@@ -393,9 +400,12 @@ class HomeFragment : Fragment() {
                             course_end_date = course.course_end_date,
                         )
                     } ?: emptyList()
-                    binding.rvRecommendedCourses.adapter = courses?.let { courseList ->
+
+                    adapterRecommend = courses.let { courseList ->
                         RecommendedCoursesAdapter(courseList, lectureCounts) { selectedCourse,recommendCourseTags ->
-                            Log.d("recommendCourseTagsHome", recommendCourseTags.toString())
+                            Log.d("recommendCoursesTags", recommendCourseTags.toString())
+                            filteredCourses = courseList
+                            Log.d("filteredCoursesHome", filteredCourses.toString())
                             val lectureCount = lectureCounts[selectedCourse.id]?.toString() ?: "0"
                             val bundle = Bundle().apply {
                                 putString("course_id", selectedCourse.id)
@@ -406,9 +416,13 @@ class HomeFragment : Fragment() {
                             findNavController().navigate(R.id.exploreFragment, bundle)
                         }
                     }
+
                     binding.rvRecommendedCourses.layoutManager =
                         LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+                    binding.rvRecommendedCourses.adapter = adapterRecommend
+                    setupToolbar()
                     recommendedCourseList = Constants.recommendedCourseList
+                    adapterRecommend.updateCourses(courses)
                     helperFunctions.setupDotsIndicator(
                         requireContext(),
                         recommendedCourseList.size,
@@ -424,7 +438,6 @@ class HomeFragment : Fragment() {
                             )
                         }
                     })
-
                 }?.onFailure { exception ->
                     if(exception.message == "Unauthorized"){
                         val intent = Intent(requireContext(), MainActivity::class.java)
@@ -437,6 +450,22 @@ class HomeFragment : Fragment() {
                 }
             }
         }
+    }
+
+    private fun setupToolbar() {
+        val searchView = binding.topAppBar.menu.findItem(R.id.action_search)?.actionView as? SearchView
+        searchView?.queryHint = "Search Recommended Courses"
+        searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean = false
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+
+                adapterRecommend.filter.filter(newText)
+              //  adapterRecommend.updateCourses(filteredCourses)
+
+                return true
+            }
+        })
     }
 
     fun getMyDetails() {
@@ -543,5 +572,6 @@ class HomeFragment : Fragment() {
         _binding = null
         drawerLayout.removeDrawerListener(toggle)
     }
+
 
 }

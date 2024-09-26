@@ -25,6 +25,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class ProfileFragment : Fragment() {
 
+    var TAG = "ProfileFragment"
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
     private lateinit var sharedPreferencesManager: SharedPreferencesManager
@@ -105,6 +106,7 @@ class ProfileFragment : Fragment() {
                     binding.tvYear.setText(" | "+target.toString())
                 }
             }.onFailure { exception ->
+                Log.e(TAG,exception.message.toString())
                 Toast.makeText(requireContext(), "Error fetching details: ${exception.message}", Toast.LENGTH_LONG).show()
             }
         }

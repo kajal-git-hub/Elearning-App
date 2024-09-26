@@ -4,19 +4,20 @@
 
     <item
         android:id="@+id/action_notification"
-        app:showAsAction="always"
+        app:showAsAction="ifRoom"
         android:title="Notification"
         android:icon="@drawable/notification_home"/>
 
     <item
         android:id="@+id/action_search"
         android:icon="@drawable/search_normal"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"
         app:showAsAction="always"
         android:title="Search" />
 
     <item
         android:id="@+id/action_profile"
         app:showAsAction="always"
-        android:title="Profile"
+        android:title="ifRoom"
         android:icon="@drawable/frame_370000521"/>
 </menu>
