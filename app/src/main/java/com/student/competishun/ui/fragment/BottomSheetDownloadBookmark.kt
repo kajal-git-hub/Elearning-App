@@ -1,13 +1,7 @@
 package com.student.competishun.ui.fragment
 
-import android.app.DownloadManager
-import android.content.BroadcastReceiver
 import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
-import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -15,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.gson.Gson
@@ -24,19 +19,21 @@ import com.student.competishun.databinding.FragmentBottomSheetDownloadBookmarkBi
 import com.student.competishun.ui.viewmodel.VideourlViewModel
 import com.student.competishun.utils.SharedPreferencesManager
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.io.File
 import java.io.FileOutputStream
+import java.io.IOException
 import java.io.InputStream
 
 @AndroidEntryPoint
 class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
     private var itemDetails: TopicContentModel? = null
-    private lateinit var binding : FragmentBottomSheetDownloadBookmarkBinding
+    private lateinit var binding: FragmentBottomSheetDownloadBookmarkBinding
     private lateinit var viewModel: VideourlViewModel
-    private var pdfUrl = ""
-    private var videoUrl = ""
 
     fun setItemDetails(details: TopicContentModel) {
         this.itemDetails = details
@@ -44,15 +41,13 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-        }
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentBottomSheetDownloadBookmarkBinding.inflate(inflater,container,false)
+        binding = FragmentBottomSheetDownloadBookmarkBinding.inflate(inflater, container, false)
         viewModel = ViewModelProvider(this).get(VideourlViewModel::class.java)
         return binding.root
     }
@@ -60,18 +55,21 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
         binding.tvBookmark.setOnClickListener {
-
+            // Bookmark functionality
         }
+
         binding.tvDownload.setOnClickListener {
             itemDetails?.let { details ->
-                Log.d("ItemDetails",details.toString())
-//                pdfUrl = details.url
-//                downloadFile(pdfUrl,details.topicName)
-//                videoUrl = videoUrlApi(viewModel,details.id,details.topicName).toString()
-                storeItemInPreferences(details) //except video url
-                downloadFile(details)
+                Log.d("ItemDetails", details.toString())
+                storeItemInPreferences(details)
+                if(details.fileType=="VIDEO")
+                {
+                     downloadVideo(requireContext(),details.url,details.topicName)
+                }
+                else{
+                    downloadPdf(details)
+                }
                 dismiss()
             }
         }
@@ -81,58 +79,120 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
         val sharedPreferencesManager = SharedPreferencesManager(requireActivity())
         sharedPreferencesManager.saveDownloadedItem(item)
     }
-    private fun downloadFile(details: TopicContentModel) {
-        val downloadManager = requireContext().getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-        val uri = Uri.parse(details.url)
-        val request = DownloadManager.Request(uri)
 
-        request.setTitle(details.topicName)
-        request.setDescription(details.topicDescription)
-        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, details.topicName + "." + details.fileType.lowercase())
-        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-        request.setAllowedOverMetered(true)
+    private fun downloadPdf(details: TopicContentModel) {
+        Log.d("DownloadPdf", "Starting download for: ${details.url} with topic name: ${details.topicName}")
 
-        val downloadId = downloadManager.enqueue(request)
-        Log.d("DownloadManager", "Download started with ID: $downloadId")
+        lifecycleScope.launch {
+            val pdfUrl = details.url // Assuming details.url contains the PDF URL
+            val fileName = "${details.topicName}.${details.fileType.lowercase()}"
 
-        requireContext().registerReceiver(object : BroadcastReceiver() {
-            override fun onReceive(context: Context?, intent: Intent?) {
-                val id = intent?.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
-                if (id == downloadId) {
-                    Log.d("DownloadManager", "Download completed")
-                    val query = DownloadManager.Query().setFilterById(downloadId)
-                    val cursor = downloadManager.query(query)
-                    if (cursor.moveToFirst()) {
-                        val filePath = cursor.getString(cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI))
-                        Log.d("DownloadManager", "File path: $filePath")
+            withContext(Dispatchers.IO) {
+                try {
+                    Log.d("DownloadPdf", "File name set to: $fileName")
 
-                        // Save file path to SharedPreferences
-                        details.url = filePath
-                        storeItemInPreferences(details)
+                    val client = OkHttpClient()
+                    val request = Request.Builder().url(pdfUrl).build()
+
+                    val response = client.newCall(request).execute()
+                    if (!response.isSuccessful) throw IOException("Failed to download file: $response")
+
+                    Log.d("DownloadPdf", "Response received, starting file download.")
+
+                    val pdfFile = File(requireContext().filesDir, fileName)
+                    Log.d("DownloadPdf", "Saving file to: ${pdfFile.absolutePath}")
+
+                    val inputStream: InputStream = response.body?.byteStream() ?: return@withContext
+                    val outputStream = FileOutputStream(pdfFile)
+
+                    inputStream.use { input ->
+                        outputStream.use { output ->
+                            input.copyTo(output)
+                            Log.d("DownloadPdf", "File downloaded successfully.")
+                        }
                     }
-                    cursor.close()
-                    dismiss()
-                }
-            }
-        }, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE), Context.RECEIVER_NOT_EXPORTED)
-    }
 
-    private fun videoUrlApi(viewModel: VideourlViewModel, folderContentId: String, name: String) {
-        viewModel.fetchVideoStreamUrl(folderContentId, "480p")
+                    withContext(Dispatchers.Main) {
+                        if (isAdded) {
+                            Log.d("DownloadPdf", "Download success, showing toast.")
+                            Toast.makeText(requireContext(), "PDF Download completed: $fileName", Toast.LENGTH_SHORT).show()
+                        }
+                    }
 
-        viewModel.videoStreamUrl.observe(viewLifecycleOwner) { signedUrl ->
-            Log.d("VideoUrl", "Signed URL: $signedUrl")
-            if (signedUrl != null) {
-                val bundle = Bundle().apply {
-                    putString("url", signedUrl)
-                    putString("url_name", name)
-                    putString("ContentId", folderContentId)
+                    details.url = pdfFile.absolutePath
+                    storeItemInPreferences(details)
+                    Log.d("DownloadPdf", "File path saved to preferences: ${pdfFile.absolutePath}")
+
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    Log.e("DownloadPdf", "Download failed: ${e.message}")
+                    withContext(Dispatchers.Main) {
+                        if (isAdded) {
+                            Toast.makeText(requireContext(), "PDF Download failed: ${e.message}", Toast.LENGTH_SHORT).show()
+                        }
+                    }
                 }
-                findNavController().navigate(R.id.mediaFragment, bundle)
-            } else {
-                // Handle error or null URL
             }
         }
     }
+
+
+
+    private fun downloadVideo(context: Context, videoUrl: String, name: String) {
+        Log.d("DownloadVideo", "Starting download for: $videoUrl with name: $name")
+
+       lifecycleScope.launch {
+            try {
+                withContext(Dispatchers.IO) {
+                    val fileName = "$name.mp4"
+                    Log.d("DownloadVideo", "File name set to: $fileName")
+                    val client = OkHttpClient()
+                    val request = Request.Builder().url(videoUrl).build()
+
+                    client.newCall(request).execute().use { response ->
+                        if (!response.isSuccessful) throw IOException("Failed to download file: $response")
+
+                        val videoFile = File(context.filesDir, fileName)
+                        val inputStream: InputStream? = response.body?.byteStream()
+                        val outputStream = FileOutputStream(videoFile)
+
+                        inputStream?.use { input ->
+                            outputStream.use { output ->
+                                input.copyTo(output)
+                                Log.d("DownloadVideo", "File downloaded successfully.")
+                            }
+                        }
+                    }
+                }
+                // Show success toast
+                withContext(Dispatchers.Main) {
+                    Log.d("DownloadVideo", "Download success, showing toast.")
+                    Toast.makeText(context, "Download successful", Toast.LENGTH_SHORT).show()
+                }
+            } catch (e: Exception) {
+                // Show error toast
+                withContext(Dispatchers.Main) {
+                    Log.e("DownloadVideo", "Download failed: ${e.message}")
+                    Toast.makeText(context, "Download failed: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+
+
+//    private fun videoUrlApi(folderContentId: String, name: String) {
+//        viewModel.fetchVideoStreamUrl(folderContentId, "480p")
+//
+//        viewModel.videoStreamUrl.observe(viewLifecycleOwner) { signedUrl ->
+//            Log.d("VideoUrl", "Signed URL: $signedUrl")
+//            if (signedUrl != null) {
+//                downloadVideo(signedUrl, name) // Download the video using the signed URL
+//            } else {
+//                // Handle error or null URL
+//                Toast.makeText(requireContext(), "Failed to retrieve video URL", Toast.LENGTH_SHORT).show()
+//            }
+//        }
+//    }
 
 }

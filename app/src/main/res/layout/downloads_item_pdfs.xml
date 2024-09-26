@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="14dp"
         android:layout_marginStart="12dp"
-        android:background="@drawable/frame_1707480918"
+        android:background="@drawable/frame_1707480919"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 

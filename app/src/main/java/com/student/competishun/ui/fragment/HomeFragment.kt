@@ -25,6 +25,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -280,6 +281,34 @@ class HomeFragment : Fragment() {
 
         igClose.setOnClickListener {
             drawerLayout.closeDrawer(GravityCompat.START)
+        }
+        navigationView.setNavigationItemSelectedListener { menuItem ->
+            when(menuItem.itemId){
+                R.id.aboutUs ->{
+                    findNavController().navigate(R.id.AboutUs)
+//                    findNavController().navigate(R.id.AboutUs, null, NavOptions.Builder().setPopUpTo(R.id.homeFragment, true).build())
+                }
+                R.id.download ->{
+                    findNavController().navigate(R.id.DownloadFragment)
+                }
+                R.id.ContactUs -> {
+                    findNavController().navigate(R.id.ContactUs)
+//                    findNavController().navigate(R.id.ContactUs, null, NavOptions.Builder().setPopUpTo(R.id.homeFragment, true).build())
+
+                }
+                R.id.tvTermsPrivacy ->  {
+                    findNavController().navigate(R.id.TermsAndCondition)
+                }
+                R.id.privacyPolicy ->{
+                    findNavController().navigate(R.id.PolicyFragment)
+                }
+                R.id.tvdisclaimer ->{
+                    findNavController().navigate(R.id.DisclaimerFragment)
+                }
+            }
+            drawerLayout.closeDrawer(GravityCompat.START)
+            true
+
         }
 
     }

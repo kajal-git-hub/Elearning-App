@@ -133,7 +133,11 @@ class VerifyOTPFragment : Fragment() {
                         if (userDetails.userInformation.address?.city!=null && userDetails.userInformation.reference!=null && userDetails.userInformation.targetYear!=null && userDetails.userInformation.preparingFor!=null && userDetails.fullName!=null) {
 
                             navigateToHomeActivity(userDetails.id)
-                        } else {
+                        }
+//                        else if (userDetails.userInformation.fatherName!=null) {
+//                            navigateToMyCourse()
+//                        }
+                        else {
                             // Store necessary data in SharedPreferencesManager
                             sharedPreferencesManager.mobileNo = userDetails.mobileNumber
                             navigateToHome()
@@ -157,6 +161,15 @@ class VerifyOTPFragment : Fragment() {
             }
         }
     }
+
+    private fun navigateToMyCourse() {
+        val intent = Intent(requireContext(), HomeActivity::class.java).apply {
+            putExtra("navigateTo", "CourseEmptyFragment")
+        }
+        startActivity(intent)
+        requireActivity().finish()
+    }
+
 
     private fun navigateToHomeActivity(userId:String) {
        sharedPreferencesManager.userId = userId
