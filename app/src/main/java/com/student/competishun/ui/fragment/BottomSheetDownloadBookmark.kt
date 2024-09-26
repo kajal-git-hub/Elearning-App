@@ -62,8 +62,11 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
             itemDetails?.let { details ->
                 Log.d("ItemDetails", details.toString())
                 storeItemInPreferences(details) // Store initial item details
-                downloadPdf(details) // Download the PDF
-                videoUrlApi(details.id, details.topicName) // Fetch video URL and download
+                if(details.fileType == "PDF"){
+                    downloadPdf(details) // Download the PDF
+                }else{
+                    downloadVideo(details.url,details.topicName) // Fetch video URL and download
+                }
                 dismiss()
             }
         }
@@ -91,6 +94,7 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
 
                     // Save the PDF to internal storage
                     val pdfFile = File(requireContext().filesDir, fileName)
+                    Log.d("PdfFile",pdfFile.toString())
                     val inputStream: InputStream = response.body?.byteStream() ?: return@withContext
                     val outputStream = FileOutputStream(pdfFile)
 
@@ -140,6 +144,7 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
 
                     // Save the video to internal storage
                     val videoFile = File(requireContext().filesDir, fileName)
+                    Log.d("videoFile",videoFile.toString())
                     val inputStream: InputStream = response.body?.byteStream() ?: return@withContext
                     val outputStream = FileOutputStream(videoFile)
 
