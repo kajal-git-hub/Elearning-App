@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,6 +19,7 @@ import com.student.competishun.R
 import com.student.competishun.ui.fragment.BottomSheetDeletePDFsFragment
 import com.student.competishun.ui.fragment.BottomSheetDeleteVideoFragment
 import com.student.competishun.ui.fragment.PdfViewerFragment
+import com.student.competishun.ui.main.PdfViewerActivity
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.io.File
@@ -45,6 +47,7 @@ class DownloadedItemAdapter(private val context: Context,
     interface OnVideoClickListener {
         fun onVideoClick(folderContentId: String, name: String)
     }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.downloads_item_pdfs, parent, false)
         return ViewHolder(view)
@@ -115,7 +118,13 @@ class DownloadedItemAdapter(private val context: Context,
         holder.topicDescription.text = item.topicDescription
 
         holder.forRead.setOnClickListener {
-            openPdfInFragment(item.url)
+//            openPdfInFragment(item.topicName)
+            val path=File(context.filesDir, item.topicName)
+            Log.d("aman",path.toString())
+            Log.d("aman",path.absolutePath)
+            val intent = Intent(context, PdfViewerActivity::class.java)
+            intent.putExtra("PDF_URL", path.absolutePath)
+            context.startActivity(intent)
         }
 
         holder.forVideo.setOnClickListener {
