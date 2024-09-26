@@ -16,6 +16,12 @@ import com.student.competishun.R
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.TimeZone
+import javax.crypto.Cipher
+import javax.crypto.CipherOutputStream
+import javax.crypto.KeyGenerator
+import javax.crypto.SecretKey
+import javax.crypto.spec.SecretKeySpec
+import java.io.*
 
 class HelperFunctions {
     fun setupDotsIndicator(context: Context,itemCount: Int, dotsIndicator: LinearLayout) {
@@ -128,6 +134,31 @@ class HelperFunctions {
         return Pair(discountPercentage, realPriceAfterDiscount)
     }
 
+    private fun encryptFile(inputFile: File, outputFile: File, secretKey: SecretKey) {
+        val cipher = Cipher.getInstance("AES")
+        cipher.init(Cipher.ENCRYPT_MODE, secretKey)
+
+        FileInputStream(inputFile).use { fis ->
+            FileOutputStream(outputFile).use { fos ->
+                CipherOutputStream(fos, cipher).use { cos ->
+                    fis.copyTo(cos)
+                }
+            }
+        }
+    }
+
+    private fun decryptFile(encryptedFile: File, decryptedFile: File, secretKey: SecretKey) {
+        val cipher = Cipher.getInstance("AES")
+        cipher.init(Cipher.DECRYPT_MODE, secretKey)
+
+        FileInputStream(encryptedFile).use { fis ->
+            FileOutputStream(decryptedFile).use { fos ->
+                CipherOutputStream(fos, cipher).use { cos ->
+                    fis.copyTo(cos)
+                }
+            }
+        }
+    }
 
     fun downloadPdf(context: Context,fileUrl: String, title: String) {
          val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
@@ -156,7 +187,6 @@ class HelperFunctions {
             .setTitle("Download PDF")
             .setMessage("Do you want to download $title?")
             .setPositiveButton("Yes") { _, _ ->
-                // Call the helper function to download the PDF
                downloadPdf(context, fileUrl, title)
             }
             .setNegativeButton("No", null)

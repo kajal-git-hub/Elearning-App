@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -133,56 +134,18 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <com.google.android.material.button.MaterialButtonToggleGroup
-        android:id="@+id/filterToggleButton"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvToggleButtons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/_12sp"
+        android:orientation="horizontal"
+        android:layout_marginTop="@dimen/_24dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:itemCount="5"
+        tools:listitem="@layout/item_filter_purchase"
+        app:layout_constraintTop_toBottomOf="@id/MyPurchaseTopView"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/MyPurchaseTopView">
-
-        <!-- "All" Button -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnAll"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/segment_selected_bg"
-            android:text="All"
-            android:textColor="@color/blue_3E3EF7"
-            android:textSize="18dp"
-            app:cornerRadius="@dimen/_16dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <!-- "Successful" Button -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnSuccessful"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:background="@drawable/segment_unselected_bg"
-            android:text="Successful"
-            android:textColor="@color/_5a5555"
-            android:textSize="@dimen/_14sp"
-            app:cornerRadius="@dimen/_16dp"
-            app:layout_constraintStart_toEndOf="@id/btnAll"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <!-- "Failed" Button -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnFailed"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:background="@drawable/segment_unselected_bg"
-            android:text="Failed"
-            android:textColor="@color/_5a5555"
-            android:textSize="@dimen/_14sp"
-            app:cornerRadius="@dimen/_16dp"
-            app:layout_constraintStart_toEndOf="@id/btnSuccessful"
-            app:layout_constraintTop_toTopOf="parent" />
-
-    </com.google.android.material.button.MaterialButtonToggleGroup>
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewPurchases"
@@ -194,7 +157,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/filterToggleButton" />
+        app:layout_constraintTop_toBottomOf="@id/rvToggleButtons" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 
