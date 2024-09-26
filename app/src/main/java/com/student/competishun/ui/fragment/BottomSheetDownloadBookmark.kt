@@ -1,5 +1,6 @@
 package com.student.competishun.ui.fragment
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -61,9 +62,14 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
         binding.tvDownload.setOnClickListener {
             itemDetails?.let { details ->
                 Log.d("ItemDetails", details.toString())
-                storeItemInPreferences(details) // Store initial item details
-                downloadPdf(details) // Download the PDF
-                videoUrlApi(details.id, details.topicName) // Fetch video URL and download
+                storeItemInPreferences(details)
+                if(details.fileType=="VIDEO")
+                {
+                     downloadVideo(requireContext(),details.url,details.topicName)
+                }
+                else{
+                    downloadPdf(details)
+                }
                 dismiss()
             }
         }
@@ -124,66 +130,43 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
     }
 
 
-    private fun downloadVideo(videoUrl: String, name: String) {
-        lifecycleScope.launch {
-            val fileName = "$name.mp4" // Set appropriate file name and extension
+    private fun downloadVideo(context: Context, videoUrl: String, name: String) {
+        Log.d("DownloadVideo", "Starting download for: $videoUrl with name: $name")
 
-            withContext(Dispatchers.IO) {
-                try {
-                    // Create OkHttpClient and request
+       lifecycleScope.launch {
+            try {
+                withContext(Dispatchers.IO) {
+                    val fileName = "$name.mp4"
+                    Log.d("DownloadVideo", "File name set to: $fileName")
                     val client = OkHttpClient()
                     val request = Request.Builder().url(videoUrl).build()
 
-                    // Execute the request
-                    val response = client.newCall(request).execute()
-                    if (!response.isSuccessful) throw IOException("Unexpected code $response")
+                    client.newCall(request).execute().use { response ->
+                        if (!response.isSuccessful) throw IOException("Failed to download file: $response")
 
-                    // Save the video to internal storage
-                    val videoFile = File(requireContext().filesDir, fileName)
-                    val inputStream: InputStream = response.body?.byteStream() ?: return@withContext
-                    val outputStream = FileOutputStream(videoFile)
+                        val videoFile = File(context.filesDir, fileName)
+                        val inputStream: InputStream? = response.body?.byteStream()
+                        val outputStream = FileOutputStream(videoFile)
 
-                    inputStream.use { input ->
-                        outputStream.use { output ->
-                            input.copyTo(output)
-                        }
-                    }
-
-                    // Notify user that video download is complete
-                    withContext(Dispatchers.Main) {
-                        if (isAdded) { // Check if fragment is attached
-                            Toast.makeText(requireContext(), "Video Download completed: $fileName", Toast.LENGTH_SHORT).show()
-                        }
-                    }
-
-                    // Optionally update item details with video path and save to SharedPreferences
-                    // details.url = videoFile.absolutePath // Update if needed
-                    // storeItemInPreferences(itemDetails!!)
-
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                    withContext(Dispatchers.Main) {
-                        if (isAdded) { // Check if fragment is attached
-                            Toast.makeText(requireContext(), "Video Download failed: ${e.message}", Toast.LENGTH_SHORT).show()
+                        inputStream?.use { input ->
+                            outputStream.use { output ->
+                                input.copyTo(output)
+                                Log.d("DownloadVideo", "File downloaded successfully.")
+                            }
                         }
                     }
                 }
-            }
-        }
-    }
-
-
-
-    private fun videoUrlApi(folderContentId: String, name: String) {
-        viewModel.fetchVideoStreamUrl(folderContentId, "480p")
-
-        viewModel.videoStreamUrl.observe(viewLifecycleOwner) { signedUrl ->
-            Log.d("VideoUrl", "Signed URL: $signedUrl")
-            if (signedUrl != null) {
-                downloadVideo(signedUrl, name) // Download the video using the signed URL
-            } else {
-                // Handle error or null URL
-                Toast.makeText(requireContext(), "Failed to retrieve video URL", Toast.LENGTH_SHORT).show()
+                // Show success toast
+                withContext(Dispatchers.Main) {
+                    Log.d("DownloadVideo", "Download success, showing toast.")
+                    Toast.makeText(context, "Download successful", Toast.LENGTH_SHORT).show()
+                }
+            } catch (e: Exception) {
+                // Show error toast
+                withContext(Dispatchers.Main) {
+                    Log.e("DownloadVideo", "Download failed: ${e.message}")
+                    Toast.makeText(context, "Download failed: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }
