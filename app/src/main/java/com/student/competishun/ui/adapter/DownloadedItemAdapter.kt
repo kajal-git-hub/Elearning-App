@@ -117,6 +117,7 @@ class DownloadedItemAdapter(private val context: Context,
         holder.forRead.setOnClickListener {
             openPdfInFragment(item.url)
         }
+
         holder.forVideo.setOnClickListener {
             videoClickListener.onVideoClick(item.id, item.topicName)
         }

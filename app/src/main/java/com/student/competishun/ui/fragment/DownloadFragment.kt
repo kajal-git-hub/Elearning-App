@@ -1,5 +1,6 @@
 package com.student.competishun.ui.fragment
 
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -7,6 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.widget.MediaController
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,6 +23,7 @@ import com.student.competishun.ui.main.HomeActivity
 import com.student.competishun.ui.viewmodel.VideourlViewModel
 import com.student.competishun.utils.SharedPreferencesManager
 import dagger.hilt.android.AndroidEntryPoint
+import java.io.File
 
 @AndroidEntryPoint
 class DownloadFragment : Fragment(),DownloadedItemAdapter.OnVideoClickListener {
@@ -102,17 +106,32 @@ class DownloadFragment : Fragment(),DownloadedItemAdapter.OnVideoClickListener {
 
     private fun showVideoItems() {
         val videoItems = allDownloadedItems.filter { it.fileType == "VIDEO" }
-
         updateRecyclerView(videoItems)
     }
 
     override fun onVideoClick(folderContentId: String, name: String) {
-        videoUrlApi(viewModel, folderContentId, name)
+//        videoUrlApi(viewModel, folderContentId, name)
+        playVideo(folderContentId,name)
     }
 
     private fun updateRecyclerView(items: List<TopicContentModel>) {
         adapter = DownloadedItemAdapter(requireContext(), items,this,parentFragmentManager)
         binding.rvDownloads.adapter = adapter
+    }
+
+    private fun playVideo(folderContentId: String,name: String){
+        val videoFileURL = File(requireContext().filesDir, "$name.mp4").absolutePath
+
+        if (!videoFileURL.isNullOrEmpty()) {
+            val bundle = Bundle().apply {
+                putString("url", videoFileURL)
+                putString("url_name", name)
+                putString("ContentId", folderContentId)
+            }
+            findNavController().navigate(R.id.mediaFragment,bundle)
+        } else {
+            Toast.makeText(requireContext(), "Video file not found", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun videoUrlApi(viewModel: VideourlViewModel, folderContentId: String, name: String) {
@@ -135,15 +154,15 @@ class DownloadFragment : Fragment(),DownloadedItemAdapter.OnVideoClickListener {
 
     override fun onResume() {
         super.onResume()
-        requireActivity().window.setFlags(
-            WindowManager.LayoutParams.FLAG_SECURE,
-            WindowManager.LayoutParams.FLAG_SECURE
-        )
+//        requireActivity().window.setFlags(
+//            WindowManager.LayoutParams.FLAG_SECURE,
+//            WindowManager.LayoutParams.FLAG_SECURE
+//        )
     }
 
     override fun onPause() {
         super.onPause()
-        requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
+//        requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
 
     }
 }
