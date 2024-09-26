@@ -71,7 +71,8 @@ class ProfileFragment : Fragment() {
             findNavController().navigate(R.id.courseEmptyFragment)
         }
         binding.llLogout.setOnClickListener {
-            findNavController().navigate(R.id.action_profileFragment_to_ProfileLogout)
+            val bottomSheetDescriptionFragment = ProfileLogoutFragment()
+            bottomSheetDescriptionFragment.show(childFragmentManager, "BottomSheetDescriptionFragment")
 
 //            sharedPreferencesManager.clearUserData()
 //
