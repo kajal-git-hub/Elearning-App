@@ -89,6 +89,14 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
             supportFragmentManager.findFragmentById(R.id.fragmentNavigation) as NavHostFragment
         navController = navHostFragment.navController
 
+//        val navigateToFragment = intent.getStringExtra("navigateTo")
+//        if (navigateToFragment == "CourseEmptyFragment") {
+//            // Navigate to CourseEmptyFragment
+//            supportFragmentManager.beginTransaction()
+//                .replace(R.id.fragmentNavigation, CourseEmptyFragment())
+//                .commit()
+//        }
+
 
         drawerLayout = findViewById(R.id.drwaer_layout)
         navigationView = findViewById(R.id.nv_navigationView)

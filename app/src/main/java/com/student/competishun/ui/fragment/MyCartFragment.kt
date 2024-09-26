@@ -258,12 +258,15 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener,MyCartAdapter.OnCar
                         Log.e("getselected",paymentType.toString())
                         Toast.makeText(requireContext(),"Select Course Again", Toast.LENGTH_SHORT).show()
                         val selectedItem = cartAdapter.getSelectedItem()
+                        Log.e("getselected",paymentType.toString())
                         if (cartAdapter.selectedItemPosition != RecyclerView.NO_POSITION) {
                            // val selectedItem = cartItems[cartAdapter.selectedItemPosition]
                             Log.e("getselectedITem",selectedItem.toString())
                             if (selectedItem != null) {
                                 showPartialPayment(selectedItem)
                             }
+                        }else {
+                            showPartialPayment(cartItems[0])
                         }
 
                     }

@@ -86,6 +86,10 @@ class SharedPreferencesManager(context: Context) {
         get() = sharedPreferences.getBoolean("isBottomSheetShown", false)
         set(value) = sharedPreferences.edit().putBoolean("isBottomSheetShown", value).apply()
 
+    var isMyCourseAvailable: Boolean
+        get() = sharedPreferences.getBoolean("isMyCourseAvailable", false)
+        set(value) = sharedPreferences.edit().putBoolean("isMyCourseAvailable", value).apply()
+
 
 
     var fatherName: String?

@@ -239,6 +239,10 @@
         android:name="com.student.competishun.ui.fragment.ProfileFragment"
         tools:layout="@layout/fragment_profile"/>
 
+    <action
+        android:id="@+id/action_profileFragment_to_ProfileLogout"
+        app:destination="@+id/ProfileLogoutFragment"/>
+
     <fragment
         android:id="@+id/NotificationFragment"
         android:name="com.student.competishun.ui.fragment.NotificationFragment"
@@ -273,6 +277,10 @@
         android:id="@+id/ContactUs"
         android:name="com.student.competishun.ui.fragment.ContactUsFragment"
         tools:layout="@layout/fragment_contact_us">
+
+        <action
+            android:id="@+id/action_ContactUs_to_homePage"
+            app:destination="@+id/homeFragment"/>
     </fragment>
 
 
@@ -289,6 +297,52 @@
     </fragment>
 
 
+    <fragment
+        android:id="@+id/BottomSheetDownload"
+        android:name="com.student.competishun.ui.fragment.BottomSheetDownloadBookmark"
+        tools:layout="@layout/fragment_bottom_sheet_download_bookmark">
+    </fragment>
+    <fragment
+        android:id="@+id/ProfileLogoutFragment"
+        android:name="com.student.competishun.ui.fragment.ProfileLogoutFragment"
+        tools:layout="@layout/fragment_profile_logout">
+    </fragment>
+    <fragment
+        android:id="@+id/AboutUs"
+        android:name="com.student.competishun.ui.fragment.AboutUsFragment"
+        tools:layout="@layout/fragment_about_us">
+        <action
+            android:id="@+id/action_AboutUs_to_homePage"
+            app:destination="@+id/homeFragment"/>
+
+    </fragment>
+    <fragment
+        android:id="@+id/TermsAndCondition"
+        android:name="com.student.competishun.ui.fragment.TermsAndCondition"
+        tools:layout="@layout/fragment_terms_and_condition">
+        <action
+            android:id="@+id/action_terms_to_homePage"
+            app:destination="@+id/homeFragment"/>
+
+    </fragment>
+    <fragment
+        android:id="@+id/PolicyFragment"
+        android:name="com.student.competishun.ui.fragment.PrivacyPolicyFragment"
+        tools:layout="@layout/fragment_privacy_policy">
+        <action
+            android:id="@+id/action_policy_to_homePage"
+            app:destination="@+id/homeFragment"/>
+
+    </fragment>
+    <fragment
+        android:id="@+id/DisclaimerFragment"
+        android:name="com.student.competishun.ui.fragment.DisclaimerFragment"
+        tools:layout="@layout/fragment_disclaimer">
+        <action
+            android:id="@+id/action_disclaimer_to_homePage"
+            app:destination="@+id/homeFragment"/>
+
+    </fragment>
 
 
 </navigation>

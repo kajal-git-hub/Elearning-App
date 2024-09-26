@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.navigation.NavController
@@ -49,7 +50,7 @@ class WhyCompetishunAdapter(private val listWhyCompetishun: List<WhyCompetishun>
         val tvtitlename: TextView =itemView.findViewById(R.id.VideoTitle)
         val tvtag1: TextView =itemView.findViewById(R.id.IIT_JEE)
         val tvtag2: TextView =itemView.findViewById(R.id.NEET_Cracked)
-        val itemplay:ConstraintLayout = itemView.findViewById(R.id.item_why_comp)
+        val itemplay:ImageView = itemView.findViewById(R.id.play_buttonView)
     }
 
 }

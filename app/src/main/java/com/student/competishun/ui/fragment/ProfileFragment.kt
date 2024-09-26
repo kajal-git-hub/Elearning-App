@@ -71,17 +71,16 @@ class ProfileFragment : Fragment() {
             findNavController().navigate(R.id.courseEmptyFragment)
         }
         binding.llLogout.setOnClickListener {
-            // Clear the user session
+            val bottomSheetDescriptionFragment = ProfileLogoutFragment()
+            bottomSheetDescriptionFragment.show(childFragmentManager, "BottomSheetDescriptionFragment")
 
-//            sharedPreferencesManager.clearAccessToken()
-//            sharedPreferencesManager.clearRefreshToken()
-            sharedPreferencesManager.clearUserData()
-
-            val intent = Intent(requireContext(), MainActivity::class.java)
-            intent.putExtra("navigateToLogin", true)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            startActivity(intent)
-            requireActivity().finish()
+//            sharedPreferencesManager.clearUserData()
+//
+//            val intent = Intent(requireContext(), MainActivity::class.java)
+//            intent.putExtra("navigateToLogin", true)
+//            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+//            startActivity(intent)
+//            requireActivity().finish()
         }
 
         binding.ProfileUserName.text = sharedPreferencesManager.name

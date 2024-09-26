@@ -68,6 +68,7 @@
         app:layout_constraintEnd_toEndOf="parent"/>
 
     <ImageView
+        android:id="@+id/play_buttonView"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:src="@drawable/frame_1707480948"

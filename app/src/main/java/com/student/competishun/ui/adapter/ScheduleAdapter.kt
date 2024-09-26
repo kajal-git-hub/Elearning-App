@@ -248,9 +248,10 @@ class ScheduleAdapter(private val scheduleItems: List<ScheduleData>, private val
                         val hours = (secondsRemaining % 86400) / 3600
                         val minutes = (secondsRemaining % 3600) / 60
                         val seconds = secondsRemaining % 60
+                        val totalHours = (days * 24) + hours
                         binding.clJoinLecture.visibility = View.GONE
                         binding.clLectureTimer.visibility = View.VISIBLE
-                        binding.tvHoursRemaining.text = "$hours"
+                        binding.tvHoursRemaining.text = "$totalHours"
                         binding.tvMinRemaining.text = "$minutes"
                         binding.tvSecRemaining.text = "$seconds"
                         // Update the TextView on the main thread
