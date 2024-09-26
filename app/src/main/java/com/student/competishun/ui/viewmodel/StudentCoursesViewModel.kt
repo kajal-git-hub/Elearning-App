@@ -44,7 +44,7 @@ class StudentCoursesViewModel @Inject constructor(
         viewModelScope.launch {
             val result = studentCourseRepository.getAllLectureCount(courseId)
             _lectures.value = result
-            Log.e("LectureCountVM","${result}")
+//            Log.e("LectureCountVM","${result}")
         }
     }
 

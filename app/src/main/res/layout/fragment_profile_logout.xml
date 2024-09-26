@@ -30,11 +30,11 @@
         app:layout_constraintTop_toBottomOf="@+id/ig_notch">
 
 
-        <ImageView
+        <pl.droidsonroids.gif.GifImageView
             android:id="@+id/iv_logout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/lecture_play"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/logout_gif"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -43,7 +43,7 @@
             android:id="@+id/et_takingBreak"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_28dp"
+            android:layout_marginTop="@dimen/_20dp"
             android:fontFamily="@font/nunito"
             android:text="Taking a Break?"
             android:textColor="@color/_2b2829"
@@ -56,7 +56,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_10dp"
+            android:layout_marginTop="@dimen/_16dp"
             android:gravity="center"
             android:lineHeight="22.4sp"
             android:text=" Logging out now will hit pause on your study session. Don’t worry, your progress will be here when you return."
@@ -72,7 +72,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/_16sp"
-        android:paddingBottom="@dimen/_10dp"
+        android:paddingBottom="@dimen/_12dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cl_breakConstraint">
 

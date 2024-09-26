@@ -110,7 +110,6 @@ class DownloadFragment : Fragment(),DownloadedItemAdapter.OnVideoClickListener {
     }
 
     override fun onVideoClick(folderContentId: String, name: String) {
-//        videoUrlApi(viewModel, folderContentId, name)
         playVideo(folderContentId,name)
     }
 

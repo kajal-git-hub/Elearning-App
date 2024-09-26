@@ -84,7 +84,6 @@
             app:tabSelectedTextColor="#3E3EF7">
 
             <com.google.android.material.tabs.TabItem
-                android:id="@+id/pdfsTab"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -93,7 +92,6 @@
                 android:textAllCaps="false"/>
 
             <com.google.android.material.tabs.TabItem
-                android:id="@+id/videosTab"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

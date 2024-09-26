@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,35 +19,40 @@ import com.student.competishun.R
 import com.student.competishun.ui.fragment.BottomSheetDeletePDFsFragment
 import com.student.competishun.ui.fragment.BottomSheetDeleteVideoFragment
 import com.student.competishun.ui.fragment.PdfViewerFragment
+import com.student.competishun.ui.main.PdfViewerActivity
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
 
-class DownloadedItemAdapter(private val context: Context,
-                            private val items: List<TopicContentModel>,
-                            private val videoClickListener:OnVideoClickListener,
-                            private val fragmentManager: FragmentManager // Add this parameter
+class DownloadedItemAdapter(
+    private val context: Context,
+    private val items: List<TopicContentModel>,
+    private val videoClickListener: OnVideoClickListener,
+    private val fragmentManager: FragmentManager // Add this parameter
 ) : RecyclerView.Adapter<DownloadedItemAdapter.ViewHolder>() {
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val clCourseBook : ConstraintLayout = itemView.findViewById(R.id.cl_course_book)
-        val ivSubjectBookIcon : ImageView = itemView.findViewById(R.id.iv_subject_book_icon)
-        val ivBookShadow : ImageView = itemView.findViewById(R.id.iv_book_Shadow)
+        val clCourseBook: ConstraintLayout = itemView.findViewById(R.id.cl_course_book)
+        val ivSubjectBookIcon: ImageView = itemView.findViewById(R.id.iv_subject_book_icon)
+        val ivBookShadow: ImageView = itemView.findViewById(R.id.iv_book_Shadow)
         val studyMaterial: TextView = itemView.findViewById(R.id.tv_StudyMaterial)
         val lecTime: TextView = itemView.findViewById(R.id.tv_lecturer_time)
         val topicName: TextView = itemView.findViewById(R.id.tv_topic_name)
         val topicDescription: TextView = itemView.findViewById(R.id.tv_topic_description)
-        var forRead : ImageView  = itemView.findViewById(R.id.iv_read_pdf)
-        var forVideo : ImageView = itemView.findViewById(R.id.iv_read_video)
-        var dotExtraInfoDownload : ImageView = itemView.findViewById(R.id.dotExtraInfoDownload)
+        var forRead: ImageView = itemView.findViewById(R.id.iv_read_pdf)
+        var forVideo: ImageView = itemView.findViewById(R.id.iv_read_video)
+        var dotExtraInfoDownload: ImageView = itemView.findViewById(R.id.dotExtraInfoDownload)
     }
+
     interface OnVideoClickListener {
         fun onVideoClick(folderContentId: String, name: String)
     }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.downloads_item_pdfs, parent, false)
+        val view =
+            LayoutInflater.from(parent.context).inflate(R.layout.downloads_item_pdfs, parent, false)
         return ViewHolder(view)
     }
 
@@ -54,41 +60,14 @@ class DownloadedItemAdapter(private val context: Context,
         val item = items[position]
         holder.studyMaterial.text = item.lecture
 
-//        val localFile = File(context.getExternalFilesDir(null), item.id + "_" + item.fileType)
-//
-//        if (localFile.exists()) {
-//            // File exists locally, open it
-//            if (item.fileType == "PDF") {
-//                holder.forRead.setOnClickListener {
-//                    openPdfFromLocalFile(localFile)
-//                }
-//            } else if (item.fileType == "VIDEO") {
-//                holder.forVideo.setOnClickListener {
-//                    openVideoFromLocalFile(localFile)
-//                }
-//            }
-//        } else {
-//            // File doesn't exist locally, download it
-//            if (item.fileType == "PDF") {
-//                holder.forRead.setOnClickListener {
-//                    val file = downloadFile(item.url, item.id + "_PDF")
-//                    file?.let {
-//                        openPdfFromLocalFile(it)
-//                    }
-//                }
-//            } else if (item.fileType == "VIDEO") {
-//                holder.forVideo.setOnClickListener {
-//                    val file = downloadFile(item.url, item.id + "_VIDEO")
-//                    file?.let {
-//                        openVideoFromLocalFile(it)
-//                    }
-//                }
-//            }
-//        }
-
-        if(item.fileType == "PDF"){
+        if (item.fileType == "PDF") {
             holder.lecTime.text = item.lecturerName
-            holder.lecTime.setCompoundDrawablesWithIntrinsicBounds(R.drawable.download_person, 0, 0, 0);
+            holder.lecTime.setCompoundDrawablesWithIntrinsicBounds(
+                R.drawable.download_person,
+                0,
+                0,
+                0
+            );
             holder.clCourseBook.setBackgroundResource(R.drawable.frame_1707480918)
             holder.ivSubjectBookIcon.setImageResource(R.drawable.group_1707478995)
             holder.ivBookShadow.setImageResource(R.drawable.ellipse_17956)
@@ -97,7 +76,7 @@ class DownloadedItemAdapter(private val context: Context,
                 val bottomSheet = BottomSheetDeletePDFsFragment()
                 bottomSheet.show(fragmentManager, bottomSheet.tag)
             }
-        }else{
+        } else {
             holder.lecTime.setCompoundDrawablesWithIntrinsicBounds(R.drawable.clock_black, 0, 0, 0);
             holder.lecTime.text = formatTimeDuration(item.videoDuration)
             holder.forRead.visibility = View.GONE
@@ -107,7 +86,7 @@ class DownloadedItemAdapter(private val context: Context,
             holder.ivBookShadow.setImageResource(R.drawable.ellipse_17956)
             holder.dotExtraInfoDownload.setOnClickListener {
                 val bottomSheet = BottomSheetDeleteVideoFragment()
-                bottomSheet.show(fragmentManager,bottomSheet.tag)
+                bottomSheet.show(fragmentManager, bottomSheet.tag)
             }
 
         }
@@ -115,8 +94,15 @@ class DownloadedItemAdapter(private val context: Context,
         holder.topicDescription.text = item.topicDescription
 
         holder.forRead.setOnClickListener {
-            openPdfInFragment(item.url)
+            val localPath = File(context.filesDir, item.topicName+".pdf")
+            Log.d("localPath", localPath.toString())
+            Log.d("localPath", localPath.absolutePath)
+
+            val intent = Intent(context, PdfViewerFragment::class.java)
+            intent.putExtra("PDF_URL", localPath.absolutePath) // This is correct
+            context.startActivity(intent)
         }
+
 
         holder.forVideo.setOnClickListener {
             videoClickListener.onVideoClick(item.id, item.topicName)
@@ -158,13 +144,16 @@ class DownloadedItemAdapter(private val context: Context,
                 val seconds = totalDuration % 60
 
                 val hourString = if (hours > 0) "${hours} hr${if (hours > 1) "s" else ""}" else ""
-                val minuteString = if (minutes > 0) "${minutes} min${if (minutes > 1) "s" else ""}" else ""
+                val minuteString =
+                    if (minutes > 0) "${minutes} min${if (minutes > 1) "s" else ""}" else ""
                 val secondString = if (seconds > 0) "${seconds} sec" else ""
 
-                listOf(hourString, minuteString, secondString).filter { it.isNotEmpty() }.joinToString(" ").trim()
+                listOf(hourString, minuteString, secondString).filter { it.isNotEmpty() }
+                    .joinToString(" ").trim()
             }
         }
     }
+
     fun removeItem(position: Int) {
         val updatedItems = items.toMutableList()
         updatedItems.removeAt(position)
@@ -199,6 +188,7 @@ class DownloadedItemAdapter(private val context: Context,
         }
         return null
     }
+
     private fun openPdfFromLocalFile(file: String) {
         val intent = Intent(context, PdfViewerFragment::class.java).apply {
             putExtra("PDF_URL", file)

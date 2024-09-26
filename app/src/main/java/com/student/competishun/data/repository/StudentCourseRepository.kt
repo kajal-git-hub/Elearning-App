@@ -42,7 +42,7 @@ class StudentCourseRepository @Inject constructor(
             if (response.hasErrors()) {
                 Result.failure(Exception(response.errors?.first()?.message))
             } else {
-                Log.e("LectureRepository","${response.data}")
+//                Log.e("LectureRepository","${response.data}")
                 Result.success(response.data!!)
             }
         } catch (e: Exception) {
