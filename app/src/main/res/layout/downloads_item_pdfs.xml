@@ -120,6 +120,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:maxLines="2"
+        android:layout_marginEnd="@dimen/_10dp"
         android:text="Relations and Functions: Types of relations and types and relations.Relations and Functions: Types of relations and functions, &amp; Inverse trigonometric functions and"
         android:layout_marginBottom="@dimen/_16dp"
         app:layout_constraintBottom_toBottomOf="parent"

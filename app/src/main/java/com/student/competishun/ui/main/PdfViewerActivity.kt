@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.os.ParcelFileDescriptor
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.student.competishun.R
 import java.io.File
@@ -30,13 +31,24 @@ class PdfViewerActivity : AppCompatActivity() {
         nextPageButton = findViewById(R.id.nextPageButton)
         previousPageButton = findViewById(R.id.previousPageButton)
 
-
         val pdfUrl = intent.getStringExtra("PDF_URL")
         if (pdfUrl != null) {
             thread {
-                val pdfFile = downloadPdfFile(pdfUrl)
-                openPdfRenderer(pdfFile)
-                runOnUiThread { showPage(currentPageIndex) }
+                val pdfFile = if (pdfUrl.startsWith("http://") || pdfUrl.startsWith("https://")) {
+                    downloadPdfFile(pdfUrl) // Download from URL
+                } else {
+                    File(pdfUrl) // Use the local file directly
+                }
+
+                if (pdfFile.exists()) {
+                    openPdfRenderer(pdfFile)
+                    runOnUiThread { showPage(currentPageIndex) }
+                } else {
+                    runOnUiThread {
+                        Toast.makeText(this, "PDF file not found", Toast.LENGTH_SHORT).show()
+                        finish() // Close activity if file not found
+                    }
+                }
             }
         }
 

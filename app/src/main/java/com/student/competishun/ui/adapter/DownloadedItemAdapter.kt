@@ -98,8 +98,9 @@ class DownloadedItemAdapter(
             Log.d("localPath", localPath.toString())
             Log.d("localPath", localPath.absolutePath)
 
-            val intent = Intent(context, PdfViewerFragment::class.java)
+            val intent = Intent(context, PdfViewerActivity::class.java)
             intent.putExtra("PDF_URL", localPath.absolutePath) // This is correct
+            Log.d("absolutePath",localPath.absolutePath)
             context.startActivity(intent)
         }
 
