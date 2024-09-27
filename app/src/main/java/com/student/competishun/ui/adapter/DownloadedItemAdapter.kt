@@ -2,6 +2,8 @@ package com.student.competishun.ui.adapter
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
+import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -15,11 +17,14 @@ import com.student.competishun.data.model.TopicContentModel
 import com.student.competishun.R
 import com.student.competishun.ui.fragment.BottomSheetDeletePDFsFragment
 import com.student.competishun.ui.fragment.BottomSheetDeleteVideoFragment
-import com.student.competishun.ui.fragment.DownloadFragment
 import com.student.competishun.ui.main.PdfViewerActivity
 import com.student.competishun.utils.OnDeleteClickListener
 import com.student.competishun.utils.SharedPreferencesManager
+import okhttp3.OkHttpClient
+import okhttp3.Request
 import java.io.File
+import java.io.FileOutputStream
+import java.io.InputStream
 
 class DownloadedItemAdapter(
     private val context: Context,
@@ -27,6 +32,12 @@ class DownloadedItemAdapter(
     private val videoClickListener: OnVideoClickListener,
     private val fragmentManager: FragmentManager
 ) : RecyclerView.Adapter<DownloadedItemAdapter.ViewHolder>(), OnDeleteClickListener {
+
+    fun updateItems(newItems: List<TopicContentModel>) {
+        items.clear()
+        items.addAll(newItems)
+        notifyDataSetChanged()
+    }
 
     interface OnVideoClickListener {
         fun onVideoClick(folderContentId: String, name: String)
@@ -60,7 +71,6 @@ class DownloadedItemAdapter(
             if (file.exists()) {
                 file.delete()
             }
-            (context as? DownloadFragment)?.updateRecyclerView(items.toString())
 
         }
     }
