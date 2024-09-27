@@ -8,14 +8,24 @@ import android.view.ViewGroup
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.student.competishun.R
 import com.student.competishun.databinding.FragmentBottomSheetDeletePDFsBinding
+import com.student.competishun.ui.adapter.DownloadedItemAdapter
+import com.student.competishun.utils.OnDeleteClickListener
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class BottomSheetDeletePDFsFragment : BottomSheetDialogFragment() {
 
+    private var listener: OnDeleteClickListener? = null
+    private var itemPosition: Int = -1
+
     private lateinit var binding : FragmentBottomSheetDeletePDFsBinding
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    fun setListener(listener: OnDeleteClickListener, position: Int) {
+        this.listener = listener
+        this.itemPosition = position
+    }
+
+        override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
         }
@@ -31,6 +41,13 @@ class BottomSheetDeletePDFsFragment : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.tvDeletePdf.setOnClickListener {
+            if (itemPosition >= 0) {
+                listener?.onDeleteClick(itemPosition)
+            }
+            dismiss()
+        }
 
     }
 

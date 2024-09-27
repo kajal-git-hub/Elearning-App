@@ -114,7 +114,8 @@ class DownloadFragment : Fragment(),DownloadedItemAdapter.OnVideoClickListener {
     }
 
     private fun updateRecyclerView(items: List<TopicContentModel>) {
-        adapter = DownloadedItemAdapter(requireContext(), items,this,parentFragmentManager)
+        adapter = DownloadedItemAdapter(requireContext(),
+            items.toMutableList(),this,parentFragmentManager)
         binding.rvDownloads.adapter = adapter
     }
 

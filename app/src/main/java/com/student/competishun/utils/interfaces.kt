@@ -25,3 +25,7 @@ interface OnCartItemRemovedListener {
 interface OnTopicTypeSelectedListener {
     fun onTopicTypeSelected(selectedTopic: TopicTypeModel)
 }
+
+interface OnDeleteClickListener {
+    fun onDeleteClick(position: Int)
+}
