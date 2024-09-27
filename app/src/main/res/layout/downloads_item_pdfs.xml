@@ -95,7 +95,7 @@
         android:maxLines="2"
         android:ellipsize="end"
         android:textColor="#2B2829"
-        android:layout_marginTop="@dimen/_6dp"
+        android:layout_marginTop="@dimen/_8dp"
         android:fontFamily="@font/nunito"
         android:textStyle="bold"
         android:lineHeight="@dimen/_20dp"
