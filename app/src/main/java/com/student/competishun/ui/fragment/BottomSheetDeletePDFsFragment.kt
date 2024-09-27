@@ -56,13 +56,4 @@ class BottomSheetDeletePDFsFragment : BottomSheetDialogFragment() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        val sharedPreferencesManager = SharedPreferencesManager(requireContext())
-        val updatedItems = sharedPreferencesManager.getDownloadedItems()
-
-        adapter.updateItems(updatedItems)
-    }
-
-
 }

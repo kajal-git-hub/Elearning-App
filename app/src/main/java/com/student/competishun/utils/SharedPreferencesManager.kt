@@ -60,17 +60,9 @@ class SharedPreferencesManager(context: Context) {
         return items
     }
 
-    // In SharedPreferencesManager
+
     fun deleteDownloadedItem(item: TopicContentModel) {
-        val savedItemsJson = sharedPreferences.getString("downloaded_items", "[]")
-        val savedItems = Gson().fromJson(savedItemsJson, Array<TopicContentModel>::class.java).toMutableList()
-
-        // Remove the item from the list
-        savedItems.removeIf { it.id == item.id }
-
-        // Save the updated list back to SharedPreferences
-        val updatedItemsJson = Gson().toJson(savedItems)
-        sharedPreferences.edit().putString("downloaded_items", updatedItemsJson).apply()
+        sharedPreferences.edit().remove(KEY_DOWNLOADED_ITEM_PREFIX + item.id).apply()
     }
 
 

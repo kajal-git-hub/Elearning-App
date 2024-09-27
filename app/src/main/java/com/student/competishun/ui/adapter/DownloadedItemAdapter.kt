@@ -57,12 +57,13 @@ class DownloadedItemAdapter(
 
     override fun onDeleteClick(position: Int,item:TopicContentModel) {
         if (position >= 0 && position < items.size) {
-            items.removeAt(position)
-            notifyItemRemoved(position)
-            notifyItemRangeChanged(position, items.size)
 
             val sharedPreferencesManager = SharedPreferencesManager(context)
             sharedPreferencesManager.deleteDownloadedItem(item)
+
+            items.removeAt(position)
+            notifyItemRemoved(position)
+            notifyItemRangeChanged(position, items.size)
 
             val fileName = "${item.topicName}.${item.fileType.lowercase()}"
             val file = File(context.filesDir, fileName)
