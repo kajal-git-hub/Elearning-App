@@ -133,35 +133,17 @@ class DownloadFragment : Fragment(),DownloadedItemAdapter.OnVideoClickListener {
         }
     }
 
-    private fun videoUrlApi(viewModel: VideourlViewModel, folderContentId: String, name: String) {
-        viewModel.fetchVideoStreamUrl(folderContentId, "480p")
-
-        viewModel.videoStreamUrl.observe(viewLifecycleOwner) { signedUrl ->
-            Log.d("VideoUrl", "Signed URL: $signedUrl")
-            if (signedUrl != null) {
-                val bundle = Bundle().apply {
-                    putString("url", signedUrl)
-                    putString("url_name", name)
-                    putString("ContentId", folderContentId)
-                }
-                findNavController().navigate(R.id.mediaFragment, bundle)
-            } else {
-                // Handle error or null URL
-            }
-        }
-    }
-
     override fun onResume() {
         super.onResume()
-//        requireActivity().window.setFlags(
-//            WindowManager.LayoutParams.FLAG_SECURE,
-//            WindowManager.LayoutParams.FLAG_SECURE
-//        )
+        requireActivity().window.setFlags(
+            WindowManager.LayoutParams.FLAG_SECURE,
+            WindowManager.LayoutParams.FLAG_SECURE
+        )
     }
 
     override fun onPause() {
         super.onPause()
-//        requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
+        requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
 
     }
 }
