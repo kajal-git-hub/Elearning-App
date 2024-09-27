@@ -16,6 +16,7 @@ import com.google.gson.Gson
 import com.student.competishun.R
 import com.student.competishun.data.model.TopicContentModel
 import com.student.competishun.databinding.FragmentBottomSheetDownloadBookmarkBinding
+import com.student.competishun.ui.adapter.DownloadedItemAdapter
 import com.student.competishun.ui.viewmodel.VideourlViewModel
 import com.student.competishun.utils.SharedPreferencesManager
 import dagger.hilt.android.AndroidEntryPoint
@@ -39,9 +40,6 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
         this.itemDetails = details
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -137,7 +135,6 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
     }
 
 
-
     private fun downloadVideo(context: Context, videoUrl: String, name: String) {
         Log.d("DownloadVideo", "Starting download for: $videoUrl with name: $name")
 
@@ -178,21 +175,5 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
             }
         }
     }
-
-
-
-//    private fun videoUrlApi(folderContentId: String, name: String) {
-//        viewModel.fetchVideoStreamUrl(folderContentId, "480p")
-//
-//        viewModel.videoStreamUrl.observe(viewLifecycleOwner) { signedUrl ->
-//            Log.d("VideoUrl", "Signed URL: $signedUrl")
-//            if (signedUrl != null) {
-//                downloadVideo(signedUrl, name) // Download the video using the signed URL
-//            } else {
-//                // Handle error or null URL
-//                Toast.makeText(requireContext(), "Failed to retrieve video URL", Toast.LENGTH_SHORT).show()
-//            }
-//        }
-//    }
 
 }

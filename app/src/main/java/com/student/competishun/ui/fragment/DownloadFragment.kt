@@ -142,6 +142,7 @@ class DownloadFragment : Fragment(),DownloadedItemAdapter.OnVideoClickListener {
         )
     }
 
+
     override fun onPause() {
         super.onPause()
         requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)

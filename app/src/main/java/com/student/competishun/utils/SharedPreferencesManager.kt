@@ -60,17 +60,19 @@ class SharedPreferencesManager(context: Context) {
         return items
     }
 
-    fun clearDownloadedItems() {
-        sharedPreferences.edit().apply {
-            sharedPreferences.all.keys.forEach { key ->
-                if (key.startsWith(KEY_DOWNLOADED_ITEM_PREFIX)) {
-                    remove(key)
-                }
-            }
-            apply()
-        }
-        Log.e("SharedPreferences", "Cleared all downloaded items")
+    // In SharedPreferencesManager
+    fun deleteDownloadedItem(item: TopicContentModel) {
+        val savedItemsJson = sharedPreferences.getString("downloaded_items", "[]")
+        val savedItems = Gson().fromJson(savedItemsJson, Array<TopicContentModel>::class.java).toMutableList()
+
+        // Remove the item from the list
+        savedItems.removeIf { it.id == item.id }
+
+        // Save the updated list back to SharedPreferences
+        val updatedItemsJson = Gson().toJson(savedItems)
+        sharedPreferences.edit().putString("downloaded_items", updatedItemsJson).apply()
     }
+
 
 
     var shirtSize: String?

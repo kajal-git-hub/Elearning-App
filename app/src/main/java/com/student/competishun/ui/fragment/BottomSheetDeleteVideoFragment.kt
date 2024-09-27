@@ -8,19 +8,23 @@ import android.view.ViewGroup
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.student.competishun.R
+import com.student.competishun.data.model.TopicContentModel
 import com.student.competishun.databinding.FragmentBottomSheetDeleteVideoBinding
+import com.student.competishun.ui.adapter.DownloadedItemAdapter
 import com.student.competishun.utils.OnDeleteClickListener
+import com.student.competishun.utils.SharedPreferencesManager
 
 class BottomSheetDeleteVideoFragment : BottomSheetDialogFragment() {
 
     private lateinit var binding : FragmentBottomSheetDeleteVideoBinding
-
     private var listener: OnDeleteClickListener? = null
     private var itemPosition: Int = -1
+    private var itemDetails: TopicContentModel? = null
 
-    fun setListener(listener: OnDeleteClickListener, position: Int) {
+    fun setListener(listener: OnDeleteClickListener, position: Int,item:TopicContentModel) {
         this.listener = listener
         this.itemPosition = position
+        this.itemDetails = item
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,7 +46,7 @@ class BottomSheetDeleteVideoFragment : BottomSheetDialogFragment() {
 
         binding.clDeleteButton.setOnClickListener {
             if (itemPosition >= 0) {
-                listener?.onDeleteClick(itemPosition)
+                listener?.onDeleteClick(itemPosition,itemDetails!!)
             }
             dismiss()
         }
@@ -50,5 +54,6 @@ class BottomSheetDeleteVideoFragment : BottomSheetDialogFragment() {
             dismiss()
         }
     }
+
 
 }

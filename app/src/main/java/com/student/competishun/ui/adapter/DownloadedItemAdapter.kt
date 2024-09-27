@@ -19,6 +19,7 @@ import com.student.competishun.ui.fragment.BottomSheetDeletePDFsFragment
 import com.student.competishun.ui.fragment.BottomSheetDeleteVideoFragment
 import com.student.competishun.ui.main.PdfViewerActivity
 import com.student.competishun.utils.OnDeleteClickListener
+import com.student.competishun.utils.SharedPreferencesManager
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.io.File
@@ -31,6 +32,11 @@ class DownloadedItemAdapter(
     private val videoClickListener: OnVideoClickListener,
     private val fragmentManager: FragmentManager
 ) : RecyclerView.Adapter<DownloadedItemAdapter.ViewHolder>(), OnDeleteClickListener {
+    fun updateItems(newItems: List<TopicContentModel>) {
+        items.clear()
+        items.addAll(newItems)
+        notifyDataSetChanged() // Notify the adapter of data changes
+    }
 
     interface OnVideoClickListener {
         fun onVideoClick(folderContentId: String, name: String)
@@ -49,11 +55,20 @@ class DownloadedItemAdapter(
         var dotExtraInfoDownload: ImageView = itemView.findViewById(R.id.dotExtraInfoDownload)
     }
 
-    override fun onDeleteClick(position: Int) {
-        if (position >= 0 && position < items.size) { // Ensure position is valid
+    override fun onDeleteClick(position: Int,item:TopicContentModel) {
+        if (position >= 0 && position < items.size) {
             items.removeAt(position)
             notifyItemRemoved(position)
             notifyItemRangeChanged(position, items.size)
+
+            val sharedPreferencesManager = SharedPreferencesManager(context)
+            sharedPreferencesManager.deleteDownloadedItem(item)
+
+            val fileName = "${item.topicName}.${item.fileType.lowercase()}"
+            val file = File(context.filesDir, fileName)
+            if (file.exists()) {
+                file.delete()
+            }
         }
     }
 
@@ -77,7 +92,7 @@ class DownloadedItemAdapter(
 
             holder.dotExtraInfoDownload.setOnClickListener {
                 val bottomSheet = BottomSheetDeletePDFsFragment()
-                bottomSheet.setListener(this, position)
+                bottomSheet.setListener(this, position,item)
                 bottomSheet.show(fragmentManager, bottomSheet.tag)
             }
         } else {
@@ -92,7 +107,7 @@ class DownloadedItemAdapter(
 
             holder.dotExtraInfoDownload.setOnClickListener {
                 val bottomSheet = BottomSheetDeleteVideoFragment()
-                bottomSheet.setListener(this, position)
+                bottomSheet.setListener(this, position,item)
                 bottomSheet.show(fragmentManager, bottomSheet.tag)
             }
         }

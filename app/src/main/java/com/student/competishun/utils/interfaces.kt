@@ -4,6 +4,7 @@ import android.os.Bundle
 import com.student.competishun.curator.AllCourseForStudentQuery
 import com.student.competishun.curator.GetAllCourseCategoriesQuery
 import com.student.competishun.curator.MyCoursesQuery
+import com.student.competishun.data.model.TopicContentModel
 import com.student.competishun.data.model.TopicTypeModel
 
 interface ToolbarCustomizationListener {
@@ -27,5 +28,5 @@ interface OnTopicTypeSelectedListener {
 }
 
 interface OnDeleteClickListener {
-    fun onDeleteClick(position: Int)
+    fun onDeleteClick(position: Int,item:TopicContentModel)
 }
