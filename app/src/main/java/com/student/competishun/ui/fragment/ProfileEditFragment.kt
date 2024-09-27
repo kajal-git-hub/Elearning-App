@@ -37,6 +37,9 @@ class ProfileEditFragment : BottomSheetDialogFragment() {
         binding.closeBottomClass.setOnClickListener {
             dismiss()
         }
+        binding.mbCancel.setOnClickListener {
+            dismiss()
+        }
 
         val classList = listOf("11th", "12th", "12th+")
 
