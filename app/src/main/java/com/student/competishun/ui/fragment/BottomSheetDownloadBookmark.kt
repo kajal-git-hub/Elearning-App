@@ -161,13 +161,11 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
                         }
                     }
                 }
-                // Show success toast
                 withContext(Dispatchers.Main) {
                     Log.d("DownloadVideo", "Download success, showing toast.")
                     Toast.makeText(context, "Download successful", Toast.LENGTH_SHORT).show()
                 }
             } catch (e: Exception) {
-                // Show error toast
                 withContext(Dispatchers.Main) {
                     Log.e("DownloadVideo", "Download failed: ${e.message}")
                     Toast.makeText(context, "Download failed: ${e.message}", Toast.LENGTH_SHORT).show()

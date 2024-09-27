@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -77,7 +78,7 @@ class DownloadFragment : Fragment(), DownloadedItemAdapter.OnVideoClickListener 
         Log.d("allDownloadedItems", allDownloadedItems.toString())
 
         updateTabCounts()
-        updateRecyclerView("PDF") // Show PDF items by default
+        updateRecyclerView("PDF")
     }
 
     private fun updateTabCounts() {
@@ -92,9 +93,14 @@ class DownloadFragment : Fragment(), DownloadedItemAdapter.OnVideoClickListener 
         playVideo(folderContentId, name)
     }
 
-     fun updateRecyclerView(itemType: String) {
+    fun updateRecyclerView(itemType: String) {
         val itemsToDisplay = allDownloadedItems.filter { it.fileType == itemType }
-        adapter = DownloadedItemAdapter(requireContext(), itemsToDisplay.toMutableList(), this, parentFragmentManager)
+        adapter = DownloadedItemAdapter(
+            requireContext(),
+            itemsToDisplay.toMutableList(),
+            this,
+            parentFragmentManager
+        )
         binding.rvDownloads.adapter = adapter
 
         updateTabCounts()
@@ -115,30 +121,17 @@ class DownloadFragment : Fragment(), DownloadedItemAdapter.OnVideoClickListener 
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        requireActivity().window.setFlags(
+            WindowManager.LayoutParams.FLAG_SECURE,
+            WindowManager.LayoutParams.FLAG_SECURE
+        )
+    }
+
     override fun onPause() {
         super.onPause()
-        // Optional: Handle any pause-specific logic
+        requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
     }
 }
-
-
-
-//    override fun onResume() {
-//        super.onResume()
-//        requireActivity().window.setFlags(
-//            WindowManager.LayoutParams.FLAG_SECURE,
-//            WindowManager.LayoutParams.FLAG_SECURE
-//        )
-//    }
-
-
-
-
-
-
-//    override fun onPause() {
-//        super.onPause()
-//        requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
-//
-//    }
 

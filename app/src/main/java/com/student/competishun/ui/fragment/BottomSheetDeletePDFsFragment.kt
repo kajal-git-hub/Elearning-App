@@ -19,11 +19,8 @@ class BottomSheetDeletePDFsFragment : BottomSheetDialogFragment() {
 
     private var listener: OnDeleteClickListener? = null
     private var itemPosition: Int = -1
-    private lateinit var adapter: DownloadedItemAdapter
     private var itemDetails: TopicContentModel? = null
     private lateinit var binding: FragmentBottomSheetDeletePDFsBinding
-    private lateinit var items: List<TopicContentModel>
-
 
     fun setListener(listener: OnDeleteClickListener, position: Int, item: TopicContentModel) {
         this.listener = listener
