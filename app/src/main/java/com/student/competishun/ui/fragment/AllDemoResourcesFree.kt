@@ -68,7 +68,7 @@ class AllDemoResourcesFree : Fragment() {
         var folderName = arguments?.getString("folderName")
         binding.igDemoBackButton.setOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed() }
         binding.tvDemoTitle.text = folderName
-        if (folderName?.split(" ")?.get(0)?.equals("Free") == true) {
+        if (folderName?.split(" ")?.get(0)?.equals("Class") == true) {
             binding.igFreeImage.visibility = View.VISIBLE
             binding.igFreeImage.setImageResource(R.drawable.frame_1707480952)
         } else {
