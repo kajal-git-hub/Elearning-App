@@ -28,13 +28,17 @@
                 android:id="@+id/topAppBar"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
+                android:elevation="@dimen/_4dp"
                 android:background="@color/white"
-                android:elevation="4dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                app:titleTextColor="@color/black_2B2829"
+                app:navigationIcon="@drawable/arrow_left"
                 app:menu="@menu/top_app_bar_menu"
-                app:navigationIcon="@drawable/frame_370000069" />
+                android:paddingEnd="@dimen/_7dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+            </com.google.android.material.appbar.MaterialToolbar>
 
 
             <androidx.core.widget.NestedScrollView

@@ -35,11 +35,11 @@
                 android:id="@+id/tvDemoTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
+                android:layout_marginStart="@dimen/_30dp"
                 android:fontFamily="@font/nunito"
                 android:text="Demo Resources"
                 android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
-                android:textSize="18sp" />
+                android:textSize="@dimen/_17sp" />
 
             <ImageView
                 android:id="@+id/ig_freeImage"

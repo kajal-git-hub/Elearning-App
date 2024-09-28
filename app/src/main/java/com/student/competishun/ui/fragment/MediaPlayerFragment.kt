@@ -70,7 +70,7 @@ class MediaPlayerFragment : Fragment() {
             handler.postDelayed(this, updateInterval)
         }
     }
-    private fun getWatchedDuration(): String {
+     fun getWatchedDuration(): String {
         val currentPosition = player.currentPosition
 
         val minutes = (currentPosition / 60000).toInt()

@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import com.bumptech.glide.request.target.Target
 import android.view.ViewGroup
+import android.widget.Filter
+import android.widget.Filterable
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -14,13 +16,14 @@ import com.google.android.material.textview.MaterialTextView
 import com.student.competishun.R
 import com.student.competishun.curator.AllCourseForStudentQuery
 import com.student.competishun.utils.HelperFunctions
+import java.util.Locale
 
 class RecommendedCoursesAdapter(
-    private val items: List<AllCourseForStudentQuery.Course>,
+    private var items: List<AllCourseForStudentQuery.Course>,
     private val lectureCounts: Map<String, Int>,
     private val onItemClick: (AllCourseForStudentQuery.Course,List<String>?) -> Unit
-) : RecyclerView.Adapter<RecommendedCoursesAdapter.CourseViewHolder>() {
-
+) : RecyclerView.Adapter<RecommendedCoursesAdapter.CourseViewHolder>(),Filterable {
+    private var filteredItems: MutableList<AllCourseForStudentQuery.Course> = items.toMutableList()
     private lateinit var helperFunctions: HelperFunctions
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CourseViewHolder {
@@ -30,7 +33,7 @@ class RecommendedCoursesAdapter(
     }
 
     override fun onBindViewHolder(holder: CourseViewHolder, position: Int) {
-        val course = items[position]
+        val course = filteredItems[position]
         val recommendCourseTags = course.course_tags
         Log.d("recommendCourseTags", recommendCourseTags.toString())
 
@@ -85,7 +88,15 @@ class RecommendedCoursesAdapter(
         }
     }
 
-    override fun getItemCount(): Int = items.size
+
+
+    override fun getItemCount(): Int = filteredItems.size
+    fun updateCourses(newCourseList: List<AllCourseForStudentQuery.Course>) {
+        items = newCourseList
+        filteredItems.clear()
+        filteredItems.addAll(newCourseList)
+        notifyDataSetChanged()
+    }
 
     class CourseViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val courseName: TextView = view.findViewById(R.id.tvRecommendedCourseName)
@@ -104,4 +115,37 @@ class RecommendedCoursesAdapter(
 
         val tvLastField:TextView = view.findViewById(R.id.tvLastField)
     }
+
+    override fun getFilter(): Filter {
+        return object : Filter() {
+            override fun performFiltering(constraint: CharSequence?): FilterResults {
+                val query = constraint?.toString()?.lowercase(Locale.getDefault()) ?: ""
+
+                val filteredList = if (query.isEmpty()) {
+                    items
+                } else {
+                    items.filter {
+                        it.name.lowercase(Locale.getDefault()).contains(query)
+                    }
+                }
+
+//                val results = FilterResults()
+//                results.values = filteredList
+//                Log.e("filteredList",results.values.toString())
+//                return results
+                return FilterResults().apply {
+                    values = filteredList
+                }
+            }
+
+            override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
+                filteredItems.clear()
+                if (results?.values is List<*>) {
+                    filteredItems.addAll(results.values as List<AllCourseForStudentQuery.Course>)
+                }
+                notifyDataSetChanged()
+            }
+        }
+    }
+
 }
