@@ -17,6 +17,7 @@ import com.student.competishun.data.model.TopicContentModel
 import com.student.competishun.R
 import com.student.competishun.ui.fragment.BottomSheetDeletePDFsFragment
 import com.student.competishun.ui.fragment.BottomSheetDeleteVideoFragment
+import com.student.competishun.ui.fragment.DownloadFragment
 import com.student.competishun.ui.main.PdfViewerActivity
 import com.student.competishun.utils.OnDeleteClickListener
 import com.student.competishun.utils.SharedPreferencesManager
@@ -30,7 +31,9 @@ class DownloadedItemAdapter(
     private val context: Context,
     private val items: MutableList<TopicContentModel>,
     private val videoClickListener: OnVideoClickListener,
-    private val fragmentManager: FragmentManager
+    private val fragmentManager: FragmentManager,
+    private val fragment: DownloadFragment
+
 ) : RecyclerView.Adapter<DownloadedItemAdapter.ViewHolder>(), OnDeleteClickListener {
 
     fun updateItems(newItems: List<TopicContentModel>) {
@@ -72,7 +75,10 @@ class DownloadedItemAdapter(
                 file.delete()
             }
 
+            fragment.loadDownloadedItems()
+
         }
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -84,7 +90,7 @@ class DownloadedItemAdapter(
         val item = items[position]
         holder.studyMaterial.text = item.lecture
 
-        // Handle PDF item
+
         if (item.fileType == "PDF") {
             holder.lecTime.text = item.lecturerName
             holder.lecTime.setCompoundDrawablesWithIntrinsicBounds(R.drawable.download_person, 0, 0, 0)

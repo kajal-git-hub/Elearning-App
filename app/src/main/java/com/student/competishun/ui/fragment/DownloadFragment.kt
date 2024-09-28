@@ -28,9 +28,7 @@ import java.io.File
 @AndroidEntryPoint
 class DownloadFragment : Fragment(),DownloadedItemAdapter.OnVideoClickListener {
 
-
     private lateinit var viewModel: VideourlViewModel
-
     private lateinit var binding: FragmentDownloadBinding
     private lateinit var adapter: DownloadedItemAdapter
     private var allDownloadedItems: List<TopicContentModel> = emptyList()
@@ -81,7 +79,7 @@ class DownloadFragment : Fragment(),DownloadedItemAdapter.OnVideoClickListener {
         })
     }
 
-    private fun loadDownloadedItems() {
+    fun loadDownloadedItems() {
         val sharedPreferencesManager = SharedPreferencesManager(requireActivity())
         allDownloadedItems = sharedPreferencesManager.getDownloadedItems()
         Log.d("allDownloadedItems", allDownloadedItems.toString())
@@ -115,7 +113,7 @@ class DownloadFragment : Fragment(),DownloadedItemAdapter.OnVideoClickListener {
 
     private fun updateRecyclerView(items: List<TopicContentModel>) {
         adapter = DownloadedItemAdapter(requireContext(),
-            items.toMutableList(),this,parentFragmentManager)
+            items.toMutableList(),this,parentFragmentManager,this)
         binding.rvDownloads.adapter = adapter
     }
 
@@ -134,29 +132,18 @@ class DownloadFragment : Fragment(),DownloadedItemAdapter.OnVideoClickListener {
         }
     }
 
-//    override fun onResume() {
-//        super.onResume()
-//        requireActivity().window.setFlags(
-//            WindowManager.LayoutParams.FLAG_SECURE,
-//            WindowManager.LayoutParams.FLAG_SECURE
-//        )
-//    }
-//    override fun onResume() {
-//        super.onResume()
-//        // Get the updated list from SharedPreferences
-//        val sharedPreferencesManager = SharedPreferencesManager(requireContext())
-//        val updatedItems = sharedPreferencesManager.getDownloadedItems()
-//        adapter.updateItems(updatedItems)
-//    }
 
-
-
-
-
+    override fun onResume() {
+        super.onResume()
+        requireActivity().window.setFlags(
+            WindowManager.LayoutParams.FLAG_SECURE,
+            WindowManager.LayoutParams.FLAG_SECURE
+        )
+    }
 
     override fun onPause() {
         super.onPause()
-//        requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
+        requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
 
     }
 }
