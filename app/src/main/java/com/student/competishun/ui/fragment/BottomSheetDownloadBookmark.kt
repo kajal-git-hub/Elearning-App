@@ -60,17 +60,31 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
         binding.tvDownload.setOnClickListener {
             itemDetails?.let { details ->
                 Log.d("ItemDetails", details.toString())
-                storeItemInPreferences(details)
-                if(details.fileType=="VIDEO")
-                {
-                     downloadVideo(requireContext(),details.url,details.topicName)
+
+                val sharedPreferencesManager = SharedPreferencesManager(requireActivity())
+                val downloadedVideos = sharedPreferencesManager.getDownloadedVideos()
+                val downloadedPdfs = sharedPreferencesManager.getDownloadedPdfs()
+
+                // Check download limits
+                if (details.fileType == "VIDEO" && downloadedVideos.size >= 8) {
+                    Toast.makeText(requireContext(), "You can only download up to 8 videos. Please delete some.", Toast.LENGTH_SHORT).show()
+                    return@let
+                } else if (details.fileType == "PDF" && downloadedPdfs.size >= 8) {
+                    Toast.makeText(requireContext(), "You can only download up to 8 PDFs. Please delete some.", Toast.LENGTH_SHORT).show()
+                    return@let
                 }
-                else{
+
+                storeItemInPreferences(details)
+
+                if (details.fileType == "VIDEO") {
+                    downloadVideo(requireContext(), details.url, details.topicName)
+                } else {
                     downloadPdf(details)
                 }
                 dismiss()
             }
         }
+
     }
 
     private fun storeItemInPreferences(item: TopicContentModel) {
@@ -82,7 +96,7 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
         Log.d("DownloadPdf", "Starting download for: ${details.url} with topic name: ${details.topicName}")
 
         lifecycleScope.launch {
-            val pdfUrl = details.url // Assuming details.url contains the PDF URL
+            val pdfUrl = details.url
             val fileName = "${details.topicName}.${details.fileType.lowercase()}"
 
             withContext(Dispatchers.IO) {

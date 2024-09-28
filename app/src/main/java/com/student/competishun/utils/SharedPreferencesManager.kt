@@ -59,6 +59,13 @@ class SharedPreferencesManager(context: Context) {
         }
         return items
     }
+    fun getDownloadedVideos(): List<TopicContentModel> {
+        return getDownloadedItems().filter { it.fileType == "VIDEO" }
+    }
+
+    fun getDownloadedPdfs(): List<TopicContentModel> {
+        return getDownloadedItems().filter { it.fileType == "PDF" }
+    }
 
 
     fun deleteDownloadedItem(item: TopicContentModel) {
