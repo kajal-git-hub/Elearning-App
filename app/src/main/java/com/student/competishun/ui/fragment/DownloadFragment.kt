@@ -49,10 +49,9 @@ class DownloadFragment : Fragment(),DownloadedItemAdapter.OnVideoClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-       binding.backIconDownloads.setOnClickListener {
-           requireActivity().onBackPressedDispatcher.onBackPressed()
-       }
-
+        binding.TopViewDownloads.setNavigationOnClickListener {
+            findNavController().navigateUp()
+        }
 
         (activity as? HomeActivity)?.showBottomNavigationView(false)
         (activity as? HomeActivity)?.showFloatingButton(false)
@@ -94,16 +93,22 @@ class DownloadFragment : Fragment(),DownloadedItemAdapter.OnVideoClickListener {
         binding.studentTabLayout.getTabAt(0)?.text = "PDFs (${pdfItemsSize})"
         binding.studentTabLayout.getTabAt(1)?.text = "Videos (${videoItemsSize})"
 
-        showPdfItems()
+        if (binding.studentTabLayout.selectedTabPosition == 0) {
+            updateRecyclerView(pdfItems)
+        } else {
+            updateRecyclerView(videoItems)
+        }
+
+//        showPdfItems()
     }
 
-    private fun showPdfItems() {
+     fun showPdfItems() {
         val pdfItems = allDownloadedItems.filter { it.fileType == "PDF" }
 
         updateRecyclerView(pdfItems)
     }
 
-    private fun showVideoItems() {
+     fun showVideoItems() {
         val videoItems = allDownloadedItems.filter { it.fileType == "VIDEO" }
         updateRecyclerView(videoItems)
     }
