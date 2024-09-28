@@ -36,9 +36,28 @@ class DownloadedItemAdapter(
 
 ) : RecyclerView.Adapter<DownloadedItemAdapter.ViewHolder>(), OnDeleteClickListener {
 
+    private var filteredItems: MutableList<TopicContentModel> = items.toMutableList()
+
+
     fun updateItems(newItems: List<TopicContentModel>) {
         items.clear()
         items.addAll(newItems)
+        filteredItems.clear()
+        filteredItems.addAll(newItems)
+        notifyDataSetChanged()
+    }
+    fun filter(query: String?) {
+        filteredItems.clear()
+        if (query.isNullOrEmpty()) {
+            filteredItems.addAll(items)
+        } else {
+            val filterPattern = query.lowercase().trim()
+            filteredItems.addAll(items.filter { item ->
+                item.topicName.lowercase().contains(filterPattern) ||
+                        item.lecture.lowercase().contains(filterPattern) ||
+                        item.topicDescription.lowercase().contains(filterPattern)
+            })
+        }
         notifyDataSetChanged()
     }
 
@@ -87,7 +106,7 @@ class DownloadedItemAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = items[position]
+        val item = filteredItems[position]
         holder.studyMaterial.text = item.lecture
 
 
@@ -139,7 +158,7 @@ class DownloadedItemAdapter(
     }
 
     override fun getItemCount(): Int {
-        return items.size
+        return filteredItems.size
     }
 
     private fun formatTimeDuration(totalDuration: Int): String {
