@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.fragment.BottomSheetBookmarkDeleteDownload">
+
+    <ImageView
+        android:id="@+id/ig_notch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/notch"
+        android:layout_marginTop="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tv_More_Options"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="More Options"
+        android:textColor="#2B2829"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ig_notch"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/nunito"
+        android:layout_marginStart="@dimen/_16dp"
+        android:textSize="@dimen/_16sp"/>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tv_bm_download_thing"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Download"
+        android:textColor="@color/black_2B2829"
+        android:fontFamily="@font/nunito"
+        android:layout_marginStart="@dimen/_16dp"
+        android:drawableStart="@drawable/download"
+        android:drawablePadding="@dimen/_10dp"
+        android:layout_marginTop="@dimen/_28dp"
+        android:textSize="@dimen/_16sp"
+        android:lineHeight="24dp"
+        android:layout_marginBottom="40dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_More_Options" />
+
+
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tv_bm_delete_thing"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Delete"
+        android:textColor="#E25B53"
+        android:fontFamily="@font/nunito"
+        android:layout_marginStart="@dimen/_16dp"
+        android:drawableStart="@drawable/delete_pdf_icon"
+        android:drawablePadding="@dimen/_10dp"
+        android:layout_marginTop="@dimen/_28dp"
+        android:textSize="@dimen/_16sp"
+        android:lineHeight="24dp"
+        android:layout_marginBottom="40dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_bm_download_thing" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

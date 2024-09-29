@@ -55,6 +55,10 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
 
         binding.tvBookmark.setOnClickListener {
             // Bookmark functionality
+            itemDetails?.let { details ->
+                storeItemInPreferencesBm(details)
+                dismiss()
+            }
         }
 
         binding.tvDownload.setOnClickListener {
@@ -85,6 +89,10 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
             }
         }
 
+    }
+    private fun storeItemInPreferencesBm(item: TopicContentModel) {
+        val sharedPreferencesManager = SharedPreferencesManager(requireActivity())
+        sharedPreferencesManager.saveDownloadedItemBm(item)
     }
 
     private fun storeItemInPreferences(item: TopicContentModel) {
