@@ -60,7 +60,7 @@ class BookMarkFragment : Fragment()  ,BookMarkAdapter.OnVideoClickListener{
         val pdfItems = allDownloadedItems.filter { it.fileType == "PDF" }
 //        updateRecyclerView(pdfItems)
         bookmarkAdapter.updateItems(pdfItems)
-        checkEmptyState() // Check for empty state
+//        checkEmptyState() // Check for empty state
 
     }
 
@@ -68,7 +68,7 @@ class BookMarkFragment : Fragment()  ,BookMarkAdapter.OnVideoClickListener{
         val videoItems = allDownloadedItems.filter { it.fileType == "VIDEO" }
 //        updateRecyclerView(videoItems)
         bookmarkAdapter.updateItems(videoItems)
-        checkEmptyState() // Check for empty state
+//        checkEmptyState() // Check for empty state
 
 
     }
@@ -87,14 +87,14 @@ class BookMarkFragment : Fragment()  ,BookMarkAdapter.OnVideoClickListener{
         binding.BookmarkTabLayout.getTabAt(1)?.text = "Videos ($videoItemsSize)"
 
         updateRecyclerView(pdfItems)
-        checkEmptyState()
+//        checkEmptyState()
     }
     private fun updateRecyclerView(items: List<TopicContentModel>) {
         bookmarkAdapter = BookMarkAdapter(
             requireContext(),
             items.toMutableList(),  parentFragmentManager,this,this)
         binding.rvBookmark.adapter = bookmarkAdapter
-        checkEmptyState() // Check for empty state after updating the adapter
+//        checkEmptyState() // Check for empty state after updating the adapter
 
     }
     private fun setupTabLayout() {

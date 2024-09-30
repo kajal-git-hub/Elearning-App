@@ -57,7 +57,7 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
             // Bookmark functionality
             itemDetails?.let { details ->
                 storeItemInPreferencesBm(details)
-                dismiss()
+//                dismiss()
             }
         }
 
@@ -85,7 +85,7 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
                 } else {
                     downloadPdf(details)
                 }
-                dismiss()
+//                dismiss()
             }
         }
 
@@ -102,6 +102,8 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
 
     private fun downloadPdf(details: TopicContentModel) {
         Log.d("DownloadPdf", "Starting download for: ${details.url} with topic name: ${details.topicName}")
+
+        Toast.makeText(requireContext(), "Download started....", Toast.LENGTH_SHORT).show()
 
         lifecycleScope.launch {
             val pdfUrl = details.url
@@ -136,6 +138,7 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
                         if (isAdded) {
                             Log.d("DownloadPdf", "Download success, showing toast.")
                             Toast.makeText(requireContext(), "PDF Download completed: $fileName", Toast.LENGTH_SHORT).show()
+                            dismiss()
                         }
                     }
 
@@ -160,7 +163,9 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
     private fun downloadVideo(context: Context, videoUrl: String, name: String) {
         Log.d("DownloadVideo", "Starting download for: $videoUrl with name: $name")
 
-       lifecycleScope.launch {
+        Toast.makeText(context, "Download started....", Toast.LENGTH_SHORT).show()
+
+        lifecycleScope.launch {
             try {
                 withContext(Dispatchers.IO) {
                     val fileName = "$name.mp4"
@@ -186,6 +191,7 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
                 withContext(Dispatchers.Main) {
                     Log.d("DownloadVideo", "Download success, showing toast.")
                     Toast.makeText(context, "Download successful", Toast.LENGTH_SHORT).show()
+                    dismiss()
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
