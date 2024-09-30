@@ -5,9 +5,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.student.competishun.R
+import com.student.competishun.data.model.VideoQualityItem
 import com.student.competishun.databinding.FragmentBottomSheetVideoQualityBinding
+import com.student.competishun.ui.adapter.SelectExamAdapter
+import com.student.competishun.ui.adapter.VideoQualityAdapter
 
 class BottomSheetVideoQualityFragment : BottomSheetDialogFragment() {
 
@@ -24,6 +29,18 @@ class BottomSheetVideoQualityFragment : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val videoQualityList = listOf(
+            VideoQualityItem("360p", "48.5 MB"),
+            VideoQualityItem("480p", "72.8 MB"),
+            VideoQualityItem("720p", "104.5 MB"),
+        )
+
+
+        binding.rvVideoQualityTypes.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = VideoQualityAdapter(context, videoQualityList)
+        }
 
 
     }
