@@ -93,6 +93,9 @@ class SharedPreferencesManager(context: Context) {
     fun deleteDownloadedItem(item: TopicContentModel) {
         sharedPreferences.edit().remove(KEY_DOWNLOADED_ITEM_PREFIX + item.id).apply()
     }
+    fun deleteDownloadedItemBm(item: TopicContentModel) {
+        sharedPreferences.edit().remove(KEY_DOWNLOADED_ITEM_BM_PREFIX + item.id).apply()
+    }
 
 
 

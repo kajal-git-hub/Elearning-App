@@ -15,17 +15,22 @@ import androidx.recyclerview.widget.RecyclerView
 import com.student.competishun.R
 import com.student.competishun.data.model.TopicContentModel
 import com.student.competishun.ui.adapter.DownloadedItemAdapter.OnVideoClickListener
+import com.student.competishun.ui.fragment.BookMarkFragment
 import com.student.competishun.ui.fragment.BottomSheetBookmarkDeleteDownload
+import com.student.competishun.ui.fragment.DownloadFragment
 import com.student.competishun.ui.main.PdfViewerActivity
+import com.student.competishun.utils.SharedPreferencesManager
 import java.io.File
 
 class BookMarkAdapter(
     private val context: Context,
     private val items: MutableList<TopicContentModel>,
     private val fragmentManager: FragmentManager,
-    private val videoClickListener: OnVideoClickListener
+    private val videoClickListener: OnVideoClickListener,
+    private val fragment: BookMarkFragment
 
-    ) : RecyclerView.Adapter<BookMarkAdapter.ViewHolder>() {
+
+) : RecyclerView.Adapter<BookMarkAdapter.ViewHolder>(),BottomSheetBookmarkDeleteDownload.OnDeleteItemListener {
 
     interface OnVideoClickListener {
         fun onVideoClick(folderContentId: String, name: String)
@@ -58,8 +63,8 @@ class BookMarkAdapter(
             holder.forRead.setImageResource(R.drawable.frame_1707481707_1_)
 
             holder.dotExtraInfoDownload.setOnClickListener {
-                val bottomSheet = BottomSheetBookmarkDeleteDownload()
-//                bottomSheet.setListener(this, position,item)
+                val bottomSheet = BottomSheetBookmarkDeleteDownload(this)
+                bottomSheet.setItem(position, item)
                 bottomSheet.show(fragmentManager, bottomSheet.tag)
             }
         } else {
@@ -72,8 +77,8 @@ class BookMarkAdapter(
             holder.ivBookShadow.setImageResource(R.drawable.ellipse_17956)
 
             holder.dotExtraInfoDownload.setOnClickListener {
-                val bottomSheet = BottomSheetBookmarkDeleteDownload()
-//                bottomSheet.setListener(this, position,item)
+                val bottomSheet = BottomSheetBookmarkDeleteDownload(this)
+                bottomSheet.setItem(position, item)
                 bottomSheet.show(fragmentManager, bottomSheet.tag)
             }
         }
@@ -92,6 +97,19 @@ class BookMarkAdapter(
 
         }
 
+    }
+    override fun onDeleteItem(position: Int,item:TopicContentModel) {
+
+        val sharedPreferencesManager = SharedPreferencesManager(context)
+        sharedPreferencesManager.deleteDownloadedItemBm(item)
+
+
+        items.removeAt(position) // Remove the item from the list
+        notifyItemRemoved(position) // Notify the adapter about the removed item
+        notifyItemRangeChanged(position, items.size) // Optional: update the range of the RecyclerView
+
+
+        fragment.loadDownloadedItems()
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -122,4 +140,6 @@ class BookMarkAdapter(
             }
         }
     }
+
+
 }

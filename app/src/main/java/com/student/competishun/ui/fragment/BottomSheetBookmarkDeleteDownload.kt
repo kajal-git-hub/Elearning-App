@@ -8,11 +8,25 @@ import android.view.ViewGroup
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.student.competishun.R
+import com.student.competishun.data.model.TopicContentModel
 import com.student.competishun.databinding.FragmentBottomSheetBookmarkDeleteDownloadBinding
 
-class BottomSheetBookmarkDeleteDownload : BottomSheetDialogFragment() {
-
+class BottomSheetBookmarkDeleteDownload(
+    private val listener: OnDeleteItemListener,
+) : BottomSheetDialogFragment() {
+    private var position: Int = -1
+    private lateinit var item: TopicContentModel
     private lateinit var binding : FragmentBottomSheetBookmarkDeleteDownloadBinding
+
+
+    fun setItem(position: Int, item: TopicContentModel) {
+        this.position = position
+        this.item = item
+    }
+
+    interface OnDeleteItemListener {
+        fun onDeleteItem(position: Int,item:TopicContentModel)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +49,8 @@ class BottomSheetBookmarkDeleteDownload : BottomSheetDialogFragment() {
             bottomSheetDownloadOptions.show(childFragmentManager, bottomSheetDownloadOptions.tag)
         }
         binding.tvBmDeleteThing.setOnClickListener {
-
+            listener.onDeleteItem(position,item)
+            dismiss()
         }
 
     }

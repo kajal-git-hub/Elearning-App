@@ -81,7 +81,7 @@ class BookMarkFragment : Fragment()  ,BookMarkAdapter.OnVideoClickListener{
     private fun updateRecyclerView(items: List<TopicContentModel>) {
         bookmarkAdapter = BookMarkAdapter(
             requireContext(),
-            items.toMutableList(),  parentFragmentManager,this)
+            items.toMutableList(),  parentFragmentManager,this,this)
         binding.rvBookmark.adapter = bookmarkAdapter
     }
     private fun setupTabLayout() {
