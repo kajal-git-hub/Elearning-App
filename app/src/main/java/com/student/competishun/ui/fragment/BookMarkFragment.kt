@@ -27,6 +27,8 @@ class BookMarkFragment : Fragment()  ,BookMarkAdapter.OnVideoClickListener{
     private lateinit var bookmarkAdapter: BookMarkAdapter
     private var pdfItemsSize = ""
     private var videoItemsSize = ""
+    private lateinit var emptyStateLayout: View
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,6 +42,8 @@ class BookMarkFragment : Fragment()  ,BookMarkAdapter.OnVideoClickListener{
         super.onViewCreated(view, savedInstanceState)
         (activity as? HomeActivity)?.showBottomNavigationView(false)
         (activity as? HomeActivity)?.showFloatingButton(false)
+
+        emptyStateLayout = binding.clEmptySearchBookmark
 
         binding.TopViewBookMark.setOnClickListener {
             findNavController().navigateUp()
@@ -56,12 +60,16 @@ class BookMarkFragment : Fragment()  ,BookMarkAdapter.OnVideoClickListener{
         val pdfItems = allDownloadedItems.filter { it.fileType == "PDF" }
 //        updateRecyclerView(pdfItems)
         bookmarkAdapter.updateItems(pdfItems)
+        checkEmptyState() // Check for empty state
+
     }
 
     private fun showVideoItems() {
         val videoItems = allDownloadedItems.filter { it.fileType == "VIDEO" }
 //        updateRecyclerView(videoItems)
         bookmarkAdapter.updateItems(videoItems)
+        checkEmptyState() // Check for empty state
+
 
     }
     fun loadDownloadedItems() {
@@ -79,12 +87,15 @@ class BookMarkFragment : Fragment()  ,BookMarkAdapter.OnVideoClickListener{
         binding.BookmarkTabLayout.getTabAt(1)?.text = "Videos ($videoItemsSize)"
 
         updateRecyclerView(pdfItems)
+        checkEmptyState()
     }
     private fun updateRecyclerView(items: List<TopicContentModel>) {
         bookmarkAdapter = BookMarkAdapter(
             requireContext(),
             items.toMutableList(),  parentFragmentManager,this,this)
         binding.rvBookmark.adapter = bookmarkAdapter
+        checkEmptyState() // Check for empty state after updating the adapter
+
     }
     private fun setupTabLayout() {
         binding.BookmarkTabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
@@ -101,6 +112,13 @@ class BookMarkFragment : Fragment()  ,BookMarkAdapter.OnVideoClickListener{
             override fun onTabReselected(tab: TabLayout.Tab?) {}
         })
     }
+
+    private fun checkEmptyState() {
+        val isEmpty = bookmarkAdapter.itemCount == 0
+        binding.rvBookmark.visibility = if (isEmpty) View.GONE else View.VISIBLE
+        emptyStateLayout.visibility = if (isEmpty) View.VISIBLE else View.GONE
+    }
+
     override fun onVideoClick(folderContentId: String, name: String) {
         playVideo(folderContentId, name)
     }
