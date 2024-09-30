@@ -44,6 +44,10 @@ class BookMarkFragment : Fragment()  ,BookMarkAdapter.OnVideoClickListener{
         binding.backIconBookmark.setOnClickListener {
             findNavController().navigateUp()
         }
+        binding.screenTitleBookmark.setOnClickListener {
+            findNavController().navigateUp()
+        }
+
 
         binding.rvBookmark.layoutManager = LinearLayoutManager(requireContext())
 
