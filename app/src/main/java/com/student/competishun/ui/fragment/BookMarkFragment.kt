@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.tabs.TabLayout
@@ -16,8 +17,9 @@ import com.student.competishun.ui.adapter.BookMarkAdapter
 import com.student.competishun.ui.adapter.DownloadedItemAdapter
 import com.student.competishun.ui.main.HomeActivity
 import com.student.competishun.utils.SharedPreferencesManager
+import java.io.File
 
-class BookMarkFragment : Fragment() {
+class BookMarkFragment : Fragment()  ,BookMarkAdapter.OnVideoClickListener{
 
     private lateinit var binding : FragmentBookMarkBinding
     private var allDownloadedItems: List<TopicContentModel> = emptyList()
@@ -78,7 +80,8 @@ class BookMarkFragment : Fragment() {
     }
     private fun updateRecyclerView(items: List<TopicContentModel>) {
         bookmarkAdapter = BookMarkAdapter(
-            items.toMutableList(),  parentFragmentManager)
+            requireContext(),
+            items.toMutableList(),  parentFragmentManager,this)
         binding.rvBookmark.adapter = bookmarkAdapter
     }
     private fun setupTabLayout() {
@@ -95,6 +98,24 @@ class BookMarkFragment : Fragment() {
             override fun onTabUnselected(tab: TabLayout.Tab?) {}
             override fun onTabReselected(tab: TabLayout.Tab?) {}
         })
+    }
+    override fun onVideoClick(folderContentId: String, name: String) {
+        playVideo(folderContentId, name)
+    }
+
+    private fun playVideo(folderContentId: String, name: String) {
+        val videoFileURL = File(requireContext().filesDir, "$name.mp4").absolutePath
+
+        if (videoFileURL.isNotEmpty()) {
+            val bundle = Bundle().apply {
+                putString("url", videoFileURL)
+                putString("url_name", name)
+                putString("ContentId", folderContentId)
+            }
+            findNavController().navigate(R.id.mediaFragment, bundle)
+        } else {
+            Toast.makeText(requireContext(), "Video file not found", Toast.LENGTH_SHORT).show()
+        }
     }
 
 }

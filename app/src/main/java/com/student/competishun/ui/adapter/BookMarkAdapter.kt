@@ -1,23 +1,38 @@
 package com.student.competishun.ui.adapter
 
+import android.content.Context
+import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat.startActivity
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import com.student.competishun.R
 import com.student.competishun.data.model.TopicContentModel
+import com.student.competishun.ui.adapter.DownloadedItemAdapter.OnVideoClickListener
 import com.student.competishun.ui.fragment.BottomSheetBookmarkDeleteDownload
+import com.student.competishun.ui.main.PdfViewerActivity
+import java.io.File
 
 class BookMarkAdapter(
+    private val context: Context,
     private val items: MutableList<TopicContentModel>,
     private val fragmentManager: FragmentManager,
-) : RecyclerView.Adapter<BookMarkAdapter.ViewHolder>() {
+    private val videoClickListener: OnVideoClickListener
+
+    ) : RecyclerView.Adapter<BookMarkAdapter.ViewHolder>() {
+
+    interface OnVideoClickListener {
+        fun onVideoClick(folderContentId: String, name: String)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.bookmark_item_pdfs, parent, false)
         return ViewHolder(view)
@@ -66,10 +81,17 @@ class BookMarkAdapter(
         holder.lecTime.text = item.lecturerName
         holder.topicName.text = item.topicName
         holder.topicDescription.text = item.topicDescription
-//
-//        holder.forRead.setOnClickListener { onPdfClick(item) }
-//        holder.forVideo.setOnClickListener { onVideoClick(item) }
-//        holder.dotExtraInfoDownload.setOnClickListener { onMenuClick(item) }
+
+        holder.forRead.setOnClickListener {
+            val intent = Intent(context, PdfViewerActivity::class.java)
+            intent.putExtra("PDF_URL", item.url)
+            context.startActivity(intent)
+        }
+        holder.forVideo.setOnClickListener {
+            videoClickListener.onVideoClick(item.id, item.topicName)
+
+        }
+
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

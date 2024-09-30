@@ -11,16 +11,21 @@ import com.student.competishun.databinding.FragmentBottomSheetVideoQualityBindin
 
 class BottomSheetVideoQualityFragment : BottomSheetDialogFragment() {
 
-    private val binding by lazy {
-        FragmentBottomSheetVideoQualityBinding.inflate(layoutInflater)
-    }
+    private lateinit var binding : FragmentBottomSheetVideoQualityBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
+
+        binding = FragmentBottomSheetVideoQualityBinding.inflate(inflater,container,false)
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+
     }
 
 }
