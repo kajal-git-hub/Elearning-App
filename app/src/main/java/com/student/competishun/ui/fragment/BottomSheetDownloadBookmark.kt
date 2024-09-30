@@ -103,6 +103,15 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
     private fun downloadPdf(details: TopicContentModel) {
         Log.d("DownloadPdf", "Starting download for: ${details.url} with topic name: ${details.topicName}")
 
+        val fileName = "${details.topicName}.${details.fileType.lowercase()}"
+        val pdfFile = File(requireContext().filesDir, fileName)
+
+        if (pdfFile.exists()) {
+            Toast.makeText(requireContext(), "PDF already downloaded Choose Other", Toast.LENGTH_SHORT).show()
+            dismiss()
+            return
+        }
+
         Toast.makeText(requireContext(), "Download started....", Toast.LENGTH_SHORT).show()
 
         lifecycleScope.launch {
@@ -162,6 +171,15 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
 
     private fun downloadVideo(context: Context, videoUrl: String, name: String) {
         Log.d("DownloadVideo", "Starting download for: $videoUrl with name: $name")
+
+        val fileName = "$name.mp4"
+        val videoFile = File(context.filesDir, fileName)
+
+        if (videoFile.exists()) {
+            Toast.makeText(context, "Video already downloaded choose Other", Toast.LENGTH_SHORT).show()
+            dismiss()
+            return
+        }
 
         Toast.makeText(context, "Download started....", Toast.LENGTH_SHORT).show()
 
