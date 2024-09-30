@@ -166,8 +166,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/_16sp"
                     app:layout_constraintTop_toBottomOf="@+id/cl_SelectYear"
-                    app:layout_constraintStart_toStartOf="parent"
-                    >
+                    app:layout_constraintStart_toStartOf="parent">
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/mb_cancel"
