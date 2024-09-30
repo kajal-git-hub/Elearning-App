@@ -32,8 +32,9 @@ class BottomSheetVideoQualityFragment : BottomSheetDialogFragment() {
 
         val videoQualityList = listOf(
             VideoQualityItem("360p", "48.5 MB"),
-            VideoQualityItem("480p", "72.8 MB"),
-            VideoQualityItem("720p", "104.5 MB"),
+            VideoQualityItem("480p", "480.5 MB"),
+            VideoQualityItem("720p", "1.29 GB"),
+            VideoQualityItem("1080p", "2.45 GB"),
         )
 
 

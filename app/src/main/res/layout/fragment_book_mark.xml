@@ -7,29 +7,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.fragment.BookMarkFragment">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/TopView_Downloads"
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/TopView_bookMark"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="?attr/actionBarSize"
         android:elevation="@dimen/_4dp"
+        app:menu="@menu/search_bar_white"
+        app:navigationIcon="@drawable/arrow_left_white"
         android:background="@drawable/gradiant_bg_bookmark"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
-            android:id="@+id/back_icon_bookmark"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_16dp"
-            android:layout_marginVertical="@dimen/_20dp"
-            android:src="@drawable/arrow_left_white"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/screen_title_bookmark"
+            android:id="@+id/screen_bm_title_bookmark"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Bookmarks"
@@ -37,32 +29,19 @@
             android:textStyle="bold"
             android:textSize="@dimen/_18sp"
             android:textColor="#ffffff"
-            android:layout_marginStart="12dp"
-            android:layout_marginVertical="@dimen/_16dp"
-            app:layout_constraintStart_toEndOf="@id/back_icon_bookmark"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" />
 
 
-        <ImageView
-            android:id="@+id/search_icon_bookmark"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/search_normal_white"
-            android:layout_marginEnd="@dimen/_20dp"
-            android:layout_marginVertical="@dimen/_20dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.appbar.MaterialToolbar>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_tabLayout_Bookmark"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
-        app:layout_constraintTop_toBottomOf="@id/TopView_Downloads"
+        app:layout_constraintTop_toBottomOf="@id/TopView_bookMark"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 

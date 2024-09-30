@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.widget.SearchView
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.tabs.TabLayout
@@ -24,7 +25,6 @@ class BookMarkFragment : Fragment()  ,BookMarkAdapter.OnVideoClickListener{
     private lateinit var binding : FragmentBookMarkBinding
     private var allDownloadedItems: List<TopicContentModel> = emptyList()
     private lateinit var bookmarkAdapter: BookMarkAdapter
-
     private var pdfItemsSize = ""
     private var videoItemsSize = ""
 
@@ -41,29 +41,27 @@ class BookMarkFragment : Fragment()  ,BookMarkAdapter.OnVideoClickListener{
         (activity as? HomeActivity)?.showBottomNavigationView(false)
         (activity as? HomeActivity)?.showFloatingButton(false)
 
-        binding.backIconBookmark.setOnClickListener {
+        binding.TopViewBookMark.setOnClickListener {
             findNavController().navigateUp()
         }
-        binding.screenTitleBookmark.setOnClickListener {
-            findNavController().navigateUp()
-        }
-
 
         binding.rvBookmark.layoutManager = LinearLayoutManager(requireContext())
 
-
+        setupToolbar()
         setupTabLayout()
         loadDownloadedItems()
 
     }
     private fun showPdfItems() {
         val pdfItems = allDownloadedItems.filter { it.fileType == "PDF" }
-        updateRecyclerView(pdfItems)
+//        updateRecyclerView(pdfItems)
+        bookmarkAdapter.updateItems(pdfItems)
     }
 
     private fun showVideoItems() {
         val videoItems = allDownloadedItems.filter { it.fileType == "VIDEO" }
-        updateRecyclerView(videoItems)
+//        updateRecyclerView(videoItems)
+        bookmarkAdapter.updateItems(videoItems)
 
     }
     fun loadDownloadedItems() {
@@ -120,6 +118,18 @@ class BookMarkFragment : Fragment()  ,BookMarkAdapter.OnVideoClickListener{
         } else {
             Toast.makeText(requireContext(), "Video file not found", Toast.LENGTH_SHORT).show()
         }
+    }
+    private fun setupToolbar() {
+        val searchView = binding.TopViewBookMark.menu.findItem(R.id.action_search_download)?.actionView as? SearchView
+        searchView?.queryHint = "Search Pdf/Video"
+        searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean = false
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                bookmarkAdapter.filter(newText)
+                return true
+            }
+        })
     }
 
 }
