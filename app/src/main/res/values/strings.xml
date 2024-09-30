@@ -96,5 +96,6 @@
     <string name="note_txt">Download up to total <font color="#FF7A28">8 videos &amp; PDFs</font> at once! \nTo add more, just delete some of your previous \ndownloads. Happy learning!</string>
 
     <string name="download_success"><font color="#2B2829"><b>“Introduction to Basic Maths”</b></font> <font color="#726C6C"><b>is downloaded successfully</b></font></string>
+    <string name="bookmark_success"><font color="#2B2829"><b>“Introduction to Basic Maths”</b></font> <font color="#726C6C"><b>is bookmarked successfully</b></font></string>
 
 </resources>

@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/f6f6ff"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.fragment.StudyMaterialDetailsFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/TopView_StudyMaterial"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/back_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_16dp"
+            android:layout_marginVertical="@dimen/_20dp"
+            android:src="@drawable/arrow_left"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/clStudyMaterialDetailsView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_4dp"
+        android:background="@color/white"
+        app:layout_constraintTop_toBottomOf="@id/TopView_StudyMaterial"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_study_material_inner_book"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_16dp"
+            android:layout_marginHorizontal="@dimen/_16dp"
+            android:background="@drawable/background_study_material_material_book"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <ImageView
+                android:id="@+id/iv_subject_book_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/iv_studeymaterialdetails"
+                android:layout_marginTop="@dimen/_16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_topic_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Introduction to Basic Maths"
+            android:fontFamily="@font/nunito"
+            android:textColor="#070519"
+            android:textSize="@dimen/_16sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cl_study_material_inner_book"
+            android:layout_marginTop="@dimen/_16dp"
+            android:layout_marginStart="@dimen/_16dp"/>
+
+        <com.student.competishun.utils.ExpandableTextView
+            android:id="@+id/tv_topic_desc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/nunito"
+            android:textColor="#726C6C"
+            android:textSize="@dimen/_14sp"
+            android:textStyle="normal"
+            android:maxLines="2"
+            android:text="Topics discussed in this video: types of relations and functions, Inverse trigonometric function..."
+            android:layout_marginHorizontal="@dimen/_16dp"
+            android:layout_marginTop="@dimen/_8dp"
+            app:layout_constraintTop_toBottomOf="@id/tv_topic_name"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/clBtnBookmarkFolder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_16dp"
+            android:layout_marginVertical="@dimen/_16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_topic_desc"
+            app:layout_constraintStart_toStartOf="parent"
+            android:background="@drawable/bg_bookmark_and_downloads">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tvBtnBookmark"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Bookmark"
+                android:fontFamily="@font/nunito"
+                android:textStyle="bold"
+                android:textSize="@dimen/_12sp"
+                android:drawableStart="@drawable/baseline_bookmark"
+                android:drawablePadding="@dimen/_8dp"
+                android:textAlignment="center"
+                android:textColor="#2B2829"
+                android:layout_marginVertical="@dimen/_8dp"
+                android:layout_marginHorizontal="@dimen/_16dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/clBtnDownloadFolder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_16dp"
+            android:layout_marginVertical="@dimen/_16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_topic_desc"
+            app:layout_constraintStart_toEndOf="@id/clBtnBookmarkFolder"
+            android:background="@drawable/bg_bookmark_and_downloads">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tvBtnDownload"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Download"
+                android:fontFamily="@font/nunito"
+                android:textStyle="bold"
+                android:textSize="@dimen/_12sp"
+                android:drawableStart="@drawable/baseline_download"
+                android:drawablePadding="@dimen/_8dp"
+                android:textAlignment="center"
+                android:textColor="#2B2829"
+                android:layout_marginVertical="@dimen/_8dp"
+                android:layout_marginHorizontal="@dimen/_16dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/clNoOfPdfs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/clStudyMaterialDetailsView"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:id="@+id/horizontal_line1"
+            android:layout_width="0dp"
+            android:layout_height="2dp"
+            android:src="@drawable/horizontal_line"
+            android:layout_marginVertical="9dp"
+            android:layout_marginStart="@dimen/_16dp"
+            app:layout_constraintEnd_toStartOf="@id/tvNoOfPdf"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tvNoOfPdf"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="34 PDFs"
+            android:fontFamily="@font/nunito"
+            android:textColor="#2B2829"
+            android:textSize="@dimen/_12sp"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:drawablePadding="@dimen/_6dp"
+            android:drawableStart="@drawable/document_text"
+            android:layout_marginHorizontal="@dimen/_16dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/horizontal_line1"
+            app:layout_constraintEnd_toStartOf="@id/horizontal_line2"/>
+
+        <ImageView
+            android:id="@+id/horizontal_line2"
+            android:layout_width="0dp"
+            android:layout_height="2dp"
+            android:layout_marginEnd="@dimen/_16dp"
+            android:layout_marginVertical="9dp"
+            android:src="@drawable/horizontal_line"
+            app:layout_constraintStart_toEndOf="@id/tvNoOfPdf"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_topic_type"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/clNoOfPdfs">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_topic_type"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_16sp"
+            android:layout_marginStart="@dimen/_16dp"
+            android:fontFamily="@font/nunito"
+            android:text="Basic Maths"
+            android:textColor="#2B2829"
+            android:textSize="@dimen/_14sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_Content_Count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_4dp"
+            android:fontFamily="@font/nunito"
+            android:text="(04)"
+            android:textColor="#2B2829"
+            android:textSize="@dimen/_14sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/tv_topic_type"
+            app:layout_constraintStart_toEndOf="@id/tv_topic_type"
+            app:layout_constraintTop_toTopOf="@id/tv_topic_type" />
+
+        <ImageView
+            android:id="@+id/down_chooseTopic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_6dp"
+            android:src="@drawable/arrow_down_black"
+            app:layout_constraintBottom_toBottomOf="@id/tv_topic_type"
+            app:layout_constraintStart_toEndOf="@id/tv_Content_Count"
+            app:layout_constraintTop_toTopOf="@id/tv_topic_type" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvStudyMaterial"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_16dp"
+        android:layout_marginTop="@dimen/_16dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:orientation="vertical"
+        tools:itemCount="5"
+        tools:listitem="@layout/study_material_item"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cl_topic_type"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
