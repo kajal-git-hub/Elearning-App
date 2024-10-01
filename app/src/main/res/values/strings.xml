@@ -96,5 +96,8 @@
     <string name="note_txt">Download up to total <font color="#FF7A28">16 videos &amp; PDFs</font> at once! \nTo add more, just delete some of your previous \ndownloads. Happy learning!</string>
 
     <string name="download_success"><font color="#2B2829"><b>“Introduction to Basic Maths”</b></font> <font color="#726C6C"><b>is downloaded successfully</b></font></string>
+    <string name="phone_no">Phone No.</string>
+    <string name="enter_no">Enter Your Number</string>
+    <string name="client_id">887693153546-mv6cfeppj49al2c2bdpainrh6begq6bi.apps.googleusercontent.com</string>
 
 </resources>
