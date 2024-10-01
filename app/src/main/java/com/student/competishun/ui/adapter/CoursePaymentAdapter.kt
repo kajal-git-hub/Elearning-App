@@ -11,8 +11,13 @@ import com.student.competishun.R
 import com.student.competishun.data.model.CoursePaymentDetails
 
 class CoursePaymentAdapter(
-    private val coursePaymentList: List<CoursePaymentDetails>
+    private var coursePaymentList: List<CoursePaymentDetails>
 ) : RecyclerView.Adapter<CoursePaymentAdapter.CoursePaymentViewHolder>() {
+
+    fun updateData(filteredList: List<CoursePaymentDetails>) {
+        this.coursePaymentList = filteredList
+        notifyDataSetChanged() // Refresh the RecyclerView
+    }
 
     class CoursePaymentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val tvPurchaseStatus: MaterialTextView = itemView.findViewById(R.id.tvPurchaseStatus)

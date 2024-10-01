@@ -10,7 +10,8 @@ import com.student.competishun.R
 
 class PurchaseStatusAdapter(
     private val context: Context,
-    private val statusList: List<PurchaseStatus>
+    private val statusList: List<PurchaseStatus>,
+    private val onStatusSelected: (String) -> Unit
 ) : RecyclerView.Adapter<PurchaseStatusAdapter.StatusViewHolder>() {
 
     class StatusViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -26,6 +27,9 @@ class PurchaseStatusAdapter(
     override fun onBindViewHolder(holder: StatusViewHolder, position: Int) {
         val status = statusList[position]
         holder.statusTextView.text = status.statusText
+        holder.itemView.setOnClickListener {
+            onStatusSelected(status.statusText)
+        }
     }
 
     override fun getItemCount(): Int = statusList.size

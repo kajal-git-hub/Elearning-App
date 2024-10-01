@@ -17,6 +17,8 @@ import com.student.competishun.ui.main.HomeActivity
 class MyPurchaseFragment : Fragment() {
     private var _binding: FragmentMyPurchaseBinding? = null
     private val binding get() = _binding!!
+    private lateinit var coursePaymentAdapter: CoursePaymentAdapter
+    private lateinit var coursePaymentList: List<CoursePaymentDetails>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,10 +49,13 @@ class MyPurchaseFragment : Fragment() {
 
         binding.rvToggleButtons.apply {
             layoutManager = LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
-            adapter = PurchaseStatusAdapter(context, statusList)
+            adapter = PurchaseStatusAdapter(context, statusList){ selectedStatus ->
+                filterPurchaseList(selectedStatus)
+
+            }
         }
 
-        val coursePaymentList = listOf(
+        coursePaymentList = listOf(
             CoursePaymentDetails(
                 "COMPLETE",
                 "Prakhar Integrated (Fast Lane-2) 2024-25",
@@ -93,12 +98,23 @@ class MyPurchaseFragment : Fragment() {
             ),
         )
 
-
+        coursePaymentAdapter = CoursePaymentAdapter(coursePaymentList)
         binding.recyclerViewPurchases.apply {
             layoutManager = LinearLayoutManager(context)
-            adapter = CoursePaymentAdapter(coursePaymentList)
+            adapter = coursePaymentAdapter
+        }
+    }
+    private fun filterPurchaseList(selectedStatus: String) {
+        val filteredList = when (selectedStatus) {
+            "All" -> coursePaymentList
+            "Successful" -> coursePaymentList.filter { it.purchaseStatus == "COMPLETE" }
+            "Failed" -> coursePaymentList.filter { it.purchaseStatus == "FAILED" }
+            "Processing" -> coursePaymentList.filter { it.purchaseStatus == "PAYMENT PROCESSING" }
+            else -> coursePaymentList
         }
 
+        // Update the adapter with the filtered list
+        coursePaymentAdapter.updateData(filteredList)
     }
 
 }
