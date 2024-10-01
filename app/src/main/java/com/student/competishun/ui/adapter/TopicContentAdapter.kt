@@ -43,7 +43,6 @@ class TopicContentAdapter(
         return TopicContentViewHolder(binding)
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: TopicContentViewHolder, position: Int) {
 
         val topicContent = topicContents[position]
@@ -66,7 +65,6 @@ class TopicContentAdapter(
     class TopicContentViewHolder(private val binding: ItemTopicTypeContentBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        @RequiresApi(Build.VERSION_CODES.O)
         fun bind(topicContent: TopicContentModel, fragmentActivity: FragmentActivity) {
             binding.ivSubjectBookIcon.setImageResource(topicContent.subjectIcon)
 

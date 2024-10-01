@@ -148,7 +148,7 @@ class LoginFragment : Fragment() {
                 handleSignIn(result)
             } catch (e: GetCredentialException) {
                 // Handle the case when user cancels the sign-in process or another error occurs
-                Log.e("GoogleCredentialError", e.localizedMessage.toString() + e.message)
+                Log.e("GoogleCredentialError", (e.localizedMessage?.toString() ?: "") + e.message)
                 if (e.message?.contains("cancelled by the user") == true) {
                     Log.e("GoogleUserError", "Sign-in cancelled by the user")
                     Toast.makeText(requireContext(), "Sign-in cancelled. Please try again.", Toast.LENGTH_SHORT).show()
