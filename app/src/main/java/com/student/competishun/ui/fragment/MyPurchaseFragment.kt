@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.student.competishun.R
 import com.student.competishun.data.model.CoursePaymentDetails
@@ -39,6 +40,11 @@ class MyPurchaseFragment : Fragment() {
 
         (activity as? HomeActivity)?.showBottomNavigationView(false)
         (activity as? HomeActivity)?.showFloatingButton(false)
+
+        binding.MyPurchaseTopView.setOnClickListener {
+            findNavController().navigate(R.id.homeFragment)
+        }
+
 
         val statusList = listOf(
             PurchaseStatus("All"),
