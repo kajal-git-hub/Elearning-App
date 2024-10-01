@@ -35,11 +35,33 @@ class SharedPreferencesManager(context: Context) {
         private const val KEY_Tshirt = "t_shirt_size"
         private const val IS_FIRST_INSTALL = "is_first_install"
 
-
         private const val KEY_DOWNLOADED_ITEM_PREFIX = "downloaded_item_"
+        private const val KEY_DOWNLOADED_ITEM_BM_PREFIX = "downloaded_item_bm"
+
 
 
     }
+
+    fun saveDownloadedItemBm(item: TopicContentModel) {
+        val json = gson.toJson(item)
+        sharedPreferences.edit().putString(KEY_DOWNLOADED_ITEM_BM_PREFIX + item.id, json).apply()
+        Log.e("SharedPreferences", "Saved downloaded item: ${item.url}")
+    }
+
+    fun getDownloadedItemsBm(): List<TopicContentModel> {
+        val items = mutableListOf<TopicContentModel>()
+        sharedPreferences.all.forEach { entry ->
+            if (entry.key.startsWith(KEY_DOWNLOADED_ITEM_BM_PREFIX)) {
+                val json = entry.value as? String
+                json?.let {
+                    val item = gson.fromJson(it, TopicContentModel::class.java)
+                    items.add(item)
+                }
+            }
+        }
+        return items
+    }
+
 
     fun saveDownloadedItem(item: TopicContentModel) {
         val json = gson.toJson(item)
@@ -60,18 +82,22 @@ class SharedPreferencesManager(context: Context) {
         }
         return items
     }
-
-    fun clearDownloadedItems() {
-        sharedPreferences.edit().apply {
-            sharedPreferences.all.keys.forEach { key ->
-                if (key.startsWith(KEY_DOWNLOADED_ITEM_PREFIX)) {
-                    remove(key)
-                }
-            }
-            apply()
-        }
-        Log.e("SharedPreferences", "Cleared all downloaded items")
+    fun getDownloadedVideos(): List<TopicContentModel> {
+        return getDownloadedItems().filter { it.fileType == "VIDEO" }
     }
+
+    fun getDownloadedPdfs(): List<TopicContentModel> {
+        return getDownloadedItems().filter { it.fileType == "PDF" }
+    }
+
+
+    fun deleteDownloadedItem(item: TopicContentModel) {
+        sharedPreferences.edit().remove(KEY_DOWNLOADED_ITEM_PREFIX + item.id).apply()
+    }
+    fun deleteDownloadedItemBm(item: TopicContentModel) {
+        sharedPreferences.edit().remove(KEY_DOWNLOADED_ITEM_BM_PREFIX + item.id).apply()
+    }
+
 
 
     var shirtSize: String?

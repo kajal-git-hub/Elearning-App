@@ -53,6 +53,9 @@ class ResumeCourseFragment : Fragment() {
             requireActivity().onBackPressedDispatcher.onBackPressed()
         }
 
+        binding.clResumeCourseIcon4.setOnClickListener {
+//            findNavController().navigate(R.id.BookMarkFragment)
+        }
         binding.clResumeCourseIcon3.setOnClickListener {
             findNavController().navigate(R.id.DownloadFragment)
         }

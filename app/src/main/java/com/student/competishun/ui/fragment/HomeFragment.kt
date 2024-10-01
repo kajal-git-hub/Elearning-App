@@ -288,6 +288,9 @@ class HomeFragment : Fragment() {
                     findNavController().navigate(R.id.AboutUs)
 //                    findNavController().navigate(R.id.AboutUs, null, NavOptions.Builder().setPopUpTo(R.id.homeFragment, true).build())
                 }
+                R.id.bookmark ->{
+                    findNavController().navigate(R.id.BookMarkFragment)
+                }
                 R.id.download ->{
                     findNavController().navigate(R.id.DownloadFragment)
                 }
@@ -537,7 +540,7 @@ class HomeFragment : Fragment() {
                 studentCoursesViewModel.lectures.collect { result ->
                     result?.onSuccess { lecture ->
                         val count = lecture.getAllCourseLecturesCount.lecture_count.toInt()
-                        Log.e("lectureCount",count.toString())
+//                        Log.e("lectureCount",count.toString())
                         callback(courseId, count)
                     }?.onFailure { exception ->
                         Log.e("LectureException", exception.toString())

@@ -8,7 +8,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cl_course_book"
+        android:id="@+id/cl_bm_course_book"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="14dp"
@@ -18,7 +18,7 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <ImageView
-            android:id="@+id/iv_subject_book_icon"
+            android:id="@+id/iv_bm_subject_book_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/group_1707478995"
@@ -30,7 +30,7 @@
             app:layout_constraintTop_toTopOf="parent"/>
 
         <ImageView
-            android:id="@+id/iv_book_Shadow"
+            android:id="@+id/iv_bm_book_Shadow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ellipse_17956"
@@ -41,13 +41,13 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/iv_subject_book_icon" />
+            app:layout_constraintTop_toBottomOf="@id/iv_bm_subject_book_icon" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/tv_StudyMaterial"
+        android:id="@+id/tv_bm_StudyMaterial"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Study Material"
@@ -57,21 +57,21 @@
         android:fontFamily="@font/nunito"
         android:textStyle="bold"
         android:textSize="10sp"
-        app:layout_constraintStart_toEndOf="@id/cl_course_book"
+        app:layout_constraintStart_toEndOf="@id/cl_bm_course_book"
         app:layout_constraintTop_toTopOf="parent"/>
 
     <ImageView
-        android:id="@+id/iv_vertical_line"
+        android:id="@+id/iv_bm_vertical_line"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_marginTop="18dp"
         android:layout_marginStart="@dimen/_6dp"
-        app:layout_constraintStart_toEndOf="@id/tv_StudyMaterial"
+        app:layout_constraintStart_toEndOf="@id/tv_bm_StudyMaterial"
         app:layout_constraintTop_toTopOf="parent"
         android:src="@drawable/vector_verticle_line"/>
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/tv_lecturer_time"
+        android:id="@+id/tv_bm_lecturer_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="03 hrs"
@@ -83,11 +83,11 @@
         android:fontFamily="@font/nunito"
         android:textStyle="bold"
         android:textSize="10sp"
-        app:layout_constraintStart_toEndOf="@id/iv_vertical_line"
+        app:layout_constraintStart_toEndOf="@id/iv_bm_vertical_line"
         app:layout_constraintTop_toTopOf="parent"/>
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/tv_topic_name"
+        android:id="@+id/tv_bm_topic_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Applying Trig Functions to \nAngles of Rotation"
@@ -100,11 +100,11 @@
         android:textStyle="bold"
         android:lineHeight="@dimen/_20dp"
         android:textSize="@dimen/_14sp"
-        app:layout_constraintStart_toEndOf="@id/cl_course_book"
-        app:layout_constraintTop_toBottomOf="@id/tv_StudyMaterial"/>
+        app:layout_constraintStart_toEndOf="@id/cl_bm_course_book"
+        app:layout_constraintTop_toBottomOf="@id/tv_bm_StudyMaterial"/>
 
     <View
-        android:id="@+id/view_line"
+        android:id="@+id/view_bm_line"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="#F2F2F2"
@@ -112,10 +112,10 @@
         android:layout_marginTop="12dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cl_course_book"/>
+        app:layout_constraintTop_toBottomOf="@+id/cl_bm_course_book"/>
 
     <com.student.competishun.utils.ExpandableTextView
-        android:id="@+id/tv_topic_description"
+        android:id="@+id/tv_bm_topic_description"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
@@ -124,23 +124,36 @@
         android:text="Relations and Functions: Types of relations and types and relations.Relations and Functions: Types of relations and functions, &amp; Inverse trigonometric functions and"
         android:layout_marginBottom="@dimen/_16dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/iv_read_pdf"
-        app:layout_constraintTop_toBottomOf="@id/view_line"
+        app:layout_constraintEnd_toStartOf="@id/iv_bm_read_pdf"
+        app:layout_constraintTop_toBottomOf="@id/view_bm_line"
         app:layout_constraintStart_toStartOf="parent"/>
 
     <ImageView
-        android:id="@+id/iv_read_pdf"
+        android:id="@+id/iv_bm_read_pdf"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="12dp"
         android:src="@drawable/frame_1707481707_1_"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginStart="@dimen/_20dp"
-        app:layout_constraintStart_toEndOf="@id/tv_topic_description"
-        app:layout_constraintBottom_toBottomOf="@id/tv_topic_description"
-        app:layout_constraintTop_toTopOf="@id/tv_topic_description"/>
+        app:layout_constraintStart_toEndOf="@id/tv_bm_topic_description"
+        app:layout_constraintBottom_toBottomOf="@id/tv_bm_topic_description"
+        app:layout_constraintTop_toTopOf="@id/tv_bm_topic_description"/>
 
     <ImageView
+        android:id="@+id/iv_bm_read_video"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="12dp"
+        android:visibility="gone"
+        android:src="@drawable/video_bg"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="@dimen/_20dp"
+        app:layout_constraintBottom_toBottomOf="@id/tv_bm_topic_description"
+        app:layout_constraintTop_toTopOf="@id/tv_bm_topic_description"/>
+
+    <ImageView
+        android:id="@+id/bookmark_extra"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="12dp"

@@ -48,6 +48,13 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
+        binding.igEditProfile.setOnClickListener {
+            val bottomSheetDescriptionFragment = ProfileEditFragment()
+            bottomSheetDescriptionFragment.show(childFragmentManager, "BottomSheetDescriptionFragment")
+
+        }
+
         observeUserDetails()
         userViewModel.fetchUserDetails()
 
@@ -69,7 +76,7 @@ class ProfileFragment : Fragment() {
         }
 
         binding.llMyPurchase.setOnClickListener{
-            findNavController().navigate(R.id.courseEmptyFragment)
+            findNavController().navigate(R.id.MyPurchase)
         }
         binding.llLogout.setOnClickListener {
             val bottomSheetDescriptionFragment = ProfileLogoutFragment()
