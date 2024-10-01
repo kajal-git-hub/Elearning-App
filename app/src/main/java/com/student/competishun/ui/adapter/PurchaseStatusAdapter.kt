@@ -31,13 +31,11 @@ class PurchaseStatusAdapter(
         val status = statusList[position]
         holder.statusTextView.text = status.statusText
 
-        // Check if this item is selected
         val isSelected = position == selectedPosition
         holder.itemView.setBackgroundResource(
             if (isSelected) R.drawable.getstarted_itembg_selected else R.drawable.getstarted_itembg_unselected
         )
 
-        // Set text color based on selection
         holder.statusTextView.setTextColor(
             ContextCompat.getColor(
                 holder.itemView.context,
@@ -46,15 +44,12 @@ class PurchaseStatusAdapter(
         )
 
         holder.itemView.setOnClickListener {
-            // Update the selected position and notify the adapter
             val previousSelectedPosition = selectedPosition
             selectedPosition = position
 
-            // Notify the previous and current selected positions to refresh their views
             notifyItemChanged(previousSelectedPosition)
             notifyItemChanged(position)
 
-            // Trigger the callback with the selected status
             onStatusSelected(status.statusText)
         }
     }
