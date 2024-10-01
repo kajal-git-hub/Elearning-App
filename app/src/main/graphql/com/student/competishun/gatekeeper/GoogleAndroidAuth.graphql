@@ -1,0 +1,14 @@
+mutation GoogleAndroidAuth($idToken: String!) {
+    googleAndroidAuth(idToken: $idToken) {
+        accessToken
+        refreshToken
+        user {
+            mobileNumber
+            fullName
+            countryCode
+            email
+        }
+        refreshToken
+        accessToken
+    }
+}

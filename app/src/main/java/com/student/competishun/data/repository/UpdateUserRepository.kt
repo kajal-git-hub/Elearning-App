@@ -49,9 +49,9 @@ class UpdateUserRepository @Inject constructor(@Gatekeeper private val apolloCli
                     user = result.let { user ->
                         User(
                             id = user.id,
-                            mobileNumber = user.mobileNumber,
+                            mobileNumber = user.mobileNumber?:"",
                             fullName = user.fullName,
-                            countryCode = user.countryCode,
+                            countryCode = user.countryCode?:"",
                             email = user.email.toString(),
                             userInformation = user.userInformation?.let { info ->
                                 UserInformation(

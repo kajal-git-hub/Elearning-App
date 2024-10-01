@@ -107,8 +107,8 @@ class VerifyOTPFragment : Fragment() {
 
     private fun observeViewModel() {
         Log.d("shared number", sharedPreferencesManager.mobileNo.toString())
-        if (!sharedPreferencesManager.mobileNo.isNullOrEmpty()) mobileNumber =
-            sharedPreferencesManager.mobileNo
+        if (!sharedPreferencesManager.mobileNo.isNullOrEmpty())
+            mobileNumber = sharedPreferencesManager.mobileNo
 
         verifyOtpViewModel.verifyOtpResult.observe(viewLifecycleOwner) { result ->
             if (result != null) {

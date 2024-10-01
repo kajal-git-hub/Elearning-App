@@ -5,3 +5,9 @@ data class VerifyOtpResponse(
     val refreshToken: String?,
     val accessToken: String?
 )
+
+data class GoogleResponse(
+    val user: User?,
+    val refreshToken: String?,
+    val accessToken: String?
+)

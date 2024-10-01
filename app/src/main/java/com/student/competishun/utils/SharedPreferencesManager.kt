@@ -22,6 +22,7 @@ class SharedPreferencesManager(context: Context) {
         private const val KEY_UPDATE_USER_INPUT = "updateUserInput"
         private const val KEY_MOBILE_NO = "mobileNo"
         private const val KEY_NAME = "name"
+        private const val KEY_EMAIL = "email"
         private const val KEY_CITY = "city"
         private const val KEY_USER_ID = "userId"
         private const val KEY_PREPARATION_FOR = "preparingFor"
@@ -172,6 +173,12 @@ class SharedPreferencesManager(context: Context) {
         set(value){
             sharedPreferences.edit().putString(KEY_NAME, value).apply()
             Log.e("sharedPrefname sa", name.toString())
+        }
+    var email: String?
+        get() = sharedPreferences.getString(KEY_EMAIL, null)
+        set(value){
+            sharedPreferences.edit().putString(KEY_EMAIL, value).apply()
+            Log.e("sharedPrefname sa", email.toString())
         }
     var city:String?
         get() = sharedPreferences.getString(KEY_CITY, null)
