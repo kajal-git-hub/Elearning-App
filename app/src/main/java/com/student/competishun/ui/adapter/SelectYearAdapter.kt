@@ -8,7 +8,8 @@ import com.student.competishun.R
 import com.student.competishun.databinding.SelectYearItemBinding
 
 class SelectYearAdapter(
-    private val yearList: List<String>
+    private val yearList: List<String>,
+    private val onExamSelected: (Int) -> Unit
 ) : RecyclerView.Adapter<SelectYearAdapter.SelectYearViewHolder>() {
 
     class SelectYearViewHolder(val binding: SelectYearItemBinding) : RecyclerView.ViewHolder(binding.root)
@@ -40,6 +41,7 @@ class SelectYearAdapter(
         binding.radioButtonProfileYear.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
 
         holder.itemView.setOnClickListener {
+            onExamSelected(year.toInt())
             val previousSelectedPosition = selectedPosition
             selectedPosition = position
             notifyItemChanged(previousSelectedPosition)

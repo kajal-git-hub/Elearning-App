@@ -8,7 +8,8 @@ import com.student.competishun.R
 import com.student.competishun.databinding.SelectClassItemBinding // Generated binding class
 
 class SelectClassAdapter(
-    private val classList: List<String>
+    private val classList: List<String>,
+    private val onClassSelected: (String) -> Unit
 ) : RecyclerView.Adapter<SelectClassAdapter.SelectClassViewHolder>() {
 
     // ViewHolder with binding
@@ -41,6 +42,7 @@ class SelectClassAdapter(
         binding.radioButtonProfile.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
 
         holder.itemView.setOnClickListener {
+            onClassSelected(className)
             val previousSelectedPosition = selectedPosition
             selectedPosition = position
             notifyItemChanged(previousSelectedPosition)
