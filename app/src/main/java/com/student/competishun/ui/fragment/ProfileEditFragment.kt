@@ -82,15 +82,8 @@ class ProfileEditFragment : BottomSheetDialogFragment() {
                 this@ProfileEditFragment.selectedYear = selectedYear
             }
         }
-
-//        val updateUserInput = UpdateUserInput(
-//            city = Optional.Present(sharedPreferencesManager.city),
-//            fullName = Optional.Present(sharedPreferencesManager.name),
-//            preparingFor = Optional.Present(sharedPreferencesManager.preparingFor),
-//            reference = Optional.Present(sharedPreferencesManager.reference),
-//            targetYear = Optional.Present(sharedPreferencesManager.targetYear)
-//        )
-
+//        val bundle = Bundle()
+//        bundle.putString("StudentClass",selectedClass)
 
         binding.mbSaveButton.setOnClickListener {
             val updatedUserInput = UpdateUserInput(

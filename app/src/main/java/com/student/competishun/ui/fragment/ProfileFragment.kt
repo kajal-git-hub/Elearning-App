@@ -30,6 +30,7 @@ class ProfileFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var sharedPreferencesManager: SharedPreferencesManager
     private val userViewModel: UserViewModel by viewModels()
+    private var studentClass = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,6 +48,9 @@ class ProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+//        studentClass = arguments?.getString("StudentClass","") ?: ""
+//        Log.d("studentClass",studentClass)
 
 
         binding.igEditProfile.setOnClickListener {
@@ -90,6 +94,10 @@ class ProfileFragment : Fragment() {
 //            startActivity(intent)
 //            requireActivity().finish()
         }
+//        if(studentClass.isNotEmpty()){
+//            binding.tvClass.visibility = View.VISIBLE
+//            binding.tvClass.text = studentClass
+//        }
 
         binding.ProfileUserName.text = sharedPreferencesManager.name
         if (!sharedPreferencesManager.email.isNullOrEmpty())
