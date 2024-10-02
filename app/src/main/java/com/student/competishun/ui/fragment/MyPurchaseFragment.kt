@@ -42,7 +42,7 @@ class MyPurchaseFragment : Fragment() {
         (activity as? HomeActivity)?.showFloatingButton(false)
 
         binding.MyPurchaseTopView.setOnClickListener {
-            findNavController().navigate(R.id.homeFragment)
+            findNavController().navigate(R.id.ProfileFragment)
         }
 
 
