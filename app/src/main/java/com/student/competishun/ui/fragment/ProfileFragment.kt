@@ -54,8 +54,8 @@ class ProfileFragment : Fragment() {
 
 
         binding.igEditProfile.setOnClickListener {
-            val bottomSheetDescriptionFragment = ProfileEditFragment()
-            bottomSheetDescriptionFragment.show(childFragmentManager, "BottomSheetDescriptionFragment")
+//            val bottomSheetDescriptionFragment = ProfileEditFragment()
+//            bottomSheetDescriptionFragment.show(childFragmentManager, "BottomSheetDescriptionFragment")
 
         }
 
@@ -80,7 +80,7 @@ class ProfileFragment : Fragment() {
         }
 
         binding.llMyPurchase.setOnClickListener{
-            findNavController().navigate(R.id.MyPurchase)
+//            findNavController().navigate(R.id.MyPurchase)
         }
         binding.llLogout.setOnClickListener {
             val bottomSheetDescriptionFragment = ProfileLogoutFragment()
