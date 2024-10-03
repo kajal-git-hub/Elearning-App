@@ -44,6 +44,8 @@ class BottomSheetDeleteVideoFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.tvATDTopicName.text = itemDetails?.topicName
+
         binding.clDeleteButton.setOnClickListener {
             if (itemPosition >= 0) {
                 listener?.onDeleteClick(itemPosition,itemDetails!!)

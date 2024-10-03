@@ -54,12 +54,21 @@ class OnBoardingFragment : Fragment() {
 
         val savedName = sharedPreferencesManager.name
         val savedCity = sharedPreferencesManager.city
-
+        val phoneNo = sharedPreferencesManager.mobileNo
         savedName?.let {
             binding.etEnterHereText.setText(it)
         }
         savedCity?.let {
             binding.etEnterCityText.setText(it)
+        }
+        phoneNo?.let {
+            binding.etEnterMob.setText(it)
+        }
+
+        //condition need to check for google
+        if (sharedPreferencesManager.mobileNo.isNullOrEmpty()){
+            binding.clEnterNo.visibility = View.VISIBLE
+            binding.etPhoneNoText.visibility = View.VISIBLE
         }
 
         userViewModel.userDetails.observe(requireActivity()) { result ->
@@ -85,6 +94,7 @@ class OnBoardingFragment : Fragment() {
                 val updateUserInput = UpdateUserInput(
                     city = Optional.Present(sharedPreferencesManager.city),
                     fullName = Optional.Present(sharedPreferencesManager.name),
+                    mobileNumber = Optional.present(sharedPreferencesManager.mobileNo)
                     )
                 updateUserViewModel.updateUser(updateUserInput,null,null)
 
@@ -131,13 +141,15 @@ class OnBoardingFragment : Fragment() {
         }
         binding.etEnterHereText.addTextChangedListener(textWatcher)
         binding.etEnterCityText.addTextChangedListener(textWatcher)
+        binding.etEnterMob.addTextChangedListener(textWatcher)
     }
 
     private fun updateNextButtonState() {
         val isNameValid = binding.etEnterHereText.text.toString().trim().length >= 3
         val isCityValid = binding.etEnterCityText.text.toString().trim().length >= 3
-
-        if (isNameValid && isCityValid) {
+        val isPhoneValid = binding.etEnterMob.text.toString().trim().length >= 10
+        Log.e("PhoneNoText",isPhoneValid.toString())
+        if (isNameValid && isCityValid && isPhoneValid) {
             binding.NextOnBoarding.setBackgroundResource(R.drawable.second_getstarteddone)
         } else {
             binding.NextOnBoarding.setBackgroundResource(R.drawable.second_getstarted)
@@ -147,19 +159,22 @@ class OnBoardingFragment : Fragment() {
     private fun isCurrentStepValid(): Boolean {
         val name = binding.etEnterHereText.text.toString().trim()
         val city = binding.etEnterCityText.text.toString().trim()
-        return name.length >= 3 && city.length >= 3
+        val phone = binding.etEnterMob.text.toString().trim()
+        Log.e("phoneNumbertext",phone)
+        return name.length >= 3 && city.length >= 3 && phone.length >= 10
     }
 
     private fun saveNameAndCity() {
         val name = binding.etEnterHereText.text.toString().trim()
         val city = binding.etEnterCityText.text.toString().trim()
-
+        val phone = binding.etEnterMob.text.toString().trim()
         sharedPreferencesManager.name = name
         sharedPreferencesManager.city = city
+        sharedPreferencesManager.mobileNo = phone
 
 //        userViewModel.updateUserDetails(name, city)
 
-        Log.d("OnBoardingFragment", "Name and City saved: $name, $city")
+        Log.d("OnBoardingFragment", "Name, City, phone saved: $name, $city, $phone")
     }
 
     override fun onDestroyView() {

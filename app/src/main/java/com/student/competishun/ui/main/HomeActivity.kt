@@ -89,13 +89,17 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
             supportFragmentManager.findFragmentById(R.id.fragmentNavigation) as NavHostFragment
         navController = navHostFragment.navController
 
-//        val navigateToFragment = intent.getStringExtra("navigateTo")
-//        if (navigateToFragment == "CourseEmptyFragment") {
-//            // Navigate to CourseEmptyFragment
-//            supportFragmentManager.beginTransaction()
-//                .replace(R.id.fragmentNavigation, CourseEmptyFragment())
-//                .commit()
-//        }
+        val navigateToFragment = intent.getStringExtra("navigateTo")
+        if (navigateToFragment == "CourseEmptyFragment") {
+            // Navigate to CourseEmptyFragment
+            navController.navigate(R.id.courseEmptyFragment)
+            binding.bottomNav.selectedItemId = R.id.myCourse // Set the selected tab to My Course
+        }else{
+            if (savedInstanceState == null) {
+                navController.navigate(R.id.homeFragment, bundle)
+                binding.bottomNav.selectedItemId = R.id.home
+            }
+        }
 
 
         drawerLayout = findViewById(R.id.drwaer_layout)
@@ -170,12 +174,6 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        if (savedInstanceState == null) {
-            // Ensure that HomeFragment is loaded on the first launch
-            navController.navigate(R.id.homeFragment,bundle)
-            bottomNavigationView.selectedItemId = R.id.home
-        }
-
 
     }
     override fun onBackPressed() {

@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.student.competishun.coinkeeper.CreateOrderMutation
+import com.student.competishun.coinkeeper.GenerateReceiptQuery
 import com.student.competishun.coinkeeper.type.CreateOrderInput
 import com.student.competishun.data.api.Coinkeeper
 import com.student.competishun.data.repository.OrderRepository

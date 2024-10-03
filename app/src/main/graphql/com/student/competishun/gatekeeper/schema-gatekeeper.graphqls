@@ -109,6 +109,90 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+enum ExamTypeEnum {
+  IITJEE
+
+  NEET
+}
+
+type ExtendedUserCourseMapping {
+  courseDetails: GetCourseByIdsDto
+
+  createdAt: DateTime!
+
+  deletedAt: DateTime!
+
+  enrolledCourseId: String!
+
+  enrolledCourseName: String!
+
+  examType: String!
+
+  id: ID!
+
+  paymentStatus: String!
+
+  pricePaid: String!
+
+  updatedAt: DateTime!
+}
+
+type GetCourseByIdsDto {
+  banner_image: String!
+
+  category_name: String!
+
+  discount: Int!
+
+  exam_type: String!
+
+  id: String!
+
+  is_recommended: Boolean!
+
+  name: String!
+
+  price: Int!
+
+  status: String!
+
+  target_year: Int!
+
+  video_thumbnail: String!
+
+  video_thumbnail_name: String!
+
+  with_installment_price: String!
+}
+
+type GetMyDetailsDto {
+  countryCode: String
+
+  courses: [ExtendedUserCourseMapping]!
+
+  createdAt: DateTime!
+
+  deletedAt: DateTime!
+
+  email: String
+
+  fullName: String
+
+  id: ID!
+
+  isGoogleSignup: Boolean!
+
+  metadata: UserMetadata!
+
+  mobileNumber: String
+
+  role: Role!
+
+  updatedAt: DateTime!
+
+  userInformation: UserInformation!
+}
+
 input GetOtpInput {
   countryCode: String!
 
@@ -121,10 +205,28 @@ type GetStudentsDto {
   students: [User!]!
 }
 
+type GetUserMetricsDto {
+  iitUsers: MetricDto!
+
+  neetUsers: MetricDto!
+
+  newRegisteredUsers: MetricDto!
+
+  totalUsers: MetricDto!
+}
+
 type MarksDto {
   tenth: String
 
   twelfth: String
+}
+
+type MetricDto {
+  percentDifference: Int!
+
+  previousMonthCount: Int!
+
+  totalCount: Int!
 }
 
 type Mutation {
@@ -138,6 +240,8 @@ type Mutation {
 
   getOtp(getOtpInput: GetOtpInput!): Boolean!
 
+  googleAndroidAuth(idToken: String!): Auth!
+
   updateCustomer(updateCustomerInput: UpdateCustomerInput!): Customer!
 
   updateStudentByAdmin(updateStudentByAdminInput: UpdateStudentByAdminInput!): User!
@@ -150,11 +254,13 @@ type Mutation {
 type Query {
   adminSignIn(adminSignInInput: AdminSignInInput!): AdminAuth!
 
-  getMyDetails: User!
+  getMyDetails: GetMyDetailsDto!
 
-  getStudents(courseIds: [ID!], isEnrolled: Boolean, limit: Float!, offset: Float!, paymentStatuses: [StudentPaymentStatuses!], search: String, sort: String = "DESC", studentId: String, targetYear: [Float!]): GetStudentsDto!
+  getStudents(courseIds: [ID!], endDate: DateTime, examType: ExamTypeEnum, isEnrolled: Boolean, limit: Float!, offset: Float!, paymentStatuses: [StudentPaymentStatuses!], search: String, sort: String = "DESC", startDate: DateTime, studentId: String, targetYear: [Float!]): GetStudentsDto!
 
-  getStudentsWithoutPagination(courseIds: [ID!], isEnrolled: Boolean, paymentStatuses: [StudentPaymentStatuses!], search: String, sort: String = "DESC", studentId: String, targetYear: [Float!]): GetStudentsDto!
+  getStudentsWithoutPagination(courseIds: [ID!], endDate: DateTime, examType: ExamTypeEnum, isEnrolled: Boolean, paymentStatuses: [StudentPaymentStatuses!], search: String, sort: String = "DESC", startDate: DateTime, studentId: String, targetYear: [Float!]): GetStudentsDto!
+
+  getUserMetrics: GetUserMetricsDto!
 
   sayHello: String!
 }
@@ -172,6 +278,8 @@ type Role {
 }
 
 enum StudentPaymentStatuses {
+  CAPTURED
+
   INSTALLMENT_1
 
   INSTALLMENT_2
@@ -232,9 +340,13 @@ input UpdateUserInput {
 
   city: String
 
+  countryCode: String
+
   fatherName: String
 
   fullName: String
+
+  mobileNumber: String
 
   pinCode: String
 
@@ -257,7 +369,9 @@ The `Upload` scalar type represents a file upload.
 scalar Upload
 
 type User {
-  countryCode: String!
+  countryCode: String
+
+  courses: [UserCourseMapping]!
 
   createdAt: DateTime!
 
@@ -269,15 +383,37 @@ type User {
 
   id: ID!
 
+  isGoogleSignup: Boolean!
+
   metadata: UserMetadata!
 
-  mobileNumber: String!
+  mobileNumber: String
 
   role: Role!
 
   updatedAt: DateTime!
 
   userInformation: UserInformation!
+}
+
+type UserCourseMapping {
+  createdAt: DateTime!
+
+  deletedAt: DateTime!
+
+  enrolledCourseId: String!
+
+  enrolledCourseName: String!
+
+  examType: String!
+
+  id: ID!
+
+  paymentStatus: String!
+
+  pricePaid: String!
+
+  updatedAt: DateTime!
 }
 
 type UserInformation {

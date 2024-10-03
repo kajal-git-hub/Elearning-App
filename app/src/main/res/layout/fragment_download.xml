@@ -7,54 +7,28 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.fragment.DownloadFragment">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/TopView_Downloads"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="?attr/actionBarSize"
         android:elevation="@dimen/_4dp"
+        app:navigationIcon="@drawable/arrow_left_white"
+        app:menu="@menu/search_bar_white"
         android:background="@drawable/gradiant_bg_downloads"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
-            android:id="@+id/back_icon_downloads"
+        <TextView
+            android:id="@+id/tittle_tb"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_16dp"
-            android:layout_marginVertical="@dimen/_20dp"
-            android:src="@drawable/arrow_left_white"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
-
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Downloads"
-            android:fontFamily="@font/nunito"
-            android:textStyle="bold"
-            android:textSize="@dimen/_18sp"
+            android:text="Recommended"
             android:textColor="#ffffff"
-            android:layout_marginStart="12dp"
-            android:layout_marginVertical="@dimen/_16dp"
-            app:layout_constraintStart_toEndOf="@id/back_icon_downloads"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            android:fontFamily="@font/nunito"
+            android:textSize="@dimen/_18sp"/>
 
-
-        <ImageView
-            android:id="@+id/search_icon_downloads"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/search_normal_white"
-            android:layout_marginEnd="@dimen/_20dp"
-            android:layout_marginVertical="@dimen/_20dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.appbar.MaterialToolbar>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_tabLayout_downloads"

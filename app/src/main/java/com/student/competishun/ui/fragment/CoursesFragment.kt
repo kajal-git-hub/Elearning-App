@@ -54,8 +54,9 @@ class CoursesFragment : Fragment() {
 
         clickedViewMessage?.let {
             val tittle = view.findViewById<TextView>(R.id.tittle_tb)
+            Log.e("CoursesFragment", "Received message: $it")
             tittle.text = it
-            // Log.d("CoursesFragment", "Received message: $it")
+
         }
         setupViewPager(tabViewPager,examIIT,examNEET)
         tabToolbar.setNavigationOnClickListener {

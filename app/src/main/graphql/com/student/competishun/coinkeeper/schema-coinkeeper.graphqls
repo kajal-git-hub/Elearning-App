@@ -61,11 +61,15 @@ input CreatePaymentInput {
 type CustomOrder {
   amountPaid: Int!
 
+  createdAt: DateTime!
+
   entityId: String!
 
   entityType: String!
 
   paymentStatus: String!
+
+  userId: String!
 }
 
 """
@@ -74,13 +78,11 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 scalar DateTime
 
 input FindAllPaymentsInput {
-  date: DateTime
-
   endDate: DateTime
 
-  limit: Int = 10
+  limit: Int
 
-  offset: Int = 0
+  offset: Int
 
   search: String
 
@@ -165,6 +167,14 @@ type Order {
   userName: String!
 }
 
+type OrderCountResponse {
+  currentOrderCount: Float!
+
+  percentageChange: String!
+
+  prevOrderCount: Float!
+}
+
 type Payment {
   amount: Float!
 
@@ -201,22 +211,48 @@ type Payment {
   userName: String!
 }
 
+type PaymentBreakDownResponse {
+  amount: Float!
+
+  createdAt: DateTime!
+
+  paymentMode: String!
+
+  paymentType: String!
+
+  rzpOrderId: String!
+
+  status: String!
+}
+
 type PaymentResponse {
   count: Int!
 
   payments: [Payment!]!
+
+  totalCount: Int!
 }
 
 type Query {
+  coursePaymentsByUserId(courseId: String!, userId: String!): [Payment!]!
+
   findAllPayments(filters: FindAllPaymentsInput): PaymentResponse!
 
   findByInstallment(id: String!): Installment!
 
   findByOrder(id: String!): [Installment!]!
 
+  findPaymentBreakdown(courseId: String!, userId: String!): PaymentBreakDownResponse!
+
   findSinglePayment(id: String!): Payment!
 
+  generateReceipt(transactionId: String!): String!
+
+  getPaymentDetailsInternalQ(ids: [String!]!): [Payment]!
+
   orderById(id: String!): Order!
+
+  orderCount: OrderCountResponse!
 
   orders: [Order!]!
 

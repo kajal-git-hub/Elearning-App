@@ -18,10 +18,12 @@ class SharedPreferencesManager(context: Context) {
 
     companion object {
         private const val KEY_ACCESS_TOKEN = "accessToken"
+        private const val KEY_Order_Id = "rzpOrderId"
         private const val KEY_REFRESH_TOKEN = "refreshToken"
         private const val KEY_UPDATE_USER_INPUT = "updateUserInput"
         private const val KEY_MOBILE_NO = "mobileNo"
         private const val KEY_NAME = "name"
+        private const val KEY_EMAIL = "email"
         private const val KEY_CITY = "city"
         private const val KEY_USER_ID = "userId"
         private const val KEY_PREPARATION_FOR = "preparingFor"
@@ -34,11 +36,33 @@ class SharedPreferencesManager(context: Context) {
         private const val KEY_Tshirt = "t_shirt_size"
         private const val IS_FIRST_INSTALL = "is_first_install"
 
-
         private const val KEY_DOWNLOADED_ITEM_PREFIX = "downloaded_item_"
+        private const val KEY_DOWNLOADED_ITEM_BM_PREFIX = "downloaded_item_bm"
+
 
 
     }
+
+    fun saveDownloadedItemBm(item: TopicContentModel) {
+        val json = gson.toJson(item)
+        sharedPreferences.edit().putString(KEY_DOWNLOADED_ITEM_BM_PREFIX + item.id, json).apply()
+        Log.e("SharedPreferences", "Saved downloaded item: ${item.url}")
+    }
+
+    fun getDownloadedItemsBm(): List<TopicContentModel> {
+        val items = mutableListOf<TopicContentModel>()
+        sharedPreferences.all.forEach { entry ->
+            if (entry.key.startsWith(KEY_DOWNLOADED_ITEM_BM_PREFIX)) {
+                val json = entry.value as? String
+                json?.let {
+                    val item = gson.fromJson(it, TopicContentModel::class.java)
+                    items.add(item)
+                }
+            }
+        }
+        return items
+    }
+
 
     fun saveDownloadedItem(item: TopicContentModel) {
         val json = gson.toJson(item)
@@ -59,10 +83,20 @@ class SharedPreferencesManager(context: Context) {
         }
         return items
     }
+    fun getDownloadedVideos(): List<TopicContentModel> {
+        return getDownloadedItems().filter { it.fileType == "VIDEO" }
+    }
+
+    fun getDownloadedPdfs(): List<TopicContentModel> {
+        return getDownloadedItems().filter { it.fileType == "PDF" }
+    }
 
 
     fun deleteDownloadedItem(item: TopicContentModel) {
         sharedPreferences.edit().remove(KEY_DOWNLOADED_ITEM_PREFIX + item.id).apply()
+    }
+    fun deleteDownloadedItemBm(item: TopicContentModel) {
+        sharedPreferences.edit().remove(KEY_DOWNLOADED_ITEM_BM_PREFIX + item.id).apply()
     }
 
 
@@ -121,6 +155,14 @@ class SharedPreferencesManager(context: Context) {
             Log.e("sharedPreferences token", accessToken.toString())
         }
 
+    var rzpOrderId: String?
+        get() = sharedPreferences.getString(KEY_Order_Id, null)
+        set(value) {
+            sharedPreferences.edit().putString(KEY_Order_Id, value).apply()
+
+            Log.e("sharedPreferences rzpOrderId", rzpOrderId.toString())
+        }
+
     var userId: String?
         get() = sharedPreferences.getString(KEY_USER_ID, null)
         set(value) {
@@ -140,6 +182,12 @@ class SharedPreferencesManager(context: Context) {
         set(value){
             sharedPreferences.edit().putString(KEY_NAME, value).apply()
             Log.e("sharedPrefname sa", name.toString())
+        }
+    var email: String?
+        get() = sharedPreferences.getString(KEY_EMAIL, null)
+        set(value){
+            sharedPreferences.edit().putString(KEY_EMAIL, value).apply()
+            Log.e("sharedPrefname sa", email.toString())
         }
     var city:String?
         get() = sharedPreferences.getString(KEY_CITY, null)

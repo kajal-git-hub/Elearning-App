@@ -25,6 +25,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class ProfileFragment : Fragment() {
 
+    var TAG = "ProfileFragment"
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
     private lateinit var sharedPreferencesManager: SharedPreferencesManager
@@ -91,7 +92,9 @@ class ProfileFragment : Fragment() {
         }
 
         binding.ProfileUserName.text = sharedPreferencesManager.name
-        binding.ProfileEmail.text = sharedPreferencesManager.mobileNo
+        if (!sharedPreferencesManager.email.isNullOrEmpty())
+        binding.ProfileEmail.text = sharedPreferencesManager.email
+        else binding.ProfileEmail.text = sharedPreferencesManager.mobileNo
         binding.tvExamType.text = sharedPreferencesManager.preparingFor
         binding.tvYear.text= "| "+sharedPreferencesManager.targetYear.toString()
     }
@@ -103,7 +106,10 @@ class ProfileFragment : Fragment() {
                 Log.d("userDetails",data.getMyDetails.userInformation.address?.city.toString())
                 val name = data.getMyDetails.fullName
                 val target = data.getMyDetails.userInformation.targetYear
-
+                val rollno = data.getMyDetails.userInformation.rollNumber
+                if (!rollno.isNullOrEmpty()){
+                    binding.ProfileRollNo.text = "Roll No:  $rollno"
+                }
                 if (!name.isNullOrEmpty()) {
                     binding.ProfileUserName.setText(name)
                 }
@@ -111,6 +117,7 @@ class ProfileFragment : Fragment() {
                     binding.tvYear.setText(" | "+target.toString())
                 }
             }.onFailure { exception ->
+                Log.e(TAG,exception.message.toString())
                 Toast.makeText(requireContext(), "Error fetching details: ${exception.message}", Toast.LENGTH_LONG).show()
             }
         }

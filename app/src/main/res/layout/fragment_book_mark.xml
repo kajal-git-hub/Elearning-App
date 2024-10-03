@@ -7,62 +7,41 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.fragment.BookMarkFragment">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/TopView_Downloads"
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/TopView_bookMark"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="?attr/actionBarSize"
         android:elevation="@dimen/_4dp"
+        app:menu="@menu/search_bar_white"
+        app:navigationIcon="@drawable/arrow_left_white"
         android:background="@drawable/gradiant_bg_bookmark"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
-            android:id="@+id/back_icon_bookmark"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_16dp"
-            android:layout_marginVertical="@dimen/_20dp"
-            android:src="@drawable/arrow_left_white"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/screen_title_bookmark"
+            android:id="@+id/screen_bm_title_bookmark"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Bookmarks (12)"
+            android:text="Bookmarks"
             android:fontFamily="@font/nunito"
             android:textStyle="bold"
             android:textSize="@dimen/_18sp"
             android:textColor="#ffffff"
-            android:layout_marginStart="12dp"
-            android:layout_marginVertical="@dimen/_16dp"
-            app:layout_constraintStart_toEndOf="@id/back_icon_bookmark"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" />
 
 
-        <ImageView
-            android:id="@+id/search_icon_bookmark"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/search_normal_white"
-            android:layout_marginEnd="@dimen/_20dp"
-            android:layout_marginVertical="@dimen/_20dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.appbar.MaterialToolbar>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_tabLayout_Bookmark"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
-        app:layout_constraintTop_toBottomOf="@id/TopView_Downloads"
+        app:layout_constraintTop_toBottomOf="@id/TopView_bookMark"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
@@ -102,13 +81,60 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_bookmark"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:visibility="visible"
         tools:itemCount="2"
         tools:listitem="@layout/bookmark_item_pdfs"
         app:layout_constraintTop_toBottomOf="@id/cl_tabLayout_Bookmark"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         android:layout_margin="@dimen/_10dp" />
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_emptySearchBookmark"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@+id/cl_tabLayout_Bookmark"
+        android:layout_margin="@dimen/_10dp"
+        >
+
+        <pl.droidsonroids.gif.GifImageView
+            android:id="@+id/gif_search"
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:src="@drawable/search_bookmark"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/et_no_result_found"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="No Result Found!"
+            app:layout_constraintTop_toBottomOf="@+id/gif_search"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:fontFamily="@font/nunito"
+            android:textColor="@color/black_2B2829"
+            android:textStyle="bold"
+            android:textSize="20sp"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="260dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="@dimen/_14sp"
+            android:layout_marginTop="@dimen/_12sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:maxLines="2"
+            app:layout_constraintTop_toBottomOf="@+id/et_no_result_found"
+            android:text="“Kinetics Theory” does not exist in the bookmarks. Search another keyword."/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

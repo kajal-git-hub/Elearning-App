@@ -5,9 +5,11 @@ import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.exception.ApolloException
 import com.student.competishun.gatekeeper.VerifyOtpMutation
 import com.student.competishun.data.api.Gatekeeper
+import com.student.competishun.data.model.GoogleResponse
 import com.student.competishun.data.model.User
 import com.student.competishun.data.model.UserInformation
 import com.student.competishun.data.model.VerifyOtpResponse
+import com.student.competishun.gatekeeper.GoogleAndroidAuthMutation
 import com.student.competishun.gatekeeper.type.VerifyOtpInput
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -34,9 +36,46 @@ class VerifyOtpRepository @Inject constructor(@Gatekeeper private val apolloClie
                 VerifyOtpResponse(
                     user = result.user?.let { user ->
                         User(
-                            mobileNumber = user.mobileNumber,
-                            fullName = user.fullName,
-                            countryCode = user.countryCode,
+                            mobileNumber = user.mobileNumber?:"",
+                            fullName = user.fullName?:"",
+                            countryCode = user.countryCode?:"",
+                            id = "",
+                            email = "",
+                            userInformation = UserInformation(0,"","","","","","","",null)
+                        )
+                    },
+                    refreshToken = result.refreshToken,
+                    accessToken = result.accessToken
+                )
+            }
+        } catch (e: ApolloException) {
+            // Handle ApolloException
+            Log.e("ApolloException", e.message ?: "Unknown error")
+            null
+        }
+    }
+
+    suspend fun googleAuth(idToken: String): GoogleResponse? {
+        val mutation = GoogleAndroidAuthMutation(idToken)
+
+        return try {
+            val response = apolloClient.mutate(mutation).execute()
+
+            if (response.hasErrors()) {
+                // Handle errors if needed
+                response.errors?.forEach {
+                    Log.e("GraphQL Error", it.message)
+                }
+                return null
+            }
+
+            response.data?.googleAndroidAuth?.let { result ->
+                GoogleResponse(
+                    user = result.user?.let { user ->
+                        User(
+                            mobileNumber = user.mobileNumber?:"",
+                            fullName = user.fullName?:"",
+                            countryCode = user.countryCode?:"",
                             id = "",
                             email = "",
                             userInformation = UserInformation(0,"","","","","","","",null)
