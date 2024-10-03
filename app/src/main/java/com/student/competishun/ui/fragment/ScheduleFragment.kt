@@ -65,7 +65,7 @@ class ScheduleFragment : Fragment(), ToolbarCustomizationListener {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun setupCalendar(scheduleTime:String) {
+    private fun setupCalendar(scheduleTime:String, issheduleavailblestatus:Boolean = false) {
         calendarSetUp = HorizontalCalendarSetUp()
 
         val currentMonth = calendarSetUp.setUpCalendarAdapter(
@@ -92,7 +92,7 @@ class ScheduleFragment : Fragment(), ToolbarCustomizationListener {
         )
         val today = LocalDate.now() // Get current date without time
 
-        calendarSetUp.scrollToSpecificDate(binding.rvCalenderDates, convertIST(scheduleTime))
+        calendarSetUp.scrollToSpecificDate(binding.rvCalenderDates, convertIST(scheduleTime),issheduleavailblestatus)
 
       //  calendarSetUp.scrollToSpecificDate(binding.rvCalenderDates, convertIST(scheduleTime))
     }
@@ -159,6 +159,8 @@ class ScheduleFragment : Fragment(), ToolbarCustomizationListener {
                 }
                 data.findAllCourseFolderContentByScheduleTime.forEachIndexed {index, schedulecontent->
                 // Log.e("timea",schedulecontent.s.toString())
+
+
                  schedulecontent.content.scheduled_time.let {
                     Log.e("scheduletimess", convertIST(it.toString()).toString())
                      val currentDate = ZonedDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
@@ -166,6 +168,12 @@ class ScheduleFragment : Fragment(), ToolbarCustomizationListener {
                      val matchResult = regex.find(it.toString())
                      val extractedDate = matchResult?.value ?: "Invalid date"
                      Log.e("scheduletimecu ","$extractedDate $it")
+
+                     if(it!=null)
+                     {
+                         setupCalendar(it.toString(),issheduleavailblestatus = true)
+                     }
+
                      if (!foundMatchingDate){
                          setupCalendar(it.toString())
                      }
@@ -177,6 +185,7 @@ class ScheduleFragment : Fragment(), ToolbarCustomizationListener {
                          setupCalendar(it.toString())
                          return@forEachIndexed
                      }
+
 
 //                     if (currentDate != it)
 //                         setupCalendar(it.toString()) else setupCalendar(currentDate)

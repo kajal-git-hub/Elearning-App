@@ -3,6 +3,7 @@ package com.student.competishun.ui.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.ObservableField
 import androidx.recyclerview.widget.RecyclerView
 import com.student.competishun.data.model.CalendarDate
 import com.student.competishun.databinding.CalenderDateItemBinding
@@ -13,6 +14,7 @@ class CalendarDateAdapter(
 ) : RecyclerView.Adapter<CalendarDateAdapter.CalendarDateViewHolder>() {
 
     private var selectedPosition = RecyclerView.NO_POSITION
+    private var isScheduleAvailable=false
 
     inner class CalendarDateViewHolder(private val binding: CalenderDateItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -26,6 +28,9 @@ class CalendarDateAdapter(
             } else {
                 binding.tvReminderCard.visibility = View.GONE
             }
+
+            binding.dotContentAvailable.visibility = if (isScheduleAvailable) View.VISIBLE else View.GONE
+
             binding.viewIndicator.visibility = if (isSelected) View.VISIBLE else View.GONE
             binding.root.setOnClickListener {
                 val previousSelectedPosition = selectedPosition
@@ -52,9 +57,10 @@ class CalendarDateAdapter(
 
     override fun getItemCount() = dates.size
 
-    fun setSelectedPosition(position: Int) {
+    fun setSelectedPosition(position: Int, isScheduleAvailableStatus: Boolean) {
         val previousSelectedPosition = selectedPosition
         selectedPosition = position
+        isScheduleAvailable=isScheduleAvailableStatus
         notifyItemChanged(previousSelectedPosition)
         notifyItemChanged(selectedPosition)
     }

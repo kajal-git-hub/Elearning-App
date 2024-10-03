@@ -19,7 +19,8 @@ class HorizontalCalendarSetUp {
     @RequiresApi(Build.VERSION_CODES.O)
     fun scrollToSpecificDate(
         recyclerView: RecyclerView,
-        zonedDateTime: ZonedDateTime
+        zonedDateTime: ZonedDateTime,
+        isScheduleAvailablestatus: Boolean
     ) {
         val dates = getDatesForMonth(currentMonth)
         val adapter = recyclerView.adapter as? CalendarDateAdapter
@@ -27,7 +28,7 @@ class HorizontalCalendarSetUp {
         val position = dates.indexOfFirst { it.zonedDateTime?.toLocalDate() == zonedDateTime.toLocalDate() }
         if (position != -1) {
             (recyclerView.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(position, 0)
-            adapter?.setSelectedPosition(position)
+            adapter?.setSelectedPosition(position,isScheduleAvailablestatus)
         }
     }
 
@@ -47,7 +48,7 @@ class HorizontalCalendarSetUp {
         val currentPosition = dates.indexOfFirst { it.date == currentDate.date }
         if (currentPosition != -1) {
             (recyclerView.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(currentPosition, 0)
-            adapter.setSelectedPosition(currentPosition)
+            adapter.setSelectedPosition(currentPosition,false)
         }
 
         return getCurrentMonthYear(currentMonth)
