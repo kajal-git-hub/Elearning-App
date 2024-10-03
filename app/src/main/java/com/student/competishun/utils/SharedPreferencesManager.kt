@@ -18,6 +18,7 @@ class SharedPreferencesManager(context: Context) {
 
     companion object {
         private const val KEY_ACCESS_TOKEN = "accessToken"
+        private const val KEY_Order_Id = "rzpOrderId"
         private const val KEY_REFRESH_TOKEN = "refreshToken"
         private const val KEY_UPDATE_USER_INPUT = "updateUserInput"
         private const val KEY_MOBILE_NO = "mobileNo"
@@ -152,6 +153,14 @@ class SharedPreferencesManager(context: Context) {
             sharedPreferences.edit().putString(KEY_ACCESS_TOKEN, value).apply()
 
             Log.e("sharedPreferences token", accessToken.toString())
+        }
+
+    var rzpOrderId: String?
+        get() = sharedPreferences.getString(KEY_Order_Id, null)
+        set(value) {
+            sharedPreferences.edit().putString(KEY_Order_Id, value).apply()
+
+            Log.e("sharedPreferences rzpOrderId", rzpOrderId.toString())
         }
 
     var userId: String?

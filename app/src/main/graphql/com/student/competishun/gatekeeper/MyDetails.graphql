@@ -12,6 +12,7 @@ query MyDetails {
             address {
                 city
             }
+            rollNumber
             passportPhoto
             documentPhoto
             fatherName

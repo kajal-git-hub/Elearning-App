@@ -106,7 +106,10 @@ class ProfileFragment : Fragment() {
                 Log.d("userDetails",data.getMyDetails.userInformation.address?.city.toString())
                 val name = data.getMyDetails.fullName
                 val target = data.getMyDetails.userInformation.targetYear
-
+                val rollno = data.getMyDetails.userInformation.rollNumber
+                if (!rollno.isNullOrEmpty()){
+                    binding.tvYear.text= "| "+sharedPreferencesManager.targetYear.toString()
+                }
                 if (!name.isNullOrEmpty()) {
                     binding.ProfileUserName.setText(name)
                 }

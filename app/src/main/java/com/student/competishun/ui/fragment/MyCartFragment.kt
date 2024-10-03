@@ -389,6 +389,7 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener,MyCartAdapter.OnCar
 
     private fun processPayment(order: CreateOrderMutation.CreateOrder) {
         val rzpOrderId = order.rzpOrderId
+        sharedPreferencesManager.rzpOrderId = rzpOrderId
         Log.e("razorpaydi",rzpOrderId.toString())
         var amount = order.amountPaid
         Log.e("chcekcnou",amount.toString())
