@@ -67,13 +67,85 @@ class MyPurchaseFragment : Fragment() {
         )
 
         binding.rvToggleButtons.apply {
-            layoutManager = LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
-            adapter = PurchaseStatusAdapter(context, statusList){ selectedStatus ->
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            adapter = PurchaseStatusAdapter(context, statusList) { selectedStatus ->
                 filterPurchaseList(selectedStatus)
 
             }
         }
 
+        coursePaymentAdapter = CoursePaymentAdapter(emptyList()){ selectedCourse ->
+            val bundle = Bundle().apply {
+                putString("PurchaseCourseId",selectedCourse.enrolledCourseId)
+                putString("PurchaseUserId",selectedCourse.userId)
+            }
+            findNavController().navigate(R.id.MyPurchaseDetail, bundle)
+
+
+        }
+        binding.recyclerViewPurchases.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = coursePaymentAdapter
+        }
+    }
+
+    private fun observeUserDetails() {
+        userViewModel.userDetails.observe(viewLifecycleOwner) { result ->
+            result.onSuccess { data ->
+                val paymentDetails = data.getMyDetails.courses.mapNotNull { course ->
+                    course?.let {
+                        CoursePaymentDetails(
+                            it.paymentStatus ?: "",
+                            it.enrolledCourseName ?: "",
+                            getIconResForStatus(it.paymentStatus),
+                            "₹ ${it.pricePaid}",
+                            helperFunctions.formatCourseDate(it.createdAt.toString()),
+                            "One-Time Payment",
+                            "24111001",
+                            it.paymentStatus == "refund complete",
+                            it.enrolledCourseId,
+                            data.getMyDetails.id
+                        )
+                    }
+                }
+
+                coursePaymentList = paymentDetails
+                // Initially show all payments
+                coursePaymentAdapter.updateData(coursePaymentList)
+            }.onFailure { exception ->
+                Toast.makeText(
+                    requireContext(),
+                    "Error fetching details: ${exception.message}",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
+    }
+
+    private fun getIconResForStatus(paymentStatus: String?): Int {
+        return when (paymentStatus) {
+            "captured" -> R.drawable.group_1707479053
+            "FAILED" -> R.drawable.failed_status
+            "REFUND COMPLETE" -> R.drawable.refund_status
+            "PAYMENT PROCESSING" -> R.drawable.process_status
+            else -> R.drawable.group_1707479053 // Fallback icon
+        }
+    }
+
+    private fun filterPurchaseList(selectedStatus: String) {
+        val filteredList = when (selectedStatus) {
+            "All" -> coursePaymentList
+            "Successful" -> coursePaymentList.filter { it.purchaseStatus == "captured" }
+//            "Failed" -> coursePaymentList.filter { it.purchaseStatus == "FAILED" }
+//            "Processing" -> coursePaymentList.filter { it.purchaseStatus == "PAYMENT PROCESSING" }
+            else -> coursePaymentList
+        }
+
+        // Update the adapter with the filtered list
+        coursePaymentAdapter.updateData(filteredList)
+    }
+
+}
 
 
 //        coursePaymentList = listOf(
@@ -118,58 +190,3 @@ class MyPurchaseFragment : Fragment() {
 //                true // Refund note visible
 //            ),
 //        )
-
-        coursePaymentAdapter = CoursePaymentAdapter(emptyList())
-        binding.recyclerViewPurchases.apply {
-            layoutManager = LinearLayoutManager(context)
-            adapter = coursePaymentAdapter
-        }
-    }
-    private fun observeUserDetails() {
-        userViewModel.userDetails.observe(viewLifecycleOwner) { result ->
-            result.onSuccess { data ->
-                val paymentDetails = data.getMyDetails.courses.mapNotNull { course ->
-                    course?.let {
-                        CoursePaymentDetails(
-                            it.paymentStatus ?: "",
-                            it.enrolledCourseName ?: "",
-                            getIconResForStatus(it.paymentStatus),
-                            "₹ ${it.pricePaid}",
-                          helperFunctions.formatCourseDate(it.createdAt.toString()),
-                              "One-Time Payment",
-                              "24111001",
-                            it.paymentStatus == "refund complete"
-                        )
-                    }
-                }
-
-                coursePaymentList = paymentDetails
-                // Initially show all payments
-                coursePaymentAdapter.updateData(coursePaymentList)
-            }.onFailure { exception ->
-                Toast.makeText(requireContext(), "Error fetching details: ${exception.message}", Toast.LENGTH_LONG).show()
-            }
-        }
-    }    private fun getIconResForStatus(paymentStatus: String?): Int {
-        return when (paymentStatus) {
-            "captured" -> R.drawable.group_1707479053
-            "FAILED" -> R.drawable.failed_status
-            "REFUND COMPLETE" -> R.drawable.refund_status
-            "PAYMENT PROCESSING" -> R.drawable.process_status
-            else -> R.drawable.group_1707479053 // Fallback icon
-        }
-    }
-    private fun filterPurchaseList(selectedStatus: String) {
-        val filteredList = when (selectedStatus) {
-            "All" -> coursePaymentList
-            "Successful" -> coursePaymentList.filter { it.purchaseStatus == "captured" }
-//            "Failed" -> coursePaymentList.filter { it.purchaseStatus == "FAILED" }
-//            "Processing" -> coursePaymentList.filter { it.purchaseStatus == "PAYMENT PROCESSING" }
-            else -> coursePaymentList
-        }
-
-        // Update the adapter with the filtered list
-        coursePaymentAdapter.updateData(filteredList)
-    }
-
-}

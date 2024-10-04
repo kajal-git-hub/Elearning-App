@@ -11,7 +11,8 @@ import com.student.competishun.R
 import com.student.competishun.data.model.CoursePaymentDetails
 
 class CoursePaymentAdapter(
-    private var coursePaymentList: List<CoursePaymentDetails>
+    private var coursePaymentList: List<CoursePaymentDetails>,
+    private val onCourseClick: (CoursePaymentDetails) -> Unit
 ) : RecyclerView.Adapter<CoursePaymentAdapter.CoursePaymentViewHolder>() {
 
     fun updateData(filteredList: List<CoursePaymentDetails>) {
@@ -76,6 +77,10 @@ class CoursePaymentAdapter(
 
         // Set visibility for refund note
         holder.clNote.visibility = if (currentItem.isRefundVisible) View.VISIBLE else View.GONE
+
+        holder.itemView.setOnClickListener {
+            onCourseClick(currentItem)
+        }
     }
 
     // Return the size of your dataset (invoked by the layout manager)
