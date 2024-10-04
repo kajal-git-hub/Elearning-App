@@ -19,7 +19,7 @@ class HorizontalCalendarSetUp {
     @RequiresApi(Build.VERSION_CODES.O)
     fun scrollToSpecificDate(
         recyclerView: RecyclerView,
-        zonedDateTime: ZonedDateTime
+        zonedDateTime: ZonedDateTime,
     ) {
         val dates = getDatesForMonth(currentMonth)
         val adapter = recyclerView.adapter as? CalendarDateAdapter
@@ -35,10 +35,11 @@ class HorizontalCalendarSetUp {
     fun setUpCalendarAdapter(
         recyclerView: RecyclerView,
         context: Context,
-        onDateSelected: (CalendarDate) -> Unit
+        onDateSelected: (CalendarDate) -> Unit,
+        hasScheduleList: MutableList<String>,
     ): String {
         val dates = getDatesForMonth(currentMonth)
-        val adapter = CalendarDateAdapter(dates, onDateSelected)
+        val adapter = CalendarDateAdapter(dates, onDateSelected,hasScheduleList)
         recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         recyclerView.adapter = adapter
 
@@ -54,6 +55,22 @@ class HorizontalCalendarSetUp {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
+    fun setUpScheduleAvailable(
+        recyclerView: RecyclerView,
+        hasScheduleList: MutableList<String>,
+        context: Context,
+        onDateSelected: (CalendarDate)  -> Unit
+    ) {
+        val adapter = recyclerView.adapter as? CalendarDateAdapter
+            ?: CalendarDateAdapter(getDatesForMonth(currentMonth), onDateSelected, hasScheduleList).also {
+                recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+                recyclerView.adapter = it
+            }
+        adapter.updateHasScheduleList(hasScheduleList)
+    }
+
+
+    @RequiresApi(Build.VERSION_CODES.O)
     fun setUpCalendarPrevNextClickListener(
         recyclerView: RecyclerView,
         nextButton: ImageView,
@@ -64,12 +81,18 @@ class HorizontalCalendarSetUp {
     ) {
         nextButton.setOnClickListener {
             currentMonth.add(Calendar.MONTH, 1)
-            val newMonth = setUpCalendarAdapter(recyclerView, context, onDateSelected)
+            val newMonth = setUpCalendarAdapter(
+                recyclerView, context, onDateSelected,
+                mutableListOf()
+            )
             onMonthChange(newMonth)
         }
         prevButton.setOnClickListener {
             currentMonth.add(Calendar.MONTH, -1)
-            val newMonth = setUpCalendarAdapter(recyclerView, context, onDateSelected)
+            val newMonth = setUpCalendarAdapter(
+                recyclerView, context, onDateSelected,
+                mutableListOf()
+            )
             onMonthChange(newMonth)
         }
     }
@@ -113,7 +136,6 @@ class HorizontalCalendarSetUp {
 
         return CalendarDate(date, day, null,zonedDateTime)
     }
-
 
 }
 

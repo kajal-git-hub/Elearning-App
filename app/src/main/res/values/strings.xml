@@ -57,6 +57,10 @@
     <string name="next">Next</string>
     <string name="previous">Previous</string>
 
+    <string name="thumbnail_desc">The topics covered typically include:
+        <ul>Relations and Functions: Types of relations and functions, &amp; Inverse trigonometric functions.Relations and Functions: Types of relations and functions, &amp; Inverse trigonometric functions.</ul>
+        <ul>This chapter covers important topics such as Cartesian products of sets, various types of relations, domain and range of relations, and different types of functions. These foundational concepts are essential for understanding advanced mathematical ideas</ul></string>
+
     <string name="lorem_ipsum">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris
         volutpat, dolor id interdum ullamcorper, risus dolor egestas lectus, sit amet mattis purus

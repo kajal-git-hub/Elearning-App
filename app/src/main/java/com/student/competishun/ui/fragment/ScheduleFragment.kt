@@ -4,7 +4,6 @@ import android.content.Intent
 import com.student.competishun.utils.HorizontalCalendarSetUp
 import android.os.Build
 import android.os.Bundle
-import android.os.CountDownTimer
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -15,11 +14,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.student.competishun.R
 import com.student.competishun.curator.FindAllCourseFolderContentByScheduleTimeQuery
-import com.student.competishun.curator.FindCourseFolderProgressQuery
 import com.student.competishun.data.model.CalendarDate
 import com.student.competishun.data.model.ScheduleData
 import com.student.competishun.databinding.FragmentScheduleBinding
@@ -36,7 +32,6 @@ import java.time.LocalTime
 import java.time.ZoneId
 import java.util.Locale
 import java.time.ZonedDateTime
-import java.time.Duration
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Calendar
@@ -56,6 +51,8 @@ class ScheduleFragment : Fragment(), ToolbarCustomizationListener {
     lateinit var scheduleData:ZonedDateTime
     var matchingPosition: Int? = null
 
+    var hasScheduleList= mutableListOf<String>()
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -68,12 +65,13 @@ class ScheduleFragment : Fragment(), ToolbarCustomizationListener {
     private fun setupCalendar(scheduleTime:String) {
         calendarSetUp = HorizontalCalendarSetUp()
 
-        val currentMonth = calendarSetUp.setUpCalendarAdapter(
+        calendarSetUp.setUpCalendarAdapter(
             binding.rvCalenderDates,
             requireContext(),
             onDateSelected = { calendarDate ->
                 scrollToDate(calendarDate)
             }
+            ,hasScheduleList
         )
         //Log.e("schedule57 $scheduleTime", convertIST(scheduleTime).month.toString() )
         binding.tvCalenderCurrentMonth.text = "${convertIST(scheduleData.toString()).month} ${convertIST(scheduleData.toString()).year} "
@@ -90,11 +88,19 @@ class ScheduleFragment : Fragment(), ToolbarCustomizationListener {
               //  scrollToDate(calendarDate)
             }
         )
+
         val today = LocalDate.now() // Get current date without time
 
         calendarSetUp.scrollToSpecificDate(binding.rvCalenderDates, convertIST(scheduleTime))
 
       //  calendarSetUp.scrollToSpecificDate(binding.rvCalenderDates, convertIST(scheduleTime))
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun setUpScheduleAvailable(hasScheduleList: MutableList<String>) {
+        calendarSetUp.setUpScheduleAvailable(binding.rvCalenderDates, hasScheduleList,requireContext(),{ calendarDate ->
+            //  scrollToDate(calendarDate)
+        })
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -157,6 +163,7 @@ class ScheduleFragment : Fragment(), ToolbarCustomizationListener {
                 data.findAllCourseFolderContentByScheduleTime.forEachIndexed { index, scheduleContent ->
                     Log.e("timea $index", scheduleContent.content.scheduled_time.toString())
                 }
+
                 data.findAllCourseFolderContentByScheduleTime.forEachIndexed {index, schedulecontent->
                 // Log.e("timea",schedulecontent.s.toString())
                  schedulecontent.content.scheduled_time.let {
@@ -165,7 +172,16 @@ class ScheduleFragment : Fragment(), ToolbarCustomizationListener {
                      val regex = Regex("""(\d{4}-\d{2}-\d{2})""")
                      val matchResult = regex.find(it.toString())
                      val extractedDate = matchResult?.value ?: "Invalid date"
+                     val date=extractedDate.split("-")[2]
                      Log.e("scheduletimecu ","$extractedDate $it")
+
+                     Log.e("aman",date)
+
+                     if(!hasScheduleList.contains(date))
+                     {
+                         hasScheduleList.add(date)
+                     }
+
                      if (!foundMatchingDate){
                          setupCalendar(it.toString())
                      }
@@ -178,6 +194,7 @@ class ScheduleFragment : Fragment(), ToolbarCustomizationListener {
                          return@forEachIndexed
                      }
 
+
 //                     if (currentDate != it)
 //                         setupCalendar(it.toString()) else setupCalendar(currentDate)
 
@@ -185,6 +202,9 @@ class ScheduleFragment : Fragment(), ToolbarCustomizationListener {
                     Log.e("schedule57 $scheduleData", convertIST(scheduleData.toString()).toString())
                     binding.tvCalenderCurrentMonth.text = "${convertIST(scheduleData.toString()).month} ${convertIST(scheduleData.toString()).year}"
                 }
+
+                setUpScheduleAvailable(hasScheduleList)
+                Log.e("hasScheduleList",hasScheduleList.toString())
 
             }.onFailure { exception ->
                 Toast.makeText(context, "Error: ${exception.message}", Toast.LENGTH_SHORT).show()

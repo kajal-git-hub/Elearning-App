@@ -313,8 +313,4 @@ object Constants {
 //        Toast.makeText(requireContext(), "Item deleted successfully", Toast.LENGTH_SHORT).show()
 //    }
 
-
-
-
-
 }

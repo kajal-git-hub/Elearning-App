@@ -1,5 +1,6 @@
 package com.student.competishun.ui.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,7 +10,8 @@ import com.student.competishun.databinding.CalenderDateItemBinding
 
 class CalendarDateAdapter(
     private val dates: List<CalendarDate>,
-    private val onClick: (CalendarDate) -> Unit
+    private val onClick: (CalendarDate) -> Unit,
+    private var hasScheduleList: MutableList<String>
 ) : RecyclerView.Adapter<CalendarDateAdapter.CalendarDateViewHolder>() {
 
     private var selectedPosition = RecyclerView.NO_POSITION
@@ -20,12 +22,21 @@ class CalendarDateAdapter(
         fun bind(calendarDate: CalendarDate, isSelected: Boolean) {
             binding.tvDate.text = calendarDate.date
             binding.tvDay.text = calendarDate.day
+
             if (calendarDate.task != null) {
                 binding.tvReminderCard.visibility = View.VISIBLE
                 binding.tvReminderCard.text = calendarDate.task
             } else {
                 binding.tvReminderCard.visibility = View.GONE
             }
+
+            if (hasScheduleList.contains(calendarDate.date)) {
+                Log.e("calendaradapter",hasScheduleList.toString() +"+++"+ calendarDate.date)
+                binding.dotContentAvailable.visibility = View.VISIBLE
+            } else {
+                binding.dotContentAvailable.visibility = View.GONE
+            }
+
             binding.viewIndicator.visibility = if (isSelected) View.VISIBLE else View.GONE
             binding.root.setOnClickListener {
                 val previousSelectedPosition = selectedPosition
@@ -58,5 +69,11 @@ class CalendarDateAdapter(
         notifyItemChanged(previousSelectedPosition)
         notifyItemChanged(selectedPosition)
     }
+
+    fun updateHasScheduleList(newHasScheduleList: MutableList<String>) {
+        hasScheduleList = newHasScheduleList
+        notifyDataSetChanged()
+    }
 }
+
 
