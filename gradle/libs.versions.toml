@@ -80,7 +80,6 @@ play-services-wallet = { module = "com.google.android.gms:play-services-wallet",
 razorpay-checkout = { module = "com.razorpay:checkout", version.ref = "checkoutVersion" }
 play-services-drive = { group = "com.google.android.gms", name = "play-services-drive", version.ref = "playServicesDrive" }
 androidx-core-i18n = { group = "androidx.core", name = "core-i18n", version.ref = "coreI18n" }
-firebase-auth = { group = "com.google.firebase", name = "firebase-auth", version.ref = "firebaseAuth" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
