@@ -177,6 +177,7 @@
                 app:layout_constraintTop_toTopOf="parent"/>
 
             <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/et_PurtotalPrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="₹40,000"
@@ -210,6 +211,7 @@
                 app:layout_constraintTop_toTopOf="parent"/>
 
             <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/et_PurInstallmentCharge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="₹2,500"
@@ -233,6 +235,7 @@
             app:layout_constraintEnd_toEndOf="parent">
 
             <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/et_PurDiscountPer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Discount (15%)"
@@ -243,6 +246,7 @@
                 app:layout_constraintTop_toTopOf="parent"/>
 
             <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/et_PurDiscountPay"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="- ₹6,000"
@@ -275,6 +279,7 @@
                 app:layout_constraintTop_toTopOf="parent"/>
 
             <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/et_PurFirstInstallment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="₹18,000"
@@ -309,6 +314,7 @@
                 app:layout_constraintTop_toTopOf="parent"/>
 
             <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/et_PurSecondInstallment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="₹18,000"
@@ -387,6 +393,7 @@
                 app:layout_constraintTop_toTopOf="parent"/>
 
             <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/et_PurFinalPay"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text=" ₹ 36,500"
