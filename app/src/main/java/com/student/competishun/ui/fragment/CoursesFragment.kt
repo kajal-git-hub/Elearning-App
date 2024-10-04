@@ -1,8 +1,6 @@
 package com.student.competishun.ui.fragment
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
 import com.student.competishun.R
@@ -15,7 +13,6 @@ import android.widget.TextView
 import androidx.fragment.app.viewModels
 import androidx.media3.common.util.Log
 import com.google.android.material.appbar.MaterialToolbar
-import com.student.competishun.curator.type.FindAllCourseInputStudent
 import com.student.competishun.ui.main.HomeActivity
 import com.student.competishun.ui.viewmodel.StudentCoursesViewModel
 import dagger.hilt.android.AndroidEntryPoint

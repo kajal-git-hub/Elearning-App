@@ -1,7 +1,5 @@
 package com.student.competishun.data.model
 
-import com.student.competishun.curator.type.CourseLectureCount
-
 data class CartItem(
     val profileImageResId: String,
     val name: String,

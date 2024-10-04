@@ -1,23 +1,8 @@
 package com.student.competishun.utils
 
-import android.app.DownloadManager
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
-import android.net.Uri
-import android.os.Environment
-import android.util.Log
-import android.widget.Toast
-import com.student.competishun.R
-import com.student.competishun.data.model.OtherContentItem
-import com.student.competishun.data.model.OurContentFirstItem
-import com.student.competishun.data.model.OurContentItem
 import com.student.competishun.data.model.RecommendedCourseDataModel
 import com.student.competishun.data.model.Testimonial
-import com.student.competishun.data.model.TopicContentModel
 import com.student.competishun.data.model.WhyCompetishun
-import java.io.File
 
 object Constants {
     // Define each list item as a constant

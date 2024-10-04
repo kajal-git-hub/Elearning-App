@@ -9,10 +9,8 @@ import androidx.activity.addCallback
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.student.competishun.R
-import com.student.competishun.data.model.FAQItem
 import com.student.competishun.data.model.TermsItem
 import com.student.competishun.databinding.FragmentTermsAndConditionBinding
-import com.student.competishun.ui.adapter.FAQAdapter
 import com.student.competishun.ui.adapter.TermsAdapter
 
 class TermsAndCondition : Fragment() {

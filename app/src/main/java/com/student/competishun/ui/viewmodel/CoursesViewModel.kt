@@ -5,7 +5,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.student.competishun.curator.FindCourseFolderByParentIdQuery
 import com.student.competishun.curator.FindCourseFolderProgressQuery
 import com.student.competishun.curator.FindCourseParentFolderProgressQuery
 import com.student.competishun.curator.GetAllCourseQuery
@@ -14,7 +13,6 @@ import com.student.competishun.data.repository.CoursesRepository
 import com.student.competishun.utils.HelperFunctions
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import java.util.Date
 import com.student.competishun.di.Result
 import javax.inject.Inject
 

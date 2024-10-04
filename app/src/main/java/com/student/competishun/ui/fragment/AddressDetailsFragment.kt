@@ -12,7 +12,6 @@ import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import com.student.competishun.R
 import com.student.competishun.databinding.FragmentAddressDetailsBinding
-import com.student.competishun.databinding.FragmentPersonalDetailBinding
 import com.student.competishun.ui.main.HomeActivity
 
 class AddressDetailsFragment : Fragment() {

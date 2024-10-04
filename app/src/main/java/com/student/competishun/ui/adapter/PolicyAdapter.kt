@@ -9,7 +9,6 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.student.competishun.R
 import com.student.competishun.data.model.PolicyItem
-import com.student.competishun.data.model.TermsItem
 
 class PolicyAdapter(private var policyList: List<PolicyItem>):
     RecyclerView.Adapter<PolicyAdapter.PolicyViewHolder>() {

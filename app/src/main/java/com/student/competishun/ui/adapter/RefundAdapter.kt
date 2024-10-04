@@ -8,7 +8,6 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.student.competishun.R
-import com.student.competishun.data.model.DisclaimerItem
 import com.student.competishun.data.model.RefundItem
 
 class RefundAdapter(private var refundList: List<RefundItem>):RecyclerView.Adapter<RefundAdapter.RefundViewHolder>() {

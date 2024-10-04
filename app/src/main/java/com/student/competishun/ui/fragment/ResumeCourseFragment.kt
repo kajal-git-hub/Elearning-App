@@ -14,16 +14,12 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.student.competishun.R
 import com.student.competishun.curator.FindCourseParentFolderProgressQuery
-import com.student.competishun.curator.GetAllCourseCategoriesQuery
 import com.student.competishun.curator.MyCoursesQuery
 import com.student.competishun.databinding.FragmentResumeCourseBinding
-import com.student.competishun.ui.adapter.ExploreCourseAdapter
-import com.student.competishun.ui.adapter.OurCoursesAdapter
 import com.student.competishun.ui.adapter.OurSubjectsAdapter
 import com.student.competishun.ui.main.HomeActivity
 import com.student.competishun.ui.viewmodel.CoursesViewModel
 import com.student.competishun.ui.viewmodel.MyCoursesViewModel
-import com.student.competishun.utils.OnCourseItemClickListener
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

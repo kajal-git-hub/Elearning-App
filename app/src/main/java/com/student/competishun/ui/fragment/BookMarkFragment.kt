@@ -15,7 +15,6 @@ import com.student.competishun.R
 import com.student.competishun.data.model.TopicContentModel
 import com.student.competishun.databinding.FragmentBookMarkBinding
 import com.student.competishun.ui.adapter.BookMarkAdapter
-import com.student.competishun.ui.adapter.DownloadedItemAdapter
 import com.student.competishun.ui.main.HomeActivity
 import com.student.competishun.utils.SharedPreferencesManager
 import java.io.File

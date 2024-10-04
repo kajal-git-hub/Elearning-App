@@ -26,9 +26,7 @@ import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.trackselection.DefaultTrackSelector
-import androidx.navigation.fragment.findNavController
 import com.otaliastudios.zoom.ZoomLayout
-import com.student.competishun.R
 import com.student.competishun.databinding.FragmentMediaPlayerBinding
 import com.student.competishun.di.SharedVM
 import com.student.competishun.ui.main.HomeActivity
@@ -125,6 +123,7 @@ class MediaPlayerFragment : Fragment() {
         try {
             changeQuality(videoFormat)
             val mediaItem = MediaItem.fromUri(videoUrl)
+            Log.e("vidoeurl",videoUrl)
             player.setMediaItem(mediaItem)
             player.prepare()
             player.play()
@@ -137,6 +136,7 @@ class MediaPlayerFragment : Fragment() {
                         Player.STATE_READY -> {
                             binding.playerView.visibility = View.VISIBLE
                             binding.upNextOverlay.visibility = View.GONE
+                            player.play()
                         }
                         Player.STATE_ENDED -> {
                             Log.e("videoEnded",player.toString())

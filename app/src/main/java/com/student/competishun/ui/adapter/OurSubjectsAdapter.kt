@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.textview.MaterialTextView
 import com.student.competishun.R
 import com.student.competishun.curator.FindCourseParentFolderProgressQuery
-import com.student.competishun.curator.MyCoursesQuery
 
 class OurSubjectsAdapter(private val listOurSubjectItem:List<FindCourseParentFolderProgressQuery. Folder?>, private val progress: List<Double>, private val onItemClicked: (String, String, String ) -> Unit
 ): RecyclerView.Adapter<OurSubjectsAdapter.OurSubjectViewHolder>() {

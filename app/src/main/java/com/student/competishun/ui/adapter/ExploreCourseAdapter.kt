@@ -9,7 +9,6 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.Target
 import com.student.competishun.R
 import com.student.competishun.curator.MyCoursesQuery
-import com.student.competishun.data.model.ExploreCourse
 import com.student.competishun.databinding.ExploreCourseItemBinding
 
 class ExploreCourseAdapter(

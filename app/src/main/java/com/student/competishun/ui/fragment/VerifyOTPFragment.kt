@@ -19,16 +19,13 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
-import androidx.activity.viewModels
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.otaliastudios.opengl.core.use
 import com.student.competishun.R
 import com.student.competishun.databinding.FragmentVerifyBinding
-import com.student.competishun.gatekeeper.UpdateUserMutation
 import com.student.competishun.ui.main.HomeActivity
 import com.student.competishun.ui.main.MainActivity
 import com.student.competishun.ui.viewmodel.GetOtpViewModel

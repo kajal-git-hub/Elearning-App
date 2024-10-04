@@ -7,15 +7,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.student.competishun.R
 import com.student.competishun.curator.FindCourseFolderProgressQuery
-import com.student.competishun.curator.MyCoursesQuery
-import com.student.competishun.data.model.SubjectContentItem
 import com.student.competishun.data.model.TopicTypeModel
 import com.student.competishun.databinding.FragmentBottomsheetCourseTopicTypeBinding
 import com.student.competishun.ui.adapter.TopicTypeAdapter

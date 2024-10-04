@@ -7,20 +7,15 @@ import android.net.Uri
 import android.os.Environment
 import android.widget.ImageView
 import android.widget.LinearLayout
-import androidx.core.content.ContentProviderCompat.requireContext
-import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.student.competishun.R
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.TimeZone
 import javax.crypto.Cipher
 import javax.crypto.CipherOutputStream
-import javax.crypto.KeyGenerator
 import javax.crypto.SecretKey
-import javax.crypto.spec.SecretKeySpec
 import java.io.*
 
 class HelperFunctions {

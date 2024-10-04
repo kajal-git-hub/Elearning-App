@@ -2,25 +2,20 @@ package com.student.competishun.ui.adapter
 
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat.startActivity
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import com.student.competishun.R
 import com.student.competishun.data.model.TopicContentModel
-import com.student.competishun.ui.adapter.DownloadedItemAdapter.OnVideoClickListener
 import com.student.competishun.ui.fragment.BookMarkFragment
 import com.student.competishun.ui.fragment.BottomSheetBookmarkDeleteDownload
-import com.student.competishun.ui.fragment.DownloadFragment
 import com.student.competishun.ui.main.PdfViewerActivity
 import com.student.competishun.utils.SharedPreferencesManager
-import java.io.File
 
 class BookMarkAdapter(
     private val context: Context,

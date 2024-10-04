@@ -1,6 +1,5 @@
 package com.student.competishun.ui.fragment
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -12,11 +11,8 @@ import androidx.activity.addCallback
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.student.competishun.R
-import com.student.competishun.databinding.FragmentOnBoardingBinding
 import com.student.competishun.databinding.FragmentProfileBinding
-import com.student.competishun.databinding.FragmentReferenceBinding
 import com.student.competishun.ui.main.HomeActivity
-import com.student.competishun.ui.main.MainActivity
 import com.student.competishun.ui.viewmodel.UserViewModel
 import com.student.competishun.utils.SharedPreferencesManager
 import dagger.hilt.android.AndroidEntryPoint

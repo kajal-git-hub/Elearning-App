@@ -11,7 +11,6 @@ import com.student.competishun.R
 import com.student.competishun.data.model.NotificationItem
 import com.student.competishun.data.model.NotificationSection
 import com.student.competishun.databinding.FragmentNotificationBinding
-import com.student.competishun.databinding.FragmentProfileBinding
 import com.student.competishun.ui.adapter.NotificationSectionAdapter
 
 class NotificationFragment : Fragment() {

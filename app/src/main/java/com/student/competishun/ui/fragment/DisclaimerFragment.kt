@@ -10,10 +10,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.student.competishun.R
 import com.student.competishun.data.model.DisclaimerItem
-import com.student.competishun.data.model.PolicyItem
 import com.student.competishun.databinding.FragmentDisclaimerBinding
 import com.student.competishun.ui.adapter.DisclaimerAdapter
-import com.student.competishun.ui.adapter.PolicyAdapter
 
 class DisclaimerFragment : Fragment() {
 

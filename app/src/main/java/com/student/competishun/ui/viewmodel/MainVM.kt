@@ -1,7 +1,6 @@
 package com.student.competishun.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
-import com.student.competishun.data.api.ApiProcess
 import com.student.competishun.data.api.Repository
 import com.student.competishun.data.model.User
 import dagger.hilt.android.lifecycle.HiltViewModel

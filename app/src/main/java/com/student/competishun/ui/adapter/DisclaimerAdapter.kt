@@ -9,7 +9,6 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.student.competishun.R
 import com.student.competishun.data.model.DisclaimerItem
-import com.student.competishun.data.model.PolicyItem
 
 class DisclaimerAdapter(private var disclaimerList: List<DisclaimerItem>):RecyclerView.Adapter<DisclaimerAdapter.DisclaimerViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DisclaimerAdapter.DisclaimerViewHolder {

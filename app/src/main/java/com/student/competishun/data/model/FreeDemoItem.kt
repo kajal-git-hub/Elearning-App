@@ -1,7 +1,5 @@
 package com.student.competishun.data.model
 
-import com.student.competishun.curator.FindCourseFolderProgressQuery
-
 data class FreeDemoItem(
     val id:String,
     val playIcon:Int,

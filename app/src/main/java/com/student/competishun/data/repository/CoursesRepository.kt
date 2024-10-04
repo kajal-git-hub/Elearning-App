@@ -4,7 +4,6 @@ import android.util.Log
 import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.api.Optional
 import com.apollographql.apollo3.exception.ApolloException
-import com.student.competishun.curator.FindCourseFolderByParentIdQuery
 import com.student.competishun.curator.FindCourseFolderProgressQuery
 import com.student.competishun.curator.FindCourseParentFolderProgressQuery
 import com.student.competishun.curator.GetAllCourseQuery

@@ -8,7 +8,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.student.competishun.R
-import com.student.competishun.curator.FindCourseFolderProgressQuery
 import com.student.competishun.data.model.FreeDemoItem
 
 class FreeDemoAdapter(private val demoItemList: List<FreeDemoItem>,

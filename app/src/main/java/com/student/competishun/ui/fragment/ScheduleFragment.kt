@@ -4,7 +4,6 @@ import android.content.Intent
 import com.student.competishun.utils.HorizontalCalendarSetUp
 import android.os.Build
 import android.os.Bundle
-import android.os.CountDownTimer
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -15,11 +14,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.student.competishun.R
 import com.student.competishun.curator.FindAllCourseFolderContentByScheduleTimeQuery
-import com.student.competishun.curator.FindCourseFolderProgressQuery
 import com.student.competishun.data.model.CalendarDate
 import com.student.competishun.data.model.ScheduleData
 import com.student.competishun.databinding.FragmentScheduleBinding
@@ -36,7 +32,6 @@ import java.time.LocalTime
 import java.time.ZoneId
 import java.util.Locale
 import java.time.ZonedDateTime
-import java.time.Duration
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Calendar

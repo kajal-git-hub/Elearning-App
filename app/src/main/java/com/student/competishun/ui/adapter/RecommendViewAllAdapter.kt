@@ -13,7 +13,6 @@ import com.bumptech.glide.request.target.Target
 import com.google.android.material.textview.MaterialTextView
 import com.student.competishun.R
 import com.student.competishun.curator.AllCourseForStudentQuery
-import com.student.competishun.curator.GetAllCourseQuery
 import com.student.competishun.utils.HelperFunctions
 import java.util.Locale
 

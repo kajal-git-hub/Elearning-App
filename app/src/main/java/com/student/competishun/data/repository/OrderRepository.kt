@@ -2,7 +2,6 @@ package com.student.competishun.data.repository
 
 import com.apollographql.apollo3.ApolloClient
 import com.student.competishun.coinkeeper.CreateOrderMutation
-import com.student.competishun.coinkeeper.GenerateReceiptQuery
 import com.student.competishun.coinkeeper.type.CreateOrderInput
 import com.student.competishun.data.api.Coinkeeper
 import javax.inject.Inject

@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.apollographql.apollo3.exception.ApolloException
 import com.student.competishun.curator.CreateCartItemsMutation
 import com.student.competishun.curator.FindAllCartItemsQuery
 import com.student.competishun.curator.type.CreateCartItemDto

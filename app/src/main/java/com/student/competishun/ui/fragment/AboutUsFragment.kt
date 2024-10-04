@@ -7,12 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.student.competishun.R
 import com.student.competishun.databinding.FragmentAboutUsBinding
 import com.student.competishun.ui.adapter.AboutUsAdapter
 import com.student.competishun.ui.adapter.AboutUsItem
-import com.student.competishun.ui.adapter.TeacherAdapter
 import com.student.competishun.ui.main.HomeActivity
 
 class AboutUsFragment : Fragment() {

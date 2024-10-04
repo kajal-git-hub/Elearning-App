@@ -1,13 +1,11 @@
 package com.student.competishun.di
 
 import android.content.Context
-import androidx.media3.common.util.Log
 import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.api.http.HttpRequest
 import com.apollographql.apollo3.api.http.HttpResponse
 import com.apollographql.apollo3.network.http.HttpInterceptor
 import com.apollographql.apollo3.network.http.HttpInterceptorChain
-import com.apollographql.apollo3.network.http.LoggingInterceptor
 import com.student.competishun.data.api.BASE_URL_COINKEEPER
 import com.student.competishun.data.api.BASE_URL_CURATOR
 import com.student.competishun.data.api.BASE_URL_GATEKEEPER

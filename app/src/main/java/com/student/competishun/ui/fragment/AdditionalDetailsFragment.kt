@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.database.Cursor
 import android.net.Uri
-import android.content.ContentResolver
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Build
@@ -24,7 +23,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.apollographql.apollo3.api.Optional
-import com.apollographql.apollo3.api.Upload
 import com.google.android.gms.common.util.IOUtils.copyStream
 import com.google.android.material.snackbar.Snackbar
 import com.student.competishun.R
@@ -34,7 +32,6 @@ import com.student.competishun.ui.main.HomeActivity
 import com.student.competishun.ui.viewmodel.UpdateUserViewModel
 import com.student.competishun.ui.viewmodel.UserViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import java.io.ByteArrayInputStream
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException

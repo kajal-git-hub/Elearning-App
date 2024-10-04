@@ -1,31 +1,21 @@
 package com.student.competishun.ui.fragment
 
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.drawable.Drawable
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 
 import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import android.widget.MediaController
 import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.addCallback
-import androidx.activity.enableEdgeToEdge
 import androidx.fragment.app.Fragment
-import androidx.core.widget.NestedScrollView
 import androidx.databinding.ObservableField
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
@@ -36,9 +26,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.apollographql.apollo3.api.Optional
 import com.bumptech.glide.Glide
 import androidx.media3.common.MediaItem
-import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.target.Target
-import com.bumptech.glide.request.transition.Transition
 import com.google.android.material.tabs.TabLayout
 import com.student.competishun.R
 import com.student.competishun.curator.AllCourseForStudentQuery
@@ -47,23 +35,19 @@ import com.student.competishun.curator.type.CreateCartItemDto
 import com.student.competishun.curator.type.EntityType
 import com.student.competishun.curator.type.FindAllCourseInputStudent
 import com.student.competishun.data.model.CourseFItem
-import com.student.competishun.data.model.ExploreCourse
 import com.student.competishun.data.model.FAQItem
 import com.student.competishun.data.model.OtherContentItem
-import com.student.competishun.data.model.OurContentFirstItem
 import com.student.competishun.data.model.OurContentItem
 import com.student.competishun.data.model.TabItem
 import com.student.competishun.data.model.TeacherItem
 import com.student.competishun.databinding.FragmentExploreBinding
 import com.student.competishun.ui.adapter.CourseAdapter
 import com.student.competishun.ui.adapter.CourseFeaturesAdapter
-import com.student.competishun.ui.adapter.ExploreCourseAdapter
 import com.student.competishun.ui.adapter.FAQAdapter
 import com.student.competishun.ui.adapter.OurContentAdapter
 import com.student.competishun.ui.adapter.TeacherAdapter
 import com.student.competishun.ui.main.HomeActivity
 import com.student.competishun.ui.main.PdfViewerActivity
-import com.student.competishun.ui.viewmodel.CoursesViewModel
 import com.student.competishun.ui.viewmodel.CreateCartViewModel
 import com.student.competishun.ui.viewmodel.GetCourseByIDViewModel
 import com.student.competishun.ui.viewmodel.StudentCoursesViewModel
@@ -71,7 +55,6 @@ import com.student.competishun.utils.HelperFunctions
 import com.student.competishun.utils.SharedPreferencesManager
 import com.student.competishun.utils.StudentCourseItemClickListener
 import dagger.hilt.android.AndroidEntryPoint
-import kotlin.math.log
 
 
 @AndroidEntryPoint

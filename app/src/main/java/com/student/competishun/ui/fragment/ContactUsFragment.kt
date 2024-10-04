@@ -7,9 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import com.student.competishun.R
-import com.student.competishun.databinding.FragmentAboutUsBinding
 import com.student.competishun.databinding.FragmentContactUsBinding
-import com.student.competishun.databinding.FragmentHomeBinding
 import com.student.competishun.ui.main.HomeActivity
 
 class ContactUsFragment : Fragment() {

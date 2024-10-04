@@ -2,14 +2,12 @@ package com.student.competishun.ui.adapter
 
 import android.content.Context
 import android.os.Build
-import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.student.competishun.R
@@ -26,10 +24,7 @@ import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.ZoneId
 import android.os.CountDownTimer
-import android.widget.TextView
 import androidx.annotation.RequiresApi
-import androidx.navigation.fragment.findNavController
-import com.student.competishun.ui.viewmodel.VideourlViewModel
 import com.student.competishun.utils.ToolbarCustomizationListener
 import java.time.LocalDate
 

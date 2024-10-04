@@ -4,7 +4,6 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
-import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -20,13 +19,9 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.student.competishun.R
-import com.student.competishun.data.model.CourseFItem
 import com.student.competishun.databinding.FragmentPaymentBinding
-import com.student.competishun.ui.adapter.CourseFeaturesAdapter
 import com.student.competishun.ui.main.HomeActivity
-import com.student.competishun.ui.main.PdfViewerActivity
 import com.student.competishun.ui.viewmodel.CreateCartViewModel
 import com.student.competishun.ui.viewmodel.GetCourseByIDViewModel
 import com.student.competishun.ui.viewmodel.OrdersViewModel

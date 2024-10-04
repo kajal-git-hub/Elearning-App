@@ -1,7 +1,6 @@
 package com.student.competishun.ui.fragment
 
 import RecommendViewAllAdapter
-import com.student.competishun.ui.adapter.RecommendedCoursesAdapter
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -23,7 +22,6 @@ import com.student.competishun.curator.type.FindAllCourseInputStudent
 import com.student.competishun.ui.main.HomeActivity
 import com.student.competishun.ui.viewmodel.StudentCoursesViewModel
 import com.student.competishun.ui.viewmodel.UserViewModel
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint

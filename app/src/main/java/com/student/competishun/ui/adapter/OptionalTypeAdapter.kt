@@ -7,7 +7,6 @@ import com.google.gson.stream.JsonReader
 import com.google.gson.stream.JsonToken
 import com.google.gson.stream.JsonWriter
 import java.lang.reflect.ParameterizedType
-import java.lang.reflect.Type
 
 class OptionalTypeAdapter<T>(private val delegate: TypeAdapter<T>) : TypeAdapter<Optional<T>>() {
     override fun write(out: JsonWriter, value: Optional<T>?) {

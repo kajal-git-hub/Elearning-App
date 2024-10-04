@@ -9,7 +9,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.student.competishun.R
 import com.student.competishun.curator.GetAllCourseCategoriesQuery
-import com.student.competishun.data.model.OurCoursesItem
 import com.student.competishun.utils.OnCourseItemClickListener
 
 class OurCoursesAdapter(private val listOurCoursesItem: List<GetAllCourseCategoriesQuery.GetAllCourseCategory>,

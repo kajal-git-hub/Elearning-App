@@ -18,10 +18,6 @@ import com.google.android.material.navigation.NavigationView
 import com.google.gson.Gson
 import com.student.competishun.R
 import com.student.competishun.curator.MyCoursesQuery
-import com.student.competishun.curator.MyCoursesQuery.Folder
-import com.student.competishun.curator.type.CourseStatus
-import com.student.competishun.curator.type.ExamType
-import com.student.competishun.curator.type.OtherRequirements
 import com.student.competishun.data.model.ExploreCourse
 import com.student.competishun.databinding.FragmentCourseEmptyBinding
 import com.student.competishun.ui.adapter.ExploreCourseAdapter
@@ -31,7 +27,6 @@ import com.student.competishun.ui.viewmodel.MyCoursesViewModel
 import com.student.competishun.ui.viewmodel.OrdersViewModel
 import com.student.competishun.utils.SharedPreferencesManager
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.ArrayList
 
 
 @AndroidEntryPoint

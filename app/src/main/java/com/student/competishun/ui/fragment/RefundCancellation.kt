@@ -9,10 +9,8 @@ import androidx.activity.addCallback
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.student.competishun.R
-import com.student.competishun.data.model.DisclaimerItem
 import com.student.competishun.data.model.RefundItem
 import com.student.competishun.databinding.FragmentRefundCancellationBinding
-import com.student.competishun.ui.adapter.DisclaimerAdapter
 import com.student.competishun.ui.adapter.RefundAdapter
 
 class RefundCancellation : Fragment() {

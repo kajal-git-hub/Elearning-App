@@ -1,10 +1,8 @@
 package com.student.competishun.data.repository
 
-import android.graphics.Bitmap
 import android.util.Log
 import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.api.Optional
-import com.apollographql.apollo3.api.toUpload
 import com.apollographql.apollo3.exception.ApolloException
 import com.student.competishun.data.api.Gatekeeper
 import com.student.competishun.data.model.Address
@@ -13,7 +11,6 @@ import com.student.competishun.data.model.UpdateUserResponse
 import com.student.competishun.data.model.UserInformation
 import com.student.competishun.gatekeeper.type.UpdateUserInput
 import com.student.competishun.data.model.User
-import java.io.File
 import javax.inject.Inject
 import javax.inject.Singleton
 

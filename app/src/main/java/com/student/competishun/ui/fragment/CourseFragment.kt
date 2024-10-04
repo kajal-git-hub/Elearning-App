@@ -18,7 +18,6 @@ import com.google.android.material.tabs.TabLayout
 import com.student.competishun.R
 import com.student.competishun.curator.AllCourseForStudentQuery
 import com.student.competishun.curator.type.FindAllCourseInputStudent
-import com.student.competishun.data.model.TabItem
 import com.student.competishun.databinding.FragmentCourseBinding
 import com.student.competishun.ui.adapter.CourseAdapter
 import com.student.competishun.ui.main.HomeActivity

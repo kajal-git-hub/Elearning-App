@@ -1,13 +1,11 @@
 package com.student.competishun.ui.fragment
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.student.competishun.R
 import com.student.competishun.databinding.FragmentProfileEditBinding
 import com.student.competishun.ui.adapter.SelectClassAdapter
 import com.student.competishun.ui.adapter.SelectExamAdapter

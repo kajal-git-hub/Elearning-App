@@ -5,13 +5,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.navigation.fragment.findNavController
-import com.student.competishun.R
-import com.student.competishun.databinding.FragmentPaymentBinding
 import com.student.competishun.databinding.FragmentPaymetFailedBinding
 import com.student.competishun.ui.main.HomeActivity
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.callbackFlow
 
 @AndroidEntryPoint
 class PaymentFailedFragment : Fragment() {

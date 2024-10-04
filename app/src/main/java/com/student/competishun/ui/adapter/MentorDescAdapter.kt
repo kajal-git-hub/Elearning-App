@@ -7,7 +7,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.student.competishun.R
-import okhttp3.internal.ignoreIoExceptions
 
 class MentorDescAdapter(private val mentorDescriptions: List<String>) :
     RecyclerView.Adapter<MentorDescAdapter.MentorDescViewHolder>() {

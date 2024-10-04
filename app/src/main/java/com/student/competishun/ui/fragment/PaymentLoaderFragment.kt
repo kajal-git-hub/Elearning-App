@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.addCallback
-import com.student.competishun.R
 import com.student.competishun.databinding.FragmentPaymentLoaderBinding
 import com.student.competishun.ui.main.HomeActivity
 import dagger.hilt.android.AndroidEntryPoint
