@@ -311,6 +311,15 @@ class HomeFragment : Fragment() {
 
         }
 
+        clickListener()
+    }
+    /**
+     * for static content listener
+     * */
+    private fun clickListener(){
+        binding.clOTSeries.setOnClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_testDashboardFragment)
+        }
     }
 
     fun getAllBanners() {

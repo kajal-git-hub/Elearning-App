@@ -34,6 +34,9 @@
         <action
             android:id="@+id/action_homeFragment_to_PersonalDetailFragment"
             app:destination="@+id/PersonalDetailsFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_testDashboardFragment"
+            app:destination="@id/testDashboardFragment" />
     </fragment>
 
     <fragment
@@ -343,6 +346,11 @@
             app:destination="@+id/homeFragment"/>
 
     </fragment>
+    <fragment
+        android:id="@+id/testDashboardFragment"
+        android:name="com.student.competishun.ui.fragment.test.TestDashboardFragment"
+        android:label="fragment_test_dashboard"
+        tools:layout="@layout/fragment_test_dashboard" />
 
 
 </navigation>
