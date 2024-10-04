@@ -43,7 +43,7 @@ class CoursePaymentAdapter(
         holder.tvPurchaseStatus.text = currentItem.purchaseStatus
 
         when(currentItem.purchaseStatus){
-            "COMPLETE" -> holder.tvPurchaseStatus.setCompoundDrawablesWithIntrinsicBounds(
+            "captured" -> holder.tvPurchaseStatus.setCompoundDrawablesWithIntrinsicBounds(
                 R.drawable.tick_circle_schedule,0,0,0)
             "FAILED" -> holder.tvPurchaseStatus.setCompoundDrawablesWithIntrinsicBounds(
                 R.drawable.failed_logo,0,0,0)
@@ -57,7 +57,7 @@ class CoursePaymentAdapter(
         holder.ivStatusIcon.setImageResource(currentItem.statusIconRes)
 
         when(currentItem.purchaseStatus){
-            "COMPLETE" -> holder.ivStatusIcon.setBackgroundResource(
+            "captured" -> holder.ivStatusIcon.setBackgroundResource(
                 R.drawable.group_1707479053
             )
             "FAILED" -> holder.ivStatusIcon.setBackgroundResource(

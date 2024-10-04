@@ -128,28 +128,29 @@ class MyPurchaseFragment : Fragment() {
     private fun observeUserDetails() {
         userViewModel.userDetails.observe(viewLifecycleOwner) { result ->
             result.onSuccess { data ->
-                // Map the courses data to the CoursePaymentDetails model
-                coursePaymentList = data.getMyDetails.courses.map { course ->
-                    CoursePaymentDetails(
-                        purchaseStatus = course?.paymentStatus ?: "",
-                        courseName = course?.enrolledCourseName ?: "",
-                        statusIconRes = getStatusIcon(course?.paymentStatus),
-                        totalAmountPaid = "₹ ${course?.pricePaid}",
-                        amountPaidOn = (  helperFunctions.formatCourseDate((course?.createdAt ?: "").toString())),
-                        paymentType = "One-Time Payment", // Assuming payment type is same
-                        studentRollNo = "24111001", // Placeholder for roll number
-                        isRefundVisible = course?.paymentStatus == "REFUND COMPLETE"
-                    )
+                val paymentDetails = data.getMyDetails.courses.mapNotNull { course ->
+                    course?.let {
+                        CoursePaymentDetails(
+                            it.paymentStatus ?: "",
+                            it.enrolledCourseName ?: "",
+                            getIconResForStatus(it.paymentStatus),
+                            "₹ ${it.pricePaid}",
+                          helperFunctions.formatCourseDate(it.createdAt.toString()),
+                              "One-Time Payment",
+                              "24111001",
+                            it.paymentStatus == "refund complete"
+                        )
+                    }
                 }
 
-                // Initially show all data
+                coursePaymentList = paymentDetails
+                // Initially show all payments
                 coursePaymentAdapter.updateData(coursePaymentList)
             }.onFailure { exception ->
                 Toast.makeText(requireContext(), "Error fetching details: ${exception.message}", Toast.LENGTH_LONG).show()
             }
         }
-    }
-    private fun getStatusIcon(paymentStatus: String?): Int {
+    }    private fun getIconResForStatus(paymentStatus: String?): Int {
         return when (paymentStatus) {
             "captured" -> R.drawable.group_1707479053
             "FAILED" -> R.drawable.failed_status
