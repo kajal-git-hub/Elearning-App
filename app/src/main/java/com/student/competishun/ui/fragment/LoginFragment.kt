@@ -121,7 +121,7 @@ class LoginFragment : Fragment() {
 //        }
     }
     fun googleCredential() {
-        val credentialManager = CredentialManager.create(requireContext())
+        val credentialManager = androidx.credentials.CredentialManager.create(requireContext())
         val rawNonce = UUID.randomUUID().toString()
         val bytes = rawNonce.toByteArray()
         val md = MessageDigest.getInstance("SHA-256")
