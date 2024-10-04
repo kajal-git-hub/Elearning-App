@@ -292,19 +292,26 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
                 binding.progressBar.visibility = View.GONE
                 binding.ExpireValidity.text =
                     "Validity: " + helperFunctions.formatCourseDate(courses?.course_validity_end_date.toString())
-                if (courses.planner_pdf != null)
+
+                if (courses.planner_pdf != null) {
                     binding.clGetPlanner.setOnClickListener {
+
                         Log.d("planner_pdf", courses.planner_pdf)
                         val intent = Intent(context, PdfViewerActivity::class.java).apply {
                             putExtra("PDF_URL", courses.planner_pdf)
                         }
                         context?.startActivity(intent)
-                        helperFunctions.downloadPdf(
-                            requireContext(),
-                            courses.planner_pdf,
-                            "Planner"
-                        )
-                    } else Toast.makeText(requireContext(), "", Toast.LENGTH_LONG).show()
+
+                    }
+                    binding.downloadButton.setOnClickListener {
+
+                        Log.d("planner_pdf", courses.planner_pdf)
+                       helperFunctions.showDownloadDialog(requireContext(),courses.planner_pdf,"Planner")
+
+                    }
+                    }
+                else Toast.makeText(requireContext(), "", Toast.LENGTH_LONG).show()
+
                 if (courses != null) {
                     var coursefeature = courses.course_features
                     val courseFItems = coursefeature?.map { feature ->
