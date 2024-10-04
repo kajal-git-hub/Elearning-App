@@ -1,20 +1,20 @@
 package com.student.competishun.ui.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.databinding.ObservableField
 import androidx.recyclerview.widget.RecyclerView
 import com.student.competishun.data.model.CalendarDate
 import com.student.competishun.databinding.CalenderDateItemBinding
 
 class CalendarDateAdapter(
     private val dates: List<CalendarDate>,
-    private val onClick: (CalendarDate) -> Unit
+    private val onClick: (CalendarDate) -> Unit,
+    private var hasScheduleList: MutableList<String>
 ) : RecyclerView.Adapter<CalendarDateAdapter.CalendarDateViewHolder>() {
 
     private var selectedPosition = RecyclerView.NO_POSITION
-    private var isScheduleAvailable=false
 
     inner class CalendarDateViewHolder(private val binding: CalenderDateItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -22,6 +22,7 @@ class CalendarDateAdapter(
         fun bind(calendarDate: CalendarDate, isSelected: Boolean) {
             binding.tvDate.text = calendarDate.date
             binding.tvDay.text = calendarDate.day
+
             if (calendarDate.task != null) {
                 binding.tvReminderCard.visibility = View.VISIBLE
                 binding.tvReminderCard.text = calendarDate.task
@@ -29,7 +30,12 @@ class CalendarDateAdapter(
                 binding.tvReminderCard.visibility = View.GONE
             }
 
-            binding.dotContentAvailable.visibility = if (isScheduleAvailable) View.VISIBLE else View.GONE
+            if (hasScheduleList.contains(calendarDate.date)) {
+                Log.e("calendaradapter",hasScheduleList.toString() +"+++"+ calendarDate.date)
+                binding.dotContentAvailable.visibility = View.VISIBLE
+            } else {
+                binding.dotContentAvailable.visibility = View.GONE
+            }
 
             binding.viewIndicator.visibility = if (isSelected) View.VISIBLE else View.GONE
             binding.root.setOnClickListener {
@@ -57,12 +63,17 @@ class CalendarDateAdapter(
 
     override fun getItemCount() = dates.size
 
-    fun setSelectedPosition(position: Int, isScheduleAvailableStatus: Boolean) {
+    fun setSelectedPosition(position: Int) {
         val previousSelectedPosition = selectedPosition
         selectedPosition = position
-        isScheduleAvailable=isScheduleAvailableStatus
         notifyItemChanged(previousSelectedPosition)
         notifyItemChanged(selectedPosition)
     }
+
+    fun updateHasScheduleList(newHasScheduleList: MutableList<String>) {
+        hasScheduleList = newHasScheduleList
+        notifyDataSetChanged()
+    }
 }
+
 
