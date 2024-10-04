@@ -164,7 +164,7 @@ class HelperFunctions {
          val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
          val request = DownloadManager.Request(Uri.parse(fileUrl))
              .setTitle(title)
-             .setDescription("Downloading PDF...")
+             .setDescription("Downloading $title...")
              .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
              .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "$title.pdf")
 

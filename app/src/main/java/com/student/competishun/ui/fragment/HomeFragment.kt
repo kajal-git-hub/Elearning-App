@@ -385,7 +385,7 @@ class HomeFragment : Fragment() {
         val filters = FindAllCourseInputStudent(
             category_name = Optional.Absent,
             course_class = Optional.Absent,
-            exam_type = Optional.Absent,
+            exam_type = Optional.present(courseTypes),
             is_recommended = Optional.present(true)
         )
         studentCoursesViewModel.fetchCourses(filters)

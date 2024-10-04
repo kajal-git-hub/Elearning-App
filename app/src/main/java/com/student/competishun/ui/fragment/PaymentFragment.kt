@@ -133,10 +133,7 @@ class PaymentFragment : Fragment() {
             result.onSuccess {
                 var receiptLink = it.generateReceipt
                 Log.e("ReceiptLink",receiptLink)
-                val intent = Intent(context, PdfViewerActivity::class.java).apply {
-                    putExtra("PDF_URL", receiptLink)
-                }
-                context?.startActivity(intent)
+               helperFunctions.downloadPdf(requireContext(),receiptLink,"Payment Invoice")
             }.onFailure {
                 // Handle failure, e.g., show an error message
                 Log.e("Failed to download ReceiptLink: ",it.message.toString())
