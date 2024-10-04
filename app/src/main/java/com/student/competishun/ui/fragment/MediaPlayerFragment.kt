@@ -43,12 +43,17 @@ class MediaPlayerFragment : Fragment() {
     private lateinit var gestureDetector: GestureDetector
     private lateinit var zoomLayout: ZoomLayout
     private lateinit var courseFolderContentId: String
+    private lateinit var courseFolderContentIds: ArrayList<String>
+    private lateinit var courseFolderContentNames: ArrayList<String>
     private val handler = Handler(Looper.getMainLooper())
     private val updateInterval: Long = 5000
     private var urlVideo:String = ""
     private var videoFormat:String = "480p"
     private lateinit var sharedViewModel: SharedVM
     private val videourlViewModel: VideourlViewModel by viewModels()
+    private var videoUrls: List<String> = listOf()
+    private var videoTitles: ArrayList<String> = ArrayList()
+    private var currentVideoIndex: Int = 0
     companion object {
         private const val SEEK_OFFSET_MS = 10000L
     }
@@ -100,9 +105,11 @@ class MediaPlayerFragment : Fragment() {
             binding.tittleBtn.text = title
         }
         courseFolderContentId = arguments?.getString("ContentId")?: return
+        courseFolderContentIds = arguments?.getStringArrayList("folderContentIds")?: return
+        courseFolderContentNames = arguments?.getStringArrayList("folderContentNames")?: return
+        Log.e("getfolderNamess",courseFolderContentNames.toString())
         player = ExoPlayer.Builder(requireContext()).build()
         binding.playerView.player = player
-
         // Setup video progress update task
         handler.post(object : Runnable {
             override fun run() {
@@ -121,6 +128,42 @@ class MediaPlayerFragment : Fragment() {
             player.setMediaItem(mediaItem)
             player.prepare()
             player.play()
+            player.addListener(object : Player.Listener {
+                override fun onPlayerError(error: PlaybackException) {
+                    Log.e("PlayerError", "Playback Error: ${error.message}", error)
+                }
+                override fun onPlaybackStateChanged(state: Int) {
+                    when (state) {
+                        Player.STATE_READY -> {
+                            binding.playerView.visibility = View.VISIBLE
+                            binding.upNextOverlay.visibility = View.GONE
+                        }
+                        Player.STATE_ENDED -> {
+                            Log.e("videoEnded",player.toString())
+                            binding.playerView.visibility = View.GONE
+                            binding.upNextOverlay.visibility = View.VISIBLE
+                            binding.startNextButton.setOnClickListener {
+                                Log.e("nextButtonclick","nectButton")
+                                playNextVideo()
+                                binding.upNextOverlay.visibility = View.GONE
+                            }
+                            binding.cancelNextButton.setOnClickListener {
+                                binding.upNextOverlay.visibility = View.GONE
+                            }
+                            // When the video ends, play the next one if available
+                            Log.e("withoutclickclick","withoutclick")
+                           // playNextVideo() //deffault calling on video end
+                        }
+
+                       Player.STATE_IDLE -> {
+                            Log.e("videoEndedIdle",player.toString())
+                            // Hide the progress bar in case of idle or ended states
+                            binding.progressBar.visibility = View.GONE
+                            binding.playerView.visibility = View.VISIBLE
+                        }
+                    }
+                }
+            })
            // playVideo(videoUrl)
 
 
@@ -135,17 +178,23 @@ class MediaPlayerFragment : Fragment() {
 
     }
 
-    fun playVideo(videoUrl: String,  startPosition: Long = 0L) {
+    private fun initializePlaylist() {
+        videoUrls = listOf(
+            "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
+            "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/VolkswagenGTIReview.mp4",
+            "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"
+        )
+
+        videoTitles = courseFolderContentNames
+    }
+
+    fun playVideo(videoUrl: String,  startPosition: Long = 0L,videoTittle: String) {
         binding.progressBar.visibility = View.VISIBLE
         binding.playerView.visibility = View.GONE
         val mediaItem = MediaItem.fromUri(videoUrl)
         Log.e("getting $startPosition",videoUrl)
         player.setMediaItem(mediaItem)
         player.prepare()
-        // Seek to the previous position if provided
-//        if (startPosition > 0L) {
-//            player.seekTo(startPosition)
-//        }
         player.play()
         player.addListener(object : Player.Listener {
             override fun onPlayerError(error: PlaybackException) {
@@ -167,7 +216,26 @@ class MediaPlayerFragment : Fragment() {
                         Log.e("dfafadf",player.toString())
                     }
 
+                    Player.STATE_ENDED -> {
+                        Log.e("videoEnded",player.toString())
+                        binding.playerView.visibility = View.GONE
+                        binding.upNextOverlay.visibility = View.VISIBLE
+                        binding.nextVideoTitle.text = videoTittle
+                        binding.nextVideoTime.text = "1 min"
+                        binding.startNextButton.setOnClickListener {
+                            playNextVideo()
+                            binding.upNextOverlay.visibility = View.GONE
+                            binding.upNextOverlay.visibility = View.GONE
+                        }
+                        binding.cancelNextButton.setOnClickListener {
+                            binding.upNextOverlay.visibility = View.GONE
+                        }
+                        // When the video ends, play the next one if available
+                        playNextVideo()
+                    }
+
                     Player.STATE_ENDED, Player.STATE_IDLE -> {
+                        Log.e("videoEndedIdle",player.toString())
                         // Hide the progress bar in case of idle or ended states
                         binding.progressBar.visibility = View.GONE
                         binding.playerView.visibility = View.VISIBLE
@@ -187,6 +255,44 @@ class MediaPlayerFragment : Fragment() {
             insets
         }
     }
+
+    private fun playNextVideo() {
+
+       // initializePlaylist()
+        videoUrls = listOf(
+            "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
+            "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/VolkswagenGTIReview.mp4",
+            "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"
+        )
+        videourlViewModel.fetchVideoStreamUrl(courseFolderContentIds[currentVideoIndex], "480p")
+        Log.e("foldfdfd",courseFolderContentId)
+        videourlViewModel.videoStreamUrl.observe(viewLifecycleOwner) { signedUrl ->
+            Log.d("Videourl", "Signed URL: $signedUrl")
+            if (signedUrl != null) {
+                urlVideo = signedUrl
+
+            } else {
+                Log.e("url issues", signedUrl.toString())
+
+            }
+        }
+
+        videoTitles = courseFolderContentNames
+        if (currentVideoIndex < courseFolderContentIds.size - 1) {
+            Log.e("currentVideoIndexSize",currentVideoIndex.toString())
+            currentVideoIndex++
+           // val nextVideoUrl = videoUrls[currentVideoIndex]
+            val nextVideoUrl = urlVideo
+            val nextVideoTittle = videoTitles[currentVideoIndex]
+            binding.tittleBtn.text = nextVideoTittle
+            playVideo(nextVideoUrl,0,nextVideoTittle)
+            Log.e("currentVideoAfter",currentVideoIndex.toString())
+        } else {
+            // No more videos in the playlist
+            Toast.makeText(requireContext(), "No more videos to play", Toast.LENGTH_SHORT).show()
+        }
+    }
+
 
     private fun showSpeedOrQualityDialog() {
         val options = arrayOf("Speed", "Quality")

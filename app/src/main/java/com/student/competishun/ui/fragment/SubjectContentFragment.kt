@@ -200,7 +200,9 @@ class SubjectContentFragment : Fragment() {
                                         lockTime =  time
                                     )
                                 }
-
+                                val folderContentIds = folderProgressContent.mapNotNull { it.content?.id }.toCollection(ArrayList())
+                                val folderContentNames = folderProgressContent.mapNotNull { it.content?.file_name }.toCollection(ArrayList())
+                                Log.e("getfoldersubject2",folderContentNames.toString())
                             binding.rvTopicContent.adapter = TopicContentAdapter(
                                 topicContentList,
                                 folderId,
@@ -208,7 +210,7 @@ class SubjectContentFragment : Fragment() {
                             ) { topicContent, folderContentId ->
                                 when (topicContent.fileType) {
                                     "VIDEO" -> {
-                                        videoUrlApi(videourlViewModel, topicContent.id,topicContent.topicName)
+                                        videoUrlApi(videourlViewModel, topicContent.id,topicContent.topicName,folderContentIds,folderContentNames)
                                     }
                                     "PDF" -> {
                                         val intent = Intent(context, PdfViewerActivity::class.java).apply {
@@ -342,15 +344,18 @@ class SubjectContentFragment : Fragment() {
                                         lockTime =  time
                                     )
                                 }
-
+                            val folderContentIds = folderProgressContent.mapNotNull { it.content?.id }.toCollection(ArrayList())
+                            val folderContentNames = folderProgressContent.mapNotNull { it.content?.file_name }.toCollection(ArrayList())
+                            Log.e("getfoldersubject1",folderContentNames.toString())
                             binding.rvTopicContent.adapter = TopicContentAdapter(
                                 subjectContentList,
                                 folderId,
                                 requireActivity()
                             ) { topicContent, folderContentId ->
                                 when (topicContent.fileType) {
+
                                     "VIDEO" -> {
-                                        videoUrlApi(videourlViewModel, topicContent.id,topicContent.topicName)
+                                        videoUrlApi(videourlViewModel, topicContent.id,topicContent.topicName,folderContentIds,folderContentNames)
                                     }
                                     "PDF" -> {
                                         val intent = Intent(context, PdfViewerActivity::class.java).apply {
@@ -412,8 +417,8 @@ class SubjectContentFragment : Fragment() {
 
     }
 
-    private fun videoUrlApi(viewModel: VideourlViewModel, folderContentId: String, name:String) {
-
+    private fun videoUrlApi(viewModel: VideourlViewModel, folderContentId: String, name:String,folderContentIds: ArrayList<String>?,folderContentNames: ArrayList<String>?) {
+        Log.e("getfoldersubject",folderContentNames.toString())
         viewModel.fetchVideoStreamUrl(folderContentId, "480p")
 
         viewModel.videoStreamUrl.observe(viewLifecycleOwner) { signedUrl ->
@@ -423,6 +428,8 @@ class SubjectContentFragment : Fragment() {
                     putString("url", signedUrl)
                     putString("url_name", name)
                     putString("ContentId", folderContentId)
+                    putStringArrayList("folderContentIds", folderContentIds)
+                    putStringArrayList("folderContentNames", folderContentNames)
                 }
                 findNavController().navigate(R.id.mediaFragment, bundle)
 

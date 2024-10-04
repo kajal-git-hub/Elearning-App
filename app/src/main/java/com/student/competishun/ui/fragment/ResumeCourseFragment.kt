@@ -106,9 +106,13 @@ class ResumeCourseFragment : Fragment() {
 
     private fun parentFolderProgress(courseId:String){
         coursesViewModel.findCourseParentFolderProgress(courseId)
+        binding.progressBar.visibility = View.VISIBLE
+        binding.rvOurSubject.visibility = View.GONE
         coursesViewModel.courseParentFolderProgress.observe(viewLifecycleOwner){ result ->
             when (result) {
                 is com.student.competishun.di.Result.Success -> {
+                    binding.progressBar.visibility = View.GONE
+                    binding.rvOurSubject.visibility = View.VISIBLE
                     val subfolderProgress = result.data.findCourseParentFolderProgress.subfolderProgress
                     if (subfolderProgress.isNullOrEmpty()){
                         Log.e("subfolderProgress",subfolderProgress.toString())
@@ -134,7 +138,8 @@ class ResumeCourseFragment : Fragment() {
                     }
                 }
                 is com.student.competishun.di.Result.Failure -> {}
-                is com.student.competishun.di.Result.Loading -> {}
+                is com.student.competishun.di.Result.Loading -> {
+                }
             }
         }
     }
