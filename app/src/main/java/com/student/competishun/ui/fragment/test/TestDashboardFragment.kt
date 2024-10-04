@@ -5,17 +5,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.addCallback
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL
-import com.student.competishun.R
 import com.student.competishun.data.model.TestItem
-import com.student.competishun.databinding.FragmentHomeBinding
 import com.student.competishun.databinding.FragmentTestDashboardBinding
 import com.student.competishun.ui.adapter.ItemClickListener
-import com.student.competishun.ui.adapter.TestListAdapter
+import com.student.competishun.ui.adapter.test.TestListAdapter
 import com.student.competishun.ui.adapter.TestTypeAdapter
 import com.student.competishun.ui.fragment.BottomSheetTestFilterFragment
 import com.student.competishun.ui.main.HomeActivity
@@ -27,6 +24,8 @@ class TestDashboardFragment : Fragment() {
 
     private var testTypeAdapter : TestTypeAdapter?=null
     private var testListAdapter : TestListAdapter?=null
+
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -45,9 +44,7 @@ class TestDashboardFragment : Fragment() {
     }
 
     private fun clickListener(){
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            findNavController().popBackStack()
-        }
+        binding.back.setOnClickListener { findNavController().popBackStack() }
     }
 
 
@@ -60,7 +57,7 @@ class TestDashboardFragment : Fragment() {
             override fun onItemClick(isFirst: Boolean, item: TestItem) {
                 if (isFirst){
                     //open bottom sheet filter
-                    fragmentManager?.let {
+                    requireActivity().supportFragmentManager?.let {
                         val filter = BottomSheetTestFilterFragment()
                         filter.show(it, "")
                     }

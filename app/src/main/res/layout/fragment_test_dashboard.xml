@@ -84,9 +84,10 @@
 
             <ImageView
                 android:id="@+id/imageView"
-                android:layout_width="wrap_content"
+                android:layout_width="150dp"
                 android:layout_height="90dp"
-                android:src="@drawable/amit"
+                android:src="@drawable/test_bg"
+                android:layout_marginEnd="-10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
 
@@ -106,6 +107,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/rvTestType"
             tools:itemCount="10"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             android:background="@android:color/transparent"
             android:layout_alignParentTop="true"
             tools:listitem="@layout/item_test_type" />

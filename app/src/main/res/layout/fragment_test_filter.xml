@@ -8,331 +8,354 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#F6F6FF"
-        android:id="@+id/allFaqFragment">
+        android:layout_height="match_parent">
 
-        <!-- Top Bar -->
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="0dp"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/white"
-            android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
-
-            <TextView
-                android:id="@+id/tvHeader"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Filter"
-                android:textSize="18sp"
-                android:fontFamily="@font/nunito"
-                android:layout_marginStart="32dp"
-                android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title" />
-
-            <ImageView
-                android:id="@+id/close"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:layout_marginEnd="@dimen/_20dp"
-                android:src="@drawable/ic_close_c000"
-                android:contentDescription="Close" />
-        </androidx.appcompat.widget.Toolbar>
-
-        <!-- ScrollView for all content -->
-        <ScrollView
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/_16dp"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar">
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:background="@drawable/rounded_background_logout"
+            app:layout_constraintTop_toTopOf="parent">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+            <RelativeLayout
+                android:id="@+id/toolbar"
+                android:layout_width="0dp"
+                android:layout_height="?attr/actionBarSize"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-                <!-- Select Exam Section -->
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/tvSelectExam"
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/tvHeader"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Select Exam"
-                    android:textStyle="bold"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerInParent="true"
+                    android:layout_marginStart="32dp"
                     android:fontFamily="@font/nunito"
-                    android:textColor="@color/_2b2829"
-                    android:textSize="@dimen/_16sp"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent" />
+                    android:text="Filter"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+                    android:textSize="18sp" />
 
-                <LinearLayout
-                    android:id="@+id/examSection"
-                    android:layout_width="match_parent"
+                <ImageView
+                    android:id="@+id/close"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginTop="20dp"
-                    app:layout_constraintTop_toBottomOf="@id/tvSelectExam">
-
-                    <!-- First row: NEET-UG and AIIMS -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginTop="8dp">
-
-                        <RelativeLayout
-                            android:layout_width="0dp"
-                            android:layout_height="50dp"
-                            android:layout_weight="1"
-                            android:gravity="center_vertical"
-                            android:background="@drawable/card_bg"
-                            android:layout_marginEnd="4dp">
-
-                            <CheckBox
-                                android:id="@+id/cbNeet"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content" />
-
-                            <com.google.android.material.textview.MaterialTextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="NEET-UG"
-                                android:fontFamily="@font/nunito"
-                                android:layout_centerInParent="true"
-                                android:layout_toEndOf="@id/cbNeet" />
-                        </RelativeLayout>
-
-                        <RelativeLayout
-                            android:layout_width="0dp"
-                            android:layout_height="50dp"
-                            android:layout_weight="1"
-                            android:gravity="center_vertical"
-                            android:background="@drawable/card_bg"
-                            android:layout_marginStart="4dp">
-
-                            <CheckBox
-                                android:id="@+id/cbAiims"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content" />
-
-                            <com.google.android.material.textview.MaterialTextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="AIIMS"
-                                android:fontFamily="@font/nunito"
-                                android:layout_centerInParent="true"
-                                android:layout_toEndOf="@id/cbAiims" />
-                        </RelativeLayout>
-                    </LinearLayout>
-
-                    <!-- Second row: JEE-Mains and JEE-Advanced -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginTop="8dp">
-
-                        <RelativeLayout
-                            android:layout_width="0dp"
-                            android:layout_height="50dp"
-                            android:layout_weight="1"
-                            android:gravity="center_vertical"
-                            android:background="@drawable/card_bg"
-                            android:layout_marginEnd="4dp">
-
-                            <CheckBox
-                                android:id="@+id/cbJeeMains"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content" />
-
-                            <com.google.android.material.textview.MaterialTextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="JEE-Mains"
-                                android:fontFamily="@font/nunito"
-                                android:layout_centerInParent="true"
-                                android:layout_toEndOf="@id/cbJeeMains" />
-                        </RelativeLayout>
-
-                        <RelativeLayout
-                            android:layout_width="0dp"
-                            android:layout_height="50dp"
-                            android:layout_weight="1"
-                            android:gravity="center_vertical"
-                            android:background="@drawable/card_bg"
-                            android:layout_marginStart="4dp">
-
-                            <CheckBox
-                                android:id="@+id/cbJeeAdvance"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content" />
-
-                            <com.google.android.material.textview.MaterialTextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="JEE-Advanced"
-                                android:fontFamily="@font/nunito"
-                                android:layout_centerInParent="true"
-                                android:layout_toEndOf="@id/cbJeeAdvance" />
-                        </RelativeLayout>
-                    </LinearLayout>
-                </LinearLayout>
-
-                <!-- Select Year Section -->
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/tvSelectYear"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Select Year"
-                    android:textStyle="bold"
-                    android:fontFamily="@font/nunito"
-                    android:textColor="@color/_2b2829"
-                    android:textSize="@dimen/_16sp"
-                    android:layout_marginTop="20dp"
-                    app:layout_constraintTop_toBottomOf="@id/examSection"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent" />
-
-                <RelativeLayout
-                    android:id="@+id/yearController"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="8dp"
-                    android:background="@drawable/card_bg"
-                    android:gravity="center_vertical"
-                    android:paddingStart="@dimen/_20dp"
-                    android:paddingEnd="@dimen/_20dp"
-                    app:layout_constraintTop_toBottomOf="@id/tvSelectYear">
-
-                    <ImageView
-                        android:id="@+id/ivDescYear"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentStart="true"
-                        android:src="@drawable/ic_arrow_circle_c433e3f"
-                        android:contentDescription="Decrease Year" />
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="2023-2024"
-                        android:gravity="center"
-                        android:layout_toStartOf="@+id/ivAscYear"
-                        android:layout_toEndOf="@+id/ivDescYear" />
-
-                    <ImageView
-                        android:id="@+id/ivAscYear"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:rotation="180"
-                        android:layout_alignParentEnd="true"
-                        android:src="@drawable/ic_arrow_circle_c433e3f"
-                        android:contentDescription="Increase Year" />
-                </RelativeLayout>
-
-                <!-- Select Test Status Section -->
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/tvTestStatus"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Select Test Status"
-                    android:textStyle="bold"
-                    android:fontFamily="@font/nunito"
-                    android:textColor="@color/_2b2829"
-                    android:textSize="@dimen/_16sp"
-                    android:layout_marginTop="20dp"
-                    app:layout_constraintTop_toBottomOf="@id/yearController"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent" />
-
-                <LinearLayout
-                    android:id="@+id/examStatus"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="8dp"
-                    app:layout_constraintTop_toBottomOf="@id/tvTestStatus">
-
-                    <RelativeLayout
-                        android:layout_width="0dp"
-                        android:layout_height="50dp"
-                        android:layout_weight="1"
-                        android:gravity="center_vertical"
-                        android:background="@drawable/card_bg"
-                        android:layout_marginEnd="4dp">
-
-                        <CheckBox
-                            android:id="@+id/cbUnattempted"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
-
-                        <com.google.android.material.textview.MaterialTextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Unattempted"
-                            android:fontFamily="@font/nunito"
-                            android:layout_centerInParent="true"
-                            android:layout_toEndOf="@id/cbUnattempted" />
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:layout_width="0dp"
-                        android:layout_height="50dp"
-                        android:layout_weight="1"
-                        android:gravity="center_vertical"
-                        android:background="@drawable/card_bg"
-                        android:layout_marginStart="4dp">
-
-                        <CheckBox
-                            android:id="@+id/cbAttempted"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
-
-                        <com.google.android.material.textview.MaterialTextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Attempted"
-                            android:fontFamily="@font/nunito"
-                            android:layout_centerInParent="true"
-                            android:layout_toEndOf="@id/cbAttempted" />
-                    </RelativeLayout>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerInParent="true"
                     android:layout_gravity="end"
-                    android:gravity="end"
-                    android:layout_marginTop="@dimen/_20dp"
-                    android:orientation="horizontal"
-                    app:layout_constraintTop_toBottomOf="@+id/examStatus">
+                    android:layout_marginEnd="@dimen/_20dp"
+                    android:contentDescription="Close"
+                    android:src="@drawable/ic_close_c000" />
+            </RelativeLayout>
 
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btn_cancel"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:backgroundTint="#FFFFFF"
-                        app:cornerRadius="@dimen/_10dp"
-                        app:strokeColor="#4444ff"
-                        app:strokeWidth="@dimen/_1dp"
-                        android:textColor="#4444ff"
-                        android:layout_weight="1"
-                        android:text="Cancel" />
+            <View
+                android:id="@+id/line"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_1dp"
+                android:background="@color/c_f2f2f2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btn_apply"
-                        android:layout_width="wrap_content"
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/_16dp"
+                app:layout_constraintTop_toBottomOf="@+id/line">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <!-- Select Exam Section -->
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tvSelectExam"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:cornerRadius="@dimen/_8dp"
-                        android:layout_marginStart="16dp"
-                        android:layout_weight="1"
-                        android:backgroundTint="#4444ff"
-                        android:text="Apply" />
-                </LinearLayout>
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </ScrollView>
+                        android:fontFamily="@font/nunito"
+                        android:text="Select Exam"
+                        android:textColor="@color/_2b2829"
+                        android:textSize="@dimen/_16sp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <LinearLayout
+                        android:id="@+id/examSection"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:orientation="vertical"
+                        app:layout_constraintTop_toBottomOf="@id/tvSelectExam">
+
+                        <!-- First row: NEET-UG and AIIMS -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:orientation="horizontal">
+
+                            <RelativeLayout
+                                android:layout_width="0dp"
+                                android:layout_height="50dp"
+                                android:layout_marginEnd="4dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/card_bg"
+                                android:gravity="center_vertical">
+
+                                <CheckBox
+                                    android:id="@+id/cbNeet"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="10dp" />
+
+                                <com.google.android.material.textview.MaterialTextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerInParent="true"
+                                    android:layout_toEndOf="@id/cbNeet"
+                                    android:fontFamily="@font/nunito"
+                                    android:text="NEET-UG" />
+                            </RelativeLayout>
+
+                            <RelativeLayout
+                                android:layout_width="0dp"
+                                android:layout_height="50dp"
+                                android:layout_marginStart="4dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/card_bg"
+                                android:gravity="center_vertical">
+
+                                <CheckBox
+                                    android:id="@+id/cbAiims"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="10dp" />
+
+                                <com.google.android.material.textview.MaterialTextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerInParent="true"
+                                    android:layout_toEndOf="@id/cbAiims"
+                                    android:fontFamily="@font/nunito"
+                                    android:text="AIIMS" />
+                            </RelativeLayout>
+                        </LinearLayout>
+
+                        <!-- Second row: JEE-Mains and JEE-Advanced -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:orientation="horizontal">
+
+                            <RelativeLayout
+                                android:layout_width="0dp"
+                                android:layout_height="50dp"
+                                android:layout_marginEnd="4dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/card_bg"
+                                android:gravity="center_vertical">
+
+                                <CheckBox
+                                    android:id="@+id/cbJeeMains"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="10dp" />
+
+                                <com.google.android.material.textview.MaterialTextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerInParent="true"
+                                    android:layout_toEndOf="@id/cbJeeMains"
+                                    android:fontFamily="@font/nunito"
+                                    android:text="JEE-Mains" />
+                            </RelativeLayout>
+
+                            <RelativeLayout
+                                android:layout_width="0dp"
+                                android:layout_height="50dp"
+                                android:layout_marginStart="4dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/card_bg"
+                                android:gravity="center_vertical">
+
+                                <CheckBox
+                                    android:id="@+id/cbJeeAdvance"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="10dp" />
+
+                                <com.google.android.material.textview.MaterialTextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerInParent="true"
+                                    android:layout_toEndOf="@id/cbJeeAdvance"
+                                    android:fontFamily="@font/nunito"
+                                    android:text="JEE-Advanced" />
+                            </RelativeLayout>
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <!-- Select Year Section -->
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tvSelectYear"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:fontFamily="@font/nunito"
+                        android:text="Select Year"
+                        android:textColor="@color/_2b2829"
+                        android:textSize="@dimen/_16sp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/examSection" />
+
+                    <RelativeLayout
+                        android:id="@+id/yearController"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginTop="8dp"
+                        android:background="@drawable/card_bg"
+                        android:gravity="center_vertical"
+                        android:paddingStart="@dimen/_20dp"
+                        android:paddingEnd="@dimen/_20dp"
+                        app:layout_constraintTop_toBottomOf="@id/tvSelectYear">
+
+                        <ImageView
+                            android:id="@+id/ivDescYear"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:contentDescription="Decrease Year"
+                            android:src="@drawable/ic_arrow_circle_c433e3f" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_toStartOf="@+id/ivAscYear"
+                            android:layout_toEndOf="@+id/ivDescYear"
+                            android:gravity="center"
+                            android:text="2023-2024" />
+
+                        <ImageView
+                            android:id="@+id/ivAscYear"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:contentDescription="Increase Year"
+                            android:rotation="180"
+                            android:src="@drawable/ic_arrow_circle_c433e3f" />
+                    </RelativeLayout>
+
+                    <!-- Select Test Status Section -->
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tvTestStatus"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:fontFamily="@font/nunito"
+                        android:text="Select Test Status"
+                        android:textColor="@color/_2b2829"
+                        android:textSize="@dimen/_16sp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/yearController" />
+
+                    <LinearLayout
+                        android:id="@+id/examStatus"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:orientation="horizontal"
+                        app:layout_constraintTop_toBottomOf="@id/tvTestStatus">
+
+                        <RelativeLayout
+                            android:layout_width="0dp"
+                            android:layout_height="50dp"
+                            android:layout_marginEnd="4dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/card_bg"
+                            android:gravity="center_vertical">
+
+                            <CheckBox
+                                android:id="@+id/cbUnattempted"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="10dp" />
+
+                            <com.google.android.material.textview.MaterialTextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                android:layout_toEndOf="@id/cbUnattempted"
+                                android:fontFamily="@font/nunito"
+                                android:text="Unattempted" />
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_width="0dp"
+                            android:layout_height="50dp"
+                            android:layout_marginStart="4dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/card_bg"
+                            android:gravity="center_vertical">
+
+                            <CheckBox
+                                android:id="@+id/cbAttempted"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="10dp" />
+
+                            <com.google.android.material.textview.MaterialTextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                android:layout_toEndOf="@id/cbAttempted"
+                                android:fontFamily="@font/nunito"
+                                android:text="Attempted" />
+                        </RelativeLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:layout_marginTop="@dimen/_20dp"
+                        android:gravity="end"
+                        android:orientation="horizontal"
+                        app:layout_constraintTop_toBottomOf="@+id/examStatus">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_cancel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:backgroundTint="#FFFFFF"
+                            android:text="Cancel"
+                            android:textColor="#4444ff"
+                            app:cornerRadius="@dimen/_10dp"
+                            app:strokeColor="#4444ff"
+                            app:strokeWidth="@dimen/_1dp" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_apply"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_weight="1"
+                            android:backgroundTint="#4444ff"
+                            android:text="Apply"
+                            android:textColor="@color/white"
+                            app:cornerRadius="@dimen/_8dp" />
+                    </LinearLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </ScrollView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

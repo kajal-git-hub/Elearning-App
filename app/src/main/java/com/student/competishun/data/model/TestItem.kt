@@ -3,7 +3,7 @@ package com.student.competishun.data.model
 import android.os.Parcel
 import android.os.Parcelable
 
-class TestItem(
+open class TestItem(
     val title: String,
     var isFilter: Boolean = false,
 ) : Parcelable {

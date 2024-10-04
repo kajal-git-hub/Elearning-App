@@ -10,15 +10,15 @@ import com.student.competishun.R
 import com.student.competishun.data.model.TestItem
 
 class TestTypeAdapter(private var testTypeList: List<TestItem>, private var listener: ItemClickListener):
-    RecyclerView.Adapter<TestTypeAdapter.PolicyViewHolder>() {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TestTypeAdapter.PolicyViewHolder {
+    RecyclerView.Adapter<TestTypeAdapter.TestTypeViewHolder>() {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TestTypeAdapter.TestTypeViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_test_type, parent, false)
-        return PolicyViewHolder(view)
+        return TestTypeViewHolder(view)
     }
 
     override fun getItemCount(): Int = testTypeList.size
 
-    override fun onBindViewHolder(holder: TestTypeAdapter.PolicyViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: TestTypeAdapter.TestTypeViewHolder, position: Int) {
         val item = testTypeList[position]
         holder.bind(item)
 
@@ -26,7 +26,7 @@ class TestTypeAdapter(private var testTypeList: List<TestItem>, private var list
             listener.onItemClick(isFirst = (position == 0), item = item)
         }
     }
-    inner class PolicyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class TestTypeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val titleText: TextView = itemView.findViewById(R.id.title)
         private val type: ImageView = itemView.findViewById(R.id.type)
 
