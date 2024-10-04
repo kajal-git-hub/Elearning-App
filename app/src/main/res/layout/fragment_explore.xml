@@ -8,7 +8,7 @@
 
         <variable
             name="courseByIDViewModel"
-            type="com.student.competishun.ui.viewmodel.GetCourseByIDViewModel" />
+            type="xyz.penpencil.competishun.ui.viewmodel.GetCourseByIDViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.student.competishun" >
+    package="xyz.penpencil.competishun" >
     <!-- Bluetooth permissions -->
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
@@ -33,14 +33,14 @@
         android:theme="@style/Theme.Competishun"
         tools:targetApi="31" >
         <activity
-            android:name="com.student.xyz.penpencil.competishun.ui.main.PdfViewerActivity"
+            android:name="xyz.penpencil.competishun.ui.main.PdfViewerActivity"
             android:exported="false"
             android:theme="@style/Theme.Competishun" />
         <activity
-            android:name="com.student.xyz.penpencil.competishun.ui.main.MainActivity"
+            android:name="xyz.penpencil.competishun.ui.main.MainActivity"
             android:exported="false" />
         <activity
-            android:name="com.student.xyz.penpencil.competishun.ui.main.HomeActivity"
+            android:name="xyz.penpencil.competishun.ui.main.HomeActivity"
             android:exported="false"
             android:launchMode="singleTop" />
         <activity
@@ -48,7 +48,7 @@
             android:exported="true"
             tools:replace="android:exported" />
         <activity
-            android:name="com.student.xyz.penpencil.competishun.ui.main.SplashActivity"
+            android:name="xyz.penpencil.competishun.ui.main.SplashActivity"
             android:exported="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" >

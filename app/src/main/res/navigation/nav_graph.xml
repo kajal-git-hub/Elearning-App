@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.student.competishun.ui.fragment.LoginFragment"
+        android:name="xyz.penpencil.competishun.ui.fragment.LoginFragment"
         tools:layout="@layout/fragment_login">
         <action
             android:id="@+id/action_loginFragment_to_verifyOTPFragment"
@@ -23,7 +23,7 @@
 
     <fragment
         android:id="@+id/verifyOTPFragment"
-        android:name="com.student.competishun.ui.fragment.VerifyOTPFragment"
+        android:name="xyz.penpencil.competishun.ui.fragment.VerifyOTPFragment"
         tools:layout="@layout/fragment_verify">
         <action
             android:id="@+id/action_verifyOTPFragment_to_onBoardingFragment"
@@ -35,7 +35,7 @@
 
     <fragment
         android:id="@+id/onboardingFragment"
-        android:name="com.student.competishun.ui.fragment.OnBoardingFragment"
+        android:name="xyz.penpencil.competishun.ui.fragment.OnBoardingFragment"
         tools:layout="@layout/fragment_on_boarding">
         <action
             android:id="@+id/action_OnBoardingFragment_to_loginFragment"
@@ -50,7 +50,7 @@
 
     <fragment
         android:id="@+id/onWelcomeFragment"
-        android:name="com.student.competishun.ui.fragment.WelcomeFragment"
+        android:name="xyz.penpencil.competishun.ui.fragment.WelcomeFragment"
         tools:layout="@layout/fragment_welcome">
         <action
             android:id="@+id/action_onWelcomeFragment_to_loginFragment"
@@ -62,7 +62,7 @@
 
     <fragment
         android:id="@+id/PrepForFragment"
-        android:name="com.student.competishun.ui.fragment.PrepForFragment"
+        android:name="xyz.penpencil.competishun.ui.fragment.PrepForFragment"
         tools:layout="@layout/fragment_prep_for">
         <action
             android:id="@+id/action_PrepForFragment_to_TargetFragment"
@@ -70,7 +70,7 @@
     </fragment>
     <fragment
         android:id="@+id/TargetFragment"
-        android:name="com.student.competishun.ui.fragment.TargetFragment"
+        android:name="xyz.penpencil.competishun.ui.fragment.TargetFragment"
         tools:layout="@layout/fragment_target">
         <action
             android:id="@+id/action_TargetFragment_to_reference"
@@ -78,7 +78,7 @@
     </fragment>
     <fragment
         android:id="@+id/ReferenceFragment"
-        android:name="com.student.competishun.ui.fragment.ReferenceFragment"
+        android:name="xyz.penpencil.competishun.ui.fragment.ReferenceFragment"
         tools:layout="@layout/fragment_reference">
         <action
             android:id="@+id/action_ReferenceFragment_to_HomeActivity"
@@ -106,7 +106,7 @@
 
     <activity
         android:id="@+id/homeActivity"
-        android:name="com.student.competishun.ui.main.HomeActivity"
+        android:name="xyz.penpencil.competishun.ui.main.HomeActivity"
         tools:layout="@layout/activity_home" />
 
     <activity
