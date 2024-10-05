@@ -13,6 +13,7 @@ import androidx.navigation.fragment.findNavController
 import com.student.competishun.R
 import com.student.competishun.data.model.CoursePaymentDetails
 import com.student.competishun.databinding.FragmentMyPurchaseDetailsBinding
+import com.student.competishun.ui.viewmodel.CoursePaymentsViewModel
 import com.student.competishun.ui.viewmodel.GetCourseByIDViewModel
 import com.student.competishun.ui.viewmodel.UserViewModel
 import com.student.competishun.utils.HelperFunctions
@@ -23,7 +24,10 @@ class MyPurchaseDetailsFragment : Fragment() {
     private lateinit var binding: FragmentMyPurchaseDetailsBinding
     private val userViewModel: UserViewModel by viewModels()
     private val getCourseByIDViewModel: GetCourseByIDViewModel by viewModels()
-    private val helperFunctions = HelperFunctions()
+    private val coursePaymentsViewModel: CoursePaymentsViewModel by viewModels() // Add CoursePaymentsViewModel
+    private var paymentType = ""
+    private var rzpOrderId = ""
+    private var amountPaid = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -50,44 +54,93 @@ class MyPurchaseDetailsFragment : Fragment() {
         Log.d("MyPurchaseDetailsFragment", "Course ID: $courseId")
         Log.d("MyPurchaseDetailsFragment", "Course Name: $courseUserId")
 
+        if(courseId!=null && courseUserId!=null){
+            Log.d("CheckCall","${courseId}${courseUserId}")
+            coursePaymentsViewModel.fetchCoursePayments(courseId, courseUserId)
+            Log.d("upperline","called")
+            observeCoursePayments()
+        }
+
+
+
         if (courseId != null) {
             getCourseByIDViewModel.fetchCourseById(courseId)
             getCourseByIDViewModel.courseByID.observe(viewLifecycleOwner, Observer { courses ->
 
 
-                if (courses?.with_installment_price == null) {
+                if (paymentType=="full") {
                     binding.clInstallmentCharge.visibility = View.GONE
                     binding.clFirstInstallment.visibility = View.GONE
                     binding.clSecondInstallment.visibility = View.GONE
+
+                    courses?.let {
+                        binding.etPurtotalPrice.text = it.price?.toString() ?: "NA"
+                        binding.etPurFinalPay.text = it.discount?.toString() ?: "NA"
+                        val finalPrice = it.price?.let { price ->
+                            it.discount?.let { discount -> price - discount }
+                        } ?: "NA"
+                        binding.etPurDiscountPay.text = "₹${finalPrice}"
+
+
+                        //Discount Percentage
+                        binding.etPurDiscountPer.text = "Discount (${
+                            purchaseDiscountPercentage(it.price ?: 0, it.discount ?: 0).toInt()
+                        }%)"
+                    }
+
                 } else {
-                    binding.clInstallmentCharge.visibility = View.VISIBLE
-                    binding.etPurInstallmentCharge.text = "NA"
-                    binding.clFirstInstallment.visibility = View.VISIBLE
-                    binding.etPurFirstInstallment.text = "NA"
-                    binding.clSecondInstallment.visibility = View.VISIBLE
-                    binding.etPurSecondInstallment.text = "NA"
+                    binding.clBuyCourseSection.visibility = View.VISIBLE
+                    binding.clDiscount.visibility = View.GONE
 
+                    courses?.let {
+                        val totalPrice = it.price?: 0
+
+                        binding.etPurtotalPrice.text = totalPrice.toString()
+                        binding.etPurFinalPay.text = totalPrice.toString()
+                        binding.clInstallmentCharge.visibility = View.GONE
+                        binding.etPurInstallmentCharge.visibility = View.GONE
+
+                        binding.clFirstInstallment.visibility = View.VISIBLE
+                        binding.etPurFirstInstallment.text = amountPaid
+
+                        binding.clSecondInstallment.visibility = View.VISIBLE
+                        val paidAmount = amountPaid.toIntOrNull() ?: 0
+                        val remainingAmount = totalPrice - paidAmount
+                        binding.etPurSecondInstallment.text = remainingAmount.toString()
+                    }
                 }
 
 
-                courses?.let {
-                    binding.etPurtotalPrice.text = it.price?.toString() ?: "NA"
-                    binding.etPurFinalPay.text = it.discount?.toString() ?: "NA"
-                    val finalPrice = it.price?.let { price ->
-                        it.discount?.let { discount -> price - discount }
-                    } ?: "NA"
-                    binding.etPurDiscountPay.text = "₹${finalPrice}"
 
-
-                    //Discount Percentage
-                    binding.etPurDiscountPer.text = "Discount (${
-                        purchaseDiscountPercentage(it.price ?: 0, it.discount ?: 0).toInt()
-                    }%)"
-                }
             })
         }
 
 
+    }
+    private fun observeCoursePayments() {
+        Log.d("commiin ","comminginbsoefsklf")
+        // Observe the course payments data
+        coursePaymentsViewModel.coursePayments.observe(viewLifecycleOwner) { payments ->
+            Log.d("payments",payments.toString())
+            if (payments != null) {
+
+                rzpOrderId = payments.firstOrNull()?.rzpOrderId ?: ""
+                paymentType = payments.firstOrNull()?.paymentType ?: ""
+                amountPaid = (payments.firstOrNull()?.amountPaid ?: "").toString()
+                Log.d("PaymentType", "Payment Type: $paymentType")
+                Log.d("rzpOrderId", "rzpOrderId: $rzpOrderId")
+
+            } else {
+                Toast.makeText(requireContext(), "Error fetching payment details", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        // Observe errors if any
+        coursePaymentsViewModel.error.observe(viewLifecycleOwner) { errorMessage ->
+            errorMessage?.let {
+                Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun observeUserDetails() {
@@ -112,16 +165,16 @@ class MyPurchaseDetailsFragment : Fragment() {
             }
         }
     }
+
     private fun purchaseDiscountPercentage(originalPrice: Int, discountPrice: Int): Double {
         return if (originalPrice > 0) {
             val discount = (originalPrice - discountPrice).toDouble()
             val percentage = (discount / originalPrice) * 100
-            String.format("%.2f", percentage).toDouble() // formats to 2 decimal places
+            String.format("%.2f", percentage).toDouble()
         } else {
             0.0
         }
     }
-
 
 
 }
