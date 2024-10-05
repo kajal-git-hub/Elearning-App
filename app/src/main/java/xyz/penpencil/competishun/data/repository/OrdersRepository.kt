@@ -1,11 +1,14 @@
 package xyz.penpencil.competishun.data.repository
 
+import android.content.ContentValues.TAG
 import android.util.Log
 import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.exception.ApolloException
+import com.student.competishun.coinkeeper.CoursePaymentsByUserIdQuery
 import com.student.competishun.coinkeeper.GenerateReceiptQuery
 import com.student.competishun.coinkeeper.OrdersByUserIdsQuery
 import xyz.penpencil.competishun.data.api.Coinkeeper
+import xyz.penpencil.competishun.data.model.CoursePaymentDetail
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -44,4 +47,24 @@ class OrdersRepository @Inject constructor(@Coinkeeper private val apolloClient:
             Result.failure(e)
         }
     }
+    suspend fun getCoursePaymentsByUserId(courseId: String, userId: String): List<CoursePaymentsByUserIdQuery.CoursePaymentsByUserId>? {
+        val query = CoursePaymentsByUserIdQuery(courseId,userId)
+
+        return try {
+            val response = apolloClient.query(query).execute()
+
+            if (response.hasErrors()) {
+                response.errors?.forEach {
+                    Log.e("GraphQL Error", it.message)
+                }
+                return null
+            }
+
+            response.data?.coursePaymentsByUserId
+        } catch (e: ApolloException) {
+            Log.e("ApolloException", e.message ?: "Unknown error")
+            null
+        }
+    }
+
 }

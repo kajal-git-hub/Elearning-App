@@ -15,6 +15,7 @@ import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.databinding.FragmentMyPurchaseDetailsBinding
 import xyz.penpencil.competishun.ui.viewmodel.CoursePaymentsViewModel
 import xyz.penpencil.competishun.ui.viewmodel.GetCourseByIDViewModel
+import xyz.penpencil.competishun.ui.viewmodel.OrdersViewModel
 import xyz.penpencil.competishun.ui.viewmodel.UserViewModel
 
 @AndroidEntryPoint
@@ -22,7 +23,7 @@ class MyPurchaseDetailsFragment : Fragment() {
     private lateinit var binding: FragmentMyPurchaseDetailsBinding
     private val userViewModel: UserViewModel by viewModels()
     private val getCourseByIDViewModel: GetCourseByIDViewModel by viewModels()
-    private val coursePaymentsViewModel: CoursePaymentsViewModel by viewModels() // Add CoursePaymentsViewModel
+    private val ordersViewModel: OrdersViewModel by viewModels()
     private var paymentType = ""
     private var rzpOrderId = ""
     private var amountPaid = ""
@@ -52,10 +53,8 @@ class MyPurchaseDetailsFragment : Fragment() {
         Log.d("MyPurchaseDetailsFragment", "Course ID: $courseId")
         Log.d("MyPurchaseDetailsFragment", "Course Name: $courseUserId")
 
-        if(courseId!=null && courseUserId!=null){
-            Log.d("CheckCall","${courseId}${courseUserId}")
-            coursePaymentsViewModel.fetchCoursePayments(courseId, courseUserId)
-            Log.d("upperline","called")
+        if (courseId != null && courseUserId != null) {
+            ordersViewModel.getPaymentBreakdown(courseId, courseUserId)
             observeCoursePayments()
         }
 
@@ -66,7 +65,7 @@ class MyPurchaseDetailsFragment : Fragment() {
             getCourseByIDViewModel.courseByID.observe(viewLifecycleOwner, Observer { courses ->
 
 
-                if (paymentType=="full") {
+                if (paymentType != "full") {
                     binding.clInstallmentCharge.visibility = View.GONE
                     binding.clFirstInstallment.visibility = View.GONE
                     binding.clSecondInstallment.visibility = View.GONE
@@ -91,7 +90,7 @@ class MyPurchaseDetailsFragment : Fragment() {
                     binding.clDiscount.visibility = View.GONE
 
                     courses?.let {
-                        val totalPrice = it.price?: 0
+                        val totalPrice = it.price ?: 0
 
                         binding.etPurtotalPrice.text = totalPrice.toString()
                         binding.etPurFinalPay.text = totalPrice.toString()
@@ -109,36 +108,39 @@ class MyPurchaseDetailsFragment : Fragment() {
                 }
 
 
-
             })
         }
 
 
     }
+
     private fun observeCoursePayments() {
-        Log.d("commiin ","comminginbsoefsklf")
         // Observe the course payments data
-        coursePaymentsViewModel.coursePayments.observe(viewLifecycleOwner) { payments ->
-            Log.d("payments",payments.toString())
+        ordersViewModel.paymentResult.observe(viewLifecycleOwner) { payments ->
+            Log.d("payments", payments.toString())
             if (payments != null) {
 
                 rzpOrderId = payments.firstOrNull()?.rzpOrderId ?: ""
                 paymentType = payments.firstOrNull()?.paymentType ?: ""
-                amountPaid = (payments.firstOrNull()?.amountPaid ?: "").toString()
+                amountPaid = (payments.firstOrNull()?.amount ?: "").toString()
                 Log.d("PaymentType", "Payment Type: $paymentType")
                 Log.d("rzpOrderId", "rzpOrderId: $rzpOrderId")
 
             } else {
-                Toast.makeText(requireContext(), "Error fetching payment details", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(),
+                    "Error fetching payment details",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
 
         // Observe errors if any
-        coursePaymentsViewModel.error.observe(viewLifecycleOwner) { errorMessage ->
-            errorMessage?.let {
-                Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
-            }
-        }
+//        ordersViewModel.error.observe(viewLifecycleOwner) { errorMessage ->
+//            errorMessage?.let {
+//                Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+//            }
+//        }
     }
 
     private fun observeUserDetails() {
