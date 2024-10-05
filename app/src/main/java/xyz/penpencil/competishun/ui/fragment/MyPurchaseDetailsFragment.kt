@@ -65,7 +65,6 @@ class MyPurchaseDetailsFragment : Fragment() {
     }
 
     private fun observeCoursePayments() {
-        // Observe the course payments data
         ordersViewModel.paymentResult.observe(viewLifecycleOwner) { payments ->
             if (payments != null) {
                 val firstPayment = payments.firstOrNull()
@@ -135,13 +134,13 @@ class MyPurchaseDetailsFragment : Fragment() {
                                 binding.clSecondInstallment.visibility = View.VISIBLE
                                 binding.tvInstallmentAmount.text ="₹ ${secondPaymentAmount.toInt()}"
                                 binding.etPurFirstInstallment.text = "₹ ${secondPaymentAmount.toInt()}"
-                                val paidAmount = secondPayment.amount.toInt() ?: 0  // Assuming you have a firstPayment object
+                                val paidAmount = secondPayment.amount.toInt()
                                 val remainingAmount = totalPrice - paidAmount
                                 binding.etPurSecondInstallment.text = "₹ ${remainingAmount}"
                                 binding.tvPriceRemaining.text = "₹ ${remainingAmount}"
                                 binding.tv2ndInstallmentAmount.text = "₹ ${remainingAmount}"
                             } else {
-                                // Calculate remaining amount based on the first payment
+                                //
 
                             }
 
