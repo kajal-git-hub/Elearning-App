@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.addCallback
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -66,11 +67,14 @@ class ProfileFragment : Fragment() {
         (activity as? HomeActivity)?.showBottomNavigationView(false)
         (activity as? HomeActivity)?.showFloatingButton(false)
 
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            requireActivity().finish()
-        }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                findNavController().popBackStack()
+            }
+        })
 
         sharedPreferencesManager = SharedPreferencesManager(requireContext())
+
         binding.etBTUpload.setOnClickListener {
             findNavController().navigate(R.id.homeFragment)
         }
@@ -82,6 +86,7 @@ class ProfileFragment : Fragment() {
         binding.llMyPurchase.setOnClickListener{
             findNavController().navigate(R.id.MyPurchase)
         }
+
         binding.llLogout.setOnClickListener {
             val bottomSheetDescriptionFragment = ProfileLogoutFragment()
             bottomSheetDescriptionFragment.show(childFragmentManager, "BottomSheetDescriptionFragment")
