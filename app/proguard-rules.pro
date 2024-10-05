@@ -3,7 +3,7 @@
 # proguardFiles setting in build.gradle.
 
 # Keep the BuildConfig class
--keep class com.student.competishun.BuildConfig { *; }
+-keep class xyz.penpencil.competishun.BuildConfig { *; }
 # Preserve the Google Pay Wallet classes
 -keep class com.google.android.gms.wallet.** { *; }
 -keep class com.google.android.gms.common.** { *; }

@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.student.competishun.ui.fragment.HomeFragment"
+        android:name="xyz.penpencil.competishun.ui.fragment.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home">
         <action
@@ -40,7 +40,7 @@
 
     <fragment
         android:id="@+id/coursesFragment"
-        android:name="com.student.competishun.ui.fragment.CoursesFragment"
+        android:name="xyz.penpencil.competishun.ui.fragment.CoursesFragment"
         android:label="fragment_courses"
         tools:layout="@layout/fragment_courses">
         <argument
@@ -53,7 +53,7 @@
 
     <fragment
         android:id="@+id/mediaFragment"
-        android:name="com.student.competishun.ui.fragment.MediaPlayerFragment"
+        android:name="xyz.penpencil.competishun.ui.fragment.MediaPlayerFragment"
         android:label="fragment_media"
         tools:layout="@layout/fragment_media_player">
         <argument
@@ -64,7 +64,7 @@
 
     <fragment
         android:id="@+id/exploreFragment"
-        android:name="com.student.competishun.ui.fragment.ExploreFragment"
+        android:name="xyz.penpencil.competishun.ui.fragment.ExploreFragment"
         android:label="fragment_explore"
         tools:layout="@layout/fragment_explore">
         <argument
@@ -89,14 +89,14 @@
 
     <fragment
         android:id="@+id/allFaqFragment"
-        android:name="com.student.competishun.ui.fragment.AllFaqFragment"
+        android:name="xyz.penpencil.competishun.ui.fragment.AllFaqFragment"
         android:label="fragment_all_faq"
         tools:layout="@layout/fragment_all_faq">
     </fragment>
 
     <fragment
         android:id="@+id/demoFreeFragment"
-        android:name="com.student.competishun.ui.fragment.AllDemoResourcesFree"
+        android:name="xyz.penpencil.competishun.ui.fragment.AllDemoResourcesFree"
         tools:layout="@layout/fragment_all_demo_resources_free">
         <argument
             android:name="folderId"
@@ -105,13 +105,13 @@
 
     <fragment
         android:id="@+id/installmentFragment"
-        android:name="com.student.competishun.ui.fragment.InstallmentDetailsBottomSheet"
+        android:name="xyz.penpencil.competishun.ui.fragment.InstallmentDetailsBottomSheet"
         tools:layout="@layout/bottom_sheet_installment_details">
     </fragment>
 
     <fragment
         android:id="@+id/myCartFragment"
-        android:name="com.student.competishun.ui.fragment.MyCartFragment"
+        android:name="xyz.penpencil.competishun.ui.fragment.MyCartFragment"
         tools:layout="@layout/fragment_my_cart">
         <action
             android:id="@+id/action_mycartFragment_to_paymentFragment"
@@ -129,7 +129,7 @@
 
     <fragment
         android:id="@+id/paymentFragment"
-        android:name="com.student.competishun.ui.fragment.PaymentFragment"
+        android:name="xyz.penpencil.competishun.ui.fragment.PaymentFragment"
         tools:layout="@layout/fragment_payment">
         <argument
             android:name="userId"
@@ -138,7 +138,7 @@
 
     <fragment
         android:id="@+id/paymentLoaderFragment"
-        android:name="com.student.competishun.ui.fragment.PaymentLoaderFragment"
+        android:name="xyz.penpencil.competishun.ui.fragment.PaymentLoaderFragment"
         tools:layout="@layout/fragment_payment_loader">
         <action
             android:id="@+id/action_paymentLoaderFragment_to_paymentFragment"
@@ -147,7 +147,7 @@
 
     <fragment
         android:id="@+id/PersonalDetailsFragment"
-        android:name="com.student.competishun.ui.fragment.PersonalDetailsFragment"
+        android:name="xyz.penpencil.competishun.ui.fragment.PersonalDetailsFragment"
         tools:layout="@layout/fragment_personal_detail">
         <action
             android:id="@+id/action_PersonalDetails_to_AdditionalDetail"
@@ -156,7 +156,7 @@
 
     <fragment
         android:id="@+id/AdditionalDetailsFragment"
-        android:name="com.student.competishun.ui.fragment.AdditionalDetailsFragment"
+        android:name="xyz.penpencil.competishun.ui.fragment.AdditionalDetailsFragment"
         tools:layout="@layout/fragment_additional_detail">
         <action
             android:id="@+id/action_AdditionalDetail_to_AddressDetail"
@@ -165,7 +165,7 @@
 
     <fragment
         android:id="@+id/AddressDetailFragment"
-        android:name="com.student.competishun.ui.fragment.AddressDetailsFragment"
+        android:name="xyz.penpencil.competishun.ui.fragment.AddressDetailsFragment"
         tools:layout="@layout/fragment_address_details">
         <action
             android:id="@+id/action_AddressDetail_to_CourseEmpty"
@@ -174,7 +174,7 @@
 
     <fragment
         android:id="@+id/courseEmptyFragment"
-        android:name="com.student.competishun.ui.fragment.CourseEmptyFragment"
+        android:name="xyz.penpencil.competishun.ui.fragment.CourseEmptyFragment"
         tools:layout="@layout/fragment_course_empty">
         <action
             android:id="@+id/action_courseEmptyFragment_to_SubjectContentFragment"
@@ -189,7 +189,7 @@
 
     <fragment
         android:id="@+id/SubjectContentFragment"
-        android:name="com.student.competishun.ui.fragment.SubjectContentFragment"
+        android:name="xyz.penpencil.competishun.ui.fragment.SubjectContentFragment"
         tools:layout="@layout/fragment_subject_content">
         <argument
             android:name="folder_Name"
@@ -201,7 +201,7 @@
 
     <fragment
         android:id="@+id/ResumeCourseFragment"
-        android:name="com.student.competishun.ui.fragment.ResumeCourseFragment"
+        android:name="xyz.penpencil.competishun.ui.fragment.ResumeCourseFragment"
         tools:layout="@layout/fragment_resume_course">
         <argument
             android:name="course_Id"
@@ -220,7 +220,7 @@
 
     <fragment
         android:id="@+id/TopicTYPEContentFragment"
-        android:name="com.student.competishun.ui.fragment.TopicTypeContentFragment"
+        android:name="xyz.penpencil.competishun.ui.fragment.TopicTypeContentFragment"
         tools:layout="@layout/fragment_topic_type_content">
         <argument
             android:name="folder_Id"
@@ -232,13 +232,13 @@
 
     <fragment
         android:id="@+id/PaymentFailedFragment"
-        android:name="com.student.competishun.ui.fragment.PaymentFailedFragment"
+        android:name="xyz.penpencil.competishun.ui.fragment.PaymentFailedFragment"
         tools:layout="@layout/fragment_paymet_failed">
     </fragment>
 
     <fragment
         android:id="@+id/ProfileFragment"
-        android:name="com.student.competishun.ui.fragment.ProfileFragment"
+        android:name="xyz.penpencil.competishun.ui.fragment.ProfileFragment"
         tools:layout="@layout/fragment_profile"/>
 
     <action
@@ -247,13 +247,13 @@
 
     <fragment
         android:id="@+id/NotificationFragment"
-        android:name="com.student.competishun.ui.fragment.NotificationFragment"
+        android:name="xyz.penpencil.competishun.ui.fragment.NotificationFragment"
         tools:layout="@layout/fragment_notification">
     </fragment>
 
     <fragment
         android:id="@+id/ScheduleFragment"
-        android:name="com.student.competishun.ui.fragment.ScheduleFragment"
+        android:name="xyz.penpencil.competishun.ui.fragment.ScheduleFragment"
         tools:layout="@layout/fragment_schedule">
 
         <argument
@@ -270,14 +270,14 @@
 
     <fragment
         android:id="@+id/RecommendViewDetail"
-        android:name="com.student.competishun.ui.fragment.RecommendViewDetail"
+        android:name="xyz.penpencil.competishun.ui.fragment.RecommendViewDetail"
         tools:layout="@layout/fragment_recommend_view_detail">
     </fragment>
 
 
     <fragment
         android:id="@+id/ContactUs"
-        android:name="com.student.competishun.ui.fragment.ContactUsFragment"
+        android:name="xyz.penpencil.competishun.ui.fragment.ContactUsFragment"
         tools:layout="@layout/fragment_contact_us">
 
         <action
@@ -288,30 +288,30 @@
 
     <fragment
         android:id="@+id/DownloadFragment"
-        android:name="com.student.competishun.ui.fragment.DownloadFragment"
+        android:name="xyz.penpencil.competishun.ui.fragment.DownloadFragment"
         tools:layout="@layout/fragment_download">
     </fragment>
 
     <fragment
         android:id="@+id/PdfViewerFragment"
-        android:name="com.student.competishun.ui.fragment.PdfViewerFragment"
+        android:name="xyz.penpencil.competishun.ui.fragment.PdfViewerFragment"
         tools:layout="@layout/fragment_pdf_viewer">
     </fragment>
 
 
     <fragment
         android:id="@+id/BottomSheetDownload"
-        android:name="com.student.competishun.ui.fragment.BottomSheetDownloadBookmark"
+        android:name="xyz.penpencil.competishun.ui.fragment.BottomSheetDownloadBookmark"
         tools:layout="@layout/fragment_bottom_sheet_download_bookmark">
     </fragment>
     <fragment
         android:id="@+id/ProfileLogoutFragment"
-        android:name="com.student.competishun.ui.fragment.ProfileLogoutFragment"
+        android:name="xyz.penpencil.competishun.ui.fragment.ProfileLogoutFragment"
         tools:layout="@layout/fragment_profile_logout">
     </fragment>
     <fragment
         android:id="@+id/AboutUs"
-        android:name="com.student.competishun.ui.fragment.AboutUsFragment"
+        android:name="xyz.penpencil.competishun.ui.fragment.AboutUsFragment"
         tools:layout="@layout/fragment_about_us">
         <action
             android:id="@+id/action_AboutUs_to_homePage"
@@ -320,7 +320,7 @@
     </fragment>
     <fragment
         android:id="@+id/TermsAndCondition"
-        android:name="com.student.competishun.ui.fragment.TermsAndCondition"
+        android:name="xyz.penpencil.competishun.ui.fragment.TermsAndCondition"
         tools:layout="@layout/fragment_terms_and_condition">
         <action
             android:id="@+id/action_terms_to_homePage"
@@ -329,7 +329,7 @@
     </fragment>
     <fragment
         android:id="@+id/PolicyFragment"
-        android:name="com.student.competishun.ui.fragment.PrivacyPolicyFragment"
+        android:name="xyz.penpencil.competishun.ui.fragment.PrivacyPolicyFragment"
         tools:layout="@layout/fragment_privacy_policy">
         <action
             android:id="@+id/action_policy_to_homePage"
@@ -338,7 +338,7 @@
     </fragment>
     <fragment
         android:id="@+id/DisclaimerFragment"
-        android:name="com.student.competishun.ui.fragment.DisclaimerFragment"
+        android:name="xyz.penpencil.competishun.ui.fragment.DisclaimerFragment"
         tools:layout="@layout/fragment_disclaimer">
         <action
             android:id="@+id/action_disclaimer_to_homePage"
@@ -346,12 +346,12 @@
     </fragment>
     <fragment
         android:id="@+id/BookMarkFragment"
-        android:name="com.student.competishun.ui.fragment.BookMarkFragment"
+        android:name="xyz.penpencil.competishun.ui.fragment.BookMarkFragment"
         tools:layout="@layout/fragment_book_mark">
     </fragment>
     <fragment
         android:id="@+id/MyPurchase"
-        android:name="com.student.competishun.ui.fragment.MyPurchaseFragment"
+        android:name="xyz.penpencil.competishun.ui.fragment.MyPurchaseFragment"
         tools:layout="@layout/fragment_my_purchase">
         <action
             android:id="@+id/action_purchase_to_purchaseDetail"
@@ -359,7 +359,7 @@
     </fragment>
     <fragment
         android:id="@+id/MyPurchaseDetail"
-        android:name="com.student.competishun.ui.fragment.MyPurchaseDetailsFragment"
+        android:name="xyz.penpencil.competishun.ui.fragment.MyPurchaseDetailsFragment"
         tools:layout="@layout/fragment_my_purchase_details">
         <action
             android:id="@+id/action_purchase_to_purchaseDetail"

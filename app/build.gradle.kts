@@ -8,10 +8,10 @@ plugins {
 }
 
 android {
-    namespace = "com.student.competishun"
+    namespace = "xyz.penpencil.competishun"
     compileSdk = 34
     defaultConfig {
-        applicationId = "com.student.competishun"
+        applicationId = "xyz.penpencil.competishun"
         minSdk = 26
         targetSdk = 34
         versionCode = 1

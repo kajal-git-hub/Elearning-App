@@ -7,14 +7,14 @@
     <data>
         <variable
             name="studentCoursesViewModel"
-            type="com.student.competishun.ui.viewmodel.StudentCoursesViewModel" />
+            type="xyz.penpencil.competishun.ui.viewmodel.StudentCoursesViewModel" />
         <variable
             name="coursesViewModel"
-            type="com.student.competishun.ui.viewmodel.CoursesViewModel" />
+            type="xyz.penpencil.competishun.ui.viewmodel.CoursesViewModel" />
 
         <variable
             name="coursesCategoryViewModel"
-            type="com.student.competishun.ui.viewmodel.CoursesCategoryViewModel" />
+            type="xyz.penpencil.competishun.ui.viewmodel.CoursesCategoryViewModel" />
     </data>
 
 
