@@ -101,6 +101,7 @@ class MainActivity : AppCompatActivity() {
             putExtra("userId", userId)
         }
         startActivity(intent)
+        finish()
     }
 
     private fun getUserInfo() {

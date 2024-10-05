@@ -194,7 +194,7 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
         override fun handleOnBackPressed() {
             when (navController.currentDestination?.id) {
                 R.id.courseEmptyFragment -> {
-                    navController.navigate(R.id.homeFragment)
+                    navController.popBackStack(R.id.homeFragment,false)
                     binding.bottomNav.selectedItemId = R.id.home
                 }
                 R.id.ResumeCourseFragment ->
