@@ -67,11 +67,8 @@ class MyPurchaseDetailsFragment : Fragment() {
     private fun observeCoursePayments() {
         // Observe the course payments data
         ordersViewModel.paymentResult.observe(viewLifecycleOwner) { payments ->
-            Log.d("payments", payments.toString())
             if (payments != null) {
-                // Fetch the first payment (if present)
                 val firstPayment = payments.firstOrNull()
-                // Fetch the second payment (if present)
                 val secondPayment = if (payments.size > 1) payments[1] else null
 
                 rzpOrderId = firstPayment?.rzpOrderId ?: ""
@@ -97,13 +94,13 @@ class MyPurchaseDetailsFragment : Fragment() {
 
                     getCourseByIDViewModel.courseByID.observe(viewLifecycleOwner) { course ->
                         course?.let {
-                            binding.etPurtotalPrice.text = it.price?.toString() ?: "NA"
-                            binding.etPurFinalPay.text = it.discount?.toString() ?: "NA"
+                            binding.etPurtotalPrice.text = "₹ ${it.price?.toString() ?: "0"}"
+                            binding.etPurFinalPay.text = "₹ ${it.discount?.toString() ?: "0"}"
 
                             val finalPrice = it.price?.let { price ->
                                 it.discount?.let { discount -> price - discount }
                             } ?: "NA"
-                            binding.etPurDiscountPay.text = "₹${finalPrice}"
+                            binding.etPurDiscountPay.text = "- ₹ ${finalPrice}"
 
                             // Discount Percentage
                             binding.etPurDiscountPer.text = "Discount (${
@@ -117,28 +114,32 @@ class MyPurchaseDetailsFragment : Fragment() {
                 } else {
                     // Installment logic (if paymentType is not "full")
                     binding.clBuyCourseSection.visibility = View.VISIBLE
+                    binding.clInstallmentDetails.visibility = View.VISIBLE
                     binding.clDiscount.visibility = View.GONE
 
                     getCourseByIDViewModel.courseByID.observe(viewLifecycleOwner) { course ->
                         course?.let {
                             val totalPrice = it.price ?: 0
-                            binding.etPurtotalPrice.text = totalPrice.toString()
-                            binding.etPurFinalPay.text = totalPrice.toString()
+                            binding.etPurtotalPrice.text = "₹ ${totalPrice}"
+                            binding.etPurFinalPay.text = "₹ ${totalPrice}"
 
                             binding.clInstallmentCharge.visibility = View.GONE
                             binding.etPurInstallmentCharge.visibility = View.GONE
 
                             binding.clFirstInstallment.visibility = View.VISIBLE
-                            binding.etPurFirstInstallment.text = amountPaid
+                            binding.etPurFirstInstallment.text = "₹ ${amountPaid}"
 
                             // If there's a second payment (installment)
                             if (secondPayment != null) {
                                 val secondPaymentAmount = secondPayment.amount ?: 0
                                 binding.clSecondInstallment.visibility = View.VISIBLE
-                                binding.etPurFirstInstallment.text = secondPaymentAmount.toInt().toString()
+                                binding.tvInstallmentAmount.text ="₹ ${secondPaymentAmount.toInt()}"
+                                binding.etPurFirstInstallment.text = "₹ ${secondPaymentAmount.toInt()}"
                                 val paidAmount = secondPayment.amount.toInt() ?: 0  // Assuming you have a firstPayment object
                                 val remainingAmount = totalPrice - paidAmount
-                                binding.etPurSecondInstallment.text = remainingAmount.toString()
+                                binding.etPurSecondInstallment.text = "₹ ${remainingAmount}"
+                                binding.tvPriceRemaining.text = "₹ ${remainingAmount}"
+                                binding.tv2ndInstallmentAmount.text = "₹ ${remainingAmount}"
                             } else {
                                 // Calculate remaining amount based on the first payment
 
