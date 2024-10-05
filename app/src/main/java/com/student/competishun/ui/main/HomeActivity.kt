@@ -10,6 +10,7 @@ import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -84,6 +85,7 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
         setContentView(binding.root)
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
+        onBackPressedDispatcher.addCallback(this ,backPressListener)
 
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.fragmentNavigation) as NavHostFragment
@@ -176,14 +178,44 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
         }
 
     }
-    override fun onBackPressed() {
 
-        if (navController.currentDestination?.id != R.id.homeFragment) {
-            Log.e("cousswetype",bundle.toString())
-            navController.navigate(R.id.homeFragment,bundle)
-            binding.bottomNav.selectedItemId = R.id.home
-        } else {
-            super.onBackPressed()
+//    override fun onBackPressed() {
+//
+//        if (navController.currentDestination?.id != R.id.homeFragment) {
+//            Log.e("cousswetype",bundle.toString())
+//            navController.navigate(R.id.homeFragment,bundle)
+//            binding.bottomNav.selectedItemId = R.id.home
+//        } else {
+//            super.onBackPressed()
+//        }
+//    }
+
+    private val backPressListener = object : OnBackPressedCallback(true){
+        override fun handleOnBackPressed() {
+            when (navController.currentDestination?.id) {
+                R.id.courseEmptyFragment -> {
+                    navController.navigate(R.id.homeFragment)
+                    binding.bottomNav.selectedItemId = R.id.home
+                }
+                R.id.ResumeCourseFragment ->
+                {
+                    navController.navigate(R.id.courseEmptyFragment)
+                    binding.bottomNav.selectedItemId = R.id.myCourse
+                }
+                R.id.SubjectContentFragment ->
+                {
+                    navController.navigate(R.id.ResumeCourseFragment)
+                    binding.bottomNav.selectedItemId = R.id.myCourse
+                }
+                else -> {
+                    if (navController.currentDestination?.id == R.id.home){
+                        finish()
+                    }else{
+                        isEnabled=false
+                        onBackPressedDispatcher.onBackPressed()
+                    }
+                }
+            }
         }
     }
 
