@@ -78,6 +78,7 @@ class MyPurchaseFragment : Fragment() {
             val bundle = Bundle().apply {
                 putString("PurchaseCourseId",selectedCourse.enrolledCourseId)
                 putString("PurchaseUserId",selectedCourse.userId)
+                putString("FirstPurchase",selectedCourse.amountPaidOn)
             }
             findNavController().navigate(R.id.MyPurchaseDetail, bundle)
 

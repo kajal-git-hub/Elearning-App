@@ -28,6 +28,7 @@ class MyPurchaseDetailsFragment : Fragment() {
     private var rzpOrderId = ""
     private var amountPaid = ""
     private var paymentStatus = ""
+    private var firstPurchase = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -50,6 +51,8 @@ class MyPurchaseDetailsFragment : Fragment() {
 
         val courseId = arguments?.getString("PurchaseCourseId")
         val courseUserId = arguments?.getString("PurchaseUserId")
+
+        firstPurchase = arguments?.getString("FirstPurchase").toString()
 
         Log.d("MyPurchaseDetailsFragment", "Course ID: $courseId")
         Log.d("MyPurchaseDetailsFragment", "Course Name: $courseUserId")
@@ -134,6 +137,7 @@ class MyPurchaseDetailsFragment : Fragment() {
                                 binding.clSecondInstallment.visibility = View.VISIBLE
                                 binding.tvInstallmentAmount.text ="₹ ${secondPaymentAmount.toInt()}"
                                 binding.etPurFirstInstallment.text = "₹ ${secondPaymentAmount.toInt()}"
+                                binding.tvInstallmentDate.text = firstPurchase
                                 val paidAmount = secondPayment.amount.toInt()
                                 val remainingAmount = totalPrice - paidAmount
                                 binding.etPurSecondInstallment.text = "₹ ${remainingAmount}"
