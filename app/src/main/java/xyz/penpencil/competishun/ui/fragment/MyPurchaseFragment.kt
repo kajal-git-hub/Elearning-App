@@ -10,15 +10,6 @@ import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.student.competishun.R
-import com.student.competishun.data.model.CoursePaymentDetails
-import com.student.competishun.databinding.FragmentMyPurchaseBinding
-import com.student.competishun.ui.adapter.CoursePaymentAdapter
-import com.student.competishun.ui.adapter.PurchaseStatus
-import com.student.competishun.ui.adapter.PurchaseStatusAdapter
-import com.student.competishun.ui.main.HomeActivity
-import com.student.competishun.ui.viewmodel.UserViewModel
-import com.student.competishun.utils.HelperFunctions
 import dagger.hilt.android.AndroidEntryPoint
 import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.data.model.CoursePaymentDetails
@@ -27,6 +18,8 @@ import xyz.penpencil.competishun.ui.adapter.CoursePaymentAdapter
 import xyz.penpencil.competishun.ui.adapter.PurchaseStatus
 import xyz.penpencil.competishun.ui.adapter.PurchaseStatusAdapter
 import xyz.penpencil.competishun.ui.main.HomeActivity
+import xyz.penpencil.competishun.ui.viewmodel.UserViewModel
+import xyz.penpencil.competishun.utils.HelperFunctions
 
 @AndroidEntryPoint
 class MyPurchaseFragment : Fragment() {

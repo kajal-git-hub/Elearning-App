@@ -6,19 +6,16 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import xyz.penpencil.competishun.R
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
-import com.student.competishun.R
-import com.student.competishun.data.model.CoursePaymentDetails
-import com.student.competishun.databinding.FragmentMyPurchaseDetailsBinding
-import com.student.competishun.ui.viewmodel.CoursePaymentsViewModel
-import com.student.competishun.ui.viewmodel.GetCourseByIDViewModel
-import com.student.competishun.ui.viewmodel.UserViewModel
-import com.student.competishun.utils.HelperFunctions
 import dagger.hilt.android.AndroidEntryPoint
+import xyz.penpencil.competishun.R
+import xyz.penpencil.competishun.databinding.FragmentMyPurchaseDetailsBinding
+import xyz.penpencil.competishun.ui.viewmodel.CoursePaymentsViewModel
+import xyz.penpencil.competishun.ui.viewmodel.GetCourseByIDViewModel
+import xyz.penpencil.competishun.ui.viewmodel.UserViewModel
 
 @AndroidEntryPoint
 class MyPurchaseDetailsFragment : Fragment() {

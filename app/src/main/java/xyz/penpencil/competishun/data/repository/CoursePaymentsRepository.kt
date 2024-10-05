@@ -3,7 +3,7 @@ package xyz.penpencil.competishun.data.repository
 import android.util.Log
 import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.exception.ApolloException
-import xyz.penpencil.competishun.coinkeeper.CoursePaymentsByUserIdQuery
+import com.student.competishun.coinkeeper.CoursePaymentsByUserIdQuery
 import xyz.penpencil.competishun.data.model.CoursePaymentDetail
 import javax.inject.Inject
 import javax.inject.Singleton

@@ -9,21 +9,15 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.apollographql.apollo3.api.Optional
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.student.competishun.gatekeeper.type.UpdateUserInput
 import xyz.penpencil.competishun.databinding.FragmentProfileEditBinding
 import xyz.penpencil.competishun.ui.adapter.SelectClassAdapter
 import xyz.penpencil.competishun.ui.adapter.SelectExamAdapter
 import xyz.penpencil.competishun.ui.adapter.SelectYearAdapter
-import com.student.competishun.R
-import com.student.competishun.databinding.FragmentProfileEditBinding
-import com.student.competishun.gatekeeper.type.UpdateUserInput
-import com.student.competishun.ui.adapter.SelectClassAdapter
-import com.student.competishun.ui.adapter.SelectExamAdapter
-import com.student.competishun.ui.adapter.SelectYearAdapter
-import com.student.competishun.ui.main.HomeActivity
-import com.student.competishun.ui.main.MainActivity
-import com.student.competishun.ui.viewmodel.UpdateUserViewModel
-import com.student.competishun.utils.SharedPreferencesManager
 import dagger.hilt.android.AndroidEntryPoint
+import xyz.penpencil.competishun.ui.main.HomeActivity
+import xyz.penpencil.competishun.ui.viewmodel.UpdateUserViewModel
+import xyz.penpencil.competishun.utils.SharedPreferencesManager
 
 @AndroidEntryPoint
 class ProfileEditFragment : BottomSheetDialogFragment() {
