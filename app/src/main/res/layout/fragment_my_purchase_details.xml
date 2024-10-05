@@ -461,6 +461,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_16dp"
                 android:layout_marginTop="@dimen/_24dp"
+                android:visibility="gone"
                 android:background="@drawable/card_bg"
                 android:layout_marginBottom="34dp"
                 app:layout_constraintBottom_toBottomOf="parent"

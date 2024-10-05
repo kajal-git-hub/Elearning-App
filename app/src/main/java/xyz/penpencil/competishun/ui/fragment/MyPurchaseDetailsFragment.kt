@@ -27,6 +27,7 @@ class MyPurchaseDetailsFragment : Fragment() {
     private var paymentType = ""
     private var rzpOrderId = ""
     private var amountPaid = ""
+    private var paymentStatus = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -54,64 +55,13 @@ class MyPurchaseDetailsFragment : Fragment() {
         Log.d("MyPurchaseDetailsFragment", "Course Name: $courseUserId")
 
         if (courseId != null && courseUserId != null) {
+            // Fetch payment breakdown and observe results
             ordersViewModel.getPaymentBreakdown(courseId, courseUserId)
             observeCoursePayments()
+
+            // Fetch course details after fetching payment information
+            observeCourseDetails(courseId)
         }
-
-
-
-        if (courseId != null) {
-            getCourseByIDViewModel.fetchCourseById(courseId)
-            getCourseByIDViewModel.courseByID.observe(viewLifecycleOwner, Observer { courses ->
-
-
-                if (paymentType != "full") {
-                    binding.clInstallmentCharge.visibility = View.GONE
-                    binding.clFirstInstallment.visibility = View.GONE
-                    binding.clSecondInstallment.visibility = View.GONE
-
-                    courses?.let {
-                        binding.etPurtotalPrice.text = it.price?.toString() ?: "NA"
-                        binding.etPurFinalPay.text = it.discount?.toString() ?: "NA"
-                        val finalPrice = it.price?.let { price ->
-                            it.discount?.let { discount -> price - discount }
-                        } ?: "NA"
-                        binding.etPurDiscountPay.text = "₹${finalPrice}"
-
-
-                        //Discount Percentage
-                        binding.etPurDiscountPer.text = "Discount (${
-                            purchaseDiscountPercentage(it.price ?: 0, it.discount ?: 0).toInt()
-                        }%)"
-                    }
-
-                } else {
-                    binding.clBuyCourseSection.visibility = View.VISIBLE
-                    binding.clDiscount.visibility = View.GONE
-
-                    courses?.let {
-                        val totalPrice = it.price ?: 0
-
-                        binding.etPurtotalPrice.text = totalPrice.toString()
-                        binding.etPurFinalPay.text = totalPrice.toString()
-                        binding.clInstallmentCharge.visibility = View.GONE
-                        binding.etPurInstallmentCharge.visibility = View.GONE
-
-                        binding.clFirstInstallment.visibility = View.VISIBLE
-                        binding.etPurFirstInstallment.text = amountPaid
-
-                        binding.clSecondInstallment.visibility = View.VISIBLE
-                        val paidAmount = amountPaid.toIntOrNull() ?: 0
-                        val remainingAmount = totalPrice - paidAmount
-                        binding.etPurSecondInstallment.text = remainingAmount.toString()
-                    }
-                }
-
-
-            })
-        }
-
-
     }
 
     private fun observeCoursePayments() {
@@ -119,13 +69,19 @@ class MyPurchaseDetailsFragment : Fragment() {
         ordersViewModel.paymentResult.observe(viewLifecycleOwner) { payments ->
             Log.d("payments", payments.toString())
             if (payments != null) {
-
                 rzpOrderId = payments.firstOrNull()?.rzpOrderId ?: ""
                 paymentType = payments.firstOrNull()?.paymentType ?: ""
+                paymentStatus = payments.firstOrNull()?.status?:""
                 amountPaid = (payments.firstOrNull()?.amount ?: "").toString()
+
                 Log.d("PaymentType", "Payment Type: $paymentType")
                 Log.d("rzpOrderId", "rzpOrderId: $rzpOrderId")
 
+                // After payment details are available, fetch course details based on payment type
+                val courseId = arguments?.getString("PurchaseCourseId")
+                if (courseId != null) {
+                    getCourseByIDViewModel.fetchCourseById(courseId)
+                }
             } else {
                 Toast.makeText(
                     requireContext(),
@@ -134,28 +90,69 @@ class MyPurchaseDetailsFragment : Fragment() {
                 ).show()
             }
         }
+    }
 
-        // Observe errors if any
-//        ordersViewModel.error.observe(viewLifecycleOwner) { errorMessage ->
-//            errorMessage?.let {
-//                Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
-//            }
-//        }
+    private fun observeCourseDetails(courseId: String) {
+        // Observe course details only after the payment data has been fetched
+        getCourseByIDViewModel.courseByID.observe(viewLifecycleOwner, Observer { course ->
+            course?.let {
+                if (paymentType == "full" && paymentStatus == "captured") {
+                    // Full payment logic
+                    binding.clInstallmentCharge.visibility = View.GONE
+                    binding.clFirstInstallment.visibility = View.GONE
+                    binding.clSecondInstallment.visibility = View.GONE
+
+                    binding.etPurtotalPrice.text = it.price?.toString() ?: "NA"
+                    binding.etPurFinalPay.text = it.discount?.toString() ?: "NA"
+
+                    val finalPrice = it.price?.let { price ->
+                        it.discount?.let { discount -> price - discount }
+                    } ?: "NA"
+                    binding.etPurDiscountPay.text = "₹${finalPrice}"
+
+                    // Discount Percentage
+                    binding.etPurDiscountPer.text = "Discount (${
+                        purchaseDiscountPercentage(it.price ?: 0, it.discount ?: 0).toInt()
+                    }%)"
+
+                    binding.clBuyCourseSection.visibility = View.GONE
+                    binding.clInstallmentDetails.visibility = View.GONE
+
+                } else {
+                    // Installment logic (if paymentType is not "full")
+                    binding.clBuyCourseSection.visibility = View.VISIBLE
+                    binding.clDiscount.visibility = View.GONE
+
+                    val totalPrice = it.price ?: 0
+                    binding.etPurtotalPrice.text = totalPrice.toString()
+                    binding.etPurFinalPay.text = totalPrice.toString()
+
+                    binding.clInstallmentCharge.visibility = View.GONE
+                    binding.etPurInstallmentCharge.visibility = View.GONE
+
+                    binding.clFirstInstallment.visibility = View.VISIBLE
+                    binding.etPurFirstInstallment.text = amountPaid
+
+                    binding.clSecondInstallment.visibility = View.VISIBLE
+                    val paidAmount = amountPaid.toIntOrNull() ?: 0
+                    val remainingAmount = totalPrice - paidAmount
+                    binding.etPurSecondInstallment.text = remainingAmount.toString()
+                }
+            }
+        })
     }
 
     private fun observeUserDetails() {
         userViewModel.userDetails.observe(viewLifecycleOwner) { result ->
             result.onSuccess { data ->
-
                 binding.tvUserName.text = data.getMyDetails.fullName
                 binding.tvUserAddress.text = data.getMyDetails.userInformation.address?.addressLine1
+
                 data.getMyDetails.courses.mapNotNull { course ->
                     if (course?.paymentStatus == "captured") {
                         binding.clBuyCourseSection.visibility = View.GONE
                     }
                 }
-
-
             }.onFailure { exception ->
                 Toast.makeText(
                     requireContext(),
@@ -175,6 +172,4 @@ class MyPurchaseDetailsFragment : Fragment() {
             0.0
         }
     }
-
-
 }
