@@ -69,10 +69,15 @@ class MyPurchaseDetailsFragment : Fragment() {
         ordersViewModel.paymentResult.observe(viewLifecycleOwner) { payments ->
             Log.d("payments", payments.toString())
             if (payments != null) {
-                rzpOrderId = payments.firstOrNull()?.rzpOrderId ?: ""
-                paymentType = payments.firstOrNull()?.paymentType ?: ""
-                paymentStatus = payments.firstOrNull()?.status?:""
-                amountPaid = (payments.firstOrNull()?.amount ?: "").toString()
+                // Fetch the first payment (if present)
+                val firstPayment = payments.firstOrNull()
+                // Fetch the second payment (if present)
+                val secondPayment = if (payments.size > 1) payments[1] else null
+
+                rzpOrderId = firstPayment?.rzpOrderId ?: ""
+                paymentType = firstPayment?.paymentType ?: ""
+                paymentStatus = firstPayment?.status ?: ""
+                amountPaid = (firstPayment?.amount ?: "").toString()
 
                 Log.d("PaymentType", "Payment Type: $paymentType")
                 Log.d("rzpOrderId", "rzpOrderId: $rzpOrderId")
@@ -81,6 +86,66 @@ class MyPurchaseDetailsFragment : Fragment() {
                 val courseId = arguments?.getString("PurchaseCourseId")
                 if (courseId != null) {
                     getCourseByIDViewModel.fetchCourseById(courseId)
+                }
+
+                // Handling "full" payment
+                if (paymentType == "full" && paymentStatus == "captured") {
+                    // Full payment logic
+                    binding.clInstallmentCharge.visibility = View.GONE
+                    binding.clFirstInstallment.visibility = View.GONE
+                    binding.clSecondInstallment.visibility = View.GONE
+
+                    getCourseByIDViewModel.courseByID.observe(viewLifecycleOwner) { course ->
+                        course?.let {
+                            binding.etPurtotalPrice.text = it.price?.toString() ?: "NA"
+                            binding.etPurFinalPay.text = it.discount?.toString() ?: "NA"
+
+                            val finalPrice = it.price?.let { price ->
+                                it.discount?.let { discount -> price - discount }
+                            } ?: "NA"
+                            binding.etPurDiscountPay.text = "₹${finalPrice}"
+
+                            // Discount Percentage
+                            binding.etPurDiscountPer.text = "Discount (${
+                                purchaseDiscountPercentage(it.price ?: 0, it.discount ?: 0).toInt()
+                            }%)"
+
+                            binding.clBuyCourseSection.visibility = View.GONE
+                            binding.clInstallmentDetails.visibility = View.GONE
+                        }
+                    }
+                } else {
+                    // Installment logic (if paymentType is not "full")
+                    binding.clBuyCourseSection.visibility = View.VISIBLE
+                    binding.clDiscount.visibility = View.GONE
+
+                    getCourseByIDViewModel.courseByID.observe(viewLifecycleOwner) { course ->
+                        course?.let {
+                            val totalPrice = it.price ?: 0
+                            binding.etPurtotalPrice.text = totalPrice.toString()
+                            binding.etPurFinalPay.text = totalPrice.toString()
+
+                            binding.clInstallmentCharge.visibility = View.GONE
+                            binding.etPurInstallmentCharge.visibility = View.GONE
+
+                            binding.clFirstInstallment.visibility = View.VISIBLE
+                            binding.etPurFirstInstallment.text = amountPaid
+
+                            // If there's a second payment (installment)
+                            if (secondPayment != null) {
+                                val secondPaymentAmount = secondPayment.amount ?: 0
+                                binding.clSecondInstallment.visibility = View.VISIBLE
+                                binding.etPurFirstInstallment.text = secondPaymentAmount.toInt().toString()
+                                val paidAmount = secondPayment.amount.toInt() ?: 0  // Assuming you have a firstPayment object
+                                val remainingAmount = totalPrice - paidAmount
+                                binding.etPurSecondInstallment.text = remainingAmount.toString()
+                            } else {
+                                // Calculate remaining amount based on the first payment
+
+                            }
+
+                        }
+                    }
                 }
             } else {
                 Toast.makeText(
