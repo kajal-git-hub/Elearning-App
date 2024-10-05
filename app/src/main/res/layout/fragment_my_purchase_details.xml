@@ -590,7 +590,6 @@
                         android:textSize="@dimen/_12sp"
                         android:layout_marginStart="@dimen/_4dp"
                         app:layout_constraintTop_toTopOf="@id/tvInstallmentDateTxt"
-                        app:layout_constraintBottom_toBottomOf="tvInstallmentDateTxt"
                         app:layout_constraintStart_toEndOf="@id/tvInstallmentDateTxt"/>
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -663,7 +662,6 @@
                         android:textSize="@dimen/_12sp"
                         android:layout_marginStart="@dimen/_4dp"
                         app:layout_constraintTop_toTopOf="@id/tv2ndInstallmentDateTxt"
-                        app:layout_constraintBottom_toBottomOf="tv2ndInstallmentDateTxt"
                         app:layout_constraintStart_toEndOf="@id/tv2ndInstallmentDateTxt"/>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
