@@ -1,5 +1,6 @@
 package xyz.penpencil.competishun.ui.adapter
 
+import android.content.Context
 import android.os.Build
 import android.text.SpannableString
 import android.text.Spanned
@@ -10,6 +11,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
@@ -18,6 +20,7 @@ import xyz.penpencil.competishun.data.model.TopicContentModel
 import xyz.penpencil.competishun.ui.fragment.BottomSheetDownloadBookmark
 import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.databinding.ItemTopicTypeContentBinding
+import xyz.penpencil.competishun.utils.HelperFunctions
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -30,17 +33,17 @@ TopicContentAdapter(
     private val topicContents: List<TopicContentModel>,
     private val folderContentId: String,
     private val fragmentActivity: FragmentActivity,
+    private val context: Context, // Pass context
     private val onItemClick: (TopicContentModel, String) -> Unit
 ) :
     RecyclerView.Adapter<TopicContentAdapter.TopicContentViewHolder>() {
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TopicContentViewHolder {
         val binding = ItemTopicTypeContentBinding.inflate(
             LayoutInflater.from(parent.context), parent, false
         )
-
-        Log.e("topicocwntn",topicContents.toString())
-        return TopicContentViewHolder(binding)
+        return TopicContentViewHolder(binding,context)
     }
 
     override fun onBindViewHolder(holder: TopicContentViewHolder, position: Int) {
@@ -62,11 +65,15 @@ TopicContentAdapter(
 
     override fun getItemCount(): Int = topicContents.size
 
-    class TopicContentViewHolder(private val binding: ItemTopicTypeContentBinding) :
+    class TopicContentViewHolder(private val binding: ItemTopicTypeContentBinding,
+                                 private val context: Context // Use context for download function
+    ) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(topicContent: TopicContentModel, fragmentActivity: FragmentActivity) {
             binding.ivSubjectBookIcon.setImageResource(topicContent.subjectIcon)
+
+            var helperFunctions = HelperFunctions()
 
             binding.ivMoreInfoLec.setOnClickListener {
                 val bottomSheet = BottomSheetDownloadBookmark()
@@ -81,10 +88,20 @@ TopicContentAdapter(
             if ( isDateTodayOrPast(topicContent.lockTime)) {
                 if (topicContent.fileType == "VIDEO")
                 {
+                    binding.etHomeWorkText.visibility = View.VISIBLE
+                    binding.etHomeWorkPdf.visibility = View.VISIBLE
+                    binding.etHomeWorkPdf.text = if (topicContent.homeworkName.isNotEmpty()) topicContent.homeworkName else "NA"
+                    binding.etHomeWorkPdf.setOnClickListener {
+                        helperFunctions.downloadPdf(context,topicContent.homeworkUrl,topicContent.homeworkName)
+                    }
                     binding.videoicon.setImageResource(R.drawable.frame_1707481707)
                     binding.ivPersonIdentifier.setBackgroundResource(R.drawable.clock_black)
                 }
-                else if (topicContent.fileType == "PDF"){ binding.videoicon.setImageResource(R.drawable.pdf_bg)}
+                else if (topicContent.fileType == "PDF"){
+                    binding.etHomeWorkPdf.visibility = View.GONE
+                    binding.etHomeWorkText.visibility = View.GONE
+
+                    binding.videoicon.setImageResource(R.drawable.pdf_bg)}
                 binding.videoicon.visibility = View.VISIBLE
                 binding.ivPersonIdentifier.setBackgroundResource(R.drawable.download_person)
 

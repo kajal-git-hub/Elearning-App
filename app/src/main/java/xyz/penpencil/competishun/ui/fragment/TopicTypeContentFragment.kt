@@ -81,6 +81,10 @@ class TopicTypeContentFragment : Fragment() {
         val topicContents = folderContents?.map { content ->
             val date = content.content?.scheduled_time.toString()?:""
             val time = helperFunctions.formatCourseDateTime(date)
+
+            val homeworkUrl = content.content?.homework?.map { it.file_url } ?:""
+            val homeworkFileName = content.content?.homework?.map { it.file_name } ?: ""
+
             TopicContentModel(
                 subjectIcon = if (content.content?.file_type?.name == "PDF") R.drawable.content_bg else R.drawable.group_1707478994,
                 id = content.content?.id ?: "",
@@ -93,10 +97,12 @@ class TopicTypeContentFragment : Fragment() {
                 videoDuration = content.content?.video_duration ?: 0,
                 url = content.content?.file_url.toString(),
                 fileType = content.content?.file_type?.name ?: "",
-                lockTime = time
+                lockTime = time,
+                homeworkUrl = removeBrackets(homeworkUrl.toString()),
+                homeworkName = removeBrackets(homeworkFileName.toString())
             )
         } ?: emptyList()
-        val adapter = TopicContentAdapter(topicContents, folderId,requireActivity()) { topicContent, folderContentId ->
+        val adapter = TopicContentAdapter(topicContents, folderId,requireActivity(),requireContext()) { topicContent, folderContentId ->
             when (topicContent.fileType) {
                 "VIDEO" -> videoUrlApi(videourlViewModel, topicContent.id,topicContent.topicName)
                 "PDF" -> {
@@ -131,7 +137,14 @@ class TopicTypeContentFragment : Fragment() {
                     Log.e("GetFolderdatazz", data.findCourseFolderProgress.folder.toString())
                     val folderContents = data.findCourseFolderProgress.folderContents
                     Log.d("folderContentsProgress", folderContents.toString())
+
                     val topicContents = folderContents?.map { content ->
+
+                        val homeworkUrl = content.content?.homework?.map { it.file_url } ?:""
+                        val homeworkFileName = content.content?.homework?.map { it.file_name } ?: ""
+
+                        Log.d("homeworkUrl",homeworkUrl.toString())
+
                         val time = helperFunctions.formatCourseDateTime(content.content?.scheduled_time.toString())
                         TopicContentModel(
                             subjectIcon = R.drawable.group_1707478994, // Replace with dynamic icon if needed
@@ -145,11 +158,13 @@ class TopicTypeContentFragment : Fragment() {
                             url = content.content?.file_url.orEmpty(),
                             videoDuration = content.content?.video_duration ?: 0,
                             fileType = content.content?.file_type?.name.orEmpty(),
-                            lockTime = time
+                            lockTime = time,
+                            homeworkUrl = removeBrackets(homeworkUrl.toString()),
+                            homeworkName = removeBrackets(homeworkFileName.toString())
                         )
                     } ?: emptyList()
 
-                    val adapter = TopicContentAdapter(topicContents, folderId,requireActivity()) { topicContent, folderContentId ->
+                    val adapter = TopicContentAdapter(topicContents, folderId,requireActivity(),requireContext()) { topicContent, folderContentId ->
                         when (topicContent.fileType) {
                             "VIDEO" -> videoUrlApi(videourlViewModel, topicContent.id,topicContent.topicName)
                             "PDF" -> {
@@ -195,6 +210,9 @@ class TopicTypeContentFragment : Fragment() {
                 // Handle error or null URL
             }
         })
+    }
+    fun removeBrackets(input: String): String {
+        return input.replace("[", "").replace("]", "")
     }
 
 
