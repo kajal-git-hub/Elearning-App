@@ -10,14 +10,21 @@ import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import com.razorpay.Checkout
+import com.student.competishun.coinkeeper.CreateOrderMutation
+import com.student.competishun.coinkeeper.type.CreateOrderInput
 import dagger.hilt.android.AndroidEntryPoint
+import org.json.JSONException
+import org.json.JSONObject
 import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.databinding.FragmentMyPurchaseDetailsBinding
 import xyz.penpencil.competishun.ui.viewmodel.CoursePaymentsViewModel
 import xyz.penpencil.competishun.ui.viewmodel.GetCourseByIDViewModel
+import xyz.penpencil.competishun.ui.viewmodel.OrderViewModel
 import xyz.penpencil.competishun.ui.viewmodel.OrdersViewModel
 import xyz.penpencil.competishun.ui.viewmodel.UserViewModel
 import xyz.penpencil.competishun.utils.HelperFunctions
+import xyz.penpencil.competishun.utils.SharedPreferencesManager
 
 @AndroidEntryPoint
 class MyPurchaseDetailsFragment : Fragment() {
@@ -25,8 +32,13 @@ class MyPurchaseDetailsFragment : Fragment() {
     private val userViewModel: UserViewModel by viewModels()
     private val getCourseByIDViewModel: GetCourseByIDViewModel by viewModels()
     private val ordersViewModel: OrdersViewModel by viewModels()
+    private lateinit var sharedPreferencesManager: SharedPreferencesManager
     private var helperFunctions = HelperFunctions()
     private var paymentType = ""
+    private var input: CreateOrderInput? = null
+    private val orderViewModel: OrderViewModel by viewModels()
+    var courseId = ""
+    var courseUserId = ""
     private var rzpOrderId = ""
     private var amountPaid = ""
     private var paymentStatus = ""
@@ -48,12 +60,13 @@ class MyPurchaseDetailsFragment : Fragment() {
         binding.etBTPurchase.setOnClickListener {
             findNavController().navigate(R.id.MyPurchase)
         }
+        sharedPreferencesManager = SharedPreferencesManager(requireContext())
 
         observeUserDetails()
         userViewModel.fetchUserDetails()
 
-        val courseId = arguments?.getString("PurchaseCourseId")
-        val courseUserId = arguments?.getString("PurchaseUserId")
+        courseId = arguments?.getString("PurchaseCourseId")?: ""
+        courseUserId = arguments?.getString("PurchaseUserId")?: ""
 
         firstPurchase = arguments?.getString("FirstPurchase").toString()
 
@@ -151,6 +164,9 @@ class MyPurchaseDetailsFragment : Fragment() {
                                 val remainingAmount = totalPrice - paidAmount
                                 binding.etPurSecondInstallment.text = "₹ ${remainingAmount}"
                                 binding.tvPriceRemaining.text = "₹ ${remainingAmount}"
+                                binding.clBuynow.setOnClickListener {
+
+                                }
                                 binding.tv2ndInstallmentAmount.text = "₹ ${remainingAmount}"
                             } else {
                                 //
@@ -167,6 +183,70 @@ class MyPurchaseDetailsFragment : Fragment() {
                     Toast.LENGTH_SHORT
                 ).show()
             }
+        }
+    }
+
+    private fun createOrder(){
+        input = CreateOrderInput(
+            amountPaid = amountPaid,
+            entityId = courseId,
+            entityType = "course",
+            isPaidOnce = paymentType == "full",
+            paymentMode = "online",
+            paymentType = paymentType,
+            totalAmount = totalAmount.toDouble(),
+            userId = userId,
+            userName = userName,
+            courseName = courseName
+        )
+        input?.let { orderInput ->
+            orderViewModel.createOrder(orderInput)
+            Log.e("orderAmountss",orderInput.toString())
+            orderViewModel.orderResult.observe(viewLifecycleOwner, Observer { result ->
+                result.onSuccess { data ->
+                    processPayment(data.createOrder)
+                }.onFailure { exception ->
+                    Log.e("payemen",exception.message.toString(),exception.cause)
+                    navigatePaymentFail()
+                    // Toast.makeText(requireContext(), exception.message, Toast.LENGTH_SHORT).show()
+                }
+            })
+        }?: run {
+            Log.e("clicked enable","procedd")
+            // Re-enable the button if input is null (edge case)
+            binding.clBuynow.isEnabled = true
+        }
+    }
+
+    private fun navigatePaymentFail() {
+        findNavController().navigate(R.id.action_mycartFragment_to_paymentFailedFragment)
+    }
+
+    private fun processPayment(order: CreateOrderMutation.CreateOrder) {
+        val rzpOrderId = order.rzpOrderId
+        sharedPreferencesManager.rzpOrderId = rzpOrderId
+        Log.e("razorpaydi",rzpOrderId.toString())
+        var amount = order.amountPaid
+        Log.e("chcekcnou",amount.toString())
+        val currency = "INR"
+        val checkout = Checkout()
+        checkout.setKeyID("rzp_test_DcVrk6NysFj71r")
+        Log.e("user/id=",userId.toString())
+        Log.e("user/tokem=",sharedPreferencesManager.accessToken.toString())
+        val obj = JSONObject()
+        try {
+            obj.put("name", "Competishun")
+            obj.put("currency", currency)
+            obj.put("amount", amount)
+            obj.put("order_id", rzpOrderId)
+            val prefill = JSONObject()
+            prefill.put("userId", userId)
+            prefill.put("contact", sharedPreferencesManager.mobileNo)
+            obj.put("prefill", prefill)
+            Log.e("orderData",obj.toString())
+            checkout.open(requireActivity(), obj)
+        } catch (e: JSONException) {
+            e.printStackTrace()
         }
     }
 
