@@ -5,9 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import dagger.hilt.android.AndroidEntryPoint
 import xyz.penpencil.competishun.data.model.TopicContentModel
 import xyz.penpencil.competishun.databinding.FragmentBottomSheetBookmarkDeleteDownloadBinding
 
+
+@AndroidEntryPoint
 class BottomSheetBookmarkDeleteDownload(
     private val listener: OnDeleteItemListener,
 ) : BottomSheetDialogFragment() {
