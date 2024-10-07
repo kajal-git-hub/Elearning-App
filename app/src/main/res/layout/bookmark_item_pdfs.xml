@@ -88,7 +88,7 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/tv_bm_topic_name"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Applying Trig Functions to \nAngles of Rotation"
         android:layout_marginStart="@dimen/_16dp"
@@ -99,6 +99,7 @@
         android:fontFamily="@font/nunito"
         android:textStyle="bold"
         android:lineHeight="@dimen/_20dp"
+        app:layout_constraintEnd_toStartOf="@+id/bookmark_extra"
         android:textSize="@dimen/_14sp"
         app:layout_constraintStart_toEndOf="@id/cl_bm_course_book"
         app:layout_constraintTop_toBottomOf="@id/tv_bm_StudyMaterial"/>

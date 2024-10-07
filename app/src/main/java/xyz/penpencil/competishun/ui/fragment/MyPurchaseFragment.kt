@@ -102,7 +102,7 @@ class MyPurchaseFragment : Fragment() {
                             "₹ ${it.pricePaid}",
                             helperFunctions.formatCourseDate(it.createdAt.toString()),
                             "One-Time Payment",
-                            "24111001",
+                            data.getMyDetails.userInformation.rollNumber.toString(),
                             it.paymentStatus == "refund complete",
                             it.enrolledCourseId,
                             data.getMyDetails.id
