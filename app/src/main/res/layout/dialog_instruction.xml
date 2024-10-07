@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:paddingStart="@dimen/_16dp"
+        android:paddingEnd="@dimen/_16dp"
+        android:paddingBottom="@dimen/_16dp"
+        android:paddingTop="@dimen/_16dp"
+        android:background="@drawable/bg_rounded_dialog">
+        <View
+            android:layout_width="60dp"
+            android:layout_height="@dimen/_4dp"
+            android:background="@color/gray"
+            android:layout_margin="@dimen/_10dp"
+            android:id="@+id/line"
+            android:layout_alignParentTop="true"
+            android:layout_centerInParent="true"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/_20dp"
+            android:fontFamily="@font/nunito"
+            android:id="@+id/header"
+            android:textStyle="bold"
+            android:paddingBottom="@dimen/_10dp"
+            android:textSize="@dimen/_16sp"
+            android:layout_below="@+id/line"
+            android:text="More Options"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/nunito"
+            android:textStyle="bold"
+            android:id="@+id/instruction"
+            android:paddingTop="@dimen/_10dp"
+            android:drawableStart="@drawable/ic_note_grey"
+            android:drawablePadding="@dimen/_10dp"
+            android:paddingBottom="@dimen/_10dp"
+            android:textSize="@dimen/_16sp"
+            android:layout_below="@+id/header"
+            android:text="Instructions"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/nunito"
+            android:textStyle="bold"
+            android:id="@+id/report"
+            android:drawableStart="@drawable/ic_info_red"
+            android:drawablePadding="@dimen/_10dp"
+            android:paddingTop="@dimen/_10dp"
+            android:paddingBottom="@dimen/_10dp"
+            android:textSize="@dimen/_16sp"
+            android:layout_below="@+id/instruction"
+            android:text="Report Question"/>
+    </RelativeLayout>
+
+</RelativeLayout>

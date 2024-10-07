@@ -1,11 +1,13 @@
 package com.student.competishun.ui.fragment.test
 
+import android.app.Dialog
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.RadioButton
@@ -136,6 +138,8 @@ class TestFragment : Fragment() {
                 putString("QUESTION_ID", "Q6765")
             })
         }
+
+        binding.options.setOnClickListener { showInstructionDialog() }
     }
 
     private fun disableAns(isEnable: Boolean){
@@ -167,4 +171,19 @@ class TestFragment : Fragment() {
             }
         }
     }
+
+
+    private fun showInstructionDialog() {
+        val dialog = Dialog(requireContext())
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        val view = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_instruction, null)
+        dialog.setContentView(view)
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+        val layoutParams = dialog.window?.attributes
+        layoutParams?.width = (resources.displayMetrics.widthPixels).toInt()
+        dialog.window?.attributes = layoutParams
+        dialog.show()
+    }
+
 }
