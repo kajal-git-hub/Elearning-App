@@ -70,7 +70,12 @@ class RecommendViewDetail : Fragment() {
     }
 
     private fun getAllCoursesForStudent(courseType: String) {
-        val filters = FindAllCourseInputStudent(Optional.Absent, Optional.Absent, Optional.Absent, Optional.present(true))
+        val filters = FindAllCourseInputStudent(
+            category_name = Optional.Absent,
+            course_class = Optional.Absent,
+            exam_type = Optional.present(courseType),
+            is_recommended = Optional.present(true)
+        )
         studentCoursesViewModel.fetchCourses(filters)
         binding.progressBarRec.visibility = View.VISIBLE
         binding.rvRecommendedCourses.visibility = View.GONE
