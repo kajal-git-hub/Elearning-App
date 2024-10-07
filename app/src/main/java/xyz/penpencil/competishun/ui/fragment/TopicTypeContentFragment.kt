@@ -84,7 +84,8 @@ class TopicTypeContentFragment : Fragment() {
 
             val homeworkUrl = content.content?.homework?.map { it.file_url } ?:""
             val homeworkFileName = content.content?.homework?.map { it.file_name } ?: ""
-
+            Log.d("homeworkUrl",homeworkUrl.toString())
+            Log.d("homeworkFileName",homeworkFileName.toString())
             TopicContentModel(
                 subjectIcon = if (content.content?.file_type?.name == "PDF") R.drawable.content_bg else R.drawable.group_1707478994,
                 id = content.content?.id ?: "",
@@ -98,8 +99,8 @@ class TopicTypeContentFragment : Fragment() {
                 url = content.content?.file_url.toString(),
                 fileType = content.content?.file_type?.name ?: "",
                 lockTime = time,
-                homeworkUrl = removeBrackets(homeworkUrl.toString()),
-                homeworkName = removeBrackets(homeworkFileName.toString())
+                homeworkUrl = homeworkUrl.toString(),
+                homeworkName = homeworkFileName.toString()
             )
         } ?: emptyList()
         val adapter = TopicContentAdapter(topicContents, folderId,requireActivity(),requireContext()) { topicContent, folderContentId ->
@@ -159,8 +160,8 @@ class TopicTypeContentFragment : Fragment() {
                             videoDuration = content.content?.video_duration ?: 0,
                             fileType = content.content?.file_type?.name.orEmpty(),
                             lockTime = time,
-                            homeworkUrl = removeBrackets(homeworkUrl.toString()),
-                            homeworkName = removeBrackets(homeworkFileName.toString())
+                            homeworkUrl = homeworkUrl.toString(),
+                            homeworkName = homeworkFileName.toString()
                         )
                     } ?: emptyList()
 
@@ -211,9 +212,7 @@ class TopicTypeContentFragment : Fragment() {
             }
         })
     }
-    fun removeBrackets(input: String): String {
-        return input.replace("[", "").replace("]", "")
-    }
+
 
 
 }

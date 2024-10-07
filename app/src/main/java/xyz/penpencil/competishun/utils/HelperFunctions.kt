@@ -157,13 +157,16 @@ class HelperFunctions {
 
     fun downloadPdf(context: Context,fileUrl: String, title: String) {
          val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-         val request = DownloadManager.Request(Uri.parse(fileUrl))
+         val request = DownloadManager.Request(Uri.parse(removeBrackets(fileUrl)))
              .setTitle(title)
              .setDescription("Downloading $title...")
              .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
              .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "$title.pdf")
 
          downloadManager.enqueue(request)
+    }
+    fun removeBrackets(input: String): String {
+        return input.replace("[", "").replace("]", "")
     }
 
 
