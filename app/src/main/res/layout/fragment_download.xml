@@ -23,7 +23,7 @@
             android:id="@+id/tittle_tb"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Recommended"
+            android:text="Downloads"
             android:textColor="#ffffff"
             android:fontFamily="@font/nunito"
             android:textSize="@dimen/_18sp"/>
