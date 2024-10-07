@@ -2,6 +2,16 @@ query MyDetails {
     getMyDetails {
         id
         fullName
+        courses {
+            enrolledCourseName
+            enrolledCourseId
+            id
+            paymentStatus
+            pricePaid
+            examType
+            createdAt
+            __typename
+        }
         mobileNumber
         userInformation {
             id
@@ -11,6 +21,7 @@ query MyDetails {
             targetYear
             address {
                 city
+                addressLine1
             }
             rollNumber
             passportPhoto

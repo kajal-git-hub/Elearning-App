@@ -2,7 +2,7 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/nav_graph_home"
+    android:id="@+id/nav_graph_chome"
     app:startDestination="@id/homeFragment">
 
     <fragment
@@ -13,6 +13,8 @@
         <action
             android:id="@+id/action_homeFragment_to_coursesFragment"
             app:destination="@+id/coursesFragment" />
+        <action android:id="@+id/action_homeFragment_to_YTCoursesFragment"
+            app:destination="@id/YTCourseFragment" />
         <action
             android:id="@+id/action_homeFragment_to_homeActivity"
             app:destination="@+id/homeActivity" />
@@ -362,6 +364,12 @@
         <action
             android:id="@+id/action_purchase_to_purchaseDetail"
             app:destination="@+id/homeFragment"/>
+    </fragment>
+    <fragment
+        android:id="@+id/YTCourseFragment"
+        android:name="com.student.competishun.ui.fragment.YTCourseFragment"
+        android:label="fragment_y_t_course"
+        tools:layout="@layout/fragment_y_t_course">
     </fragment>
 
 

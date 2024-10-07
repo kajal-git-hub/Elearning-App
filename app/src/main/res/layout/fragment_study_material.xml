@@ -76,6 +76,7 @@
             app:layout_constraintStart_toStartOf="parent">
 
             <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tvCourseMaterialCount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="58 PDFs"
@@ -132,6 +133,7 @@
             android:background="@drawable/bg_filter_purchase">
 
             <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tvFilterTextSM"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Filter"
@@ -150,7 +152,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvToggleButtons"
+            android:id="@+id/rvToggleButtonsSM"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -165,6 +167,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvStudyMaterial"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_8dp"

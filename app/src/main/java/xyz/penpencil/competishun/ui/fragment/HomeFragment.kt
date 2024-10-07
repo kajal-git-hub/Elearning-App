@@ -137,6 +137,10 @@ class HomeFragment : Fragment() {
             findNavController().navigate(R.id.action_homeFragment_to_RecommendDetailFragment)
         }
 
+        binding.clYLectures.setOnClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_YTCoursesFragment)
+        }
+
 
         rvOurCourses = view.findViewById(R.id.rvOurCourses)
         dotsIndicatorOurCourses = view.findViewById(R.id.llDotsIndicatorOurCourses)

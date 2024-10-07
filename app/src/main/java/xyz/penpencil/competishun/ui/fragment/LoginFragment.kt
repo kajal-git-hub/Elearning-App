@@ -16,6 +16,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.FileProvider
 import androidx.activity.result.ActivityResultLauncher
 import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
@@ -27,6 +28,8 @@ import androidx.credentials.exceptions.GetCredentialException
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -48,6 +51,8 @@ import xyz.penpencil.competishun.databinding.FragmentLoginBinding
 import xyz.penpencil.competishun.ui.main.MainActivity
 import java.security.MessageDigest
 import java.util.UUID
+import java.io.File
+
 
 
 @AndroidEntryPoint
@@ -404,11 +409,8 @@ class LoginFragment : Fragment() {
 
     private val termsClickableSpan = object : ClickableSpan() {
         override fun onClick(widget: View) {
-            Toast.makeText(
-                requireContext(),
-                getString(R.string.terms_conditions_clicked),
-                Toast.LENGTH_SHORT
-            ).show()
+            val pdfFileName = "TermsandCondition.pdf"
+            openPdfFromAssets(pdfFileName)
         }
 
         override fun updateDrawState(ds: android.text.TextPaint) {
@@ -418,15 +420,42 @@ class LoginFragment : Fragment() {
 
     private val privacyClickableSpan = object : ClickableSpan() {
         override fun onClick(widget: View) {
-            Toast.makeText(
-                requireContext(),
-                getString(R.string.privacy_policy_clicked),
-                Toast.LENGTH_SHORT
-            ).show()
+            val pdfFileName = "TermsandCondition.pdf"
+            openPdfFromAssets(pdfFileName)
         }
 
         override fun updateDrawState(ds: android.text.TextPaint) {
             ds.isUnderlineText = false
+        }
+    }
+    private fun openPdfFromAssets(fileName: String) {
+        try {
+            val inputStream = requireContext().assets.open(fileName)
+            val file = File(requireContext().cacheDir, fileName)
+            file.outputStream().use { outputStream ->
+                inputStream.copyTo(outputStream)
+            }
+            val uri = FileProvider.getUriForFile(
+                requireContext(),
+                "${requireContext().packageName}.provider",
+                file
+            )
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.setDataAndType(uri, "application/pdf")
+            intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+
+            if (intent.resolveActivity(requireContext().packageManager) != null) {
+                startActivity(intent)
+            } else {
+                Toast.makeText(
+                    requireContext(),
+                    "No PDF viewer found",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Toast.makeText(requireContext(), "Error opening file", Toast.LENGTH_SHORT).show()
         }
     }
 

@@ -8,7 +8,9 @@ import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.databinding.SelectExamItemBinding
 
 class SelectExamAdapter(
-    private val examList: List<String> // List of Exam objects
+    private val examList: List<String> ,
+    private val onExamSelected: (String) -> Unit
+
 ) : RecyclerView.Adapter<SelectExamAdapter.SelectExamViewHolder>() {
 
     // ViewHolder class using View Binding
@@ -44,6 +46,7 @@ class SelectExamAdapter(
 
         // Handle item click and update selection
         holder.itemView.setOnClickListener {
+            onExamSelected(exam)
             val previousSelectedPosition = selectedPosition
             selectedPosition = position
             notifyItemChanged(previousSelectedPosition) // Update the previous selected item

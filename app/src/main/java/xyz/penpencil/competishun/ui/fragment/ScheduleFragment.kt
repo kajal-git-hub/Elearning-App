@@ -51,6 +51,8 @@ class ScheduleFragment : Fragment(), ToolbarCustomizationListener {
     lateinit var scheduleData:ZonedDateTime
     var matchingPosition: Int? = null
 
+    var hasScheduleList= mutableListOf<String>()
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -63,12 +65,13 @@ class ScheduleFragment : Fragment(), ToolbarCustomizationListener {
     private fun setupCalendar(scheduleTime:String) {
         calendarSetUp = HorizontalCalendarSetUp()
 
-        val currentMonth = calendarSetUp.setUpCalendarAdapter(
+        calendarSetUp.setUpCalendarAdapter(
             binding.rvCalenderDates,
             requireContext(),
             onDateSelected = { calendarDate ->
                 scrollToDate(calendarDate)
             }
+            ,hasScheduleList
         )
         //Log.e("schedule57 $scheduleTime", convertIST(scheduleTime).month.toString() )
         binding.tvCalenderCurrentMonth.text = "${convertIST(scheduleData.toString()).month} ${convertIST(scheduleData.toString()).year} "
@@ -85,6 +88,7 @@ class ScheduleFragment : Fragment(), ToolbarCustomizationListener {
               //  scrollToDate(calendarDate)
             }
         )
+
         val today = LocalDate.now() // Get current date without time
 
         calendarSetUp.scrollToSpecificDate(binding.rvCalenderDates, convertIST(scheduleTime))
@@ -93,9 +97,16 @@ class ScheduleFragment : Fragment(), ToolbarCustomizationListener {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
+    private fun setUpScheduleAvailable(hasScheduleList: MutableList<String>) {
+        calendarSetUp.setUpScheduleAvailable(binding.rvCalenderDates, hasScheduleList,requireContext(),{ calendarDate ->
+            //  scrollToDate(calendarDate)
+        })
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun setupRecyclerView(contentList: List<FindAllCourseFolderContentByScheduleTimeQuery.FindAllCourseFolderContentByScheduleTime>) {
     Log.e("foldevontent" ,contentList.toString())
-        var courseDate: CalendarDate = CalendarDate("","","",null)
+        var courseDate:CalendarDate = CalendarDate("","","",null)
         Log.e("foldevonten" ,courseDate.toString())
 
         val scheduleDataList = contentList.groupBy {
@@ -152,6 +163,7 @@ class ScheduleFragment : Fragment(), ToolbarCustomizationListener {
                 data.findAllCourseFolderContentByScheduleTime.forEachIndexed { index, scheduleContent ->
                     Log.e("timea $index", scheduleContent.content.scheduled_time.toString())
                 }
+
                 data.findAllCourseFolderContentByScheduleTime.forEachIndexed {index, schedulecontent->
                 // Log.e("timea",schedulecontent.s.toString())
                  schedulecontent.content.scheduled_time.let {
@@ -160,7 +172,16 @@ class ScheduleFragment : Fragment(), ToolbarCustomizationListener {
                      val regex = Regex("""(\d{4}-\d{2}-\d{2})""")
                      val matchResult = regex.find(it.toString())
                      val extractedDate = matchResult?.value ?: "Invalid date"
+                     val date=extractedDate.split("-")[2]
                      Log.e("scheduletimecu ","$extractedDate $it")
+
+                     Log.e("aman",date)
+
+                     if(!hasScheduleList.contains(date))
+                     {
+                         hasScheduleList.add(date)
+                     }
+
                      if (!foundMatchingDate){
                          setupCalendar(it.toString())
                      }
@@ -173,6 +194,7 @@ class ScheduleFragment : Fragment(), ToolbarCustomizationListener {
                          return@forEachIndexed
                      }
 
+
 //                     if (currentDate != it)
 //                         setupCalendar(it.toString()) else setupCalendar(currentDate)
 
@@ -180,6 +202,9 @@ class ScheduleFragment : Fragment(), ToolbarCustomizationListener {
                     Log.e("schedule57 $scheduleData", convertIST(scheduleData.toString()).toString())
                     binding.tvCalenderCurrentMonth.text = "${convertIST(scheduleData.toString()).month} ${convertIST(scheduleData.toString()).year}"
                 }
+
+                setUpScheduleAvailable(hasScheduleList)
+                Log.e("hasScheduleList",hasScheduleList.toString())
 
             }.onFailure { exception ->
                 Toast.makeText(context, "Error: ${exception.message}", Toast.LENGTH_SHORT).show()
@@ -216,6 +241,7 @@ class ScheduleFragment : Fragment(), ToolbarCustomizationListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        calendarSetUp = HorizontalCalendarSetUp()
 
         (activity as? HomeActivity)?.showBottomNavigationView(false)
         (activity as? HomeActivity)?.showFloatingButton(false)
@@ -356,7 +382,7 @@ class ScheduleFragment : Fragment(), ToolbarCustomizationListener {
         }
 
     }
-    fun videoUrlApi(viewModel: VideourlViewModel, folderContentId: String, name: String) {
+    fun videoUrlApi(viewModel: VideourlViewModel, folderContentId: String,name: String) {
 
         viewModel.fetchVideoStreamUrl(folderContentId, "480")
          Log.e("foldfdfd",folderContentId)

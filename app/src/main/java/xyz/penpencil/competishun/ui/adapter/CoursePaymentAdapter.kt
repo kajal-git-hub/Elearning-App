@@ -11,7 +11,8 @@ import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.data.model.CoursePaymentDetails
 
 class CoursePaymentAdapter(
-    private var coursePaymentList: List<CoursePaymentDetails>
+    private var coursePaymentList: List<CoursePaymentDetails>,
+    private val onCourseClick: (CoursePaymentDetails) -> Unit
 ) : RecyclerView.Adapter<CoursePaymentAdapter.CoursePaymentViewHolder>() {
 
     fun updateData(filteredList: List<CoursePaymentDetails>) {
@@ -43,7 +44,7 @@ class CoursePaymentAdapter(
         holder.tvPurchaseStatus.text = currentItem.purchaseStatus
 
         when(currentItem.purchaseStatus){
-            "COMPLETE" -> holder.tvPurchaseStatus.setCompoundDrawablesWithIntrinsicBounds(
+            "captured" -> holder.tvPurchaseStatus.setCompoundDrawablesWithIntrinsicBounds(
                 R.drawable.tick_circle_schedule,0,0,0)
             "FAILED" -> holder.tvPurchaseStatus.setCompoundDrawablesWithIntrinsicBounds(
                 R.drawable.failed_logo,0,0,0)
@@ -57,7 +58,7 @@ class CoursePaymentAdapter(
         holder.ivStatusIcon.setImageResource(currentItem.statusIconRes)
 
         when(currentItem.purchaseStatus){
-            "COMPLETE" -> holder.ivStatusIcon.setBackgroundResource(
+            "captured" -> holder.ivStatusIcon.setBackgroundResource(
                 R.drawable.group_1707479053
             )
             "FAILED" -> holder.ivStatusIcon.setBackgroundResource(
@@ -76,6 +77,10 @@ class CoursePaymentAdapter(
 
         // Set visibility for refund note
         holder.clNote.visibility = if (currentItem.isRefundVisible) View.VISIBLE else View.GONE
+
+        holder.itemView.setOnClickListener {
+            onCourseClick(currentItem)
+        }
     }
 
     // Return the size of your dataset (invoked by the layout manager)

@@ -29,3 +29,7 @@ interface OnTopicTypeSelectedListener {
 interface OnDeleteClickListener {
     fun onDeleteClick(position: Int,item: TopicContentModel)
 }
+
+interface OnClassSelectedListener {
+    fun onClassSelected(selectedClass: String)
+}

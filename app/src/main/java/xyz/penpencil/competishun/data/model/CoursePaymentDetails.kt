@@ -8,5 +8,7 @@ data class CoursePaymentDetails(
     val amountPaidOn: String,
     val paymentType: String,
     val studentRollNo: String,
-    val isRefundVisible: Boolean
+    val isRefundVisible: Boolean,
+    val enrolledCourseId: String,
+    val userId:String
 )

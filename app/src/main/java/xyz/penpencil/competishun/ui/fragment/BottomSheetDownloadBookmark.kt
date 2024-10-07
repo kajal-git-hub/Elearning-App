@@ -52,7 +52,8 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
             // Bookmark functionality
             itemDetails?.let { details ->
                 storeItemInPreferencesBm(details)
-//                dismiss()
+                Toast.makeText(requireContext(),"Added in BookMark",Toast.LENGTH_SHORT).show()
+                dismiss()
             }
         }
 

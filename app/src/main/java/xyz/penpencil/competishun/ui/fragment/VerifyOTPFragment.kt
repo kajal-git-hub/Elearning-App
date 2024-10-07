@@ -131,7 +131,7 @@ class VerifyOTPFragment : Fragment() {
 
                             navigateToHomeActivity(userDetails.id)
                         }
-                        else if (userDetails.userInformation.fatherName!=null) {
+                        else if (userDetails.courses.isNotEmpty()) {
                             navigateToMyCourse()
                         }
                         else {

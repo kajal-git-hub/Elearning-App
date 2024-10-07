@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.addCallback
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -26,6 +27,7 @@ class ProfileFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var sharedPreferencesManager: SharedPreferencesManager
     private val userViewModel: UserViewModel by viewModels()
+    private var studentClass = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,6 +46,9 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+//        studentClass = arguments?.getString("StudentClass","") ?: ""
+//        Log.d("studentClass",studentClass)
+
 
         binding.igEditProfile.setOnClickListener {
             val bottomSheetDescriptionFragment = ProfileEditFragment()
@@ -58,13 +63,16 @@ class ProfileFragment : Fragment() {
         (activity as? HomeActivity)?.showBottomNavigationView(false)
         (activity as? HomeActivity)?.showFloatingButton(false)
 
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            requireActivity().finish()
-        }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                findNavController().popBackStack()
+            }
+        })
 
         sharedPreferencesManager = SharedPreferencesManager(requireContext())
+
         binding.etBTUpload.setOnClickListener {
-            findNavController().navigateUp()
+            findNavController().navigate(R.id.homeFragment)
         }
 
         binding.llMyCart.setOnClickListener {
@@ -74,6 +82,7 @@ class ProfileFragment : Fragment() {
         binding.llMyPurchase.setOnClickListener{
             findNavController().navigate(R.id.MyPurchase)
         }
+
         binding.llLogout.setOnClickListener {
             val bottomSheetDescriptionFragment = ProfileLogoutFragment()
             bottomSheetDescriptionFragment.show(childFragmentManager, "BottomSheetDescriptionFragment")
@@ -86,6 +95,10 @@ class ProfileFragment : Fragment() {
 //            startActivity(intent)
 //            requireActivity().finish()
         }
+//        if(studentClass.isNotEmpty()){
+//            binding.tvClass.visibility = View.VISIBLE
+//            binding.tvClass.text = studentClass
+//        }
 
         binding.ProfileUserName.text = sharedPreferencesManager.name
         if (!sharedPreferencesManager.email.isNullOrEmpty())
