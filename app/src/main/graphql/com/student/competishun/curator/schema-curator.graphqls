@@ -196,6 +196,32 @@ type Course {
   with_installment_price: Int
 }
 
+type CourseAnalytics {
+  academicYearPercentageChange: String!
+
+  currentMonthOrderCount: Float!
+
+  currentMonthPublishedCourseCount: Float!
+
+  currentMonthUnpublishedCourseCount: Float!
+
+  currentYearCourseCount: Float!
+
+  monthlyOrderPercentageChange: String!
+
+  monthlyPublishedCoursePercentageChange: String!
+
+  monthlyUnpublishedCoursePercentageChange: String!
+
+  prevMonthCoursePublishedCount: Float!
+
+  prevMonthCourseUnpublishedCount: Float!
+
+  prevMonthOrderCount: Float!
+
+  prevYearCourseCount: Float!
+}
+
 type CourseCategory {
   createdAt: DateTime!
 
@@ -228,6 +254,8 @@ type CourseFolder {
   id: ID!
 
   name: String!
+
+  order: Int
 
   parent_folder_id: String
 
@@ -269,11 +297,17 @@ type CourseFolderContent {
 
   folder_id: String!
 
+  homework: [Homework!]
+
   id: ID!
+
+  order: Int
 
   orignal_file_name: String!
 
   scheduled_time: DateTime
+
+  thumbnail: [Thumbnail!]
 
   updatedAt: DateTime!
 
@@ -328,6 +362,8 @@ type CourseFolderWithCount {
   id: ID!
 
   name: String!
+
+  order: Int
 
   parent_folder_id: String
 
@@ -582,6 +618,8 @@ enum FileType {
 enum FileUpload {
   COMPLETED
 
+  GOOGLE_UPLOAD
+
   PROCESSING
 
   REJECTED
@@ -636,6 +674,8 @@ input FindAllCourseInputStudent {
 
   offset: Int = 0
 
+  search: String
+
   sortOrder: String
 }
 
@@ -643,6 +683,38 @@ type FolderContentWithCompletion {
   content: CourseFolderContent
 
   videoCompletionPercentage: Float
+}
+
+type Homework {
+  content: CourseFolderContent!
+
+  content_id: String!
+
+  createdAt: DateTime!
+
+  deletedAt: DateTime!
+
+  description: String
+
+  file_name: String!
+
+  file_type: FileType!
+
+  file_uploading_status: FileUpload!
+
+  file_url: String
+
+  id: ID!
+
+  orignal_file_name: String!
+
+  updatedAt: DateTime!
+}
+
+input MergeVideo {
+  contentId: ID!
+
+  order: Int!
 }
 
 type Mutation {
@@ -672,7 +744,11 @@ type Mutation {
 
   deleteCourseFolderContent(id: String!): Boolean!
 
-  findFolderPath(id: String!): String!
+  deleteHomework(id: String!): Boolean!
+
+  deleteThumbnail(id: String!): Boolean!
+
+  mergeVideos(mergeVideos: [MergeVideo!]!): Boolean!
 
   removeBanner(id: ID!, mobileBanner: Boolean, webBanner: Boolean): Boolean!
 
@@ -694,6 +770,8 @@ type Mutation {
 
   updateCourseFolderContent(id: String!, updateFolderContent: UpdateFolderContent!): Boolean!
 
+  updateHomework(id: String!, updateHomework: UpdateHomework!): Boolean!
+
   updateVideoProgress(updateVideoProgress: UpdateVideoProgress!): StudentCourseTrack!
 }
 
@@ -714,9 +792,13 @@ enum OtherRequirements {
 }
 
 type Query {
+  courseAnalytics: CourseAnalytics!
+
   courseListFromIds(courseIds: [String!]!): [Course!]!
 
-  findAllBookmarks(fileType: String): [Bookmark!]!
+  downloadVideo(contentId: String!): Boolean!
+
+  findAllBookmarks(courseId: String, fileType: String): [Bookmark!]!
 
   findAllCartItems: [CartResponseDto!]!
 
@@ -733,6 +815,8 @@ type Query {
   findCourseFolderProgress(id: String!): CourseFolderLectureCount!
 
   findCourseParentFolderProgress(courseId: String!): CourseParentFolderProgress!
+
+  findFolderPath(id: String!): String!
 
   findOne(id: String!): Cart!
 
@@ -773,6 +857,8 @@ type Query {
 
 type ScheduleContentResponseDto {
   content: CourseFolderContent!
+
+  folderPath: String
 
   parentFolderName: String
 
@@ -837,6 +923,30 @@ type SubfolderProgress {
   videoDuration: Float
 }
 
+type Thumbnail {
+  content: CourseFolderContent!
+
+  content_id: String!
+
+  createdAt: DateTime!
+
+  deletedAt: DateTime!
+
+  file_name: String!
+
+  file_type: FileType!
+
+  file_uploading_status: FileUpload!
+
+  file_url: String
+
+  id: ID!
+
+  orignal_file_name: String!
+
+  updatedAt: DateTime!
+}
+
 input UpdateBannerInput {
   course_id: ID
 
@@ -865,6 +975,8 @@ input UpdateCourseFolderInput {
   description: String
 
   name: String
+
+  order: Int
 
   parent_folder_id: ID
 
@@ -938,7 +1050,15 @@ input UpdateFolderContent {
 
   file_name: String
 
+  order: Int
+
   scheduled_time: DateTime
+}
+
+input UpdateHomework {
+  description: String
+
+  file_name: String
 }
 
 input UpdateVideoProgress {

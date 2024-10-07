@@ -108,7 +108,7 @@ class ScheduleFragment : Fragment(), ToolbarCustomizationListener {
                 dayOfMonth,
                 groupedContentList.map { content ->
                     ScheduleData.InnerScheduleItem(
-                        content.parentFolderName?:"",
+                        content.folderPath?:"",
                         content.content.file_name,
                         formatTime(convertIST(content.content.scheduled_time.toString())),
                         convertLastDuration(formatTime(convertIST(content.content.scheduled_time.toString())),content.content.video_duration?.toLong()?:0),
