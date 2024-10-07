@@ -93,7 +93,9 @@ class ReferenceFragment : Fragment() {
                     fullName = Optional.Present(sharedPreferencesManager.name),
                     preparingFor = Optional.Present(sharedPreferencesManager.preparingFor),
                     reference = Optional.Present(sharedPreferencesManager.reference),
-                    targetYear = Optional.Present(sharedPreferencesManager.targetYear)
+                    targetYear = Optional.Present(sharedPreferencesManager.targetYear),
+                    mobileNumber = Optional.present(sharedPreferencesManager.mobileNo),
+                    countryCode = Optional.present("+91")
                 )
 
                 updateUserViewModel.updateUser(updateUserInput,null,null)
