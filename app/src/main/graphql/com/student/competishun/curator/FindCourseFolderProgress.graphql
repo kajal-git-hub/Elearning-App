@@ -19,6 +19,12 @@ query FindCourseFolderProgress($findCourseFolderProgressId: String!) {
                 course_track {
                     completed_duration
                 }
+                homework {
+                    id
+                    file_url
+                    file_name
+                    description
+                }
                 description
                 id
                 scheduled_time

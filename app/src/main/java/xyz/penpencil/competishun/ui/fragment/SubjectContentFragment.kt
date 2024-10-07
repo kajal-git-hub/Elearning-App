@@ -175,6 +175,7 @@ class SubjectContentFragment : Fragment() {
                             val topicContentList =
                                 folderProgressContent.mapIndexed { index, contents ->
                                     Log.e("folderContentLog", contents.content?.file_url.toString())
+                                    Log.e("homeworkLog", contents.content?.homework.toString())
                                     val time = helperFunctions.formatCourseDateTime(contents.content?.scheduled_time.toString())
                                     Log.e("foldertimes", time)
                                     TopicContentModel(
