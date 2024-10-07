@@ -17,6 +17,7 @@ import xyz.penpencil.competishun.ui.viewmodel.CoursePaymentsViewModel
 import xyz.penpencil.competishun.ui.viewmodel.GetCourseByIDViewModel
 import xyz.penpencil.competishun.ui.viewmodel.OrdersViewModel
 import xyz.penpencil.competishun.ui.viewmodel.UserViewModel
+import xyz.penpencil.competishun.utils.HelperFunctions
 
 @AndroidEntryPoint
 class MyPurchaseDetailsFragment : Fragment() {
@@ -24,11 +25,13 @@ class MyPurchaseDetailsFragment : Fragment() {
     private val userViewModel: UserViewModel by viewModels()
     private val getCourseByIDViewModel: GetCourseByIDViewModel by viewModels()
     private val ordersViewModel: OrdersViewModel by viewModels()
+    private var helperFunctions = HelperFunctions()
     private var paymentType = ""
     private var rzpOrderId = ""
     private var amountPaid = ""
     private var paymentStatus = ""
     private var firstPurchase = ""
+    private var transactionId = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -75,6 +78,7 @@ class MyPurchaseDetailsFragment : Fragment() {
 
                 rzpOrderId = firstPayment?.rzpOrderId ?: ""
                 paymentType = firstPayment?.paymentType ?: ""
+                transactionId = firstPayment?.rzpOrderId?:""
                 paymentStatus = firstPayment?.status ?: ""
                 amountPaid = (firstPayment?.amount ?: "").toString()
 
@@ -90,6 +94,9 @@ class MyPurchaseDetailsFragment : Fragment() {
                 // Handling "full" payment
                 if (paymentType == "full" && paymentStatus == "captured") {
                     // Full payment logic
+                    binding.btGenerateReceipt.setOnClickListener {
+                        downloadReceipt(transactionId)
+                    }
                     binding.clInstallmentCharge.visibility = View.GONE
                     binding.clFirstInstallment.visibility = View.GONE
                     binding.clSecondInstallment.visibility = View.GONE
@@ -124,7 +131,6 @@ class MyPurchaseDetailsFragment : Fragment() {
                             val totalPrice = it.price ?: 0
                             binding.etPurtotalPrice.text = "₹ ${totalPrice}"
                             binding.etPurFinalPay.text = "₹ ${totalPrice}"
-
                             binding.clInstallmentCharge.visibility = View.GONE
                             binding.etPurInstallmentCharge.visibility = View.GONE
 
@@ -135,6 +141,9 @@ class MyPurchaseDetailsFragment : Fragment() {
                             if (secondPayment != null) {
                                 val secondPaymentAmount = secondPayment.amount ?: 0
                                 binding.clSecondInstallment.visibility = View.VISIBLE
+                                binding.btGenerateReceipt.setOnClickListener {
+                                    downloadReceipt(secondPayment.rzpOrderId.toString())
+                                }
                                 binding.tvInstallmentAmount.text ="₹ ${secondPaymentAmount.toInt()}"
                                 binding.etPurFirstInstallment.text = "₹ ${secondPaymentAmount.toInt()}"
                                 binding.tvInstallmentDate.text = firstPurchase
@@ -239,6 +248,24 @@ class MyPurchaseDetailsFragment : Fragment() {
             String.format("%.2f", percentage).toDouble()
         } else {
             0.0
+        }
+    }
+    private fun downloadReceipt( transactionId:String){
+        ordersViewModel.generateReceipt(transactionId)
+        ordersViewModel.receiptResult.observe(viewLifecycleOwner)
+        { result ->
+
+            result.onSuccess {
+                var receiptLink = it.generateReceipt
+                Log.e("ReceiptLink",receiptLink)
+                Toast.makeText(requireContext(), "Download started", Toast.LENGTH_SHORT).show()
+
+                helperFunctions.downloadPdf(requireContext(),receiptLink,"Payment Invoice")
+                Toast.makeText(requireContext(), "Download completed successfully", Toast.LENGTH_SHORT).show()
+            }.onFailure {
+                // Handle failure, e.g., show an error message
+                Log.e("Failed to download ReceiptLink: ",it.message.toString())
+            }
         }
     }
 }
