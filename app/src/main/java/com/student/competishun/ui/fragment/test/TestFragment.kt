@@ -1,5 +1,6 @@
 package com.student.competishun.ui.fragment.test
 
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.text.Html
 import android.view.LayoutInflater
@@ -8,8 +9,8 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.RadioButton
-import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
 import com.student.competishun.R
 import com.student.competishun.databinding.FragmentTestBinding
 
@@ -39,6 +40,17 @@ class TestFragment : Fragment() {
         setAnsOptions("a2 – b2 – 2ac = 0", "D ", binding.awsFour)
 
         clickListener()
+        changeSubmitButtonView()
+    }
+
+    private fun changeSubmitButtonView() {
+        if (binding.submit.isEnabled) {
+            val colorStateList = ColorStateList.valueOf(resources.getColor(R.color.PrimaryColor, null))
+            binding.submit.backgroundTintList = colorStateList
+        } else {
+            val colorStateList = ColorStateList.valueOf(resources.getColor(R.color._808080, null))
+            binding.submit.backgroundTintList = colorStateList
+        }
     }
 
     private fun setTestStatus(correct: String, wrong: String){
@@ -60,7 +72,7 @@ class TestFragment : Fragment() {
         binding.subject.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                 val selectedItem = parent.getItemAtPosition(position).toString()
-                Toast.makeText(requireContext(), "Selected: $selectedItem", Toast.LENGTH_SHORT).show()
+                //Toast.makeText(requireContext(), "Selected: $selectedItem", Toast.LENGTH_SHORT).show()
             }
             override fun onNothingSelected(parent: AdapterView<*>) {}
         }
@@ -99,6 +111,7 @@ class TestFragment : Fragment() {
             }
         }
         binding.submit.isEnabled = true
+        changeSubmitButtonView()
     }
 
     private fun clickListener(){
@@ -114,10 +127,14 @@ class TestFragment : Fragment() {
         binding.nextQuestion.setOnClickListener {
             //Write logic for next question
             disableAns(true)
+            binding.submit.isEnabled = false
+            changeSubmitButtonView()
         }
 
         binding.viewSolution.setOnClickListener {
-
+            it.findNavController().navigate(R.id.action_testFragment_to_viewSolutionFragment,Bundle().apply {
+                putString("QUESTION_ID", "Q6765")
+            })
         }
     }
 

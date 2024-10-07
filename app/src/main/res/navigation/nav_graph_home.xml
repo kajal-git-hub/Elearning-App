@@ -392,7 +392,16 @@
         android:id="@+id/testFragment"
         android:name="com.student.competishun.ui.fragment.test.TestFragment"
         android:label="fragment_test"
-        tools:layout="@layout/fragment_test" />
+        tools:layout="@layout/fragment_test" >
+        <action
+            android:id="@+id/action_testFragment_to_viewSolutionFragment"
+            app:destination="@id/viewSolutionFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/viewSolutionFragment"
+        android:name="com.student.competishun.ui.fragment.test.ViewSolutionFragment"
+        android:label="fragment_view_solution"
+        tools:layout="@layout/fragment_view_solution" />
 
 
 </navigation>
