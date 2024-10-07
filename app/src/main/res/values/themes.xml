@@ -57,4 +57,15 @@
         <item name="android:backgroundTint">@color/transparent</item>
     </style>
 
+    <style name="RadioButton" parent="Base.Widget.AppCompat.CompoundButton.RadioButton">
+        <item name="android:textColor">@color/black_2B2829</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingRight">20dp</item>
+        <item name="android:background">@null</item>
+        <item name="android:button">@null</item>
+        <item name="android:minHeight">55dp</item>
+        <item name="fontFamily">@font/nunito</item>
+    </style>
+
 </resources>

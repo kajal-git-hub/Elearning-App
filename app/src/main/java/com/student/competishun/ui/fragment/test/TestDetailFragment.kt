@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.navigation.findNavController
 import com.student.competishun.R
 import com.student.competishun.databinding.FragmentTestDashboardBinding
 import com.student.competishun.databinding.FragmentTestDetailBinding
@@ -26,6 +27,7 @@ class TestDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         requireActivity().window.statusBarColor = ContextCompat.getColor(requireContext(), R.color.PrimaryColor)
+        clickListener()
     }
 
     override fun onDestroyView() {
@@ -33,5 +35,13 @@ class TestDetailFragment : Fragment() {
         requireActivity().window.statusBarColor = ContextCompat.getColor(requireContext(), R.color.white)
 
         _binding = null
+    }
+
+    private fun clickListener(){
+        val bundle = Bundle().apply {
+            putString("MESSAGE", "Best Of Luck!")
+            putBoolean("IS_TEST_START", true)
+        }
+        binding.submit.setOnClickListener { it.findNavController().navigate(R.id.action_testDetailFragment_to_testSplashFragment, bundle) }
     }
 }

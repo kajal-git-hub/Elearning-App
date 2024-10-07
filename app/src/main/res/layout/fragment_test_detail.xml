@@ -225,15 +225,17 @@
             </LinearLayout>
 
             <CheckBox
-                android:id="@+id/checkedTextView"
+                android:id="@+id/instructionAccept"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:buttonIconTint="@color/white"
+                app:buttonTint="@color/PrimaryColor"
+                android:checked="false"
                 android:text="I’ve all read test instructions."
-                app:layout_constraintBottom_toTopOf="@+id/materialButton"
-                tools:layout_editor_absoluteX="16dp" />
+                app:layout_constraintBottom_toTopOf="@+id/submit"/>
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/materialButton"
+                android:id="@+id/submit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintBottom_toBottomOf="parent"
