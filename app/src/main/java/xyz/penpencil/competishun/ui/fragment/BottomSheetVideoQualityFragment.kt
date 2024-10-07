@@ -27,6 +27,10 @@ class BottomSheetVideoQualityFragment : BottomSheetDialogFragment() {
 
     private lateinit var binding : FragmentBottomSheetVideoQualityBinding
 
+    private var videoUrl: String? = null
+    private var videoName: String? = null
+    private var videoId: String? = null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -38,6 +42,15 @@ class BottomSheetVideoQualityFragment : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        arguments?.let {
+            videoUrl = it.getString("video_url")
+            videoName = it.getString("video_name")
+            videoId = it.getString("video_id")
+        }
+        Log.d("BottomSheetVideoQualityFragment", "Video URL: $videoUrl")
+        Log.d("BottomSheetVideoQualityFragment", "Video Name: $videoName")
+        Log.d("BottomSheetVideoQualityFragment", "Video ID: $videoId")
 
         val videoQualityList = listOf(
             VideoQualityItem("360p", "48.5 MB"),

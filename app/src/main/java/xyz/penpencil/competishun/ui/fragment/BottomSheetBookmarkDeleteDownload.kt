@@ -41,8 +41,17 @@ class BottomSheetBookmarkDeleteDownload(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        item.url
         binding.tvBmDownloadThing.setOnClickListener {
             val bottomSheetDownloadOptions = BottomSheetVideoQualityFragment()
+
+            val bundle  = Bundle().apply {
+                putString("video_url",item.url)
+                putString("video_name",item.topicName)
+                putString("video_id",item.id)
+            }
+            bottomSheetDownloadOptions.arguments = bundle
+
             bottomSheetDownloadOptions.show(childFragmentManager, bottomSheetDownloadOptions.tag)
         }
         binding.tvBmDeleteThing.setOnClickListener {
