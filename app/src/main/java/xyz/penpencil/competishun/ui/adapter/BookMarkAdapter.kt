@@ -80,9 +80,11 @@ class BookMarkAdapter(
         if (item.fileType == "PDF") {
             holder.lecTime.text = item.lecturerName
             holder.lecTime.setCompoundDrawablesWithIntrinsicBounds(R.drawable.download_person, 0, 0, 0)
-            holder.clCourseBook.setBackgroundResource(R.drawable.frame_1707480918)
+            holder.clCourseBook.setBackgroundResource(R.drawable.frame_1707480919)
             holder.ivSubjectBookIcon.setImageResource(R.drawable.group_1707478995)
             holder.ivBookShadow.setImageResource(R.drawable.ellipse_17956)
+            holder.forRead.visibility = View.VISIBLE
+            holder.forVideo.visibility = View.GONE
             holder.forRead.setImageResource(R.drawable.frame_1707481707_1_)
 
             holder.dotExtraInfoDownload.setOnClickListener {
@@ -95,9 +97,10 @@ class BookMarkAdapter(
             holder.lecTime.text = formatTimeDuration(item.videoDuration)
             holder.forRead.visibility = View.GONE
             holder.forVideo.visibility = View.VISIBLE
-            holder.clCourseBook.setBackgroundResource(R.drawable.frame_1707480918)
+            holder.clCourseBook.setBackgroundResource(R.drawable.frame_1707480919)
             holder.ivSubjectBookIcon.setImageResource(R.drawable.group_1707478994)
             holder.ivBookShadow.setImageResource(R.drawable.ellipse_17956)
+            holder.forRead.setImageResource(R.drawable.frame_1707481707)
 
             holder.dotExtraInfoDownload.setOnClickListener {
                 val bottomSheet = BottomSheetBookmarkDeleteDownload(this)

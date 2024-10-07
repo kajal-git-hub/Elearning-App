@@ -72,7 +72,7 @@ class ProfileFragment : Fragment() {
         sharedPreferencesManager = SharedPreferencesManager(requireContext())
 
         binding.etBTUpload.setOnClickListener {
-            findNavController().navigate(R.id.homeFragment)
+            findNavController().popBackStack()
         }
 
         binding.llMyCart.setOnClickListener {
