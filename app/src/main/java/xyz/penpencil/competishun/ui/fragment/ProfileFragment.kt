@@ -51,8 +51,8 @@ class ProfileFragment : Fragment() {
 
 
         binding.igEditProfile.setOnClickListener {
-//            val bottomSheetDescriptionFragment = ProfileEditFragment()
-//            bottomSheetDescriptionFragment.show(childFragmentManager, "BottomSheetDescriptionFragment")
+            val bottomSheetDescriptionFragment = ProfileEditFragment()
+            bottomSheetDescriptionFragment.show(childFragmentManager, "BottomSheetDescriptionFragment")
 
         }
 
