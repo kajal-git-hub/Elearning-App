@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -32,11 +33,12 @@ import java.io.InputStream
 class BottomSheetVideoQualityFragment : BottomSheetDialogFragment() {
 
     private lateinit var binding : FragmentBottomSheetVideoQualityBinding
-    private val videourlViewModel: VideourlViewModel by viewModels()
+    private val videoUrlViewModel: VideourlViewModel by viewModels()
     private var videoUrl: String? = null
     private var videoName: String? = null
     private var videoId: String? = null
     private var qualityResolution: String? = null
+    private var updateSignUrl: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -65,13 +67,20 @@ class BottomSheetVideoQualityFragment : BottomSheetDialogFragment() {
             VideoQualityItem("720p", "1.29 GB"),
             VideoQualityItem("1080p", "2.45 GB"),
         )
+        binding.btnBmDownload.setOnClickListener {
+            downloadVideo(requireContext(), updateSignUrl.toString(), videoName.toString())
+            dismiss()
+        }
 
         binding.rvVideoQualityTypes.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = VideoQualityAdapter(context, videoQualityList){ selectedQuality ->
                 qualityResolution = selectedQuality.qualityType
-                videoUrlApi(videourlViewModel,videoId.toString(),videoName.toString())
-
+                videoUrlApi(videoUrlViewModel,videoId.toString(),videoName.toString())
+                binding.btnBmDownload.apply {
+                    setBackgroundColor(ContextCompat.getColor(context, R.color.blue_3E3EF7))
+                    isEnabled = true
+                }
             }
         }
     }
@@ -81,16 +90,9 @@ class BottomSheetVideoQualityFragment : BottomSheetDialogFragment() {
         viewModel.fetchVideoStreamUrl(folderContentId, qualityResolution.toString())
 
         viewModel.videoStreamUrl.observe(viewLifecycleOwner) { signedUrl ->
-            Log.d("VideoUrl", "Signed URL: $signedUrl")
             if (signedUrl != null) {
+                updateSignUrl = signedUrl
                 Log.d("SignedUrl",signedUrl.toString())
-//                val bundle = Bundle().apply {
-//                    putString("video_url", signedUrl)
-//                    putString("video_name", name)
-//                }
-//                downloadVideo(requireContext(), signedUrl, name)
-//                findNavController().navigate(R.id.mediaFragment, bundle)
-
             } else {
                 // Handle error or null URL
             }
@@ -128,6 +130,12 @@ class BottomSheetVideoQualityFragment : BottomSheetDialogFragment() {
                 withContext(Dispatchers.Main) {
                     Log.d("DownloadVideo", "Download success, showing toast.")
                     Toast.makeText(context, "Download successful", Toast.LENGTH_SHORT).show()
+                    val bottomSheetComplete = BottomsheetDownloadCompletedFragment()
+                    val bundle = Bundle().apply {
+                        putString("video_name", videoName)
+                    }
+                    bottomSheetComplete.arguments = bundle
+                    bottomSheetComplete.show(childFragmentManager, bottomSheetComplete.tag)
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
