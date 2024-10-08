@@ -2,6 +2,7 @@ package xyz.penpencil.competishun.ui.adapter
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +17,7 @@ import xyz.penpencil.competishun.ui.fragment.BottomSheetBookmarkDeleteDownload
 import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.ui.main.PdfViewerActivity
 import xyz.penpencil.competishun.utils.SharedPreferencesManager
+import java.io.File
 
 class BookMarkAdapter(
     private val context: Context,
@@ -125,13 +127,31 @@ class BookMarkAdapter(
         sharedPreferencesManager.deleteDownloadedItemBm(item)
 
 
-        items.removeAt(position) // Remove the item from the list
-        notifyItemRemoved(position) // Notify the adapter about the removed item
-        notifyItemRangeChanged(position, items.size) // Optional: update the range of the RecyclerView
+        items.removeAt(position)
+        notifyItemRemoved(position)
+        notifyItemRangeChanged(position, items.size)
 
 
-        fragment.loadDownloadedItems()
-    }
+
+        if (item.fileType=="PDF")
+        {
+            val fileName = "${item.topicName}.${item.fileType.lowercase()}"
+            val file = File(context.filesDir, fileName)
+            Log.d("DownloadDelete", file.exists().toString())
+            if (file.exists()) {
+                file.delete()
+            }
+        }else
+        {
+            val fileName = "${item.topicName}.mp4"
+            val file = File(context.filesDir, fileName)
+            Log.d("DownloadDelete", file.exists().toString())
+            if (file.exists()) {
+                file.delete()
+            }
+        }
+
+        fragment.updateDownloadedItems(item.fileType)    }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val clCourseBook: ConstraintLayout = itemView.findViewById(R.id.cl_bm_course_book)

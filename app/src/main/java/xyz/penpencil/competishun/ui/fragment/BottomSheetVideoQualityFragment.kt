@@ -68,8 +68,8 @@ class BottomSheetVideoQualityFragment : BottomSheetDialogFragment() {
             VideoQualityItem("1080p", "2.45 GB"),
         )
         binding.btnBmDownload.setOnClickListener {
+            Toast.makeText(requireContext(), "Download started", Toast.LENGTH_SHORT).show()
             downloadVideo(requireContext(), updateSignUrl.toString(), videoName.toString())
-            dismiss()
         }
 
         binding.rvVideoQualityTypes.apply {
@@ -103,7 +103,6 @@ class BottomSheetVideoQualityFragment : BottomSheetDialogFragment() {
 
     private fun downloadVideo(context: Context, videoUrl: String, name: String) {
         Log.d("DownloadVideo", "Starting download for: $videoUrl with name: $name")
-
         lifecycleScope.launch {
             try {
                 withContext(Dispatchers.IO) {

@@ -32,6 +32,7 @@ class BottomsheetDownloadCompletedFragment : BottomSheetDialogFragment() {
         binding.tvSuccessMessage.text = "$videoName is downloaded successfully"
         binding.btnGoToDownload.setOnClickListener {
             findNavController().navigate(R.id.DownloadFragment)
+            dismiss()
         }
     }
 

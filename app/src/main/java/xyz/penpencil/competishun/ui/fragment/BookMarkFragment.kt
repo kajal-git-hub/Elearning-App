@@ -71,6 +71,22 @@ class BookMarkFragment : Fragment()  , BookMarkAdapter.OnVideoClickListener{
 
 
     }
+    fun updateDownloadedItems(fileType:String)
+    {
+        val sharedPreferencesManager = SharedPreferencesManager(requireActivity())
+        allDownloadedItems = sharedPreferencesManager.getDownloadedItemsBm()
+        if (fileType == "PDF")
+        {
+            val pdfItems = allDownloadedItems.filter { it.fileType == "PDF" }
+            binding.BookmarkTabLayout.getTabAt(0)?.text = "PDFs (${pdfItems.size})"
+            updateRecyclerView(pdfItems)
+        }else
+        {
+            val videoItems = allDownloadedItems.filter { it.fileType == "VIDEO" }
+            binding.BookmarkTabLayout.getTabAt(1)?.text = "Videos (${videoItems.size})"
+            updateRecyclerView(videoItems)
+        }
+    }
     fun loadDownloadedItems() {
         val sharedPreferencesManager = SharedPreferencesManager(requireActivity())
         allDownloadedItems = sharedPreferencesManager.getDownloadedItemsBm()
