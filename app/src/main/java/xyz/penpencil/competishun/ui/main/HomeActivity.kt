@@ -56,12 +56,17 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
             supportFragmentManager.findFragmentById(R.id.fragmentNavigation) as NavHostFragment
         navController = navHostFragment.navController
 
-        val navigateToFragment = intent.getStringExtra("navigateTo")
-        if (navigateToFragment == "CourseEmptyFragment") {
+        val navigateToFragment = intent.getBooleanExtra("isMyCourseAvailable",false)
+        val navigateFromVerify = intent.getStringExtra("navigateTo")
+        if (navigateToFragment) {
             // Navigate to CourseEmptyFragment
             navController.navigate(R.id.courseEmptyFragment)
             binding.bottomNav.selectedItemId = R.id.myCourse // Set the selected tab to My Course
-        }else{
+        }else if (navigateFromVerify == "CourseEmptyFragment"){
+            navController.navigate(R.id.courseEmptyFragment)
+            binding.bottomNav.selectedItemId = R.id.myCourse
+        }
+        else{
             if (savedInstanceState == null) {
                 navController.navigate(R.id.homeFragment, bundle)
                 binding.bottomNav.selectedItemId = R.id.home

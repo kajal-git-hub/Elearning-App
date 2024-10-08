@@ -21,7 +21,7 @@ class SplashActivity : AppCompatActivity() {
 
     private var newUserOrNot = false
     private val userViewModel: UserViewModel by viewModels()
-
+    private var isMyCourseAvailable = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +38,8 @@ class SplashActivity : AppCompatActivity() {
                 Log.d("userDetails", data.getMyDetails.fullName.toString())
                 Log.d("userDetails", data.getMyDetails.userInformation.address?.city.toString())
 
+                isMyCourseAvailable  = data.getMyDetails.courses.isNotEmpty()
+                Log.d("userDetails", "isMyCourseAvailable: $isMyCourseAvailable")
                 newUserOrNot = !data.getMyDetails.fullName.isNullOrEmpty()
                 proceedBasedOnUserType()
             }.onFailure { exception ->
@@ -53,9 +55,14 @@ class SplashActivity : AppCompatActivity() {
         Log.d("userdata", checkUserData().toString())
 
         if (newUserOrNot) {
-            if (!token.isNullOrEmpty() && checkUserData()) {
+            if (!token.isNullOrEmpty() && checkUserData() && !isMyCourseAvailable) {
                 startActivity(Intent(this, HomeActivity::class.java))
-            } else {
+            } else if (!token.isNullOrEmpty() && isMyCourseAvailable){
+                val intent = Intent(this, HomeActivity::class.java)
+                intent.putExtra("isMyCourseAvailable", true)
+                startActivity(intent)
+            }
+            else {
                 startActivity(Intent(this, MainActivity::class.java))
             }
             finish()
