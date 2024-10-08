@@ -3,23 +3,15 @@ package com.student.competishun.ui.fragment.test
 import android.app.Dialog
 import android.content.res.ColorStateList
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.Window
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.RadioButton
-import android.widget.RadioGroup
-import android.widget.RelativeLayout
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
-import com.google.android.material.button.MaterialButton
-import com.google.android.material.textfield.TextInputEditText
-import com.google.android.material.textview.MaterialTextView
 import com.student.competishun.R
 import com.student.competishun.databinding.FragmentTestBinding
 import com.student.competishun.utils.DialogTestUtils
@@ -150,13 +142,22 @@ class TestFragment : Fragment() {
         }
 
         binding.options.setOnClickListener {
-            optionsDialog = DialogTestUtils.showInstructionDialog(requireContext(), {
-                //instruction
+            optionsDialog = DialogTestUtils.showOptionsDialog(requireContext(), {
+                showInstructionSection()
             },{
                 showReportSection()
             })
             optionsDialog?.show()
         }
+
+        binding.testResult.setOnClickListener { fragmentManager?.let {
+            TestStatusFragment().show(it, "test")
+        } }
+    }
+
+    private fun showInstructionSection(){
+        val showInstructionDialog = DialogTestUtils.showInstructionDialog(requireContext())
+        showInstructionDialog?.show()
     }
 
     private fun showReportSection(){

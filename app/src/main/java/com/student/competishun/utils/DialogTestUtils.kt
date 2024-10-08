@@ -17,7 +17,7 @@ import com.student.competishun.R
 
 object DialogTestUtils {
 
-    fun showInstructionDialog(context: Context, instructionCall: () -> Unit, reportCall: () -> Unit): Dialog? {
+    fun showOptionsDialog(context: Context, instructionCall: () -> Unit, reportCall: () -> Unit): Dialog? {
         val dialog = Dialog(context)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         val view = LayoutInflater.from(context).inflate(R.layout.dialog_instruction, null)
@@ -147,4 +147,21 @@ object DialogTestUtils {
         Handler(Looper.getMainLooper()).postDelayed({dialog.dismiss()}, 3000)
         return dialog
     }
+
+    fun showInstructionDialog(context: Context): Dialog? {
+        val dialog = Dialog(context)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        val view = LayoutInflater.from(context).inflate(R.layout.dialog_instruction_test, null)
+        dialog.setContentView(view)
+        val root = view.findViewById<RelativeLayout>(R.id.root)
+        val mHeader = view.findViewById<RelativeLayout>(R.id.mHeader)
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        root.setOnClickListener { dialog.dismiss() }
+        mHeader.setOnClickListener { }
+        val layoutParams = dialog.window?.attributes
+        layoutParams?.width = (context.resources.displayMetrics.widthPixels).toInt()
+        dialog.window?.attributes = layoutParams
+        return dialog
+    }
+
 }
