@@ -1,15 +1,19 @@
 package com.student.competishun.ui.fragment.test
 
+import android.R.attr.fragment
 import android.app.Dialog
+import android.content.DialogInterface
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.text.Html
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.RadioButton
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import com.student.competishun.R
@@ -45,6 +49,7 @@ class TestFragment : Fragment() {
 
         clickListener()
         changeSubmitButtonView()
+        backPress()
     }
 
     private fun changeSubmitButtonView() {
@@ -156,7 +161,9 @@ class TestFragment : Fragment() {
     }
 
     private fun showInstructionSection(){
-        val showInstructionDialog = DialogTestUtils.showInstructionDialog(requireContext())
+        val showInstructionDialog = DialogTestUtils.showInstructionDialog(requireContext()) {
+
+        }
         showInstructionDialog?.show()
     }
 
@@ -201,4 +208,22 @@ class TestFragment : Fragment() {
             }
         }
     }
+
+    private fun backPress(){
+        view?.setFocusableInTouchMode(true)
+        view?.requestFocus()
+        view?.setOnKeyListener(object : View.OnKeyListener {
+            override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    v?.let {
+                        val showExitTestDialog = DialogTestUtils.showExitTestDialog(it.context)
+                        showExitTestDialog?.show()
+                    }
+                    return true
+                }
+                return false
+            }
+        })
+    }
+    
 }

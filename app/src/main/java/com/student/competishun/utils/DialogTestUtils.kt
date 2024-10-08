@@ -8,8 +8,10 @@ import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.Window
+import android.widget.ImageView
 import android.widget.RadioGroup
 import android.widget.RelativeLayout
+import com.bumptech.glide.Glide
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textview.MaterialTextView
@@ -148,15 +150,20 @@ object DialogTestUtils {
         return dialog
     }
 
-    fun showInstructionDialog(context: Context): Dialog? {
+    fun showInstructionDialog(context: Context, exit:()->Unit): Dialog? {
         val dialog = Dialog(context)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         val view = LayoutInflater.from(context).inflate(R.layout.dialog_instruction_test, null)
         dialog.setContentView(view)
         val root = view.findViewById<RelativeLayout>(R.id.root)
         val mHeader = view.findViewById<RelativeLayout>(R.id.mHeader)
+        val dismiss = view.findViewById<MaterialButton>(R.id.dismiss)
+        val exit = view.findViewById<MaterialButton>(R.id.exit)
         dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
         root.setOnClickListener { dialog.dismiss() }
+        dismiss.setOnClickListener { dialog.dismiss()
+            exit()}
+        exit.setOnClickListener { dialog.dismiss() }
         mHeader.setOnClickListener { }
         val layoutParams = dialog.window?.attributes
         layoutParams?.width = (context.resources.displayMetrics.widthPixels).toInt()
@@ -164,4 +171,25 @@ object DialogTestUtils {
         return dialog
     }
 
+
+    fun showExitTestDialog(context: Context): Dialog? {
+        val dialog = Dialog(context)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        val view = LayoutInflater.from(context).inflate(R.layout.dialog_exit_test, null)
+        dialog.setContentView(view)
+        val root = view.findViewById<RelativeLayout>(R.id.root)
+        val mHeader = view.findViewById<RelativeLayout>(R.id.mHeader)
+        val icon = view.findViewById<ImageView>(R.id.icon)
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        root.setOnClickListener { dialog.dismiss() }
+        mHeader.setOnClickListener { }
+        Glide.with(context)
+            .load(R.drawable.ic_exit_test)
+            .placeholder(R.drawable.ic_exit_test)
+            .into(icon)
+        val layoutParams = dialog.window?.attributes
+        layoutParams?.width = (context.resources.displayMetrics.widthPixels).toInt()
+        dialog.window?.attributes = layoutParams
+        return dialog
+    }
 }

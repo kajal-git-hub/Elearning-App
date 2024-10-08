@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:paddingStart="@dimen/_16dp"
+        android:paddingEnd="@dimen/_16dp"
+        android:clickable="false"
+        android:id="@+id/mHeader"
+        android:focusable="false"
+        android:paddingBottom="@dimen/_16dp"
+        android:paddingTop="@dimen/_16dp"
+        android:background="@drawable/bg_rounded_dialog">
+        <View
+            android:layout_width="60dp"
+            android:layout_height="@dimen/_4dp"
+            android:background="@color/gray"
+            android:layout_margin="@dimen/_10dp"
+            android:id="@+id/line"
+            android:layout_alignParentTop="true"
+            android:layout_centerInParent="true"/>
+
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_below="@+id/line"
+            android:id="@+id/icon"
+            android:layout_centerInParent="true"
+            android:src="@drawable/ic_instruction_test"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/_20dp"
+            android:fontFamily="@font/nunito"
+            android:id="@+id/header"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:paddingBottom="@dimen/_10dp"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_16sp"
+            android:layout_below="@+id/icon"
+            android:text="Confirm Exit Test"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/testDesciption"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/nunito"
+            android:layout_marginTop="@dimen/_10dp"
+            android:gravity="center"
+            android:paddingStart="@dimen/_30dp"
+            android:paddingEnd="@dimen/_30dp"
+            android:text="Exiting now will pause your exam, and you will have to contact admin to resume it."
+            android:layout_below="@id/header"
+            android:layout_marginBottom="@dimen/_16dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_bg_f2f2f2_c12"
+            android:orientation="vertical"
+            android:id="@+id/status"
+            android:paddingTop="@dimen/_20dp"
+            android:paddingBottom="@dimen/_20dp"
+            android:layout_below="@+id/testDesciption">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_10dp"
+                android:paddingTop="@dimen/_4dp"
+                android:paddingBottom="@dimen/_4dp"
+                android:layout_marginEnd="@dimen/_10dp">
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/review"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/nunito"
+                    android:gravity="center_vertical"
+                    android:drawableStart="@drawable/ic_review_later_blue"
+                    android:drawablePadding="@dimen/_10dp"
+                    android:textColor="@color/black_2B2829"
+                    android:layout_toStartOf="@+id/reviewCount"
+                    android:text="Review Later" />
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/reviewCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/nunito"
+                    android:gravity="start"
+                    android:text="30"
+                    android:textColor="@color/black"
+                    android:layout_centerInParent="true"
+                    android:layout_alignParentEnd="true"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_10dp"
+                android:paddingTop="@dimen/_4dp"
+                android:paddingBottom="@dimen/_4dp"
+                android:layout_marginEnd="@dimen/_10dp">
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/ans"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/nunito"
+                    android:gravity="center_vertical"
+                    android:drawableStart="@drawable/ic_correct_ans_green"
+                    android:drawablePadding="@dimen/_10dp"
+                    android:textColor="@color/black_2B2829"
+                    android:layout_toStartOf="@+id/ansCount"
+                    android:text="Answered" />
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/ansCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/nunito"
+                    android:gravity="start"
+                    android:text="30"
+                    android:textColor="@color/black"
+                    android:layout_centerInParent="true"
+                    android:layout_alignParentEnd="true"/>
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_10dp"
+                android:paddingTop="@dimen/_4dp"
+                android:paddingBottom="@dimen/_4dp"
+                android:layout_marginEnd="@dimen/_10dp">
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/notAns"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/nunito"
+                    android:gravity="center_vertical"
+                    android:drawableStart="@drawable/ic_wrong_ans_red"
+                    android:drawablePadding="@dimen/_10dp"
+                    android:textColor="@color/black_2B2829"
+                    android:layout_toStartOf="@+id/notAnsCount"
+                    android:text="Not Answered" />
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/notAnsCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/nunito"
+                    android:gravity="start"
+                    android:text="30"
+                    android:textColor="@color/black"
+                    android:layout_centerInParent="true"
+                    android:layout_alignParentEnd="true"/>
+            </RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:orientation="horizontal"
+            android:layout_below="@+id/status"
+            android:layout_marginTop="40dp"
+            android:id="@+id/nextQuestionController"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/dismiss"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_16dp"
+                android:layout_marginBottom="@dimen/_16dp"
+                android:text="No, Continue"
+                app:cornerRadius="@dimen/_8dp"
+                android:backgroundTint="@color/white"
+                app:strokeWidth="@dimen/_1dp"
+                android:layout_marginEnd="@dimen/_8dp"
+                app:strokeColor="@color/PrimaryColor"
+                android:layout_weight="1"
+                android:textColor="@color/PrimaryColor" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/exit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="@dimen/_8dp"
+                android:layout_marginEnd="@dimen/_16dp"
+                android:layout_marginBottom="@dimen/_16dp"
+                android:text="Yes, Exit"
+                android:backgroundTint="@color/red"
+                app:cornerRadius="@dimen/_8dp"
+                android:textColor="@color/white" />
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>
