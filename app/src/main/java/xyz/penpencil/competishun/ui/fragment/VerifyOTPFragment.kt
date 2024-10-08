@@ -2,9 +2,11 @@ package xyz.penpencil.competishun.ui.fragment
 
 import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
+import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.text.Editable
@@ -23,6 +25,7 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
@@ -124,6 +127,7 @@ class VerifyOTPFragment : Fragment() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     private fun registerBroadcastReceiver(){
         smsBroadcastReceiver=SmsBroadcastReceiver()
         smsBroadcastReceiver!!.smsBroadcastReceiverListener = object : SmsBroadcastReceiver.SmsBroadcastReceiverListener{
@@ -139,7 +143,8 @@ class VerifyOTPFragment : Fragment() {
 
         }
         val intentFilter = IntentFilter(SmsRetriever.SMS_RETRIEVED_ACTION)
-        requireActivity().registerReceiver(smsBroadcastReceiver, intentFilter)
+        requireActivity().registerReceiver(smsBroadcastReceiver, intentFilter,
+            Context.RECEIVER_NOT_EXPORTED)
     }
 
     private fun setupViews() {
@@ -393,6 +398,7 @@ class VerifyOTPFragment : Fragment() {
     }
 
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onResume() {
         super.onResume()
         registerBroadcastReceiver()

@@ -49,6 +49,11 @@ class ProfileFragment : Fragment() {
 //        studentClass = arguments?.getString("StudentClass","") ?: ""
 //        Log.d("studentClass",studentClass)
 
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                findNavController().popBackStack()
+            }
+        })
 
         binding.igEditProfile.setOnClickListener {
             val bottomSheetDescriptionFragment = ProfileEditFragment()
@@ -63,11 +68,6 @@ class ProfileFragment : Fragment() {
         (activity as? HomeActivity)?.showBottomNavigationView(false)
         (activity as? HomeActivity)?.showFloatingButton(false)
 
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                findNavController().popBackStack()
-            }
-        })
 
         sharedPreferencesManager = SharedPreferencesManager(requireContext())
 

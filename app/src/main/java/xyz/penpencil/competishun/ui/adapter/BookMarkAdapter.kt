@@ -79,6 +79,8 @@ class BookMarkAdapter(
 
         if (item.fileType == "PDF") {
             holder.lecTime.text = item.lecturerName
+            holder.forRead.visibility = View.VISIBLE
+            holder.forVideo.visibility = View.GONE
             holder.lecTime.setCompoundDrawablesWithIntrinsicBounds(R.drawable.download_person, 0, 0, 0)
             holder.clCourseBook.setBackgroundResource(R.drawable.frame_1707480918)
             holder.ivSubjectBookIcon.setImageResource(R.drawable.group_1707478995)

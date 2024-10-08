@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.addCallback
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -77,18 +78,19 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener, MyCartAdapter.OnCa
     ): View {
         binding = FragmentMyCartBinding.inflate(inflater, container, false)
 
-        requireActivity().onBackPressedDispatcher.addCallback(this) {
-            handleBackPressed()
-        }
+
         return binding.root
     }
 
-    private fun handleBackPressed() {
-        findNavController().navigate(R.id.ProfileFragment)
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                findNavController().popBackStack()
+            }
+        })
 
 
         (activity as? HomeActivity)?.showBottomNavigationView(false)
