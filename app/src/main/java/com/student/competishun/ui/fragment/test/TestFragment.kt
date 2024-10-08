@@ -22,6 +22,7 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textview.MaterialTextView
 import com.student.competishun.R
 import com.student.competishun.databinding.FragmentTestBinding
+import com.student.competishun.utils.DialogTestUtils
 
 
 class TestFragment : Fragment() {
@@ -29,6 +30,8 @@ class TestFragment : Fragment() {
     private var _binding: FragmentTestBinding? = null
     private val binding get() = _binding!!
 
+    private var optionsDialog: Dialog?=null
+    private var showReportDialog: Dialog?=null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -146,7 +149,26 @@ class TestFragment : Fragment() {
             })
         }
 
-        binding.options.setOnClickListener { showInstructionDialog() }
+        binding.options.setOnClickListener {
+            optionsDialog = DialogTestUtils.showInstructionDialog(requireContext(), {
+                //instruction
+            },{
+                showReportSection()
+            })
+            optionsDialog?.show()
+        }
+    }
+
+    private fun showReportSection(){
+        showReportDialog = DialogTestUtils.showReportDialog(requireContext()) { message: String, type: String ->
+            showReportSubmitSection()
+        }
+        showReportDialog?.show()
+    }
+
+    private fun showReportSubmitSection(){
+        val showReportSubmitDialog = DialogTestUtils.showReportSubmitDialog(requireContext())
+        showReportSubmitDialog.show()
     }
 
     private fun disableAns(isEnable: Boolean){
@@ -177,116 +199,5 @@ class TestFragment : Fragment() {
                 }
             }
         }
-    }
-
-
-    private fun showInstructionDialog() {
-        val dialog = Dialog(requireContext())
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        val view = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_instruction, null)
-        dialog.setContentView(view)
-        val instruction = view.findViewById<MaterialTextView>(R.id.instruction)
-        val report = view.findViewById<MaterialTextView>(R.id.report)
-        val root = view.findViewById<RelativeLayout>(R.id.root)
-        val mHeader = view.findViewById<RelativeLayout>(R.id.mHeader)
-        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
-
-        instruction.setOnClickListener { dialog.dismiss() }
-        report.setOnClickListener {
-            dialog.dismiss()
-            showReportDialog()
-        }
-        root.setOnClickListener { dialog.dismiss() }
-        mHeader.setOnClickListener { }
-
-        val layoutParams = dialog.window?.attributes
-        layoutParams?.width = (resources.displayMetrics.widthPixels).toInt()
-        dialog.window?.attributes = layoutParams
-        dialog.show()
-    }
-
-
-    private fun showReportDialog() {
-        val dialog = Dialog(requireContext())
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        val view = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_report_test, null)
-        dialog.setContentView(view)
-        val root = view.findViewById<RelativeLayout>(R.id.root)
-        val mHeader = view.findViewById<RelativeLayout>(R.id.mHeader)
-        val rbReport = view.findViewById<RadioGroup>(R.id.rbReport)
-
-        val incorrectController = view.findViewById<RelativeLayout>(R.id.incorrectController)
-        val missingController = view.findViewById<RelativeLayout>(R.id.missingController)
-        val otherController = view.findViewById<RelativeLayout>(R.id.otherController)
-
-        val etIncorrect = view.findViewById<TextInputEditText>(R.id.etIncorrect)
-        val etMissing = view.findViewById<TextInputEditText>(R.id.etMissing)
-        val etOther = view.findViewById<TextInputEditText>(R.id.etOther)
-
-        val submit = view.findViewById<MaterialButton>(R.id.submit)
-        val colorStateList = ColorStateList.valueOf(resources.getColor(R.color._808080, null))
-        submit.backgroundTintList = colorStateList
-
-        val colorStateList1 = ColorStateList.valueOf(resources.getColor(R.color.PrimaryColor, null))
-        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
-        root.setOnClickListener { dialog.dismiss() }
-        mHeader.setOnClickListener { }
-        rbReport.setOnCheckedChangeListener { group, checkedId ->
-            when (checkedId) {
-                R.id.incorrect -> {
-                    submit.isEnabled = true
-                    submit.backgroundTintList = colorStateList1
-                    incorrectController.visibility = View.VISIBLE
-                    missingController.visibility = View.GONE
-                    otherController.visibility = View.GONE
-                }
-
-                R.id.missing -> {
-                    submit.isEnabled = true
-                    submit.backgroundTintList = colorStateList1
-                    incorrectController.visibility = View.GONE
-                    missingController.visibility = View.VISIBLE
-                    otherController.visibility = View.GONE
-                }
-
-                R.id.other1 -> {
-                    submit.isEnabled = true
-                    submit.backgroundTintList = colorStateList1
-                    incorrectController.visibility = View.GONE
-                    missingController.visibility = View.GONE
-                    otherController.visibility = View.VISIBLE
-                }
-            }
-        }
-
-        submit.setOnClickListener {
-            dialog.dismiss()
-            showReportSubmitDialog()
-        }
-
-        val layoutParams = dialog.window?.attributes
-        layoutParams?.width = (resources.displayMetrics.widthPixels).toInt()
-        dialog.window?.attributes = layoutParams
-        dialog.show()
-    }
-
-
-    private fun showReportSubmitDialog() {
-        val dialog = Dialog(requireContext())
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        val view = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_report_submit, null)
-        dialog.setContentView(view)
-        val root = view.findViewById<RelativeLayout>(R.id.root)
-        val mHeader = view.findViewById<RelativeLayout>(R.id.mHeader)
-        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
-
-        root.setOnClickListener { dialog.dismiss() }
-        mHeader.setOnClickListener { }
-
-        val layoutParams = dialog.window?.attributes
-        layoutParams?.width = (resources.displayMetrics.widthPixels).toInt()
-        dialog.window?.attributes = layoutParams
-        Handler(Looper.getMainLooper()).postDelayed({dialog.dismiss()}, 3000)
-        dialog.show()
     }
 }
