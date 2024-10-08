@@ -70,10 +70,15 @@ class RecommendViewDetail : Fragment() {
     }
 
     private fun getAllCoursesForStudent(courseType: String) {
+        var courseTypes = courseType
+        if (courseType != "IIT-JEE" || courseType != "NEET") {
+            courseTypes = "IIT-JEE"
+        }
+
         val filters = FindAllCourseInputStudent(
             category_name = Optional.Absent,
             course_class = Optional.Absent,
-            exam_type = Optional.present(courseType),
+            exam_type =Optional.present(courseTypes),
             is_recommended = Optional.present(true)
         )
         studentCoursesViewModel.fetchCourses(filters)
