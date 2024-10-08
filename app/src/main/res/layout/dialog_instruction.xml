@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:id="@+id/root">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -9,6 +10,9 @@
         android:layout_alignParentBottom="true"
         android:paddingStart="@dimen/_16dp"
         android:paddingEnd="@dimen/_16dp"
+        android:clickable="false"
+        android:id="@+id/mHeader"
+        android:focusable="false"
         android:paddingBottom="@dimen/_16dp"
         android:paddingTop="@dimen/_16dp"
         android:background="@drawable/bg_rounded_dialog">
@@ -28,6 +32,8 @@
             android:fontFamily="@font/nunito"
             android:id="@+id/header"
             android:textStyle="bold"
+            android:clickable="true"
+            android:focusable="true"
             android:paddingBottom="@dimen/_10dp"
             android:textSize="@dimen/_16sp"
             android:layout_below="@+id/line"
@@ -44,6 +50,8 @@
             android:drawablePadding="@dimen/_10dp"
             android:paddingBottom="@dimen/_10dp"
             android:textSize="@dimen/_16sp"
+            android:clickable="true"
+            android:focusable="true"
             android:layout_below="@+id/header"
             android:text="Instructions"/>
 
@@ -53,6 +61,8 @@
             android:fontFamily="@font/nunito"
             android:textStyle="bold"
             android:id="@+id/report"
+            android:clickable="true"
+            android:focusable="true"
             android:drawableStart="@drawable/ic_info_red"
             android:drawablePadding="@dimen/_10dp"
             android:paddingTop="@dimen/_10dp"
