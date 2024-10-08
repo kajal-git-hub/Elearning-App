@@ -251,6 +251,7 @@
             android:layout_marginEnd="@dimen/_8dp"
             app:strokeColor="@color/PrimaryColor"
             android:layout_weight="1"
+            android:fontFamily="@font/nunito"
             android:textColor="@color/PrimaryColor" />
 
         <com.google.android.material.button.MaterialButton
@@ -258,6 +259,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:clickable="true"
+            android:focusable="true"
+            android:fontFamily="@font/nunito"
             android:layout_marginStart="@dimen/_8dp"
             android:layout_marginEnd="@dimen/_16dp"
             android:layout_marginBottom="@dimen/_16dp"

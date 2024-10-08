@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/bg_submit_test"
+    android:padding="@dimen/_16dp"
+    tools:context=".ui.fragment.test.TestSubmissionFragment">
+
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/close_circle"
+        android:id="@+id/close"
+        android:layout_alignParentEnd="true"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/close"
+        android:layout_marginTop="@dimen/_16dp"
+        android:padding="@dimen/_20dp"
+        android:id="@+id/top"
+        android:background="@drawable/card_bg">
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_correct_ans"
+            android:id="@+id/check"
+            android:layout_alignParentTop="true"
+            android:layout_centerInParent="true" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/questionHeading"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_10dp"
+            android:paddingStart="@dimen/_10dp"
+            android:paddingTop="@dimen/_4dp"
+            android:paddingEnd="@dimen/_10dp"
+            android:paddingBottom="@dimen/_4dp"
+            android:layout_marginTop="@dimen/_16dp"
+            android:gravity="center"
+            android:text="Test completed successfully!"
+            android:textStyle="bold"
+            android:fontFamily="@font/nunito"
+            android:textColor="@color/black_2B2829"
+            android:textSize="@dimen/_16sp"
+            android:layout_below="@+id/check" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/card_bg"
+        android:layout_marginTop="@dimen/_20dp"
+        android:padding="@dimen/_10dp"
+        android:layout_below="@+id/top">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:text="Test Summary"
+            android:textStyle="bold"
+            android:padding="@dimen/_8dp"
+            android:layout_alignParentTop="true"
+            android:fontFamily="@font/nunito"
+            android:layout_toStartOf="@+id/download"
+            android:textColor="@color/black_2B2829"
+            android:textSize="@dimen/_16sp" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/download"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:text="Paper"
+            android:drawablePadding="@dimen/_10dp"
+            android:drawableStart="@drawable/download"
+            android:textStyle="bold"
+            app:drawableTint="@color/PrimaryColor"
+            android:padding="@dimen/_8dp"
+            android:fontFamily="@font/nunito"
+            android:textColor="@color/PrimaryColor"
+            android:textSize="@dimen/_16sp" />
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/download">
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:layout_width="220dp"
+                    android:layout_height="220dp"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/ic_bg_progressbar_test"
+                    app:shapeAppearanceOverlay="@style/RoundedShapeImageView"/>
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:id="@+id/scoreHeader"
+                    android:fontFamily="@font/nunito"
+                    android:text="Score"/>
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/scoreHeader"
+                    android:layout_centerInParent="true">
+                    <com.google.android.material.textview.MaterialTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:fontFamily="@font/nunito"
+                        android:text="167"/>
+                </RelativeLayout>
+
+                <com.google.android.material.progressindicator.CircularProgressIndicator
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:trackColor="@color/white"
+                    android:padding="@dimen/_16dp"
+                    app:indicatorColor="#8888F7"
+                    android:elevation="@dimen/_10dp"
+                    android:max="100"
+                    app:indicatorSize="200dp"
+                    app:trackThickness="@dimen/_16dp"
+                    android:layout_gravity="center"
+                    android:progress="70"
+                    android:layout_centerInParent="true" />
+            </RelativeLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>

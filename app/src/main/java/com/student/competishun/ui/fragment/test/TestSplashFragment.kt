@@ -35,15 +35,20 @@ class TestSplashFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        var isTestStart = false
         arguments?.let {
             val message = it.getString("MESSAGE", "Best of luck!")
             binding.message.text = message
-            val isTestStart = it.getBoolean("IS_TEST_START", false)
+            isTestStart = it.getBoolean("IS_TEST_START", false)
 
         }
         launchWhenResumed {
             delay(3000)
-            view.findNavController().navigate(R.id.action_testSplashFragment_to_testFragment)
+            if (isTestStart) {
+                view.findNavController().navigate(R.id.action_testSplashFragment_to_testFragment)
+            }else{
+                view.findNavController().navigate(R.id.action_testSplashFragment_to_testSubmissionFragment)
+            }
         }
     }
 

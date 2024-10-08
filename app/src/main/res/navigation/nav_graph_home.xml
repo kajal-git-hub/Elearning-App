@@ -387,6 +387,9 @@
         <action
             android:id="@+id/action_testSplashFragment_to_testFragment"
             app:destination="@id/testFragment" />
+        <action
+            android:id="@+id/action_testSplashFragment_to_testSubmissionFragment"
+            app:destination="@id/testSubmissionFragment" />
     </fragment>
     <fragment
         android:id="@+id/testFragment"
@@ -396,12 +399,20 @@
         <action
             android:id="@+id/action_testFragment_to_viewSolutionFragment"
             app:destination="@id/viewSolutionFragment" />
+        <action
+            android:id="@+id/action_testFragment_to_testSplashFragment"
+            app:destination="@id/testSplashFragment" />
     </fragment>
     <fragment
         android:id="@+id/viewSolutionFragment"
         android:name="com.student.competishun.ui.fragment.test.ViewSolutionFragment"
         android:label="fragment_view_solution"
         tools:layout="@layout/fragment_view_solution" />
+    <fragment
+        android:id="@+id/testSubmissionFragment"
+        android:name="com.student.competishun.ui.fragment.test.TestSubmissionFragment"
+        android:label="fragment_test_submission"
+        tools:layout="@layout/fragment_test_submission" />
 
 
 </navigation>

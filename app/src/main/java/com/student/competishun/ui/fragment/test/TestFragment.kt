@@ -138,6 +138,10 @@ class TestFragment : Fragment() {
             disableAns(true)
             binding.submit.isEnabled = false
             changeSubmitButtonView()
+            it.findNavController().navigate(R.id.action_testFragment_to_testSplashFragment, Bundle().apply {
+                putString("MESSAGE", "Submitting your test...")
+                putBoolean("IS_TEST_START", false)
+            })
         }
 
         binding.viewSolution.setOnClickListener {
