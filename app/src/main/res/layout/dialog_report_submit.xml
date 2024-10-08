@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:paddingStart="@dimen/_16dp"
+        android:paddingEnd="@dimen/_16dp"
+        android:clickable="false"
+        android:id="@+id/mHeader"
+        android:focusable="false"
+        android:paddingBottom="@dimen/_16dp"
+        android:paddingTop="@dimen/_16dp"
+        android:background="@drawable/bg_rounded_dialog">
+        <View
+            android:layout_width="60dp"
+            android:layout_height="@dimen/_4dp"
+            android:background="@color/gray"
+            android:layout_margin="@dimen/_10dp"
+            android:id="@+id/line"
+            android:layout_alignParentTop="true"
+            android:layout_centerInParent="true"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/_20dp"
+            android:fontFamily="@font/nunito"
+            android:id="@+id/header"
+            android:textStyle="bold"
+            android:clickable="true"
+            android:gravity="center"
+            android:drawableEnd="@drawable/ic_checkmark"
+            android:drawablePadding="@dimen/_10dp"
+            android:focusable="true"
+            android:paddingBottom="@dimen/_10dp"
+            android:textSize="@dimen/_16sp"
+            android:layout_below="@+id/line"
+            android:text="Feedback Submitted"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/nunito"
+            android:textStyle="bold"
+            android:id="@+id/instruction"
+            android:paddingTop="@dimen/_10dp"
+            android:gravity="center"
+            android:paddingStart="@dimen/_40dp"
+            android:paddingEnd="@dimen/_40dp"
+            android:paddingBottom="@dimen/_10dp"
+            android:textSize="@dimen/_16sp"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_below="@+id/header"
+            android:text="Thank you! Your feedbacks helps us improve."/>
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:layout_width="@dimen/_8dp"
+            android:layout_height="@dimen/_8dp"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="@dimen/_40dp"
+            android:layout_marginBottom="@dimen/_40dp"
+            android:layout_below="@+id/instruction"
+            android:background="@color/PrimaryColor"
+            app:shapeAppearanceOverlay="@style/RoundedShapeImageView"/>
+
+
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -68,4 +68,10 @@
         <item name="fontFamily">@font/nunito</item>
     </style>
 
+    <style name="RoundedShapeImageView" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">4dp</item>
+    </style>
+
+
 </resources>

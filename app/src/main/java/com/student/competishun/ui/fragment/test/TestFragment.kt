@@ -3,6 +3,8 @@ package com.student.competishun.ui.fragment.test
 import android.app.Dialog
 import android.content.res.ColorStateList
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
@@ -257,6 +259,11 @@ class TestFragment : Fragment() {
             }
         }
 
+        submit.setOnClickListener {
+            dialog.dismiss()
+            showReportSubmitDialog()
+        }
+
         val layoutParams = dialog.window?.attributes
         layoutParams?.width = (resources.displayMetrics.widthPixels).toInt()
         dialog.window?.attributes = layoutParams
@@ -264,4 +271,22 @@ class TestFragment : Fragment() {
     }
 
 
+    private fun showReportSubmitDialog() {
+        val dialog = Dialog(requireContext())
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        val view = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_report_submit, null)
+        dialog.setContentView(view)
+        val root = view.findViewById<RelativeLayout>(R.id.root)
+        val mHeader = view.findViewById<RelativeLayout>(R.id.mHeader)
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+        root.setOnClickListener { dialog.dismiss() }
+        mHeader.setOnClickListener { }
+
+        val layoutParams = dialog.window?.attributes
+        layoutParams?.width = (resources.displayMetrics.widthPixels).toInt()
+        dialog.window?.attributes = layoutParams
+        Handler(Looper.getMainLooper()).postDelayed({dialog.dismiss()}, 3000)
+        dialog.show()
+    }
 }
