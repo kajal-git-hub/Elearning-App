@@ -82,13 +82,25 @@ class DownloadedItemAdapter(
             notifyItemRemoved(position)
             notifyItemRangeChanged(position, items.size)
 
-            val fileName = "${item.topicName}.${item.fileType.lowercase()}"
-            val file = File(context.filesDir, fileName)
-            if (file.exists()) {
-                file.delete()
+            if (item.fileType=="PDF")
+            {
+                val fileName = "${item.topicName}.${item.fileType.lowercase()}"
+                val file = File(context.filesDir, fileName)
+                Log.d("DownloadDelete", file.exists().toString())
+                if (file.exists()) {
+                    file.delete()
+                }
+            }else
+            {
+                val fileName = "${item.topicName}.mp4"
+                val file = File(context.filesDir, fileName)
+                Log.d("DownloadDelete", file.exists().toString())
+                if (file.exists()) {
+                    file.delete()
+                }
             }
 
-            fragment.loadDownloadedItems()
+            fragment.updateDownloadedItems(item.fileType)
 
         }
 
@@ -107,9 +119,11 @@ class DownloadedItemAdapter(
         if (item.fileType == "PDF") {
             holder.lecTime.text = item.lecturerName
             holder.lecTime.setCompoundDrawablesWithIntrinsicBounds(R.drawable.download_person, 0, 0, 0)
-            holder.clCourseBook.setBackgroundResource(R.drawable.frame_1707480918)
+            holder.clCourseBook.setBackgroundResource(R.drawable.frame_1707480919)
             holder.ivSubjectBookIcon.setImageResource(R.drawable.group_1707478995)
             holder.ivBookShadow.setImageResource(R.drawable.ellipse_17956)
+            holder.forRead.visibility = View.VISIBLE
+            holder.forVideo.visibility = View.GONE
             holder.forRead.setImageResource(R.drawable.frame_1707481707_1_)
 
             holder.dotExtraInfoDownload.setOnClickListener {
@@ -123,9 +137,10 @@ class DownloadedItemAdapter(
             holder.lecTime.text = formatTimeDuration(item.videoDuration)
             holder.forRead.visibility = View.GONE
             holder.forVideo.visibility = View.VISIBLE
-            holder.clCourseBook.setBackgroundResource(R.drawable.frame_1707480918)
+            holder.clCourseBook.setBackgroundResource(R.drawable.frame_1707480919)
             holder.ivSubjectBookIcon.setImageResource(R.drawable.group_1707478994)
             holder.ivBookShadow.setImageResource(R.drawable.ellipse_17956)
+            holder.forVideo.setImageResource(R.drawable.frame_1707481707)
 
             holder.dotExtraInfoDownload.setOnClickListener {
                 val bottomSheet = BottomSheetDeleteVideoFragment()

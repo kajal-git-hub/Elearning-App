@@ -93,6 +93,23 @@ class DownloadFragment : Fragment(), DownloadedItemAdapter.OnVideoClickListener 
         updateRecyclerView(pdfItems) // Default to show PDF items
     }
 
+    fun updateDownloadedItems(fileType:String)
+    {
+        val sharedPreferencesManager = SharedPreferencesManager(requireActivity())
+        allDownloadedItems = sharedPreferencesManager.getDownloadedItems()
+        if (fileType == "PDF")
+        {
+            val pdfItems = allDownloadedItems.filter { it.fileType == "PDF" }
+            binding.studentTabLayout.getTabAt(0)?.text = "PDFs (${pdfItems.size})"
+            updateRecyclerView(pdfItems)
+        }else
+        {
+            val videoItems = allDownloadedItems.filter { it.fileType == "VIDEO" }
+            binding.studentTabLayout.getTabAt(1)?.text = "Videos (${videoItems.size})"
+            updateRecyclerView(videoItems)
+        }
+    }
+
     private fun updateRecyclerView(items: List<TopicContentModel>) {
         adapter = DownloadedItemAdapter(requireContext(),
             items.toMutableList(), this, parentFragmentManager, this)
@@ -143,14 +160,14 @@ class DownloadFragment : Fragment(), DownloadedItemAdapter.OnVideoClickListener 
 
     override fun onResume() {
         super.onResume()
-        requireActivity().window.setFlags(
-            WindowManager.LayoutParams.FLAG_SECURE,
-            WindowManager.LayoutParams.FLAG_SECURE
-        )
+//        requireActivity().window.setFlags(
+//            WindowManager.LayoutParams.FLAG_SECURE,
+//            WindowManager.LayoutParams.FLAG_SECURE
+//        )
     }
 
     override fun onPause() {
         super.onPause()
-        requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
+//        requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
     }
 }
