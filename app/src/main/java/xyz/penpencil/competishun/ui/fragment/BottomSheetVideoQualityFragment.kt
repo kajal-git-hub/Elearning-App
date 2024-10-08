@@ -103,6 +103,17 @@ class BottomSheetVideoQualityFragment : BottomSheetDialogFragment() {
 
     private fun downloadVideo(context: Context, videoUrl: String, name: String) {
         Log.d("DownloadVideo", "Starting download for: $videoUrl with name: $name")
+
+        val fileName = "$name.mp4"
+        val videoFile = File(context.filesDir, fileName)
+
+        if (videoFile.exists()) {
+            Toast.makeText(context, "Video already downloaded choose Other", Toast.LENGTH_SHORT).show()
+            dismiss()
+            return
+        }
+
+
         lifecycleScope.launch {
             try {
                 withContext(Dispatchers.IO) {

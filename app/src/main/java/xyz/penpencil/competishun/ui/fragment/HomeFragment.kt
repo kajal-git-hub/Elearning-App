@@ -113,6 +113,8 @@ class HomeFragment : Fragment() {
         (activity as? HomeActivity)?.showBottomNavigationView(true)
         (activity as? HomeActivity)?.showFloatingButton(true)
 
+        getMyDetails()
+
         sharedPreferencesManager = SharedPreferencesManager(requireContext())
         Log.d("tokenn",sharedPreferencesManager.accessToken.toString())
 
@@ -234,8 +236,7 @@ class HomeFragment : Fragment() {
             }
         })
         coursesCategoryViewModel.fetchCoursesCategory()
-        getMyDetails()
-        getAllCoursesForStudent("")
+//        getAllCoursesForStudent("")
 
 
         listWhyCompetishun = Constants.listWhyCompetishun
@@ -316,69 +317,45 @@ class HomeFragment : Fragment() {
 
     }
 
-    fun getAllBanners() {
-        val filtersbanner = FindAllBannersInput(
-            limit = Optional.Absent
-        )
-        studentCoursesViewModel.fetchBanners(filtersbanner)
-
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            studentCoursesViewModel.banners.collect { result ->
-                val bannerList = mutableListOf<PromoBannerModel>()
-                Log.d("bannerList", bannerList.toString())
-                result?.forEach { bannerlist ->
-                    bannerlist?.let {
-                        // Assuming you have course_id in the banner data
-                        bannerList.add(PromoBannerModel(it.mobile_banner_image, it.redirect_link, it.course_id))
-                    }
+    fun getMyDetails() {
+        userViewModel.fetchUserDetails()
+        userViewModel.userDetails.observe(viewLifecycleOwner) { result ->
+            result.onSuccess { data ->
+                val userDetails = data.getMyDetails
+                Log.e("courseeTypehome", userDetails.userInformation.address.toString())
+                sharedPreferencesManager.name=userDetails.fullName
+                sharedPreferencesManager.city=userDetails.userInformation.address?.city
+                sharedPreferencesManager.reference=userDetails.userInformation.reference
+                sharedPreferencesManager.preparingFor=userDetails.userInformation.preparingFor
+                sharedPreferencesManager.targetYear=userDetails.userInformation.targetYear
+                var courseType = userDetails.userInformation.preparingFor ?: ""
+                sharedPreferencesManager.name=userDetails.fullName
+                sharedPreferencesManager.city=userDetails.userInformation.address?.city
+                sharedPreferencesManager.reference=userDetails.userInformation.reference
+                sharedPreferencesManager.preparingFor=userDetails.userInformation.preparingFor
+                sharedPreferencesManager.targetYear=userDetails.userInformation.targetYear
+                Log.d("HomeCourseType",courseType)
+                if(courseType.isNotEmpty()){
+                    Log.d("Comingggg...","Yes Working")
+                    getAllCoursesForStudent(courseType)
+                }else{
+                    getAllCoursesForStudent("IIT-JEE")
                 }
+                Log.e("courseeTypehome", courseType)
 
-                val adapter = PromoBannerAdapter(bannerList) { redirectLink, courseId ->
-                    if (!redirectLink.isNullOrEmpty()) {
-                        openLink(redirectLink)
-                    } else if (!courseId.isNullOrEmpty()) {
-                        val bannerCourseTag = listOf<String>()
-                        Log.d("bannerCourseTag",bannerCourseTag.toString())
-
-                        val bundle = Bundle().apply {
-                            putString("course_id", courseId)
-                        }
-                        findNavController().navigate(R.id.exploreFragment, bundle)
-                    } else {
-                        Toast.makeText(requireContext(), "No redirect or course available for this banner", Toast.LENGTH_SHORT).show()
-                    }
-                }
-                binding.rvpromobanner.adapter = adapter
-                binding.rvpromobanner.layoutManager =
-                    LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-
-                // Setup dots indicator
-                helperFunctions.setupDotsIndicator(
+            }.onFailure { exception ->
+                Toast.makeText(
                     requireContext(),
-                    bannerList.size,
-                    binding.llDotsIndicatorPromoBanner
-                )
-
-                // Set up the scroll listener for updating the dots indicator
-                binding.rvpromobanner.addOnScrollListener(object :
-                    RecyclerView.OnScrollListener() {
-                    override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                        super.onScrolled(recyclerView, dx, dy)
-                        helperFunctions.updateDotsIndicator(
-                            recyclerView,
-                            binding.llDotsIndicatorPromoBanner
-                        )
-                    }
-                })
+                    "Error fetching details: ${exception.message}",
+                    Toast.LENGTH_LONG
+                ).show()
             }
+
         }
     }
-
-
-
     fun getAllCoursesForStudent(courseType: String) {
         var courseTypes = courseType
-        if (courseType != "IIT-JEE" || courseType != "NEET") {
+        if (courseType != "IIT-JEE" && courseType != "NEET") {
             courseTypes = "IIT-JEE"
         }
         Log.e("cousetyeps",courseTypes)
@@ -397,7 +374,7 @@ class HomeFragment : Fragment() {
                 Log.e("TotalStudentCours", result.toString())
                 result?.onSuccess { data ->
                     Log.e("TotalStudentCourses", data.toString())
-                     courses = data.getAllCourseForStudent.courses.map { course ->
+                    courses = data.getAllCourseForStudent.courses.map { course ->
                         binding.progressBarRec.visibility = View.GONE
                         binding.clRecommendedCourses.visibility = View.VISIBLE
                         getAllLectureCount(course.id) { courseId, lectureCount ->
@@ -484,6 +461,67 @@ class HomeFragment : Fragment() {
         }
     }
 
+    fun getAllBanners() {
+        val filtersbanner = FindAllBannersInput(
+            limit = Optional.Absent
+        )
+        studentCoursesViewModel.fetchBanners(filtersbanner)
+
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            studentCoursesViewModel.banners.collect { result ->
+                val bannerList = mutableListOf<PromoBannerModel>()
+                Log.d("bannerList", bannerList.toString())
+                result?.forEach { bannerlist ->
+                    bannerlist?.let {
+                        // Assuming you have course_id in the banner data
+                        bannerList.add(PromoBannerModel(it.mobile_banner_image, it.redirect_link, it.course_id))
+                    }
+                }
+
+                val adapter = PromoBannerAdapter(bannerList) { redirectLink, courseId ->
+                    if (!redirectLink.isNullOrEmpty()) {
+                        openLink(redirectLink)
+                    } else if (!courseId.isNullOrEmpty()) {
+                        val bannerCourseTag = listOf<String>()
+                        Log.d("bannerCourseTag",bannerCourseTag.toString())
+
+                        val bundle = Bundle().apply {
+                            putString("course_id", courseId)
+                        }
+                        findNavController().navigate(R.id.exploreFragment, bundle)
+                    } else {
+                        Toast.makeText(requireContext(), "No redirect or course available for this banner", Toast.LENGTH_SHORT).show()
+                    }
+                }
+                binding.rvpromobanner.adapter = adapter
+                binding.rvpromobanner.layoutManager =
+                    LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+
+                // Setup dots indicator
+                helperFunctions.setupDotsIndicator(
+                    requireContext(),
+                    bannerList.size,
+                    binding.llDotsIndicatorPromoBanner
+                )
+
+                // Set up the scroll listener for updating the dots indicator
+                binding.rvpromobanner.addOnScrollListener(object :
+                    RecyclerView.OnScrollListener() {
+                    override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                        super.onScrolled(recyclerView, dx, dy)
+                        helperFunctions.updateDotsIndicator(
+                            recyclerView,
+                            binding.llDotsIndicatorPromoBanner
+                        )
+                    }
+                })
+            }
+        }
+    }
+
+
+
+
     private fun setupToolbar() {
         val searchView = binding.topAppBar.menu.findItem(R.id.action_search)?.actionView as? SearchView
         searchView?.queryHint = "Search Recommended Courses"
@@ -500,36 +538,6 @@ class HomeFragment : Fragment() {
         })
     }
 
-    fun getMyDetails() {
-        userViewModel.fetchUserDetails()
-        userViewModel.userDetails.observe(viewLifecycleOwner) { result ->
-            result.onSuccess { data ->
-                val userDetails = data.getMyDetails
-                Log.e("courseeTypehome", userDetails.userInformation.address.toString())
-                sharedPreferencesManager.name=userDetails.fullName
-                sharedPreferencesManager.city=userDetails.userInformation.address?.city
-                sharedPreferencesManager.reference=userDetails.userInformation.reference
-                sharedPreferencesManager.preparingFor=userDetails.userInformation.preparingFor
-                sharedPreferencesManager.targetYear=userDetails.userInformation.targetYear
-                var courseType = userDetails.userInformation.preparingFor ?: ""
-                sharedPreferencesManager.name=userDetails.fullName
-                sharedPreferencesManager.city=userDetails.userInformation.address?.city
-                sharedPreferencesManager.reference=userDetails.userInformation.reference
-                sharedPreferencesManager.preparingFor=userDetails.userInformation.preparingFor
-                sharedPreferencesManager.targetYear=userDetails.userInformation.targetYear
-                getAllCoursesForStudent(courseType)
-                Log.e("courseeTypehome", courseType)
-
-            }.onFailure { exception ->
-                Toast.makeText(
-                    requireContext(),
-                    "Error fetching details: ${exception.message}",
-                    Toast.LENGTH_LONG
-                ).show()
-            }
-
-        }
-    }
 
         fun getAllLectureCount(courseId: String, callback: (String, Int) -> Unit){
 
