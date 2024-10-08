@@ -161,9 +161,7 @@ class TestFragment : Fragment() {
     }
 
     private fun showInstructionSection(){
-        val showInstructionDialog = DialogTestUtils.showInstructionDialog(requireContext()) {
-
-        }
+        val showInstructionDialog = DialogTestUtils.showInstructionDialog(requireContext())
         showInstructionDialog?.show()
     }
 
@@ -216,8 +214,12 @@ class TestFragment : Fragment() {
             override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
                 if (keyCode == KeyEvent.KEYCODE_BACK) {
                     v?.let {
-                        val showExitTestDialog = DialogTestUtils.showExitTestDialog(it.context)
-                        showExitTestDialog?.show()
+                        val showExitTestDialog = DialogTestUtils.showExitTestDialog(it.context) {
+
+                        }
+                        if (showExitTestDialog?.isShowing != true) {
+                            showExitTestDialog?.show()
+                        }
                     }
                     return true
                 }

@@ -150,20 +150,15 @@ object DialogTestUtils {
         return dialog
     }
 
-    fun showInstructionDialog(context: Context, exit:()->Unit): Dialog? {
+    fun showInstructionDialog(context: Context): Dialog? {
         val dialog = Dialog(context)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         val view = LayoutInflater.from(context).inflate(R.layout.dialog_instruction_test, null)
         dialog.setContentView(view)
         val root = view.findViewById<RelativeLayout>(R.id.root)
         val mHeader = view.findViewById<RelativeLayout>(R.id.mHeader)
-        val dismiss = view.findViewById<MaterialButton>(R.id.dismiss)
-        val exit = view.findViewById<MaterialButton>(R.id.exit)
         dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
         root.setOnClickListener { dialog.dismiss() }
-        dismiss.setOnClickListener { dialog.dismiss()
-            exit()}
-        exit.setOnClickListener { dialog.dismiss() }
         mHeader.setOnClickListener { }
         val layoutParams = dialog.window?.attributes
         layoutParams?.width = (context.resources.displayMetrics.widthPixels).toInt()
@@ -172,7 +167,7 @@ object DialogTestUtils {
     }
 
 
-    fun showExitTestDialog(context: Context): Dialog? {
+    fun showExitTestDialog(context: Context, exit:()->Unit): Dialog? {
         val dialog = Dialog(context)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         val view = LayoutInflater.from(context).inflate(R.layout.dialog_exit_test, null)
@@ -180,6 +175,8 @@ object DialogTestUtils {
         val root = view.findViewById<RelativeLayout>(R.id.root)
         val mHeader = view.findViewById<RelativeLayout>(R.id.mHeader)
         val icon = view.findViewById<ImageView>(R.id.icon)
+        val exitDialog = view.findViewById<MaterialButton>(R.id.exitDialog)
+        val exitBtn = view.findViewById<MaterialButton>(R.id.exitBtn)
         dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
         root.setOnClickListener { dialog.dismiss() }
         mHeader.setOnClickListener { }
@@ -187,6 +184,9 @@ object DialogTestUtils {
             .load(R.drawable.ic_exit_test)
             .placeholder(R.drawable.ic_exit_test)
             .into(icon)
+        exitDialog.setOnClickListener { dialog.dismiss()
+            exit()}
+        exitBtn.setOnClickListener { dialog.dismiss() }
         val layoutParams = dialog.window?.attributes
         layoutParams?.width = (context.resources.displayMetrics.widthPixels).toInt()
         dialog.window?.attributes = layoutParams

@@ -172,7 +172,7 @@
             app:layout_constraintStart_toStartOf="parent">
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/dismiss"
+                android:id="@+id/exitDialog"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_16dp"
@@ -187,7 +187,7 @@
                 android:textColor="@color/PrimaryColor" />
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/exit"
+                android:id="@+id/exitBtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
