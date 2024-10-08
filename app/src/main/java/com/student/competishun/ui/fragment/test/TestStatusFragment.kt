@@ -1,14 +1,17 @@
 package com.student.competishun.ui.fragment.test
 
 import android.app.Dialog
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import androidx.fragment.app.DialogFragment
+import androidx.recyclerview.widget.GridLayoutManager
 import com.student.competishun.R
 import com.student.competishun.databinding.FragmentTestStatusBinding
+import com.student.competishun.ui.adapter.test.TestStatusAdapter
 
 class TestStatusFragment : DialogFragment() {
 
@@ -28,33 +31,72 @@ class TestStatusFragment : DialogFragment() {
         _binding = null
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setStyle(DialogFragment.STYLE_NO_FRAME, android.R.style.Theme_NoDisplay)
-
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        super.onCreateDialog(savedInstanceState)
+        return Dialog(requireContext(), R.style.FullScreenDialogStyle)
     }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val dialog = super.onCreateDialog(savedInstanceState)
         dialog.window?.apply {
+            setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+
+            decorView?.systemUiVisibility =
+                View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY or
+                        View.SYSTEM_UI_FLAG_FULLSCREEN or
+                        View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
             setBackgroundDrawableResource(android.R.color.transparent)
         }
         clickListener()
+        setTestAdapter()
     }
+
 
     private fun clickListener(){
         binding.close.setOnClickListener { dismiss() }
     }
 
-    override fun onStart() {
-        super.onStart()
-        val dialog = dialog
-        if (dialog != null) {
-            val width = ViewGroup.LayoutParams.MATCH_PARENT
-            val height = ViewGroup.LayoutParams.MATCH_PARENT
-            dialog.window?.setLayout(width, height)
+    private fun setTestAdapter(){
+        val items = listOf(
+            "Physics",
+            TestStatusAdapter.GridItem(R.drawable.ic_correct_ans_green),
+            TestStatusAdapter.GridItem(R.drawable.ic_wrong_ans_red),
+            TestStatusAdapter.GridItem(R.drawable.ic_correct_ans_green),
+            TestStatusAdapter.GridItem(R.drawable.ic_wrong_ans_red),
+            TestStatusAdapter.GridItem(R.drawable.ic_correct_ans_green),
+            TestStatusAdapter.GridItem(R.drawable.ic_wrong_ans_red),
+            TestStatusAdapter.GridItem(R.drawable.ic_correct_ans_green),
+            TestStatusAdapter.GridItem(R.drawable.ic_wrong_ans_red),
+            "Maths",
+            TestStatusAdapter.GridItem(R.drawable.ic_correct_ans_green),
+            TestStatusAdapter.GridItem(R.drawable.ic_wrong_ans_red),
+            TestStatusAdapter.GridItem(R.drawable.ic_correct_ans_green),
+            TestStatusAdapter.GridItem(R.drawable.ic_wrong_ans_red),
+            TestStatusAdapter.GridItem(R.drawable.ic_correct_ans_green),
+            TestStatusAdapter.GridItem(R.drawable.ic_wrong_ans_red),
+            TestStatusAdapter.GridItem(R.drawable.ic_correct_ans_green),
+            TestStatusAdapter.GridItem(R.drawable.ic_wrong_ans_red),
+            "Chemistry",
+            TestStatusAdapter.GridItem(R.drawable.ic_correct_ans_green),
+            TestStatusAdapter.GridItem(R.drawable.ic_wrong_ans_red),
+            TestStatusAdapter.GridItem(R.drawable.ic_correct_ans_green),
+            TestStatusAdapter.GridItem(R.drawable.ic_wrong_ans_red),
+            TestStatusAdapter.GridItem(R.drawable.ic_correct_ans_green),
+            TestStatusAdapter.GridItem(R.drawable.ic_wrong_ans_red),
+            TestStatusAdapter.GridItem(R.drawable.ic_correct_ans_green),
+            TestStatusAdapter.GridItem(R.drawable.ic_wrong_ans_red)
+        )
+
+        val adapter = TestStatusAdapter(items)
+        binding.rvTestStatus.adapter = adapter
+        val layoutManager = GridLayoutManager(requireContext(), 5)
+        layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+            override fun getSpanSize(position: Int): Int {
+                return if (adapter.getItemViewType(position) == TestStatusAdapter.TYPE_TITLE) 5 else 1
+            }
         }
+        binding.rvTestStatus.layoutManager = layoutManager
     }
 }
 
