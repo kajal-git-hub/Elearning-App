@@ -51,6 +51,7 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
         binding.tvBookmark.setOnClickListener {
             // Bookmark functionality
             itemDetails?.let { details ->
+                Log.d("bookmark","Clicked")
                 storeItemInPreferencesBm(details)
                 Toast.makeText(requireContext(),"Added in BookMark",Toast.LENGTH_SHORT).show()
                 dismiss()
@@ -59,6 +60,7 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
 
         binding.tvDownload.setOnClickListener {
             itemDetails?.let { details ->
+                Log.d("download","Clicked")
                 Log.d("ItemDetails", details.toString())
 
                 val sharedPreferencesManager = SharedPreferencesManager(requireActivity())

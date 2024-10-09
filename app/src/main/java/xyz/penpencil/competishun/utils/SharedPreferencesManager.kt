@@ -37,22 +37,24 @@ class SharedPreferencesManager(context: Context) {
         private const val IS_FIRST_INSTALL = "is_first_install"
 
         private const val KEY_DOWNLOADED_ITEM_PREFIX = "downloaded_item_"
-        private const val KEY_DOWNLOADED_ITEM_BM_PREFIX = "downloaded_item_bm"
-
+        private const val KEY_BOOKMARK_ITEM_PREFIX = "bookmark_data"
 
 
     }
 
+
+    // BookMark details
+
     fun saveDownloadedItemBm(item: TopicContentModel) {
         val json = gson.toJson(item)
-        sharedPreferences.edit().putString(KEY_DOWNLOADED_ITEM_BM_PREFIX + item.id, json).apply()
-        Log.e("SharedPreferences", "Saved downloaded item: ${item.url}")
+        sharedPreferences.edit().putString(KEY_BOOKMARK_ITEM_PREFIX + item.id, json).apply()
+        Log.e("SharedPreferences_BookMark", "Saved downloaded item: ${item.url}")
     }
 
     fun getDownloadedItemsBm(): List<TopicContentModel> {
         val items = mutableListOf<TopicContentModel>()
         sharedPreferences.all.forEach { entry ->
-            if (entry.key.startsWith(KEY_DOWNLOADED_ITEM_BM_PREFIX)) {
+            if (entry.key.startsWith(KEY_BOOKMARK_ITEM_PREFIX)) {
                 val json = entry.value as? String
                 json?.let {
                     val item = gson.fromJson(it, TopicContentModel::class.java)
@@ -63,11 +65,17 @@ class SharedPreferencesManager(context: Context) {
         return items
     }
 
+    fun deleteDownloadedItemBm(item: TopicContentModel) {
+        sharedPreferences.edit().remove(KEY_BOOKMARK_ITEM_PREFIX + item.id).apply()
+    }
+
+
+    // Download Details
 
     fun saveDownloadedItem(item: TopicContentModel) {
         val json = gson.toJson(item)
         sharedPreferences.edit().putString(KEY_DOWNLOADED_ITEM_PREFIX + item.id, json).apply()
-        Log.e("SharedPreferences", "Saved downloaded item: ${item.url}")
+        Log.e("SharedPreferences_Download", "Saved downloaded item: ${item.url}")
     }
 
     fun getDownloadedItems(): List<TopicContentModel> {
@@ -83,6 +91,11 @@ class SharedPreferencesManager(context: Context) {
         }
         return items
     }
+
+    fun deleteDownloadedItem(item: TopicContentModel) {
+        sharedPreferences.edit().remove(KEY_DOWNLOADED_ITEM_PREFIX + item.id).apply()
+    }
+
     fun getDownloadedVideos(): List<TopicContentModel> {
         return getDownloadedItems().filter { it.fileType == "VIDEO" }
     }
@@ -90,15 +103,6 @@ class SharedPreferencesManager(context: Context) {
     fun getDownloadedPdfs(): List<TopicContentModel> {
         return getDownloadedItems().filter { it.fileType == "PDF" }
     }
-
-
-    fun deleteDownloadedItem(item: TopicContentModel) {
-        sharedPreferences.edit().remove(KEY_DOWNLOADED_ITEM_PREFIX + item.id).apply()
-    }
-    fun deleteDownloadedItemBm(item: TopicContentModel) {
-        sharedPreferences.edit().remove(KEY_DOWNLOADED_ITEM_BM_PREFIX + item.id).apply()
-    }
-
 
 
     var shirtSize: String?

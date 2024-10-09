@@ -127,7 +127,7 @@ class VerifyOTPFragment : Fragment() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
     private fun registerBroadcastReceiver(){
         smsBroadcastReceiver=SmsBroadcastReceiver()
         smsBroadcastReceiver!!.smsBroadcastReceiverListener = object : SmsBroadcastReceiver.SmsBroadcastReceiverListener{
@@ -398,7 +398,7 @@ class VerifyOTPFragment : Fragment() {
     }
 
 
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
     override fun onResume() {
         super.onResume()
         registerBroadcastReceiver()
