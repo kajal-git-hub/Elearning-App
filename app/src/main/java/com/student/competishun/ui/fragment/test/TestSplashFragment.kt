@@ -38,9 +38,16 @@ class TestSplashFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         var isTestStart = false
         arguments?.let {
-            val message = it.getString("MESSAGE", "Best of luck!")
-            binding.message.text = message
+//            val message = it.getString("MESSAGE", "Best of luck!")
+            //binding.message.text = message
             isTestStart = it.getBoolean("IS_TEST_START", false)
+            if (isTestStart){
+                binding.message.visibility = View.GONE
+                binding.message1.visibility = View.VISIBLE
+            }else{
+                binding.message.visibility = View.VISIBLE
+                binding.message1.visibility = View.GONE
+            }
 
         }
         launchWhenResumed {

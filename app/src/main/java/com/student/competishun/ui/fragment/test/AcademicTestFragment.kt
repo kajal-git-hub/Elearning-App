@@ -5,19 +5,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL
 import androidx.recyclerview.widget.RecyclerView
 import com.student.competishun.data.model.TestItem
 import com.student.competishun.databinding.FragmentAcademicTestBinding
-import com.student.competishun.ui.adapter.ItemClickListener
-import com.student.competishun.ui.adapter.TestTypeAdapter
 
 import com.student.competishun.ui.adapter.test.AcademicTestAdapter
 import com.student.competishun.ui.adapter.test.AcademicTestResumeAdapter
-import com.student.competishun.ui.adapter.test.TestListAdapter
-import com.student.competishun.ui.fragment.BottomSheetTestFilterFragment
 import com.student.competishun.utils.HelperFunctions
 
 

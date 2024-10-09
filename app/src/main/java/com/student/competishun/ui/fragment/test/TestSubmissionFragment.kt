@@ -1,18 +1,16 @@
 package com.student.competishun.ui.fragment.test
 
-import android.animation.ValueAnimator
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
+import android.view.WindowManager
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
 import com.student.competishun.R
 import com.student.competishun.databinding.FragmentTestSubmissionBinding
-import kotlin.math.cos
-import kotlin.math.sin
 
 
 class TestSubmissionFragment : Fragment() {
@@ -25,10 +23,13 @@ class TestSubmissionFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentTestSubmissionBinding.inflate(inflater, container, false)
-        requireActivity().window.statusBarColor = ContextCompat.getColor(requireContext(), R.color.PrimaryColor)
         return binding.root
     }
 
+    override fun onResume() {
+        super.onResume()
+        requireActivity().window.statusBarColor = ContextCompat.getColor(requireContext(), R.color.blue_3E3EF7)
+    }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         clickListener()
@@ -38,7 +39,9 @@ class TestSubmissionFragment : Fragment() {
     }
 
     private fun clickListener() {
-
+        binding.close.setOnClickListener {
+            it.findNavController().navigate(R.id.action_testSubmissionFragment_to_testDashboardFragment)
+        }
     }
 
     override fun onDestroyView() {

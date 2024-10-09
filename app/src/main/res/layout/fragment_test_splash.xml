@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/test_detail_bg"
     tools:context=".ui.fragment.test.TestSplashFragment">
 
@@ -10,10 +11,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="@font/nunito"
+        android:visibility="gone"
         android:layout_centerInParent="true"
         android:textSize="28sp"
         android:gravity="center"
-        android:text="Best Of Luck!"
+        android:text="Submitting your test..."
         android:id="@+id/message"/>
 
     <ImageView
@@ -23,5 +25,19 @@
         android:layout_marginTop="@dimen/_20dp"
         android:layout_below="@+id/message"
         android:id="@+id/loader"/>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/nunito"
+        android:layout_centerInParent="true"
+        android:textSize="28sp"
+        android:gravity="center"
+        android:layout_below="@+id/loader"
+        android:layout_marginTop="@dimen/_20dp"
+        android:text="Best Of Luck!"
+        app:fontFamily="@font/nunito"
+        android:textStyle="bold"
+        android:id="@+id/message1"/>
 
 </RelativeLayout>

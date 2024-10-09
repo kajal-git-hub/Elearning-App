@@ -229,4 +229,8 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
                 navController.navigate(R.id.paymentFragment,bundle)
         }, 2000)
     }
+
+    override fun onSupportNavigateUp(): Boolean {
+        return navController.navigateUp() || super.onSupportNavigateUp()
+    }
 }

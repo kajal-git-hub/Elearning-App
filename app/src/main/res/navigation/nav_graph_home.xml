@@ -412,7 +412,11 @@
         android:id="@+id/testSubmissionFragment"
         android:name="com.student.competishun.ui.fragment.test.TestSubmissionFragment"
         android:label="fragment_test_submission"
-        tools:layout="@layout/fragment_test_submission" />
+        tools:layout="@layout/fragment_test_submission" >
+        <action
+            android:id="@+id/action_testSubmissionFragment_to_testDashboardFragment"
+            app:destination="@id/testDashboardFragment" />
+    </fragment>
 
 
 </navigation>

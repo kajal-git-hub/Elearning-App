@@ -1,4 +1,4 @@
-package com.student.competishun.ui.fragment
+package com.student.competishun.ui.fragment.test
 
 import android.os.Bundle
 import android.view.LayoutInflater
