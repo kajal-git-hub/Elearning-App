@@ -8,11 +8,12 @@
     android:padding="@dimen/_16dp"
     tools:context=".ui.fragment.test.TestSubmissionFragment">
 
-    <ImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:src="@drawable/close_circle"
+        android:src="@drawable/ic_close_white"
         android:id="@+id/close"
+        app:shapeAppearanceOverlay="@style/RoundedShapeImageView25"
         android:layout_alignParentEnd="true"/>
 
     <RelativeLayout
@@ -94,6 +95,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/progressContainer"
                 android:layout_below="@+id/download">
                 <com.google.android.material.imageview.ShapeableImageView
                     android:layout_width="220dp"
@@ -101,41 +103,265 @@
                     android:layout_centerInParent="true"
                     android:src="@drawable/ic_bg_progressbar_test"
                     app:shapeAppearanceOverlay="@style/RoundedShapeImageView"/>
-                <com.google.android.material.textview.MaterialTextView
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:id="@+id/scoreHeader"
-                    android:fontFamily="@font/nunito"
-                    android:text="Score"/>
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/scoreHeader"
-                    android:layout_centerInParent="true">
+                    android:gravity="center"
+                    android:orientation="vertical">
                     <com.google.android.material.textview.MaterialTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
+                        android:id="@+id/scoreHeader"
                         android:fontFamily="@font/nunito"
-                        android:text="167"/>
-                </RelativeLayout>
+                        android:text="Score"/>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <com.google.android.material.textview.MaterialTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/nunito"
+                            android:id="@+id/score"
+                            android:textSize="28sp"
+                            android:text="167"/>
 
-                <com.google.android.material.progressindicator.CircularProgressIndicator
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:trackColor="@color/white"
-                    android:padding="@dimen/_16dp"
-                    app:indicatorColor="#8888F7"
-                    android:elevation="@dimen/_10dp"
-                    android:max="100"
-                    app:indicatorSize="200dp"
-                    app:trackThickness="@dimen/_16dp"
+                        <com.google.android.material.textview.MaterialTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/nunito"
+                            android:id="@+id/totalMarks"
+                            android:textSize="@dimen/_14sp"
+                            android:textColor="#726C6C"
+                            android:text="/180"/>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <antonkozyriatskyi.circularprogressindicator.CircularProgressIndicator
+                    android:id="@+id/circular_progress"
+                    android:layout_width="193dp"
+                    android:layout_height="193dp"
                     android:layout_gravity="center"
-                    android:progress="70"
-                    android:layout_centerInParent="true" />
+                    app:direction="clockwise"
+                    android:layout_centerInParent="true"
+                    app:dotColor="#BABAF7"
+                    app:progressBackgroundColor="@color/white"
+                    app:progressColor="#8888F7"
+                    app:progressStrokeWidth="@dimen/_16dp"
+                    app:textColor="@color/transparent"
+                    app:enableProgressAnimation="true"
+                    app:progressCap="round"
+                    app:dotWidth="16dp" />
+
             </RelativeLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:id="@+id/state"
+            android:orientation="horizontal"
+            android:layout_below="@+id/progressContainer">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="@dimen/_4dp"
+                android:layout_marginStart="@dimen/_4dp"
+                android:elevation="@dimen/_0dp"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_15dp"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:paddingTop="@dimen/_30dp"
+                    android:paddingBottom="@dimen/_30dp"
+                    android:background="@drawable/rounded_r8_grey">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/correctTitle"
+                        android:textColor="#726C6C"
+                        android:fontFamily="@font/nunito"
+                        android:text="Correct"/>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <com.google.android.material.textview.MaterialTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/nunito"
+                            android:id="@+id/correctScore"
+                            android:textSize="@dimen/_16sp"
+                            android:text="167"/>
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/nunito"
+                            android:id="@+id/correctTotalMarks"
+                            android:textSize="@dimen/_12sp"
+                            android:textColor="#726C6C"
+                            android:text="/180"/>
+                    </LinearLayout>
+                </LinearLayout>
+                <ImageView
+                    android:layout_width="50dp"
+                    android:background="@color/white"
+                    android:layout_height="30dp"
+                    android:paddingStart="@dimen/_10dp"
+                    android:paddingEnd="@dimen/_10dp"
+                    android:src="@drawable/ic_thunder_green"
+                    android:layout_centerInParent="true"
+                    android:layout_alignParentTop="true"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="@dimen/_4dp"
+                android:layout_marginStart="@dimen/_4dp"
+                android:elevation="@dimen/_0dp"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_15dp"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:paddingTop="@dimen/_30dp"
+                    android:paddingBottom="@dimen/_30dp"
+                    android:background="@drawable/rounded_r8_grey">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/incorrectTitle"
+                        android:textColor="#726C6C"
+                        android:fontFamily="@font/nunito"
+                        android:text="Incorrect"/>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <com.google.android.material.textview.MaterialTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/nunito"
+                            android:id="@+id/incorrectScore"
+                            android:textSize="@dimen/_16sp"
+                            android:text="167"/>
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/nunito"
+                            android:id="@+id/incorrectTotalMarks"
+                            android:textSize="@dimen/_12sp"
+                            android:textColor="#726C6C"
+                            android:text="/180"/>
+                    </LinearLayout>
+                </LinearLayout>
+                <ImageView
+                    android:layout_width="50dp"
+                    android:background="@color/white"
+                    android:layout_height="30dp"
+                    android:paddingStart="@dimen/_10dp"
+                    android:paddingEnd="@dimen/_10dp"
+                    android:src="@drawable/ic_close_red"
+                    android:layout_centerInParent="true"
+                    android:layout_alignParentTop="true"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="@dimen/_4dp"
+                android:layout_marginStart="@dimen/_4dp"
+                android:elevation="@dimen/_0dp"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_15dp"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:paddingTop="@dimen/_30dp"
+                    android:paddingBottom="@dimen/_30dp"
+                    android:background="@drawable/rounded_r8_grey">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/timeTitle"
+                        android:textColor="#726C6C"
+                        android:fontFamily="@font/nunito"
+                        android:text="Time Taken"/>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <com.google.android.material.textview.MaterialTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/nunito"
+                            android:id="@+id/time"
+                            android:textSize="@dimen/_16sp"
+                            android:text="12:20:00"/>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:background="@color/white"
+                    android:layout_height="30dp"
+                    android:paddingTop="@dimen/_4dp"
+                    android:paddingBottom="@dimen/_4dp"
+                    android:paddingStart="@dimen/_10dp"
+                    android:paddingEnd="@dimen/_10dp"
+                    android:src="@drawable/ic_timer"
+                    android:layout_centerInParent="true"
+                    android:layout_alignParentTop="true"/>
+            </RelativeLayout>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@drawable/dottedline"
+            android:layout_marginTop="@dimen/_20dp"
+            android:id="@+id/line"
+            android:layout_below="@+id/state"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/viewSolution"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_16dp"
+            android:layout_marginBottom="@dimen/_16dp"
+            android:text="Result Analysis"
+            app:cornerRadius="@dimen/_8dp"
+            app:icon="@drawable/cart_arrow_right"
+            app:iconTint="@color/PrimaryColor"
+            android:backgroundTint="@color/white"
+            app:strokeWidth="@dimen/_1dp"
+            app:iconPadding="4dp"
+            app:iconGravity="textEnd"
+            android:layout_marginEnd="@dimen/_8dp"
+            app:strokeColor="@color/PrimaryColor"
+            android:layout_alignParentBottom="true"
+            android:fontFamily="@font/nunito"
+            android:textColor="@color/PrimaryColor" />
     </RelativeLayout>
 
 </RelativeLayout>

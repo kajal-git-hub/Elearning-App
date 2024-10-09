@@ -111,6 +111,7 @@ dependencies {
     implementation (libs.github.glide)
 
     implementation (libs.exoplayer)
-    
+    implementation (libs.circular.progress.indicator)
+
 
 }

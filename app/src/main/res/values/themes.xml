@@ -73,6 +73,11 @@
         <item name="cornerSize">4dp</item>
     </style>
 
+    <style name="RoundedShapeImageView25" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">@dimen/_25dp</item>
+    </style>
+
     <style name="DialogAnimation">
         <item name="android:windowEnterAnimation">@anim/slide_out_right</item>
         <item name="android:windowExitAnimation">@anim/slide_in_left</item>

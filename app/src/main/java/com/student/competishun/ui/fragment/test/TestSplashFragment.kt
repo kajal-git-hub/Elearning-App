@@ -10,6 +10,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.findNavController
+import com.bumptech.glide.Glide
 import com.student.competishun.R
 import com.student.competishun.databinding.FragmentTestDetailBinding
 import com.student.competishun.databinding.FragmentTestSplashBinding
@@ -50,6 +51,7 @@ class TestSplashFragment : Fragment() {
                 view.findNavController().navigate(R.id.action_testSplashFragment_to_testSubmissionFragment)
             }
         }
+        Glide.with(binding.loader).load(R.drawable.loader).into(binding.loader)
     }
 
     override fun onResume() {
