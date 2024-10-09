@@ -68,7 +68,9 @@ class TestDashboardFragment : Fragment() {
         binding.rvTestList.adapter = testListAdapter
 
         binding.filter.setOnClickListener { requireActivity().supportFragmentManager?.let {
-            val filter = BottomSheetTestFilterFragment()
+            val filter = BottomSheetTestFilterFragment {
+
+            }
             filter.show(it, "")
         } }
     }
