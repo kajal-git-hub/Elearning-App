@@ -8,6 +8,7 @@ import android.content.IntentFilter
 import android.net.Uri
 import android.os.Environment
 import android.util.Log
+import android.widget.Toast
 import com.student.competishun.R
 import com.student.competishun.data.model.OtherContentItem
 import com.student.competishun.data.model.OurContentFirstItem
@@ -16,6 +17,7 @@ import com.student.competishun.data.model.RecommendedCourseDataModel
 import com.student.competishun.data.model.Testimonial
 import com.student.competishun.data.model.TopicContentModel
 import com.student.competishun.data.model.WhyCompetishun
+import java.io.File
 
 object Constants {
     // Define each list item as a constant
@@ -291,6 +293,28 @@ object Constants {
 //    }
 //
 //
+
+//    private fun deleteDownloadedItem(item: TopicContentModel) {
+//        val sharedPreferencesManager = SharedPreferencesManager(requireActivity())
+//        sharedPreferencesManager.deleteDownloadedItem(item) // Implement this method
+//
+//        // Remove the file from local storage
+//        val fileName = "${item.topicName}.${item.fileType.lowercase()}"
+//        val file = File(requireContext().filesDir, fileName)
+//        if (file.exists()) {
+//            if (file.delete()) {
+//                Log.d("DeleteItem", "File deleted successfully: ${file.absolutePath}")
+//            } else {
+//                Log.e("DeleteItem", "Failed to delete file: ${file.absolutePath}")
+//            }
+//        } else {
+//            Log.w("DeleteItem", "File not found: ${file.absolutePath}")
+//        }
+//        Toast.makeText(requireContext(), "Item deleted successfully", Toast.LENGTH_SHORT).show()
+//    }
+
+
+
 
 
 }

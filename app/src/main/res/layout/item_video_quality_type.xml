@@ -1,27 +1,27 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/getStarted_bg_layoutSecond"
     android:layout_width="match_parent"
     android:layout_height="48dp"
     android:layout_margin="6dp"
-    android:id="@+id/getStarted_bg_layoutSecond"
     android:background="@drawable/getstarted_itembg_unselected"
     android:paddingStart="17dp"
     android:paddingTop="12dp"
     android:paddingBottom="12dp">
 
-    <com.google.android.material.radiobutton.MaterialRadioButton
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/radio_button_videoQuality_type"
-        style="@style/Widget.AppCompat.CompoundButton.CheckBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:button="@drawable/radio_button_selector"
+        android:drawableStart="@drawable/property_default"
+        android:drawablePadding="8dp"
+        android:paddingStart="0dp"
+        android:paddingTop="0dp"
         android:fontFamily="@font/nunito"
-        android:paddingStart="12dp"
+        android:paddingEnd="0dp"
         android:text="360p"
         android:textColor="#433E3F"
-        android:textSize="@dimen/_14sp"
+        android:textSize="14sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -29,13 +29,13 @@
         android:id="@+id/tv_file_size"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="12dp"
+        android:fontFamily="@font/nunito"
         android:text="48.5 MB"
         android:textColor="#726C6C"
-        android:fontFamily="@font/nunito"
-        android:textSize="@dimen/_12sp"
-        android:layout_marginEnd="12dp"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

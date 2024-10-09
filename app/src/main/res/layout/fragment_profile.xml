@@ -118,18 +118,32 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_2dp"
                 android:fontFamily="@font/nunito"
-                android:text="amansharma@gmail.com"
+                android:text=""
                 android:textColor="#898384"
                 android:textSize="@dimen/_14sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/Profile_UserName" />
 
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/Profile_RollNo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_2dp"
+                android:fontFamily="@font/nunito"
+                android:text=""
+                android:textColor="#898384"
+                android:textSize="@dimen/_14sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/Profile_Email" />
+
             <ImageView
                 android:id="@+id/ig_divderEmail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_16dp"
+                android:layout_marginTop="@dimen/_20dp"
+                android:visibility="visible"
                 android:src="@drawable/vector_107"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/Profile_Email" />
@@ -207,7 +221,7 @@
                     android:layout_marginStart="@dimen/_8dp"
                     android:contentDescription="Edit Profile"
                     android:src="@drawable/edit_2"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@id/tv_Year"
                     app:layout_constraintTop_toTopOf="parent"
@@ -297,7 +311,7 @@
                 android:background="@drawable/bg_item_selector"
                 android:orientation="horizontal"
                 android:padding="16dp"
-                android:visibility="gone"
+                android:visibility="visible"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/llMyCart">

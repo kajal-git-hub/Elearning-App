@@ -12,6 +12,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -25,6 +26,7 @@ import com.student.competishun.data.model.CourseFItem
 import com.student.competishun.databinding.FragmentPaymentBinding
 import com.student.competishun.ui.adapter.CourseFeaturesAdapter
 import com.student.competishun.ui.main.HomeActivity
+import com.student.competishun.ui.main.PdfViewerActivity
 import com.student.competishun.ui.viewmodel.CreateCartViewModel
 import com.student.competishun.ui.viewmodel.GetCourseByIDViewModel
 import com.student.competishun.ui.viewmodel.OrdersViewModel
@@ -40,6 +42,7 @@ import java.util.Locale
 class PaymentFragment : Fragment() {
     private lateinit var sharedPreferencesManager: SharedPreferencesManager
     private lateinit var binding: FragmentPaymentBinding
+    private val userViewModel: UserViewModel by viewModels()
     private val ordersViewModel: OrdersViewModel by viewModels()
     private lateinit var  helperFunctions:HelperFunctions
     private val cartViewModel: CreateCartViewModel by viewModels()
@@ -98,6 +101,13 @@ class PaymentFragment : Fragment() {
 
          findNavController().navigate(R.id.PersonalDetailsFragment)
         }
+        getUserDetails()
+        binding.btReceipt.setOnClickListener {
+         var transactionId = sharedPreferencesManager.rzpOrderId
+            if (transactionId != null) {
+                downloadReceipt(transactionId)
+            }
+        }
     }
 
     private fun removeCourse( cartItemId:String){
@@ -115,6 +125,37 @@ class PaymentFragment : Fragment() {
 
     }
 
+    private fun downloadReceipt( transactionId:String){
+        ordersViewModel.generateReceipt(transactionId)
+        ordersViewModel.receiptResult.observe(viewLifecycleOwner)
+        { result ->
+
+            result.onSuccess {
+                var receiptLink = it.generateReceipt
+                Log.e("ReceiptLink",receiptLink)
+               helperFunctions.downloadPdf(requireContext(),receiptLink,"Payment Invoice")
+            }.onFailure {
+                // Handle failure, e.g., show an error message
+                Log.e("Failed to download ReceiptLink: ",it.message.toString())
+            }
+        }
+
+    }
+
+    fun getUserDetails()
+    {
+        userViewModel.fetchUserDetails()
+        userViewModel.userDetails.observe(viewLifecycleOwner) { result ->
+            result.onSuccess { data ->
+                val userDetails = data.getMyDetails
+                binding.tvRollNumber.text = userDetails.userInformation.rollNumber
+            }.onFailure { exception ->
+                Toast.makeText(requireContext(), "Error fetching details: ${exception.message}", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
+
     fun orderdetails(ordersViewModel: OrdersViewModel,userId:String
     ){
         binding.progressBar.visibility = View.VISIBLE
@@ -129,7 +170,6 @@ class PaymentFragment : Fragment() {
                 for (order in orders) {
                     binding.tvAmount.text = "₹ ${order.amountPaid}"
                     binding.paymentSuccessText.text = "Payment Sucessfully"
-
                     observeCourseById(order.entityId)
                     binding.tvPaidDate.text =  getCurrentDateString()
                   val cartItemId =   sharedPreferencesManager.getString("cartItemId","")

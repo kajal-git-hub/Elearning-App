@@ -10,10 +10,10 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.MediaController
 import android.widget.Toast
+import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.tabs.TabLayout
 import com.student.competishun.R
 import com.student.competishun.data.model.TopicContentModel
@@ -26,11 +26,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 
 @AndroidEntryPoint
-class DownloadFragment : Fragment(),DownloadedItemAdapter.OnVideoClickListener {
-
+class DownloadFragment : Fragment(), DownloadedItemAdapter.OnVideoClickListener {
 
     private lateinit var viewModel: VideourlViewModel
-
     private lateinit var binding: FragmentDownloadBinding
     private lateinit var adapter: DownloadedItemAdapter
     private var allDownloadedItems: List<TopicContentModel> = emptyList()
@@ -41,7 +39,7 @@ class DownloadFragment : Fragment(),DownloadedItemAdapter.OnVideoClickListener {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentDownloadBinding.inflate(inflater, container, false)
         viewModel = ViewModelProvider(this).get(VideourlViewModel::class.java)
         return binding.root
@@ -50,10 +48,9 @@ class DownloadFragment : Fragment(),DownloadedItemAdapter.OnVideoClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-       binding.backIconDownloads.setOnClickListener {
-           requireActivity().onBackPressedDispatcher.onBackPressed()
-       }
-
+        binding.TopViewDownloads.setNavigationOnClickListener {
+            findNavController().navigateUp()
+        }
 
         (activity as? HomeActivity)?.showBottomNavigationView(false)
         (activity as? HomeActivity)?.showFloatingButton(false)
@@ -61,7 +58,7 @@ class DownloadFragment : Fragment(),DownloadedItemAdapter.OnVideoClickListener {
         binding.rvDownloads.layoutManager = LinearLayoutManager(requireContext())
 
         setupTabLayout()
-
+        setupToolbar()
         loadDownloadedItems()
     }
 
@@ -81,7 +78,7 @@ class DownloadFragment : Fragment(),DownloadedItemAdapter.OnVideoClickListener {
         })
     }
 
-    private fun loadDownloadedItems() {
+    fun loadDownloadedItems() {
         val sharedPreferencesManager = SharedPreferencesManager(requireActivity())
         allDownloadedItems = sharedPreferencesManager.getDownloadedItems()
         Log.d("allDownloadedItems", allDownloadedItems.toString())
@@ -92,77 +89,70 @@ class DownloadFragment : Fragment(),DownloadedItemAdapter.OnVideoClickListener {
         pdfItemsSize = pdfItems.size.toString()
         videoItemsSize = videoItems.size.toString()
 
-        binding.studentTabLayout.getTabAt(0)?.text = "PDFs (${pdfItemsSize})"
-        binding.studentTabLayout.getTabAt(1)?.text = "Videos (${videoItemsSize})"
+        binding.studentTabLayout.getTabAt(0)?.text = "PDFs ($pdfItemsSize)"
+        binding.studentTabLayout.getTabAt(1)?.text = "Videos ($videoItemsSize)"
 
-        showPdfItems()
+        updateRecyclerView(pdfItems) // Default to show PDF items
+    }
+
+    private fun updateRecyclerView(items: List<TopicContentModel>) {
+        adapter = DownloadedItemAdapter(requireContext(),
+            items.toMutableList(), this, parentFragmentManager, this)
+        binding.rvDownloads.adapter = adapter
     }
 
     private fun showPdfItems() {
         val pdfItems = allDownloadedItems.filter { it.fileType == "PDF" }
-
-        updateRecyclerView(pdfItems)
+        adapter.updateItems(pdfItems)
     }
 
     private fun showVideoItems() {
         val videoItems = allDownloadedItems.filter { it.fileType == "VIDEO" }
-        updateRecyclerView(videoItems)
+        adapter.updateItems(videoItems)
     }
 
     override fun onVideoClick(folderContentId: String, name: String) {
-//        videoUrlApi(viewModel, folderContentId, name)
-        playVideo(folderContentId,name)
+        playVideo(folderContentId, name)
     }
 
-    private fun updateRecyclerView(items: List<TopicContentModel>) {
-        adapter = DownloadedItemAdapter(requireContext(), items,this,parentFragmentManager)
-        binding.rvDownloads.adapter = adapter
-    }
-
-    private fun playVideo(folderContentId: String,name: String){
+    private fun playVideo(folderContentId: String, name: String) {
         val videoFileURL = File(requireContext().filesDir, "$name.mp4").absolutePath
 
-        if (!videoFileURL.isNullOrEmpty()) {
+        if (videoFileURL.isNotEmpty()) {
             val bundle = Bundle().apply {
                 putString("url", videoFileURL)
                 putString("url_name", name)
                 putString("ContentId", folderContentId)
             }
-            findNavController().navigate(R.id.mediaFragment,bundle)
+            findNavController().navigate(R.id.mediaFragment, bundle)
         } else {
             Toast.makeText(requireContext(), "Video file not found", Toast.LENGTH_SHORT).show()
         }
     }
 
-    private fun videoUrlApi(viewModel: VideourlViewModel, folderContentId: String, name: String) {
-        viewModel.fetchVideoStreamUrl(folderContentId, "480p")
+    private fun setupToolbar() {
+        val searchView = binding.TopViewDownloads.menu.findItem(R.id.action_search_download)?.actionView as? SearchView
+        searchView?.queryHint = "Search Pdf/Video"
+        searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean = false
 
-        viewModel.videoStreamUrl.observe(viewLifecycleOwner) { signedUrl ->
-            Log.d("VideoUrl", "Signed URL: $signedUrl")
-            if (signedUrl != null) {
-                val bundle = Bundle().apply {
-                    putString("url", signedUrl)
-                    putString("url_name", name)
-                    putString("ContentId", folderContentId)
-                }
-                findNavController().navigate(R.id.mediaFragment, bundle)
-            } else {
-                // Handle error or null URL
+            override fun onQueryTextChange(newText: String?): Boolean {
+                adapter.filter(newText)
+                return true
             }
-        }
+        })
     }
 
     override fun onResume() {
         super.onResume()
-//        requireActivity().window.setFlags(
-//            WindowManager.LayoutParams.FLAG_SECURE,
-//            WindowManager.LayoutParams.FLAG_SECURE
-//        )
+        requireActivity().window.setFlags(
+            WindowManager.LayoutParams.FLAG_SECURE,
+            WindowManager.LayoutParams.FLAG_SECURE
+        )
     }
 
     override fun onPause() {
         super.onPause()
-//        requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
-
+        requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
     }
 }

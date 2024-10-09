@@ -1,5 +1,6 @@
 package com.student.competishun.ui.fragment
 
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.net.Uri
@@ -61,6 +62,7 @@ import com.student.competishun.ui.adapter.FAQAdapter
 import com.student.competishun.ui.adapter.OurContentAdapter
 import com.student.competishun.ui.adapter.TeacherAdapter
 import com.student.competishun.ui.main.HomeActivity
+import com.student.competishun.ui.main.PdfViewerActivity
 import com.student.competishun.ui.viewmodel.CoursesViewModel
 import com.student.competishun.ui.viewmodel.CreateCartViewModel
 import com.student.competishun.ui.viewmodel.GetCourseByIDViewModel
@@ -290,15 +292,26 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
                 binding.progressBar.visibility = View.GONE
                 binding.ExpireValidity.text =
                     "Validity: " + helperFunctions.formatCourseDate(courses?.course_validity_end_date.toString())
-                if (courses?.planner_pdf != null)
+
+                if (courses.planner_pdf != null) {
                     binding.clGetPlanner.setOnClickListener {
+
                         Log.d("planner_pdf", courses.planner_pdf)
-                        helperFunctions.showDownloadDialog(
-                            requireContext(),
-                            courses.planner_pdf,
-                            "Planner"
-                        )
-                    } else Toast.makeText(requireContext(), "", Toast.LENGTH_LONG).show()
+                        val intent = Intent(context, PdfViewerActivity::class.java).apply {
+                            putExtra("PDF_URL", courses.planner_pdf)
+                        }
+                        context?.startActivity(intent)
+
+                    }
+                    binding.downloadButton.setOnClickListener {
+
+                        Log.d("planner_pdf", courses.planner_pdf)
+                       helperFunctions.showDownloadDialog(requireContext(),courses.planner_pdf,"Planner")
+
+                    }
+                    }
+                else Toast.makeText(requireContext(), "", Toast.LENGTH_LONG).show()
+
                 if (courses != null) {
                     var coursefeature = courses.course_features
                     val courseFItems = coursefeature?.map { feature ->

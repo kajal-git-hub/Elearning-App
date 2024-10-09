@@ -36,8 +36,6 @@ import com.google.android.gms.tasks.Task
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.GoogleAuthProvider
 import com.student.competishun.R
 import com.student.competishun.databinding.FragmentLoginBinding
 import com.student.competishun.ui.main.HomeActivity
@@ -65,7 +63,6 @@ class LoginFragment : Fragment() {
     private val RC_SIGN_IN = 1001
     private val userViewModel: UserViewModel by viewModels()
     private lateinit var googleSignInClient: GoogleSignInClient
-    private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var signInLauncher: ActivityResultLauncher<Intent>
 
     private lateinit var googleSignInLauncher: ActivityResultLauncher<Intent>
@@ -78,7 +75,6 @@ class LoginFragment : Fragment() {
     ): View {
         _binding = FragmentLoginBinding.inflate(inflater, container, false)
         sharedPreferencesManager = (requireActivity() as MainActivity).sharedPreferencesManager
-        firebaseAuth = FirebaseAuth.getInstance()
 
         return binding.root
     }
@@ -148,7 +144,7 @@ class LoginFragment : Fragment() {
                 handleSignIn(result)
             } catch (e: GetCredentialException) {
                 // Handle the case when user cancels the sign-in process or another error occurs
-                Log.e("GoogleCredentialError", e.localizedMessage.toString() + e.message)
+                Log.e("GoogleCredentialError", (e.localizedMessage?.toString() ?: "") + e.message)
                 if (e.message?.contains("cancelled by the user") == true) {
                     Log.e("GoogleUserError", "Sign-in cancelled by the user")
                     Toast.makeText(requireContext(), "Sign-in cancelled. Please try again.", Toast.LENGTH_SHORT).show()
@@ -338,7 +334,6 @@ class LoginFragment : Fragment() {
             val account = completedTask.getResult(ApiException::class.java)
             if (account != null) {
                 // Google Sign-In was successful, authenticate with Firebase
-                firebaseAuthWithGoogle(account)
             }else {
                 Log.e("GoogleSignAccount", "Google sign-in account is null")
             }
@@ -349,21 +344,6 @@ class LoginFragment : Fragment() {
         }
     }
 
-    private fun firebaseAuthWithGoogle(account: GoogleSignInAccount) {
-        val credential = GoogleAuthProvider.getCredential(account.idToken, null)
-        firebaseAuth.signInWithCredential(credential)
-            .addOnCompleteListener(requireActivity()) { task ->
-                if (task.isSuccessful) {
-                    // Sign in success, navigate to profile
-                    navigateToHome()
-                    Toast.makeText(requireContext(), "Firebase authentication successful", Toast.LENGTH_SHORT).show()
-                } else {
-                    // If sign in fails, display a message to the user.
-                    Toast.makeText(requireContext(), "Firebase authentication failed", Toast.LENGTH_SHORT).show()
-                    Log.e("FirebaseAuth", "Firebase authentication failed", task.exception)
-                }
-            }
-    }
 
     private fun navigateToHome() {
         findNavController().navigate(R.id.onboardingFragment)

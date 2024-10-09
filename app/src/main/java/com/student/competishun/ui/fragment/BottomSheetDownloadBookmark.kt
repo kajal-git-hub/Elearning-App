@@ -16,6 +16,7 @@ import com.google.gson.Gson
 import com.student.competishun.R
 import com.student.competishun.data.model.TopicContentModel
 import com.student.competishun.databinding.FragmentBottomSheetDownloadBookmarkBinding
+import com.student.competishun.ui.adapter.DownloadedItemAdapter
 import com.student.competishun.ui.viewmodel.VideourlViewModel
 import com.student.competishun.utils.SharedPreferencesManager
 import dagger.hilt.android.AndroidEntryPoint
@@ -39,9 +40,6 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
         this.itemDetails = details
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -57,22 +55,44 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
 
         binding.tvBookmark.setOnClickListener {
             // Bookmark functionality
+            itemDetails?.let { details ->
+                storeItemInPreferencesBm(details)
+//                dismiss()
+            }
         }
 
         binding.tvDownload.setOnClickListener {
             itemDetails?.let { details ->
                 Log.d("ItemDetails", details.toString())
-                storeItemInPreferences(details)
-                if(details.fileType=="VIDEO")
-                {
-                     downloadVideo(requireContext(),details.url,details.topicName)
+
+                val sharedPreferencesManager = SharedPreferencesManager(requireActivity())
+                val downloadedVideos = sharedPreferencesManager.getDownloadedVideos()
+                val downloadedPdfs = sharedPreferencesManager.getDownloadedPdfs()
+
+                // Check download limits
+                if (details.fileType == "VIDEO" && downloadedVideos.size >= 8) {
+                    Toast.makeText(requireContext(), "You can only download up to 8 videos. Please delete some.", Toast.LENGTH_SHORT).show()
+                    return@let
+                } else if (details.fileType == "PDF" && downloadedPdfs.size >= 8) {
+                    Toast.makeText(requireContext(), "You can only download up to 8 PDFs. Please delete some.", Toast.LENGTH_SHORT).show()
+                    return@let
                 }
-                else{
+
+                storeItemInPreferences(details)
+
+                if (details.fileType == "VIDEO") {
+                    downloadVideo(requireContext(), details.url, details.topicName)
+                } else {
                     downloadPdf(details)
                 }
-                dismiss()
+//                dismiss()
             }
         }
+
+    }
+    private fun storeItemInPreferencesBm(item: TopicContentModel) {
+        val sharedPreferencesManager = SharedPreferencesManager(requireActivity())
+        sharedPreferencesManager.saveDownloadedItemBm(item)
     }
 
     private fun storeItemInPreferences(item: TopicContentModel) {
@@ -83,8 +103,19 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
     private fun downloadPdf(details: TopicContentModel) {
         Log.d("DownloadPdf", "Starting download for: ${details.url} with topic name: ${details.topicName}")
 
+        val fileName = "${details.topicName}.${details.fileType.lowercase()}"
+        val pdfFile = File(requireContext().filesDir, fileName)
+
+        if (pdfFile.exists()) {
+            Toast.makeText(requireContext(), "PDF already downloaded Choose Other", Toast.LENGTH_SHORT).show()
+            dismiss()
+            return
+        }
+
+        Toast.makeText(requireContext(), "Download started....", Toast.LENGTH_SHORT).show()
+
         lifecycleScope.launch {
-            val pdfUrl = details.url // Assuming details.url contains the PDF URL
+            val pdfUrl = details.url
             val fileName = "${details.topicName}.${details.fileType.lowercase()}"
 
             withContext(Dispatchers.IO) {
@@ -116,6 +147,7 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
                         if (isAdded) {
                             Log.d("DownloadPdf", "Download success, showing toast.")
                             Toast.makeText(requireContext(), "PDF Download completed: $fileName", Toast.LENGTH_SHORT).show()
+                            dismiss()
                         }
                     }
 
@@ -137,11 +169,21 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
     }
 
 
-
     private fun downloadVideo(context: Context, videoUrl: String, name: String) {
         Log.d("DownloadVideo", "Starting download for: $videoUrl with name: $name")
 
-       lifecycleScope.launch {
+        val fileName = "$name.mp4"
+        val videoFile = File(context.filesDir, fileName)
+
+        if (videoFile.exists()) {
+            Toast.makeText(context, "Video already downloaded choose Other", Toast.LENGTH_SHORT).show()
+            dismiss()
+            return
+        }
+
+        Toast.makeText(context, "Download started....", Toast.LENGTH_SHORT).show()
+
+        lifecycleScope.launch {
             try {
                 withContext(Dispatchers.IO) {
                     val fileName = "$name.mp4"
@@ -164,13 +206,12 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
                         }
                     }
                 }
-                // Show success toast
                 withContext(Dispatchers.Main) {
                     Log.d("DownloadVideo", "Download success, showing toast.")
                     Toast.makeText(context, "Download successful", Toast.LENGTH_SHORT).show()
+                    dismiss()
                 }
             } catch (e: Exception) {
-                // Show error toast
                 withContext(Dispatchers.Main) {
                     Log.e("DownloadVideo", "Download failed: ${e.message}")
                     Toast.makeText(context, "Download failed: ${e.message}", Toast.LENGTH_SHORT).show()
@@ -178,21 +219,5 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
             }
         }
     }
-
-
-
-//    private fun videoUrlApi(folderContentId: String, name: String) {
-//        viewModel.fetchVideoStreamUrl(folderContentId, "480p")
-//
-//        viewModel.videoStreamUrl.observe(viewLifecycleOwner) { signedUrl ->
-//            Log.d("VideoUrl", "Signed URL: $signedUrl")
-//            if (signedUrl != null) {
-//                downloadVideo(signedUrl, name) // Download the video using the signed URL
-//            } else {
-//                // Handle error or null URL
-//                Toast.makeText(requireContext(), "Failed to retrieve video URL", Toast.LENGTH_SHORT).show()
-//            }
-//        }
-//    }
 
 }
