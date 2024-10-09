@@ -110,6 +110,7 @@
                                     android:id="@+id/cbNeet"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
+                                    style="@style/MyCheckboxStyle"
                                     android:layout_marginStart="10dp" />
 
                                 <com.google.android.material.textview.MaterialTextView
@@ -133,6 +134,7 @@
                                     android:id="@+id/cbAiims"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
+                                    style="@style/MyCheckboxStyle"
                                     android:layout_marginStart="10dp" />
 
                                 <com.google.android.material.textview.MaterialTextView
@@ -164,6 +166,7 @@
                                     android:id="@+id/cbJeeMains"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
+                                    style="@style/MyCheckboxStyle"
                                     android:layout_marginStart="10dp" />
 
                                 <com.google.android.material.textview.MaterialTextView
@@ -187,6 +190,7 @@
                                     android:id="@+id/cbJeeAdvance"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
+                                    style="@style/MyCheckboxStyle"
                                     android:layout_marginStart="10dp" />
 
                                 <com.google.android.material.textview.MaterialTextView
@@ -287,6 +291,7 @@
                                 android:id="@+id/cbUnattempted"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                style="@style/MyCheckboxStyle"
                                 android:layout_marginStart="10dp" />
 
                             <com.google.android.material.textview.MaterialTextView
@@ -310,6 +315,7 @@
                                 android:id="@+id/cbAttempted"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                style="@style/MyCheckboxStyle"
                                 android:layout_marginStart="10dp" />
 
                             <com.google.android.material.textview.MaterialTextView
