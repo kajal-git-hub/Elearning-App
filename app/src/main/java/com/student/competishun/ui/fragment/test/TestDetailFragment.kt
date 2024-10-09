@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.navigation.findNavController
 import com.student.competishun.R
@@ -42,6 +43,13 @@ class TestDetailFragment : Fragment() {
             putString("MESSAGE", "Best Of Luck!")
             putBoolean("IS_TEST_START", true)
         }
-        binding.submit.setOnClickListener { it.findNavController().navigate(R.id.action_testDetailFragment_to_testSplashFragment, bundle) }
+        binding.submit.setOnClickListener {
+            if (binding.instructionAccept.isChecked){
+                it.findNavController().navigate(R.id.action_testDetailFragment_to_testSplashFragment, bundle)
+            }else{
+                Toast.makeText(it.context, "Please accept test instruction", Toast.LENGTH_SHORT).show()
+            }
+        }
+        binding.back.setOnClickListener { it.findNavController().popBackStack() }
     }
 }

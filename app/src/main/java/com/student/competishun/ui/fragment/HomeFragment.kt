@@ -323,6 +323,10 @@ class HomeFragment : Fragment() {
         binding.clOTSeries.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_testDashboardFragment)
         }
+
+        binding.clPYP.setOnClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_testDashboardFragment)
+        }
     }
 
     fun getAllBanners() {

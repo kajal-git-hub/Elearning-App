@@ -94,6 +94,7 @@
         android:text="Contact to resume test"
         android:textColor="@color/blue_3E3EF7"
         app:iconSize="14dp"
+        android:id="@+id/continueTest"
         app:iconTint="@null"
         app:iconGravity="textStart"
         android:textStyle="normal"

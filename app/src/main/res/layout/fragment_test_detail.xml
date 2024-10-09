@@ -12,7 +12,7 @@
         android:background="@drawable/test_detail_bg">
 
         <ImageView
-            android:id="@+id/imageView2"
+            android:id="@+id/back"
             android:layout_width="50dp"
             android:layout_height="?actionBarSize"
             android:layout_marginStart="@dimen/_10dp"
@@ -23,7 +23,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/imageView2"
+            android:layout_below="@+id/back"
             android:layout_margin="@dimen/_16dp"
             android:background="@drawable/card_bg"
             android:padding="@dimen/_16dp">

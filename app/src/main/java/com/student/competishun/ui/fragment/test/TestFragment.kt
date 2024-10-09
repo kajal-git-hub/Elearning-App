@@ -28,6 +28,7 @@ class TestFragment : Fragment() {
 
     private var optionsDialog: Dialog?=null
     private var showReportDialog: Dialog?=null
+    private var showExitTestDialog: Dialog?=null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -148,9 +149,9 @@ class TestFragment : Fragment() {
             optionsDialog?.show()
         }
 
-        binding.testResult.setOnClickListener { fragmentManager?.let {
-            TestStatusFragment().show(it, "test")
-        } }
+        binding.testResult.setOnClickListener {
+            fragmentManager?.let { TestStatusFragment().show(it, "test") }
+        }
     }
 
     private fun showInstructionSection(){
@@ -214,7 +215,7 @@ class TestFragment : Fragment() {
             override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
                 if (keyCode == KeyEvent.KEYCODE_BACK) {
                     v?.let {
-                        val showExitTestDialog = DialogTestUtils.showExitTestDialog(it.context) {
+                        showExitTestDialog = DialogTestUtils.showExitTestDialog(it.context) {
 
                         }
                         if (showExitTestDialog?.isShowing != true) {

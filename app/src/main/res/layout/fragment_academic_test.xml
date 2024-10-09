@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/_white_F6F6FF"
     tools:context=".ui.fragment.test.AcademicTestFragment">
 
     <com.google.android.material.appbar.MaterialToolbar

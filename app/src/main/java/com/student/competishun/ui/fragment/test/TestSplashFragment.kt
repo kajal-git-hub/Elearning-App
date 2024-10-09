@@ -63,7 +63,7 @@ class TestSplashFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        requireActivity().window.statusBarColor = ContextCompat.getColor(requireContext(), R.color.home_bg)
+        requireActivity().window.statusBarColor = ContextCompat.getColor(requireContext(), R.color._white_F6F6FF)
     }
 
     override fun onDestroyView() {

@@ -389,6 +389,9 @@
             app:destination="@id/testDetailFragment"
             app:popUpTo="@id/academicTestFragment"
             app:popUpToInclusive="true"/>
+        <action
+            android:id="@+id/action_academicTestFragment_to_testFragment"
+            app:destination="@id/testFragment" />
     </fragment>
     <fragment
         android:id="@+id/testDetailFragment"

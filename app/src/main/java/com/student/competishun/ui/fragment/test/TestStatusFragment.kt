@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,6 +24,7 @@ class TestStatusFragment : DialogFragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentTestStatusBinding.inflate(inflater, container, false)
+
         return binding.root
     }
 
@@ -32,22 +34,27 @@ class TestStatusFragment : DialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        super.onCreateDialog(savedInstanceState)
-        return Dialog(requireContext(), R.style.FullScreenDialogStyle)
+        val dialog = super.onCreateDialog(savedInstanceState)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        return dialog
     }
 
+    override fun onStart() {
+        super.onStart()
+
+        dialog?.window?.setLayout(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.MATCH_PARENT
+        )
+        val window = dialog?.window
+        val params = window?.attributes
+        params?.gravity = Gravity.END
+        params?.width = resources.displayMetrics.widthPixels
+        params?.height = resources.displayMetrics.heightPixels+30
+        window?.attributes = params
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val dialog = super.onCreateDialog(savedInstanceState)
-        dialog.window?.apply {
-            setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-
-            decorView?.systemUiVisibility =
-                View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY or
-                        View.SYSTEM_UI_FLAG_FULLSCREEN or
-                        View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-            setBackgroundDrawableResource(android.R.color.transparent)
-        }
         clickListener()
         setTestAdapter()
     }
