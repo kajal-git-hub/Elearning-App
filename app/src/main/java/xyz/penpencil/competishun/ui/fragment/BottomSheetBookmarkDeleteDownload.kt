@@ -135,7 +135,7 @@ class BottomSheetBookmarkDeleteDownload(
                     }
 
                     details.url = pdfFile.absolutePath
-                    storeItemInPreferencesBm(details)
+                    storeItemInPreferences(details)
                     Log.d("DownloadPdf", "File path saved to preferences: ${pdfFile.absolutePath}")
 
                 } catch (e: Exception) {
@@ -153,6 +153,10 @@ class BottomSheetBookmarkDeleteDownload(
     private fun storeItemInPreferencesBm(item: TopicContentModel) {
         val sharedPreferencesManager = SharedPreferencesManager(requireActivity())
         sharedPreferencesManager.saveDownloadedItemBm(item)
+    }
+    private fun storeItemInPreferences(item: TopicContentModel) {
+        val sharedPreferencesManager = SharedPreferencesManager(requireActivity())
+        sharedPreferencesManager.saveDownloadedItem(item)
     }
 
 

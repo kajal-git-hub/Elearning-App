@@ -49,6 +49,10 @@ class ProfileFragment : Fragment() {
 //        studentClass = arguments?.getString("StudentClass","") ?: ""
 //        Log.d("studentClass",studentClass)
 
+        binding.igProfileCall.setOnClickListener {
+
+        }
+
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 findNavController().popBackStack()
