@@ -81,7 +81,7 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
                 } else {
                     downloadPdf(details)
                 }
-//                dismiss()
+                dismiss()
             }
         }
 

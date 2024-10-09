@@ -70,15 +70,6 @@ class VerifyOTPFragment : Fragment() {
         _binding = FragmentVerifyBinding.inflate(inflater, container, false)
         sharedPreferencesManager = (requireActivity() as MainActivity).sharedPreferencesManager
 
-        smsRetrieverLauncher = registerForActivityResult(
-            ActivityResultContracts.StartActivityForResult()
-        ) { result ->
-            if (result.resultCode == RESULT_OK && result.data != null) {
-                val message = result.data?.getStringExtra(SmsRetriever.EXTRA_SMS_MESSAGE)
-                getOtpFromMessage(message)
-            }
-        }
-
         return binding.root
     }
 
@@ -127,7 +118,7 @@ class VerifyOTPFragment : Fragment() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
     private fun registerBroadcastReceiver(){
         smsBroadcastReceiver=SmsBroadcastReceiver()
         smsBroadcastReceiver!!.smsBroadcastReceiverListener = object : SmsBroadcastReceiver.SmsBroadcastReceiverListener{
@@ -399,7 +390,7 @@ class VerifyOTPFragment : Fragment() {
     }
 
 
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
     override fun onResume() {
         super.onResume()
         registerBroadcastReceiver()
