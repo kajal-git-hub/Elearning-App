@@ -28,11 +28,9 @@ class TestTypeAdapter(private var testTypeList: List<TestItem>, private var list
     }
     inner class TestTypeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val titleText: TextView = itemView.findViewById(R.id.title)
-        private val type: ImageView = itemView.findViewById(R.id.type)
 
         fun bind(item: TestItem) {
             titleText.text = item.title
-            type.visibility = if (item.isFilter) View.VISIBLE else View.GONE
         }
     }
 }

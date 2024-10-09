@@ -48,22 +48,11 @@ class TestDashboardFragment : Fragment() {
 
 
     private fun initAdapter(){
-        testTypeAdapter = TestTypeAdapter(listOf(TestItem("Filter", true),
-            TestItem("JEE-Mains", false),
+        testTypeAdapter = TestTypeAdapter(listOf(TestItem("JEE-Mains", false),
             TestItem("JEE-Advanced", false),
             TestItem("NEET-UG", false),
             TestItem("AIIMS", false)), object : ItemClickListener {
             override fun onItemClick(isFirst: Boolean, item: TestItem) {
-                if (isFirst){
-                    //open bottom sheet filter
-                    requireActivity().supportFragmentManager?.let {
-                        val filter = BottomSheetTestFilterFragment()
-                        filter.show(it, "")
-                    }
-
-                }else {
-                    //filter list of test by filter
-                }
 
             }
         })
@@ -77,6 +66,11 @@ class TestDashboardFragment : Fragment() {
             TestItem("NEET", false)))
         binding.rvTestList.layoutManager = GridLayoutManager(context, 2)
         binding.rvTestList.adapter = testListAdapter
+
+        binding.filter.setOnClickListener { requireActivity().supportFragmentManager?.let {
+            val filter = BottomSheetTestFilterFragment()
+            filter.show(it, "")
+        } }
     }
 
     override fun onDestroyView() {
