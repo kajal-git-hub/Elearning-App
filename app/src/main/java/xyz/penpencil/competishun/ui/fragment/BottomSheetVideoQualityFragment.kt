@@ -22,8 +22,10 @@ import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import xyz.penpencil.competishun.R
+import xyz.penpencil.competishun.data.model.TopicContentModel
 import xyz.penpencil.competishun.databinding.FragmentBottomSheetVideoQualityBinding
 import xyz.penpencil.competishun.ui.viewmodel.VideourlViewModel
+import xyz.penpencil.competishun.utils.SharedPreferencesManager
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -39,6 +41,8 @@ class BottomSheetVideoQualityFragment : BottomSheetDialogFragment() {
     private var videoId: String? = null
     private var qualityResolution: String? = null
     private var updateSignUrl: String? = null
+    private lateinit var itemDetails: TopicContentModel
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -53,6 +57,7 @@ class BottomSheetVideoQualityFragment : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         arguments?.let {
+            itemDetails = it.getSerializable("topic_content_model") as TopicContentModel
             videoUrl = it.getString("video_url")
             videoName = it.getString("video_name")
             videoId = it.getString("video_id")
@@ -68,6 +73,7 @@ class BottomSheetVideoQualityFragment : BottomSheetDialogFragment() {
             VideoQualityItem("1080p", "2.45 GB"),
         )
         binding.btnBmDownload.setOnClickListener {
+            storeItemInPreferences(itemDetails)
             Toast.makeText(requireContext(), "Download started", Toast.LENGTH_SHORT).show()
             downloadVideo(requireContext(), updateSignUrl.toString(), videoName.toString())
         }
@@ -154,6 +160,10 @@ class BottomSheetVideoQualityFragment : BottomSheetDialogFragment() {
                 }
             }
         }
+    }
+    private fun storeItemInPreferences(item: TopicContentModel) {
+        val sharedPreferencesManager = SharedPreferencesManager(requireActivity())
+        sharedPreferencesManager.saveDownloadedItem(item)
     }
 
 

@@ -5,6 +5,8 @@ plugins {
     alias(libs.plugins.hilt)
     alias(libs.plugins.apollo.graph.ql)
     alias(libs.plugins.google.gms.google.services)
+    id ("kotlin-parcelize")
+
 }
 
 android {

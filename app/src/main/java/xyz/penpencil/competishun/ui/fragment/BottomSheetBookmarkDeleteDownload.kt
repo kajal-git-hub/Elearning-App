@@ -67,6 +67,7 @@ class BottomSheetBookmarkDeleteDownload(
                 val bottomSheetDownloadOptions = BottomSheetVideoQualityFragment()
 
                 val bundle  = Bundle().apply {
+                    putSerializable("topic_content_model", item)
                     putString("video_url",item.url)
                     putString("video_name",item.topicName)
                     putString("video_id",item.id)
@@ -83,6 +84,8 @@ class BottomSheetBookmarkDeleteDownload(
         }
 
     }
+
+
     private fun downloadPdf(details: TopicContentModel) {
         Log.d("DownloadPdf", "Starting download for: ${details.url} with topic name: ${details.topicName}")
 
@@ -150,10 +153,7 @@ class BottomSheetBookmarkDeleteDownload(
             }
         }
     }
-    private fun storeItemInPreferencesBm(item: TopicContentModel) {
-        val sharedPreferencesManager = SharedPreferencesManager(requireActivity())
-        sharedPreferencesManager.saveDownloadedItemBm(item)
-    }
+
     private fun storeItemInPreferences(item: TopicContentModel) {
         val sharedPreferencesManager = SharedPreferencesManager(requireActivity())
         sharedPreferencesManager.saveDownloadedItem(item)
