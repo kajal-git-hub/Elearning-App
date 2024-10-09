@@ -1,14 +1,15 @@
 package com.student.competishun.ui.fragment.test
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.Window
-import android.view.WindowManager
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
+import com.bumptech.glide.Glide
 import com.student.competishun.R
 import com.student.competishun.databinding.FragmentTestSubmissionBinding
 
@@ -32,10 +33,21 @@ class TestSubmissionFragment : Fragment() {
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Glide.with(requireContext())
+            .load(R.drawable.ic_success_loading)
+            .into(binding.loading)
+        loadData()
         clickListener()
         binding.circularProgress.setMaxProgress(180.0)
         binding.circularProgress.setCurrentProgress(167.0)
         binding.circularProgress.setProgress(167.0, 180.0)
+    }
+
+    private fun loadData(){
+        Handler(Looper.getMainLooper()).postDelayed({
+            binding.mainContainer.visibility = View.VISIBLE
+            binding.loading.visibility = View.GONE
+        }, 2000)
     }
 
     private fun clickListener() {

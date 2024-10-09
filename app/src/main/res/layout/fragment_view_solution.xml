@@ -17,57 +17,23 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:background="@drawable/rounded_s1_fff"
-            android:layout_centerInParent="true"
-            android:padding="2dp"
-            android:layout_marginStart="@dimen/_16dp">
-            <androidx.appcompat.widget.AppCompatSpinner
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/subject"
-                android:paddingStart="@dimen/_8dp"
-                android:paddingEnd="@dimen/_8dp"
-                android:paddingTop="@dimen/_4dp"
-                android:layout_marginEnd="@dimen/_4dp"
-                android:background="@android:color/white"
-                android:paddingBottom="@dimen/_4dp" />
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:src="@drawable/arrow_down"
-                android:layout_marginEnd="@dimen/_10dp"
-                app:tint="@color/black"
-                android:layout_toEndOf="@id/subject"/>
-        </RelativeLayout>
         <com.google.android.material.textview.MaterialTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:layout_marginEnd="@dimen/_16dp"
-            android:text="Finish test"
+            android:id="@+id/back"
+            android:text="Q 01 - Solution"
             android:textSize="14sp"
+            android:layout_alignParentStart="true"
             android:textColor="@color/black_2B2829"
-            android:background="@drawable/rounded_s1_fff"
             android:paddingStart="@dimen/_8dp"
             android:paddingEnd="@dimen/_8dp"
+            android:drawablePadding="@dimen/_16sp"
             android:paddingTop="@dimen/_6dp"
+            android:drawableStart="@drawable/arrow_left"
             android:paddingBottom="@dimen/_6dp"
-            android:clickable="true"
-            android:layout_toStartOf="@id/testResult"/>
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:id="@+id/testResult"
-            android:layout_alignParentEnd="true"
-            android:src="@drawable/ic_test_result"
-            android:layout_marginEnd="@dimen/_16dp"/>
+            android:clickable="true" />
     </RelativeLayout>
 
     <RadioGroup
@@ -291,7 +257,7 @@
             app:layout_constraintStart_toStartOf="parent">
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/back"
+                android:id="@+id/backBtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_16dp"

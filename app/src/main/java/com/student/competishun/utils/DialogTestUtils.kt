@@ -138,11 +138,12 @@ object DialogTestUtils {
         dialog.setContentView(view)
         val root = view.findViewById<RelativeLayout>(R.id.root)
         val mHeader = view.findViewById<RelativeLayout>(R.id.mHeader)
+        val loader = view.findViewById<ImageView>(R.id.loader)
         dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
 
         root.setOnClickListener { dialog.dismiss() }
         mHeader.setOnClickListener { }
-
+        Glide.with(view).load(R.drawable.loader).into(loader)
         val layoutParams = dialog.window?.attributes
         layoutParams?.width = (context.resources.displayMetrics.widthPixels).toInt()
         dialog.window?.attributes = layoutParams
@@ -192,4 +193,57 @@ object DialogTestUtils {
         dialog.window?.attributes = layoutParams
         return dialog
     }
+
+
+    fun showSubjectDialog(context: Context, submitCall:(subject: String)->Unit): Dialog {
+        val dialog = Dialog(context)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        val view = LayoutInflater.from(context).inflate(R.layout.dialog_subject_test, null)
+        dialog.setContentView(view)
+        val root = view.findViewById<RelativeLayout>(R.id.root)
+        val mHeader = view.findViewById<RelativeLayout>(R.id.mHeader)
+        val rbReport = view.findViewById<RadioGroup>(R.id.rbReport)
+
+        val submit = view.findViewById<MaterialButton>(R.id.submit)
+        val colorStateList = ColorStateList.valueOf(context.resources.getColor(R.color._808080, null))
+        submit.backgroundTintList = colorStateList
+
+        var type = ""
+
+        val colorStateList1 = ColorStateList.valueOf(context.resources.getColor(R.color.PrimaryColor, null))
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        root.setOnClickListener { dialog.dismiss() }
+        mHeader.setOnClickListener { }
+        rbReport.setOnCheckedChangeListener { group, checkedId ->
+            when (checkedId) {
+                R.id.maths -> {
+                    submit.isEnabled = true
+                    submit.backgroundTintList = colorStateList1
+                    type = "Maths"
+                }
+
+                R.id.physics -> {
+                    submit.isEnabled = true
+                    submit.backgroundTintList = colorStateList1
+                    type = "Physics"
+                }
+
+                R.id.chemistry -> {
+                    submit.isEnabled = true
+                    submit.backgroundTintList = colorStateList1
+                    type = "Chemistry"
+                }
+            }
+        }
+
+        submit.setOnClickListener {
+            dialog.dismiss()
+            submitCall(type)
+        }
+        val layoutParams = dialog.window?.attributes
+        layoutParams?.width = (context.resources.displayMetrics.widthPixels).toInt()
+        dialog.window?.attributes = layoutParams
+        return dialog
+    }
+
 }

@@ -36,26 +36,12 @@ class ViewSolutionFragment : Fragment() {
         arguments?.let {
             it.getString("QUESTION_ID", "")
         }
-        testSubjectSpinner()
         clickListener()
     }
 
-    private fun testSubjectSpinner(){
-        val planetsArray = arrayOf("Maths", "Chemistry", "Physics", "Biology")
-        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, planetsArray)
-
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        binding.subject.adapter = adapter
-        binding.subject.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-                val selectedItem = parent.getItemAtPosition(position).toString()
-                //Toast.makeText(requireContext(), "Selected: $selectedItem", Toast.LENGTH_SHORT).show()
-            }
-            override fun onNothingSelected(parent: AdapterView<*>) {}
-        }
-    }
-
     private fun clickListener(){
+        binding.back.setOnClickListener { it.findNavController().popBackStack() }
+        binding.backBtn.setOnClickListener { it.findNavController().popBackStack() }
         binding.tabRadioGroup.setOnCheckedChangeListener { group, checkedId ->
             when(checkedId){
                 binding.textSolutionButton.id->{

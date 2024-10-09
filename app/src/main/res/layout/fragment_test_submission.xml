@@ -12,6 +12,8 @@
        android:layout_width="match_parent"
        android:layout_height="wrap_content"
        android:fitsSystemWindows="true"
+       android:id="@+id/mainContainer"
+       android:visibility="gone"
        android:layout_marginTop="@dimen/_30dp">
        <com.google.android.material.imageview.ShapeableImageView
            android:layout_width="50dp"
@@ -369,5 +371,11 @@
                android:textColor="@color/PrimaryColor" />
        </RelativeLayout>
    </RelativeLayout>
+
+    <ImageView
+        android:layout_width="140dp"
+        android:layout_height="140dp"
+        android:layout_centerInParent="true"
+        android:id="@+id/loading"/>
 
 </RelativeLayout>

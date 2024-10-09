@@ -39,7 +39,6 @@ class TestFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        testSubjectSpinner()
         setTestStatus("+1", "0")
         answerSelection()
         setAnsOptions("a2 – b2 + 2ac = 0", "A", binding.awsOne)
@@ -72,20 +71,6 @@ class TestFragment : Fragment() {
         _binding = null
     }
 
-    private fun testSubjectSpinner(){
-        val planetsArray = arrayOf("Maths", "Chemistry", "Physics", "Biology")
-        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, planetsArray)
-
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        binding.subject.adapter = adapter
-        binding.subject.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-                val selectedItem = parent.getItemAtPosition(position).toString()
-                //Toast.makeText(requireContext(), "Selected: $selectedItem", Toast.LENGTH_SHORT).show()
-            }
-            override fun onNothingSelected(parent: AdapterView<*>) {}
-        }
-    }
 
     private fun setAnsOptions(ans:String, option: String, radioButton: RadioButton){
         val text = "<font color=#F2A779>$option </font><font color=#2B2829> $ans</font>"
@@ -124,6 +109,10 @@ class TestFragment : Fragment() {
     }
 
     private fun clickListener(){
+        binding.subject.setOnClickListener {
+            showSubjectSection()
+        }
+
         binding.submit.setOnClickListener {
             binding.submit.isEnabled = false
             disableAns(false)
@@ -179,6 +168,13 @@ class TestFragment : Fragment() {
     private fun showReportSubmitSection(){
         val showReportSubmitDialog = DialogTestUtils.showReportSubmitDialog(requireContext())
         showReportSubmitDialog.show()
+    }
+
+    private fun showSubjectSection(){
+        val showSubjectDialog = DialogTestUtils.showSubjectDialog(requireContext()){
+            binding.subject.text = it
+        }
+        showSubjectDialog.show()
     }
 
     private fun disableAns(isEnable: Boolean){

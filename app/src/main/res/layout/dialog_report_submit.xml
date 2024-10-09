@@ -61,14 +61,14 @@
             android:layout_below="@+id/header"
             android:text="Thank you! Your feedbacks helps us improve."/>
 
-        <com.google.android.material.imageview.ShapeableImageView
-            android:layout_width="@dimen/_8dp"
-            android:layout_height="@dimen/_8dp"
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:layout_centerInParent="true"
             android:layout_marginTop="@dimen/_40dp"
             android:layout_marginBottom="@dimen/_40dp"
+            android:id="@+id/loader"
             android:layout_below="@+id/instruction"
-            android:background="@color/PrimaryColor"
             app:shapeAppearanceOverlay="@style/RoundedShapeImageView"/>
 
 

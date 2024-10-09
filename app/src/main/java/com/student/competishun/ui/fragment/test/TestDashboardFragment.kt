@@ -48,10 +48,10 @@ class TestDashboardFragment : Fragment() {
 
 
     private fun initAdapter(){
-        testTypeAdapter = TestTypeAdapter(listOf(TestItem("JEE-Mains", false),
-            TestItem("JEE-Advanced", false),
+        testTypeAdapter = TestTypeAdapter(listOf(TestItem("JEE-Mains", true),
+            TestItem("JEE-Advanced", true),
             TestItem("NEET-UG", false),
-            TestItem("AIIMS", false)), object : ItemClickListener {
+            TestItem("AIIMS", true)), object : ItemClickListener {
             override fun onItemClick(isFirst: Boolean, item: TestItem) {
 
             }

@@ -4,7 +4,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.student.competishun.R
 import com.student.competishun.data.model.TestItem
@@ -28,9 +30,17 @@ class TestTypeAdapter(private var testTypeList: List<TestItem>, private var list
     }
     inner class TestTypeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val titleText: TextView = itemView.findViewById(R.id.title)
+        private val itemFilter: RelativeLayout = itemView.findViewById(R.id.itemFilter)
 
         fun bind(item: TestItem) {
             titleText.text = item.title
+            if (item.isFilter){
+                itemFilter.background = ContextCompat.getDrawable(itemView.context, R.drawable.rounded_filter_blue_bg)
+                titleText.setTextColor(ContextCompat.getColor(itemView.context, R.color.PrimaryColor))
+            }else{
+                itemFilter.background = ContextCompat.getDrawable(itemView.context, R.drawable.card_bg_r20)
+                titleText.setTextColor(ContextCompat.getColor(itemView.context, R.color.black))
+            }
         }
     }
 }
