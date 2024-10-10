@@ -17,6 +17,7 @@ import xyz.penpencil.competishun.data.model.CartItem
 import xyz.penpencil.competishun.ui.adapter.MyCartAdapter
 import xyz.penpencil.competishun.ui.viewmodel.CreateCartViewModel
 import androidx.lifecycle.Observer
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.wallet.PaymentsClient
 import com.google.android.gms.wallet.Wallet
@@ -427,8 +428,7 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener, MyCartAdapter.OnCa
         binding.rvAllCart.visibility = View.GONE
         binding.clEmptyCart.visibility = View.VISIBLE
         binding.MyCartNavigateToCourses.setOnClickListener {
-
-            findNavController().navigate(R.id.action_mycartFragment_to_homeFragment)
+            it.findNavController().navigate(R.id.action_mycartFragment_to_homeFragment)
         }
         cartViewModel.findAllCartItems(userId)
         cartViewModel.findAllCartItemsResult.observe(viewLifecycleOwner, Observer { result ->
@@ -576,9 +576,9 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener, MyCartAdapter.OnCa
         binding.clProccedToPay.visibility = View.GONE
         binding.clEmptyCart.visibility = View.VISIBLE
         binding.clSecondbottomInstallement.visibility = View.GONE
-        binding.MyCartNavigateToCourses.setOnClickListener {
-            findNavController().navigate(R.id.action_mycartFragment_to_homeFragment)
-        }
+//        binding.MyCartNavigateToCourses.setOnClickListener {
+//            findNavController().navigate(R.id.action_mycartFragment_to_homeFragment)
+//        }
         binding.clrvContainer.visibility = View.GONE
         //   Toast.makeText(requireContext(), "Cart item removed", Toast.LENGTH_SHORT).show()
     }

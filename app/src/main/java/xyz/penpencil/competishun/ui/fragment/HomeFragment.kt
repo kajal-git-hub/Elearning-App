@@ -194,10 +194,23 @@ class HomeFragment : Fragment() {
                 contactImage.visibility = View.GONE
             }
 
+
             override fun onDrawerClosed(drawerView: View) {
-                bottomNav.visibility = View.VISIBLE
-                contactImage.visibility = View.VISIBLE
+                if (findNavController().currentDestination?.id  == R.id.homeFragment){
+                    bottomNav.visibility = View.VISIBLE
+                    contactImage.visibility = View.VISIBLE
+                }
+                if(findNavController().currentDestination?.id == R.id.courseEmptyFragment){
+                    bottomNav.visibility = View.VISIBLE
+                    contactImage.visibility = View.GONE
+                }
+                if(findNavController().currentDestination?.id == R.id.coursesFragment){
+                    bottomNav.visibility = View.GONE
+                    contactImage.visibility = View.VISIBLE
+                }
+
             }
+
         })
 
         testimonial_recyclerView = view.findViewById(R.id.recyclerViewTestimonials)

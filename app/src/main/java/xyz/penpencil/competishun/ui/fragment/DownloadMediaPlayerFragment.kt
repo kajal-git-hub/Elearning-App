@@ -13,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.Toast
+import androidx.annotation.OptIn
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -56,6 +57,7 @@ class DownloadMediaPlayerFragment : Fragment() {
         return binding.root
     }
 
+    @OptIn(UnstableApi::class)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -78,6 +80,8 @@ class DownloadMediaPlayerFragment : Fragment() {
         }
         player = ExoPlayer.Builder(requireContext()).build()
         binding.playerView.player = player
+        binding.playerView.getVideoSurfaceView()?.setRotation(90F);
+
 
         playVideo(videoUrl)
 
