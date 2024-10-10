@@ -87,6 +87,9 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener, MyCartAdapter.OnCa
         return binding.root
     }
 
+    private fun handleBackPressed() {
+        findNavController().navigate(R.id.ProfileFragment)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

@@ -36,8 +36,6 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
     private lateinit var bottomNavigationView: BottomNavigationView
     private lateinit var callIcon: ImageView
     private var isCallingSupportVisible = ObservableField(true)
-    private lateinit var drawerLayout: DrawerLayout
-    private lateinit var navigationView: NavigationView
     private lateinit var toggle: ActionBarDrawerToggle
     lateinit var sharedPreferencesManager: SharedPreferencesManager
     var courseType:String = ""
@@ -49,12 +47,21 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-
+        sharedPreferencesManager = SharedPreferencesManager(this)
         onBackPressedDispatcher.addCallback(this ,backPressListener)
 
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.fragmentNavigation) as NavHostFragment
         navController = navHostFragment.navController
+
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
+
+        bottomNavigationView = findViewById(R.id.bottomNav)
+        callIcon = findViewById(R.id.ig_ContactImage)
 
         val navigateToFragment = intent.getBooleanExtra("isMyCourseAvailable",false)
         val navigateFromVerify = intent.getStringExtra("navigateTo")
@@ -74,35 +81,28 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
         }
 
 
-        drawerLayout = findViewById(R.id.drwaer_layout)
-        navigationView = findViewById(R.id.nv_navigationView)
-
-        sharedPreferencesManager = SharedPreferencesManager(this)
-
         binding.clStartCall.setOnClickListener {
             val phoneNumber = "8888000021"
             val intent = Intent(Intent.ACTION_DIAL)
             intent.data = Uri.parse("tel:$phoneNumber")
             startActivity(intent)
         }
-
-        bottomNavigationView = findViewById(R.id.bottomNav)
-        callIcon = findViewById(R.id.ig_ContactImage)
+        binding.igContactImage.setOnClickListener {
+            if (isCallingSupportVisible.get() == true) {
+                binding.clCallingSupport.visibility = View.VISIBLE
+                binding.igContactImage.setImageResource(R.drawable.fab_icon)
+                isCallingSupportVisible.set(false)
+            } else {
+                binding.clCallingSupport.visibility = View.GONE
+                binding.igContactImage.setImageResource(R.drawable.ic_call)
+                isCallingSupportVisible.set(true)
+            }
+        }
 
 
         val savePaymentSuccess = sharedPreferencesManager.getBoolean("savePaymentSuccess", false)
         val bottomNavigationView = binding.bottomNav
         val menu = bottomNavigationView.menu
-        sharedPreferencesManager = SharedPreferencesManager(this)
-
-//
-//        if(!sharedPreferencesManager.isFormValid){
-//            supportFragmentManager.beginTransaction()
-//                .replace(R.id.nv_navigationView,PersonalDetailsFragment())
-//                .addToBackStack(null)
-//                .commit()
-//        }
-
         if (savePaymentSuccess) {
             menu.findItem(R.id.News).isVisible = false
             menu.findItem(R.id.Chat).isVisible = true
@@ -129,36 +129,7 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
             }
         }
 
-        binding.igContactImage.setOnClickListener {
-            if (isCallingSupportVisible.get() == true) {
-                binding.clCallingSupport.visibility = View.VISIBLE
-                binding.igContactImage.setImageResource(R.drawable.fab_icon)
-                isCallingSupportVisible.set(false)
-            } else {
-                binding.clCallingSupport.visibility = View.GONE
-                binding.igContactImage.setImageResource(R.drawable.ic_call)
-                isCallingSupportVisible.set(true)
-            }
-        }
-
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
-
     }
-
-//    override fun onBackPressed() {
-//
-//        if (navController.currentDestination?.id != R.id.homeFragment) {
-//            Log.e("cousswetype",bundle.toString())
-//            navController.navigate(R.id.homeFragment,bundle)
-//            binding.bottomNav.selectedItemId = R.id.home
-//        } else {
-//            super.onBackPressed()
-//        }
-//    }
 
     private val backPressListener = object : OnBackPressedCallback(true){
         override fun handleOnBackPressed() {
@@ -188,13 +159,6 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
             }
         }
     }
-
-    override fun onResume() {
-        super.onResume()
-        userId = sharedPreferencesManager.userId.toString()
-        Log.e("Sharedhome $userId", intent.getStringExtra("userId").toString())
-    }
-
 
     fun showBottomNavigationView(show:Boolean){
         bottomNavigationView.visibility = if(show) View.VISIBLE else View.GONE
@@ -229,4 +193,11 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
                 navController.navigate(R.id.paymentFragment,bundle)
         }, 2000)
     }
+
+    override fun onResume() {
+        super.onResume()
+        userId = sharedPreferencesManager.userId.toString()
+        Log.e("Sharedhome $userId", intent.getStringExtra("userId").toString())
+    }
+
 }

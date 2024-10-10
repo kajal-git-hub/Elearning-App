@@ -1,5 +1,7 @@
 package xyz.penpencil.competishun.ui.fragment
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -50,6 +52,13 @@ class InstallmentDetailsBottomSheet : BottomSheetDialogFragment() {
 
         (activity as? HomeActivity)?.showBottomNavigationView(false)
         (activity as? HomeActivity)?.showFloatingButton(false)
+
+        binding.ivTalkToSupport.setOnClickListener {
+            val phoneNumber = "8888000021"
+            val intent = Intent(Intent.ACTION_DIAL)
+            intent.data = Uri.parse("tel:$phoneNumber")
+            startActivity(intent)
+        }
 
         val installmentItemList = listOf(
             InstallmentItemModel("On the day of purchase of the course."),
