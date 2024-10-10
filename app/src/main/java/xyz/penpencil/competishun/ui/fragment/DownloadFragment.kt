@@ -133,7 +133,7 @@ class DownloadFragment : Fragment(), DownloadedItemAdapter.OnVideoClickListener 
     private fun playVideo(folderContentId: String, name: String) {
         val file=File(context?.filesDir,"$name.mp4")
         val videoFileURL = file.absolutePath
-        Log.e("FilePath", "File exists: ${file.exists()}, Path: ${videoFileURL}")
+        Log.e("FilePath", "File exists: ${file.exists()}, Path: $videoFileURL")
 
         if (videoFileURL.isNotEmpty()) {
             val bundle = Bundle().apply {
