@@ -86,7 +86,6 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
             }
         }
 
-
         binding.clStartCall.setOnClickListener {
             val phoneNumber = "8888000021"
             val intent = Intent(Intent.ACTION_DIAL)
@@ -104,10 +103,6 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
                 isCallingSupportVisible.set(true)
             }
         }
-
-
-//        val savePaymentSuccess = sharedPreferencesManager.getBoolean("savePaymentSuccess", false)
-
 
         bottomNavigationView.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
