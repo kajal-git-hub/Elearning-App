@@ -62,7 +62,7 @@ class HomeFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var testimonial_recyclerView: RecyclerView
     private lateinit var rvWhyCompetishun: RecyclerView
-    private lateinit var courses: List<AllCourseForStudentQuery. Course>
+    private lateinit var courses: List<AllCourseForStudentQuery.Course>
     private val verifyOtpViewModel: VerifyOtpViewModel by viewModels()
     private lateinit var dotsIndicatorTestimonials: LinearLayout
     private lateinit var dotsIndicatorWhyCompetishun: LinearLayout
@@ -72,7 +72,7 @@ class HomeFragment : Fragment() {
     private lateinit var adapterRecommend: RecommendedCoursesAdapter
     private lateinit var listWhyCompetishun: List<WhyCompetishun>
     private lateinit var drawerLayout: DrawerLayout
-    private lateinit var sharedPreferencesManager : SharedPreferencesManager
+    private lateinit var sharedPreferencesManager: SharedPreferencesManager
     private lateinit var bottomNav: BottomNavigationView
     private lateinit var toggle: ActionBarDrawerToggle
     private val coursesCategoryViewModel: CoursesCategoryViewModel by viewModels()
@@ -116,21 +116,19 @@ class HomeFragment : Fragment() {
         getMyDetails()
 
         sharedPreferencesManager = SharedPreferencesManager(requireContext())
-        Log.d("tokenn",sharedPreferencesManager.accessToken.toString())
+        Log.d("tokenn", sharedPreferencesManager.accessToken.toString())
 
         verifyOtpViewModel.verifyOtpResult.observe(viewLifecycleOwner) { result ->
-            if (result==null)
-            {
+            if (result == null) {
                 findNavController().navigate(R.id.loginFragment)
             }
         }
 
-        sharedPreferencesManager= SharedPreferencesManager(requireContext())
+        sharedPreferencesManager = SharedPreferencesManager(requireContext())
         getAllBanners()
 
         verifyOtpViewModel.verifyOtpResult.observe(viewLifecycleOwner) { result ->
-            if (result==null)
-            {
+            if (result == null) {
                 findNavController().navigate(R.id.loginFragment)
             }
         }
@@ -226,7 +224,10 @@ class HomeFragment : Fragment() {
                             putString("category_id", course.id)
 
                         }
-                        findNavController().navigate(R.id.action_homeFragment_to_coursesFragment, bundle)
+                        findNavController().navigate(
+                            R.id.action_homeFragment_to_coursesFragment,
+                            bundle
+                        )
                     }
                 })
                 rvOurCourses.adapter = adapterOurCourses
@@ -276,7 +277,8 @@ class HomeFragment : Fragment() {
         })
 
 
-        val navigationView: NavigationView = (activity as HomeActivity).findViewById(R.id.nv_navigationView)
+        val navigationView: NavigationView =
+            (activity as HomeActivity).findViewById(R.id.nv_navigationView)
         val headerView = navigationView.getHeaderView(0)
         val igClose: ImageView = headerView.findViewById(R.id.ig_close)
 
@@ -284,29 +286,35 @@ class HomeFragment : Fragment() {
             drawerLayout.closeDrawer(GravityCompat.START)
         }
         navigationView.setNavigationItemSelectedListener { menuItem ->
-            when(menuItem.itemId){
-                R.id.aboutUs ->{
+            when (menuItem.itemId) {
+                R.id.aboutUs -> {
                     findNavController().navigate(R.id.AboutUs)
 //                    findNavController().navigate(R.id.AboutUs, null, NavOptions.Builder().setPopUpTo(R.id.homeFragment, true).build())
                 }
-                R.id.bookmark ->{
+
+                R.id.bookmark -> {
                     findNavController().navigate(R.id.BookMarkFragment)
                 }
-                R.id.download ->{
+
+                R.id.download -> {
                     findNavController().navigate(R.id.DownloadFragment)
                 }
+
                 R.id.ContactUs -> {
                     findNavController().navigate(R.id.ContactUs)
 //                    findNavController().navigate(R.id.ContactUs, null, NavOptions.Builder().setPopUpTo(R.id.homeFragment, true).build())
 
                 }
-                R.id.tvTermsPrivacy ->  {
+
+                R.id.tvTermsPrivacy -> {
                     findNavController().navigate(R.id.TermsAndCondition)
                 }
-                R.id.privacyPolicy ->{
+
+                R.id.privacyPolicy -> {
                     findNavController().navigate(R.id.PolicyFragment)
                 }
-                R.id.tvdisclaimer ->{
+
+                R.id.tvdisclaimer -> {
                     findNavController().navigate(R.id.DisclaimerFragment)
                 }
             }
@@ -323,22 +331,22 @@ class HomeFragment : Fragment() {
             result.onSuccess { data ->
                 val userDetails = data.getMyDetails
                 Log.e("courseeTypehome", userDetails.userInformation.address.toString())
-                sharedPreferencesManager.name=userDetails.fullName
-                sharedPreferencesManager.city=userDetails.userInformation.address?.city
-                sharedPreferencesManager.reference=userDetails.userInformation.reference
-                sharedPreferencesManager.preparingFor=userDetails.userInformation.preparingFor
-                sharedPreferencesManager.targetYear=userDetails.userInformation.targetYear
+                sharedPreferencesManager.name = userDetails.fullName
+                sharedPreferencesManager.city = userDetails.userInformation.address?.city
+                sharedPreferencesManager.reference = userDetails.userInformation.reference
+                sharedPreferencesManager.preparingFor = userDetails.userInformation.preparingFor
+                sharedPreferencesManager.targetYear = userDetails.userInformation.targetYear
                 var courseType = userDetails.userInformation.preparingFor ?: ""
-                sharedPreferencesManager.name=userDetails.fullName
-                sharedPreferencesManager.city=userDetails.userInformation.address?.city
-                sharedPreferencesManager.reference=userDetails.userInformation.reference
-                sharedPreferencesManager.preparingFor=userDetails.userInformation.preparingFor
-                sharedPreferencesManager.targetYear=userDetails.userInformation.targetYear
-                Log.d("HomeCourseType",courseType)
-                if(courseType.isNotEmpty()){
-                    Log.d("Comingggg...","Yes Working")
+                sharedPreferencesManager.name = userDetails.fullName
+                sharedPreferencesManager.city = userDetails.userInformation.address?.city
+                sharedPreferencesManager.reference = userDetails.userInformation.reference
+                sharedPreferencesManager.preparingFor = userDetails.userInformation.preparingFor
+                sharedPreferencesManager.targetYear = userDetails.userInformation.targetYear
+                Log.d("HomeCourseType", courseType)
+                if (courseType.isNotEmpty()) {
+                    Log.d("Comingggg...", "Yes Working")
                     getAllCoursesForStudent(courseType)
-                }else{
+                } else {
                     getAllCoursesForStudent("IIT-JEE")
                 }
                 Log.e("courseeTypehome", courseType)
@@ -353,12 +361,13 @@ class HomeFragment : Fragment() {
 
         }
     }
+
     fun getAllCoursesForStudent(courseType: String) {
         var courseTypes = courseType
         if (courseType != "IIT-JEE" && courseType != "NEET") {
             courseTypes = "IIT-JEE"
         }
-        Log.e("cousetyeps",courseTypes)
+        Log.e("cousetyeps", courseTypes)
         val filters = FindAllCourseInputStudent(
             category_name = Optional.Absent,
             course_class = Optional.Absent,
@@ -411,7 +420,10 @@ class HomeFragment : Fragment() {
                     } ?: emptyList()
 
                     adapterRecommend = courses.let { courseList ->
-                        RecommendedCoursesAdapter(courseList, lectureCounts) { selectedCourse,recommendCourseTags ->
+                        RecommendedCoursesAdapter(
+                            courseList,
+                            lectureCounts
+                        ) { selectedCourse, recommendCourseTags ->
                             Log.d("recommendCoursesTags", recommendCourseTags.toString())
                             filteredCourses = courseList
                             Log.d("filteredCoursesHome", filteredCourses.toString())
@@ -419,7 +431,10 @@ class HomeFragment : Fragment() {
                             val bundle = Bundle().apply {
                                 putString("course_id", selectedCourse.id)
                                 putString("LectureCount", lectureCount)
-                                putStringArrayList("recommendCourseTags", ArrayList(recommendCourseTags)) // Pass the tags
+                                putStringArrayList(
+                                    "recommendCourseTags",
+                                    ArrayList(recommendCourseTags)
+                                ) // Pass the tags
 
                             }
                             findNavController().navigate(R.id.exploreFragment, bundle)
@@ -448,10 +463,11 @@ class HomeFragment : Fragment() {
                         }
                     })
                 }?.onFailure { exception ->
-                    if(exception.message == "Unauthorized"){
+                    if (exception.message == "Unauthorized") {
                         val intent = Intent(requireContext(), MainActivity::class.java)
                         intent.putExtra("navigateToLogin", true)
-                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        intent.flags =
+                            Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                         startActivity(intent)
                         requireActivity().finish()
                     }
@@ -474,7 +490,13 @@ class HomeFragment : Fragment() {
                 result?.forEach { bannerlist ->
                     bannerlist?.let {
                         // Assuming you have course_id in the banner data
-                        bannerList.add(PromoBannerModel(it.mobile_banner_image, it.redirect_link, it.course_id))
+                        bannerList.add(
+                            PromoBannerModel(
+                                it.mobile_banner_image,
+                                it.redirect_link,
+                                it.course_id
+                            )
+                        )
                     }
                 }
 
@@ -483,14 +505,18 @@ class HomeFragment : Fragment() {
                         openLink(redirectLink)
                     } else if (!courseId.isNullOrEmpty()) {
                         val bannerCourseTag = listOf<String>()
-                        Log.d("bannerCourseTag",bannerCourseTag.toString())
+                        Log.d("bannerCourseTag", bannerCourseTag.toString())
 
                         val bundle = Bundle().apply {
                             putString("course_id", courseId)
                         }
                         findNavController().navigate(R.id.exploreFragment, bundle)
                     } else {
-                        Toast.makeText(requireContext(), "No redirect or course available for this banner", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            requireContext(),
+                            "No redirect or course available for this banner",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
                 binding.rvpromobanner.adapter = adapter
@@ -520,10 +546,9 @@ class HomeFragment : Fragment() {
     }
 
 
-
-
     private fun setupToolbar() {
-        val searchView = binding.topAppBar.menu.findItem(R.id.action_search)?.actionView as? SearchView
+        val searchView =
+            binding.topAppBar.menu.findItem(R.id.action_search)?.actionView as? SearchView
         searchView?.queryHint = "Search Recommended Courses"
         searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean = false
@@ -531,7 +556,7 @@ class HomeFragment : Fragment() {
             override fun onQueryTextChange(newText: String?): Boolean {
 
                 adapterRecommend.filter.filter(newText)
-              //  adapterRecommend.updateCourses(filteredCourses)
+                //  adapterRecommend.updateCourses(filteredCourses)
 
                 return true
             }
@@ -539,10 +564,10 @@ class HomeFragment : Fragment() {
     }
 
 
-        fun getAllLectureCount(courseId: String, callback: (String, Int) -> Unit){
+    fun getAllLectureCount(courseId: String, callback: (String, Int) -> Unit) {
 
         studentCoursesViewModel.fetchLectures(courseId)
-        Log.e("getcourseIds",courseId)
+        Log.e("getcourseIds", courseId)
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 studentCoursesViewModel.lectures.collect { result ->
@@ -611,6 +636,13 @@ class HomeFragment : Fragment() {
         super.onDestroyView()
         _binding = null
         drawerLayout.removeDrawerListener(toggle)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        (activity as? HomeActivity)?.showBottomNavigationView(true)
+        (activity as? HomeActivity)?.showFloatingButton(true)
+
     }
 
 

@@ -36,8 +36,6 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
     private lateinit var bottomNavigationView: BottomNavigationView
     private lateinit var callIcon: ImageView
     private var isCallingSupportVisible = ObservableField(true)
-    private lateinit var drawerLayout: DrawerLayout
-    private lateinit var navigationView: NavigationView
     private lateinit var toggle: ActionBarDrawerToggle
     lateinit var sharedPreferencesManager: SharedPreferencesManager
     var courseType:String = ""
@@ -73,10 +71,6 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
             }
         }
 
-
-        drawerLayout = findViewById(R.id.drwaer_layout)
-        navigationView = findViewById(R.id.nv_navigationView)
-
         sharedPreferencesManager = SharedPreferencesManager(this)
 
         binding.clStartCall.setOnClickListener {
@@ -94,15 +88,6 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
         val bottomNavigationView = binding.bottomNav
         val menu = bottomNavigationView.menu
         sharedPreferencesManager = SharedPreferencesManager(this)
-
-//
-//        if(!sharedPreferencesManager.isFormValid){
-//            supportFragmentManager.beginTransaction()
-//                .replace(R.id.nv_navigationView,PersonalDetailsFragment())
-//                .addToBackStack(null)
-//                .commit()
-//        }
-
         if (savePaymentSuccess) {
             menu.findItem(R.id.News).isVisible = false
             menu.findItem(R.id.Chat).isVisible = true

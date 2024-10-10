@@ -63,6 +63,8 @@ class CourseEmptyFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        (activity as? HomeActivity)?.showBottomNavigationView(true)
+        (activity as? HomeActivity)?.showFloatingButton(false)
 
         drawerLayout = (activity as HomeActivity).findViewById(R.id.drwaer_layout)
 
@@ -299,6 +301,12 @@ class CourseEmptyFragment : Fragment() {
 //        // Fetch orders by user IDs
 //
 //    }
+
+    override fun onPause() {
+        super.onPause()
+        (activity as? HomeActivity)?.showBottomNavigationView(true)
+        (activity as? HomeActivity)?.showFloatingButton(false)
+    }
 
 
 
