@@ -58,7 +58,7 @@ class ProfileEditFragment : BottomSheetDialogFragment() {
         }
 
         val classList = listOf("11th", "12th", "12th+")
-        val examList = listOf("NEET-UG", "IIT-JEE", "Board", "UCET", "Others")
+        val examList = listOf("NEET", "IIT-JEE", "Board", "UCET", "Others")
         val yearList = listOf("2025", "2026")
 
         binding.rvSelectClass.apply {
