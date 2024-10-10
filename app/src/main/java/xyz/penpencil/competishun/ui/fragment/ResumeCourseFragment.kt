@@ -25,7 +25,7 @@ import xyz.penpencil.competishun.databinding.FragmentResumeCourseBinding
 import xyz.penpencil.competishun.di.Result
 
 @AndroidEntryPoint
-class ResumeCourseFragment : Fragment() {
+class ResumeCourseFragment : DrawerVisibility() {
 
     private lateinit var binding: FragmentResumeCourseBinding
     private val myCourseViewModel: MyCoursesViewModel by viewModels()
@@ -39,7 +39,7 @@ class ResumeCourseFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentResumeCourseBinding.inflate(inflater, container, false)
         return binding.root
     }

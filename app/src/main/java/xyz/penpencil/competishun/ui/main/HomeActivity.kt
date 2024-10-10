@@ -27,12 +27,14 @@ import xyz.penpencil.competishun.utils.SharedPreferencesManager
 import dagger.hilt.android.AndroidEntryPoint
 import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.databinding.ActivityHomeBinding
+import xyz.penpencil.competishun.ui.viewmodel.UserViewModel
 
 @AndroidEntryPoint
 class HomeActivity : AppCompatActivity(), PaymentResultListener {
 
     private lateinit var navController: NavController
     private lateinit var binding: ActivityHomeBinding
+    private val userViewModel: UserViewModel by viewModels()
     private lateinit var bottomNavigationView: BottomNavigationView
     private lateinit var callIcon: ImageView
     private var isCallingSupportVisible = ObservableField(true)
@@ -40,6 +42,7 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
     lateinit var sharedPreferencesManager: SharedPreferencesManager
     var courseType:String = ""
      var userId:String = ""
+    private var DetailAvailable = false
     val bundle = Bundle()
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -59,6 +62,9 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        userViewModel.fetchUserDetails()
+        observeUserDetails()
 
         bottomNavigationView = findViewById(R.id.bottomNav)
         callIcon = findViewById(R.id.ig_ContactImage)
@@ -100,16 +106,8 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
         }
 
 
-        val savePaymentSuccess = sharedPreferencesManager.getBoolean("savePaymentSuccess", false)
-        val bottomNavigationView = binding.bottomNav
-        val menu = bottomNavigationView.menu
-        if (savePaymentSuccess) {
-            menu.findItem(R.id.News).isVisible = false
-            menu.findItem(R.id.Chat).isVisible = true
-        } else {
-            menu.findItem(R.id.News).isVisible = true
-            menu.findItem(R.id.Chat).isVisible = false
-        }
+//        val savePaymentSuccess = sharedPreferencesManager.getBoolean("savePaymentSuccess", false)
+
 
         bottomNavigationView.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
@@ -197,7 +195,30 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
     override fun onResume() {
         super.onResume()
         userId = sharedPreferencesManager.userId.toString()
+        val bottomNavigationView = binding.bottomNav
+        val menu = bottomNavigationView.menu
+        if (DetailAvailable) {
+            Log.d("DetailAvailable",DetailAvailable.toString())
+            menu.findItem(R.id.News).isVisible = false
+            menu.findItem(R.id.Chat).isVisible = true
+        } else {
+            menu.findItem(R.id.News).isVisible = true
+            menu.findItem(R.id.Chat).isVisible = false
+        }
         Log.e("Sharedhome $userId", intent.getStringExtra("userId").toString())
     }
+
+    private fun observeUserDetails() {
+        userViewModel.userDetails.observe(this) { result ->
+            result.onSuccess { data ->
+
+                DetailAvailable = data.getMyDetails.courses.isNotEmpty()
+
+            }.onFailure { exception ->
+                Toast.makeText(this, "Error fetching details: ${exception.message}", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
 
 }

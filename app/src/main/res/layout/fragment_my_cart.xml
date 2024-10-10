@@ -135,13 +135,13 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:visibility="visible"
+            android:id="@+id/parent_data"
             app:layout_constraintBottom_toTopOf="@+id/cl_proccedToPay"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/MyCartToolbar">
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/parent_data"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 

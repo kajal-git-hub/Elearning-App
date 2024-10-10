@@ -384,6 +384,12 @@
         tools:layout="@layout/fragment_y_t_course">
     </fragment>
 
+    <fragment
+        android:id="@+id/DrawerVisibility"
+        android:name="xyz.penpencil.competishun.ui.fragment.DrawerVisibility"
+        tools:layout="@layout/fragment_drawer_visibility">
+    </fragment>
+
 
 
 

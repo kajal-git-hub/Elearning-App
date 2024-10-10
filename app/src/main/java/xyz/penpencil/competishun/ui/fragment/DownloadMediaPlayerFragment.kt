@@ -13,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.Toast
+import androidx.annotation.OptIn
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -57,6 +58,7 @@ class DownloadMediaPlayerFragment : Fragment() {
         return binding.root
     }
 
+    @OptIn(UnstableApi::class)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -73,19 +75,32 @@ class DownloadMediaPlayerFragment : Fragment() {
         Log.e("url","video_url:"+videoUrl)
         Log.e("url","video_title:"+title)
 
-        if (title != null) {
+        if (title.isNotEmpty()) {
             binding.tittleBtn.visibility = View.VISIBLE
             binding.tittleBtn.text = title
         }
         player = ExoPlayer.Builder(requireContext()).build()
         binding.playerView.player = player
+        binding.playerView.getVideoSurfaceView()?.setRotation(90F);
+
+
+        playVideo(videoUrl)
 
         try {
             val file = File(videoUrl)
-            Log.e("FilePath", "File exists: ${file.exists()}, Path: ${file.absolutePath}")
-            playVideo(videoUrl)
+            val uri = if (file.exists()) {
+                Uri.fromFile(file) // Local file path
+            } else {
+                Uri.parse(videoUrl) // Handle as a URL
+            }
+
+            Log.e("FilePath", "File exists: ${file.exists()}, Path: $file")
+            val mediaItem = MediaItem.fromUri(uri)
+            player.setMediaItem(mediaItem)
+            player.prepare()
+            player.play()
         } catch (e: Exception) {
-            Log.e("PlayerSetup", "Failed to play video from local storage", e)
+            Log.e("PlayerSetup", "Failed to play video", e)
         }
 
 
@@ -95,52 +110,33 @@ class DownloadMediaPlayerFragment : Fragment() {
 
     }
 
-    fun playVideo(videoUrl: String,  startPosition: Long = 0L) {
+    private fun playVideo(videoUrl: String) {
         binding.progressBar.visibility = View.VISIBLE
         binding.playerView.visibility = View.GONE
-        val mediaItem = MediaItem.fromUri(videoUrl)
-        Log.e("getting $startPosition",videoUrl)
+
+        val uri = if (File(videoUrl).exists()) {
+            Uri.fromFile(File(videoUrl))
+        } else {
+            Uri.parse(videoUrl)
+        }
+
+        val mediaItem = MediaItem.fromUri(uri)
         player.setMediaItem(mediaItem)
         player.prepare()
         player.play()
+
         player.addListener(object : Player.Listener {
             override fun onPlayerError(error: PlaybackException) {
                 Log.e("PlayerError", "Playback Error: ${error.message}", error)
             }
             override fun onPlaybackStateChanged(state: Int) {
-                when (state) {
-                    Player.STATE_READY -> {
-                        binding.progressBar.visibility = View.GONE
-                        binding.playerView.visibility = View.VISIBLE
-                        if (startPosition > 0L) {
-                            Log.e("PlayerErrors", startPosition.toString())
-                            player.seekTo(startPosition)
-                        }
-
-                        player.play()
-                        Log.e("dfafadf",player.toString())
-                    }
-
-                    Player.STATE_ENDED, Player.STATE_IDLE -> {
-                        binding.progressBar.visibility = View.GONE
-                        binding.playerView.visibility = View.VISIBLE
-                    }
+                if (state == Player.STATE_READY) {
+                    binding.progressBar.visibility = View.GONE
+                    binding.playerView.visibility = View.VISIBLE
                 }
             }
         })
-        gestureDetector = GestureDetector(requireContext(), DoubleTapGestureListener())
-        binding.playerView.setOnTouchListener { _, event ->
-            gestureDetector.onTouchEvent(event)
-            true
-        }
-
-        ViewCompat.setOnApplyWindowInsetsListener(binding.playerView) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
     }
-
     private fun showSpeedOrQualityDialog() {
         val options = arrayOf("Speed", "Quality")
 
