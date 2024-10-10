@@ -200,6 +200,7 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
                             outputStream.use { output ->
                                 input.copyTo(output)
                                 Log.d("DownloadVideo", "File downloaded successfully.")
+                                Log.e("FilePath", "File exists: ${videoFile.exists()}, Path: ${videoFile.absolutePath}")
                             }
                         }
                     }
@@ -207,7 +208,6 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
 
                 withContext(Dispatchers.Main) {
                     Log.d("DownloadVideo", "Download success, showing toast.")
-                    Log.e("FilePath", "File exists: ${videoFile.exists()}, Path: ${videoFile.absolutePath}")
                     Toast.makeText(context, "Download successful", Toast.LENGTH_SHORT).show()
                     dismiss()
                 }

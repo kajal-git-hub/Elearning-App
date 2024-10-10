@@ -71,6 +71,7 @@ class DownloadMediaPlayerFragment : Fragment() {
         val title = arguments?.getString("url_name") ?: return
         Log.e("url","video_url:"+videoUrl)
         Log.e("url","video_title:"+title)
+
         if (title != null) {
             binding.tittleBtn.visibility = View.VISIBLE
             binding.tittleBtn.text = title
@@ -81,7 +82,7 @@ class DownloadMediaPlayerFragment : Fragment() {
         try {
             val file = File(context?.filesDir, videoUrl)
             Log.e("FilePath", "File exists: ${file.exists()}, Path: ${file.absolutePath}")
-            val mediaItem = MediaItem.fromUri(Uri.fromFile(file))
+            val mediaItem = MediaItem.fromUri(videoUrl)
             player.setMediaItem(mediaItem)
             player.prepare()
             player.play()
