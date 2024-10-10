@@ -42,6 +42,7 @@
         <activity
             android:name="xyz.penpencil.competishun.ui.main.HomeActivity"
             android:exported="false"
+            android:configChanges="orientation|screenSize|layoutDirection"
             android:launchMode="singleTop" />
         <activity
             android:name="com.razorpay.CheckoutActivity"

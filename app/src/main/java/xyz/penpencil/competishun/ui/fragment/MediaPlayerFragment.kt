@@ -27,6 +27,7 @@ import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.trackselection.DefaultTrackSelector
+import androidx.navigation.fragment.findNavController
 import com.otaliastudios.zoom.ZoomLayout
 import xyz.penpencil.competishun.di.SharedVM
 import xyz.penpencil.competishun.ui.main.HomeActivity
@@ -93,7 +94,7 @@ class MediaPlayerFragment : Fragment() {
 
         sharedViewModel = ViewModelProvider(requireActivity()).get(SharedVM::class.java)
         binding.backBtn.setOnClickListener {
-            requireActivity().onBackPressedDispatcher.onBackPressed()
+           findNavController().popBackStack()
         }
 
         val videoUrl = arguments?.getString("url") ?: return

@@ -27,6 +27,7 @@ import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.trackselection.DefaultTrackSelector
+import androidx.navigation.fragment.findNavController
 import com.otaliastudios.zoom.ZoomLayout
 import dagger.hilt.android.AndroidEntryPoint
 import xyz.penpencil.competishun.databinding.FragmentDownloadMediaPlayerBinding
@@ -64,7 +65,7 @@ class DownloadMediaPlayerFragment : Fragment() {
 
         sharedViewModel = ViewModelProvider(requireActivity()).get(SharedVM::class.java)
         binding.backBtn.setOnClickListener {
-            requireActivity().onBackPressedDispatcher.onBackPressed()
+            findNavController().popBackStack()
         }
 
         val videoUrl = arguments?.getString("url") ?: return
@@ -80,12 +81,9 @@ class DownloadMediaPlayerFragment : Fragment() {
         binding.playerView.player = player
 
         try {
-            val file = File(context?.filesDir, videoUrl)
+            val file = File(videoUrl)
             Log.e("FilePath", "File exists: ${file.exists()}, Path: ${file.absolutePath}")
-            val mediaItem = MediaItem.fromUri(videoUrl)
-            player.setMediaItem(mediaItem)
-            player.prepare()
-            player.play()
+            playVideo(videoUrl)
         } catch (e: Exception) {
             Log.e("PlayerSetup", "Failed to play video from local storage", e)
         }
