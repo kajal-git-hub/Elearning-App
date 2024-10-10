@@ -42,7 +42,7 @@ import java.util.Calendar
 import java.util.Locale
 
 @AndroidEntryPoint
-class MyCartFragment : Fragment(), OnCartItemRemovedListener, MyCartAdapter.OnCartItemClickListener {
+class MyCartFragment : DrawerVisibility(), OnCartItemRemovedListener, MyCartAdapter.OnCartItemClickListener {
     private lateinit var binding : FragmentMyCartBinding
     private val orderViewModel: OrderViewModel by viewModels()
     private val userViewModel: UserViewModel by viewModels()

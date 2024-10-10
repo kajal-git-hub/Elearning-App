@@ -13,7 +13,7 @@ import xyz.penpencil.competishun.ui.adapter.AboutUsAdapter
 import xyz.penpencil.competishun.ui.adapter.AboutUsItem
 import xyz.penpencil.competishun.ui.main.HomeActivity
 
-class AboutUsFragment : Fragment() {
+class AboutUsFragment : DrawerVisibility() {
 
     private var _binding: FragmentAboutUsBinding? = null
     private val binding get() = _binding!!
@@ -21,7 +21,7 @@ class AboutUsFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentAboutUsBinding.inflate(inflater, container, false)
         return binding.root
     }

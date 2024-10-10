@@ -19,7 +19,7 @@ import xyz.penpencil.competishun.ui.main.HomeActivity
 import xyz.penpencil.competishun.utils.SharedPreferencesManager
 import java.io.File
 
-class BookMarkFragment : Fragment()  , BookMarkAdapter.OnVideoClickListener{
+class BookMarkFragment : DrawerVisibility()  , BookMarkAdapter.OnVideoClickListener{
 
     private lateinit var binding : FragmentBookMarkBinding
     private var allDownloadedItems: List<TopicContentModel> = emptyList()
@@ -32,7 +32,7 @@ class BookMarkFragment : Fragment()  , BookMarkAdapter.OnVideoClickListener{
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentBookMarkBinding.inflate(inflater,container,false)
         return binding.root
     }

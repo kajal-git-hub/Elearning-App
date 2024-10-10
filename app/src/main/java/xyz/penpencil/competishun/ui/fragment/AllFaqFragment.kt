@@ -16,7 +16,7 @@ import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.databinding.FragmentAllFaqBinding
 
 @AndroidEntryPoint
-class AllFaqFragment : Fragment() {
+class AllFaqFragment : DrawerVisibility() {
 
     private var _binding: FragmentAllFaqBinding? = null
     private val binding get() = _binding!!

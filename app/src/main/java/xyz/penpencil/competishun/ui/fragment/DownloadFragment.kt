@@ -24,7 +24,7 @@ import xyz.penpencil.competishun.databinding.FragmentDownloadBinding
 import java.io.File
 
 @AndroidEntryPoint
-class DownloadFragment : Fragment(), DownloadedItemAdapter.OnVideoClickListener {
+class DownloadFragment : DrawerVisibility(), DownloadedItemAdapter.OnVideoClickListener {
 
     private lateinit var viewModel: VideourlViewModel
     private lateinit var binding: FragmentDownloadBinding

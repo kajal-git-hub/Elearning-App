@@ -32,12 +32,13 @@ import com.otaliastudios.zoom.ZoomLayout
 import dagger.hilt.android.AndroidEntryPoint
 import xyz.penpencil.competishun.databinding.FragmentDownloadMediaPlayerBinding
 import xyz.penpencil.competishun.di.SharedVM
+import xyz.penpencil.competishun.ui.fragment.DrawerVisibility
 import xyz.penpencil.competishun.ui.main.HomeActivity
 import xyz.penpencil.competishun.ui.viewmodel.VideourlViewModel
 import java.io.File
 
 @AndroidEntryPoint
-class DownloadMediaPlayerFragment : Fragment() {
+class DownloadMediaPlayerFragment : DrawerVisibility() {
 
     private lateinit var binding: FragmentDownloadMediaPlayerBinding
     private lateinit var player: ExoPlayer

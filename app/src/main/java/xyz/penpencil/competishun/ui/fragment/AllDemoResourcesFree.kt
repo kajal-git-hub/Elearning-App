@@ -32,7 +32,7 @@ import xyz.penpencil.competishun.databinding.FragmentAllDemoResourcesFreeBinding
 import xyz.penpencil.competishun.di.Result
 
 @AndroidEntryPoint
-class AllDemoResourcesFree : Fragment() {
+class AllDemoResourcesFree : DrawerVisibility() {
 
     private var _binding: FragmentAllDemoResourcesFreeBinding? = null
     private val binding get() = _binding!!
