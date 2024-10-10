@@ -131,15 +131,16 @@ class DownloadFragment : Fragment(), DownloadedItemAdapter.OnVideoClickListener 
     }
 
     private fun playVideo(folderContentId: String, name: String) {
-        val videoFileURL = File(requireContext().filesDir, "$name.mp4").absolutePath
+        val file=File(context?.filesDir,"$name.mp4")
+        val videoFileURL = file.absolutePath
+        Log.e("FilePath", "File exists: ${file.exists()}, Path: ${videoFileURL}")
 
         if (videoFileURL.isNotEmpty()) {
             val bundle = Bundle().apply {
                 putString("url", videoFileURL)
                 putString("url_name", name)
-                putString("ContentId", folderContentId)
             }
-            findNavController().navigate(R.id.mediaFragment, bundle)
+            findNavController().navigate(R.id.downloadMediaPlayerFragment, bundle)
         } else {
             Toast.makeText(requireContext(), "Video file not found", Toast.LENGTH_SHORT).show()
         }
