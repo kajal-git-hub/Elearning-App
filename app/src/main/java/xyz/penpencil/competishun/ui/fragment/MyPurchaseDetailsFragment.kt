@@ -7,9 +7,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import com.apollographql.apollo3.api.Optional
 import com.razorpay.Checkout
 import com.student.competishun.coinkeeper.CreateOrderMutation
 import com.student.competishun.coinkeeper.type.CreateOrderInput
@@ -39,8 +41,10 @@ class MyPurchaseDetailsFragment : Fragment() {
     private val orderViewModel: OrderViewModel by viewModels()
     var courseId = ""
     var courseUserId = ""
+    var userName = ""
+    var courseName = ""
     private var rzpOrderId = ""
-    private var amountPaid = ""
+    private var amountPaid = 0.0
     private var paymentStatus = ""
     private var firstPurchase = ""
     private var transactionId = ""
@@ -79,23 +83,26 @@ class MyPurchaseDetailsFragment : Fragment() {
             observeCoursePayments()
 
             // Fetch course details after fetching payment information
-            observeCourseDetails(courseId)
         }
     }
 
     private fun observeCoursePayments() {
+        binding.clBuyCourseSection.visibility = View.GONE
+        binding.clInstallmentDetails.visibility = View.GONE
+        binding.clOrderReceipt.visibility = View.GONE
         ordersViewModel.paymentResult.observe(viewLifecycleOwner) { payments ->
             if (payments != null) {
+                Log.d("PaymentTypen", "Payment Type: ${payments}")
                 val firstPayment = payments.firstOrNull()
-                val secondPayment = if (payments.size > 1) payments[1] else null
-
+                val secondPayment = if (payments.isNotEmpty()) payments else null
+                binding.clOrderReceipt.visibility = View.VISIBLE
                 rzpOrderId = firstPayment?.rzpOrderId ?: ""
                 paymentType = firstPayment?.paymentType ?: ""
                 transactionId = firstPayment?.rzpOrderId?:""
                 paymentStatus = firstPayment?.status ?: ""
-                amountPaid = (firstPayment?.amount ?: "").toString()
+                amountPaid = ((firstPayment?.amount ?: "") as Double)
 
-                Log.d("PaymentType", "Payment Type: $paymentType")
+
                 Log.d("rzpOrderId", "rzpOrderId: $rzpOrderId")
 
                 // After payment details are available, fetch course details based on payment type
@@ -113,7 +120,6 @@ class MyPurchaseDetailsFragment : Fragment() {
                     binding.clInstallmentCharge.visibility = View.GONE
                     binding.clFirstInstallment.visibility = View.GONE
                     binding.clSecondInstallment.visibility = View.GONE
-
                     getCourseByIDViewModel.courseByID.observe(viewLifecycleOwner) { course ->
                         course?.let {
                             binding.etPurtotalPrice.text = "₹ ${it.price?.toString() ?: "0"}"
@@ -142,6 +148,7 @@ class MyPurchaseDetailsFragment : Fragment() {
                     getCourseByIDViewModel.courseByID.observe(viewLifecycleOwner) { course ->
                         course?.let {
                             val totalPrice = it.price ?: 0
+                            courseName = it.name ?: ""
                             binding.etPurtotalPrice.text = "₹ ${totalPrice}"
                             binding.etPurFinalPay.text = "₹ ${totalPrice}"
                             binding.clInstallmentCharge.visibility = View.GONE
@@ -151,23 +158,44 @@ class MyPurchaseDetailsFragment : Fragment() {
                             binding.etPurFirstInstallment.text = "₹ ${amountPaid}"
 
                             // If there's a second payment (installment)
-                            if (secondPayment != null) {
-                                val secondPaymentAmount = secondPayment.amount ?: 0
+                            if (secondPayment != null ) {
+                                val secondPaymentAmount = secondPayment[0].amount ?: 0
                                 binding.clSecondInstallment.visibility = View.VISIBLE
                                 binding.btGenerateReceipt.setOnClickListener {
-                                    downloadReceipt(secondPayment.rzpOrderId.toString())
+                                    downloadReceipt(secondPayment[0].rzpOrderId.toString())
                                 }
                                 binding.tvInstallmentAmount.text ="₹ ${secondPaymentAmount.toInt()}"
+                                Log.e("courseIddn", courseUserId)
                                 binding.etPurFirstInstallment.text = "₹ ${secondPaymentAmount.toInt()}"
                                 binding.tvInstallmentDate.text = firstPurchase
-                                val paidAmount = secondPayment.amount.toInt()
+                                val paidAmount = secondPayment[0].amount.toInt()
                                 val remainingAmount = totalPrice - paidAmount
                                 binding.etPurSecondInstallment.text = "₹ ${remainingAmount}"
                                 binding.tvPriceRemaining.text = "₹ ${remainingAmount}"
                                 binding.clBuynow.setOnClickListener {
-
+                                    createOrder(totalPrice,remainingAmount,"installment",rzpOrderId,)
                                 }
                                 binding.tv2ndInstallmentAmount.text = "₹ ${remainingAmount}"
+                               val secondInstallment =   secondPayment.forEach { payment ->
+                                   Log.e("secondInstallments",payment.paymentType.toString())
+                                   if ( payment.paymentType == "partial") {
+                                       binding.clBuyCourseSection.visibility = View.VISIBLE
+                                       binding.tv2ndInstallmentStatus.text = "Pending"
+                                       binding.tv2ndInstallmentStatus.setTextColor(ContextCompat.getColor(requireContext(), R.color._B3261E))
+
+                                   }else
+                                       if ( payment.paymentType == "installment"){
+                                           binding.clBuyCourseSection.visibility = View.GONE
+                                           Log.e("secondinstal",secondPayment[1].toString())
+                                           binding.tv2ndInstallmentStatus.text = "Successful"
+                                           binding.tv2ndInstallmentStatus.setTextColor(ContextCompat.getColor(requireContext(), R.color._4BB543))
+                                           binding.secondInstSlip.text = "2nd Installment (Paid)"
+                                           binding.tv2ndInstallmentDate.text =  helperFunctions.formatCourseDate(secondPayment[1].createdAt.toString())
+                                           binding.ivGreyTick.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.green_tick_installment))
+                                           binding.ivLine.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.vector_verticle_line_green))
+                                           observeCourseDetails(course.id)
+                                       } }
+                                Log.e("secondInstallmentss",secondInstallment.toString())
                             } else {
                                 //
 
@@ -176,6 +204,7 @@ class MyPurchaseDetailsFragment : Fragment() {
                         }
                     }
                 }
+
             } else {
                 Toast.makeText(
                     requireContext(),
@@ -186,17 +215,18 @@ class MyPurchaseDetailsFragment : Fragment() {
         }
     }
 
-    private fun createOrder(){
+    private fun createOrder(totalAmount:Int,amountPaid: Int,paymentType :String,rzpOrderId :String){
         input = CreateOrderInput(
-            amountPaid = amountPaid,
+            amountPaid = amountPaid.toDouble(),
             entityId = courseId,
             entityType = "course",
             isPaidOnce = paymentType == "full",
             paymentMode = "online",
             paymentType = paymentType,
             totalAmount = totalAmount.toDouble(),
-            userId = userId,
+            userId = courseUserId,
             userName = userName,
+            rzpOrderId = Optional.present(rzpOrderId),
             courseName = courseName
         )
         input?.let { orderInput ->
@@ -219,7 +249,7 @@ class MyPurchaseDetailsFragment : Fragment() {
     }
 
     private fun navigatePaymentFail() {
-        findNavController().navigate(R.id.action_mycartFragment_to_paymentFailedFragment)
+        findNavController().navigate(R.id.PaymentFailedFragment)
     }
 
     private fun processPayment(order: CreateOrderMutation.CreateOrder) {
@@ -231,7 +261,7 @@ class MyPurchaseDetailsFragment : Fragment() {
         val currency = "INR"
         val checkout = Checkout()
         checkout.setKeyID("rzp_test_DcVrk6NysFj71r")
-        Log.e("user/id=",userId.toString())
+        Log.e("user/id=",courseUserId)
         Log.e("user/tokem=",sharedPreferencesManager.accessToken.toString())
         val obj = JSONObject()
         try {
@@ -240,7 +270,7 @@ class MyPurchaseDetailsFragment : Fragment() {
             obj.put("amount", amount)
             obj.put("order_id", rzpOrderId)
             val prefill = JSONObject()
-            prefill.put("userId", userId)
+            prefill.put("userId", courseUserId)
             prefill.put("contact", sharedPreferencesManager.mobileNo)
             obj.put("prefill", prefill)
             Log.e("orderData",obj.toString())
@@ -253,6 +283,7 @@ class MyPurchaseDetailsFragment : Fragment() {
     private fun observeCourseDetails(courseId: String) {
         // Observe course details only after the payment data has been fetched
         getCourseByIDViewModel.courseByID.observe(viewLifecycleOwner, Observer { course ->
+            Log.e("paymentTypeCour",paymentType)
             course?.let {
                 if (paymentType == "full" && paymentStatus == "captured") {
                     // Full payment logic
@@ -276,9 +307,12 @@ class MyPurchaseDetailsFragment : Fragment() {
                     binding.clBuyCourseSection.visibility = View.GONE
                     binding.clInstallmentDetails.visibility = View.GONE
 
+                } else if (paymentType == "installment" && paymentStatus == "captured"){
+                    binding.clBuyCourseSection.visibility = View.GONE
+                    binding.tv2ndInstallmentStatus.text = "Successful"
                 } else {
                     // Installment logic (if paymentType is not "full")
-                    binding.clBuyCourseSection.visibility = View.VISIBLE
+                   // binding.clBuyCourseSection.visibility = View.VISIBLE
                     binding.clDiscount.visibility = View.GONE
 
                     val totalPrice = it.price ?: 0
@@ -289,10 +323,10 @@ class MyPurchaseDetailsFragment : Fragment() {
                     binding.etPurInstallmentCharge.visibility = View.GONE
 
                     binding.clFirstInstallment.visibility = View.VISIBLE
-                    binding.etPurFirstInstallment.text = amountPaid
+                    binding.etPurFirstInstallment.text = amountPaid.toString()
 
                     binding.clSecondInstallment.visibility = View.VISIBLE
-                    val paidAmount = amountPaid.toIntOrNull() ?: 0
+                    val paidAmount = amountPaid ?: 0.0
                     val remainingAmount = totalPrice - paidAmount
                     binding.etPurSecondInstallment.text = remainingAmount.toString()
                 }
@@ -303,6 +337,8 @@ class MyPurchaseDetailsFragment : Fragment() {
     private fun observeUserDetails() {
         userViewModel.userDetails.observe(viewLifecycleOwner) { result ->
             result.onSuccess { data ->
+                userName = data.getMyDetails.fullName?:""
+                Log.e("courseIddu ${data.getMyDetails.id}",sharedPreferencesManager.accessToken.toString() )
                 binding.tvUserName.text = data.getMyDetails.fullName
                 binding.tvUserAddress.text = data.getMyDetails.userInformation.address?.addressLine1
 

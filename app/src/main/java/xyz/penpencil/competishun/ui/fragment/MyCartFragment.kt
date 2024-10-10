@@ -116,6 +116,7 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener, MyCartAdapter.OnCa
             result.onSuccess { data ->
                 val userDetails = data.getMyDetails
                 userId = userDetails.id
+                sharedPreferencesManager.userId =  userId
                 userName = userDetails.fullName?:""
                 sharedPreferencesManager.mobileNo = userDetails.mobileNumber
             }.onFailure { exception ->
@@ -576,7 +577,6 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener, MyCartAdapter.OnCa
         binding.MyCartNavigateToCourses.setOnClickListener {
             findNavController().navigate(R.id.action_mycartFragment_to_homeFragment)
         }
-        binding.clrvContainer.visibility = View.GONE
         //   Toast.makeText(requireContext(), "Cart item removed", Toast.LENGTH_SHORT).show()
     }
 
