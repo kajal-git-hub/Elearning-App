@@ -94,7 +94,6 @@ class OnBoardingFragment : Fragment() {
                 val updateUserInput = UpdateUserInput(
                     city = Optional.Present(sharedPreferencesManager.city),
                     fullName = Optional.Present(sharedPreferencesManager.name),
-                    mobileNumber = Optional.present(sharedPreferencesManager.mobileNo)
                     )
                 updateUserViewModel.updateUser(updateUserInput,null,null)
 

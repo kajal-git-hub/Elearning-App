@@ -365,6 +365,15 @@
             android:id="@+id/action_purchase_to_purchaseDetail"
             app:destination="@+id/homeFragment"/>
     </fragment>
+
+    <fragment
+        android:id="@+id/StudyMaterialFragment"
+        android:name="xyz.penpencil.competishun.ui.fragment.StudyMaterialFragment"
+        tools:layout="@layout/fragment_study_material">
+        <action
+            android:id="@+id/action_home_to_study_material"
+            app:destination="@+id/homeFragment"/>
+    </fragment>
     <fragment
         android:id="@+id/YTCourseFragment"
         android:name="com.student.competishun.ui.fragment.YTCourseFragment"

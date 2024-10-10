@@ -136,6 +136,9 @@ class HomeFragment : Fragment() {
         binding.tvRecommendViewAll.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_RecommendDetailFragment)
         }
+        binding.clStudyMaterial.setOnClickListener {
+            findNavController().navigate(R.id.StudyMaterialFragment)
+        }
 
         binding.clYLectures.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_YTCoursesFragment)
@@ -213,7 +216,6 @@ class HomeFragment : Fragment() {
             _binding?.progressBar?.visibility = View.GONE
 
             if (!category.isNullOrEmpty()) {
-                Log.e("coursesCategor not", category.toString())
                 _binding?.rvOurCourses?.visibility = View.VISIBLE
                 listOurCoursesItem = category
                 adapterOurCourses = OurCoursesAdapter(listOurCoursesItem!!, object :
