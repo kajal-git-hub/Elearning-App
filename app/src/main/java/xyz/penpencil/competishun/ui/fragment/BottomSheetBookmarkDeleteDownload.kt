@@ -22,19 +22,26 @@ import java.io.FileOutputStream
 import java.io.IOException
 import java.io.InputStream
 
+interface closeListener{
+    fun close()
+}
 
 @AndroidEntryPoint
 class BottomSheetBookmarkDeleteDownload(
-    private val listener: OnDeleteItemListener,
+    private val listener: OnDeleteItemListener
 ) : BottomSheetDialogFragment() {
     private var position: Int = -1
     private lateinit var item: TopicContentModel
     private lateinit var binding : FragmentBottomSheetBookmarkDeleteDownloadBinding
 
-
+    var lintener:closeListener?=null
     fun setItem(position: Int, item: TopicContentModel) {
         this.position = position
         this.item = item
+    }
+
+    fun closeFragment(lintener:closeListener){
+        this.lintener = lintener
     }
 
     interface OnDeleteItemListener {
@@ -64,17 +71,21 @@ class BottomSheetBookmarkDeleteDownload(
             }
         }else{
             binding.tvBmDownloadThing.setOnClickListener {
-                val bottomSheetDownloadOptions = BottomSheetVideoQualityFragment()
+               fragmentManager?.let { msnsgr->
+                   val bottomSheetDownloadOptions = BottomSheetVideoQualityFragment()
 
-                val bundle  = Bundle().apply {
-                    putSerializable("topic_content_model", item)
-                    putString("video_url",item.url)
-                    putString("video_name",item.topicName)
-                    putString("video_id",item.id)
-                }
-                bottomSheetDownloadOptions.arguments = bundle
+                   val bundle  = Bundle().apply {
+                       putSerializable("topic_content_model", item)
+                       putString("video_url",item.url)
+                       putString("video_name",item.topicName)
+                       putString("video_id",item.id)
+                   }
+                   bottomSheetDownloadOptions.arguments = bundle
 
-                bottomSheetDownloadOptions.show(childFragmentManager, bottomSheetDownloadOptions.tag)
+                   bottomSheetDownloadOptions.show(msnsgr, bottomSheetDownloadOptions.tag)
+               }
+                dismissNow()
+
             }
         }
 
