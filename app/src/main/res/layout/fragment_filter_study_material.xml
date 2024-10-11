@@ -116,7 +116,7 @@
                     android:id="@+id/tvSelectSubject"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Select Subject"
+                    android:text="Select Class Type"
                     android:textSize="@dimen/_16sp"
                     android:fontFamily="@font/nunito"
                     android:textStyle="bold"
