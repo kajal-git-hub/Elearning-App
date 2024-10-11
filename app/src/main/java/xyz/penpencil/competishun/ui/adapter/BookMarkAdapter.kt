@@ -53,6 +53,7 @@ class BookMarkAdapter(
             })
         }
         notifyDataSetChanged()
+//        fragment.checkEmptyState()
     }
 
     interface OnVideoClickListener {

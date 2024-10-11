@@ -96,7 +96,13 @@ class DownloadFragment : DrawerVisibility(), DownloadedItemAdapter.OnVideoClickL
         binding.studentTabLayout.getTabAt(0)?.text = "PDFs ($pdfItemsSize)"
         binding.studentTabLayout.getTabAt(1)?.text = "Videos ($videoItemsSize)"
 
-        updateRecyclerView(pdfItems) // Default to show PDF items
+        if (binding.studentTabLayout.getTabAt(selectedTabPosition)?.text == "PDFs ($pdfItemsSize)") {
+            updateRecyclerView(pdfItems)
+        }
+        if (binding.studentTabLayout.getTabAt(selectedTabPosition)?.text == "Videos ($videoItemsSize)") {
+            updateRecyclerView(videoItems)
+        }
+
     }
 
     fun updateDownloadedItems(fileType:String)

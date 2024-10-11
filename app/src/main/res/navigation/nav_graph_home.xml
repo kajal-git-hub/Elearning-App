@@ -64,7 +64,7 @@
 
     <fragment
         android:id="@+id/downloadMediaPlayerFragment"
-        android:name="com.student.competishun.ui.fragment.DownloadMediaPlayerFragment"
+        android:name="xyz.penpencil.competishun.ui.fragment.DownloadMediaPlayerFragment"
         android:label="DownloadMediaPlayerFragment" >
 
         <argument

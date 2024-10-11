@@ -1,4 +1,4 @@
-package com.student.competishun.ui.fragment
+package xyz.penpencil.competishun.ui.fragment
 
 import android.content.pm.ActivityInfo
 import android.net.Uri
@@ -11,30 +11,18 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ProgressBar
-import android.widget.Toast
 import androidx.annotation.OptIn
 import androidx.appcompat.app.AlertDialog
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import androidx.media3.common.C
-import androidx.media3.common.Format
 import androidx.media3.common.MediaItem
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
-import androidx.media3.exoplayer.trackselection.DefaultTrackSelector
-import com.otaliastudios.zoom.ZoomLayout
 import dagger.hilt.android.AndroidEntryPoint
 import xyz.penpencil.competishun.databinding.FragmentDownloadMediaPlayerBinding
 import xyz.penpencil.competishun.di.SharedVM
-import xyz.penpencil.competishun.ui.fragment.DrawerVisibility
 import xyz.penpencil.competishun.ui.main.HomeActivity
-import xyz.penpencil.competishun.ui.viewmodel.VideourlViewModel
 import java.io.File
 
 @AndroidEntryPoint
