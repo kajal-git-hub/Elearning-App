@@ -33,7 +33,7 @@ class DownloadFragment : DrawerVisibility(), DownloadedItemAdapter.OnVideoClickL
 
     private var pdfItemsSize = ""
     private var videoItemsSize = ""
-
+    private var selectedTabPosition: Int = 0
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -45,6 +45,11 @@ class DownloadFragment : DrawerVisibility(), DownloadedItemAdapter.OnVideoClickL
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        savedInstanceState?.let {    selectedTabPosition = it.getInt("SELECTED_TAB_POSITION", 0)}
+
+
+        binding.studentTabLayout.getTabAt(selectedTabPosition)?.select()
 
         binding.TopViewDownloads.setNavigationOnClickListener {
             findNavController().navigateUp()
@@ -68,6 +73,7 @@ class DownloadFragment : DrawerVisibility(), DownloadedItemAdapter.OnVideoClickL
                         0 -> showPdfItems()
                         1 -> showVideoItems()
                     }
+                    selectedTabPosition = it.position
                 }
             }
 
@@ -171,4 +177,7 @@ class DownloadFragment : DrawerVisibility(), DownloadedItemAdapter.OnVideoClickL
         super.onPause()
 //        requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
     }
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt("SELECTED_TAB_POSITION", selectedTabPosition)}
 }

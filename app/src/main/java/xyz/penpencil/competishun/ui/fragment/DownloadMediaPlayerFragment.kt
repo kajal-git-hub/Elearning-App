@@ -72,8 +72,9 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
 
         val videoUrl = arguments?.getString("url") ?: return
         val title = arguments?.getString("url_name") ?: return
-        Log.e("url","video_url:"+videoUrl)
-        Log.e("url","video_title:"+title)
+
+        Log.e("url", "video_url:$videoUrl")
+        Log.e("Title", "video_title:$title")
 
         if (title.isNotEmpty()) {
             binding.tittleBtn.visibility = View.VISIBLE
@@ -89,9 +90,9 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
         try {
             val file = File(videoUrl)
             val uri = if (file.exists()) {
-                Uri.fromFile(file) // Local file path
+                Uri.fromFile(file)
             } else {
-                Uri.parse(videoUrl) // Handle as a URL
+                Uri.parse(videoUrl)
             }
 
             Log.e("FilePath", "File exists: ${file.exists()}, Path: $file")

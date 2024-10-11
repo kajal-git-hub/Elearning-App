@@ -28,6 +28,8 @@ class BookMarkFragment : DrawerVisibility()  , BookMarkAdapter.OnVideoClickListe
     private var videoItemsSize = ""
     private lateinit var emptyStateLayout: View
 
+    private var selectedTabPosition: Int = 0
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,6 +41,13 @@ class BookMarkFragment : DrawerVisibility()  , BookMarkAdapter.OnVideoClickListe
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        savedInstanceState?.let {    selectedTabPosition = it.getInt("SELECTED_TAB_POSITION", 0)}
+
+
+        binding.BookmarkTabLayout.getTabAt(selectedTabPosition)?.select()
+
+
         (activity as? HomeActivity)?.showBottomNavigationView(false)
         (activity as? HomeActivity)?.showFloatingButton(false)
 
@@ -120,6 +129,7 @@ class BookMarkFragment : DrawerVisibility()  , BookMarkAdapter.OnVideoClickListe
                         0 -> showPdfItems()
                         1 -> showVideoItems()
                     }
+                    selectedTabPosition = it.position
                 }
             }
 
@@ -147,7 +157,7 @@ class BookMarkFragment : DrawerVisibility()  , BookMarkAdapter.OnVideoClickListe
                 putString("url_name", name)
                 putString("ContentId", folderContentId)
             }
-            findNavController().navigate(R.id.mediaFragment, bundle)
+            findNavController().navigate(R.id.downloadMediaPlayerFragment, bundle)
         } else {
             Toast.makeText(requireContext(), "Video file not found", Toast.LENGTH_SHORT).show()
         }
@@ -164,5 +174,8 @@ class BookMarkFragment : DrawerVisibility()  , BookMarkAdapter.OnVideoClickListe
             }
         })
     }
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt("SELECTED_TAB_POSITION", selectedTabPosition)}
 
 }
