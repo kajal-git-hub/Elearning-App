@@ -7,9 +7,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import dagger.hilt.android.AndroidEntryPoint
 import xyz.penpencil.competishun.data.model.VideoQualityItem
 import xyz.penpencil.competishun.ui.adapter.VideoQualityAdapter
 import kotlinx.coroutines.Dispatchers
@@ -17,15 +21,28 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import xyz.penpencil.competishun.R
+import xyz.penpencil.competishun.data.model.TopicContentModel
 import xyz.penpencil.competishun.databinding.FragmentBottomSheetVideoQualityBinding
+import xyz.penpencil.competishun.ui.viewmodel.VideourlViewModel
+import xyz.penpencil.competishun.utils.SharedPreferencesManager
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.InputStream
 
+@AndroidEntryPoint
 class BottomSheetVideoQualityFragment : BottomSheetDialogFragment() {
 
     private lateinit var binding : FragmentBottomSheetVideoQualityBinding
+    private val videoUrlViewModel: VideourlViewModel by viewModels()
+    private var videoUrl: String? = null
+    private var videoName: String? = null
+    private var videoId: String? = null
+    private var qualityResolution: String? = null
+    private var updateSignUrl: String? = null
+    private lateinit var itemDetails: TopicContentModel
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,20 +56,70 @@ class BottomSheetVideoQualityFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        arguments?.let {
+            itemDetails = it.getSerializable("topic_content_model") as TopicContentModel
+            videoUrl = it.getString("video_url")
+            videoName = it.getString("video_name")
+            videoId = it.getString("video_id")
+        }
+        Log.d("BottomSheetVideoQualityFragment", "Video URL: $videoUrl")
+        Log.d("BottomSheetVideoQualityFragment", "Video Name: $videoName")
+        Log.d("BottomSheetVideoQualityFragment", "Video ID: $videoId")
+
         val videoQualityList = listOf(
             VideoQualityItem("360p", "48.5 MB"),
             VideoQualityItem("480p", "480.5 MB"),
             VideoQualityItem("720p", "1.29 GB"),
             VideoQualityItem("1080p", "2.45 GB"),
         )
+        binding.btnBmDownload.setOnClickListener {
+            storeItemInPreferences(itemDetails)
+            Toast.makeText(requireContext(), "Download started", Toast.LENGTH_SHORT).show()
+            downloadVideo(requireContext(), updateSignUrl.toString(), videoName.toString())
+        }
 
         binding.rvVideoQualityTypes.apply {
             layoutManager = LinearLayoutManager(context)
-            adapter = VideoQualityAdapter(context, videoQualityList)
+            adapter = VideoQualityAdapter(context, videoQualityList){ selectedQuality ->
+                qualityResolution = selectedQuality.qualityType
+                videoUrlApi(videoUrlViewModel,videoId.toString(),videoName.toString())
+                binding.btnBmDownload.apply {
+                    setBackgroundColor(ContextCompat.getColor(context, R.color.blue_3E3EF7))
+                    isEnabled = true
+                }
+            }
         }
     }
+
+
+    private fun videoUrlApi(viewModel: VideourlViewModel, folderContentId: String, name:String) {
+        viewModel.fetchVideoStreamUrl(folderContentId, qualityResolution.toString())
+
+        viewModel.videoStreamUrl.observe(viewLifecycleOwner) { signedUrl ->
+            if (signedUrl != null) {
+                updateSignUrl = signedUrl
+                Log.d("SignedUrl",signedUrl.toString())
+            } else {
+                // Handle error or null URL
+            }
+        }
+    }
+
+
+
     private fun downloadVideo(context: Context, videoUrl: String, name: String) {
         Log.d("DownloadVideo", "Starting download for: $videoUrl with name: $name")
+
+        val fileName = "$name.mp4"
+        val videoFile = File(context.filesDir, fileName)
+
+        if (videoFile.exists() && videoFile.length()!=0L) {
+            Log.d("location",videoFile.absolutePath)
+            Toast.makeText(context, "Video already downloaded choose Other", Toast.LENGTH_SHORT).show()
+            dismiss()
+            return
+        }
+
 
         lifecycleScope.launch {
             try {
@@ -80,6 +147,12 @@ class BottomSheetVideoQualityFragment : BottomSheetDialogFragment() {
                 withContext(Dispatchers.Main) {
                     Log.d("DownloadVideo", "Download success, showing toast.")
                     Toast.makeText(context, "Download successful", Toast.LENGTH_SHORT).show()
+                    val bottomSheetComplete = BottomsheetDownloadCompletedFragment()
+                    val bundle = Bundle().apply {
+                        putString("video_name", videoName)
+                    }
+                    bottomSheetComplete.arguments = bundle
+                    bottomSheetComplete.show(childFragmentManager, bottomSheetComplete.tag)
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
@@ -88,6 +161,10 @@ class BottomSheetVideoQualityFragment : BottomSheetDialogFragment() {
                 }
             }
         }
+    }
+    private fun storeItemInPreferences(item: TopicContentModel) {
+        val sharedPreferencesManager = SharedPreferencesManager(requireActivity())
+        sharedPreferencesManager.saveDownloadedItem(item)
     }
 
 

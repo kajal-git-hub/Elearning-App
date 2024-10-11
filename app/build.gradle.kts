@@ -5,6 +5,8 @@ plugins {
     alias(libs.plugins.hilt)
     alias(libs.plugins.apollo.graph.ql)
     alias(libs.plugins.google.gms.google.services)
+    id ("kotlin-parcelize")
+
 }
 
 android {
@@ -70,12 +72,12 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     implementation(libs.androidx.activity)
-    implementation("com.google.android.libraries.identity.googleid:googleid:1.1.1")
+    implementation(libs.googleid)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.play.services.drive)
     implementation(libs.androidx.credentials)
     implementation(libs.play.services.auth)
-    implementation("androidx.credentials:credentials-play-services-auth:1.2.2")
+    implementation(libs.androidx.credentials.play.services.auth.v122)
     implementation(libs.googleid)
     implementation(libs.androidx.core.i18n)
     testImplementation(libs.junit)

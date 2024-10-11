@@ -29,7 +29,7 @@ import xyz.penpencil.competishun.utils.HelperFunctions
 import xyz.penpencil.competishun.utils.SharedPreferencesManager
 
 @AndroidEntryPoint
-class MyPurchaseDetailsFragment : Fragment() {
+class MyPurchaseDetailsFragment : DrawerVisibility() {
     private lateinit var binding: FragmentMyPurchaseDetailsBinding
     private val userViewModel: UserViewModel by viewModels()
     private val getCourseByIDViewModel: GetCourseByIDViewModel by viewModels()
@@ -52,7 +52,7 @@ class MyPurchaseDetailsFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         binding = FragmentMyPurchaseDetailsBinding.inflate(inflater, container, false)
         return binding.root

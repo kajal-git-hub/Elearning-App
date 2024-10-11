@@ -2,6 +2,7 @@ package xyz.penpencil.competishun.ui.fragment
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -41,6 +42,8 @@ class ProfileLogoutFragment : BottomSheetDialogFragment() {
 
             sharedPreferencesManager.clearUserData()
 
+            deleteLocalFiles()
+
             val intent = Intent(requireContext(), MainActivity::class.java)
             intent.putExtra("navigateToLogin", true)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -49,6 +52,18 @@ class ProfileLogoutFragment : BottomSheetDialogFragment() {
         }
         binding.mbCancel.setOnClickListener {
             findNavController().navigate(R.id.ProfileFragment)
+        }
+    }
+    private fun deleteLocalFiles() {
+        val filesDir = requireActivity().filesDir
+
+        val files = filesDir.listFiles()
+
+        files?.forEach { file ->
+            if (file.name.endsWith(".mp4", ignoreCase = true) || file.name.endsWith("PDF",ignoreCase = true)) {
+                Log.d("LogoutDelete", "Deleting file: ${file.name}")
+                file.delete()
+            }
         }
     }
 

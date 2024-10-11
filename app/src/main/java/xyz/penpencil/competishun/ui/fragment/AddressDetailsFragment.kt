@@ -14,7 +14,7 @@ import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.databinding.FragmentAddressDetailsBinding
 import xyz.penpencil.competishun.ui.main.HomeActivity
 
-class AddressDetailsFragment : Fragment() {
+class AddressDetailsFragment : DrawerVisibility() {
 
     private var _binding: FragmentAddressDetailsBinding?=null
     private val binding get() = _binding!!
@@ -23,7 +23,7 @@ class AddressDetailsFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentAddressDetailsBinding.inflate(inflater, container, false)
         return binding.root
     }

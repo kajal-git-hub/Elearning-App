@@ -63,6 +63,18 @@
     </fragment>
 
     <fragment
+        android:id="@+id/downloadMediaPlayerFragment"
+        android:name="xyz.penpencil.competishun.ui.fragment.DownloadMediaPlayerFragment"
+        android:label="DownloadMediaPlayerFragment" >
+
+        <argument
+            android:name="url"
+            android:defaultValue=""
+            app:argType="string" />
+
+    </fragment>
+
+    <fragment
         android:id="@+id/exploreFragment"
         android:name="xyz.penpencil.competishun.ui.fragment.ExploreFragment"
         android:label="fragment_explore"
@@ -380,6 +392,14 @@
         android:label="fragment_y_t_course"
         tools:layout="@layout/fragment_y_t_course">
     </fragment>
+
+    <fragment
+        android:id="@+id/DrawerVisibility"
+        android:name="xyz.penpencil.competishun.ui.fragment.DrawerVisibility"
+        tools:layout="@layout/fragment_drawer_visibility">
+    </fragment>
+
+
 
 
 </navigation>

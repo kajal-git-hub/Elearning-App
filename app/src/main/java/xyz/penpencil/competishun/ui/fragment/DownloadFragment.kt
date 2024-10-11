@@ -24,7 +24,7 @@ import xyz.penpencil.competishun.databinding.FragmentDownloadBinding
 import java.io.File
 
 @AndroidEntryPoint
-class DownloadFragment : Fragment(), DownloadedItemAdapter.OnVideoClickListener {
+class DownloadFragment : DrawerVisibility(), DownloadedItemAdapter.OnVideoClickListener {
 
     private lateinit var viewModel: VideourlViewModel
     private lateinit var binding: FragmentDownloadBinding
@@ -33,7 +33,7 @@ class DownloadFragment : Fragment(), DownloadedItemAdapter.OnVideoClickListener 
 
     private var pdfItemsSize = ""
     private var videoItemsSize = ""
-
+    private var selectedTabPosition: Int = 0
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -45,6 +45,11 @@ class DownloadFragment : Fragment(), DownloadedItemAdapter.OnVideoClickListener 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        savedInstanceState?.let {    selectedTabPosition = it.getInt("SELECTED_TAB_POSITION", 0)}
+
+
+        binding.studentTabLayout.getTabAt(selectedTabPosition)?.select()
 
         binding.TopViewDownloads.setNavigationOnClickListener {
             findNavController().navigateUp()
@@ -68,6 +73,7 @@ class DownloadFragment : Fragment(), DownloadedItemAdapter.OnVideoClickListener 
                         0 -> showPdfItems()
                         1 -> showVideoItems()
                     }
+                    selectedTabPosition = it.position
                 }
             }
 
@@ -90,7 +96,30 @@ class DownloadFragment : Fragment(), DownloadedItemAdapter.OnVideoClickListener 
         binding.studentTabLayout.getTabAt(0)?.text = "PDFs ($pdfItemsSize)"
         binding.studentTabLayout.getTabAt(1)?.text = "Videos ($videoItemsSize)"
 
-        updateRecyclerView(pdfItems) // Default to show PDF items
+        if (binding.studentTabLayout.getTabAt(selectedTabPosition)?.text == "PDFs ($pdfItemsSize)") {
+            updateRecyclerView(pdfItems)
+        }
+        if (binding.studentTabLayout.getTabAt(selectedTabPosition)?.text == "Videos ($videoItemsSize)") {
+            updateRecyclerView(videoItems)
+        }
+
+    }
+
+    fun updateDownloadedItems(fileType:String)
+    {
+        val sharedPreferencesManager = SharedPreferencesManager(requireActivity())
+        allDownloadedItems = sharedPreferencesManager.getDownloadedItems()
+        if (fileType == "PDF")
+        {
+            val pdfItems = allDownloadedItems.filter { it.fileType == "PDF" }
+            binding.studentTabLayout.getTabAt(0)?.text = "PDFs (${pdfItems.size})"
+            updateRecyclerView(pdfItems)
+        }else
+        {
+            val videoItems = allDownloadedItems.filter { it.fileType == "VIDEO" }
+            binding.studentTabLayout.getTabAt(1)?.text = "Videos (${videoItems.size})"
+            updateRecyclerView(videoItems)
+        }
     }
 
     private fun updateRecyclerView(items: List<TopicContentModel>) {
@@ -114,15 +143,16 @@ class DownloadFragment : Fragment(), DownloadedItemAdapter.OnVideoClickListener 
     }
 
     private fun playVideo(folderContentId: String, name: String) {
-        val videoFileURL = File(requireContext().filesDir, "$name.mp4").absolutePath
+        val file=File(context?.filesDir,"$name.mp4")
+        val videoFileURL = file.absolutePath
+        Log.e("FilePath", "File exists: ${file.exists()}, Path: $videoFileURL")
 
         if (videoFileURL.isNotEmpty()) {
             val bundle = Bundle().apply {
                 putString("url", videoFileURL)
                 putString("url_name", name)
-                putString("ContentId", folderContentId)
             }
-            findNavController().navigate(R.id.mediaFragment, bundle)
+            findNavController().navigate(R.id.downloadMediaPlayerFragment, bundle)
         } else {
             Toast.makeText(requireContext(), "Video file not found", Toast.LENGTH_SHORT).show()
         }
@@ -143,14 +173,17 @@ class DownloadFragment : Fragment(), DownloadedItemAdapter.OnVideoClickListener 
 
     override fun onResume() {
         super.onResume()
-        requireActivity().window.setFlags(
-            WindowManager.LayoutParams.FLAG_SECURE,
-            WindowManager.LayoutParams.FLAG_SECURE
-        )
+//        requireActivity().window.setFlags(
+//            WindowManager.LayoutParams.FLAG_SECURE,
+//            WindowManager.LayoutParams.FLAG_SECURE
+//        )
     }
 
     override fun onPause() {
         super.onPause()
-        requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
+//        requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
     }
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt("SELECTED_TAB_POSITION", selectedTabPosition)}
 }

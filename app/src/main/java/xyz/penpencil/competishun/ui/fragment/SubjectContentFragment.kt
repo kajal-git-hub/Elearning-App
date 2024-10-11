@@ -34,7 +34,7 @@ import xyz.penpencil.competishun.di.Result
 import xyz.penpencil.competishun.ui.main.PdfViewerActivity
 
 @AndroidEntryPoint
-class SubjectContentFragment : Fragment() {
+class SubjectContentFragment : DrawerVisibility() {
 
     private lateinit var binding: FragmentSubjectContentBinding
     private val coursesViewModel: CoursesViewModel by viewModels()
@@ -47,7 +47,7 @@ class SubjectContentFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentSubjectContentBinding.inflate(inflater, container, false)
 
 
@@ -178,6 +178,11 @@ class SubjectContentFragment : Fragment() {
                                     Log.e("homeworkLog", contents.content?.homework.toString())
                                     val time = helperFunctions.formatCourseDateTime(contents.content?.scheduled_time.toString())
                                     Log.e("foldertimes", time)
+
+                                    // Extract homework URL and filename if they exist
+                                    val homeworkUrl = contents.content?.homework?.map { it.file_url } ?:""
+                                    val homeworkFileName = contents.content?.homework?.map { it.file_name } ?: ""
+
                                     TopicContentModel(
                                         subjectIcon = if (contents.content?.file_type?.name == "PDF") R.drawable.content_bg else R.drawable.group_1707478994,
                                         id = contents.content?.id ?: "",
@@ -185,15 +190,17 @@ class SubjectContentFragment : Fragment() {
                                         lecture = if (contents.content?.file_type?.name == "VIDEO") "Lecture" else "Study Material",
                                         lecturerName = if(contents.content?.file_type?.name == "VIDEO") formatTimeDuration(
                                             contents.content.video_duration ?: 0
-                                        ) else "Ashok" ,
+                                        ) else "Ashok",
                                         topicName = contents.content?.file_name ?: "",
                                         topicDescription = contents.content?.description.toString(),
                                         progress = 1,
-                                        videoDuration = contents.content?.video_duration
-                                            ?: 0,
+                                        videoDuration = contents.content?.video_duration ?: 0,
                                         url = contents.content?.file_url.toString(),
                                         fileType = contents.content?.file_type?.name ?: "",
-                                        lockTime =  time
+                                        lockTime = time,
+                                        // Assign homework name and URL here
+                                        homeworkName = homeworkFileName.toString(),
+                                        homeworkUrl = homeworkUrl.toString()  // Add this field in your TopicContentModel if it doesn't exist
                                     )
                                 }
                                 val folderContentIds = folderProgressContent.mapNotNull { it.content?.id }.toCollection(ArrayList())
@@ -202,7 +209,8 @@ class SubjectContentFragment : Fragment() {
                             binding.rvTopicContent.adapter = TopicContentAdapter(
                                 topicContentList,
                                 folderId,
-                                requireActivity()
+                                requireActivity(),
+                                requireContext()
                             ) { topicContent, folderContentId ->
                                 when (topicContent.fileType) {
                                     "VIDEO" -> {
@@ -320,6 +328,11 @@ class SubjectContentFragment : Fragment() {
                             val subjectContentList =
                                 folderProgressContent.mapIndexed { index, contents ->
                                     Log.e("folderContentLog", contents.content?.file_url.toString())
+
+                                    val homeworkUrl = contents.content?.homework?.map { it.file_url } ?:""
+                                    val homeworkFileName = contents.content?.homework?.map { it.file_name } ?: ""
+
+
                                     val time = helperFunctions.formatCourseDateTime(contents.content?.scheduled_time.toString())
                                     Log.e("foldertime", time)
                                     TopicContentModel(
@@ -337,7 +350,9 @@ class SubjectContentFragment : Fragment() {
                                             ?: 0,
                                         url = contents.content?.file_url.toString(),
                                         fileType = contents.content?.file_type?.name ?: "",
-                                        lockTime =  time
+                                        lockTime =  time,
+                                        homeworkUrl = homeworkUrl.toString(),
+                                        homeworkName = homeworkFileName.toString()
                                     )
                                 }
                             val folderContentIds = folderProgressContent.mapNotNull { it.content?.id }.toCollection(ArrayList())
@@ -346,7 +361,8 @@ class SubjectContentFragment : Fragment() {
                             binding.rvTopicContent.adapter = TopicContentAdapter(
                                 subjectContentList,
                                 folderId,
-                                requireActivity()
+                                requireActivity(),
+                                requireContext()
                             ) { topicContent, folderContentId ->
                                 when (topicContent.fileType) {
 

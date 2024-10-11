@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.addCallback
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -16,6 +17,7 @@ import xyz.penpencil.competishun.data.model.CartItem
 import xyz.penpencil.competishun.ui.adapter.MyCartAdapter
 import xyz.penpencil.competishun.ui.viewmodel.CreateCartViewModel
 import androidx.lifecycle.Observer
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.wallet.PaymentsClient
 import com.google.android.gms.wallet.Wallet
@@ -40,7 +42,7 @@ import java.util.Calendar
 import java.util.Locale
 
 @AndroidEntryPoint
-class MyCartFragment : Fragment(), OnCartItemRemovedListener, MyCartAdapter.OnCartItemClickListener {
+class MyCartFragment : DrawerVisibility(), OnCartItemRemovedListener, MyCartAdapter.OnCartItemClickListener {
     private lateinit var binding : FragmentMyCartBinding
     private val orderViewModel: OrderViewModel by viewModels()
     private val userViewModel: UserViewModel by viewModels()
@@ -77,9 +79,12 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener, MyCartAdapter.OnCa
     ): View {
         binding = FragmentMyCartBinding.inflate(inflater, container, false)
 
-        requireActivity().onBackPressedDispatcher.addCallback(this) {
-            handleBackPressed()
-        }
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                findNavController().popBackStack()
+            }
+        })
         return binding.root
     }
 
@@ -98,11 +103,10 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener, MyCartAdapter.OnCa
         tabLayout = view.findViewById(R.id.CartTabLayout)
 
 
-
-
         binding.igToolbarBackButton.setOnClickListener {
-            findNavController().navigate(R.id.ProfileFragment)
+            findNavController().popBackStack()
         }
+
         helperFunctions = HelperFunctions()
         binding.parentData.visibility = View.GONE
 
@@ -425,8 +429,7 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener, MyCartAdapter.OnCa
         binding.rvAllCart.visibility = View.GONE
         binding.clEmptyCart.visibility = View.VISIBLE
         binding.MyCartNavigateToCourses.setOnClickListener {
-
-            findNavController().navigate(R.id.action_mycartFragment_to_homeFragment)
+            it.findNavController().navigate(R.id.action_mycartFragment_to_homeFragment)
         }
         cartViewModel.findAllCartItems(userId)
         cartViewModel.findAllCartItemsResult.observe(viewLifecycleOwner, Observer { result ->
@@ -574,9 +577,10 @@ class MyCartFragment : Fragment(), OnCartItemRemovedListener, MyCartAdapter.OnCa
         binding.clProccedToPay.visibility = View.GONE
         binding.clEmptyCart.visibility = View.VISIBLE
         binding.clSecondbottomInstallement.visibility = View.GONE
-        binding.MyCartNavigateToCourses.setOnClickListener {
-            findNavController().navigate(R.id.action_mycartFragment_to_homeFragment)
-        }
+//        binding.MyCartNavigateToCourses.setOnClickListener {
+//            findNavController().navigate(R.id.action_mycartFragment_to_homeFragment)
+//        }
+        binding.clrvContainer.visibility = View.GONE
         //   Toast.makeText(requireContext(), "Cart item removed", Toast.LENGTH_SHORT).show()
     }
 

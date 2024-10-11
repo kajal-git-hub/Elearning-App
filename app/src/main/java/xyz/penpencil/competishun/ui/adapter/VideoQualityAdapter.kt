@@ -12,7 +12,8 @@ import xyz.penpencil.competishun.data.model.VideoQualityItem
 
 class VideoQualityAdapter(
     private val context: Context,
-    private val itemList: List<VideoQualityItem>
+    private val itemList: List<VideoQualityItem>,
+    private val onQualitySelected :(VideoQualityItem) -> Unit
 ) : RecyclerView.Adapter<VideoQualityAdapter.ViewHolder>() {
 
     private var selectedPosition = -1
@@ -59,6 +60,8 @@ class VideoQualityAdapter(
 
             notifyItemChanged(previousPosition)
             notifyItemChanged(selectedPosition)
+
+            onQualitySelected(item)
         }
     }
 

@@ -1,5 +1,7 @@
 package xyz.penpencil.competishun.ui.fragment
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -20,7 +22,7 @@ import xyz.penpencil.competishun.databinding.FragmentProfileBinding
 
 
 @AndroidEntryPoint
-class ProfileFragment : Fragment() {
+class ProfileFragment : DrawerVisibility() {
 
     var TAG = "ProfileFragment"
     private var _binding: FragmentProfileBinding? = null
@@ -38,7 +40,7 @@ class ProfileFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -49,6 +51,21 @@ class ProfileFragment : Fragment() {
 //        studentClass = arguments?.getString("StudentClass","") ?: ""
 //        Log.d("studentClass",studentClass)
 
+        binding.igProfileCall.setOnClickListener {
+            val phoneNumber = "8888000021"
+            val intent = Intent(Intent.ACTION_DIAL)
+            intent.data = Uri.parse("tel:$phoneNumber")
+            startActivity(intent)
+        }
+        binding.etProfileHelp.setOnClickListener {
+            findNavController().navigate(R.id.ContactUs)
+        }
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                findNavController().popBackStack()
+            }
+        })
 
         binding.igEditProfile.setOnClickListener {
             val bottomSheetDescriptionFragment = ProfileEditFragment()
@@ -63,16 +80,11 @@ class ProfileFragment : Fragment() {
         (activity as? HomeActivity)?.showBottomNavigationView(false)
         (activity as? HomeActivity)?.showFloatingButton(false)
 
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                findNavController().popBackStack()
-            }
-        })
 
         sharedPreferencesManager = SharedPreferencesManager(requireContext())
 
         binding.etBTUpload.setOnClickListener {
-            findNavController().navigate(R.id.homeFragment)
+            findNavController().popBackStack()
         }
 
         binding.llMyCart.setOnClickListener {

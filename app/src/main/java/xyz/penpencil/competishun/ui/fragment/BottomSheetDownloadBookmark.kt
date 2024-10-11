@@ -51,6 +51,7 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
         binding.tvBookmark.setOnClickListener {
             // Bookmark functionality
             itemDetails?.let { details ->
+                Log.d("bookmark","Clicked")
                 storeItemInPreferencesBm(details)
                 Toast.makeText(requireContext(),"Added in BookMark",Toast.LENGTH_SHORT).show()
                 dismiss()
@@ -59,6 +60,7 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
 
         binding.tvDownload.setOnClickListener {
             itemDetails?.let { details ->
+                Log.d("download","Clicked")
                 Log.d("ItemDetails", details.toString())
 
                 val sharedPreferencesManager = SharedPreferencesManager(requireActivity())
@@ -81,7 +83,7 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
                 } else {
                     downloadPdf(details)
                 }
-//                dismiss()
+                dismiss()
             }
         }
 
@@ -198,10 +200,12 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
                             outputStream.use { output ->
                                 input.copyTo(output)
                                 Log.d("DownloadVideo", "File downloaded successfully.")
+                                Log.e("FilePath", "File exists: ${videoFile.exists()}, Path: ${videoFile.absolutePath}")
                             }
                         }
                     }
                 }
+
                 withContext(Dispatchers.Main) {
                     Log.d("DownloadVideo", "Download success, showing toast.")
                     Toast.makeText(context, "Download successful", Toast.LENGTH_SHORT).show()

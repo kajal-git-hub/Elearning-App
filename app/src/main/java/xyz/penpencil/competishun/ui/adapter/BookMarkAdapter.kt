@@ -2,6 +2,7 @@ package xyz.penpencil.competishun.ui.adapter
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,8 +15,10 @@ import xyz.penpencil.competishun.data.model.TopicContentModel
 import xyz.penpencil.competishun.ui.fragment.BookMarkFragment
 import xyz.penpencil.competishun.ui.fragment.BottomSheetBookmarkDeleteDownload
 import xyz.penpencil.competishun.R
+import xyz.penpencil.competishun.ui.fragment.closeListener
 import xyz.penpencil.competishun.ui.main.PdfViewerActivity
 import xyz.penpencil.competishun.utils.SharedPreferencesManager
+import java.io.File
 
 class BookMarkAdapter(
     private val context: Context,
@@ -51,6 +54,7 @@ class BookMarkAdapter(
             })
         }
         notifyDataSetChanged()
+//        fragment.checkEmptyState()
     }
 
     interface OnVideoClickListener {
@@ -77,14 +81,24 @@ class BookMarkAdapter(
 
         if (item.fileType == "PDF") {
             holder.lecTime.text = item.lecturerName
+            holder.forRead.visibility = View.VISIBLE
+            holder.forVideo.visibility = View.GONE
             holder.lecTime.setCompoundDrawablesWithIntrinsicBounds(R.drawable.download_person, 0, 0, 0)
-            holder.clCourseBook.setBackgroundResource(R.drawable.frame_1707480918)
+            holder.clCourseBook.setBackgroundResource(R.drawable.frame_1707480919)
             holder.ivSubjectBookIcon.setImageResource(R.drawable.group_1707478995)
             holder.ivBookShadow.setImageResource(R.drawable.ellipse_17956)
+            holder.forRead.visibility = View.VISIBLE
+            holder.forVideo.visibility = View.GONE
             holder.forRead.setImageResource(R.drawable.frame_1707481707_1_)
 
             holder.dotExtraInfoDownload.setOnClickListener {
                 val bottomSheet = BottomSheetBookmarkDeleteDownload(this)
+
+                bottomSheet.closeFragment(object : closeListener {
+                    override fun close() {
+                       bottomSheet.dismiss()
+                    }
+                })
                 bottomSheet.setItem(position, item)
                 bottomSheet.show(fragmentManager, bottomSheet.tag)
             }
@@ -93,9 +107,10 @@ class BookMarkAdapter(
             holder.lecTime.text = formatTimeDuration(item.videoDuration)
             holder.forRead.visibility = View.GONE
             holder.forVideo.visibility = View.VISIBLE
-            holder.clCourseBook.setBackgroundResource(R.drawable.frame_1707480918)
+            holder.clCourseBook.setBackgroundResource(R.drawable.frame_1707480919)
             holder.ivSubjectBookIcon.setImageResource(R.drawable.group_1707478994)
             holder.ivBookShadow.setImageResource(R.drawable.ellipse_17956)
+            holder.forRead.setImageResource(R.drawable.frame_1707481707)
 
             holder.dotExtraInfoDownload.setOnClickListener {
                 val bottomSheet = BottomSheetBookmarkDeleteDownload(this)
@@ -125,13 +140,30 @@ class BookMarkAdapter(
         sharedPreferencesManager.deleteDownloadedItemBm(item)
 
 
-        items.removeAt(position) // Remove the item from the list
-        notifyItemRemoved(position) // Notify the adapter about the removed item
-        notifyItemRangeChanged(position, items.size) // Optional: update the range of the RecyclerView
+        items.removeAt(position)
+        notifyItemRemoved(position)
+        notifyItemRangeChanged(position, items.size)
 
 
-        fragment.loadDownloadedItems()
-    }
+        if (item.fileType=="PDF")
+        {
+            val fileName = "${item.topicName}.${item.fileType.lowercase()}"
+            val file = File(context.filesDir, fileName)
+            Log.d("DownloadDelete", file.exists().toString())
+            if (file.exists()) {
+                file.delete()
+            }
+        }else
+        {
+            val fileName = "${item.topicName}.mp4"
+            val file = File(context.filesDir, fileName)
+            Log.d("DownloadDelete", file.exists().toString())
+            if (file.exists()) {
+                file.delete()
+            }
+        }
+
+        fragment.updateDownloadedItems(item.fileType)    }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val clCourseBook: ConstraintLayout = itemView.findViewById(R.id.cl_bm_course_book)

@@ -25,7 +25,7 @@ import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.databinding.FragmentRecommendViewDetailBinding
 
 @AndroidEntryPoint
-class RecommendViewDetail : Fragment() {
+class RecommendViewDetail : DrawerVisibility() {
 
     private val userViewModel: UserViewModel by viewModels()
     private val studentCoursesViewModel: StudentCoursesViewModel by viewModels()
@@ -34,10 +34,12 @@ class RecommendViewDetail : Fragment() {
     private val binding get() = _binding!!
     private lateinit var adapter: RecommendViewAllAdapter
 
+    private var courseTypeRecommend = ""
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentRecommendViewDetailBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -62,7 +64,6 @@ class RecommendViewDetail : Fragment() {
         setupToolbar()
 
         getMyDetails()
-        getAllCoursesForStudent(courseType)
 
         binding.appbar.setNavigationOnClickListener {
             findNavController().navigateUp()
@@ -70,7 +71,19 @@ class RecommendViewDetail : Fragment() {
     }
 
     private fun getAllCoursesForStudent(courseType: String) {
-        val filters = FindAllCourseInputStudent(Optional.Absent, Optional.Absent, Optional.Absent, Optional.present(true))
+        var courseTypes = courseType
+        Log.d("courseTypes", courseTypes)
+        if (courseType != "IIT-JEE" && courseType != "NEET") {
+            courseTypes = "IIT-JEE"
+        }
+        Log.d("courseTypeRecommend", courseTypes)
+
+        val filters = FindAllCourseInputStudent(
+            category_name = Optional.Absent,
+            course_class = Optional.Absent,
+            exam_type = Optional.present(courseTypes),
+            is_recommended = Optional.present(true)
+        )
         studentCoursesViewModel.fetchCourses(filters)
         binding.progressBarRec.visibility = View.VISIBLE
         binding.rvRecommendedCourses.visibility = View.GONE
@@ -80,6 +93,7 @@ class RecommendViewDetail : Fragment() {
                 result?.onSuccess { data ->
                     Log.d("Getting Student Courses", data.toString())
                     val courses = data.getAllCourseForStudent.courses.map { course ->
+                        courseTypeRecommend = course.course_type.toString()
                         AllCourseForStudentQuery.Course(
                             discount = course.discount,
                             name = course.name,
@@ -144,6 +158,14 @@ class RecommendViewDetail : Fragment() {
                 val userDetails = data.getMyDetails
                 courseType = userDetails.userInformation.preparingFor ?: ""
                 Log.d("CourseType Retrieved", courseType)
+
+                // Call getAllCoursesForStudent() only after courseType is received
+                if (courseType.isNotEmpty()) {
+                    getAllCoursesForStudent(courseType)
+                } else {
+                    // If no courseType, default to "IIT-JEE"
+                    getAllCoursesForStudent("IIT-JEE")
+                }
             }.onFailure { exception ->
                 Toast.makeText(requireContext(), "Error fetching details: ${exception.message}", Toast.LENGTH_LONG).show()
             }

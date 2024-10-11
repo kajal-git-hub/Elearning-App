@@ -13,7 +13,7 @@ import xyz.penpencil.competishun.data.model.DisclaimerItem
 import xyz.penpencil.competishun.databinding.FragmentDisclaimerBinding
 import xyz.penpencil.competishun.ui.adapter.DisclaimerAdapter
 
-class DisclaimerFragment : Fragment() {
+class DisclaimerFragment : DrawerVisibility() {
 
     private lateinit var binding: FragmentDisclaimerBinding
 
@@ -29,7 +29,7 @@ class DisclaimerFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         binding = FragmentDisclaimerBinding.inflate(inflater, container, false)
         return binding.root

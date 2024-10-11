@@ -22,7 +22,7 @@ import xyz.penpencil.competishun.ui.viewmodel.UserViewModel
 import xyz.penpencil.competishun.utils.HelperFunctions
 
 @AndroidEntryPoint
-class MyPurchaseFragment : Fragment() {
+class MyPurchaseFragment : DrawerVisibility() {
     private var _binding: FragmentMyPurchaseBinding? = null
     private val binding get() = _binding!!
     private lateinit var coursePaymentAdapter: CoursePaymentAdapter
@@ -40,7 +40,7 @@ class MyPurchaseFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentMyPurchaseBinding.inflate(inflater, container, false)
         return binding.root
     }

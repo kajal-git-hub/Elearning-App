@@ -10,7 +10,7 @@ import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.databinding.FragmentContactUsBinding
 import xyz.penpencil.competishun.ui.main.HomeActivity
 
-class ContactUsFragment : Fragment() {
+class ContactUsFragment : DrawerVisibility() {
 
 
     private var _binding: FragmentContactUsBinding? = null
@@ -20,7 +20,7 @@ class ContactUsFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentContactUsBinding.inflate(inflater, container, false)
         return binding.root
     }

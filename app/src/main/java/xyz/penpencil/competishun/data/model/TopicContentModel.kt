@@ -1,5 +1,7 @@
 package xyz.penpencil.competishun.data.model
 
+import java.io.Serializable
+
 data class TopicContentModel(
     val subjectIcon: Int,
     val id:String,
@@ -12,5 +14,7 @@ data class TopicContentModel(
     val progress: Int,
     var url: String,
     val fileType: String,
-    val lockTime:String
-)
+    val lockTime:String,
+    val homeworkUrl : String,
+    val homeworkName : String
+): Serializable

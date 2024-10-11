@@ -1,8 +1,12 @@
 package xyz.penpencil.competishun.ui.fragment
 
 import android.annotation.SuppressLint
+import android.app.Activity.RESULT_OK
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.text.Editable
@@ -19,11 +23,15 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.google.android.gms.auth.api.phone.SmsRetriever
 import xyz.penpencil.competishun.ui.main.HomeActivity
 import xyz.penpencil.competishun.ui.viewmodel.GetOtpViewModel
 import xyz.penpencil.competishun.ui.viewmodel.UserViewModel
@@ -33,6 +41,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.databinding.FragmentVerifyBinding
 import xyz.penpencil.competishun.ui.main.MainActivity
+import xyz.penpencil.competishun.utils.SmsBroadcastReceiver
 
 @AndroidEntryPoint
 class VerifyOTPFragment : Fragment() {
@@ -49,12 +58,18 @@ class VerifyOTPFragment : Fragment() {
     private lateinit var otpBoxes: List<EditText>
     private lateinit var countDownTimer: CountDownTimer
 
+    private val REQ_USER_CONSENT=200
+    var smsBroadcastReceiver: SmsBroadcastReceiver?=null
+    private lateinit var smsRetrieverLauncher: ActivityResultLauncher<Intent>
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentVerifyBinding.inflate(inflater, container, false)
         sharedPreferencesManager = (requireActivity() as MainActivity).sharedPreferencesManager
+
         return binding.root
     }
 
@@ -71,6 +86,57 @@ class VerifyOTPFragment : Fragment() {
         startTimer()
         observeViewModel()
 
+        startAutoFillOtp()
+    }
+
+
+    private fun getOtpFromMessage(message: String?) {
+        Log.d("message",message.toString())
+        val otpPattern = Regex("(\\d{4})")
+        val matchResult = otpPattern.find(message.toString())
+        val otp = matchResult?.value
+
+        binding.otpBox1.setText(otp?.substring(0,1))
+        binding.otpBox2.setText(otp?.substring(1,2))
+        binding.otpBox3.setText(otp?.substring(2,3))
+        binding.otpBox4.setText(otp?.substring(3,4))
+    }
+
+    private fun startAutoFillOtp(){
+        val client= SmsRetriever.getClient(requireContext())
+        client.startSmsUserConsent(null)
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQ_USER_CONSENT) {
+            if (resultCode == RESULT_OK && data != null) {
+                val message = data.getStringExtra(SmsRetriever.EXTRA_SMS_MESSAGE)
+                getOtpFromMessage(message)
+            }
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
+    private fun registerBroadcastReceiver(){
+        smsBroadcastReceiver=SmsBroadcastReceiver()
+        smsBroadcastReceiver!!.smsBroadcastReceiverListener = object : SmsBroadcastReceiver.SmsBroadcastReceiverListener{
+            override fun onSuccess(intent: Intent?) {
+                if (intent != null) {
+                   startActivityForResult(intent,REQ_USER_CONSENT)
+                }
+            }
+
+            override fun onFailure() {
+                TODO("Not yet implemented")
+            }
+
+        }
+
+        val intentFilter = IntentFilter(SmsRetriever.SMS_RETRIEVED_ACTION)
+        requireActivity().registerReceiver(smsBroadcastReceiver, intentFilter,
+            Context.RECEIVER_NOT_EXPORTED)
     }
 
     private fun setupViews() {
@@ -166,7 +232,6 @@ class VerifyOTPFragment : Fragment() {
         startActivity(intent)
         requireActivity().finish()
     }
-
 
     private fun navigateToHomeActivity(userId:String) {
        sharedPreferencesManager.userId = userId
@@ -290,6 +355,7 @@ class VerifyOTPFragment : Fragment() {
                 binding.etTimeText.text = "${secondsRemaining}s"
             }
 
+            @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
             override fun onFinish() {
                 binding.etEnterOtpText.text = "Didn’t receive any OTP?"
                 binding.etWaitText.visibility = View.GONE
@@ -304,6 +370,9 @@ class VerifyOTPFragment : Fragment() {
                     binding.etResendText.visibility = View.GONE
                     startTimer()  // Restart the timer
                     sendOTPRequest()
+                    registerBroadcastReceiver()
+                    startAutoFillOtp()
+
                 }
             }
         }
@@ -322,6 +391,18 @@ class VerifyOTPFragment : Fragment() {
                 Log.d("OTPnOTSent","OTP not get yet")
             }
         }
+    }
+
+
+    @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
+    override fun onResume() {
+        super.onResume()
+        registerBroadcastReceiver()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        requireActivity().unregisterReceiver(smsBroadcastReceiver)
     }
 
     override fun onDestroyView() {

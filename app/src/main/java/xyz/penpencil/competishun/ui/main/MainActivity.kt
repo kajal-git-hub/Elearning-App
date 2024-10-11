@@ -27,9 +27,15 @@ class MainActivity : AppCompatActivity() {
     lateinit var userInput: UpdateUserInput
     var userId :String = ""
 
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+
+
+//        userViewModel.fetchUserDetails()
+//        observeUserDetails()
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as? NavHostFragment

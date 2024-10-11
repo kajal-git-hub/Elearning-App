@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -34,7 +35,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import xyz.penpencil.competishun.databinding.FragmentMediaPlayerBinding
 
 @AndroidEntryPoint
-class MediaPlayerFragment : Fragment() {
+class MediaPlayerFragment : DrawerVisibility() {
 
     private lateinit var binding: FragmentMediaPlayerBinding
     private lateinit var player: ExoPlayer
@@ -478,6 +479,18 @@ class MediaPlayerFragment : Fragment() {
             // Call the mutation
             videourlViewModel.updateVideoProgress(courseFolderContentId, currentDuration)
         }
+    }
+    override fun onResume() {
+        super.onResume()
+        requireActivity().window.setFlags(
+            WindowManager.LayoutParams.FLAG_SECURE,
+            WindowManager.LayoutParams.FLAG_SECURE
+        )
+    }
+
+    override fun onPause() {
+        super.onPause()
+        requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
     }
 
 
