@@ -25,7 +25,7 @@ import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.databinding.FragmentRecommendViewDetailBinding
 
 @AndroidEntryPoint
-class RecommendViewDetail : Fragment() {
+class RecommendViewDetail : DrawerVisibility() {
 
     private val userViewModel: UserViewModel by viewModels()
     private val studentCoursesViewModel: StudentCoursesViewModel by viewModels()
@@ -39,7 +39,7 @@ class RecommendViewDetail : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentRecommendViewDetailBinding.inflate(inflater, container, false)
         return binding.root
     }

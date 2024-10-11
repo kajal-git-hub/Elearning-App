@@ -36,7 +36,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import xyz.penpencil.competishun.databinding.FragmentMediaPlayerBinding
 
 @AndroidEntryPoint
-class MediaPlayerFragment : Fragment() {
+class MediaPlayerFragment : DrawerVisibility() {
 
     private lateinit var binding: FragmentMediaPlayerBinding
     private lateinit var player: ExoPlayer

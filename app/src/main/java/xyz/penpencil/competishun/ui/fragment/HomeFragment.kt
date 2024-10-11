@@ -301,34 +301,31 @@ class HomeFragment : Fragment() {
         navigationView.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.aboutUs -> {
-                    findNavController().navigate(R.id.AboutUs)
-//                    findNavController().navigate(R.id.AboutUs, null, NavOptions.Builder().setPopUpTo(R.id.homeFragment, true).build())
+                    preventToMultiCall((R.id.AboutUs))
                 }
 
                 R.id.bookmark -> {
-                    findNavController().navigate(R.id.BookMarkFragment)
+                    preventToMultiCall((R.id.BookMarkFragment))
                 }
 
                 R.id.download -> {
-                    findNavController().navigate(R.id.DownloadFragment)
+                    preventToMultiCall((R.id.DownloadFragment))
                 }
 
                 R.id.ContactUs -> {
-                    findNavController().navigate(R.id.ContactUs)
-//                    findNavController().navigate(R.id.ContactUs, null, NavOptions.Builder().setPopUpTo(R.id.homeFragment, true).build())
-
+                    preventToMultiCall((R.id.ContactUs))
                 }
 
                 R.id.tvTermsPrivacy -> {
-                    findNavController().navigate(R.id.TermsAndCondition)
+                    preventToMultiCall((R.id.TermsAndCondition))
                 }
 
                 R.id.privacyPolicy -> {
-                    findNavController().navigate(R.id.PolicyFragment)
+                    preventToMultiCall((R.id.PolicyFragment))
                 }
 
                 R.id.tvdisclaimer -> {
-                    findNavController().navigate(R.id.DisclaimerFragment)
+                    preventToMultiCall((R.id.DisclaimerFragment))
                 }
             }
             drawerLayout.closeDrawer(GravityCompat.START)
@@ -337,6 +334,7 @@ class HomeFragment : Fragment() {
         }
 
     }
+    private fun preventToMultiCall(id: Int) {    if (findNavController().currentDestination?.id != id) {        findNavController().navigate(id)    }}
 
     fun getMyDetails() {
         userViewModel.fetchUserDetails()

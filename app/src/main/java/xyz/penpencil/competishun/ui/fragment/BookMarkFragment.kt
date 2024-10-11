@@ -19,7 +19,7 @@ import xyz.penpencil.competishun.ui.main.HomeActivity
 import xyz.penpencil.competishun.utils.SharedPreferencesManager
 import java.io.File
 
-class BookMarkFragment : Fragment()  , BookMarkAdapter.OnVideoClickListener{
+class BookMarkFragment : DrawerVisibility()  , BookMarkAdapter.OnVideoClickListener{
 
     private lateinit var binding : FragmentBookMarkBinding
     private var allDownloadedItems: List<TopicContentModel> = emptyList()
@@ -30,21 +30,24 @@ class BookMarkFragment : Fragment()  , BookMarkAdapter.OnVideoClickListener{
 
     private var selectedTabPosition: Int = 0
 
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentBookMarkBinding.inflate(inflater,container,false)
-
-        savedInstanceState?.let {
-            selectedTabPosition = it.getInt("SELECTED_TAB_POSITION", 0)
-        }
-
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        savedInstanceState?.let {    selectedTabPosition = it.getInt("SELECTED_TAB_POSITION", 0)}
+
+
+        binding.BookmarkTabLayout.getTabAt(selectedTabPosition)?.select()
+
+
         (activity as? HomeActivity)?.showBottomNavigationView(false)
         (activity as? HomeActivity)?.showFloatingButton(false)
 
@@ -60,7 +63,6 @@ class BookMarkFragment : Fragment()  , BookMarkAdapter.OnVideoClickListener{
         setupTabLayout()
         loadDownloadedItems()
 
-        binding.BookmarkTabLayout.getTabAt(selectedTabPosition)?.select()
     }
     private fun showPdfItems() {
         val pdfItems = allDownloadedItems.filter { it.fileType == "PDF" }
@@ -142,23 +144,24 @@ class BookMarkFragment : Fragment()  , BookMarkAdapter.OnVideoClickListener{
         emptyStateLayout.visibility = if (isEmpty) View.VISIBLE else View.GONE
     }
 
-    override fun onVideoClick(folderContentId: String, url: String,name:String) {
-        playVideo(folderContentId, url,name)
+    override fun onVideoClick(folderContentId: String, name: String) {
+        playVideo(folderContentId, name)
     }
 
-    private fun playVideo(folderContentId: String, url: String,name:String) {
-        if (url.isNotEmpty()) {
+    private fun playVideo(folderContentId: String, name: String) {
+        val videoFileURL = File(requireContext().filesDir, "$name.mp4").absolutePath
+
+        if (videoFileURL.isNotEmpty()) {
             val bundle = Bundle().apply {
-                putString("url", url)
+                putString("url", videoFileURL)
                 putString("url_name", name)
                 putString("ContentId", folderContentId)
             }
-            findNavController().navigate(R.id.mediaFragment, bundle)
+            findNavController().navigate(R.id.downloadMediaPlayerFragment, bundle)
         } else {
             Toast.makeText(requireContext(), "Video file not found", Toast.LENGTH_SHORT).show()
         }
     }
-
     private fun setupToolbar() {
         val searchView = binding.TopViewBookMark.menu.findItem(R.id.action_search_download)?.actionView as? SearchView
         searchView?.queryHint = "Search Pdf/Video"
@@ -171,11 +174,8 @@ class BookMarkFragment : Fragment()  , BookMarkAdapter.OnVideoClickListener{
             }
         })
     }
-
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putInt("SELECTED_TAB_POSITION", selectedTabPosition)
-    }
-
+        outState.putInt("SELECTED_TAB_POSITION", selectedTabPosition)}
 
 }

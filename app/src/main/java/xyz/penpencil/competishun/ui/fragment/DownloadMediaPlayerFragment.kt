@@ -33,12 +33,13 @@ import com.otaliastudios.zoom.ZoomLayout
 import dagger.hilt.android.AndroidEntryPoint
 import xyz.penpencil.competishun.databinding.FragmentDownloadMediaPlayerBinding
 import xyz.penpencil.competishun.di.SharedVM
+import xyz.penpencil.competishun.ui.fragment.DrawerVisibility
 import xyz.penpencil.competishun.ui.main.HomeActivity
 import xyz.penpencil.competishun.ui.viewmodel.VideourlViewModel
 import java.io.File
 
 @AndroidEntryPoint
-class DownloadMediaPlayerFragment : Fragment() {
+class DownloadMediaPlayerFragment : DrawerVisibility() {
 
     private lateinit var binding: FragmentDownloadMediaPlayerBinding
     private lateinit var player: ExoPlayer
@@ -72,8 +73,9 @@ class DownloadMediaPlayerFragment : Fragment() {
 
         val videoUrl = arguments?.getString("url") ?: return
         val title = arguments?.getString("url_name") ?: return
-        Log.e("url","video_url:"+videoUrl)
-        Log.e("url","video_title:"+title)
+
+        Log.e("url", "video_url:$videoUrl")
+        Log.e("Title", "video_title:$title")
 
         if (title.isNotEmpty()) {
             binding.tittleBtn.visibility = View.VISIBLE
@@ -89,9 +91,9 @@ class DownloadMediaPlayerFragment : Fragment() {
         try {
             val file = File(videoUrl)
             val uri = if (file.exists()) {
-                Uri.fromFile(file) // Local file path
+                Uri.fromFile(file)
             } else {
-                Uri.parse(videoUrl) // Handle as a URL
+                Uri.parse(videoUrl)
             }
 
             Log.e("FilePath", "File exists: ${file.exists()}, Path: $file")

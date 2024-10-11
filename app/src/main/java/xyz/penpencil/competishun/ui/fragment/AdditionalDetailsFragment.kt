@@ -40,7 +40,7 @@ import java.io.OutputStream
 import java.util.Base64
 
 @AndroidEntryPoint
-class AdditionalDetailsFragment : Fragment() {
+class AdditionalDetailsFragment : DrawerVisibility() {
 
     private val binding by lazy {
         FragmentAdditionalDetailBinding.inflate(layoutInflater)
@@ -63,7 +63,7 @@ class AdditionalDetailsFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         return binding.root
     }
 
