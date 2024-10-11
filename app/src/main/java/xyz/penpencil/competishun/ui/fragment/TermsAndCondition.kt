@@ -13,7 +13,7 @@ import xyz.penpencil.competishun.data.model.TermsItem
 import xyz.penpencil.competishun.databinding.FragmentTermsAndConditionBinding
 import xyz.penpencil.competishun.ui.adapter.TermsAdapter
 
-class TermsAndCondition : Fragment() {
+class TermsAndCondition : DrawerVisibility() {
     private lateinit var binding : FragmentTermsAndConditionBinding
     private lateinit var termAdapter: TermsAdapter
 
@@ -26,7 +26,7 @@ class TermsAndCondition : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         binding = FragmentTermsAndConditionBinding.inflate(inflater,container,false)
         return binding.root

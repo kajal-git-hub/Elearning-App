@@ -22,7 +22,7 @@ import xyz.penpencil.competishun.databinding.FragmentProfileBinding
 
 
 @AndroidEntryPoint
-class ProfileFragment : Fragment() {
+class ProfileFragment : DrawerVisibility() {
 
     var TAG = "ProfileFragment"
     private var _binding: FragmentProfileBinding? = null
@@ -40,7 +40,7 @@ class ProfileFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
         return binding.root
     }
