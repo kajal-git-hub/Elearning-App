@@ -56,7 +56,7 @@ class BookMarkAdapter(
     }
 
     interface OnVideoClickListener {
-        fun onVideoClick(folderContentId: String, name: String)
+        fun onVideoClick(folderContentId: String, url: String, name: String)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -120,9 +120,9 @@ class BookMarkAdapter(
             intent.putExtra("PDF_URL", item.url)
             context.startActivity(intent)
         }
-        holder.forVideo.setOnClickListener {
-            videoClickListener.onVideoClick(item.id, item.topicName)
 
+        holder.forVideo.setOnClickListener {
+            videoClickListener.onVideoClick(item.id, item.url,item.topicName)
         }
 
     }

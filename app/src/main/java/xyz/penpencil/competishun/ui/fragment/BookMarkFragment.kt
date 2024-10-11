@@ -28,12 +28,18 @@ class BookMarkFragment : Fragment()  , BookMarkAdapter.OnVideoClickListener{
     private var videoItemsSize = ""
     private lateinit var emptyStateLayout: View
 
+    private var selectedTabPosition: Int = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentBookMarkBinding.inflate(inflater,container,false)
+
+        savedInstanceState?.let {
+            selectedTabPosition = it.getInt("SELECTED_TAB_POSITION", 0)
+        }
+
         return binding.root
     }
 
@@ -54,6 +60,7 @@ class BookMarkFragment : Fragment()  , BookMarkAdapter.OnVideoClickListener{
         setupTabLayout()
         loadDownloadedItems()
 
+        binding.BookmarkTabLayout.getTabAt(selectedTabPosition)?.select()
     }
     private fun showPdfItems() {
         val pdfItems = allDownloadedItems.filter { it.fileType == "PDF" }
@@ -120,6 +127,7 @@ class BookMarkFragment : Fragment()  , BookMarkAdapter.OnVideoClickListener{
                         0 -> showPdfItems()
                         1 -> showVideoItems()
                     }
+                    selectedTabPosition = it.position
                 }
             }
 
@@ -134,16 +142,14 @@ class BookMarkFragment : Fragment()  , BookMarkAdapter.OnVideoClickListener{
         emptyStateLayout.visibility = if (isEmpty) View.VISIBLE else View.GONE
     }
 
-    override fun onVideoClick(folderContentId: String, name: String) {
-        playVideo(folderContentId, name)
+    override fun onVideoClick(folderContentId: String, url: String,name:String) {
+        playVideo(folderContentId, url,name)
     }
 
-    private fun playVideo(folderContentId: String, name: String) {
-        val videoFileURL = File(requireContext().filesDir, "$name.mp4").absolutePath
-
-        if (videoFileURL.isNotEmpty()) {
+    private fun playVideo(folderContentId: String, url: String,name:String) {
+        if (url.isNotEmpty()) {
             val bundle = Bundle().apply {
-                putString("url", videoFileURL)
+                putString("url", url)
                 putString("url_name", name)
                 putString("ContentId", folderContentId)
             }
@@ -152,6 +158,7 @@ class BookMarkFragment : Fragment()  , BookMarkAdapter.OnVideoClickListener{
             Toast.makeText(requireContext(), "Video file not found", Toast.LENGTH_SHORT).show()
         }
     }
+
     private fun setupToolbar() {
         val searchView = binding.TopViewBookMark.menu.findItem(R.id.action_search_download)?.actionView as? SearchView
         searchView?.queryHint = "Search Pdf/Video"
@@ -164,5 +171,11 @@ class BookMarkFragment : Fragment()  , BookMarkAdapter.OnVideoClickListener{
             }
         })
     }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt("SELECTED_TAB_POSITION", selectedTabPosition)
+    }
+
 
 }

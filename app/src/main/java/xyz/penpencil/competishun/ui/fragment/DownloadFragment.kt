@@ -34,12 +34,19 @@ class DownloadFragment : Fragment(), DownloadedItemAdapter.OnVideoClickListener 
     private var pdfItemsSize = ""
     private var videoItemsSize = ""
 
+    private var selectedTabPosition: Int = 0
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentDownloadBinding.inflate(inflater, container, false)
         viewModel = ViewModelProvider(this).get(VideourlViewModel::class.java)
+
+        savedInstanceState?.let {
+            selectedTabPosition = it.getInt("SELECTED_TAB_POSITION", 0)
+        }
+
         return binding.root
     }
 
@@ -58,6 +65,8 @@ class DownloadFragment : Fragment(), DownloadedItemAdapter.OnVideoClickListener 
         setupTabLayout()
         setupToolbar()
         loadDownloadedItems()
+
+        binding.studentTabLayout.getTabAt(selectedTabPosition)?.select()
     }
 
     private fun setupTabLayout() {
@@ -68,6 +77,7 @@ class DownloadFragment : Fragment(), DownloadedItemAdapter.OnVideoClickListener 
                         0 -> showPdfItems()
                         1 -> showVideoItems()
                     }
+                    selectedTabPosition = it.position // Update the selected tab position
                 }
             }
 
@@ -93,17 +103,14 @@ class DownloadFragment : Fragment(), DownloadedItemAdapter.OnVideoClickListener 
         updateRecyclerView(pdfItems) // Default to show PDF items
     }
 
-    fun updateDownloadedItems(fileType:String)
-    {
+    fun updateDownloadedItems(fileType: String) {
         val sharedPreferencesManager = SharedPreferencesManager(requireActivity())
         allDownloadedItems = sharedPreferencesManager.getDownloadedItems()
-        if (fileType == "PDF")
-        {
+        if (fileType == "PDF") {
             val pdfItems = allDownloadedItems.filter { it.fileType == "PDF" }
             binding.studentTabLayout.getTabAt(0)?.text = "PDFs (${pdfItems.size})"
             updateRecyclerView(pdfItems)
-        }else
-        {
+        } else {
             val videoItems = allDownloadedItems.filter { it.fileType == "VIDEO" }
             binding.studentTabLayout.getTabAt(1)?.text = "Videos (${videoItems.size})"
             updateRecyclerView(videoItems)
@@ -131,7 +138,7 @@ class DownloadFragment : Fragment(), DownloadedItemAdapter.OnVideoClickListener 
     }
 
     private fun playVideo(folderContentId: String, name: String) {
-        val file=File(context?.filesDir,"$name.mp4")
+        val file = File(context?.filesDir, "$name.mp4")
         val videoFileURL = file.absolutePath
         Log.e("FilePath", "File exists: ${file.exists()}, Path: $videoFileURL")
 
@@ -159,16 +166,21 @@ class DownloadFragment : Fragment(), DownloadedItemAdapter.OnVideoClickListener 
         })
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt("SELECTED_TAB_POSITION", selectedTabPosition)
+    }
+
     override fun onResume() {
         super.onResume()
-//        requireActivity().window.setFlags(
-//            WindowManager.LayoutParams.FLAG_SECURE,
-//            WindowManager.LayoutParams.FLAG_SECURE
-//        )
+        requireActivity().window.setFlags(
+            WindowManager.LayoutParams.FLAG_SECURE,
+            WindowManager.LayoutParams.FLAG_SECURE
+        )
     }
 
     override fun onPause() {
         super.onPause()
-//        requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
+        requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
     }
 }
