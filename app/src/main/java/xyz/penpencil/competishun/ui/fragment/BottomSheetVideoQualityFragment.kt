@@ -113,7 +113,8 @@ class BottomSheetVideoQualityFragment : BottomSheetDialogFragment() {
         val fileName = "$name.mp4"
         val videoFile = File(context.filesDir, fileName)
 
-        if (videoFile.exists()) {
+        if (videoFile.exists() && videoFile.length()!=0L) {
+            Log.d("location",videoFile.absolutePath)
             Toast.makeText(context, "Video already downloaded choose Other", Toast.LENGTH_SHORT).show()
             dismiss()
             return

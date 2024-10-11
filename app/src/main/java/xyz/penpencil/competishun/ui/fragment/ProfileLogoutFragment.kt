@@ -55,12 +55,12 @@ class ProfileLogoutFragment : BottomSheetDialogFragment() {
         }
     }
     private fun deleteLocalFiles() {
-        val filesDir = requireContext().filesDir
+        val filesDir = requireActivity().filesDir
 
         val files = filesDir.listFiles()
 
         files?.forEach { file ->
-            if (file.name.endsWith(".mp4", ignoreCase = true) && file.name.endsWith("PDF",ignoreCase = true)) {
+            if (file.name.endsWith(".mp4", ignoreCase = true) || file.name.endsWith("PDF",ignoreCase = true)) {
                 Log.d("LogoutDelete", "Deleting file: ${file.name}")
                 file.delete()
             }
