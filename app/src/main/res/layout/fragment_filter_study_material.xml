@@ -178,7 +178,7 @@
                     android:layout_marginStart="12sp"
                     android:layout_marginTop="@dimen/_24dp"
                     android:layout_marginBottom="@dimen/_16dp"
-                    android:text="Apply Filter (2)"
+                    android:text=""
                     android:textColor="@color/white"
                     app:backgroundTint="@color/blue_3E3EF7"
                     app:cornerRadius="@dimen/_8dp"

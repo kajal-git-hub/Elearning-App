@@ -29,13 +29,14 @@ import xyz.penpencil.competishun.utils.Constants.IIT_JEE
 import xyz.penpencil.competishun.utils.Constants.NEET
 import xyz.penpencil.competishun.utils.Constants.OTHERS
 import xyz.penpencil.competishun.utils.Constants.UCET
+import xyz.penpencil.competishun.utils.FilterSelectionListener
 import xyz.penpencil.competishun.utils.HelperFunctions
 import xyz.penpencil.competishun.utils.SharedPreferencesManager
 import xyz.penpencil.competishun.utils.StudentCourseItemClickListener
 
 
 @AndroidEntryPoint
-class StudyMaterialFragment : Fragment(), StudentCourseItemClickListener {
+class StudyMaterialFragment : Fragment(), StudentCourseItemClickListener ,FilterSelectionListener {
     val TAG = "StudyMaterialFragment"
     private lateinit var binding : FragmentStudyMaterialBinding
     private val courseViewModel: StudentCoursesViewModel by viewModels()
@@ -59,8 +60,12 @@ class StudyMaterialFragment : Fragment(), StudentCourseItemClickListener {
         sharedPreferencesManager= SharedPreferencesManager(requireContext())
         binding.rvStudyMaterial.layoutManager = LinearLayoutManager(context)
         setupToggleRecyclerView()
+        binding.backIcon.setOnClickListener {
+            requireActivity().onBackPressedDispatcher.onBackPressed()
+        }
         fetchCoursesForClass("","")
         binding.clFilterText.setOnClickListener {
+
             val filterStudyMaterialFragment = FilterStudyMaterialFragment()
             filterStudyMaterialFragment.show(childFragmentManager, "FilterStudyMaterialFragment")
 
@@ -119,6 +124,42 @@ class StudyMaterialFragment : Fragment(), StudentCourseItemClickListener {
 
     override fun onCourseItemClicked(course: AllCourseForStudentQuery.Course, bundle: Bundle) {
         TODO("Not yet implemented")
+    }
+
+    override fun onFiltersSelected(selectedExam: String?, selectedSubject: String?) {
+        Log.d("Filters", "Selected Exam: $selectedExam, Selected Subject: $selectedSubject")
+        val filters = when {
+            // If both selectedExam and selectedSubject are present
+            selectedExam != null && selectedSubject != null -> FindAllCourseInputStudent(
+                category_name = Optional.present("Study Material"),
+                exam_type = Optional.present(selectedExam),
+                course_class = Optional.present(selectedSubject)
+            )
+
+            // If only selectedExam is present
+            selectedExam != null -> FindAllCourseInputStudent(
+                category_name = Optional.present("Study Material"),
+                exam_type = Optional.present(selectedExam)
+            )
+
+            // If only selectedSubject is present
+            selectedSubject != null -> FindAllCourseInputStudent(
+                category_name = Optional.present("Study Material"),
+                course_class = Optional.present(selectedSubject)
+            )
+
+            // Default case if neither is selected (optional, if needed)
+            else -> {
+                FindAllCourseInputStudent(
+                category_name = Optional.present("Study Material"))
+            }
+        }
+
+        filters?.let {
+            courseViewModel.fetchCourses(it)
+            observeCourses()
+        }
+
     }
 
 }

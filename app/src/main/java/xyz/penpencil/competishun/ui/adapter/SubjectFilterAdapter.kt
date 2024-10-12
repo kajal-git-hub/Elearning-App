@@ -11,55 +11,64 @@ import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.databinding.GetstartedItemlayoutBinding
 import xyz.penpencil.competishun.databinding.InstallementItemBinding
 import xyz.penpencil.competishun.databinding.SelectExamItemBinding
+import xyz.penpencil.competishun.databinding.SelectSubjectItemBinding
 
-
-class ExamFilterAdapter(
+class SubjectFilterAdapter(
     private val options: List<String>,
     private val onItemClick: (String) -> Unit
-) : RecyclerView.Adapter<ExamFilterAdapter.ExamFilterHolder>() {
+) : RecyclerView.Adapter<SubjectFilterAdapter.SubjectFilterHolder>() {
 
     private var selectedPosition: Int = RecyclerView.NO_POSITION
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExamFilterHolder {
-        val binding = SelectExamItemBinding.inflate(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SubjectFilterHolder {
+        val binding = SelectSubjectItemBinding.inflate(
             LayoutInflater.from(parent.context), parent, false
         )
-        return ExamFilterHolder(binding)
+        return SubjectFilterHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: ExamFilterHolder, position: Int) {
+    override fun onBindViewHolder(holder: SubjectFilterHolder, position: Int) {
         val option = options[position]
         holder.bind(option, position == selectedPosition)
 
         holder.itemView.setOnClickListener {
             val previousPosition = selectedPosition
             selectedPosition = position
+
+            // Notify to refresh the previous and current selected positions
             notifyItemChanged(previousPosition)  // Unhighlight the previous selection
             notifyItemChanged(position)  // Highlight the new selection
 
-            onItemClick(option)  // Pass selected item to the fragment
+            onItemClick(option)  // Pass selected item to the fragment or activity
         }
     }
 
     override fun getItemCount(): Int = options.size
 
-    class ExamFilterHolder(private val binding: SelectExamItemBinding) : RecyclerView.ViewHolder(binding.root) {
+    class SubjectFilterHolder(private val binding: SelectSubjectItemBinding) : RecyclerView.ViewHolder(binding.root) {
         private val textView: MaterialTextView = itemView.findViewById(R.id.radio_button_profileExam)
 
         fun bind(option: String, isSelected: Boolean) {
+            binding.radioButtonProfileExam
+            if (option == "12+" ){ textView.text = "12th +" }else
             textView.text = option
 
             if (isSelected) {
+                // Selected state
                 textView.setTextColor(ContextCompat.getColor(itemView.context, R.color.blue_3E3EF7))
-                val drawableResId = if (isSelected) R.drawable.square_tick else R.drawable.property_default_check
+                val drawableResId = R.drawable.square_tick
                 val drawable = ContextCompat.getDrawable(binding.root.context, drawableResId)
-                val backgroundResId = if (isSelected) R.drawable.bg_filter_selected else R.drawable.getstarted_itembg_unselected
+                val backgroundResId = R.drawable.bg_filter_selected
                 binding.getStartedBgLayoutFirst.setBackgroundResource(backgroundResId)
-               // itemView.setBackgroundResource(drawableResId)
-                binding.radioButtonProfileExam.setCompoundDrawablesWithIntrinsicBounds(drawable,null,null,null)
+                binding.radioButtonProfileExam.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
             } else {
+
                 textView.setTextColor(ContextCompat.getColor(itemView.context, R.color.recycler_txt))
-                itemView.setBackgroundResource(R.drawable.bg_filter_purchase)
+                val backgroundResId = R.drawable.bg_filter_purchase
+                val drawableResId = R.drawable.property_default_check
+                val drawable = ContextCompat.getDrawable(binding.root.context, drawableResId)
+                binding.getStartedBgLayoutFirst.setBackgroundResource(backgroundResId)
+                binding.radioButtonProfileExam.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
             }
         }
     }
