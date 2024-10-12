@@ -96,15 +96,13 @@ class DownloadFragment : DrawerVisibility(), DownloadedItemAdapter.OnVideoClickL
         binding.studentTabLayout.getTabAt(0)?.text = "PDFs ($pdfItemsSize)"
         binding.studentTabLayout.getTabAt(1)?.text = "Videos ($videoItemsSize)"
 
-        updateRecyclerView(pdfItems) // Default to show PDF items
+        updateRecyclerView(pdfItems)
     }
 
-    fun updateDownloadedItems(fileType:String)
-    {
+    fun updateDownloadedItems(fileType:String) {
         val sharedPreferencesManager = SharedPreferencesManager(requireActivity())
         allDownloadedItems = sharedPreferencesManager.getDownloadedItems()
-        if (fileType == "PDF")
-        {
+        if (fileType == "PDF") {
             val pdfItems = allDownloadedItems.filter { it.fileType == "PDF" }
             binding.studentTabLayout.getTabAt(0)?.text = "PDFs (${pdfItems.size})"
             updateRecyclerView(pdfItems)

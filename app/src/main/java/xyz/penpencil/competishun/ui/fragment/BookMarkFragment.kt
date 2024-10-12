@@ -144,10 +144,6 @@ class BookMarkFragment : DrawerVisibility()  , BookMarkAdapter.OnVideoClickListe
         emptyStateLayout.visibility = if (isEmpty) View.VISIBLE else View.GONE
     }
 
-    override fun onVideoClick(folderContentId: String, name: String) {
-        playVideo(folderContentId, name)
-    }
-
     private fun playVideo(folderContentId: String, name: String) {
         val videoFileURL = File(requireContext().filesDir, "$name.mp4").absolutePath
 
@@ -162,6 +158,7 @@ class BookMarkFragment : DrawerVisibility()  , BookMarkAdapter.OnVideoClickListe
             Toast.makeText(requireContext(), "Video file not found", Toast.LENGTH_SHORT).show()
         }
     }
+
     private fun setupToolbar() {
         val searchView = binding.TopViewBookMark.menu.findItem(R.id.action_search_download)?.actionView as? SearchView
         searchView?.queryHint = "Search Pdf/Video"
@@ -174,8 +171,15 @@ class BookMarkFragment : DrawerVisibility()  , BookMarkAdapter.OnVideoClickListe
             }
         })
     }
+
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putInt("SELECTED_TAB_POSITION", selectedTabPosition)}
+        outState.putInt("SELECTED_TAB_POSITION", selectedTabPosition)
+    }
+
+    override fun onVideoClick(folderContentId: String, name: String) {
+        playVideo(folderContentId, name)
+    }
+
 
 }

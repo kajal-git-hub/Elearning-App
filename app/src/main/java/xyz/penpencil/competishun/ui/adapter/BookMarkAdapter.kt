@@ -56,7 +56,7 @@ class BookMarkAdapter(
     }
 
     interface OnVideoClickListener {
-        fun onVideoClick(folderContentId: String, url: String, name: String)
+        fun onVideoClick(folderContentId: String, name: String)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -122,7 +122,7 @@ class BookMarkAdapter(
         }
 
         holder.forVideo.setOnClickListener {
-            videoClickListener.onVideoClick(item.id, item.url,item.topicName)
+            videoClickListener.onVideoClick(item.id,item.topicName)
         }
 
     }
