@@ -14,15 +14,15 @@
             android:icon="@drawable/bookmark"
             android:title="@string/title_bookmark"/>
 
-        <item
-            android:id="@+id/News"
-            android:icon="@drawable/document_text"
-            android:title="@string/title_News"/>
+<!--        <item-->
+<!--            android:id="@+id/News"-->
+<!--            android:icon="@drawable/document_text"-->
+<!--            android:title="@string/title_News"/>-->
 
-        <item
-            android:id="@+id/Announcements"
-            android:icon="@drawable/announcement"
-            android:title="@string/title_Announcement"/>
+<!--        <item-->
+<!--            android:id="@+id/Announcements"-->
+<!--            android:icon="@drawable/announcement"-->
+<!--            android:title="@string/title_Announcement"/>-->
 
         <item
             android:id="@+id/aboutUs"
@@ -48,9 +48,9 @@
             android:id="@+id/tvdisclaimer"
             android:icon="@drawable/disclaimer"
             android:title="@string/title_disclaimer"/>
-        <item
-            android:id="@+id/tvRate"
-            android:icon="@drawable/rateapp"
-            android:title="@string/title_rate"/>
+<!--        <item-->
+<!--            android:id="@+id/tvRate"-->
+<!--            android:icon="@drawable/rateapp"-->
+<!--            android:title="@string/title_rate"/>-->
     </group>
 </menu>
