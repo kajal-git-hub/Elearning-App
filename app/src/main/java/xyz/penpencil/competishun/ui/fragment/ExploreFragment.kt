@@ -58,7 +58,7 @@ import xyz.penpencil.competishun.ui.main.PdfViewerActivity
 
 
 @AndroidEntryPoint
-class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
+class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListener,
     StudentCourseItemClickListener {
 
     private lateinit var binding: FragmentExploreBinding
@@ -88,7 +88,7 @@ class ExploreFragment : Fragment(), OurContentAdapter.OnItemClickListener,
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentExploreBinding.inflate(inflater, container, false).apply {
             this.courseByIDViewModel = this@ExploreFragment.getCourseByIDViewModel
             lifecycleOwner = viewLifecycleOwner

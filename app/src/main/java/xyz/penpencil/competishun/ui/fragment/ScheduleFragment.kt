@@ -37,7 +37,7 @@ import java.time.format.DateTimeFormatter
 import java.util.Calendar
 
 @AndroidEntryPoint
-class ScheduleFragment : Fragment(), ToolbarCustomizationListener {
+class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
 
     private val binding by lazy {
         FragmentScheduleBinding.inflate(layoutInflater)

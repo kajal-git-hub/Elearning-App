@@ -19,9 +19,9 @@ import xyz.penpencil.competishun.ui.main.HomeActivity
 import xyz.penpencil.competishun.utils.SharedPreferencesManager
 import java.io.File
 
-class BookMarkFragment : DrawerVisibility()  , BookMarkAdapter.OnVideoClickListener{
+class BookMarkFragment : DrawerVisibility(), BookMarkAdapter.OnVideoClickListener {
 
-    private lateinit var binding : FragmentBookMarkBinding
+    private lateinit var binding: FragmentBookMarkBinding
     private var allDownloadedItems: List<TopicContentModel> = emptyList()
     private lateinit var bookmarkAdapter: BookMarkAdapter
     private var pdfItemsSize = ""
@@ -35,14 +35,14 @@ class BookMarkFragment : DrawerVisibility()  , BookMarkAdapter.OnVideoClickListe
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentBookMarkBinding.inflate(inflater,container,false)
+        binding = FragmentBookMarkBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        savedInstanceState?.let {    selectedTabPosition = it.getInt("SELECTED_TAB_POSITION", 0)}
+        savedInstanceState?.let { selectedTabPosition = it.getInt("SELECTED_TAB_POSITION", 0) }
 
 
         binding.BookmarkTabLayout.getTabAt(selectedTabPosition)?.select()
@@ -64,6 +64,7 @@ class BookMarkFragment : DrawerVisibility()  , BookMarkAdapter.OnVideoClickListe
         loadDownloadedItems()
 
     }
+
     private fun showPdfItems() {
         val pdfItems = allDownloadedItems.filter { it.fileType == "PDF" }
 //        updateRecyclerView(pdfItems)
@@ -80,22 +81,21 @@ class BookMarkFragment : DrawerVisibility()  , BookMarkAdapter.OnVideoClickListe
 
 
     }
-    fun updateDownloadedItems(fileType:String)
-    {
+
+    fun updateDownloadedItems(fileType: String) {
         val sharedPreferencesManager = SharedPreferencesManager(requireActivity())
         allDownloadedItems = sharedPreferencesManager.getDownloadedItemsBm()
-        if (fileType == "PDF")
-        {
+        if (fileType == "PDF") {
             val pdfItems = allDownloadedItems.filter { it.fileType == "PDF" }
             binding.BookmarkTabLayout.getTabAt(0)?.text = "PDFs (${pdfItems.size})"
             updateRecyclerView(pdfItems)
-        }else
-        {
+        } else {
             val videoItems = allDownloadedItems.filter { it.fileType == "VIDEO" }
             binding.BookmarkTabLayout.getTabAt(1)?.text = "Videos (${videoItems.size})"
             updateRecyclerView(videoItems)
         }
     }
+
     fun loadDownloadedItems() {
         val sharedPreferencesManager = SharedPreferencesManager(requireActivity())
         allDownloadedItems = sharedPreferencesManager.getDownloadedItemsBm()
@@ -110,19 +110,28 @@ class BookMarkFragment : DrawerVisibility()  , BookMarkAdapter.OnVideoClickListe
         binding.BookmarkTabLayout.getTabAt(0)?.text = "PDFs ($pdfItemsSize)"
         binding.BookmarkTabLayout.getTabAt(1)?.text = "Videos ($videoItemsSize)"
 
-        updateRecyclerView(pdfItems)
+        if (binding.BookmarkTabLayout.getTabAt(selectedTabPosition)?.text == "PDFs ($pdfItemsSize)") {
+            updateRecyclerView(pdfItems)
+        }
+        if (binding.BookmarkTabLayout.getTabAt(selectedTabPosition)?.text == "Videos ($videoItemsSize)") {
+            updateRecyclerView(videoItems)
+        }
 //        checkEmptyState()
     }
+
     private fun updateRecyclerView(items: List<TopicContentModel>) {
         bookmarkAdapter = BookMarkAdapter(
             requireContext(),
-            items.toMutableList(),  parentFragmentManager,this,this)
+            items.toMutableList(), parentFragmentManager, this, this
+        )
         binding.rvBookmark.adapter = bookmarkAdapter
 //        checkEmptyState() // Check for empty state after updating the adapter
 
     }
+
     private fun setupTabLayout() {
-        binding.BookmarkTabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+        binding.BookmarkTabLayout.addOnTabSelectedListener(object :
+            TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 tab?.let {
                     when (it.position) {
@@ -144,6 +153,10 @@ class BookMarkFragment : DrawerVisibility()  , BookMarkAdapter.OnVideoClickListe
         emptyStateLayout.visibility = if (isEmpty) View.VISIBLE else View.GONE
     }
 
+    override fun onVideoClick(folderContentId: String, name: String) {
+        playVideo(folderContentId, name)
+    }
+
     private fun playVideo(folderContentId: String, name: String) {
         val videoFileURL = File(requireContext().filesDir, "$name.mp4").absolutePath
 
@@ -160,7 +173,8 @@ class BookMarkFragment : DrawerVisibility()  , BookMarkAdapter.OnVideoClickListe
     }
 
     private fun setupToolbar() {
-        val searchView = binding.TopViewBookMark.menu.findItem(R.id.action_search_download)?.actionView as? SearchView
+        val searchView =
+            binding.TopViewBookMark.menu.findItem(R.id.action_search_download)?.actionView as? SearchView
         searchView?.queryHint = "Search Pdf/Video"
         searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean = false
@@ -176,10 +190,5 @@ class BookMarkFragment : DrawerVisibility()  , BookMarkAdapter.OnVideoClickListe
         super.onSaveInstanceState(outState)
         outState.putInt("SELECTED_TAB_POSITION", selectedTabPosition)
     }
-
-    override fun onVideoClick(folderContentId: String, name: String) {
-        playVideo(folderContentId, name)
-    }
-
 
 }

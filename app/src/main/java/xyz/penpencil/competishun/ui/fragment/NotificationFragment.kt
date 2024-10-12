@@ -13,7 +13,7 @@ import xyz.penpencil.competishun.data.model.NotificationSection
 import xyz.penpencil.competishun.databinding.FragmentNotificationBinding
 import xyz.penpencil.competishun.ui.adapter.NotificationSectionAdapter
 
-class NotificationFragment : Fragment() {
+class NotificationFragment : DrawerVisibility() {
 
     private var _binding: FragmentNotificationBinding? = null
     private val binding get() = _binding!!
@@ -30,7 +30,7 @@ class NotificationFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View{
         _binding = FragmentNotificationBinding.inflate(inflater, container, false)
         return binding.root
     }

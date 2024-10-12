@@ -15,6 +15,7 @@ import xyz.penpencil.competishun.data.model.TopicContentModel
 import xyz.penpencil.competishun.ui.fragment.BookMarkFragment
 import xyz.penpencil.competishun.ui.fragment.BottomSheetBookmarkDeleteDownload
 import xyz.penpencil.competishun.R
+import xyz.penpencil.competishun.ui.fragment.closeListener
 import xyz.penpencil.competishun.ui.main.PdfViewerActivity
 import xyz.penpencil.competishun.utils.SharedPreferencesManager
 import java.io.File
@@ -53,6 +54,7 @@ class BookMarkAdapter(
             })
         }
         notifyDataSetChanged()
+//        fragment.checkEmptyState()
     }
 
     interface OnVideoClickListener {
@@ -91,6 +93,12 @@ class BookMarkAdapter(
 
             holder.dotExtraInfoDownload.setOnClickListener {
                 val bottomSheet = BottomSheetBookmarkDeleteDownload(this)
+
+                bottomSheet.closeFragment(object : closeListener {
+                    override fun close() {
+                       bottomSheet.dismiss()
+                    }
+                })
                 bottomSheet.setItem(position, item)
                 bottomSheet.show(fragmentManager, bottomSheet.tag)
             }

@@ -18,13 +18,13 @@ import dagger.hilt.android.AndroidEntryPoint
 import xyz.penpencil.competishun.R
 
 @AndroidEntryPoint
-class CoursesFragment : Fragment() {
+class CoursesFragment : DrawerVisibility() {
     private val  studentCoursesViewModel: StudentCoursesViewModel by viewModels()
     var categoryName = ""
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         return inflater.inflate(R.layout.fragment_courses, container, false)
     }
 

@@ -34,7 +34,7 @@ import xyz.penpencil.competishun.di.Result
 import xyz.penpencil.competishun.ui.main.PdfViewerActivity
 
 @AndroidEntryPoint
-class SubjectContentFragment : Fragment() {
+class SubjectContentFragment : DrawerVisibility() {
 
     private lateinit var binding: FragmentSubjectContentBinding
     private val coursesViewModel: CoursesViewModel by viewModels()
@@ -47,7 +47,7 @@ class SubjectContentFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentSubjectContentBinding.inflate(inflater, container, false)
 
 

@@ -120,6 +120,7 @@ class MyCartFragment : DrawerVisibility(), OnCartItemRemovedListener, MyCartAdap
             result.onSuccess { data ->
                 val userDetails = data.getMyDetails
                 userId = userDetails.id
+                sharedPreferencesManager.userId =  userId
                 userName = userDetails.fullName?:""
                 sharedPreferencesManager.mobileNo = userDetails.mobileNumber
             }.onFailure { exception ->

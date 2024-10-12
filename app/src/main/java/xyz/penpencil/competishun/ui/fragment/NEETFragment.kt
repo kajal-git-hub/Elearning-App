@@ -30,7 +30,7 @@ import xyz.penpencil.competishun.databinding.FragmentCourseBinding
 
 private const val TAG = "NEETFragment"
 @AndroidEntryPoint
-class NEETFragment : Fragment(), StudentCourseItemClickListener {
+class NEETFragment : DrawerVisibility(), StudentCourseItemClickListener {
     private lateinit var recyclerView: RecyclerView
     private lateinit var binding: FragmentCourseBinding
     var courseListSize = ""

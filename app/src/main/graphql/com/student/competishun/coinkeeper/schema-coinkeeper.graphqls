@@ -59,7 +59,7 @@ input CreatePaymentInput {
 }
 
 type CustomOrder {
-  amountPaid: Int!
+  amountPaid: Float!
 
   createdAt: DateTime!
 
@@ -225,6 +225,28 @@ type PaymentBreakDownResponse {
   status: String!
 }
 
+type PaymentKpis {
+  currentFailedTransactions: Float!
+
+  currentPaidFirstTransactions: Float!
+
+  currentPaidSecondTransactions: Float!
+
+  currentSuccessfullTransactions: Float!
+
+  currentTotalTransactions: Float!
+
+  percentageFailedTransactions: String!
+
+  percentagePaidFirstTransactions: String!
+
+  percentagePaidSecondTransactions: String!
+
+  percentageSuccessfullTransactions: String!
+
+  percentageTotalTransactions: String!
+}
+
 type PaymentResponse {
   count: Int!
 
@@ -249,6 +271,8 @@ type Query {
   generateReceipt(transactionId: String!): String!
 
   getPaymentDetailsInternalQ(ids: [String!]!): [Payment]!
+
+  getPaymentKPIs: PaymentKpis!
 
   orderById(id: String!): Order!
 

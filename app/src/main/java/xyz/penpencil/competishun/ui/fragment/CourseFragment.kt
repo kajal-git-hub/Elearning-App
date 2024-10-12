@@ -28,7 +28,7 @@ import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.databinding.FragmentCourseBinding
 
 @AndroidEntryPoint
-class CourseFragment : Fragment(), StudentCourseItemClickListener {
+class CourseFragment : DrawerVisibility(), StudentCourseItemClickListener {
     private lateinit var recyclerView: RecyclerView
     private lateinit var binding: FragmentCourseBinding
     var courseListSize = ""

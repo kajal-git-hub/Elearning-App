@@ -86,17 +86,31 @@ class ReferenceFragment : Fragment() {
                 sharedPreferencesManager.reference = SharedSelectedItem
 
                 sharedPreferencesManager.isReferenceSelectionInProgress = false
+                Log.e("emailpresen",sharedPreferencesManager.email.toString())
+                if (sharedPreferencesManager.email.isNullOrEmpty()) {
+                    Log.e("emailpresen",sharedPreferencesManager.email.toString())
+                    val updateUserInput = UpdateUserInput(
+                        city = Optional.Present(sharedPreferencesManager.city),
+                        fullName = Optional.Present(sharedPreferencesManager.name),
+                        preparingFor = Optional.Present(sharedPreferencesManager.preparingFor),
+                        reference = Optional.Present(sharedPreferencesManager.reference),
+                        targetYear = Optional.Present(sharedPreferencesManager.targetYear),
+                    )
+                    updateUserViewModel.updateUser(updateUserInput,null,null)
+                } else {
+                    Log.e("emailpresenELSE",sharedPreferencesManager.email.toString())
+                      val updateUserInput = UpdateUserInput(
+                        city = Optional.Present(sharedPreferencesManager.city),
+                        fullName = Optional.Present(sharedPreferencesManager.name),
+                        preparingFor = Optional.Present(sharedPreferencesManager.preparingFor),
+                        reference = Optional.Present(sharedPreferencesManager.reference),
+                        targetYear = Optional.Present(sharedPreferencesManager.targetYear), mobileNumber = Optional.present(sharedPreferencesManager.mobileNo), countryCode = Optional.present("+91")
+                    )
+                    updateUserViewModel.updateUser(updateUserInput,null,null)
+                }
 
 
-                val updateUserInput = UpdateUserInput(
-                    city = Optional.Present(sharedPreferencesManager.city),
-                    fullName = Optional.Present(sharedPreferencesManager.name),
-                    preparingFor = Optional.Present(sharedPreferencesManager.preparingFor),
-                    reference = Optional.Present(sharedPreferencesManager.reference),
-                    targetYear = Optional.Present(sharedPreferencesManager.targetYear)
-                )
 
-                updateUserViewModel.updateUser(updateUserInput,null,null)
             } else {
                 Toast.makeText(context, "Please select an option", Toast.LENGTH_SHORT).show()
             }

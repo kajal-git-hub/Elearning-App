@@ -7,44 +7,19 @@
     android:background="@drawable/card_bg"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <ImageView
         android:id="@+id/cl_course_book"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/_92dp"
+        android:layout_height="@dimen/_65dp"
         android:layout_marginTop="14dp"
+        android:layout_marginBottom="14dp"
         android:layout_marginStart="12dp"
         android:background="@drawable/frame_1707480919"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <ImageView
-            android:id="@+id/iv_subject_book_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/group_1707478995"
-            android:layout_marginStart="12dp"
-            android:layout_marginEnd="@dimen/_15dp"
-            android:layout_marginTop="13dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
 
-        <ImageView
-            android:id="@+id/iv_book_Shadow"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ellipse_17956"
-            android:layout_marginStart="@dimen/_20dp"
-            android:layout_marginEnd="@dimen/_20dp"
-            android:layout_marginTop="@dimen/_6dp"
-            android:layout_marginBottom="10dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/iv_subject_book_icon" />
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </ImageView>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/clItemCount"
@@ -67,6 +42,7 @@
             app:layout_constraintBottom_toBottomOf="parent"/>
 
         <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/mt_no_item"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="34 PDFs"
