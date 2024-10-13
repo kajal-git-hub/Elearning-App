@@ -134,12 +134,13 @@
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/et_homeWorkPdf"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="12sp"
             android:textColor="@color/blue"
             android:textStyle="bold"
-            android:layout_marginStart="5sp"
+            android:ellipsize="end"
+            app:layout_constraintEnd_toStartOf="@+id/videoicon"
             android:fontFamily="@font/nunito"
             android:text="Competishun.pdf"
             app:layout_constraintTop_toTopOf="parent"
