@@ -59,60 +59,33 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
         isTshirtSizeSelected = true
 
         sharedPreferencesManager.shirtSize = tShirtSize
-
-
         updateButtonState()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
         (activity as? HomeActivity)?.showBottomNavigationView(false)
         (activity as? HomeActivity)?.showFloatingButton(false)
 
-        myCourses()
-        Log.d("fieldsToVisible", fieldsToVisible.toString())
-
         sharedPreferencesManager = SharedPreferencesManager(requireContext())
 
+        // Populate saved data from SharedPreferences
+        populateSavedData()
 
-        binding.etFullName.setText(sharedPreferencesManager.name?:"")
-        binding.etFathersName.setText(sharedPreferencesManager.fatherName ?: "")
-        binding.etWhatsappNumber.setText(sharedPreferencesManager.whatsUpNo ?: "")
-        tShirtSize = sharedPreferencesManager.shirtSize ?: ""
-        if (tShirtSize.isNotEmpty()) {
-            binding.spinnerTshirtSize.text = tShirtSize
-            isTshirtSizeSelected = true
-        }
+        // Show bottom sheet description if not shown before
+        showBottomSheetIfFirstTime()
 
-        if(!sharedPreferencesManager.isBottomSheetShown){
-            val bottomSheetDescriptionFragment = BottomSheetPersonalDetailsFragment()
-            bottomSheetDescriptionFragment.show(childFragmentManager, "BottomSheetDescriptionFragment")
-
-            sharedPreferencesManager.isBottomSheetShown = true
-
-        }
-
-
+        // Fetch courses and then update visibility
+        fetchCoursesAndUpdateUI()
 
         userViewModel.fetchUserDetails()
 
         binding.spinnerTshirtSize.setOnClickListener {
-            if (!isBottomSheetShowing) {
-                isBottomSheetShowing = true
-                val bottomSheet = BottomSheetTSizeFragment().apply {
-                    setOnTSizeSelectedListener(this@PersonalDetailsFragment)
-                    arguments = Bundle().apply {
-                        putString("selectedSize", tShirtSize)
-                    }
-                }
-                bottomSheet.show(childFragmentManager, "BottomSheetTSizeFragment")
-            }
+            showBottomSheetTSize()
         }
 
         binding.btnAddDetails.setOnClickListener {
-            sharedPreferencesManager.isFormValid = true
             if (isFormValid()) {
                 updateUserDetails()
                 findNavController().navigate(R.id.action_PersonalDetails_to_AdditionalDetail)
@@ -125,15 +98,81 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
         binding.etFathersName.addTextChangedListener(textWatcher)
         binding.etWhatsappNumber.addTextChangedListener(mobileNumberTextWatcher)
 
-        updateUIVisibility()
+        updateButtonState()
+    }
+
+    private fun fetchCoursesAndUpdateUI() {
+        myCoursesViewModel.myCourses.observe(viewLifecycleOwner) { result ->
+            result.onSuccess { data ->
+                fieldsToVisible.clear()
+                data.myCourses?.forEach { courselist ->
+                    courselist.course.other_requirements?.let { requirements ->
+                        fieldsToVisible.addAll(requirements.map { it.toString() })
+                    }
+                    Log.d("fieldsToVisible",fieldsToVisible.toString())
+                }
+                // Update UI visibility after fetching courses
+                updateUIVisibility()
+            }.onFailure {
+                Log.e("MyCoursesFail", it.message.toString())
+                Toast.makeText(requireContext(), "Failed to load courses: ${it.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        // Fetch the courses
+        myCoursesViewModel.fetchMyCourses()
+    }
+
+    private fun updateUIVisibility() {
+        // Update visibility based on fieldsToVisible list
+        binding.tvFathersNameLabel.visibility = if (fieldsToVisible.contains("FATHERS_NAME")) View.VISIBLE else View.GONE
+        binding.etFathersName.visibility = if (fieldsToVisible.contains("FATHERS_NAME")) View.VISIBLE else View.GONE
+        binding.tvWhatsappNumberLabel.visibility = if (fieldsToVisible.contains("WHATSAPP_NUMBER")) View.VISIBLE else View.GONE
+        binding.etWhatsappNumber.visibility = if (fieldsToVisible.contains("WHATSAPP_NUMBER")) View.VISIBLE else View.GONE
+        binding.tvTshirtSizeLabel.visibility = if (fieldsToVisible.contains("T_SHIRTS")) View.VISIBLE else View.GONE
+        binding.spinnerTshirtSize.visibility = if (fieldsToVisible.contains("T_SHIRTS")) View.VISIBLE else View.GONE
+        binding.tvTshirtNote.visibility = if (fieldsToVisible.contains("T_SHIRTS")) View.VISIBLE else View.GONE
+
+        updateButtonState()
+    }
+
+    private fun populateSavedData() {
+        binding.etFullName.setText(sharedPreferencesManager.name ?: "")
+        binding.etFathersName.setText(sharedPreferencesManager.fatherName ?: "")
+        binding.etWhatsappNumber.setText(sharedPreferencesManager.whatsUpNo ?: "")
+        tShirtSize = sharedPreferencesManager.shirtSize ?: ""
+        if (tShirtSize.isNotEmpty()) {
+            binding.spinnerTshirtSize.text = tShirtSize
+            isTshirtSizeSelected = true
+        }
+    }
+
+    private fun showBottomSheetIfFirstTime() {
+        if (!sharedPreferencesManager.isBottomSheetShown) {
+            val bottomSheetDescriptionFragment = BottomSheetPersonalDetailsFragment()
+            bottomSheetDescriptionFragment.show(childFragmentManager, "BottomSheetDescriptionFragment")
+            sharedPreferencesManager.isBottomSheetShown = true
+        }
+    }
+
+    private fun showBottomSheetTSize() {
+        if (!isBottomSheetShowing) {
+            isBottomSheetShowing = true
+            val bottomSheet = BottomSheetTSizeFragment().apply {
+                setOnTSizeSelectedListener(this@PersonalDetailsFragment)
+                arguments = Bundle().apply {
+                    putString("selectedSize", tShirtSize)
+                }
+            }
+            bottomSheet.show(childFragmentManager, "BottomSheetTSizeFragment")
+        }
     }
 
     private fun updateUserDetails() {
         userViewModel.userDetails.observe(viewLifecycleOwner) { result ->
             result.onSuccess { data ->
                 val userDetails = data.getMyDetails
-                Log.e("userDetails",userDetails.toString())
-                  updateUserInput = UpdateUserInput(
+                updateUserInput = UpdateUserInput(
                     city = Optional.Present(userDetails.userInformation.city),
                     fullName = Optional.Present(userDetails.fullName),
                     preparingFor = Optional.Present(userDetails.userInformation.preparingFor),
@@ -144,32 +183,23 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
                     fatherName = Optional.Present(fatherName),
                     tShirtSize = Optional.Present(tShirtSize)
                 )
-                userUpdate(updateUserInput,null,null)
-                Log.d("updateUserInput",updateUserInput.toString())
+                userUpdate(updateUserInput, null, null)
                 sharedPreferencesManager.name = userDetails.fullName
-
-
-            }.onFailure { exception ->
-                Log.e("Error fetching details",exception.message.toString())
-
+            }.onFailure {
+                Log.e("Error fetching details", it.message.toString())
             }
         }
     }
 
-    fun userUpdate(updateUserInput: UpdateUserInput?, documentPhotoFile:String?, passportPhotoFile: String?) {
-        if (updateUserInput != null) {
-            updateUserViewModel.updateUser(updateUserInput, documentPhotoFile, passportPhotoFile)
+    private fun userUpdate(updateUserInput: UpdateUserInput?, documentPhotoFile: String?, passportPhotoFile: String?) {
+        updateUserInput?.let {
+            updateUserViewModel.updateUser(it, documentPhotoFile, passportPhotoFile)
         }
         updateUserViewModel.updateUserResult.observe(viewLifecycleOwner, Observer { result ->
             if (result?.user != null) {
-                Log.e("gettingUserUpdateTarget", result.user.userInformation.targetYear.toString())
-                Log.e("gettingUserUpdaterefer", result.user.userInformation.reference.toString())
-                Log.e("gettingUserUpdateprep", result.user.userInformation.preparingFor.toString())
-                Log.e("gettingUserUpdatecity", result.user.userInformation.address?.city.toString())
-
+                Log.e("User update success", result.user.toString())
             } else {
-                Log.e("gettingUserUpdatefail", result.toString())
-               // Toast.makeText(context, "Update failed", Toast.LENGTH_SHORT).show()
+                Log.e("User update failed", result.toString())
             }
         })
     }
@@ -182,7 +212,6 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
         sharedPreferencesManager.whatsUpNo = whatsappNumber
         tShirtSize = binding.spinnerTshirtSize.text.toString().trim()
 
-//        sharedPreferencesManager.shirtSize = tShirtSize
         binding.etWhatsappNumber.filters = arrayOf<InputFilter>(InputFilter.LengthFilter(10))
 
         // Only check fields that are visible
@@ -196,18 +225,12 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
     private fun updateButtonState() {
         if (isFormValid()) {
             binding.btnAddDetails.setBackgroundColor(
-                ContextCompat.getColor(
-                    requireContext(),
-                    R.color.blue_3E3EF7
-                )
+                ContextCompat.getColor(requireContext(), R.color.blue_3E3EF7)
             )
             binding.btnAddDetails.isEnabled = true
         } else {
             binding.btnAddDetails.setBackgroundColor(
-                ContextCompat.getColor(
-                    requireContext(),
-                    R.color.gray_border
-                )
+                ContextCompat.getColor(requireContext(), R.color.gray_border)
             )
             binding.btnAddDetails.isEnabled = false
         }
@@ -225,59 +248,17 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
 
     private val mobileNumberTextWatcher = object : TextWatcher {
         override fun afterTextChanged(s: Editable?) {
-            sharedPreferencesManager.name = binding.etFullName.text.toString().trim()
-            sharedPreferencesManager.fatherName = binding.etFathersName.text.toString().trim()
-            sharedPreferencesManager.whatsUpNo = binding.etWhatsappNumber.text.toString().trim()
             updateButtonState()
         }
 
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            if (s != null && s.length > 10) {
-                Toast.makeText(requireContext(), "Please enter a valid 10-digit mobile number", Toast.LENGTH_SHORT).show()
-                val trimmed = s.substring(0, 10)
-                binding.etWhatsappNumber.setText(trimmed)
-                binding.etWhatsappNumber.setSelection(trimmed.length)
+            if (s?.length ?: 0 > 10) {
+                Toast.makeText(requireContext(), "Enter valid number", Toast.LENGTH_SHORT).show()
             }
         }
     }
-
-    fun myCourses() {
-        myCoursesViewModel.myCourses.observe(viewLifecycleOwner) { result ->
-            Log.e("getMyresule", result.toString())
-            result.onSuccess { data ->
-                Log.e("getMyCourses", data.toString())
-                data.myCourses?.forEach { courselist ->
-                    Log.d("courselist", courselist.course.other_requirements.toString())
-                    courselist.course.other_requirements?.let { requirements ->
-                        fieldsToVisible.addAll(requirements.map { it.toString() })
-                    }
-                }
-                updateUIVisibility()
-
-            }.onFailure {
-                Log.e("MyCoursesFail", it.message.toString())
-                Toast.makeText(requireContext(), "Failed to load courses: ${it.message}", Toast.LENGTH_SHORT).show()
-            }
-        }
-
-        myCoursesViewModel.fetchMyCourses()
-    }
-
-    private fun updateUIVisibility() {
-        binding.tvFathersNameLabel.visibility = if (fieldsToVisible.contains("FATHERS_NAME")) View.VISIBLE else View.GONE
-        binding.etFathersName.visibility = if (fieldsToVisible.contains("FATHERS_NAME")) View.VISIBLE else View.GONE
-        binding.tvWhatsappNumberLabel.visibility = if (fieldsToVisible.contains("WHATSAPP_NUMBER")) View.VISIBLE else View.GONE
-        binding.etWhatsappNumber.visibility = if (fieldsToVisible.contains("WHATSAPP_NUMBER")) View.VISIBLE else View.GONE
-        binding.tvTshirtSizeLabel.visibility = if (fieldsToVisible.contains("T_SHIRTS")) View.VISIBLE else View.GONE
-        binding.spinnerTshirtSize.visibility = if (fieldsToVisible.contains("T_SHIRTS")) View.VISIBLE else View.GONE
-        binding.tvTshirtNote.visibility = if (fieldsToVisible.contains("T_SHIRTS")) View.VISIBLE else View.GONE
-
-        updateButtonState()
-    }
-
-
 
     override fun onDestroyView() {
         super.onDestroyView()
