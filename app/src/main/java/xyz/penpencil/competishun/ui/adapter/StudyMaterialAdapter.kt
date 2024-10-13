@@ -1,24 +1,16 @@
 package xyz.penpencil.competishun.ui.adapter
 
-import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
-import androidx.fragment.app.viewModels
-import androidx.media3.common.Player
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.Target
 import com.student.competishun.curator.AllCourseForStudentQuery
 import xyz.penpencil.competishun.R
-import xyz.penpencil.competishun.data.model.CourseFItem
-import xyz.penpencil.competishun.data.model.FreeDemoItem
-import xyz.penpencil.competishun.ui.main.PdfViewerActivity
 import xyz.penpencil.competishun.ui.viewmodel.GetCourseByIDViewModel
 
 class StudyMaterialAdapter(private val itemStudyMaterial:  List<AllCourseForStudentQuery.Course>,  private val getCourseByIDViewModel: GetCourseByIDViewModel ) :

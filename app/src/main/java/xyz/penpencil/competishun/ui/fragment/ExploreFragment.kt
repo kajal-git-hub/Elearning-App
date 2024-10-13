@@ -11,7 +11,6 @@ import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import android.widget.TextView
 import android.widget.Toast
-import androidx.fragment.app.Fragment
 import androidx.databinding.ObservableField
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -54,7 +53,7 @@ import xyz.penpencil.competishun.utils.StudentCourseItemClickListener
 import dagger.hilt.android.AndroidEntryPoint
 import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.databinding.FragmentExploreBinding
-import xyz.penpencil.competishun.ui.main.PdfViewerActivity
+import xyz.penpencil.competishun.ui.main.PdfViewActivity
 
 
 @AndroidEntryPoint
@@ -280,8 +279,9 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
                     binding.clGetPlanner.setOnClickListener {
 
                         Log.d("planner_pdf", courses.planner_pdf)
-                        val intent = Intent(context, PdfViewerActivity::class.java).apply {
+                        val intent = Intent(context, PdfViewActivity::class.java).apply {
                             putExtra("PDF_URL", courses.planner_pdf)
+                            putExtra("PDF_TITLE",courses.name)
                         }
                         context?.startActivity(intent)
 

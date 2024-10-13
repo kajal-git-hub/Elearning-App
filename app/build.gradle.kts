@@ -111,6 +111,7 @@ dependencies {
     implementation (libs.github.glide)
 
     implementation (libs.exoplayer)
-    
+
+    implementation ("io.github.afreakyelf:Pdf-Viewer:2.1.1")
 
 }

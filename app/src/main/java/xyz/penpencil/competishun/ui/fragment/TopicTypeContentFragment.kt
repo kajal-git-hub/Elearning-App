@@ -23,7 +23,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.databinding.FragmentTopicTypeContentBinding
 import xyz.penpencil.competishun.di.Result
-import xyz.penpencil.competishun.ui.main.PdfViewerActivity
+import xyz.penpencil.competishun.ui.main.PdfViewActivity
 
 @AndroidEntryPoint
 class TopicTypeContentFragment : Fragment() {
@@ -107,8 +107,9 @@ class TopicTypeContentFragment : Fragment() {
             when (topicContent.fileType) {
                 "VIDEO" -> videoUrlApi(videourlViewModel, topicContent.id,topicContent.topicName)
                 "PDF" -> {
-                    val intent = Intent(context, PdfViewerActivity::class.java).apply {
+                    val intent = Intent(context, PdfViewActivity::class.java).apply {
                         putExtra("PDF_URL", topicContent.url)
+                        putExtra("PDF_TITLE",topicContent.topicName)
                     }
                     context?.startActivity(intent)
                 }
@@ -169,8 +170,9 @@ class TopicTypeContentFragment : Fragment() {
                         when (topicContent.fileType) {
                             "VIDEO" -> videoUrlApi(videourlViewModel, topicContent.id,topicContent.topicName)
                             "PDF" -> {
-                                val intent = Intent(context, PdfViewerActivity::class.java).apply {
+                                val intent = Intent(context, PdfViewActivity::class.java).apply {
                                     putExtra("PDF_URL", topicContent.url)
+                                    putExtra("PDF_TITLE",topicContent.topicName)
                                 }
                                 context?.startActivity(intent)
                             }
