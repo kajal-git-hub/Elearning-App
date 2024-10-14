@@ -52,6 +52,7 @@ class MyCartFragment : DrawerVisibility(), OnCartItemRemovedListener, MyCartAdap
     private lateinit var paymentsClient: PaymentsClient
     private lateinit var cartAdapter: MyCartAdapter
     private var originalCartItems: List<CartItem> = listOf()
+    var partialPaymentItems:List<CartItem> = listOf()
     private var input: CreateOrderInput? = null
     private var paymentType: String = "full"
     var totalAmount:Int = 0
@@ -62,8 +63,6 @@ class MyCartFragment : DrawerVisibility(), OnCartItemRemovedListener, MyCartAdap
     var userId: String = ""
     var userName:String = ""
     var courseName:String = ""
-    var SelectedPaymentType:String=""
-    private var selectedTabPosition: Int = 0
 
    private lateinit var tabLayout : TabLayout
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -81,15 +80,6 @@ class MyCartFragment : DrawerVisibility(), OnCartItemRemovedListener, MyCartAdap
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentMyCartBinding.inflate(inflater, container, false)
-
-        SelectedPaymentType= arguments?.getString("paymentType").toString()
-        if (SelectedPaymentType=="FullPayment")
-        {
-            selectedTabPosition=0
-        }else{
-            selectedTabPosition=1
-        }
-        binding.CartTabLayout.getTabAt(selectedTabPosition)?.select()
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
@@ -274,6 +264,7 @@ class MyCartFragment : DrawerVisibility(), OnCartItemRemovedListener, MyCartAdap
                         1 -> {
                             paymentType = "partial"
                             Log.e("getselected", paymentType)
+                            Log.e("getitems", cartItems.toString())
                             if (cartItems.size>1)
                             {
                                 Toast.makeText(requireContext(), "Select Course Again", Toast.LENGTH_SHORT).show()
@@ -287,12 +278,12 @@ class MyCartFragment : DrawerVisibility(), OnCartItemRemovedListener, MyCartAdap
                                     showPartialPayment(selectedItem)
                                 }
                             } else {
-                                showPartialPayment(cartItems[0])
+
+                                showPartialPayment( cartItems.filter { it.withInstallmentPrice > 0 }[0])
                             }
 
                         }
                     }
-                    selectedTabPosition=it.position
                 }
             }
 
@@ -366,7 +357,7 @@ class MyCartFragment : DrawerVisibility(), OnCartItemRemovedListener, MyCartAdap
         binding.etInstallmentbelowDetails.text =  "2nd Installment On: "
         binding.secondText.text = secondInstallment()
 
-        val partialPaymentItems = originalCartItems.filter { it.withInstallmentPrice > 0 }
+         partialPaymentItems = originalCartItems.filter { it.withInstallmentPrice > 0 }
         if (partialPaymentItems.isNotEmpty()) {
             cartAdapter.updateCartItems(partialPaymentItems)
             val discountPrice =
