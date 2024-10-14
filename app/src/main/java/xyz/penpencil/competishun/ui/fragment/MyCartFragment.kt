@@ -62,6 +62,9 @@ class MyCartFragment : DrawerVisibility(), OnCartItemRemovedListener, MyCartAdap
     var userId: String = ""
     var userName:String = ""
     var courseName:String = ""
+    var SelectedPaymentType:String=""
+    private var selectedTabPosition: Int = 0
+
    private lateinit var tabLayout : TabLayout
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -79,6 +82,14 @@ class MyCartFragment : DrawerVisibility(), OnCartItemRemovedListener, MyCartAdap
     ): View {
         binding = FragmentMyCartBinding.inflate(inflater, container, false)
 
+        SelectedPaymentType= arguments?.getString("paymentType").toString()
+        if (SelectedPaymentType=="FullPayment")
+        {
+            selectedTabPosition=0
+        }else{
+            selectedTabPosition=1
+        }
+        binding.CartTabLayout.getTabAt(selectedTabPosition)?.select()
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
@@ -251,30 +262,37 @@ class MyCartFragment : DrawerVisibility(), OnCartItemRemovedListener, MyCartAdap
 
         binding.CartTabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
-                when (tab?.position) {
-                    0 -> {paymentType = "full"
-                        if (cartItems.isNotEmpty()) {
-                            showFullPayment(cartItems[0])
-                            binding.clSecondbottomInstallement.visibility = View.GONE
-                        }
-
-                    }
-                    1 ->{ paymentType = "partial"
-                        Log.e("getselected",paymentType.toString())
-                        Toast.makeText(requireContext(),"Select Course Again", Toast.LENGTH_SHORT).show()
-                        val selectedItem = cartAdapter.getSelectedItem()
-                        Log.e("getselected",paymentType.toString())
-                        if (cartAdapter.selectedItemPosition != RecyclerView.NO_POSITION) {
-                           // val selectedItem = cartItems[cartAdapter.selectedItemPosition]
-                            Log.e("getselectedITem",selectedItem.toString())
-                            if (selectedItem != null) {
-                                showPartialPayment(selectedItem)
+                tab?.let {
+                    when (it.position) {
+                        0 -> {
+                            paymentType = "full"
+                            if (cartItems.isNotEmpty()) {
+                                showFullPayment(cartItems[0])
+                                binding.clSecondbottomInstallement.visibility = View.GONE
                             }
-                        }else {
-                            showPartialPayment(cartItems[0])
                         }
+                        1 -> {
+                            paymentType = "partial"
+                            Log.e("getselected", paymentType)
+                            if (cartItems.size>1)
+                            {
+                                Toast.makeText(requireContext(), "Select Course Again", Toast.LENGTH_SHORT).show()
+                            }
+                            val selectedItem = cartAdapter.getSelectedItem()
+                            Log.e("getselected", paymentType)
+                            if (cartAdapter.selectedItemPosition != RecyclerView.NO_POSITION) {
+                                // val selectedItem = cartItems[cartAdapter.selectedItemPosition]
+                                Log.e("getselectedITem", selectedItem.toString())
+                                if (selectedItem != null) {
+                                    showPartialPayment(selectedItem)
+                                }
+                            } else {
+                                showPartialPayment(cartItems[0])
+                            }
 
+                        }
                     }
+                    selectedTabPosition=it.position
                 }
             }
 
@@ -329,12 +347,6 @@ class MyCartFragment : DrawerVisibility(), OnCartItemRemovedListener, MyCartAdap
             binding.tvInstDiscount.text = "-₹${selectedCartItem.discount}"
             binding.tvInstDiscountLabel.text = "Discount (0)"
         }
-         //   "- ₹${(originalCartItems.get(0).price.toDouble()).minus(originalCartItems.get(0).discount.toDouble())}"
-       // fullAmount = (helperFunctions.calculateDiscountDetails(originalCartItems.get(0).price.toDouble(),originalCartItems.get(0).discount.toDouble()).second.toDouble())
-
-
-
-
 
     }
 
@@ -665,6 +677,3 @@ class MyCartFragment : DrawerVisibility(), OnCartItemRemovedListener, MyCartAdap
 
 
 }
-
-
-

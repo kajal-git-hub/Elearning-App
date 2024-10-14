@@ -137,6 +137,9 @@
         <action
             android:id="@+id/action_mycartFragment_to_homeFragment"
             app:destination="@+id/homeFragment" />
+        <argument
+            android:name="paymentType"
+            app:argType="string" />
     </fragment>
 
     <fragment

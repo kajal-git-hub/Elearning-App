@@ -152,7 +152,7 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
         getCourseTagsData()
 
         binding.clBuynow.setOnClickListener {
-            createCart(createCartViewModel)
+            createCart(createCartViewModel,"FullPayment")
         }
 
         var lectureCount = arguments?.getString("LectureCount")
@@ -736,7 +736,8 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
         )
     }
 
-    fun createCart(createCartViewModel: CreateCartViewModel) {
+    fun createCart(createCartViewModel: CreateCartViewModel,paymentType:String) {
+
 
         val cartItems = listOf(
             CreateCartItemDto(
@@ -744,7 +745,9 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
                 entity_type = EntityType.COURSE, quantity = 1
             )
         ) // Replace with actual cart items data
-
+        val bundle = Bundle().apply {
+            putString("paymentType", paymentType)
+        }
         // Call the API to create cart items
         createCartViewModel.createCartItems(sharedPreferencesManager.userId.toString(), cartItems)
 
@@ -752,7 +755,7 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
         createCartViewModel.cartItemsResult.observe(viewLifecycleOwner, Observer { result ->
             result.onSuccess {
 
-                findNavController().navigate(R.id.myCartFragment)
+                findNavController().navigate(R.id.myCartFragment, bundle)
             }.onFailure { exception ->
                 Log.e("createCart", exception.message.toString())
                 // Handle error, e.g., show a toast or dialog
@@ -774,7 +777,7 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
             setInstallmentData(firstInstallment, secondInstallment)
             setOnBuyNowClickListener(object : InstallmentDetailsBottomSheet.OnBuyNowClickListener {
                 override fun onBuyNowClicked(totalAmount: Int) {
-                    createCart(cartViewModel)
+                    createCart(cartViewModel,"Installment")
 //                    Toast.makeText(context, "Buy Now clicked with total: ₹$totalAmount", Toast.LENGTH_SHORT).show()
                 }
             })
