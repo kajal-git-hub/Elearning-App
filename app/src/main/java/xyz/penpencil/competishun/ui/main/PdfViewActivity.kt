@@ -15,13 +15,12 @@ import xyz.penpencil.competishun.R
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
-import java.net.URL
 
 class PdfViewActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_pdf_viewer)
+        setContentView(R.layout.activity_pdf_view)
 
         window.setFlags(
             WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE
@@ -45,13 +44,13 @@ class PdfViewActivity : AppCompatActivity() {
             } else {
                 // Use PdfViewerActivity for local files directly
                 Log.d("local_title",pdfUrl)
-                PdfViewerActivity.launchPdfFromUrl(
+
+                startActivity(PdfViewerActivity.launchPdfFromPath(
                     context = this,
-                    pdfUrl = pdfUrl,
+                    path = pdfUrl,
                     pdfTitle = pdfTitle,
                     saveTo = com.rajat.pdfviewer.util.saveTo.DOWNLOADS,
-                    enableDownload = true
-                )
+                )).also { finish() }
             }
         }
     }
