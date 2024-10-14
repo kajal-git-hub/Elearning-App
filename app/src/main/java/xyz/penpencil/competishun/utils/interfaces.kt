@@ -13,6 +13,9 @@ interface ToolbarCustomizationListener {
 interface OnCourseItemClickListener {
     fun onCourseItemClick(course: GetAllCourseCategoriesQuery.GetAllCourseCategory)
 }
+interface FilterSelectionListener {
+    fun onFiltersSelected(selectedExam: String?, selectedSubject: String?)
+}
 
 interface StudentCourseItemClickListener {
     fun onCourseItemClicked(course: AllCourseForStudentQuery.Course,bundle: Bundle)

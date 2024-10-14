@@ -11,10 +11,10 @@ import xyz.penpencil.competishun.R
 
 class StudyCoursesAdapter(
     private val options: List<String>,
+    private val autoSelectedExam: String,
     private val onItemClick: (String) -> Unit
 ) : RecyclerView.Adapter<StudyCoursesAdapter.ToggleViewHolder>() {
-
-    private var selectedPosition: Int = RecyclerView.NO_POSITION
+    private var selectedPosition: Int = options.indexOf(autoSelectedExam).takeIf { it >= 0 } ?: RecyclerView.NO_POSITION
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ToggleViewHolder {
         val view = LayoutInflater.from(parent.context)

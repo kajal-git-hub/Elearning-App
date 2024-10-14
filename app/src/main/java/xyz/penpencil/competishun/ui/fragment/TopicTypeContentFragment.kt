@@ -80,10 +80,14 @@ class TopicTypeContentFragment : Fragment() {
     {
         val topicContents = folderContents?.map { content ->
             val date = content.content?.scheduled_time.toString()?:""
-            val time = helperFunctions.formatCourseDateTime(date)
+            var time = ""
+            var studyMaterial = arguments?.getString("studyMaterial")
 
-            val homeworkUrl = content.content?.homework?.map { it.file_url } ?:""
-            val homeworkFileName = content.content?.homework?.map { it.file_name } ?: ""
+            if (studyMaterial.isNullOrEmpty())
+             time = helperFunctions.formatCourseDateTime(date) else  time = helperFunctions.formatCourseDateTime("2024-10-11T17:27:00.000Z")
+
+            val homeworkUrl = content.content?.homework?.map { it.file_url?:"" } ?:""
+            val homeworkFileName = content.content?.homework?.map { it.file_name?:"" } ?: ""
             Log.d("homeworkUrl",homeworkUrl.toString())
             Log.d("homeworkFileName",homeworkFileName.toString())
             TopicContentModel(
@@ -93,7 +97,7 @@ class TopicTypeContentFragment : Fragment() {
                 lecture = if (content.content?.file_type?.name == "VIDEO") "Lecture" else "Study Material",
                 lecturerName = "Ashok",
                 topicName = content.content?.file_name ?: "",
-                topicDescription = content.content?.description.toString(),
+                topicDescription = content.content?.description ?:"",
                 progress = 1,
                 videoDuration = content.content?.video_duration ?: 0,
                 url = content.content?.file_url.toString(),
@@ -103,9 +107,11 @@ class TopicTypeContentFragment : Fragment() {
                 homeworkName = homeworkFileName.toString()
             )
         } ?: emptyList()
+        val folderContentIds = folderContents?.mapNotNull { it.content?.id }?.toCollection(ArrayList())
+        val folderContentNames = folderContents?.mapNotNull { it.content?.file_name }?.toCollection(ArrayList())
         val adapter = TopicContentAdapter(topicContents, folderId,requireActivity(),requireContext()) { topicContent, folderContentId ->
             when (topicContent.fileType) {
-                "VIDEO" -> videoUrlApi(videourlViewModel, topicContent.id,topicContent.topicName)
+                "VIDEO" -> videoUrlApi(videourlViewModel, topicContent.id,topicContent.topicName,folderContentIds,folderContentNames)
                 "PDF" -> {
                     val intent = Intent(context, PdfViewerActivity::class.java).apply {
                         putExtra("PDF_URL", topicContent.url)
@@ -141,12 +147,17 @@ class TopicTypeContentFragment : Fragment() {
 
                     val topicContents = folderContents?.map { content ->
 
-                        val homeworkUrl = content.content?.homework?.map { it.file_url } ?:""
-                        val homeworkFileName = content.content?.homework?.map { it.file_name } ?: ""
+                        val homeworkUrl = content.content?.homework?.map { it.file_url?:"" } ?:""
+                        val homeworkFileName = content.content?.homework?.map { it.file_name?:"" } ?: ""
 
                         Log.d("homeworkUrl",homeworkUrl.toString())
 
-                        val time = helperFunctions.formatCourseDateTime(content.content?.scheduled_time.toString())
+                        var time = ""
+                        var studyMaterial = arguments?.getString("studyMaterial")
+
+                        if (studyMaterial.isNullOrEmpty())
+                            time = helperFunctions.formatCourseDateTime(content.content?.scheduled_time.toString()) else  time = helperFunctions.formatCourseDateTime("2024-10-11T17:27:00.000Z")
+
                         TopicContentModel(
                             subjectIcon = R.drawable.group_1707478994, // Replace with dynamic icon if needed
                             id = content.content?.id.orEmpty(),
@@ -164,10 +175,11 @@ class TopicTypeContentFragment : Fragment() {
                             homeworkName = homeworkFileName.toString()
                         )
                     } ?: emptyList()
-
+                    val folderContentIds = folderContents?.mapNotNull { it.content?.id }?.toCollection(ArrayList())
+                    val folderContentNames = folderContents?.mapNotNull { it.content?.file_name }?.toCollection(ArrayList())
                     val adapter = TopicContentAdapter(topicContents, folderId,requireActivity(),requireContext()) { topicContent, folderContentId ->
                         when (topicContent.fileType) {
-                            "VIDEO" -> videoUrlApi(videourlViewModel, topicContent.id,topicContent.topicName)
+                            "VIDEO" -> videoUrlApi(videourlViewModel, topicContent.id,topicContent.topicName,folderContentIds,folderContentNames)
                             "PDF" -> {
                                 val intent = Intent(context, PdfViewerActivity::class.java).apply {
                                     putExtra("PDF_URL", topicContent.url)
@@ -194,23 +206,26 @@ class TopicTypeContentFragment : Fragment() {
         }
 
     }
-    fun videoUrlApi(viewModel: VideourlViewModel, folderContentId:String, name:String){
+    private fun videoUrlApi(viewModel: VideourlViewModel, folderContentId: String, name:String, folderContentIds: ArrayList<String>?, folderContentNames: ArrayList<String>?) {
+        Log.e("getfoldersubject",folderContentNames.toString())
+        viewModel.fetchVideoStreamUrl(folderContentId, "480p")
 
-        viewModel.fetchVideoStreamUrl(folderContentId, "360p")
-
-        viewModel.videoStreamUrl.observe(viewLifecycleOwner, { signedUrl ->
-            Log.d("Videourl", "Signed URL: $signedUrl")
+        viewModel.videoStreamUrl.observe(viewLifecycleOwner) { signedUrl ->
+            Log.d("VideoUrl", "Signed URL: $signedUrl")
             if (signedUrl != null) {
                 val bundle = Bundle().apply {
                     putString("url", signedUrl)
                     putString("url_name", name)
+                    putString("ContentId", folderContentId)
+                    putStringArrayList("folderContentIds", folderContentIds)
+                    putStringArrayList("folderContentNames", folderContentNames)
                 }
-                findNavController().navigate(R.id.mediaFragment,bundle)
+                findNavController().navigate(R.id.mediaFragment, bundle)
 
             } else {
                 // Handle error or null URL
             }
-        })
+        }
     }
 
 
