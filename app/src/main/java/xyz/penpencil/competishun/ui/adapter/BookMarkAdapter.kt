@@ -129,9 +129,9 @@ class BookMarkAdapter(
             intent.putExtra("PDF_TITLE",item.topicName)
             context.startActivity(intent)
         }
-        holder.forVideo.setOnClickListener {
-            videoClickListener.onVideoClick(item.id, item.topicName)
 
+        holder.forVideo.setOnClickListener {
+            videoClickListener.onVideoClick(item.id,item.topicName)
         }
 
     }

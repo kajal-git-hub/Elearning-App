@@ -71,6 +71,7 @@
                 android:layout_weight="1" />
 
         </com.google.android.material.tabs.TabLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.recyclerview.widget.RecyclerView

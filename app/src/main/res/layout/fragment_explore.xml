@@ -243,7 +243,7 @@
                         android:ellipsize="end"
                         android:lineHeight="21sp"
                         android:maxLines="3"
-                        android:text="@{courseByIDViewModel.courseByID != null ? courseByIDViewModel.courseByID.description : ` `}"
+                        setTextViewHtml="@{courseByIDViewModel.courseByID != null ? courseByIDViewModel.courseByID.description : ` `}"
                         android:textColor="#726C6C"
                         android:textSize="14sp"
                         app:fontFamily="@font/nunito"
