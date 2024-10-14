@@ -119,6 +119,7 @@ class ResumeCourseFragment : DrawerVisibility() {
                     binding.progressBar.visibility = View.GONE
                     binding.rvOurSubject.visibility = View.VISIBLE
                     val subfolderProgress = result.data.findCourseParentFolderProgress.subfolderProgress
+                    Log.e("subfolderProgrss",subfolderProgress.toString())
                     if (subfolderProgress.isNullOrEmpty()){
                         Log.e("subfolderProgress",subfolderProgress.toString())
                     }else{
@@ -182,6 +183,7 @@ class ResumeCourseFragment : DrawerVisibility() {
                             val bundle = Bundle().apply {
                                 putString("subFolders", subFoldersJson)
                                 putString("folder_Name", name)
+                                putString("folder_Id", folderId)
                             }
                             findNavController().navigate(R.id.SubjectContentFragment, bundle)
                         } else if (!folderProgressContent.isNullOrEmpty()) {

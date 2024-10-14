@@ -77,6 +77,7 @@ class SubjectContentFragment : DrawerVisibility() {
 
         val subFolders = arguments?.getString("subFolders") ?: ""
         val folderName = arguments?.getString("folder_Name") ?: ""
+        val folderId =  arguments?.getString("folder_Id") ?: ""
         var folder_Count = arguments?.getString("folder_Count") ?: "0"
         val subFolderList =
             object : TypeToken<List<FindCourseFolderProgressQuery.SubfolderDuration>>() {}.type
@@ -93,10 +94,13 @@ class SubjectContentFragment : DrawerVisibility() {
         })
 
         Log.e("folderNames", subFolders.toString())
+        binding.rvsubjectTopicContent.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         binding.rvSubjectContent.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         binding.rvTopicContent.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        subfolderProgress(folderId )
         if (subFoldersList[0].folder?.id != null) {
             var id = subFoldersList[0].folder?.id ?: ""
             binding.tvTopicType.text = subFoldersList[0].folder?.name
@@ -393,6 +397,126 @@ class SubjectContentFragment : DrawerVisibility() {
                             Log.e("folderContentsss", "No content available")
                             binding.tvContentCount.text = "(0)"
                             binding.rvSubjectContent.adapter = null
+                        }
+                    }
+                }
+
+                is Result.Failure -> {
+                    // Handle the error
+                    Log.e("AllDemoResourcesFree", result.exception.message.toString())
+                    // Optionally show an error message or indicator
+                }
+
+                else -> {
+                    Log.e("folderProgress", "Unexpected result type: $result")
+                }
+            }
+        }
+    }
+
+    private fun subfolderProgress(folderId: String) {
+        Log.e("folderProgresss", folderId)
+        val free = arguments?.getBoolean("free")
+
+        if (folderId.isNotEmpty()) {
+            // Trigger the API call
+            coursesViewModel.findCourseFolderProgress(folderId)
+        }
+
+        coursesViewModel.courseFolderProgress.observe(viewLifecycleOwner) { result ->
+            when (result) {
+                is Result.Loading -> {
+                    // Handle the loading state
+                    Log.d("folderProgress", "Loading...")
+                    // Optionally show a loading indicator here
+                }
+
+                is Result.Success -> {
+                    val data = result.data
+                    Log.e("GetFolderdata", data.toString())
+                    Log.e("findCoursgress", data.findCourseFolderProgress.folder.toString())
+                    val folderProgressFolder = data.findCourseFolderProgress.folder
+                    val folderProgressContent = data.findCourseFolderProgress.folderContents
+                    val subfolderDurationFolders = data.findCourseFolderProgress.subfolderDurations
+                    Log.e("subFolderdata", subfolderDurationFolders.toString())
+
+                    // Clear previous adapter to prevent issues
+                    binding.rvsubjectTopicContent.adapter = null
+
+                    when {
+
+                        !folderProgressContent.isNullOrEmpty() -> {
+                            Log.e("folderContentsss", folderProgressContent.toString())
+                            binding.tvContentCount.text = "(${folderProgressContent.size})"
+
+                            val subjectContentList =
+                                folderProgressContent.mapIndexed { index, contents ->
+                                    Log.e("folderContentLog", contents.content?.file_url.toString())
+
+                                    val homeworkUrl = contents.content?.homework?.map { it.file_url } ?:""
+                                    val homeworkFileName = contents.content?.homework?.map { it.file_name } ?: ""
+
+
+                                    val time = helperFunctions.formatCourseDateTime(contents.content?.scheduled_time.toString())
+                                    Log.e("foldertime", time)
+                                    TopicContentModel(
+                                        subjectIcon = if (contents.content?.file_type?.name == "PDF") R.drawable.content_bg else R.drawable.group_1707478994,
+                                        id = contents.content?.id ?: "",
+                                        playIcon = if (contents.content?.file_type?.name == "VIDEO") R.drawable.video_bg else 0,
+                                        lecture = if (contents.content?.file_type?.name == "VIDEO") "Lecture" else "Study Material",
+                                        lecturerName = if(contents.content?.file_type?.name == "VIDEO") formatTimeDuration(
+                                            contents.content.video_duration ?: 0
+                                        ) else "Ashok" ,
+                                        topicName = contents.content?.file_name ?: "",
+                                        topicDescription = contents.content?.description.toString(),
+                                        progress = 1,
+                                        videoDuration = contents.content?.video_duration
+                                            ?: 0,
+                                        url = contents.content?.file_url.toString(),
+                                        fileType = contents.content?.file_type?.name ?: "",
+                                        lockTime =  time,
+                                        homeworkUrl = homeworkUrl.toString(),
+                                        homeworkName = homeworkFileName.toString()
+                                    )
+                                }
+                            val folderContentIds = folderProgressContent.mapNotNull { it.content?.id }.toCollection(ArrayList())
+                            val folderContentNames = folderProgressContent.mapNotNull { it.content?.file_name }.toCollection(ArrayList())
+                            Log.e("getfoldersubject1",folderContentNames.toString())
+                            binding.rvsubjectTopicContent.adapter = TopicContentAdapter(
+                                subjectContentList,
+                                folderId,
+                                requireActivity(),
+                                requireContext()
+                            ) { topicContent, folderContentId ->
+                                when (topicContent.fileType) {
+
+                                    "VIDEO" -> {
+                                        videoUrlApi(videourlViewModel, topicContent.id,topicContent.topicName,folderContentIds,folderContentNames)
+                                    }
+                                    "PDF" -> {
+                                        val intent = Intent(context, PdfViewerActivity::class.java).apply {
+                                            putExtra("PDF_URL", topicContent.url)
+                                        }
+                                        context?.startActivity(intent)
+                                    }
+                                    "FOLDER" -> {
+                                        Log.e("typeofget",topicContent.fileType)
+                                    }
+                                    else -> {
+                                        Log.d(
+                                            "TopicContentAdapter",
+                                            "File type is not recognized: ${topicContent.fileType}"
+                                        )
+                                    }
+                                }
+
+                            }
+                        }
+
+                        else -> {
+                            Log.e("folderContentsss", "No content available")
+
+                          //  binding.rvSubjectContent.adapter = null
                         }
                     }
                 }

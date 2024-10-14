@@ -165,6 +165,9 @@ class PaymentFragment : Fragment() {
                 for (order in orders) {
                     binding.tvAmount.text = "₹ ${order.amountPaid}"
                     binding.paymentSuccessText.text = "Payment Sucessfully"
+                    if (sharedPreferencesManager.paymentType != null){
+                        binding.tvPaymentType.text = sharedPreferencesManager.paymentType
+                    }
                     observeCourseById(order.entityId)
                     binding.tvPaidDate.text =  getCurrentDateString()
                   val cartItemId =   sharedPreferencesManager.getString("cartItemId","")

@@ -225,6 +225,7 @@ class MyCartFragment : DrawerVisibility(), OnCartItemRemovedListener, MyCartAdap
                         courseName = courseName
                     )
                 }
+                sharedPreferencesManager.paymentType = paymentType
             }
 
             // Proceed to payment if input is not null
