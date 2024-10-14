@@ -274,6 +274,10 @@ class SharedPreferencesManager(context: Context) {
         return sharedPreferences.getBoolean(key, defaultValue)
     }
 
+    fun hasKey(key: String): Boolean {
+        return sharedPreferences.contains(key)
+    }
+
     fun clearAccessToken() {
         sharedPreferences.edit().remove(KEY_ACCESS_TOKEN).apply()
     }
