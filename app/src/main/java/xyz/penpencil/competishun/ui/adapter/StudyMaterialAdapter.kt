@@ -1,6 +1,7 @@
 package xyz.penpencil.competishun.ui.adapter
 
 import android.content.Intent
+import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -20,8 +21,10 @@ import xyz.penpencil.competishun.data.model.CourseFItem
 import xyz.penpencil.competishun.data.model.FreeDemoItem
 import xyz.penpencil.competishun.ui.main.PdfViewerActivity
 import xyz.penpencil.competishun.ui.viewmodel.GetCourseByIDViewModel
+import xyz.penpencil.competishun.utils.StudentCourseItemClickListener
+import java.util.ArrayList
 
-class StudyMaterialAdapter(private val itemStudyMaterial:  List<AllCourseForStudentQuery.Course>,  private val getCourseByIDViewModel: GetCourseByIDViewModel ) :
+class StudyMaterialAdapter(private val itemStudyMaterial:  List<AllCourseForStudentQuery.Course>,  private val getCourseByIDViewModel: GetCourseByIDViewModel,  private val listener: StudentCourseItemClickListener) :
     RecyclerView.Adapter<StudyMaterialAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -37,7 +40,11 @@ class StudyMaterialAdapter(private val itemStudyMaterial:  List<AllCourseForStud
         // subfolderDurationFolders?.let { holder.bind(courseItem, it) }
         getcouseById(courseItem.id, holder)
         holder.itemView.setOnClickListener {
-          //  onItemClick(courseItem)
+            val bundle = Bundle().apply {
+                putString("course_id", courseItem.id)
+                putStringArrayList("course_tags", courseItem.course_tags as ArrayList<String>?)
+            }
+            listener.onCourseItemClicked(courseItem, bundle)
         }
     }
 

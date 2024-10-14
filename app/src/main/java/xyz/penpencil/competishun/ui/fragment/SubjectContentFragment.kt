@@ -139,7 +139,7 @@ class SubjectContentFragment : DrawerVisibility() {
 
 
     private fun folderProgress(folderId: String) {
-        Log.e("folderProgress", folderId)
+        Log.e("folderProgresss", folderId)
         val free = arguments?.getBoolean("free")
 
         if (folderId.isNotEmpty()) {

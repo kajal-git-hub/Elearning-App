@@ -386,6 +386,15 @@
             android:id="@+id/action_home_to_study_material"
             app:destination="@+id/homeFragment"/>
     </fragment>
+
+    <fragment
+        android:id="@+id/StudyMaterialDetailsFragment"
+        android:name="xyz.penpencil.competishun.ui.fragment.StudyMaterialDetailsFragment"
+        tools:layout="@layout/fragment_study_material_details">
+        <action
+            android:id="@+id/action_home_to_study_material"
+            app:destination="@+id/homeFragment"/>
+    </fragment>
     <fragment
         android:id="@+id/YTCourseFragment"
         android:name="com.student.competishun.ui.fragment.YTCourseFragment"

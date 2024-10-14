@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.apollographql.apollo3.api.Optional
@@ -16,19 +17,10 @@ import com.student.competishun.curator.type.FindAllCourseInputStudent
 import dagger.hilt.android.AndroidEntryPoint
 import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.databinding.FragmentStudyMaterialBinding
-import xyz.penpencil.competishun.ui.adapter.CourseAdapter
-import xyz.penpencil.competishun.ui.adapter.ExampleAdapter
 import xyz.penpencil.competishun.ui.adapter.StudyCoursesAdapter
 import xyz.penpencil.competishun.ui.adapter.StudyMaterialAdapter
-import xyz.penpencil.competishun.ui.fragment.CourseFragment.Companion
 import xyz.penpencil.competishun.ui.viewmodel.GetCourseByIDViewModel
 import xyz.penpencil.competishun.ui.viewmodel.StudentCoursesViewModel
-import xyz.penpencil.competishun.utils.Constants
-import xyz.penpencil.competishun.utils.Constants.BOARD
-import xyz.penpencil.competishun.utils.Constants.IIT_JEE
-import xyz.penpencil.competishun.utils.Constants.NEET
-import xyz.penpencil.competishun.utils.Constants.OTHERS
-import xyz.penpencil.competishun.utils.Constants.UCET
 import xyz.penpencil.competishun.utils.FilterSelectionListener
 import xyz.penpencil.competishun.utils.HelperFunctions
 import xyz.penpencil.competishun.utils.SharedPreferencesManager
@@ -43,6 +35,7 @@ class StudyMaterialFragment : Fragment(), StudentCourseItemClickListener ,Filter
     private val getCourseByIDViewModel: GetCourseByIDViewModel by viewModels()
     private lateinit var toggleButtonAdapter: StudyCoursesAdapter
     private val filterOptions = listOf("IIT-JEE", "NEET")
+    private var autoSelectedExam:String = ""
     private lateinit var helperFunctions: HelperFunctions
     private var selectedItem: String? = null
     private lateinit var sharedPreferencesManager : SharedPreferencesManager
@@ -74,9 +67,15 @@ class StudyMaterialFragment : Fragment(), StudentCourseItemClickListener ,Filter
     }
 
     private fun setupToggleRecyclerView() {
-        val adapter = StudyCoursesAdapter(filterOptions) { selectedOption ->
-            // Handle item click (IIT_JEE or NEET)
+        val adapter = StudyCoursesAdapter(filterOptions,autoSelectedExam) { selectedOption ->
             Log.d("SelectedOption", "Selected: $selectedOption")
+
+            val filters = FindAllCourseInputStudent(
+                category_name = Optional.present("Study Material"),
+                exam_type = Optional.present(selectedOption)
+            )
+            courseViewModel.fetchCourses(filters)
+            observeCourses()
             // Perform your actions based on the selected option
         }
 
@@ -93,12 +92,15 @@ class StudyMaterialFragment : Fragment(), StudentCourseItemClickListener ,Filter
     }
 
     private fun observeCourses() {
+        binding.progressBar.visibility = View.VISIBLE
+        binding.rvStudyMaterial.visibility = View.GONE
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             courseViewModel.courses.collect { result ->
                 result?.onSuccess { data ->
                     Log.e(TAG, data.toString())
                     val courseSize = data.getAllCourseForStudent.courses.size
-
+                    binding.progressBar.visibility = View.GONE
+                    binding.rvStudyMaterial.visibility = View.VISIBLE
                     val courses = data.getAllCourseForStudent.courses.map { course ->
 
                         val courseClass = course.course_class?.name?:""
@@ -113,7 +115,7 @@ class StudyMaterialFragment : Fragment(), StudentCourseItemClickListener ,Filter
                     Log.d(TAG, courses.toString())
 
 
-                    binding.rvStudyMaterial.adapter = StudyMaterialAdapter(courses,getCourseByIDViewModel)
+                    binding.rvStudyMaterial.adapter = StudyMaterialAdapter(courses,getCourseByIDViewModel, this@StudyMaterialFragment)
                 }?.onFailure { exception ->
                     // Handle the failure case
                     Log.e(TAG, exception.toString())
@@ -123,11 +125,34 @@ class StudyMaterialFragment : Fragment(), StudentCourseItemClickListener ,Filter
     }
 
     override fun onCourseItemClicked(course: AllCourseForStudentQuery.Course, bundle: Bundle) {
-        TODO("Not yet implemented")
+        val courseTags = bundle.getStringArrayList("course_tags")?: arrayListOf()
+
+
+        Log.e(TAG, course.id.toString())
+        Log.e(TAG, "Course Tags: ${courseTags.toString()}")
+
+        val newBundle = Bundle().apply {
+            putString("course_id", course.id)
+            putStringArrayList("course_tags", courseTags)
+        }
+
+        findNavController().navigate(R.id.StudyMaterialDetailsFragment, newBundle)
     }
 
     override fun onFiltersSelected(selectedExam: String?, selectedSubject: String?) {
         Log.d("Filters", "Selected Exam: $selectedExam, Selected Subject: $selectedSubject")
+        if (selectedExam != null) {
+            autoSelectedExam = selectedExam
+            val adapter = StudyCoursesAdapter(filterOptions,autoSelectedExam) { selectedOption ->
+                val filters = FindAllCourseInputStudent(
+                    category_name = Optional.present("Study Material"),
+                    exam_type = Optional.present(selectedOption)
+                )
+                courseViewModel.fetchCourses(filters)
+                observeCourses()
+            }
+            binding.rvToggleButtonsSM.adapter = adapter
+        }
         val filters = when {
             // If both selectedExam and selectedSubject are present
             selectedExam != null && selectedSubject != null -> FindAllCourseInputStudent(
@@ -137,10 +162,14 @@ class StudyMaterialFragment : Fragment(), StudentCourseItemClickListener ,Filter
             )
 
             // If only selectedExam is present
-            selectedExam != null -> FindAllCourseInputStudent(
-                category_name = Optional.present("Study Material"),
-                exam_type = Optional.present(selectedExam)
-            )
+            selectedExam != null -> {
+                autoSelectedExam = selectedExam
+                Log.e("autoslecteds",selectedExam)
+                FindAllCourseInputStudent(
+                    category_name = Optional.present("Study Material"),
+                    exam_type = Optional.present(selectedExam)
+                )
+            }
 
             // If only selectedSubject is present
             selectedSubject != null -> FindAllCourseInputStudent(

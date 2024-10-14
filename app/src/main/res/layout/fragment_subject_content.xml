@@ -134,7 +134,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_4dp"
             android:fontFamily="@font/nunito"
-            android:text="0 Content"
+            android:text="0"
             android:textColor="#2B2829"
             android:textSize="@dimen/_14sp"
             android:textStyle="bold"
