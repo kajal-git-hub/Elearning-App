@@ -165,8 +165,10 @@ class PaymentFragment : Fragment() {
                 for (order in orders) {
                     binding.tvAmount.text = "₹ ${order.amountPaid}"
                     binding.paymentSuccessText.text = "Payment Sucessfully"
-                    if (sharedPreferencesManager.paymentType != null){
-                        binding.tvPaymentType.text = sharedPreferencesManager.paymentType
+                    if (sharedPreferencesManager.paymentType == "partial"){
+                        binding.tvPaymentType.text = "Installment"
+                    }else if (sharedPreferencesManager.paymentType == "full"){
+                        binding.tvPaymentType.text = "One-Time Payment"
                     }
                     observeCourseById(order.entityId)
                     binding.tvPaidDate.text =  getCurrentDateString()
@@ -264,5 +266,9 @@ class PaymentFragment : Fragment() {
         return dateFormat.format(Date())
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        sharedPreferencesManager.paymentType = ""
+    }
 
 }
