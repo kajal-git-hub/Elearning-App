@@ -20,7 +20,7 @@ import xyz.penpencil.competishun.ui.viewmodel.UpdateUserViewModel
 import xyz.penpencil.competishun.utils.SharedPreferencesManager
 
 @AndroidEntryPoint
-class ProfileEditFragment : BottomSheetDialogFragment() {
+class ProfileEditFragment(val updateCourse:(year:String,course:String )->Unit) : BottomSheetDialogFragment() {
     private lateinit var sharedPreferencesManager: SharedPreferencesManager
 
     private val updateUserViewModel: UpdateUserViewModel by viewModels()
@@ -82,7 +82,12 @@ class ProfileEditFragment : BottomSheetDialogFragment() {
 //        val bundle = Bundle()
 //        bundle.putString("StudentClass",selectedClass)
 
+
         binding.mbSaveButton.setOnClickListener {
+
+            val targetYear = selectedYear
+            val preparingFor = selectedExam
+
             val updatedUserInput = UpdateUserInput(
                 city = Optional.Present(sharedPreferencesManager.city),
                 fullName = Optional.Present(sharedPreferencesManager.name),
@@ -94,6 +99,7 @@ class ProfileEditFragment : BottomSheetDialogFragment() {
             )
             updateUserViewModel.updateUser(updatedUserInput, null, null)
             Toast.makeText(requireContext(), "Updated Successfully", Toast.LENGTH_SHORT).show()
+            updateCourse(targetYear.toString(), preparingFor.toString())
             dismiss()
         }
     }

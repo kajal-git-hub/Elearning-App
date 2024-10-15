@@ -2,12 +2,16 @@ package xyz.penpencil.competishun.utils
 
 import android.app.AlertDialog
 import android.app.DownloadManager
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.net.Uri
 import android.os.Environment
 import android.util.Log
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import xyz.penpencil.competishun.R
@@ -160,16 +164,40 @@ class HelperFunctions {
         }
     }
 
-    fun downloadPdf(context: Context,fileUrl: String, title: String) {
-         val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-         val request = DownloadManager.Request(Uri.parse(removeBrackets(fileUrl)))
-             .setTitle(title)
-             .setDescription("Downloading $title...")
-             .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-             .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "$title.pdf")
+    fun downloadPdf(context: Context, fileUrl: String, title: String) {
+        val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+        val request = DownloadManager.Request(Uri.parse(removeBrackets(fileUrl)))
+            .setTitle(title)
+            .setDescription("Downloading $title...")
+            .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+            .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "$title.pdf")
 
-         downloadManager.enqueue(request)
+        // Enqueue the download request and get the download ID
+        val downloadId = downloadManager.enqueue(request)
+
+        // Show toast when the download starts
+        Toast.makeText(context, "Download started", Toast.LENGTH_SHORT).show()
+
+        // Register a BroadcastReceiver to listen for download completion
+        val onCompleteReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context, intent: Intent) {
+                val id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
+
+                // Check if the completed download matches the current request
+                if (id == downloadId) {
+                    Toast.makeText(context, "Download successful", Toast.LENGTH_SHORT).show()
+
+                    // Optionally, you can unregister the receiver after download completes
+                    context.unregisterReceiver(this)
+                }
+            }
+        }
+
+        // Register the receiver to listen for download completion
+        context.registerReceiver(onCompleteReceiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE),
+            Context.RECEIVER_NOT_EXPORTED)
     }
+
     fun removeBrackets(input: String): String {
         return input.replace("[", "").replace("]", "")
     }
