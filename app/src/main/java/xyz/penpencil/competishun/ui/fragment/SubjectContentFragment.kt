@@ -440,12 +440,8 @@ class SubjectContentFragment : DrawerVisibility() {
                     val subfolderDurationFolders = data.findCourseFolderProgress.subfolderDurations
                     Log.e("subFolderdata", subfolderDurationFolders.toString())
 
-                    // Clear previous adapter to prevent issues
-                    binding.rvsubjectTopicContent.adapter = null
+                    if (!folderProgressContent.isNullOrEmpty() ){
 
-                    when {
-
-                        !folderProgressContent.isNullOrEmpty() -> {
                             Log.e("folderContentsss", folderProgressContent.toString())
                             binding.tvContentCount.text = "(${folderProgressContent.size})"
 
@@ -512,13 +508,6 @@ class SubjectContentFragment : DrawerVisibility() {
 
                             }
                         }
-
-                        else -> {
-                            Log.e("folderContentsss", "No content available")
-
-                          //  binding.rvSubjectContent.adapter = null
-                        }
-                    }
                 }
 
                 is Result.Failure -> {
