@@ -1,11 +1,13 @@
 package xyz.penpencil.competishun.ui.fragment
 
 
+import android.R.attr.fragment
 import android.os.Bundle
 import android.text.Editable
 import android.text.InputFilter
 import android.text.TextWatcher
 import android.util.Log
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,14 +21,15 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.apollographql.apollo3.api.Optional
 import com.student.competishun.gatekeeper.type.UpdateUserInput
+import dagger.hilt.android.AndroidEntryPoint
+import xyz.penpencil.competishun.R
+import xyz.penpencil.competishun.databinding.FragmentPersonalDetailBinding
 import xyz.penpencil.competishun.ui.main.HomeActivity
 import xyz.penpencil.competishun.ui.viewmodel.MyCoursesViewModel
 import xyz.penpencil.competishun.ui.viewmodel.UpdateUserViewModel
 import xyz.penpencil.competishun.ui.viewmodel.UserViewModel
 import xyz.penpencil.competishun.utils.SharedPreferencesManager
-import dagger.hilt.android.AndroidEntryPoint
-import xyz.penpencil.competishun.R
-import xyz.penpencil.competishun.databinding.FragmentPersonalDetailBinding
+
 
 @AndroidEntryPoint
 class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSelectedListener {
@@ -123,6 +126,26 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
         binding.etWhatsappNumber.addTextChangedListener(mobileNumberTextWatcher)
 
         updateButtonState()
+
+
+        getView()?.setFocusableInTouchMode(true)
+        getView()?.requestFocus()
+        getView()?.setOnKeyListener(object : View.OnKeyListener {
+            override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    findNavController().let { nav->
+                        val navOptions = NavOptions.Builder()
+                            .setPopUpTo(nav.graph.startDestinationId, true)
+                            .build()
+                        nav.navigate(R.id.courseEmptyFragment, Bundle().apply {
+                        }, navOptions)
+
+                    }
+                    return true
+                }
+                return false
+            }
+        })
     }
 
     private fun getFragmentId(): Int {
