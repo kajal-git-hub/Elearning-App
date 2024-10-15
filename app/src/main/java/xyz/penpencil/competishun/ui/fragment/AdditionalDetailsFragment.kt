@@ -140,13 +140,14 @@ class AdditionalDetailsFragment : DrawerVisibility() {
                         }
                     }
                     it.findNavController().let{nav->
-                        val navOptions = NavOptions.Builder()
+                        nav.navigate(getFragmentId())
+                       /* val navOptions = NavOptions.Builder()
                             .setPopUpTo(nav.graph.startDestinationId, true)
                             .build()
                         nav.navigate(getFragmentId(), Bundle().apply {
                             putStringArray("IDS", fieldsToVisible)
                             putString("IDS", courseId)
-                        }, navOptions)
+                        }, navOptions)*/
                     }
                 }.onFailure { exception ->
                     Toast.makeText(
@@ -201,11 +202,13 @@ class AdditionalDetailsFragment : DrawerVisibility() {
     }
 
     private fun getFragmentId(): Int {
-        return if (fieldsToVisible.contains("ADDRESS")){
+        return if (fieldsToVisible.contains("FULL_ADDRESS")){
+            sharedPreferencesManager.putString("current$courseId", "address")
             R.id.action_AdditionalDetail_to_AddressDetail
         }else {
+            sharedPreferencesManager.removeKey("current$courseId")
             sharedPreferencesManager.putBoolean(courseId, value = true)
-            R.id.homeFragment
+            R.id.courseEmptyFragment
         }
     }
 

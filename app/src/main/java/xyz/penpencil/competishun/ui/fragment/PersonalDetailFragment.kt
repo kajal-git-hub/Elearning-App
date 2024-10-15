@@ -16,6 +16,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.NavOptions
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.apollographql.apollo3.api.Optional
 import com.student.competishun.gatekeeper.type.UpdateUserInput
 import xyz.penpencil.competishun.ui.main.HomeActivity
@@ -103,13 +104,14 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
             if (isFormValid()) {
                 updateUserDetails()
                 it.findNavController().let { nav->
-                    val navOptions = NavOptions.Builder()
+                   nav.navigate(getFragmentId())
+                   /* val navOptions = NavOptions.Builder()
                         .setPopUpTo(nav.graph.startDestinationId, true)
                         .build()
                     nav.navigate(getFragmentId(), Bundle().apply {
                         putStringArray("IDS", fieldsToVisible.toTypedArray())
                         putString("IDS", courseId)
-                    }, navOptions)
+                    }, navOptions)*/
                 }
             } else {
                 Toast.makeText(requireContext(), "Please fill all fields.", Toast.LENGTH_SHORT).show()
@@ -126,14 +128,17 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
     private fun getFragmentId(): Int {
         if (fieldsToVisible.isEmpty()){
             sharedPreferencesManager.putBoolean(courseId, value = true)
-            R.id.homeFragment
+            R.id.courseEmptyFragment
         }
         return if (fieldsToVisible.contains("PASSPORT_SIZE_PHOTO") || fieldsToVisible.contains("AADHAR_CARD")) {
+            sharedPreferencesManager.putString("current$courseId", "document")
             R.id.AdditionalDetailsFragment
-        }else if (fieldsToVisible.contains("PASSPORT_SIZE_PHOTO") || fieldsToVisible.contains("AADHAR_CARD")){
+        }else if (fieldsToVisible.contains("FULL_ADDRESS")){
+            sharedPreferencesManager.putString("current$courseId", "address")
             R.id.AddressDetailFragment
         }else {
-            R.id.homeFragment
+            sharedPreferencesManager.removeKey("current$courseId")
+            R.id.courseEmptyFragment
         }
     }
 
@@ -142,7 +147,6 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
         myCoursesViewModel.myCourses.observe(viewLifecycleOwner) { result ->
             result.onSuccess { data ->
                 formRootStatus(isRunning = false)
-                Log.e("jfhsdjfhsdfk", "fetchCoursesAndUpdateUI: $data", )
                 fieldsToVisible.clear()
                 var shouldExitLoop = false
 
@@ -152,9 +156,13 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
                     courselist.course.other_requirements?.let { requirements ->
                         courseId = courselist.course.id
                         val isSaved = sharedPreferencesManager.getBoolean(courseId, false)
-                        if (!isSaved) {
+                        val isRunning = sharedPreferencesManager.getString("current$courseId", "")
+                        if (!isRunning.isNullOrEmpty() && (isRunning == "document" || isRunning == "address")){
                             fieldsToVisible.addAll(requirements.map { it.toString() })
-                            Log.e("IOIOI", "fetchCoursesAndUpdateUI: $courseId")
+                            moveToSaveState(isRunning)
+                            shouldExitLoop = true
+                        }else if (!isSaved) {
+                            fieldsToVisible.addAll(requirements.map { it.toString() })
                             shouldExitLoop = true
                         }
                     }
@@ -173,6 +181,30 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
 
         // Fetch the courses
         myCoursesViewModel.fetchMyCourses()
+    }
+
+    private fun moveToSaveState(isRunning: String) {
+        val id = when (isRunning) {
+            "document" -> {
+                R.id.AdditionalDetailsFragment
+            }
+            "address" -> {
+                R.id.AddressDetailFragment
+            }
+            else -> {
+                return
+            }
+        }
+        findNavController().let { nav->
+            nav.navigate(id)
+           /* val navOptions = NavOptions.Builder()
+                .setPopUpTo(nav.graph.startDestinationId, true)
+                .build()
+            nav.navigate(id, Bundle().apply {
+                putStringArray("IDS", fieldsToVisible.toTypedArray())
+                putString("IDS", courseId)
+            }, navOptions)*/
+        }
     }
 
     private fun updateUIVisibility() {
