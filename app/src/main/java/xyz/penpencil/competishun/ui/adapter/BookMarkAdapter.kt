@@ -18,6 +18,7 @@ import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.ui.fragment.closeListener
 import xyz.penpencil.competishun.ui.main.PdfViewerActivity
 import xyz.penpencil.competishun.utils.HelperFunctions
+import xyz.penpencil.competishun.ui.main.PdfViewActivity
 import xyz.penpencil.competishun.utils.SharedPreferencesManager
 import java.io.File
 
@@ -135,8 +136,9 @@ class BookMarkAdapter(
         holder.topicDescription.text = item.topicDescription
 
         holder.forRead.setOnClickListener {
-            val intent = Intent(context, PdfViewerActivity::class.java)
+            val intent = Intent(context, PdfViewActivity::class.java)
             intent.putExtra("PDF_URL", item.url)
+            intent.putExtra("PDF_TITLE",item.topicName)
             context.startActivity(intent)
         }
 

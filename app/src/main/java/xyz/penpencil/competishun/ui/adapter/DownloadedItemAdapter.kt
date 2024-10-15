@@ -16,7 +16,7 @@ import xyz.penpencil.competishun.ui.fragment.BottomSheetDeletePDFsFragment
 import xyz.penpencil.competishun.ui.fragment.BottomSheetDeleteVideoFragment
 import xyz.penpencil.competishun.ui.fragment.DownloadFragment
 import xyz.penpencil.competishun.R
-import xyz.penpencil.competishun.ui.main.PdfViewerActivity
+import xyz.penpencil.competishun.ui.main.PdfViewActivity
 import xyz.penpencil.competishun.utils.OnDeleteClickListener
 import xyz.penpencil.competishun.utils.SharedPreferencesManager
 import java.io.File
@@ -156,8 +156,9 @@ class DownloadedItemAdapter(
             val localPath = File(context.filesDir, item.topicName + ".pdf")
             Log.d("localPath", localPath.toString())
             Log.d("absolutePath", localPath.absolutePath)
-            val intent = Intent(context, PdfViewerActivity::class.java)
+            val intent = Intent(context, PdfViewActivity::class.java)
             intent.putExtra("PDF_URL", localPath.absolutePath)
+            intent.putExtra("PDF_TITLE",item.topicName)
             context.startActivity(intent)
         }
 

@@ -17,6 +17,7 @@
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="32"
+        tools:replace="android:maxSdkVersion"
         tools:ignore="ScopedStorage" />
 
     <uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION" />
@@ -33,7 +34,7 @@
         android:theme="@style/Theme.Competishun"
         tools:targetApi="31">
         <activity
-            android:name="xyz.penpencil.competishun.ui.main.PdfViewerActivity"
+            android:name="xyz.penpencil.competishun.ui.main.PdfViewActivity"
             android:exported="false"
             android:theme="@style/Theme.Competishun" />
         <activity

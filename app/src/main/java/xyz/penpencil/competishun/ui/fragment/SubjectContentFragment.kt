@@ -3,7 +3,6 @@ package xyz.penpencil.competishun.ui.fragment
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,7 +30,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.databinding.FragmentSubjectContentBinding
 import xyz.penpencil.competishun.di.Result
-import xyz.penpencil.competishun.ui.main.PdfViewerActivity
+import xyz.penpencil.competishun.ui.main.PdfViewActivity
 
 @AndroidEntryPoint
 class SubjectContentFragment : DrawerVisibility() {
@@ -221,8 +220,9 @@ class SubjectContentFragment : DrawerVisibility() {
                                         videoUrlApi(videourlViewModel, topicContent.id,topicContent.topicName,folderContentIds,folderContentNames)
                                     }
                                     "PDF" -> {
-                                        val intent = Intent(context, PdfViewerActivity::class.java).apply {
+                                        val intent = Intent(context, PdfViewActivity::class.java).apply {
                                             putExtra("PDF_URL", topicContent.url)
+                                            putExtra("PDF_TITLE",topicContent.topicName)
                                         }
                                         context?.startActivity(intent)
                                     }
@@ -374,8 +374,9 @@ class SubjectContentFragment : DrawerVisibility() {
                                         videoUrlApi(videourlViewModel, topicContent.id,topicContent.topicName,folderContentIds,folderContentNames)
                                     }
                                     "PDF" -> {
-                                        val intent = Intent(context, PdfViewerActivity::class.java).apply {
+                                        val intent = Intent(context, PdfViewActivity::class.java).apply {
                                             putExtra("PDF_URL", topicContent.url)
+                                            putExtra("PDF_TITLE",topicContent.topicName)
                                         }
                                         context?.startActivity(intent)
                                     }

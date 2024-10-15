@@ -10,7 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -26,7 +25,7 @@ import xyz.penpencil.competishun.utils.ToolbarCustomizationListener
 import dagger.hilt.android.AndroidEntryPoint
 import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.databinding.FragmentScheduleBinding
-import xyz.penpencil.competishun.ui.main.PdfViewerActivity
+import xyz.penpencil.competishun.ui.main.PdfViewActivity
 import java.text.SimpleDateFormat
 import java.time.LocalTime
 import java.time.ZoneId
@@ -375,7 +374,7 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
             Log.e("fileuodldd",fileType.toString())
             videoUrlApi(videourlViewModel,contentId,"About this Course")
         }else if (fileType == "PDF"){
-            val intent = Intent(context, PdfViewerActivity::class.java).apply {
+            val intent = Intent(context, PdfViewActivity::class.java).apply {
                 putExtra("PDF_URL", fileurl)
             }
             context?.startActivity(intent)
