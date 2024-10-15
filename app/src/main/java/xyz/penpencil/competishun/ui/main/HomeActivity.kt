@@ -118,7 +118,17 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
                     }
                     true
                 }
-                else -> false
+                R.id.Download -> {
+                        navController.navigate(R.id.DownloadFragment)
+                    true
+                }
+                R.id.Bookmark -> {
+                        navController.navigate(R.id.BookMarkFragment)
+                    true
+                }
+                else -> {
+                    false
+                }
             }
         }
 
@@ -190,17 +200,17 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
     override fun onResume() {
         super.onResume()
         userId = sharedPreferencesManager.userId.toString()
-        val bottomNavigationView = binding.bottomNav
-        val menu = bottomNavigationView.menu
-        if (DetailAvailable) {
-            Log.d("DetailAvailable",DetailAvailable.toString())
-            menu.findItem(R.id.News).isVisible = false
-            menu.findItem(R.id.Chat).isVisible = true
-        } else {
-            menu.findItem(R.id.News).isVisible = true
-            menu.findItem(R.id.Chat).isVisible = false
-        }
-        Log.e("Sharedhome $userId", intent.getStringExtra("userId").toString())
+//        val bottomNavigationView = binding.bottomNav
+//        val menu = bottomNavigationView.menu
+//        if (DetailAvailable) {
+//            Log.d("DetailAvailable",DetailAvailable.toString())
+//            menu.findItem(R.id.News).isVisible = false
+//            menu.findItem(R.id.Chat).isVisible = true
+//        } else {
+//            menu.findItem(R.id.News).isVisible = true
+//            menu.findItem(R.id.Chat).isVisible = false
+//        }
+//        Log.e("Sharedhome $userId", intent.getStringExtra("userId").toString())
     }
 
     private fun observeUserDetails() {

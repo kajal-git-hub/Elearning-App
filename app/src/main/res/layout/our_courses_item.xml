@@ -6,12 +6,8 @@
     android:layout_width="@dimen/_160dp"
     android:layout_height="90dp"
     android:layout_marginTop="@dimen/_16dp"
-    android:clickable="true"
     android:layout_marginEnd="@dimen/_20dp"
-    android:focusableInTouchMode="true"
-    android:contextClickable="true"
     android:background="@drawable/frame_1707480071"
-    android:focusable="true"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent">
 

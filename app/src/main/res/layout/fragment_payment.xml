@@ -298,6 +298,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/blue"
+            android:enabled="true"
             android:layout_marginHorizontal="@dimen/_16sp"
             android:layout_marginBottom="@dimen/_16dp"
             android:drawableStart="@drawable/refresh_payment"

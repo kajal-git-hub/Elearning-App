@@ -337,7 +337,7 @@ class HomeFragment : Fragment() {
 
         }
 
-        fetchCoursesAndUpdateUI()
+//        fetchCoursesAndUpdateUI()
 
     }
 
@@ -486,7 +486,7 @@ class HomeFragment : Fragment() {
                     adapterRecommend.updateCourses(courses)
                     helperFunctions.setupDotsIndicator(
                         requireContext(),
-                        recommendedCourseList.size,
+                        courses.size,
                         binding.llDotsIndicatorRecommendedCourses
                     )
                     binding.rvRecommendedCourses.addOnScrollListener(object :

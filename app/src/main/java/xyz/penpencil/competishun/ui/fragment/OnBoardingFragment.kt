@@ -112,9 +112,9 @@ class OnBoardingFragment : Fragment() {
                 val name = data.getMyDetails.fullName
                 val city = data.getMyDetails.userInformation.address?.city
 
-                if (!name.isNullOrEmpty()) {
-                    binding.etEnterHereText.setText(name)
-                }
+//                if (!name.isNullOrEmpty()) {
+//                    binding.etEnterHereText.setText(name)
+//                }
                 if (!city.isNullOrEmpty()) {
                     binding.etEnterCityText.setText(city)
                 }

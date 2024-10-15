@@ -172,28 +172,22 @@ class HelperFunctions {
             .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
             .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "$title.pdf")
 
-        // Enqueue the download request and get the download ID
         val downloadId = downloadManager.enqueue(request)
 
-        // Show toast when the download starts
         Toast.makeText(context, "Download started", Toast.LENGTH_SHORT).show()
 
-        // Register a BroadcastReceiver to listen for download completion
         val onCompleteReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
                 val id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
 
-                // Check if the completed download matches the current request
                 if (id == downloadId) {
                     Toast.makeText(context, "Download successful", Toast.LENGTH_SHORT).show()
 
-                    // Optionally, you can unregister the receiver after download completes
                     context.unregisterReceiver(this)
                 }
             }
         }
 
-        // Register the receiver to listen for download completion
         context.registerReceiver(onCompleteReceiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE),
             Context.RECEIVER_NOT_EXPORTED)
     }

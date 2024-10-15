@@ -758,8 +758,10 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
                 findNavController().navigate(R.id.myCartFragment, bundle)
             }.onFailure { exception ->
                 Log.e("createCart", exception.message.toString())
-                // Handle error, e.g., show a toast or dialog
-                Toast.makeText(requireContext(), exception.message, Toast.LENGTH_LONG).show()
+                val errorMessage = exception.message.toString()
+                if(errorMessage.startsWith("Duplicate entry")){
+                    findNavController().navigate(R.id.myCartFragment)
+                }
             }
         })
 
