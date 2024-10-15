@@ -431,6 +431,7 @@ class StudyMaterialDetailsFragment : Fragment() {
                                     "PDF" -> {
                                         val intent = Intent(context, PdfViewActivity::class.java).apply {
                                             putExtra("PDF_URL", topicContent.url)
+                                            putExtra("PDF_TITLE",topicContent.topicName)
                                         }
                                         context?.startActivity(intent)
                                     }
