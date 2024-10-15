@@ -8,11 +8,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
+import androidx.fragment.app.viewModels
+import androidx.media3.common.Player
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.Target
 import com.student.competishun.curator.AllCourseForStudentQuery
 import xyz.penpencil.competishun.R
+import xyz.penpencil.competishun.data.model.CourseFItem
+import xyz.penpencil.competishun.data.model.FreeDemoItem
 import xyz.penpencil.competishun.ui.viewmodel.GetCourseByIDViewModel
 import xyz.penpencil.competishun.utils.StudentCourseItemClickListener
 import java.util.ArrayList

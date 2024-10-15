@@ -179,6 +179,8 @@ class MyCartFragment : DrawerVisibility(), OnCartItemRemovedListener, MyCartAdap
                     userName = userName,
                     courseName = courseName
                 )
+                Log.e("paymentType",paymentType)
+                sharedPreferencesManager.paymentType = paymentType
             }
         }
 
@@ -224,8 +226,10 @@ class MyCartFragment : DrawerVisibility(), OnCartItemRemovedListener, MyCartAdap
                         userName = userName,
                         courseName = courseName
                     )
-                }
+                Log.e("paymenTtype",paymentType)
                 sharedPreferencesManager.paymentType = paymentType
+
+                }
             }
 
             // Proceed to payment if input is not null
@@ -268,7 +272,7 @@ class MyCartFragment : DrawerVisibility(), OnCartItemRemovedListener, MyCartAdap
                             Log.e("getitems", cartItems.toString())
                             if (cartItems.size>1)
                             {
-                                Toast.makeText(requireContext(), "Select Course Again", Toast.LENGTH_SHORT).show()
+                              //  Toast.makeText(requireContext(), "Select Course Again", Toast.LENGTH_SHORT).show()
                             }
                             val selectedItem = cartAdapter.getSelectedItem()
                             Log.e("getselected", paymentType)

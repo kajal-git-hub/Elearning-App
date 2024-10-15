@@ -441,12 +441,8 @@ class SubjectContentFragment : DrawerVisibility() {
                     val subfolderDurationFolders = data.findCourseFolderProgress.subfolderDurations
                     Log.e("subFolderdata", subfolderDurationFolders.toString())
 
-                    // Clear previous adapter to prevent issues
-                    binding.rvsubjectTopicContent.adapter = null
+                    if (!folderProgressContent.isNullOrEmpty() ){
 
-                    when {
-
-                        !folderProgressContent.isNullOrEmpty() -> {
                             Log.e("folderContentsss", folderProgressContent.toString())
                             binding.tvContentCount.text = "(${folderProgressContent.size})"
 
@@ -495,8 +491,9 @@ class SubjectContentFragment : DrawerVisibility() {
                                         videoUrlApi(videourlViewModel, topicContent.id,topicContent.topicName,folderContentIds,folderContentNames)
                                     }
                                     "PDF" -> {
-                                        val intent = Intent(context, PdfViewerActivity::class.java).apply {
+                                        val intent = Intent(context, PdfViewActivity::class.java).apply {
                                             putExtra("PDF_URL", topicContent.url)
+                                            putExtra("PDF_TITLE",topicContent.topicName)
                                         }
                                         context?.startActivity(intent)
                                     }
@@ -513,13 +510,6 @@ class SubjectContentFragment : DrawerVisibility() {
 
                             }
                         }
-
-                        else -> {
-                            Log.e("folderContentsss", "No content available")
-
-                          //  binding.rvSubjectContent.adapter = null
-                        }
-                    }
                 }
 
                 is Result.Failure -> {

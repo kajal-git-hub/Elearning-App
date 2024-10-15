@@ -1,11 +1,13 @@
 package xyz.penpencil.competishun.ui.fragment
 
 
+import android.R.attr.fragment
 import android.os.Bundle
 import android.text.Editable
 import android.text.InputFilter
 import android.text.TextWatcher
 import android.util.Log
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,17 +16,20 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.NavOptions
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.apollographql.apollo3.api.Optional
 import com.student.competishun.gatekeeper.type.UpdateUserInput
+import dagger.hilt.android.AndroidEntryPoint
+import xyz.penpencil.competishun.R
+import xyz.penpencil.competishun.databinding.FragmentPersonalDetailBinding
 import xyz.penpencil.competishun.ui.main.HomeActivity
 import xyz.penpencil.competishun.ui.viewmodel.MyCoursesViewModel
 import xyz.penpencil.competishun.ui.viewmodel.UpdateUserViewModel
 import xyz.penpencil.competishun.ui.viewmodel.UserViewModel
 import xyz.penpencil.competishun.utils.SharedPreferencesManager
-import dagger.hilt.android.AndroidEntryPoint
-import xyz.penpencil.competishun.R
-import xyz.penpencil.competishun.databinding.FragmentPersonalDetailBinding
+
 
 @AndroidEntryPoint
 class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSelectedListener {
@@ -44,6 +49,8 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
     private var tShirtSize = ""
     private var updateUserInput: UpdateUserInput? = null
     private var fieldsToVisible = mutableListOf<String>()
+    private var bottomSheetTSizeFragment = BottomSheetTSizeFragment()
+    private var courseId: String = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -59,7 +66,18 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
         isTshirtSizeSelected = true
 
         sharedPreferencesManager.shirtSize = tShirtSize
+        bottomSheetTSizeFragment.dismiss()
         updateButtonState()
+    }
+
+    private fun formRootStatus(isRunning: Boolean){
+        if (isRunning){
+            binding.formRoot.visibility = View.GONE
+            binding.progress.visibility = View.VISIBLE
+        }else {
+            binding.formRoot.visibility = View.VISIBLE
+            binding.progress.visibility = View.GONE
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -88,7 +106,16 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
         binding.btnAddDetails.setOnClickListener {
             if (isFormValid()) {
                 updateUserDetails()
-                findNavController().navigate(R.id.action_PersonalDetails_to_AdditionalDetail)
+                it.findNavController().let { nav->
+                   nav.navigate(getFragmentId())
+                   /* val navOptions = NavOptions.Builder()
+                        .setPopUpTo(nav.graph.startDestinationId, true)
+                        .build()
+                    nav.navigate(getFragmentId(), Bundle().apply {
+                        putStringArray("IDS", fieldsToVisible.toTypedArray())
+                        putString("IDS", courseId)
+                    }, navOptions)*/
+                }
             } else {
                 Toast.makeText(requireContext(), "Please fill all fields.", Toast.LENGTH_SHORT).show()
             }
@@ -99,28 +126,108 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
         binding.etWhatsappNumber.addTextChangedListener(mobileNumberTextWatcher)
 
         updateButtonState()
+
+
+        getView()?.setFocusableInTouchMode(true)
+        getView()?.requestFocus()
+        getView()?.setOnKeyListener(object : View.OnKeyListener {
+            override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    findNavController().let { nav->
+                        val navOptions = NavOptions.Builder()
+                            .setPopUpTo(nav.graph.startDestinationId, true)
+                            .build()
+                        nav.navigate(R.id.courseEmptyFragment, Bundle().apply {
+                        }, navOptions)
+
+                    }
+                    return true
+                }
+                return false
+            }
+        })
+    }
+
+    private fun getFragmentId(): Int {
+        if (fieldsToVisible.isEmpty()){
+            sharedPreferencesManager.putBoolean(courseId, value = true)
+            R.id.courseEmptyFragment
+        }
+        return if (fieldsToVisible.contains("PASSPORT_SIZE_PHOTO") || fieldsToVisible.contains("AADHAR_CARD")) {
+            sharedPreferencesManager.putString("current$courseId", "document")
+            R.id.AdditionalDetailsFragment
+        }else if (fieldsToVisible.contains("FULL_ADDRESS")){
+            sharedPreferencesManager.putString("current$courseId", "address")
+            R.id.AddressDetailFragment
+        }else {
+            sharedPreferencesManager.removeKey("current$courseId")
+            R.id.courseEmptyFragment
+        }
     }
 
     private fun fetchCoursesAndUpdateUI() {
+        formRootStatus(isRunning = true)
         myCoursesViewModel.myCourses.observe(viewLifecycleOwner) { result ->
             result.onSuccess { data ->
+                formRootStatus(isRunning = false)
                 fieldsToVisible.clear()
-                data.myCourses?.forEach { courselist ->
+                var shouldExitLoop = false
+
+                data.myCourses.forEach { courselist ->
+                    if (shouldExitLoop) return@forEach
+
                     courselist.course.other_requirements?.let { requirements ->
-                        fieldsToVisible.addAll(requirements.map { it.toString() })
+                        courseId = courselist.course.id
+                        val isSaved = sharedPreferencesManager.getBoolean(courseId, false)
+                        val isRunning = sharedPreferencesManager.getString("current$courseId", "")
+                        if (!isRunning.isNullOrEmpty() && (isRunning == "document" || isRunning == "address")){
+                            fieldsToVisible.addAll(requirements.map { it.toString() })
+                            moveToSaveState(isRunning)
+                            shouldExitLoop = true
+                        }else if (!isSaved) {
+                            fieldsToVisible.addAll(requirements.map { it.toString() })
+                            shouldExitLoop = true
+                        }
                     }
-                    Log.d("fieldsToVisible",fieldsToVisible.toString())
                 }
+
+                Log.d("fieldsToVisible", fieldsToVisible.toString())
                 // Update UI visibility after fetching courses
                 updateUIVisibility()
             }.onFailure {
+                formRootStatus(isRunning = false)
                 Log.e("MyCoursesFail", it.message.toString())
                 Toast.makeText(requireContext(), "Failed to load courses: ${it.message}", Toast.LENGTH_SHORT).show()
             }
         }
 
+
         // Fetch the courses
         myCoursesViewModel.fetchMyCourses()
+    }
+
+    private fun moveToSaveState(isRunning: String) {
+        val id = when (isRunning) {
+            "document" -> {
+                R.id.AdditionalDetailsFragment
+            }
+            "address" -> {
+                R.id.AddressDetailFragment
+            }
+            else -> {
+                return
+            }
+        }
+        findNavController().let { nav->
+            nav.navigate(id)
+           /* val navOptions = NavOptions.Builder()
+                .setPopUpTo(nav.graph.startDestinationId, true)
+                .build()
+            nav.navigate(id, Bundle().apply {
+                putStringArray("IDS", fieldsToVisible.toTypedArray())
+                putString("IDS", courseId)
+            }, navOptions)*/
+        }
     }
 
     private fun updateUIVisibility() {
@@ -158,13 +265,13 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
     private fun showBottomSheetTSize() {
         if (!isBottomSheetShowing) {
             isBottomSheetShowing = true
-            val bottomSheet = BottomSheetTSizeFragment().apply {
+            bottomSheetTSizeFragment = BottomSheetTSizeFragment().apply {
                 setOnTSizeSelectedListener(this@PersonalDetailsFragment)
                 arguments = Bundle().apply {
                     putString("selectedSize", tShirtSize)
                 }
             }
-            bottomSheet.show(childFragmentManager, "BottomSheetTSizeFragment")
+            bottomSheetTSizeFragment.show(childFragmentManager, "BottomSheetTSizeFragment")
         }
     }
 

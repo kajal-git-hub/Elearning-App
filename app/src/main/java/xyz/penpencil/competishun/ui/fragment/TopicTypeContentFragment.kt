@@ -158,6 +158,7 @@ class TopicTypeContentFragment : Fragment() {
 
                         if (studyMaterial.isNullOrEmpty())
                             time = helperFunctions.formatCourseDateTime(content.content?.scheduled_time.toString()) else  time = helperFunctions.formatCourseDateTime("2024-10-11T17:27:00.000Z")
+                        Log.e("scheduletimes",time.toString())
 
                         TopicContentModel(
                             subjectIcon = R.drawable.group_1707478994, // Replace with dynamic icon if needed

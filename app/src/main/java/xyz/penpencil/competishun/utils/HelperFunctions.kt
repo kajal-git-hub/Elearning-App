@@ -8,6 +8,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.net.Uri
 import android.os.Environment
+import android.util.Log
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Toast
@@ -103,6 +104,8 @@ class HelperFunctions {
     }
 
     fun formatCourseDateTime(date: String?): String {
+
+        Log.e("dataeis ",date.toString())
         val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault()).apply {
             timeZone = TimeZone.getTimeZone("UTC") // Assuming the input date is in UTC
         }

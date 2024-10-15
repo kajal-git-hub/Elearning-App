@@ -55,6 +55,7 @@ import kotlinx.coroutines.launch
 import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.databinding.FragmentHomeBinding
 import xyz.penpencil.competishun.ui.main.MainActivity
+import xyz.penpencil.competishun.ui.viewmodel.MyCoursesViewModel
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
@@ -92,6 +93,7 @@ class HomeFragment : Fragment() {
 
 
     private val userViewModel: UserViewModel by viewModels()
+    private val myCoursesViewModel: MyCoursesViewModel by viewModels()
 
 
     override fun onCreateView(
@@ -335,8 +337,30 @@ class HomeFragment : Fragment() {
 
         }
 
+        fetchCoursesAndUpdateUI()
+
     }
-    private fun preventToMultiCall(id: Int) {    if (findNavController().currentDestination?.id != id) {        findNavController().navigate(id)    }}
+
+    private fun fetchCoursesAndUpdateUI() {
+        myCoursesViewModel.myCourses.observe(viewLifecycleOwner) { result ->
+            result.onSuccess { data ->
+                data.myCourses.forEach { courseList ->
+                    if (!sharedPreferencesManager.hasKey(courseList.course.id)) {
+                        findNavController().navigate(R.id.action_homeFragment_to_PersonalDetailFragment)
+                        return@observe
+                    }
+                }
+            }.onFailure {
+                Log.e("MyCoursesFail", it.message.toString())
+            }
+        }
+        myCoursesViewModel.fetchMyCourses()
+    }
+
+
+    private fun preventToMultiCall(id: Int) {
+        if (findNavController().currentDestination?.id != id) { findNavController().navigate(id) }
+    }
 
     fun getMyDetails() {
         userViewModel.fetchUserDetails()
@@ -349,7 +373,7 @@ class HomeFragment : Fragment() {
                 sharedPreferencesManager.reference = userDetails.userInformation.reference
                 sharedPreferencesManager.preparingFor = userDetails.userInformation.preparingFor
                 sharedPreferencesManager.targetYear = userDetails.userInformation.targetYear
-                var courseType = userDetails.userInformation.preparingFor ?: ""
+                val courseType = userDetails.userInformation.preparingFor ?: ""
                 sharedPreferencesManager.name = userDetails.fullName
                 sharedPreferencesManager.city = userDetails.userInformation.address?.city
                 sharedPreferencesManager.reference = userDetails.userInformation.reference

@@ -21,6 +21,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.NavOptions
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.apollographql.apollo3.api.Optional
 import com.google.android.gms.common.util.IOUtils.copyStream
@@ -32,6 +34,7 @@ import xyz.penpencil.competishun.ui.viewmodel.UserViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.databinding.FragmentAdditionalDetailBinding
+import xyz.penpencil.competishun.utils.SharedPreferencesManager
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -59,6 +62,11 @@ class AdditionalDetailsFragment : DrawerVisibility() {
     private var uploadedIdUri: Uri? = null
     private var uploadedPhotoUri: Uri? = null
 
+    private var fieldsToVisible = arrayOf<String>()
+    private var courseId: String = ""
+
+    lateinit var sharedPreferencesManager: SharedPreferencesManager
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -67,14 +75,28 @@ class AdditionalDetailsFragment : DrawerVisibility() {
         return binding.root
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        sharedPreferencesManager = SharedPreferencesManager(requireContext())
 
         (activity as? HomeActivity)?.showBottomNavigationView(false)
         (activity as? HomeActivity)?.showFloatingButton(false)
 
+        arguments?.let {
+            fieldsToVisible = it.getStringArray("IDS")?: emptyArray()
+            if (fieldsToVisible.contains("PASSPORT_SIZE_PHOTO")){
+                binding.clUploadPhoto.visibility = View.VISIBLE
+            }else{
+                binding.clUploadPhoto.visibility = View.GONE
+            }
+
+            if (fieldsToVisible.contains("AADHAR_CARD")){
+                binding.clUploadId.visibility = View.VISIBLE
+            }else{
+                binding.clUploadPhoto.visibility = View.GONE
+            }
+            courseId = it.getString("IDS", "")
+        }
 
         binding.etBTHomeAddress.setOnClickListener {
             findNavController().navigate(R.id.PersonalDetailsFragment)
@@ -114,10 +136,19 @@ class AdditionalDetailsFragment : DrawerVisibility() {
                     )
                     bitmapdocumentPhotoFile?.let { it1 -> encodeBitmapToBase64(it1) }?.let { it2 ->
                         passportPhotoFile?.let { it1 -> encodeBitmapToBase64(it1) }?.let { it3 ->
-                          //  userUpdate(updateUserInput, it2, it3)
+                            //  userUpdate(updateUserInput, it2, it3)
                         }
                     }
-                    findNavController().navigate(R.id.action_AdditionalDetail_to_AddressDetail)
+                    it.findNavController().let{nav->
+                        nav.navigate(getFragmentId())
+                       /* val navOptions = NavOptions.Builder()
+                            .setPopUpTo(nav.graph.startDestinationId, true)
+                            .build()
+                        nav.navigate(getFragmentId(), Bundle().apply {
+                            putStringArray("IDS", fieldsToVisible)
+                            putString("IDS", courseId)
+                        }, navOptions)*/
+                    }
                 }.onFailure { exception ->
                     Toast.makeText(
                         requireContext(),
@@ -168,6 +199,17 @@ class AdditionalDetailsFragment : DrawerVisibility() {
             return null
         }
         return file
+    }
+
+    private fun getFragmentId(): Int {
+        return if (fieldsToVisible.contains("FULL_ADDRESS")){
+            sharedPreferencesManager.putString("current$courseId", "address")
+            R.id.action_AdditionalDetail_to_AddressDetail
+        }else {
+            sharedPreferencesManager.removeKey("current$courseId")
+            sharedPreferencesManager.putBoolean(courseId, value = true)
+            R.id.courseEmptyFragment
+        }
     }
 
     // Helper function to get the file name from the Uri
@@ -233,20 +275,20 @@ class AdditionalDetailsFragment : DrawerVisibility() {
             binding.fileName.text = fileName
             binding.fileSize.text = fileSize
             uploadedIdUri = uri
-             byteArrayAdhar = getByteArrayFromUri(requireContext(), uploadedIdUri!!)
+            byteArrayAdhar = getByteArrayFromUri(requireContext(), uploadedIdUri!!)
         } else if (currentFileType == "PHOTO") {
             binding.clUploadPhoto.visibility = View.GONE
             binding.clUploadedPassport.visibility = View.VISIBLE
             binding.fileNamePass.text = fileName
             binding.fileSizePass.text = fileSize
             uploadedPhotoUri = uri
-             byteArrayPassPort = getByteArrayFromUri(requireContext(), uploadedPhotoUri!!)
+            byteArrayPassPort = getByteArrayFromUri(requireContext(), uploadedPhotoUri!!)
         }
         updateButtonState()
     }
 
     private fun updateButtonState() {
-        if (uploadedIdUri != null && uploadedPhotoUri != null) {
+        if (uploadedIdUri != null || uploadedPhotoUri != null) {
             binding.btnAddaddressDetails.setBackgroundColor(
                 ContextCompat.getColor(
                     requireContext(),
