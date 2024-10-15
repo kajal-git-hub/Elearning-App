@@ -26,6 +26,7 @@ class SharedPreferencesManager(context: Context) {
         private const val KEY_EMAIL = "email"
         private const val KEY_CITY = "city"
         private const val KEY_USER_ID = "userId"
+        private const val KEY_PAYMENT_TYPE = "paymentType"
         private const val KEY_PREPARATION_FOR = "preparingFor"
         private const val KEY_OTHER_PREP_FOR = "OtherFor"
         private const val KEY_TARGET_YEAR = "targetYear"
@@ -180,6 +181,13 @@ class SharedPreferencesManager(context: Context) {
             sharedPreferences.edit().putString(KEY_MOBILE_NO, value).apply()
 
             Log.e("sharedPrefnumber sa", mobileNo.toString())
+        }
+    var paymentType: String?
+        get() = sharedPreferences.getString(KEY_PAYMENT_TYPE, null)
+        set(value) {
+            sharedPreferences.edit().putString(KEY_PAYMENT_TYPE, value).apply()
+
+            Log.e("sharedPrefnumber sa", paymentType.toString())
         }
     var name: String?
         get() = sharedPreferences.getString(KEY_NAME, null)

@@ -16,6 +16,8 @@ import xyz.penpencil.competishun.ui.fragment.BookMarkFragment
 import xyz.penpencil.competishun.ui.fragment.BottomSheetBookmarkDeleteDownload
 import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.ui.fragment.closeListener
+import xyz.penpencil.competishun.ui.main.PdfViewerActivity
+import xyz.penpencil.competishun.utils.HelperFunctions
 import xyz.penpencil.competishun.ui.main.PdfViewActivity
 import xyz.penpencil.competishun.utils.SharedPreferencesManager
 import java.io.File
@@ -75,6 +77,7 @@ class BookMarkAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = filteredItems[position]
 
+        var helperFunctions = HelperFunctions()
         holder.studyMaterial.text = item.lecture
 
 
@@ -89,6 +92,8 @@ class BookMarkAdapter(
             holder.ivBookShadow.setImageResource(R.drawable.ellipse_17956)
             holder.forRead.visibility = View.VISIBLE
             holder.forVideo.visibility = View.GONE
+            holder.etHomeWorkPdf.visibility = View.GONE
+            holder.etHomeWorkText.visibility = View.GONE
             holder.forRead.setImageResource(R.drawable.frame_1707481707_1_)
 
             holder.dotExtraInfoDownload.setOnClickListener {
@@ -111,6 +116,13 @@ class BookMarkAdapter(
             holder.ivSubjectBookIcon.setImageResource(R.drawable.group_1707478994)
             holder.ivBookShadow.setImageResource(R.drawable.ellipse_17956)
             holder.forRead.setImageResource(R.drawable.frame_1707481707)
+
+            holder.etHomeWorkText.visibility = View.VISIBLE
+            holder.etHomeWorkPdf.visibility = View.VISIBLE
+            holder.etHomeWorkPdf.text = if (item.homeworkName.isNotEmpty()) item.homeworkName else "NA"
+            holder.etHomeWorkPdf.setOnClickListener {
+                helperFunctions.downloadPdf(context,item.homeworkUrl,item.homeworkName)
+            }
 
             holder.dotExtraInfoDownload.setOnClickListener {
                 val bottomSheet = BottomSheetBookmarkDeleteDownload(this)
@@ -177,6 +189,8 @@ class BookMarkAdapter(
         val forRead: ImageView = itemView.findViewById(R.id.iv_bm_read_pdf)
         val forVideo: ImageView = itemView.findViewById(R.id.iv_bm_read_video)
         val dotExtraInfoDownload: ImageView = itemView.findViewById(R.id.bookmark_extra)
+        val etHomeWorkPdf: TextView = itemView.findViewById(R.id.et_homeWorkPdf)
+        val etHomeWorkText: TextView = itemView.findViewById(R.id.et_homeWorkText)
     }
     private fun formatTimeDuration(totalDuration: Int): String {
         return when {
