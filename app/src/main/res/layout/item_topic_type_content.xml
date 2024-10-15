@@ -126,6 +126,7 @@
             android:layout_marginTop="@dimen/_12sp"
             android:layout_marginStart="16sp"
             android:textStyle="bold"
+            android:textSize="12sp"
             android:textColor="@color/black_2B2829"
             android:fontFamily="@font/nunito"
             android:text="HomeWork :"
@@ -139,10 +140,12 @@
             android:layout_marginTop="12sp"
             android:textColor="@color/blue"
             android:textStyle="bold"
+            android:maxLines="1"
+            android:textSize="@dimen/_12sp"
             android:ellipsize="end"
             app:layout_constraintEnd_toStartOf="@+id/videoicon"
             android:fontFamily="@font/nunito"
-            android:text="Competishun.pdf"
+            android:text="  Competishun.pdf"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toEndOf="@+id/et_homeWorkText"/>
 

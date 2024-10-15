@@ -90,7 +90,7 @@ TopicContentAdapter(
                 {
                     binding.etHomeWorkText.visibility = View.VISIBLE
                     binding.etHomeWorkPdf.visibility = View.VISIBLE
-                    binding.etHomeWorkPdf.text = if (topicContent.homeworkName.isNotEmpty()) topicContent.homeworkName else "NA"
+                    binding.etHomeWorkPdf.text = if (topicContent.homeworkName.isNotEmpty()) " "+helperFunctions.removeBrackets(topicContent.homeworkName) else "NA"
                     binding.etHomeWorkPdf.setOnClickListener {
                         helperFunctions.downloadPdf(context,topicContent.homeworkUrl,topicContent.homeworkName)
                     }
