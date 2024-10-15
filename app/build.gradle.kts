@@ -113,6 +113,8 @@ dependencies {
 
     implementation (libs.exoplayer)
 
-    implementation ("io.github.afreakyelf:Pdf-Viewer:2.1.1")
+    implementation (libs.pdf.viewer)
+
+    implementation(libs.ketch)
 
 }
