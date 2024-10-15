@@ -24,6 +24,8 @@ import xyz.penpencil.competishun.ui.viewmodel.UpdateUserViewModel
 import xyz.penpencil.competishun.utils.SharedPreferencesManager
 import dagger.hilt.android.AndroidEntryPoint
 import xyz.penpencil.competishun.R
+import xyz.penpencil.competishun.data.api.ApiProcess
+import xyz.penpencil.competishun.data.model.UpdateUserResponse
 import xyz.penpencil.competishun.databinding.FragmentReferenceBinding
 import xyz.penpencil.competishun.ui.main.MainActivity
 import xyz.penpencil.competishun.utils.Constants
@@ -96,7 +98,7 @@ class ReferenceFragment : Fragment() {
                         reference = Optional.Present(sharedPreferencesManager.reference),
                         targetYear = Optional.Present(sharedPreferencesManager.targetYear),
                     )
-                    updateUserViewModel.updateUser(updateUserInput,null,null)
+                    updateUserViewModel.updateUserErrorHandled(updateUserInput,null,null)
                 } else {
                     Log.e("emailpresenELSE",sharedPreferencesManager.email.toString())
                       val updateUserInput = UpdateUserInput(
@@ -106,7 +108,7 @@ class ReferenceFragment : Fragment() {
                         reference = Optional.Present(sharedPreferencesManager.reference),
                         targetYear = Optional.Present(sharedPreferencesManager.targetYear), mobileNumber = Optional.present(sharedPreferencesManager.mobileNo), countryCode = Optional.present("+91")
                     )
-                    updateUserViewModel.updateUser(updateUserInput,null,null)
+                    updateUserViewModel.updateUserErrorHandled(updateUserInput,null,null)
                 }
 
 
@@ -116,19 +118,34 @@ class ReferenceFragment : Fragment() {
             }
         }
 
-        updateUserViewModel.updateUserResult.observe(viewLifecycleOwner, Observer { result ->
-            if (result?.user != null) {
-                Log.e("gettingUserUpdateTarget", result.user.userInformation.targetYear.toString())
-                Log.e("gettingUserUpdaterefer", result.user.userInformation.reference.toString())
-                Log.e("gettingUserUpdateprep", result.user.userInformation.preparingFor.toString())
-                Log.e("gettingUserUpdatecity", result.user.userInformation.address?.city.toString())
+        updateUserViewModel.updateUserErrorHandledResult.observe(viewLifecycleOwner, Observer { result ->
+            when (result) {
+                is ApiProcess.Success -> {
+                    val data: UpdateUserResponse = result.data
+                    data.user?.userInformation?.let { userInfo ->
+                        Log.e("gettingUserUpdateTarget", userInfo.targetYear?.toString() ?: "null")
+                        Log.e("gettingUserUpdaterefer", userInfo.reference?.toString() ?: "null")
+                        Log.e("gettingUserUpdateprep", userInfo.preparingFor?.toString() ?: "null")
+                        Log.e("gettingUserUpdatecity", userInfo.address?.city?.toString() ?: "null")
+                    }
 
-                navigateToLoaderScreen()
-            } else {
-                Log.e("gettingUserUpdatefail", result.toString())
-                Toast.makeText(context, "Update failed", Toast.LENGTH_SHORT).show()
+                    // Call the navigation method after successful update
+                    navigateToLoaderScreen()
+                }
+                is ApiProcess.Failure -> {
+                    Log.e("gettingUserUpdatefail", "Error: ${result.message}")
+                    Toast.makeText(context, result.message, Toast.LENGTH_SHORT).show()
+                }
+                ApiProcess.Loading -> {
+                    // Handle loading state if needed
+                    Log.d("UpdateUser", "Loading user update...")
+                }
+                else -> {
+                    Log.e("gettingUserUpdatefail", "Unexpected result")
+                }
             }
         })
+
 
         binding.etStartedText.text = stepTexts[currentStep]
         binding.etText.text = pageTexts[currentStep]
