@@ -185,6 +185,7 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
                             moveToSaveState(isRunning)
                             shouldExitLoop = true
                         }else if (!isSaved) {
+                            sharedPreferencesManager.putBoolean(courseId, true)
                             fieldsToVisible.addAll(requirements.map { it.toString() })
                             shouldExitLoop = true
                         }
