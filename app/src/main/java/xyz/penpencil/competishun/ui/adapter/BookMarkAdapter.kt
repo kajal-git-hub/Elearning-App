@@ -17,8 +17,6 @@ import xyz.penpencil.competishun.ui.fragment.BottomSheetBookmarkDeleteDownload
 import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.ui.fragment.closeListener
 import xyz.penpencil.competishun.utils.HelperFunctions
-import xyz.penpencil.competishun.ui.main.PdfViewerActivity
-import xyz.penpencil.competishun.utils.HelperFunctions
 import xyz.penpencil.competishun.ui.main.PdfViewActivity
 import xyz.penpencil.competishun.utils.SharedPreferencesManager
 import java.io.File
