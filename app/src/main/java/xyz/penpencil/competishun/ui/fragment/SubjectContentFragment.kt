@@ -491,8 +491,9 @@ class SubjectContentFragment : DrawerVisibility() {
                                         videoUrlApi(videourlViewModel, topicContent.id,topicContent.topicName,folderContentIds,folderContentNames)
                                     }
                                     "PDF" -> {
-                                        val intent = Intent(context, PdfViewerActivity::class.java).apply {
+                                        val intent = Intent(context, PdfViewActivity::class.java).apply {
                                             putExtra("PDF_URL", topicContent.url)
+                                            putExtra("PDF_TITLE",topicContent.topicName)
                                         }
                                         context?.startActivity(intent)
                                     }

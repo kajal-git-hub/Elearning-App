@@ -32,7 +32,7 @@ import xyz.penpencil.competishun.ui.adapter.CourseFeaturesAdapter
 import xyz.penpencil.competishun.ui.adapter.SubjectContentAdapter
 import xyz.penpencil.competishun.ui.adapter.TopicContentAdapter
 import xyz.penpencil.competishun.ui.main.HomeActivity
-import xyz.penpencil.competishun.ui.main.PdfViewerActivity
+import xyz.penpencil.competishun.ui.main.PdfViewActivity
 import xyz.penpencil.competishun.ui.viewmodel.CoursesViewModel
 import xyz.penpencil.competishun.ui.viewmodel.GetCourseByIDViewModel
 import xyz.penpencil.competishun.ui.viewmodel.VideourlViewModel
@@ -275,8 +275,9 @@ class StudyMaterialDetailsFragment : Fragment() {
                                         videoUrlApi(videourlViewModel, topicContent.id,topicContent.topicName,folderContentIds,folderContentNames)
                                     }
                                     "PDF" -> {
-                                        val intent = Intent(context, PdfViewerActivity::class.java).apply {
+                                        val intent = Intent(context, PdfViewActivity::class.java).apply {
                                             putExtra("PDF_URL", topicContent.url)
+                                            putExtra("PDF_TITLE",topicContent.topicName)
                                         }
                                         context?.startActivity(intent)
                                     }
@@ -428,7 +429,7 @@ class StudyMaterialDetailsFragment : Fragment() {
                                         videoUrlApi(videourlViewModel, topicContent.id,topicContent.topicName,folderContentIds,folderContentNames)
                                     }
                                     "PDF" -> {
-                                        val intent = Intent(context, PdfViewerActivity::class.java).apply {
+                                        val intent = Intent(context, PdfViewActivity::class.java).apply {
                                             putExtra("PDF_URL", topicContent.url)
                                         }
                                         context?.startActivity(intent)

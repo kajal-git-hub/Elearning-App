@@ -19,7 +19,6 @@ import com.student.competishun.curator.AllCourseForStudentQuery
 import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.data.model.CourseFItem
 import xyz.penpencil.competishun.data.model.FreeDemoItem
-import xyz.penpencil.competishun.ui.main.PdfViewerActivity
 import xyz.penpencil.competishun.ui.viewmodel.GetCourseByIDViewModel
 import xyz.penpencil.competishun.utils.StudentCourseItemClickListener
 import java.util.ArrayList
