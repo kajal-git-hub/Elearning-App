@@ -127,7 +127,7 @@ class AdditionalDetailsFragment : DrawerVisibility() {
                         waCountryCode = Optional.Present("+91"),
                     )
                     Log.d("uploadedIdUri",uploadedIdUri.toString())
-                    Log.d("uploadedIdUri",uploadedIdUri.toString())
+                    Log.d("uploadedPhotoUri",uploadedPhotoUri.toString())
                     val bitmapdocumentPhotoFile = byteArrayAdhar?.let { byteArrayToBitmap(it) }
                     val passportPhotoFile = byteArrayPassPort?.let { byteArrayToBitmap(it) }
                     userUpdate(updateUserInput, bitmapdocumentPhotoFile.toString(),

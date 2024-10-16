@@ -90,7 +90,7 @@
                     android:layout_marginTop="12dp"
                     android:layout_marginBottom="@dimen/_16dp"
                     android:lineHeight="@dimen/_18sp"
-                    android:text="Competishun is the most efficient Online &amp; Offline JEE Preparation platform for students appearing in Engineering Examinations in India like IIT JEE Main, JEE Advanced and BITSAT. We also prepare students for Boards, NTSE, KVPY &amp; Olympiads. The team has produced several top ranks in JEE Mains &amp; Advanced including in the Top 100."
+                    android:text="@string/about_us_text"
                     android:textColor="#726C6C"
                     android:textSize="@dimen/_12sp"
                     android:fontFamily="@font/nunito"

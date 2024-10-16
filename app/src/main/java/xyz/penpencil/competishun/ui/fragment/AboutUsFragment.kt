@@ -1,6 +1,7 @@
 package xyz.penpencil.competishun.ui.fragment
 
 import android.os.Bundle
+import android.text.Html
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -35,6 +36,7 @@ class AboutUsFragment : DrawerVisibility() {
         binding.etBTHomeAddress.setOnClickListener {
             findNavController().navigate(R.id.action_AboutUs_to_homePage)
         }
+        binding.tvAboutUsDesc.text = Html.fromHtml(getString(R.string.about_us_text), Html.FROM_HTML_MODE_LEGACY)
 
         val aboutUsItems = listOf(
             AboutUsItem(
@@ -43,7 +45,7 @@ class AboutUsFragment : DrawerVisibility() {
                 teacherSub = "Mathematics",
                 teacherYear = "22 Years",
                 courseAndCollege = "B.Tech. , IIT Delhi",
-                mentorDescriptions = listOf("Expert in JEE Mathematics", "Over 20 years of teaching experience")
+                mentorDescriptions = listOf("Expert in JEE Mathematics", "Over 20 years of teaching experience","Over 20 years of teaching experience")
             ),
             AboutUsItem(
                 image = R.drawable.alok,
@@ -51,7 +53,7 @@ class AboutUsFragment : DrawerVisibility() {
                 teacherSub = "Physical-Inorganic Chemistry",
                 teacherYear = "19 Years",
                 courseAndCollege = "B.Tech. , NIT Allahabad",
-                mentorDescriptions = listOf("Expert in JEE Mathematics", "Over 20 years of teaching experience")
+                mentorDescriptions = listOf("Expert in JEE Mathematics", "Over 20 years of teaching experience","Over 20 years of teaching experience")
             ),
             AboutUsItem(
                 image = R.drawable.neeraj,
@@ -59,7 +61,7 @@ class AboutUsFragment : DrawerVisibility() {
                 teacherSub = "Organic chemistry",
                 teacherYear = "18 Years",
                 courseAndCollege = "NET-JRF, SLET,",
-                mentorDescriptions = listOf("Expert in JEE Mathematics", "Over 20 years of teaching experience")
+                mentorDescriptions = listOf("Expert in JEE Mathematics", "Over 20 years of teaching experience","Over 20 years of teaching experience")
             ),
             AboutUsItem(
                 image = R.drawable.amit,
@@ -67,7 +69,7 @@ class AboutUsFragment : DrawerVisibility() {
                 teacherSub = "Physics",
                 teacherYear = "15 Years",
                 courseAndCollege = "B.Tech. , IIT Delhi",
-                mentorDescriptions = listOf("Expert in JEE Mathematics", "Over 20 years of teaching experience")
+                mentorDescriptions = listOf("Expert in JEE Mathematics", "Over 20 years of teaching experience","Over 20 years of teaching experience")
             ),
         )
 
