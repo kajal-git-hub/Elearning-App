@@ -4,25 +4,23 @@ import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
+import android.content.pm.ServiceInfo
+import android.os.Build
 import android.util.Log
-import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
-import com.ketch.Ketch
-import com.ketch.Status
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
-import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import xyz.penpencil.competishun.R
-import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.InputStream
+
 
 class DownloadWorker(
     context: Context,
@@ -37,7 +35,11 @@ class DownloadWorker(
     }
 
     override suspend fun doWork(): Result {
+//        setForegroundAsync(createForegroundInfo(0, 100))
         setForeground(createForegroundInfo(0, 100))
+
+//        setForegroundAsync(foregroundInfo)
+
 
         try {
             val url = inputData.getString("url")!!
@@ -90,7 +92,16 @@ class DownloadWorker(
 
     private fun createForegroundInfo(progress: Int, maxProgress: Int): ForegroundInfo {
         val notification = createNotification("Download in progress", progress, maxProgress)
-        return ForegroundInfo(NOTIFICATION_ID, notification)
+        val foregroundInfo = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            ForegroundInfo(
+                NOTIFICATION_ID,
+                notification,
+                ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
+            )
+        } else {
+            ForegroundInfo(NOTIFICATION_ID, notification)
+        }
+        return foregroundInfo
     }
 
     private fun createNotification(contentText: String, progress: Int, maxProgress: Int): Notification {

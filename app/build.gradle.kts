@@ -115,8 +115,6 @@ dependencies {
 
     implementation (libs.pdf.viewer)
 
-    implementation(libs.ketch)
-
     implementation(libs.androidx.work.runtime)
 
     implementation(libs.circular.progress.indicator)
