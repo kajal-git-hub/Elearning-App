@@ -191,7 +191,7 @@ class CourseEmptyFragment : Fragment() {
 
     fun myCoursesBind() {
         binding.progressBar.visibility = View.VISIBLE
-        binding.clEmptyMyCourse?.visibility = View.VISIBLE
+        binding.clEmptyMyCourse.visibility = View.GONE
         val courseDetailsList = mutableListOf<ExploreCourse>()
         viewModel.myCourses.observe(viewLifecycleOwner) { result ->
             binding.progressBar?.visibility = View.GONE
@@ -201,12 +201,12 @@ class CourseEmptyFragment : Fragment() {
                 if (data.myCourses.isNotEmpty()) {
 //                    sharedPreferencesManager.isMyCourseAvailable = true
                     sharedPreferencesManager.isBottomSheetShown = false
+                    binding.progressBar?.visibility = View.GONE
                     binding.clEmptyMyCourse.visibility = View.GONE
                     binding.rvExploreCourses.visibility = View.VISIBLE
                     // Create lists to hold courses and progress
                     val courseList = mutableListOf<MyCoursesQuery.Course>()
                     val progressList = mutableListOf<MyCoursesQuery.Progress>()
-
                     data.myCourses.forEach { myCourse ->
                         val course = myCourse.course
                         val progress = myCourse.progress
@@ -267,9 +267,12 @@ class CourseEmptyFragment : Fragment() {
                     binding.rvExploreCourses.adapter = adapter
                     binding.rvExploreCourses.layoutManager =
                         LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+                } else {
+                    binding.progressBar.visibility = View.GONE
+                    binding.clEmptyMyCourse.visibility = View.VISIBLE
                 }
             }.onFailure {
-                binding?.clEmptyMyCourse?.visibility = View.VISIBLE
+             //   binding?.clEmptyMyCourse?.visibility = View.VISIBLE
                 Log.e("MyCoursesFail", it.message.toString())
                 Toast.makeText(requireContext(), "Failed to load courses: ${it.message}", Toast.LENGTH_SHORT).show()
             }
