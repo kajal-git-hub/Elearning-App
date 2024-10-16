@@ -35,11 +35,7 @@ class DownloadWorker(
     }
 
     override suspend fun doWork(): Result {
-//        setForegroundAsync(createForegroundInfo(0, 100))
         setForeground(createForegroundInfo(0, 100))
-
-//        setForegroundAsync(foregroundInfo)
-
 
         try {
             val url = inputData.getString("url")!!
