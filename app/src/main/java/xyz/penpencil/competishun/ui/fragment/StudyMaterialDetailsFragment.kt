@@ -36,6 +36,7 @@ import xyz.penpencil.competishun.ui.main.PdfViewActivity
 import xyz.penpencil.competishun.ui.viewmodel.CoursesViewModel
 import xyz.penpencil.competishun.ui.viewmodel.GetCourseByIDViewModel
 import xyz.penpencil.competishun.ui.viewmodel.VideourlViewModel
+import xyz.penpencil.competishun.utils.BindingAdapters
 import xyz.penpencil.competishun.utils.HelperFunctions
 import xyz.penpencil.competishun.utils.OnTopicTypeSelectedListener
 import xyz.penpencil.competishun.utils.SharedPreferencesManager
@@ -143,7 +144,9 @@ class StudyMaterialDetailsFragment : Fragment() {
                     .load(imageUrl)
                     .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
                     .into(binding.ivSubjectBookIcon)
-                binding.tvTopicDesc.text = courses?.description ?:""
+                Log.e("descroptions",courses?.description.toString())
+                BindingAdapters.setTextHtml(binding.tvTopicDesc,courses?.description)
+              //  binding.tvTopicDesc.text = courses?.description ?:""
 
                // binding.progressBar.visibility = View.GONE
                 if (courses?.planner_pdf != null) {
