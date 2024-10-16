@@ -2,11 +2,16 @@ package xyz.penpencil.competishun.utils
 
 import android.app.AlertDialog
 import android.app.DownloadManager
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.net.Uri
 import android.os.Environment
+import android.util.Log
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import xyz.penpencil.competishun.R
@@ -99,6 +104,8 @@ class HelperFunctions {
     }
 
     fun formatCourseDateTime(date: String?): String {
+
+        Log.e("dataeis ",date.toString())
         val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault()).apply {
             timeZone = TimeZone.getTimeZone("UTC") // Assuming the input date is in UTC
         }
@@ -157,16 +164,34 @@ class HelperFunctions {
         }
     }
 
-    fun downloadPdf(context: Context,fileUrl: String, title: String) {
-         val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-         val request = DownloadManager.Request(Uri.parse(removeBrackets(fileUrl)))
-             .setTitle(title)
-             .setDescription("Downloading $title...")
-             .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-             .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "$title.pdf")
+    fun downloadPdf(context: Context, fileUrl: String, title: String) {
+        val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+        val request = DownloadManager.Request(Uri.parse(removeBrackets(fileUrl)))
+            .setTitle(title)
+            .setDescription("Downloading $title...")
+            .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+            .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "$title.pdf")
 
-         downloadManager.enqueue(request)
+        val downloadId = downloadManager.enqueue(request)
+
+        Toast.makeText(context, "Download started", Toast.LENGTH_SHORT).show()
+
+        val onCompleteReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context, intent: Intent) {
+                val id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
+
+                if (id == downloadId) {
+                    Toast.makeText(context, "Download successful", Toast.LENGTH_SHORT).show()
+
+                    context.unregisterReceiver(this)
+                }
+            }
+        }
+
+        context.registerReceiver(onCompleteReceiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE),
+            Context.RECEIVER_NOT_EXPORTED)
     }
+
     fun removeBrackets(input: String): String {
         return input.replace("[", "").replace("]", "")
     }

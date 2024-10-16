@@ -9,18 +9,27 @@
         android:id="@+id/myCourse"
         android:icon="@drawable/book"
         android:title="My Courses" />
-    <item
-        android:id="@+id/Scoreboard"
-        android:icon="@drawable/ranking__1_"
-        android:title="Scoreboard" />
 
     <item
-        android:id="@+id/Chat"
-        android:icon="@drawable/message"
-        android:title="Chat" />
-
+        android:id="@+id/Download"
+        android:icon="@drawable/download"
+        android:title="Download" />
     <item
-        android:id="@+id/News"
-        android:icon="@drawable/document_text"
-        android:title="News"/>
+        android:id="@+id/Bookmark"
+        android:icon="@drawable/bookmark"
+        android:title="BookMark" />
+<!--    <item-->
+<!--        android:id="@+id/Scoreboard"-->
+<!--        android:icon="@drawable/ranking__1_"-->
+<!--        android:title="Scoreboard" />-->
+
+<!--    <item-->
+<!--        android:id="@+id/Chat"-->
+<!--        android:icon="@drawable/message"-->
+<!--        android:title="Chat" />-->
+
+<!--    <item-->
+<!--        android:id="@+id/News"-->
+<!--        android:icon="@drawable/document_text"-->
+<!--        android:title="News"/>-->
 </menu>

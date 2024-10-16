@@ -98,6 +98,7 @@ class PaymentFragment : Fragment() {
         }
         getUserDetails()
         binding.btReceipt.setOnClickListener {
+            binding.btReceipt.isEnabled = false
          var transactionId = sharedPreferencesManager.rzpOrderId
             if (transactionId != null) {
                 downloadReceipt(transactionId)
@@ -120,16 +121,19 @@ class PaymentFragment : Fragment() {
 
     }
 
+    // TODO : CALLBACK FOR THE DOWNLOAD RECEIPT
     private fun downloadReceipt( transactionId:String){
         ordersViewModel.generateReceipt(transactionId)
         ordersViewModel.receiptResult.observe(viewLifecycleOwner)
         { result ->
 
             result.onSuccess {
-                var receiptLink = it.generateReceipt
+                val receiptLink = it.generateReceipt
                 Log.e("ReceiptLink",receiptLink)
                helperFunctions.downloadPdf(requireContext(),receiptLink,"Payment Invoice")
+
             }.onFailure {
+                binding.btReceipt.isEnabled = true
                 // Handle failure, e.g., show an error message
                 Log.e("Failed to download ReceiptLink: ",it.message.toString())
             }
@@ -165,6 +169,11 @@ class PaymentFragment : Fragment() {
                 for (order in orders) {
                     binding.tvAmount.text = "₹ ${order.amountPaid}"
                     binding.paymentSuccessText.text = "Payment Sucessfully"
+                    if (sharedPreferencesManager.paymentType == "partial"){
+                        binding.tvPaymentType.text = "Installment"
+                    }else if (sharedPreferencesManager.paymentType == "full"){
+                        binding.tvPaymentType.text = "One-Time Payment"
+                    }
                     observeCourseById(order.entityId)
                     binding.tvPaidDate.text =  getCurrentDateString()
                   val cartItemId =   sharedPreferencesManager.getString("cartItemId","")
@@ -261,5 +270,9 @@ class PaymentFragment : Fragment() {
         return dateFormat.format(Date())
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        sharedPreferencesManager.paymentType = ""
+    }
 
 }

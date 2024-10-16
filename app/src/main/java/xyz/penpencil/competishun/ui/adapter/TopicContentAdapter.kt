@@ -50,7 +50,7 @@ TopicContentAdapter(
 
         val topicContent = topicContents[position]
         holder.bind(topicContents[position], fragmentActivity)
-        Log.e("valuesss ${isDateTodayOrPast(topicContent.lockTime)} ", topicContent.topicName.toString())
+        Log.e("valuesss ${isDateTodayOrPast(topicContent.lockTime)} ", topicContent.lockTime.toString())
         // Disable click if locked, enable if not
         if ( isDateTodayOrPast(topicContent.lockTime)) {
             // Enable the click listener for unlocked items
@@ -90,7 +90,7 @@ TopicContentAdapter(
                 {
                     binding.etHomeWorkText.visibility = View.VISIBLE
                     binding.etHomeWorkPdf.visibility = View.VISIBLE
-                    binding.etHomeWorkPdf.text = if (topicContent.homeworkName.isNotEmpty()) topicContent.homeworkName else "NA"
+                    binding.etHomeWorkPdf.text = if (topicContent.homeworkName.isNotEmpty()) " "+helperFunctions.removeBrackets(topicContent.homeworkName) else "NA"
                     binding.etHomeWorkPdf.setOnClickListener {
                         helperFunctions.downloadPdf(context,topicContent.homeworkUrl,topicContent.homeworkName)
                     }
@@ -200,6 +200,38 @@ TopicContentAdapter(
             }
         }
         fun isDateTodayOrPast(dateString: String): Boolean {
+            if (dateString == "-") return true else {
+                // Clean up the date string
+                val cleanedDateString = dateString.replace("Sept", "Sep").trim()
+                    .replace("pm".toRegex(), "PM")
+                    .replace("am".toRegex(), "AM")
+
+
+                // Define the primary date format pattern
+                val formatter = DateTimeFormatter.ofPattern("dd MMM, yy hh:mm a", Locale.ENGLISH)
+                    .withResolverStyle(ResolverStyle.SMART)
+
+                return try {
+                    // Parse the date and time
+                    val dateTime = LocalDateTime.parse(cleanedDateString, formatter)
+                    // Get today's date and time
+                    val now = LocalDateTime.now()
+                    // Check if the date is today or in the past
+                    dateTime.isBefore(now) || dateTime.isEqual(now)
+                } catch (e: DateTimeParseException) {
+                    Log.e(
+                        "DateParsingError",
+                        "Error parsing date: ${e.message}. Input date string: '$cleanedDateString'"
+                    )
+                    false
+                }
+            }
+        }
+
+    }
+    fun isDateTodayOrPast(dateString: String): Boolean {
+        if (dateString == "-" )return true
+        else {
             // Clean up the date string
             val cleanedDateString = dateString.replace("Sept", "Sep").trim()
                 .replace("pm".toRegex(), "PM")
@@ -218,33 +250,12 @@ TopicContentAdapter(
                 // Check if the date is today or in the past
                 dateTime.isBefore(now) || dateTime.isEqual(now)
             } catch (e: DateTimeParseException) {
-                Log.e("DateParsingError", "Error parsing date: ${e.message}. Input date string: '$cleanedDateString'")
-                false
+                Log.e(
+                    "DateParsingError",
+                    "Error parsing date: ${e.message}. Input date string: '$cleanedDateString'"
+                )
+                true
             }
-        }
-
-    }
-    fun isDateTodayOrPast(dateString: String): Boolean {
-        // Clean up the date string
-        val cleanedDateString = dateString.replace("Sept", "Sep").trim()
-            .replace("pm".toRegex(), "PM")
-            .replace("am".toRegex(), "AM")
-
-
-        // Define the primary date format pattern
-        val formatter = DateTimeFormatter.ofPattern("dd MMM, yy hh:mm a", Locale.ENGLISH)
-            .withResolverStyle(ResolverStyle.SMART)
-
-        return try {
-            // Parse the date and time
-            val dateTime = LocalDateTime.parse(cleanedDateString, formatter)
-            // Get today's date and time
-            val now = LocalDateTime.now()
-            // Check if the date is today or in the past
-            dateTime.isBefore(now) || dateTime.isEqual(now)
-        } catch (e: DateTimeParseException) {
-            Log.e("DateParsingError", "Error parsing date: ${e.message}. Input date string: '$cleanedDateString'")
-            false
         }
     }
 

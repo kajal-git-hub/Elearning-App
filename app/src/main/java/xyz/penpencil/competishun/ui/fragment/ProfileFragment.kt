@@ -68,7 +68,10 @@ class ProfileFragment : DrawerVisibility() {
         })
 
         binding.igEditProfile.setOnClickListener {
-            val bottomSheetDescriptionFragment = ProfileEditFragment()
+            val bottomSheetDescriptionFragment = ProfileEditFragment(){ year,course ->
+                binding.tvYear.text =  year
+                binding.tvExamType.text = "$course |"
+            }
             bottomSheetDescriptionFragment.show(childFragmentManager, "BottomSheetDescriptionFragment")
 
         }
@@ -126,7 +129,6 @@ class ProfileFragment : DrawerVisibility() {
                 Log.d("userDetails",data.getMyDetails.fullName.toString())
                 Log.d("userDetails",data.getMyDetails.userInformation.address?.city.toString())
                 val name = data.getMyDetails.fullName
-                val target = data.getMyDetails.userInformation.targetYear
                 val rollno = data.getMyDetails.userInformation.rollNumber
                 if (!rollno.isNullOrEmpty()){
                     binding.ProfileRollNo.text = "Roll No:  $rollno"
@@ -134,9 +136,7 @@ class ProfileFragment : DrawerVisibility() {
                 if (!name.isNullOrEmpty()) {
                     binding.ProfileUserName.setText(name)
                 }
-                if (target != 0) {
-                    binding.tvYear.setText(" | "+target.toString())
-                }
+//
             }.onFailure { exception ->
                 Log.e(TAG,exception.message.toString())
                 Toast.makeText(requireContext(), "Error fetching details: ${exception.message}", Toast.LENGTH_LONG).show()

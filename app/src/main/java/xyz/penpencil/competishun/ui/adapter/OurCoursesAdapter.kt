@@ -1,6 +1,7 @@
 package xyz.penpencil.competishun.ui.adapter
 
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,6 +32,10 @@ class OurCoursesAdapter(private val listOurCoursesItem: List<GetAllCourseCategor
     override fun onBindViewHolder(holder: OurCourseViewHolder, position: Int) {
         val itemOurCourse = listOurCoursesItem[position]
         holder.tvCourseName.text = itemOurCourse.name
+        Log.e("coursesname",itemOurCourse.name)
+        if (itemOurCourse.name == "Study Material") {
+            holder.itemView.visibility = View.GONE
+        }else holder.itemView.visibility = View.VISIBLE
         val imageResource = images[position % images.size]
         holder.fullYearCourseImage.setImageResource(imageResource)
         holder.itemView.setOnClickListener {
