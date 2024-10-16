@@ -135,7 +135,8 @@ class StudyMaterialFragment : Fragment(), StudentCourseItemClickListener ,Filter
             putString("course_id", course.id)
             putStringArrayList("course_tags", courseTags)
         }
-
+        sharedPreferencesManager.putString("TOPIC_ID_STUDY", "")
+        sharedPreferencesManager.putString("TOPIC_ID_STUDY_TYPE", "")
         findNavController().navigate(R.id.StudyMaterialDetailsFragment, newBundle)
     }
 
