@@ -11,7 +11,6 @@ import android.os.Bundle
 import java.io.ByteArrayOutputStream
 import android.provider.OpenableColumns
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,7 +20,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.navigation.NavOptions
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.apollographql.apollo3.api.Optional
@@ -57,8 +55,9 @@ class AdditionalDetailsFragment : DrawerVisibility() {
         private const val MAX_FILE_SIZE_MB = 5
         private var currentFileType: String = ""
     }
-    private  var  byteArrayAdhar: ByteArray? = null
-    private  var  byteArrayPassPort: ByteArray? = null
+
+    private var byteArrayAdhar: ByteArray? = null
+    private var byteArrayPassPort: ByteArray? = null
     private var uploadedIdUri: Uri? = null
     private var uploadedPhotoUri: Uri? = null
 
@@ -69,8 +68,7 @@ class AdditionalDetailsFragment : DrawerVisibility() {
 
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         return binding.root
     }
@@ -83,16 +81,16 @@ class AdditionalDetailsFragment : DrawerVisibility() {
         (activity as? HomeActivity)?.showFloatingButton(false)
 
         arguments?.let {
-            fieldsToVisible = it.getStringArray("IDS")?: emptyArray()
-            if (fieldsToVisible.contains("PASSPORT_SIZE_PHOTO")){
+            fieldsToVisible = it.getStringArray("IDS") ?: emptyArray()
+            if (fieldsToVisible.contains("PASSPORT_SIZE_PHOTO")) {
                 binding.clUploadPhoto.visibility = View.VISIBLE
-            }else{
+            } else {
                 binding.clUploadPhoto.visibility = View.GONE
             }
 
-            if (fieldsToVisible.contains("AADHAR_CARD")){
+            if (fieldsToVisible.contains("AADHAR_CARD")) {
                 binding.clUploadId.visibility = View.VISIBLE
-            }else{
+            } else {
                 binding.clUploadPhoto.visibility = View.GONE
             }
             courseId = it.getString("IDS", "")
@@ -118,8 +116,8 @@ class AdditionalDetailsFragment : DrawerVisibility() {
             userViewModel.userDetails.observe(viewLifecycleOwner) { result ->
                 result.onSuccess { data ->
                     val userDetails = data.getMyDetails
-                    Log.e("userDeta",data.toString())
-                    Log.e("userDetails",userDetails.toString())
+                    Log.e("userDeta", data.toString())
+                    Log.e("userDetails", userDetails.toString())
                     val updateUserInput = UpdateUserInput(
                         city = Optional.Present(userDetails.userInformation.city),
                         fullName = Optional.Present(userDetails.fullName),
@@ -128,10 +126,15 @@ class AdditionalDetailsFragment : DrawerVisibility() {
                         targetYear = Optional.Present(userDetails.userInformation.targetYear),
                         waCountryCode = Optional.Present("+91"),
                     )
-                    userUpdate(updateUserInput, null, null)
+                    Log.d("uploadedIdUri",uploadedIdUri.toString())
+                    Log.d("uploadedIdUri",uploadedIdUri.toString())
                     val bitmapdocumentPhotoFile = byteArrayAdhar?.let { byteArrayToBitmap(it) }
                     val passportPhotoFile = byteArrayPassPort?.let { byteArrayToBitmap(it) }
-                    Log.e("printvalue $passportPhotoFile",
+                    userUpdate(updateUserInput, bitmapdocumentPhotoFile.toString(),
+                        passportPhotoFile.toString()
+                    )
+                    Log.e(
+                        "printvalue $passportPhotoFile",
                         bitmapdocumentPhotoFile?.let { it1 -> encodeBitmapToBase64(it1) }.toString()
                     )
                     bitmapdocumentPhotoFile?.let { it1 -> encodeBitmapToBase64(it1) }?.let { it2 ->
@@ -139,15 +142,14 @@ class AdditionalDetailsFragment : DrawerVisibility() {
                             //  userUpdate(updateUserInput, it2, it3)
                         }
                     }
-                    it.findNavController().let{nav->
-                        nav.navigate(getFragmentId())
-                       /* val navOptions = NavOptions.Builder()
-                            .setPopUpTo(nav.graph.startDestinationId, true)
-                            .build()
-                        nav.navigate(getFragmentId(), Bundle().apply {
-                            putStringArray("IDS", fieldsToVisible)
-                            putString("IDS", courseId)
-                        }, navOptions)*/
+                    it.findNavController().let { nav ->
+                        nav.navigate(getFragmentId())/* val navOptions = NavOptions.Builder()
+                             .setPopUpTo(nav.graph.startDestinationId, true)
+                             .build()
+                         nav.navigate(getFragmentId(), Bundle().apply {
+                             putStringArray("IDS", fieldsToVisible)
+                             putString("IDS", courseId)
+                         }, navOptions)*/
                     }
                 }.onFailure { exception ->
                     Toast.makeText(
@@ -184,6 +186,41 @@ class AdditionalDetailsFragment : DrawerVisibility() {
 
         updateButtonState()
     }
+
+    @Throws(IOException::class)
+    fun uriToByteArray(context: Context, uri: Uri): ByteArray? {
+        return context.contentResolver.openInputStream(uri)?.use { inputStream ->
+            inputStream.readBytes()
+        }
+    }
+
+//    fun uriToByteArray(context: Context, uri: Uri): String? {
+//        try {
+//            val inputStream: InputStream? = context.contentResolver.openInputStream(uri)
+//            inputStream?.let {
+//                val byteArrayOutputStream = ByteArrayOutputStream()
+//
+//                val buffer = ByteArray(1024)
+//                var bytesRead: Int
+//
+//                while (inputStream.read(buffer).also { bytesRead = it } != -1) {
+//                    byteArrayOutputStream.write(buffer, 0, bytesRead)
+//                }
+//
+//                inputStream.close()
+//
+//                val data = byteArrayOutputStream.toByteArray()
+//
+//                Log.e("uriToByteArray", "Byte array size: ${data.size}")
+//
+//                return android.util.Base64.encodeToString(data, android.util.Base64.DEFAULT)
+//            }
+//        } catch (e: Exception) {
+//            e.printStackTrace()
+//        }
+//        return null
+//    }
+
     // Function to get a File from a Uri
     fun getFileFromUri(context: Context, uri: Uri): File? {
         val fileName = getFileName(uri, context) ?: return null
@@ -202,10 +239,10 @@ class AdditionalDetailsFragment : DrawerVisibility() {
     }
 
     private fun getFragmentId(): Int {
-        return if (fieldsToVisible.contains("FULL_ADDRESS")){
+        return if (fieldsToVisible.contains("FULL_ADDRESS")) {
             sharedPreferencesManager.putString("current$courseId", "address")
             R.id.action_AdditionalDetail_to_AddressDetail
-        }else {
+        } else {
             sharedPreferencesManager.removeKey("current$courseId")
             sharedPreferencesManager.putBoolean(courseId, value = true)
             R.id.courseEmptyFragment
@@ -219,7 +256,8 @@ class AdditionalDetailsFragment : DrawerVisibility() {
             val cursor: Cursor? = context.contentResolver.query(uri, null, null, null, null)
             try {
                 if (cursor != null && cursor.moveToFirst()) {
-                    result = cursor.getString(cursor.getColumnIndexOrThrow(OpenableColumns.DISPLAY_NAME))
+                    result =
+                        cursor.getString(cursor.getColumnIndexOrThrow(OpenableColumns.DISPLAY_NAME))
                 }
             } finally {
                 cursor?.close()
@@ -233,6 +271,15 @@ class AdditionalDetailsFragment : DrawerVisibility() {
             }
         }
         return result
+    }
+
+    fun convertImageToByteArray(
+        imageUri: Uri
+    ): ByteArray? {
+        val inputStream = context?.contentResolver?.openInputStream(imageUri)
+        val byteArrayOutputStream = ByteArrayOutputStream()
+        inputStream?.copyTo(byteArrayOutputStream)
+        return byteArrayOutputStream.toByteArray()
     }
 
     private fun pickFile() {
@@ -252,9 +299,7 @@ class AdditionalDetailsFragment : DrawerVisibility() {
                 val fileSizeMB = getFileSizeMB(uri)
                 if (fileSizeMB > MAX_FILE_SIZE_MB) {
                     Snackbar.make(
-                        binding.root,
-                        "File size must be less than 5MB",
-                        Snackbar.LENGTH_LONG
+                        binding.root, "File size must be less than 5MB", Snackbar.LENGTH_LONG
                     ).show()
                 } else {
                     val fileSizeFormatted = getFileSizeFormatted(uri)
@@ -291,8 +336,7 @@ class AdditionalDetailsFragment : DrawerVisibility() {
         if (uploadedIdUri != null || uploadedPhotoUri != null) {
             binding.btnAddaddressDetails.setBackgroundColor(
                 ContextCompat.getColor(
-                    requireContext(),
-                    R.color.blue_3E3EF7
+                    requireContext(), R.color.blue_3E3EF7
                 )
             )
 
@@ -300,8 +344,7 @@ class AdditionalDetailsFragment : DrawerVisibility() {
         } else {
             binding.btnAddaddressDetails.setBackgroundColor(
                 ContextCompat.getColor(
-                    requireContext(),
-                    R.color.gray_border
+                    requireContext(), R.color.gray_border
                 )
             )
             binding.btnAddaddressDetails.isEnabled = false
@@ -373,9 +416,11 @@ class AdditionalDetailsFragment : DrawerVisibility() {
     }
 
 
-    fun userUpdate(updateUserInput: UpdateUserInput, documentPhotoFile: String?, passportPhotoFile: String?){
+    fun userUpdate(
+        updateUserInput: UpdateUserInput, documentPhotoFile: String?, passportPhotoFile: String?
+    ) {
         Log.e("gettingUserge $passportPhotoFile", documentPhotoFile.toString())
-        updateUserViewModel.updateUser(updateUserInput,documentPhotoFile,passportPhotoFile)
+        updateUserViewModel.updateUser(updateUserInput, documentPhotoFile, passportPhotoFile)
         updateUserViewModel.updateUserResult.observe(viewLifecycleOwner, Observer { result ->
             Log.e("gettingUserget", result.toString())
             if (result?.user != null) {
