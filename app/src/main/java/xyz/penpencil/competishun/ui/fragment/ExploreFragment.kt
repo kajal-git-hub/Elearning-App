@@ -79,10 +79,12 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
     var firstInstallment: Int = 0
     var secondInstallment: Int = 0
     var ExploreCourseTags: MutableList<String> = mutableListOf()
-    var bannerCourseTag : MutableList<String> = mutableListOf()
+    var bannerCourseTag: MutableList<String> = mutableListOf()
     var isVideoPlaying = false
     var installmentPrice1 = 0
     private var checkInstallOrNot = 0
+
+    private var categoryName = ""
 
 
     override fun onCreateView(
@@ -151,7 +153,7 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
         getCourseTagsData()
 
         binding.clBuynow.setOnClickListener {
-            createCart(createCartViewModel,"FullPayment")
+            createCart(createCartViewModel, "FullPayment")
         }
 
         var lectureCount = arguments?.getString("LectureCount")
@@ -175,9 +177,10 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
             isVideoPlaying = false
             getCourseByIDViewModel.courseByID.observe(viewLifecycleOwner, Observer { courses ->
 
+                categoryName = courses?.category_name.toString()
                 bannerCourseTag = courses?.course_tags as MutableList<String>
-                Log.d("bannerCourseTag",bannerCourseTag.toString())
-                Log.d("courseDetail",courses.toString())
+                Log.d("bannerCourseTag", bannerCourseTag.toString())
+                Log.d("courseDetail", courses.toString())
                 checkInstallOrNot = courses?.with_installment_price ?: 0
                 val imageUrl = courses?.video_thumbnail
                 val videoUrl = courses?.orientation_video
@@ -218,7 +221,7 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
 
                 val coursePrice = courses?.price ?: 0
                 installmentPrice1 = courses?.with_installment_price ?: 0
-                Log.d("installmentPrice114",installmentPrice1.toString())
+                Log.d("installmentPrice114", installmentPrice1.toString())
                 firstInstallment = (installmentPrice1 * 0.6).toInt()
                 secondInstallment = (installmentPrice1.minus(firstInstallment))
 
@@ -226,8 +229,7 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
                     Log.d("checkInstallOrNot", checkInstallOrNot.toString())
                     binding.clInstallmentOptionView.visibility = View.GONE
 
-                } else
-                {
+                } else {
                     Log.d("checkInstallOrNot", checkInstallOrNot.toString())
                     binding.clInstallmentOptionView.visibility = View.VISIBLE
                     binding.clInstallmentOptionView.setOnClickListener {
@@ -281,7 +283,7 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
                         Log.d("planner_pdf", courses.planner_pdf)
                         val intent = Intent(context, PdfViewActivity::class.java).apply {
                             putExtra("PDF_URL", courses.planner_pdf)
-                            putExtra("PDF_TITLE",courses.name)
+                            putExtra("PDF_TITLE", courses.name)
                         }
                         context?.startActivity(intent)
 
@@ -289,11 +291,14 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
                     binding.downloadButton.setOnClickListener {
 
                         Log.d("planner_pdf", courses.planner_pdf)
-                       helperFunctions.showDownloadDialog(requireContext(),courses.planner_pdf,"Planner")
+                        helperFunctions.showDownloadDialog(
+                            requireContext(),
+                            courses.planner_pdf,
+                            "Planner"
+                        )
 
                     }
-                    }
-                else Toast.makeText(requireContext(), "", Toast.LENGTH_LONG).show()
+                } else Toast.makeText(requireContext(), "", Toast.LENGTH_LONG).show()
 
                 if (courses != null) {
                     var coursefeature = courses.course_features
@@ -426,28 +431,88 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
             adapter = teacherAdapter
         }
 
-        faqItems = listOf(
-            FAQItem(
-                "Will I get Physical Study Material ?",
-                "NO, With this Course Purchase, you will get only Digital Study Material like DPP’s and their respective Text and Video Solution. Physical Study Material is not provided with this Short term Course."
-            ),
-            FAQItem(
-                "Will Classes be any Live Classes ?",
-                "NO, There will be only Recorded Scheduled Lectures will be provided. In week there will be LIVE INTERACTION Session for your guidance for 30 Minutes."
-            ),
-            FAQItem(
-                "Will Test be conducted in this course ?",
-                "YES, Test will be conducted on weekly basis as per test grid that will be provided to you along with the course. Test will be conducted on COMPETISHUN DIGITAL APP / WEBSITE and we will share the complete details in your Official Support Prior to your 1st test"
-            ),
-            FAQItem(
-                "Will Doubt clearing session will be conducted ?",
-                "YES, you can ask your doubts in your doubt groups tagging faculties and you will get a reply at the earliest."
-            ),
-            FAQItem(
-                "How Do you contact Support Staff of Competishun ?",
-                "You can contact Support Staff at 8888-0000-21, 7410-900-901 "
-            )
-        )
+        Log.d("categoryName",categoryName)
+
+        when (categoryName) {
+            "Full Year Course" -> {
+                faqItems = listOf(
+                    FAQItem(
+                        "Will I get Physical Study Material ?",
+                        "YES, you will get the Physical study material along with this purchase. We will dispatch your material and tracking id will be provide so that you can track the parcel. The Expected Delivery of the Study Material is within 10-12 Working Days from the date of admission."
+                    ),
+                    FAQItem(
+                        "Will Classes be any Live Classes ?",
+                        "NO, There will be only Recorded Scheduled Lectures will be provided. In week there will be LIVE INTERACTION Session for your guidance for 30 Minutes."
+                    ),
+                    FAQItem(
+                        "Will Test be conducted in this course ?",
+                        "YES, Test will be conducted on weekly basis as per test grid that will be provided to you along with the course. Test will be conducted on COMPETISHUN DIGITAL APP / WEBSITE and we will share the complete details in your Official Support Prior to your 1st test."
+                    ),
+                    FAQItem(
+                        "Will Doubt clearing session will be conducted ?",
+                        "YES, you can ask your doubts in your Telegram doubt groups tagging faculties and you will get a reply at the earliest. Also there will be zoom Live Session."
+                    ),
+                    FAQItem(
+                        "How Do you contact Support Staff of Competishun ?",
+                        "You can contact Support Staff at 8888-0000-21, 7410-900-901."
+                    )
+                )
+
+            }
+            "Test Series" -> {
+                faqItems = listOf(
+                    FAQItem(
+                        "How many tests are included in the series?",
+                        "The test series includes 50+ topic-wise and full-syllabus tests."
+                    ),
+                    FAQItem(
+                        "Are solutions provided for the tests?",
+                        "Yes, detailed Text and Video solutions and analysis are provided after each test."
+                    ),
+                    FAQItem(
+                        "Can I access the tests offline?",
+                        "Tests can be accessed only through the app / Website in CBT Mode"
+                    ),
+                    FAQItem(
+                        "Is there a performance report after each test?",
+                        "Yes, a detailed performance analysis is shared for improvement tracking."
+                    ),
+                )
+            }
+            else -> {
+                faqItems = listOf(
+                    FAQItem(
+                        "Will I get Physical Study Material ?",
+                        " NO, With this Course Purchase, you will get only Digital Study Material like DPP’s and their respective Text and Video Solution. Physical Study Material is not provided with this Short term Course."
+                    ),
+                    FAQItem(
+                        "Will Classes be any Live Classes ?",
+                        "NO, There will be only Recorded Scheduled Lectures will be provided. In week there will be LIVE INTERACTION Session for your guidance for 30 Minutes"
+                    ),
+                    FAQItem(
+                        "Will Test be conducted in this course ?",
+                        "YES, Test will be conducted on weekly basis as per test grid that will be provided to you along with the course. Test will be conducted on COMPETISHUN DIGITAL APP / WEBSITE and we will share the complete details in your Official Support Prior to your 1st test."
+                    ),
+                    FAQItem(
+                        "Will Doubt clearing session will be conducted ?",
+                        "YES, you can ask your doubts in your doubt groups tagging faculties and you will get a reply at the earliest. "
+                    ),
+                    FAQItem(
+                        "How Do you contact Support Staff of Competishun ?",
+                        "You can contact Support Staff at 8888-0000-21, 7410-900-901 "
+                    ),
+                    FAQItem(
+                        "Will I complete my entire syllabus in this short time?",
+                        "Yes, the course is designed for rapid coverage, focusing on high-weightage topics to maximize your score."
+                    ),
+                    FAQItem(
+                        "Do I get direct access to top educators?",
+                        "Yes, students can interact with expert faculty via live sessions and doubt-solving forums."
+                    )
+                )
+
+            }
+        }
 
         limitedFaqItems = faqItems.take(4)
 
@@ -596,8 +661,8 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
                         val data = result.onSuccess {
                             it.getAllCourseForStudent.courses.map { course ->
                                 binding.tvTag4.text = "Target ${course.target_year}"
-                                if (ExploreCourseTags.isEmpty()){
-                                    ExploreCourseTags  = bannerCourseTag
+                                if (ExploreCourseTags.isEmpty()) {
+                                    ExploreCourseTags = bannerCourseTag
                                 }
                                 ExploreCourseTags.let { tags ->
                                     binding.tvTag1.apply {
@@ -736,7 +801,7 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
         )
     }
 
-    fun createCart(createCartViewModel: CreateCartViewModel,paymentType:String) {
+    fun createCart(createCartViewModel: CreateCartViewModel, paymentType: String) {
 
 
         val cartItems = listOf(
@@ -759,7 +824,7 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
             }.onFailure { exception ->
                 Log.e("createCart", exception.message.toString())
                 val errorMessage = exception.message.toString()
-                if(errorMessage.startsWith("Duplicate entry")){
+                if (errorMessage.startsWith("Duplicate entry")) {
                     findNavController().navigate(R.id.myCartFragment)
                 }
             }
@@ -779,7 +844,7 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
             setInstallmentData(firstInstallment, secondInstallment)
             setOnBuyNowClickListener(object : InstallmentDetailsBottomSheet.OnBuyNowClickListener {
                 override fun onBuyNowClicked(totalAmount: Int) {
-                    createCart(cartViewModel,"Installment")
+                    createCart(cartViewModel, "Installment")
 //                    Toast.makeText(context, "Buy Now clicked with total: ₹$totalAmount", Toast.LENGTH_SHORT).show()
                 }
             })
