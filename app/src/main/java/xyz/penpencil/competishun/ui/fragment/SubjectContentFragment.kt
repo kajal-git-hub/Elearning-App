@@ -76,6 +76,7 @@ class SubjectContentFragment : DrawerVisibility() {
 
         val subFolders = arguments?.getString("subFolders") ?: ""
         val folderName = arguments?.getString("folder_Name") ?: ""
+        val parentContent = arguments?.getString("parent_content") ?: ""
         val folderId =  arguments?.getString("folder_Id") ?: ""
         var folder_Count = arguments?.getString("folder_Count") ?: "0"
         val subFolderList =
@@ -92,14 +93,24 @@ class SubjectContentFragment : DrawerVisibility() {
             // Update UI or perform actions based on the received duration
         })
 
-        Log.e("folderNames", subFolders.toString())
-        binding.rvsubjectTopicContent.layoutManager =
-            LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        Log.e("folderParent", parentContent.toString())
+
+        if (parentContent.isNotEmpty()) {
+            val subContentList =
+                object : TypeToken<List<FindCourseFolderProgressQuery.FolderContent>>() {}.type
+            val subContentsList: List<FindCourseFolderProgressQuery.FolderContent> =
+                gson.fromJson(parentContent, subContentList)
+            if (subContentsList != null) {
+                val contents = subContentsList.forEach { it.content }
+                newContent(subContentsList, folderId)
+                //  folderProgress(subContentsList.forEach { it.content })
+            }
+        }
         binding.rvSubjectContent.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         binding.rvTopicContent.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        subfolderProgress(folderId )
+
         if (subFoldersList[0].folder?.id != null) {
             var id = subFoldersList[0].folder?.id ?: ""
             binding.tvTopicType.text = subFoldersList[0].folder?.name
@@ -142,7 +153,7 @@ class SubjectContentFragment : DrawerVisibility() {
 
 
     private fun folderProgress(folderId: String) {
-        Log.e("folderProgresss", folderId)
+        Log.e("allfolderProgress", folderId)
         val free = arguments?.getBoolean("free")
 
         if (folderId.isNotEmpty()) {
@@ -163,7 +174,7 @@ class SubjectContentFragment : DrawerVisibility() {
                     Log.e("GetFolderdata", data.toString())
                     Log.e("findCoursgress", data.findCourseFolderProgress.folder.toString())
                     val folderProgressFolder = data.findCourseFolderProgress.folder
-                    val folderProgressContent = data.findCourseFolderProgress.folderContents
+                    var folderProgressContent = data.findCourseFolderProgress.folderContents
                     val subfolderDurationFolders = data.findCourseFolderProgress.subfolderDurations
                     Log.e("subFolderdata", subfolderDurationFolders.toString())
 
@@ -174,32 +185,34 @@ class SubjectContentFragment : DrawerVisibility() {
                     when {
                         !subfolderDurationFolders.isNullOrEmpty() && !folderProgressContent.isNullOrEmpty() ->
                             {
-                              //  binding.tvContentCount.text = "(${folderCounts.joinToString()})"
+                                Log.e("insideboth",subfolderDurationFolders.toString())
+                                binding.tvContentCount.text = "(${subfolderDurationFolders.size})"
+                             //   binding.tvContentCount.text = "(${folderCounts.joinToString()})"
                             val topicContentList =
-                                folderProgressContent.mapIndexed { index, contents ->
-                                    Log.e("folderContentLog", contents.content?.file_url.toString())
-                                    Log.e("homeworkLog", contents.content?.homework.toString())
-                                    val time = helperFunctions.formatCourseDateTime(contents.content?.scheduled_time.toString())
+                                folderProgressContent.mapIndexed { index, files ->
+                                    Log.e("folderContentLog", files.content?.file_url.toString())
+                                    Log.e("homeworkLog", files.content?.homework.toString())
+                                    val time = helperFunctions.formatCourseDateTime(files.content?.scheduled_time.toString())
                                     Log.e("foldertimes", time)
 
                                     // Extract homework URL and filename if they exist
-                                    val homeworkUrl = contents.content?.homework?.map { it.file_url } ?:""
-                                    val homeworkFileName = contents.content?.homework?.map { it.file_name } ?: ""
+                                    val homeworkUrl = files.content?.homework?.map { it.file_url } ?:""
+                                    val homeworkFileName = files.content?.homework?.map { it.file_name } ?: ""
 
                                     TopicContentModel(
-                                        subjectIcon = if (contents.content?.file_type?.name == "PDF") R.drawable.content_bg else R.drawable.group_1707478994,
-                                        id = contents.content?.id ?: "",
-                                        playIcon = if (contents.content?.file_type?.name == "VIDEO") R.drawable.video_bg else 0,
-                                        lecture = if (contents.content?.file_type?.name == "VIDEO") "Lecture" else "Study Material",
-                                        lecturerName = if(contents.content?.file_type?.name == "VIDEO") formatTimeDuration(
-                                            contents.content.video_duration ?: 0
+                                        subjectIcon = if (files.content?.file_type?.name == "PDF") R.drawable.content_bg else R.drawable.group_1707478994,
+                                        id = files.content?.id ?: "",
+                                        playIcon = if (files.content?.file_type?.name == "VIDEO") R.drawable.video_bg else 0,
+                                        lecture = if (files.content?.file_type?.name == "VIDEO") "Lecture" else "Study Material",
+                                        lecturerName = if(files.content?.file_type?.name == "VIDEO") formatTimeDuration(
+                                            files.content.video_duration ?: 0
                                         ) else "Ashok",
-                                        topicName = contents.content?.file_name ?: "",
-                                        topicDescription = contents.content?.description.toString(),
+                                        topicName = files.content?.file_name ?: "",
+                                        topicDescription = files.content?.description.toString(),
                                         progress = 1,
-                                        videoDuration = contents.content?.video_duration ?: 0,
-                                        url = contents.content?.file_url.toString(),
-                                        fileType = contents.content?.file_type?.name ?: "",
+                                        videoDuration = files.content?.video_duration ?: 0,
+                                        url = files.content?.file_url.toString(),
+                                        fileType = files.content?.file_type?.name ?: "",
                                         lockTime = time,
                                         // Assign homework name and URL here
                                         homeworkName = homeworkFileName.toString(),
@@ -283,7 +296,7 @@ class SubjectContentFragment : DrawerVisibility() {
                         }
 
                         !subfolderDurationFolders.isNullOrEmpty() -> {
-                            Log.e("subfolderDurationszs", subfolderDurationFolders.toString())
+                            Log.e("kajal2", subfolderDurationFolders.toString())
                             val folderIds = subfolderDurationFolders.mapNotNull { it.folder?.id }
                             val folders =
                                 subfolderDurationFolders.mapNotNull { it.folder }
@@ -326,7 +339,7 @@ class SubjectContentFragment : DrawerVisibility() {
                         }
 
                         !folderProgressContent.isNullOrEmpty() -> {
-                            Log.e("folderContentsss", folderProgressContent.toString())
+                            Log.e("kaja1", folderProgressContent.toString())
                             binding.tvContentCount.text = "(${folderProgressContent.size})"
 
                             val subjectContentList =
@@ -400,6 +413,7 @@ class SubjectContentFragment : DrawerVisibility() {
                             binding.rvSubjectContent.adapter = null
                         }
                     }
+                    folderProgressContent = emptyList()
                 }
 
                 is Result.Failure -> {
@@ -416,7 +430,7 @@ class SubjectContentFragment : DrawerVisibility() {
     }
 
     private fun subfolderProgress(folderId: String) {
-        Log.e("folderProgresss", folderId)
+        Log.e("allfoldernot", folderId)
         val free = arguments?.getBoolean("free")
 
         if (folderId.isNotEmpty()) {
@@ -428,25 +442,22 @@ class SubjectContentFragment : DrawerVisibility() {
             when (result) {
                 is Result.Loading -> {
                     // Handle the loading state
-                    Log.d("folderProgress", "Loading...")
+                    Log.d("folderProgressub", "Loading...")
                     // Optionally show a loading indicator here
                 }
 
                 is Result.Success -> {
                     val data = result.data
-                    Log.e("GetFolderdata", data.toString())
+                    Log.e("folderProgressub", data.toString())
                     Log.e("findCoursgress", data.findCourseFolderProgress.folder.toString())
                     val folderProgressFolder = data.findCourseFolderProgress.folder
-                    val folderProgressContent = data.findCourseFolderProgress.folderContents
-                    val subfolderDurationFolders = data.findCourseFolderProgress.subfolderDurations
-                    Log.e("subFolderdata", subfolderDurationFolders.toString())
-
+                    var folderProgressContent = data.findCourseFolderProgress.folderContents
                     if (!folderProgressContent.isNullOrEmpty() ){
+                            Log.e("folderContentsub" +
+                                    "", folderProgressContent.toString())
+                         //   binding.tvContentCount.text = "(${folderProgressContent.size})"
 
-                            Log.e("folderContentsss", folderProgressContent.toString())
-                            binding.tvContentCount.text = "(${folderProgressContent.size})"
-
-                            val subjectContentList =
+                            var subjectContentList =
                                 folderProgressContent.mapIndexed { index, contents ->
                                     Log.e("folderContentLog", contents.content?.file_url.toString())
 
@@ -510,6 +521,8 @@ class SubjectContentFragment : DrawerVisibility() {
 
                             }
                         }
+                    folderProgressContent = emptyList()
+
                 }
 
                 is Result.Failure -> {
@@ -523,6 +536,60 @@ class SubjectContentFragment : DrawerVisibility() {
                 }
             }
         }
+    }
+
+    fun newContent(folderContents: List<FindCourseFolderProgressQuery.FolderContent>,folderId:String)
+    {
+        val topicContents = folderContents?.map { content ->
+            val date = content.content?.scheduled_time.toString()?:""
+            var time = ""
+            var studyMaterial = arguments?.getString("studyMaterial")
+
+            if (studyMaterial.isNullOrEmpty())
+                time = helperFunctions.formatCourseDateTime(date) else  time = helperFunctions.formatCourseDateTime("2024-10-11T17:27:00.000Z")
+
+            val homeworkUrl = content.content?.homework?.map { it.file_url?:"" } ?:""
+            val homeworkFileName = content.content?.homework?.map { it.file_name?:"" } ?: ""
+            Log.d("homeworkUrl",homeworkUrl.toString())
+            Log.d("homeworkFileName",homeworkFileName.toString())
+            TopicContentModel(
+                subjectIcon = if (content.content?.file_type?.name == "PDF") R.drawable.content_bg else R.drawable.group_1707478994,
+                id = content.content?.id ?: "",
+                playIcon = if (content.content?.file_type?.name == "VIDEO") R.drawable.video_bg else 0,
+                lecture = if (content.content?.file_type?.name == "VIDEO") "Lecture" else "Study Material",
+                lecturerName = "Ashok",
+                topicName = content.content?.file_name ?: "",
+                topicDescription = content.content?.description ?:"",
+                progress = 1,
+                videoDuration = content.content?.video_duration ?: 0,
+                url = content.content?.file_url.toString(),
+                fileType = content.content?.file_type?.name ?: "",
+                lockTime = time,
+                homeworkUrl = homeworkUrl.toString(),
+                homeworkName = homeworkFileName.toString()
+            )
+        } ?: emptyList()
+        val folderContentIds = folderContents?.mapNotNull { it.content?.id }?.toCollection(ArrayList())
+        val folderContentNames = folderContents?.mapNotNull { it.content?.file_name }?.toCollection(ArrayList())
+        val adapter = TopicContentAdapter(topicContents, folderId,requireActivity(),requireContext()) { topicContent, folderContentId ->
+            when (topicContent.fileType) {
+                "VIDEO" -> videoUrlApi(videourlViewModel, topicContent.id,topicContent.topicName,folderContentIds,folderContentNames)
+                "PDF" -> {
+                    val intent = Intent(context, PdfViewActivity::class.java).apply {
+                        putExtra("PDF_URL", topicContent.url)
+                        putExtra("PDF_TITLE",topicContent.topicName)
+                    }
+                    context?.startActivity(intent)
+                }
+                "FOLDER" -> "Folders"
+                else -> Log.d("TopicContentAdapter", "File type is not VIDEO: ${topicContent.fileType}")
+            }
+        }
+
+        binding.rvsubjectTopicContent.adapter = adapter
+        binding.rvsubjectTopicContent.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        binding.rvTopicContent.adapter = null
+
     }
 
 
@@ -607,7 +674,7 @@ class SubjectContentFragment : DrawerVisibility() {
                     if (folderProgressFolder != null) {
                         if (!subfolderDurationFolders.isNullOrEmpty()) {
                             // Process subfolder durations
-                            Log.e("subfolderDurationszs", subfolderDurationFolders.toString())
+                            Log.e("subfolderDurationsz", subfolderDurationFolders.toString())
 
                             val gson = Gson()
                             val subFoldersJson = gson.toJson(subfolderDurationFolders)
