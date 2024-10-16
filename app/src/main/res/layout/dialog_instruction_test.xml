@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:paddingStart="@dimen/_16dp"
+        android:paddingEnd="@dimen/_16dp"
+        android:clickable="false"
+        android:id="@+id/mHeader"
+        android:focusable="false"
+        android:paddingBottom="@dimen/_16dp"
+        android:paddingTop="@dimen/_16dp"
+        android:background="@drawable/bg_rounded_dialog">
+        <View
+            android:layout_width="60dp"
+            android:layout_height="@dimen/_4dp"
+            android:background="@color/gray"
+            android:layout_margin="@dimen/_10dp"
+            android:id="@+id/line"
+            android:layout_alignParentTop="true"
+            android:layout_centerInParent="true"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/line"
+            android:id="@+id/icon"
+            android:src="@drawable/ic_instruction_test"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/_20dp"
+            android:fontFamily="@font/nunito"
+            android:id="@+id/header"
+            android:textStyle="bold"
+            android:paddingBottom="@dimen/_10dp"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_16sp"
+            android:layout_below="@+id/icon"
+            android:text="Instructions"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/testDesciption"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/nunito"
+            android:layout_marginTop="@dimen/_10dp"
+            android:text="• Multiple-choice questions (MCQs).\n• A timer shows the remaining time.\n• Quiz auto-submits when time is up.\n• Check your score and answers at the end of the quiz\n• Physics - 30 qs\n• Maths - 30 qs\n• Inorganic -30 qs\n• Organic - 30 qs"
+            android:layout_below="@id/header"
+            android:layout_marginBottom="100dp"/>
+
+
+    </RelativeLayout>
+
+</RelativeLayout>

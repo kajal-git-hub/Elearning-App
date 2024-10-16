@@ -36,6 +36,7 @@ import xyz.penpencil.competishun.ui.main.PdfViewActivity
 import xyz.penpencil.competishun.ui.viewmodel.CoursesViewModel
 import xyz.penpencil.competishun.ui.viewmodel.GetCourseByIDViewModel
 import xyz.penpencil.competishun.ui.viewmodel.VideourlViewModel
+import xyz.penpencil.competishun.utils.BindingAdapters
 import xyz.penpencil.competishun.utils.HelperFunctions
 import xyz.penpencil.competishun.utils.OnTopicTypeSelectedListener
 import xyz.penpencil.competishun.utils.SharedPreferencesManager
@@ -62,7 +63,7 @@ class StudyMaterialDetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        retainInstance = true
         (activity as? HomeActivity)?.showBottomNavigationView(true)
         (activity as? HomeActivity)?.showFloatingButton(true)
 
@@ -127,9 +128,7 @@ class StudyMaterialDetailsFragment : Fragment() {
                     bottomSheet.setOnTopicTypeSelectedListener(object :
                         OnTopicTypeSelectedListener {
                         override fun onTopicTypeSelected(selectedTopic: TopicTypeModel) {
-                            selectedTopic
                             binding.tvTopicType.text = selectedTopic.title
-
                             folderProgress(selectedTopic.id)
                         }
                     })
@@ -145,7 +144,9 @@ class StudyMaterialDetailsFragment : Fragment() {
                     .load(imageUrl)
                     .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
                     .into(binding.ivSubjectBookIcon)
-                binding.tvTopicDesc.text = courses?.description ?:""
+                Log.e("descroptions",courses?.description.toString())
+                BindingAdapters.setTextHtml(binding.tvTopicDesc,courses?.description)
+              //  binding.tvTopicDesc.text = courses?.description ?:""
 
                // binding.progressBar.visibility = View.GONE
                 if (courses?.planner_pdf != null) {
@@ -474,7 +475,7 @@ class StudyMaterialDetailsFragment : Fragment() {
         }
     }
 
-    fun videoProgress(courseFolderContentId: String, currentDuration: Int) {
+    private fun videoProgress(courseFolderContentId: String, currentDuration: Int) {
 
 
         // Observe the result of the updateVideoProgress mutation
@@ -560,7 +561,7 @@ class StudyMaterialDetailsFragment : Fragment() {
                                 putString("studyMaterial", "studyMaterial")
 
                             }
-                            findNavController().navigate(R.id.TopicTYPEContentFragment, bundle)
+                            findNavController().navigate(R.id.action_StudyMaterialDetailsFragment_to_TopicTYPEContentFragment, bundle)
                         }
                     } else {
                         Log.e("studymatfile", "No content available")
@@ -602,5 +603,4 @@ class StudyMaterialDetailsFragment : Fragment() {
             }
         }
     }
-
-    }
+}

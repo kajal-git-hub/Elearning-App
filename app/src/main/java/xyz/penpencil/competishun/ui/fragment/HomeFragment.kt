@@ -338,7 +338,20 @@ class HomeFragment : Fragment() {
         }
 
 //        fetchCoursesAndUpdateUI()
+        clickListener()
+    }
 
+    /**
+     * for static content listener
+     * */
+    private fun clickListener(){
+        binding.clOTSeries.setOnClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_testDashboardFragment)
+        }
+
+        binding.clPYP.setOnClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_testDashboardFragment)
+        }
     }
 
     private fun fetchCoursesAndUpdateUI() {

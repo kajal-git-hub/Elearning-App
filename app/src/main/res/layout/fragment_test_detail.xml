@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/PrimaryColor"
+    tools:context=".ui.fragment.test.TestDetailFragment">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/test_detail_bg">
+
+        <ImageView
+            android:id="@+id/back"
+            android:layout_width="50dp"
+            android:layout_height="?actionBarSize"
+            android:layout_marginStart="@dimen/_10dp"
+            android:padding="@dimen/_12dp"
+            android:src="@drawable/arrow_left"
+            app:tint="@color/white" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/back"
+            android:layout_margin="@dimen/_16dp"
+            android:background="@drawable/card_bg"
+            android:padding="@dimen/_16dp">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/testName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/nunito"
+                android:text="Topic : JEE Mains"
+                android:textSize="@dimen/_14sp"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/testType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/nunito"
+                android:text="Free"
+                android:textColor="@color/_e67f00"
+                android:textSize="@dimen/_12sp"
+                android:textStyle="bold"
+                android:paddingStart="@dimen/_4dp"
+                android:paddingEnd="@dimen/_4dp"
+                android:layout_marginStart="@dimen/_10dp"
+                android:background="@drawable/rounded_bg_4dp"
+                app:layout_constraintStart_toEndOf="@+id/testName"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/materialTextView3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10dp"
+                android:fontFamily="@font/nunito"
+                android:text="JEE Mains Paper - With Solutions..."
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                app:layout_constraintTop_toBottomOf="@+id/testName"
+                tools:layout_editor_absoluteX="16dp" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/testDesciption"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/nunito"
+                android:layout_marginTop="@dimen/_10dp"
+                android:text="• Multiple-choice questions (MCQs).\n• A timer shows the remaining time.\n• Quiz auto-submits when time is up.\n• Check your score and answers at the end of the quiz\n• Physics - 30 qs\n• Maths - 30 qs\n• Inorganic -30 qs\n• Organic - 30 qs"
+                app:layout_constraintTop_toBottomOf="@+id/materialTextView3" />
+
+            <LinearLayout
+                android:id="@+id/linearLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_32dp"
+                android:orientation="vertical"
+                app:layout_constraintTop_toBottomOf="@+id/testDesciption"
+                tools:layout_editor_absoluteX="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/_4dp"
+                        android:layout_marginBottom="@dimen/_4dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/rounded_bg_s1_bgf1f0fa"
+                        android:padding="@dimen/_10dp">
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/totalQuestion"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:drawableStart="@drawable/ic_message_info"
+                            android:drawablePadding="@dimen/_10dp"
+                            android:fontFamily="@font/nunito"
+                            android:text="90"
+                            android:textColor="@color/PrimaryColor"
+                            app:drawableTint="@color/PrimaryColor" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/totalQuestion"
+                            android:drawablePadding="@dimen/_10dp"
+                            android:fontFamily="@font/nunito"
+                            android:text="Total Questions"
+                            android:textColor="@color/_5a5555" />
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_4dp"
+                        android:layout_marginBottom="@dimen/_4dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/rounded_bg_s1_bgffe4c4"
+                        android:padding="@dimen/_8dp">
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/totalDuration"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:drawableStart="@drawable/ic_duration_f28a49"
+                            android:drawablePadding="@dimen/_10dp"
+                            android:fontFamily="@font/nunito"
+                            android:text="90"
+                            android:textColor="@color/_e67f00"
+                            app:drawableTint="@color/_e67f00" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/totalDuration"
+                            android:drawablePadding="@dimen/_10dp"
+                            android:fontFamily="@font/nunito"
+                            android:text="Test Duration"
+                            android:textColor="@color/_5a5555" />
+
+                    </RelativeLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_4dp"
+                        android:layout_marginEnd="@dimen/_4dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/rounded_bg_s1_bgc2e7bf"
+                        android:padding="@dimen/_8dp">
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/correctAnswer"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:drawableStart="@drawable/ic_message_info"
+                            android:drawablePadding="@dimen/_10dp"
+                            android:fontFamily="@font/nunito"
+                            android:text="(+ 4)"
+                            android:textColor="@color/_357f2f"
+                            app:drawableTint="@color/_357f2f" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/correctAnswer"
+                            android:drawablePadding="@dimen/_10dp"
+                            android:fontFamily="@font/nunito"
+                            android:text="Correct Ans."
+                            android:textColor="@color/_5a5555" />
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_4dp"
+                        android:layout_marginTop="@dimen/_4dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/rounded_bg_s1_bgf1ada9"
+                        android:padding="@dimen/_8dp">
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/inCorrectAnswer"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:drawableStart="@drawable/ic_duration_f28a49"
+                            android:drawablePadding="@dimen/_10dp"
+                            android:fontFamily="@font/nunito"
+                            android:text="(- 1)"
+                            android:textColor="@color/red"
+                            app:drawableTint="@color/red" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/inCorrectAnswer"
+                            android:drawablePadding="@dimen/_10dp"
+                            android:fontFamily="@font/nunito"
+                            android:text="Incorrect Ans."
+                            android:textColor="@color/_5a5555" />
+
+                    </RelativeLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <CheckBox
+                android:id="@+id/instructionAccept"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:buttonIconTint="@color/white"
+                app:buttonTint="@color/PrimaryColor"
+                android:checked="false"
+                android:text="I’ve all read test instructions."
+                app:layout_constraintBottom_toTopOf="@+id/submit"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/submit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:cornerRadius="@dimen/_8dp"
+                android:backgroundTint="@color/white"
+                app:strokeColor="@color/PrimaryColor"
+                app:strokeWidth="@dimen/_1dp"
+                android:text="Start Exam"
+                android:textColor="@color/PrimaryColor"
+                android:fontFamily="@font/nunito"
+                tools:layout_editor_absoluteX="16dp" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

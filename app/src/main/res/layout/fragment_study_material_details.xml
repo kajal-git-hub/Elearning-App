@@ -85,18 +85,19 @@
             android:layout_marginTop="@dimen/_16dp"
             android:layout_marginStart="@dimen/_16dp"/>
 
-        <xyz.penpencil.competishun.utils.ExpandableTextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tv_topic_desc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/nunito"
+            android:layout_marginTop="20dp"
+            android:ellipsize="end"
+            android:lineHeight="21sp"
+            android:maxLines="3"
+            android:gravity="center"
+            setTextViewHtml=""
             android:textColor="#726C6C"
-            android:textSize="@dimen/_14sp"
-            android:textStyle="normal"
-            android:maxLines="2"
-            android:text=""
-            android:layout_marginHorizontal="@dimen/_16dp"
-            android:layout_marginTop="@dimen/_8dp"
+            android:textSize="14sp"
+            app:fontFamily="@font/nunito"
             app:layout_constraintTop_toBottomOf="@id/tv_topic_name"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
