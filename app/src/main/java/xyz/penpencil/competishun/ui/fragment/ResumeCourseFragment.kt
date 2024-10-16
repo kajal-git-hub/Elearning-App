@@ -174,21 +174,23 @@ class ResumeCourseFragment : DrawerVisibility() {
                     if (folderProgressFolder != null) {
                         if (!subfolderDurationFolders.isNullOrEmpty()) {
                             // Process subfolder durations
-                            Log.e("subfolderDurationszs", subfolderDurationFolders.toString())
+                            Log.e("resumefolderDurationszs", folderProgressContent.toString())
 
                             val gson = Gson()
                             val subFoldersJson = gson.toJson(subfolderDurationFolders)
+                            val foldercontent =  gson.toJson(folderProgressContent)
                             Log.e("folderNamesss $name", subFoldersJson)
 
                             val bundle = Bundle().apply {
                                 putString("subFolders", subFoldersJson)
                                 putString("folder_Name", name)
                                 putString("folder_Id", folderId)
+                                putString("parent_content",foldercontent)
                             }
                             findNavController().navigate(R.id.SubjectContentFragment, bundle)
                         } else if (!folderProgressContent.isNullOrEmpty()) {
                             // Process folder contents
-                            Log.e("folderContentsss", folderProgressContent.toString())
+                            Log.e("folderContentresume", folderProgressContent.toString())
 
                             val gson = Gson()
                             val folderContentsJson = gson.toJson(folderProgressContent)

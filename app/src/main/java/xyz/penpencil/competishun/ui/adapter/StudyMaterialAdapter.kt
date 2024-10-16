@@ -75,7 +75,7 @@ class StudyMaterialAdapter(private val itemStudyMaterial:  List<AllCourseForStud
                val totalPdfCount = courses.folder?.sumOf { folder ->
                    folder.pdf_count?.toIntOrNull() ?: 0
                } ?: 0
-               holder.noItemTextView.text = totalPdfCount.toString()
+               holder.noItemTextView.text = totalPdfCount.toString() + " PDFs"
            }
        }
        }

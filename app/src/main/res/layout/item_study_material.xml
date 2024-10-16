@@ -10,9 +10,10 @@
     <ImageView
         android:id="@+id/cl_course_book"
         android:layout_width="@dimen/_92dp"
-        android:layout_height="@dimen/_65dp"
-        android:layout_marginTop="14dp"
+        android:layout_height="@dimen/_53dp"
+        android:layout_marginTop="12dp"
         android:layout_marginBottom="14dp"
+        android:foregroundGravity="center"
         android:layout_marginStart="12dp"
         android:background="@drawable/frame_1707480919"
         app:layout_constraintTop_toTopOf="parent"

@@ -100,7 +100,7 @@ class StudyMaterialDetailsFragment : Fragment() {
                     val totalPdfCount = courses.folder?.sumOf { folder ->
                         folder.pdf_count?.toIntOrNull() ?: 0
                     } ?: 0
-                    binding.tvNoOfPdf.text = "${totalPdfCount.toString()} Subjects"
+                    binding.tvNoOfPdf.text = "${totalPdfCount.toString()} PDFs"
                 }
                 if (folderlist[0].id != null) {
                     var id = folderlist[0].id ?: ""
@@ -324,6 +324,9 @@ class StudyMaterialDetailsFragment : Fragment() {
 
                             binding.rvSubjectContent.adapter =
                                 SubjectContentAdapter(subjectContentList) { selectedItem ->
+                                    Log.e("gettingcontenList",subjectContentList.toString())
+                                    binding.tvTopicType.text = selectedItem.topicName
+                                    binding.tvContentCount.text = selectedItem.topicDescription
                                     videoProgress(
                                         selectedItem.id,
                                        currentDuration = VwatchedDuration
@@ -336,7 +339,7 @@ class StudyMaterialDetailsFragment : Fragment() {
                         }
 
                         !subfolderDurationFolders.isNullOrEmpty() -> {
-                            Log.e("subfolderDurationszs", subfolderDurationFolders.toString())
+                            Log.e("folderDataDurationszs", subfolderDurationFolders.toString())
                             val folderIds = subfolderDurationFolders.mapNotNull { it.folder?.id }
                             val folders =
                                 subfolderDurationFolders.mapNotNull { it.folder }
@@ -350,7 +353,7 @@ class StudyMaterialDetailsFragment : Fragment() {
 
 
                             val subjectContentList = folders.mapIndexed { index, folders ->
-                                Log.e("folderContentLog", folders.id)
+                                Log.e("foldersDataLog", folders.id)
                                 val id = folders.id
                                 val date = folders.scheduled_time.toString()
                                 Log.e("foldertimes", date)
@@ -452,7 +455,8 @@ class StudyMaterialDetailsFragment : Fragment() {
                         else -> {
                             Log.e("folderContentsss", "No content available")
                             binding.tvContentCount.text = "(0)"
-                         //   binding.rvSubjectContent.adapter = null
+                            binding.rvSubjectContent.adapter = null
+                            binding.rvStudyMaterial.adapter = null
                         }
                     }
                 }
@@ -507,8 +511,7 @@ class StudyMaterialDetailsFragment : Fragment() {
     }
     private fun FileProgress(folderId: String, folderNames: String,folderCount: String){
 
-        Log.e("foldessss $folderNames",folderId)
-        val free = arguments?.getBoolean("free")
+        Log.e("FileProgresss $folderNames",folderId)
         if (folderId != null) {
             // Trigger the API call
             coursesViewModel.findCourseFolderProgress(folderId)
@@ -529,7 +532,7 @@ class StudyMaterialDetailsFragment : Fragment() {
                     if (folderProgressFolder != null) {
                         if (!subfolderDurationFolders.isNullOrEmpty()) {
                             // Process subfolder durations
-                            Log.e("subfolderDurationszs", subfolderDurationFolders.toString())
+                            Log.e("studyMaterialProgress", subfolderDurationFolders.toString())
 
                             val gson = Gson()
                             val subFoldersJson = gson.toJson(subfolderDurationFolders)
@@ -538,9 +541,11 @@ class StudyMaterialDetailsFragment : Fragment() {
                             val bundle = Bundle().apply {
                                 putString("subFolders", subFoldersJson)
                                 putString("folder_Name", name)
+                                putString("folder_Id", folderId)
                             }
                             findNavController().navigate(R.id.SubjectContentFragment, bundle)
-                        } else if (!folderProgressContent.isNullOrEmpty()) {
+                        } else if (!folderProgressContent.isNullOrEmpty())
+                        {
                             // Process folder contents
                             Log.e("folderContentsss", folderProgressContent.toString())
 
@@ -557,6 +562,10 @@ class StudyMaterialDetailsFragment : Fragment() {
                             }
                             findNavController().navigate(R.id.TopicTYPEContentFragment, bundle)
                         }
+                    } else {
+                        Log.e("studymatfile", "No content available")
+                        binding.tvContentCount.text = "(0)"
+                        binding.rvSubjectContent.adapter = null
                     }
                 }
                 is Result.Failure -> {
