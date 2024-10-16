@@ -12,6 +12,7 @@ import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.data.model.TermsItem
 import xyz.penpencil.competishun.databinding.FragmentTermsAndConditionBinding
 import xyz.penpencil.competishun.ui.adapter.TermsAdapter
+import xyz.penpencil.competishun.ui.main.HomeActivity
 
 class TermsAndCondition : DrawerVisibility() {
     private lateinit var binding : FragmentTermsAndConditionBinding
@@ -84,6 +85,11 @@ class TermsAndCondition : DrawerVisibility() {
             adapter = termAdapter
         }
 
+    }
+    override fun onResume() {
+        super.onResume()
+        (activity as? HomeActivity)?.showBottomNavigationView(false)
+        (activity as? HomeActivity)?.showFloatingButton(false)
     }
     private fun handleBackPressed() {
         findNavController().navigate(R.id.homeFragment)

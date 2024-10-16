@@ -12,6 +12,7 @@ import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.data.model.PolicyItem
 import xyz.penpencil.competishun.databinding.FragmentPrivacyPolicyBinding
 import xyz.penpencil.competishun.ui.adapter.PolicyAdapter
+import xyz.penpencil.competishun.ui.main.HomeActivity
 
 class PrivacyPolicyFragment : Fragment() {
 
@@ -85,6 +86,11 @@ class PrivacyPolicyFragment : Fragment() {
             adapter = policyAdapter
         }
 
+    }
+    override fun onResume() {
+        super.onResume()
+        (activity as? HomeActivity)?.showBottomNavigationView(false)
+        (activity as? HomeActivity)?.showFloatingButton(false)
     }
 
     private fun handleBackPressed() {

@@ -44,6 +44,7 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
      var userId:String = ""
     private var DetailAvailable = false
     val bundle = Bundle()
+    private var navigateToFragment = false
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
@@ -69,10 +70,9 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
         bottomNavigationView = findViewById(R.id.bottomNav)
         callIcon = findViewById(R.id.ig_ContactImage)
 
-        val navigateToFragment = intent.getBooleanExtra("isMyCourseAvailable",false)
+        navigateToFragment = intent.getBooleanExtra("isMyCourseAvailable",false)
         val navigateFromVerify = intent.getStringExtra("navigateTo")
         if (navigateToFragment) {
-            // Navigate to CourseEmptyFragment
             navController.navigate(R.id.courseEmptyFragment)
             binding.bottomNav.selectedItemId = R.id.myCourse // Set the selected tab to My Course
         }else if (navigateFromVerify == "CourseEmptyFragment"){
@@ -104,6 +104,17 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
             }
         }
 
+//        val bottomNavigationView = binding.bottomNav
+//        val menu = bottomNavigationView.menu
+//        if (navigateToFragment) {
+//            Log.d("DetailAvailable",DetailAvailable.toString())
+//            menu.findItem(R.id.Bookmark).isVisible = false
+//            menu.findItem(R.id.Store).isVisible = true
+//        } else {
+//            menu.findItem(R.id.Bookmark).isVisible = true
+//            menu.findItem(R.id.Store).isVisible = false
+//        }
+
         bottomNavigationView.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.home -> {
@@ -131,6 +142,7 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
                 }
             }
         }
+
 
     }
 
@@ -200,17 +212,7 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
     override fun onResume() {
         super.onResume()
         userId = sharedPreferencesManager.userId.toString()
-//        val bottomNavigationView = binding.bottomNav
-//        val menu = bottomNavigationView.menu
-//        if (DetailAvailable) {
-//            Log.d("DetailAvailable",DetailAvailable.toString())
-//            menu.findItem(R.id.News).isVisible = false
-//            menu.findItem(R.id.Chat).isVisible = true
-//        } else {
-//            menu.findItem(R.id.News).isVisible = true
-//            menu.findItem(R.id.Chat).isVisible = false
-//        }
-//        Log.e("Sharedhome $userId", intent.getStringExtra("userId").toString())
+
     }
 
     private fun observeUserDetails() {
@@ -218,7 +220,16 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
             result.onSuccess { data ->
 
                 DetailAvailable = data.getMyDetails.courses.isNotEmpty()
-
+                val bottomNavigationView = binding.bottomNav
+                val menu = bottomNavigationView.menu
+                if (DetailAvailable) {
+                    Log.d("DetailAvailable",DetailAvailable.toString())
+                    menu.findItem(R.id.Bookmark).isVisible = true
+                    menu.findItem(R.id.Store).isVisible = false
+                } else {
+                    menu.findItem(R.id.Bookmark).isVisible = false
+                    menu.findItem(R.id.Store).isVisible = true
+                }
             }.onFailure { exception ->
                 Toast.makeText(this, "Error fetching details: ${exception.message}", Toast.LENGTH_LONG).show()
             }

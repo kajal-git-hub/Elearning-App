@@ -90,26 +90,20 @@ object Constants {
             "Competishun",
             "IIT - JEE Cracked",
             "NEET Cracked",
-            "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+            "https://youtu.be/06dJv3gJX88"
         ),
         WhyCompetishun(
             "Competishun",
             "IIT - JEE Cracked",
             "NEET Cracked",
-            "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"
+            "https://youtu.be/l2tLkv_t15k"
         ),
         WhyCompetishun(
             "Competishun",
             "IIT - JEE Cracked",
             "NEET Cracked",
-            "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4"
+            "https://youtu.be/50hiqJY_8h0"
         ),
-        WhyCompetishun(
-            "Competishun",
-            "IIT - JEE Cracked",
-            "NEET Cracked",
-            "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4"
-        )
     )
 
     val testimonials = listOf(

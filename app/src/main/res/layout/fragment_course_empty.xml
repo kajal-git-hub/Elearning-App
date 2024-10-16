@@ -80,16 +80,32 @@
             android:layout_height="32dp"
             android:layout_marginLeft="4dp"
             android:background="@drawable/hand"
-            app:layout_constraintBottom_toBottomOf="@+id/welcomeUserTxt"
+            app:layout_constraintBottom_toBottomOf="@+id/et_rollNo"
+            app:layout_constraintStart_toEndOf="@+id/et_rollNo"
+            app:layout_constraintTop_toTopOf="@+id/et_rollNo" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/et_rollNo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="8377376424"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:layout_marginStart="@dimen/_5dp"
+            android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@+id/welcomeUserTxt"
-            app:layout_constraintTop_toTopOf="@+id/welcomeUserTxt" />
+            app:layout_constraintTop_toTopOf="@+id/welcomeUserTxt"
+            app:layout_constraintBottom_toBottomOf="@+id/welcomeUserTxt"
+            >
+
+        </com.google.android.material.textview.MaterialTextView>
 
         <com.google.android.material.textview.MaterialTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_16dp"
             android:layout_marginTop="@dimen/_8dp"
-            android:layout_marginBottom="34dp"
+            android:layout_marginBottom="30dp"
             android:fontFamily="@font/nunito"
             android:text="Let’s start learning &amp; achieve our target!"
             android:textColor="#ADADF7"
@@ -97,7 +113,7 @@
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/welcomeUserTxt" />
+            app:layout_constraintTop_toBottomOf="@id/et_rollNo" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <!-- ScrollView to wrap content that needs to be scrollable -->
