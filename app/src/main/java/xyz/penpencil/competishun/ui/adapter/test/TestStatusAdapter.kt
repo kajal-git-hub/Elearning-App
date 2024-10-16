@@ -1,4 +1,4 @@
-package com.student.competishun.ui.adapter.test
+package xyz.penpencil.competishun.ui.adapter.test
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.student.competishun.R
+import xyz.penpencil.competishun.R
 
 class TestStatusAdapter(private val items: List<Any>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 

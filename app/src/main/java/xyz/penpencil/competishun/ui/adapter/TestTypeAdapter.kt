@@ -8,8 +8,8 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.student.competishun.R
 import com.student.competishun.data.model.TestItem
+import xyz.penpencil.competishun.R
 
 class TestTypeAdapter(private var testTypeList: List<TestItem>, private var listener: ItemClickListener):
     RecyclerView.Adapter<TestTypeAdapter.TestTypeViewHolder>() {

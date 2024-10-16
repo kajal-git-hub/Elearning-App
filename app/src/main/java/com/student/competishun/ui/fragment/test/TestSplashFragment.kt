@@ -11,13 +11,12 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.findNavController
 import com.bumptech.glide.Glide
-import com.student.competishun.R
-import com.student.competishun.databinding.FragmentTestDetailBinding
-import com.student.competishun.databinding.FragmentTestSplashBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import xyz.penpencil.competishun.R
+import xyz.penpencil.competishun.databinding.FragmentTestSplashBinding
 
 
 class TestSplashFragment : Fragment() {

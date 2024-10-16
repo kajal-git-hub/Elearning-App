@@ -5,8 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.student.competishun.R
-import com.student.competishun.databinding.FragmentTestFilterBinding
+import xyz.penpencil.competishun.R
+import xyz.penpencil.competishun.databinding.FragmentTestFilterBinding
 
 
 class BottomSheetTestFilterFragment(val submit:(list: FilterData)->Unit) : BottomSheetDialogFragment() {

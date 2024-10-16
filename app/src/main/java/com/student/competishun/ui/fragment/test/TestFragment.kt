@@ -13,12 +13,11 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.RadioButton
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
-import com.student.competishun.R
-import com.student.competishun.databinding.FragmentTestBinding
 import com.student.competishun.utils.DialogTestUtils
+import xyz.penpencil.competishun.R
+import xyz.penpencil.competishun.databinding.FragmentTestBinding
 
 
 class TestFragment : Fragment() {

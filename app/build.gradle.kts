@@ -119,4 +119,6 @@ dependencies {
 
     implementation(libs.androidx.work.runtime)
 
+    implementation(libs.circular.progress.indicator)
+
 }

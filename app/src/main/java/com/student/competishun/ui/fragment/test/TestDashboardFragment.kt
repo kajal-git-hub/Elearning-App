@@ -10,11 +10,11 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL
 import com.student.competishun.data.model.TestItem
-import com.student.competishun.databinding.FragmentTestDashboardBinding
 import com.student.competishun.ui.adapter.ItemClickListener
-import com.student.competishun.ui.adapter.test.TestListAdapter
+import xyz.penpencil.competishun.ui.adapter.test.TestListAdapter
 import com.student.competishun.ui.adapter.TestTypeAdapter
-import com.student.competishun.ui.main.HomeActivity
+import xyz.penpencil.competishun.databinding.FragmentTestDashboardBinding
+import xyz.penpencil.competishun.ui.main.HomeActivity
 
 class TestDashboardFragment : Fragment() {
 

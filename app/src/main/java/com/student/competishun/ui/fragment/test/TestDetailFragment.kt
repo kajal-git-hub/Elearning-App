@@ -8,9 +8,8 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.navigation.findNavController
-import com.student.competishun.R
-import com.student.competishun.databinding.FragmentTestDashboardBinding
-import com.student.competishun.databinding.FragmentTestDetailBinding
+import xyz.penpencil.competishun.R
+import xyz.penpencil.competishun.databinding.FragmentTestDetailBinding
 
 class TestDetailFragment : Fragment() {
 

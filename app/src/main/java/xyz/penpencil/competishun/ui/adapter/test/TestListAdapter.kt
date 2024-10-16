@@ -1,4 +1,4 @@
-package com.student.competishun.ui.adapter.test
+package xyz.penpencil.competishun.ui.adapter.test
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,8 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
-import com.student.competishun.R
 import com.student.competishun.data.model.TestItem
+import xyz.penpencil.competishun.R
 
 class TestListAdapter(private var testTypeList: List<TestItem>):
     RecyclerView.Adapter<TestListAdapter.TestListViewHolder>() {

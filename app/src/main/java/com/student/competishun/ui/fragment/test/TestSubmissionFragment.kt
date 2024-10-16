@@ -10,9 +10,8 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import com.bumptech.glide.Glide
-import com.student.competishun.R
-import com.student.competishun.databinding.FragmentTestSubmissionBinding
-
+import xyz.penpencil.competishun.R
+import xyz.penpencil.competishun.databinding.FragmentTestSubmissionBinding
 
 class TestSubmissionFragment : Fragment() {
 

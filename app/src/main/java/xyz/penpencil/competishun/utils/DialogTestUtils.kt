@@ -15,7 +15,7 @@ import com.bumptech.glide.Glide
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textview.MaterialTextView
-import com.student.competishun.R
+import xyz.penpencil.competishun.R
 
 object DialogTestUtils {
 

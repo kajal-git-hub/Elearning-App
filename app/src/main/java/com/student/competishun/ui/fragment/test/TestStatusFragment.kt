@@ -10,9 +10,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.GridLayoutManager
-import com.student.competishun.R
-import com.student.competishun.databinding.FragmentTestStatusBinding
-import com.student.competishun.ui.adapter.test.TestStatusAdapter
+import xyz.penpencil.competishun.R
+import xyz.penpencil.competishun.databinding.FragmentTestStatusBinding
+import xyz.penpencil.competishun.ui.adapter.test.TestStatusAdapter
 
 class TestStatusFragment : DialogFragment() {
 

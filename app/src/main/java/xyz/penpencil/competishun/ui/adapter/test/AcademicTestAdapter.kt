@@ -1,13 +1,13 @@
-package com.student.competishun.ui.adapter.test
+package xyz.penpencil.competishun.ui.adapter.test
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.student.competishun.R
 import com.student.competishun.data.model.TestItem
 import android.os.Bundle
 import androidx.navigation.findNavController
+import xyz.penpencil.competishun.R
 
 
 class AcademicTestAdapter(private var testTypeList: List<TestItem>):
