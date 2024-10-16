@@ -85,7 +85,7 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
     private var checkInstallOrNot = 0
 
     private var categoryName = ""
-
+    var faqAdapter : FAQAdapter?=null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -179,8 +179,6 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
 
                 categoryName = courses?.category_name.toString()
                 bannerCourseTag = courses?.course_tags as MutableList<String>
-                Log.d("bannerCourseTag", bannerCourseTag.toString())
-                Log.d("courseDetail", courses.toString())
                 checkInstallOrNot = courses?.with_installment_price ?: 0
                 val imageUrl = courses?.video_thumbnail
                 val videoUrl = courses?.orientation_video
@@ -219,7 +217,6 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
 
                 }
 
-                val coursePrice = courses?.price ?: 0
                 installmentPrice1 = courses?.with_installment_price ?: 0
                 Log.d("installmentPrice114", installmentPrice1.toString())
                 firstInstallment = (installmentPrice1 * 0.6).toInt()
@@ -347,7 +344,9 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
 
                     ourContentAdapter.updateItems(sortedFolderList)
                 }
-
+                faqItems = getFaqItemsByCategory(categoryName)
+                limitedFaqItems = faqItems.take(4)
+                faqAdapter?.notifyDataSetChanged()
             })
         }
 
@@ -516,7 +515,7 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
 
         limitedFaqItems = faqItems.take(4)
 
-        val faqAdapter = FAQAdapter(limitedFaqItems)
+        faqAdapter = FAQAdapter(limitedFaqItems)
 
         binding.rvFaq.apply {
             layoutManager = LinearLayoutManager(context)
@@ -787,6 +786,89 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
         super.onPause()
         player?.pause()
     }
+
+
+    fun getFaqItemsByCategory(categoryName: String): List<FAQItem> {
+        return when (categoryName) {
+            "Full Year Course" -> {
+                listOf(
+                    FAQItem(
+                        "Will I get Physical Study Material ?",
+                        "YES, you will get the Physical study material along with this purchase. We will dispatch your material and tracking id will be provide so that you can track the parcel. The Expected Delivery of the Study Material is within 10-12 Working Days from the date of admission."
+                    ),
+                    FAQItem(
+                        "Will Classes be any Live Classes ?",
+                        "NO, There will be only Recorded Scheduled Lectures will be provided. In week there will be LIVE INTERACTION Session for your guidance for 30 Minutes."
+                    ),
+                    FAQItem(
+                        "Will Test be conducted in this course ?",
+                        "YES, Test will be conducted on weekly basis as per test grid that will be provided to you along with the course. Test will be conducted on COMPETISHUN DIGITAL APP / WEBSITE and we will share the complete details in your Official Support Prior to your 1st test."
+                    ),
+                    FAQItem(
+                        "Will Doubt clearing session will be conducted ?",
+                        "YES, you can ask your doubts in your Telegram doubt groups tagging faculties and you will get a reply at the earliest. Also there will be zoom Live Session."
+                    ),
+                    FAQItem(
+                        "How Do you contact Support Staff of Competishun ?",
+                        "You can contact Support Staff at 8888-0000-21, 7410-900-901."
+                    )
+                )
+            }
+            "Test Series" -> {
+                listOf(
+                    FAQItem(
+                        "How many tests are included in the series?",
+                        "The test series includes 50+ topic-wise and full-syllabus tests."
+                    ),
+                    FAQItem(
+                        "Are solutions provided for the tests?",
+                        "Yes, detailed Text and Video solutions and analysis are provided after each test."
+                    ),
+                    FAQItem(
+                        "Can I access the tests offline?",
+                        "Tests can be accessed only through the app / Website in CBT Mode."
+                    ),
+                    FAQItem(
+                        "Is there a performance report after each test?",
+                        "Yes, a detailed performance analysis is shared for improvement tracking."
+                    )
+                )
+            }
+            else -> {
+                listOf(
+                    FAQItem(
+                        "Will I get Physical Study Material ?",
+                        "NO, With this Course Purchase, you will get only Digital Study Material like DPP’s and their respective Text and Video Solution. Physical Study Material is not provided with this Short term Course."
+                    ),
+                    FAQItem(
+                        "Will Classes be any Live Classes ?",
+                        "NO, There will be only Recorded Scheduled Lectures will be provided. In week there will be LIVE INTERACTION Session for your guidance for 30 Minutes."
+                    ),
+                    FAQItem(
+                        "Will Test be conducted in this course ?",
+                        "YES, Test will be conducted on weekly basis as per test grid that will be provided to you along with the course. Test will be conducted on COMPETISHUN DIGITAL APP / WEBSITE and we will share the complete details in your Official Support Prior to your 1st test."
+                    ),
+                    FAQItem(
+                        "Will Doubt clearing session will be conducted ?",
+                        "YES, you can ask your doubts in your doubt groups tagging faculties and you will get a reply at the earliest."
+                    ),
+                    FAQItem(
+                        "How Do you contact Support Staff of Competishun ?",
+                        "You can contact Support Staff at 8888-0000-21, 7410-900-901."
+                    ),
+                    FAQItem(
+                        "Will I complete my entire syllabus in this short time?",
+                        "Yes, the course is designed for rapid coverage, focusing on high-weightage topics to maximize your score."
+                    ),
+                    FAQItem(
+                        "Do I get direct access to top educators?",
+                        "Yes, students can interact with expert faculty via live sessions and doubt-solving forums."
+                    )
+                )
+            }
+        }
+    }
+
 
     private fun mapFolderToOurContentItem(folder: GetCourseByIdQuery.Folder): OurContentItem {
         val isFreeCourse = folder.name.split(" ")[0].equals("Class", ignoreCase = true)
