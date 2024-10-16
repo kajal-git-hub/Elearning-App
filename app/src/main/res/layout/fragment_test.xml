@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/_white_F6F6FF"
+    tools:context=".ui.fragment.test.TestFragment">
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout4"
+        android:layout_width="match_parent"
+        android:background="@color/white"
+        android:elevation="@dimen/_2dp"
+        android:layout_height="?actionBarSize"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Maths"
+            android:paddingTop="@dimen/_6dp"
+            android:paddingBottom="@dimen/_6dp"
+            android:paddingStart="@dimen/_10dp"
+            android:paddingEnd="@dimen/_10dp"
+            android:id="@+id/subject"
+            android:textColor="@color/black_2B2829"
+            android:drawablePadding="@dimen/_20dp"
+            android:background="@drawable/rounded_s1_fff"
+            android:layout_centerInParent="true"
+            app:drawableTint="@color/black_2B2829"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="@dimen/_16sp"
+            android:drawableEnd="@drawable/arrow_down"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="03:00:00"
+            android:paddingTop="@dimen/_5dp"
+            android:paddingBottom="@dimen/_5dp"
+            android:paddingStart="@dimen/_10dp"
+            android:paddingEnd="@dimen/_10dp"
+            android:id="@+id/timer"
+            android:textColor="@color/orange"
+            android:drawablePadding="@dimen/_10dp"
+            android:background="@drawable/rounded_background"
+            android:layout_centerInParent="true"
+            android:visibility="gone"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="@dimen/_16sp"
+            android:drawableStart="@drawable/ic_countdown"/>
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginEnd="@dimen/_16dp"
+            android:text="Finish test"
+            android:textSize="14sp"
+            android:textColor="@color/black_2B2829"
+            android:background="@drawable/rounded_s1_fff"
+            android:paddingStart="@dimen/_8dp"
+            android:paddingEnd="@dimen/_8dp"
+            android:paddingTop="@dimen/_6dp"
+            android:paddingBottom="@dimen/_6dp"
+            android:clickable="true"
+            android:layout_toStartOf="@id/testResult"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:id="@+id/testResult"
+            android:layout_alignParentEnd="true"
+            android:src="@drawable/ic_test_result"
+            android:layout_marginEnd="@dimen/_16dp"/>
+    </RelativeLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="@dimen/_16dp"
+        android:background="@drawable/card_bg"
+        app:layout_constraintTop_toBottomOf="@+id/relativeLayout4">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/totalQuestion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_10dp"
+            android:layout_marginTop="@dimen/_10dp"
+            android:text="Q 01/90"
+            android:textStyle="bold"
+            android:fontFamily="@font/nunito"
+            android:textColor="@color/gray"
+            android:textSize="@dimen/_12sp"
+            android:paddingStart="@dimen/_10dp"
+            android:paddingEnd="@dimen/_10dp"
+            android:paddingTop="@dimen/_4dp"
+            android:paddingBottom="@dimen/_4dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:layout_width="2dp"
+            android:layout_height="24dp"
+            android:id="@+id/vLine"
+            android:background="@color/gray_progress"
+            android:layout_marginTop="@dimen/_8dp"
+            android:layout_marginStart="@dimen/_10dp"
+            app:layout_constraintStart_toEndOf="@+id/totalQuestion"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/testStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_10dp"
+            android:layout_marginTop="@dimen/_10dp"
+            android:text="Q 01/90"
+            android:paddingStart="@dimen/_10dp"
+            android:paddingEnd="@dimen/_10dp"
+            android:paddingTop="@dimen/_4dp"
+            android:paddingBottom="@dimen/_4dp"
+            android:background="@drawable/rounded_bg_f2f2f2_c12"
+            android:textColor="@color/gray"
+            android:textSize="@dimen/_12sp"
+            app:layout_constraintStart_toEndOf="@+id/vLine"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <ImageView
+            android:layout_width="@dimen/_30dp"
+            android:layout_height="@dimen/_30dp"
+            android:layout_margin="@dimen/_10dp"
+            android:id="@+id/options"
+            android:src="@drawable/ic_options_20"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/questionHeading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_10dp"
+            android:paddingStart="@dimen/_10dp"
+            android:paddingTop="@dimen/_4dp"
+            android:paddingEnd="@dimen/_10dp"
+            android:paddingBottom="@dimen/_4dp"
+            android:layout_marginTop="@dimen/_16dp"
+            android:text="SINGLE SELECT QUESTION"
+            android:textStyle="bold"
+            android:fontFamily="@font/nunito"
+            android:textColor="@color/gray"
+            android:textSize="@dimen/_12sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/testStatus" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/question"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_10dp"
+            android:paddingStart="@dimen/_10dp"
+            android:paddingTop="@dimen/_4dp"
+            android:paddingEnd="@dimen/_10dp"
+            android:paddingBottom="@dimen/_4dp"
+            android:layout_marginTop="@dimen/_16dp"
+            android:text="If sin θ and cos θ are the roots of ax2 – bx + c = 0, then the relation between a, b and c will be?"
+            android:textStyle="bold"
+            android:fontFamily="@font/nunito"
+            android:textColor="@color/black_2B2829"
+            android:textSize="@dimen/_16sp"
+            android:layout_marginEnd="@dimen/_16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/questionHeading" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_16dp"
+            android:id="@+id/answer"
+            android:layout_marginBottom="@dimen/_16dp"
+            android:orientation="vertical"
+            app:layout_constraintTop_toBottomOf="@+id/question">
+
+            <RadioButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/awsOne"
+                android:textSize="@dimen/_16sp"
+                style="@style/RadioButton"
+                android:drawablePadding="@dimen/_16sp"
+                android:button="@null"
+                android:drawableStart="@drawable/selector_test_submit"
+                android:layout_marginBottom="@dimen/_8dp"/>
+
+            <RadioButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/awsTwo"
+                style="@style/RadioButton"
+                android:button="@null"
+                android:drawableStart="@drawable/selector_test_submit"
+                android:textSize="@dimen/_16sp"
+                android:fontFamily="@font/nunito"
+                android:drawablePadding="@dimen/_16sp"
+                android:textColor="@color/black_2B2829"
+                android:layout_marginBottom="@dimen/_8dp"/>
+            <RadioButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/awsThree"
+                style="@style/RadioButton"
+                android:drawableStart="@drawable/selector_test_submit"
+                android:textSize="@dimen/_16sp"
+                android:button="@null"
+                android:fontFamily="@font/nunito"
+                android:drawablePadding="@dimen/_16sp"
+                android:textColor="@color/black_2B2829"
+                android:layout_marginBottom="@dimen/_8dp"/>
+            <RadioButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/awsFour"
+                style="@style/RadioButton"
+                android:button="@null"
+                android:drawableStart="@drawable/selector_test_submit"
+                android:drawablePadding="@dimen/_16sp"
+                android:textSize="@dimen/_16sp"
+                android:fontFamily="@font/nunito"
+                android:textColor="@color/black_2B2829"
+                android:layout_marginBottom="@dimen/_20dp"/>
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        android:id="@+id/nextQuestionController"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/viewSolution"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_16dp"
+            android:layout_marginBottom="@dimen/_16dp"
+            android:text="View Solution"
+            app:cornerRadius="@dimen/_8dp"
+            android:backgroundTint="@color/white"
+            app:strokeWidth="@dimen/_1dp"
+            android:layout_marginEnd="@dimen/_8dp"
+            app:strokeColor="@color/PrimaryColor"
+            android:layout_weight="1"
+            android:fontFamily="@font/nunito"
+            android:textColor="@color/PrimaryColor" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/nextQuestion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:focusable="true"
+            android:fontFamily="@font/nunito"
+            android:layout_marginStart="@dimen/_8dp"
+            android:layout_marginEnd="@dimen/_16dp"
+            android:layout_marginBottom="@dimen/_16dp"
+            android:text="Next Question"
+            android:backgroundTint="@color/PrimaryColor"
+            app:cornerRadius="@dimen/_8dp"
+            android:textColor="@color/white" />
+    </LinearLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/submit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_16dp"
+        android:layout_marginEnd="@dimen/_16dp"
+        android:layout_marginBottom="@dimen/_16dp"
+        android:text="Submit"
+        app:cornerRadius="@dimen/_8dp"
+        android:enabled="false"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/PrimaryColor"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

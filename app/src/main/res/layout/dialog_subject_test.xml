@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:paddingStart="@dimen/_16dp"
+        android:paddingEnd="@dimen/_16dp"
+        android:clickable="false"
+        android:id="@+id/mHeader"
+        android:focusable="false"
+        android:paddingBottom="@dimen/_16dp"
+        android:paddingTop="@dimen/_16dp"
+        android:background="@drawable/bg_rounded_dialog">
+        <View
+            android:layout_width="60dp"
+            android:layout_height="@dimen/_4dp"
+            android:background="@color/gray"
+            android:layout_margin="@dimen/_10dp"
+            android:id="@+id/line"
+            android:layout_alignParentTop="true"
+            android:layout_centerInParent="true"/>
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_below="@+id/line"
+            android:id="@+id/icon"
+            android:src="@drawable/frame_1707480811__1_"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/_20dp"
+            android:fontFamily="@font/nunito"
+            android:id="@+id/header"
+            android:textStyle="bold"
+            android:paddingBottom="@dimen/_10dp"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_16sp"
+            android:layout_below="@+id/icon"
+            android:text="Select Subject"/>
+
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/rbReport"
+            android:layout_marginTop="@dimen/_16dp"
+            android:layout_marginBottom="@dimen/_20dp"
+            android:layout_below="@+id/header">
+
+
+            <RadioButton
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                style="@style/RadioButton"
+                android:drawablePadding="@dimen/_16sp"
+                android:button="@null"
+                android:id="@+id/maths"
+                android:fontFamily="@font/nunito"
+                android:layout_marginBottom="4dp"
+                android:background="@drawable/selector_report_test"
+                android:drawableStart="@drawable/selector_test_submit"
+                android:text="Maths"/>
+
+            <RadioButton
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                style="@style/RadioButton"
+                android:drawablePadding="@dimen/_16sp"
+                android:button="@null"
+                android:id="@+id/physics"
+                android:fontFamily="@font/nunito"
+                android:layout_marginBottom="4dp"
+                android:background="@drawable/selector_report_test"
+                android:drawableStart="@drawable/selector_test_submit"
+                android:text="Physics"/>
+
+            <RadioButton
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                style="@style/RadioButton"
+                android:drawablePadding="@dimen/_16sp"
+                android:button="@null"
+                android:id="@+id/chemistry"
+                android:fontFamily="@font/nunito"
+                android:layout_marginBottom="4dp"
+                android:background="@drawable/selector_report_test"
+                android:drawableStart="@drawable/selector_test_submit"
+                android:text="Chemistry"/>
+
+        </RadioGroup>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="@dimen/_16dp"
+            android:layout_marginBottom="@dimen/_20dp"
+            android:layout_below="@id/header">
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/mathsQuesion"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:layout_marginEnd="@dimen/_10dp"
+                android:gravity="center_vertical|end"
+                android:fontFamily="@font/nunito"
+                android:text="(01-30)"
+                android:layout_marginBottom="4dp"
+                android:textColor="#433E3F" />
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/physicsQuesion"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:layout_marginEnd="@dimen/_10dp"
+                android:gravity="center|end"
+                android:layout_marginBottom="4dp"
+                android:fontFamily="@font/nunito"
+                android:text="(01-30)"
+                android:textColor="#433E3F" />
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/chemistryQuesion"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:layout_marginEnd="@dimen/_10dp"
+                android:gravity="center|end"
+                android:fontFamily="@font/nunito"
+                android:text="(01-30)"
+                android:textColor="#433E3F" />
+
+        </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/submit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_16dp"
+            android:layout_marginEnd="@dimen/_16dp"
+            android:layout_marginBottom="@dimen/_16dp"
+            android:text="Done"
+            app:cornerRadius="@dimen/_8dp"
+            android:layout_below="@+id/rbReport"
+            android:enabled="false"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/PrimaryColor"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+    </RelativeLayout>
+
+</RelativeLayout>
