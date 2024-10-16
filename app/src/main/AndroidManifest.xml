@@ -82,7 +82,7 @@
             </intent-filter>
         </receiver>
         <receiver
-            android:name=".DownloadCompleteReceiver"
+            android:name=".ui.main.DownloadCompleteReceiver"
             android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.DOWNLOAD_COMPLETE" />
