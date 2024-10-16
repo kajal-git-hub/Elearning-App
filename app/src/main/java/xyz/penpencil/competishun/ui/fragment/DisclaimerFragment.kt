@@ -12,6 +12,7 @@ import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.data.model.DisclaimerItem
 import xyz.penpencil.competishun.databinding.FragmentDisclaimerBinding
 import xyz.penpencil.competishun.ui.adapter.DisclaimerAdapter
+import xyz.penpencil.competishun.ui.main.HomeActivity
 
 class DisclaimerFragment : DrawerVisibility() {
 
@@ -86,6 +87,12 @@ class DisclaimerFragment : DrawerVisibility() {
             adapter = disclaimerAdapter
         }
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        (activity as? HomeActivity)?.showBottomNavigationView(false)
+        (activity as? HomeActivity)?.showFloatingButton(false)
     }
 
     private fun handleBackPressed() {

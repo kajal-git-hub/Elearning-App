@@ -168,6 +168,21 @@
                    app:layout_constraintTop_toTopOf="parent"/>
 
                <com.google.android.material.textview.MaterialTextView
+                   android:id="@+id/tv_CallonNo"
+                   android:layout_width="@dimen/_0dp"
+                   android:layout_marginStart="@dimen/_12sp"
+                   android:layout_height="wrap_content"
+                   android:text="+91 8888000021"
+                   android:textColor="@color/blue_3E3EF7"
+                   android:textSize="14sp"
+                   android:fontFamily="@font/nunito"
+                   android:textStyle="bold"
+                   app:layout_constraintStart_toEndOf="@+id/tv_CallUsOn"
+                   app:layout_constraintTop_toTopOf="@+id/tv_CallUsOn"
+                   app:layout_constraintBottom_toBottomOf="@+id/tv_CallUsOn"
+                   />
+
+               <com.google.android.material.textview.MaterialTextView
                    android:id="@+id/tv_availablity"
                    android:layout_width="@dimen/_0dp"
                    android:layout_height="wrap_content"
@@ -231,7 +246,7 @@
                    android:layout_marginTop="12dp"
                    android:layout_marginBottom="@dimen/_16dp"
                    android:text="support@competishun.com"
-                   android:textColor="#5A5555"
+                   android:textColor="@color/blue_3E3EF7"
                    android:textSize="@dimen/_14sp"
                    android:fontFamily="@font/nunito"
                    android:textStyle="bold"

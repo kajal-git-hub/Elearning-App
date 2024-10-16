@@ -92,18 +92,18 @@ class AllDemoResourcesFree : DrawerVisibility() {
 
         viewModel.fetchVideoStreamUrl(folderContentId, "360p")
 
-        viewModel.videoStreamUrl.observe(viewLifecycleOwner, { signedUrl ->
+        viewModel.videoStreamUrl.observe(viewLifecycleOwner) { signedUrl ->
             Log.d("Videourl", "Signed URL: $signedUrl")
             if (signedUrl != null) {
                 val bundle = Bundle().apply {
                     putString("url", signedUrl)
                 }
-                findNavController().navigate(R.id.mediaFragment,bundle)
+                findNavController().navigate(R.id.mediaFragment, bundle)
 
             } else {
                 // Handle error or null URL
             }
-        })
+        }
     }
 
     private fun folderProgress(folderId:String){
@@ -181,10 +181,14 @@ class AllDemoResourcesFree : DrawerVisibility() {
             val folderDemoAdapter = FreeDemoAdapter(FolderItems) { freeDemoItem ->
                 var videoCount = freeDemoItem.videoCount.toInt()
                 var pdfCount = freeDemoItem.pdfCount.toInt()
-                var subfolderId = freeDemoItem.id
-                 folderProgress(subfolderId)
-
-
+                val subfolderId = freeDemoItem.id
+//                 folderProgress(subfolderId)
+                val bundle = Bundle().apply {
+                    putString("folderId", subfolderId)
+                    putString("folderName", "")
+                    putBoolean("free", false)
+                }
+                findNavController().navigate(R.id.demoFreeFragment, bundle)
             }
             binding.rvAllDemoFree.apply {
                 layoutManager = LinearLayoutManager(context)

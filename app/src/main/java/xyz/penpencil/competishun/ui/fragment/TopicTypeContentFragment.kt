@@ -1,29 +1,33 @@
 package xyz.penpencil.competishun.ui.fragment
 
+import android.R.attr.fragment
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.student.competishun.curator.FindCourseFolderProgressQuery
+import dagger.hilt.android.AndroidEntryPoint
+import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.data.model.TopicContentModel
+import xyz.penpencil.competishun.databinding.FragmentTopicTypeContentBinding
+import xyz.penpencil.competishun.di.Result
 import xyz.penpencil.competishun.ui.adapter.TopicContentAdapter
 import xyz.penpencil.competishun.ui.main.HomeActivity
+import xyz.penpencil.competishun.ui.main.PdfViewActivity
 import xyz.penpencil.competishun.ui.viewmodel.CoursesViewModel
 import xyz.penpencil.competishun.ui.viewmodel.VideourlViewModel
 import xyz.penpencil.competishun.utils.HelperFunctions
-import dagger.hilt.android.AndroidEntryPoint
-import xyz.penpencil.competishun.R
-import xyz.penpencil.competishun.databinding.FragmentTopicTypeContentBinding
-import xyz.penpencil.competishun.di.Result
-import xyz.penpencil.competishun.ui.main.PdfViewActivity
+
 
 @AndroidEntryPoint
 class TopicTypeContentFragment : Fragment() {
@@ -50,8 +54,7 @@ class TopicTypeContentFragment : Fragment() {
 
         helperFunctions = HelperFunctions()
         binding.backIcon.setOnClickListener {
-
-                requireActivity().onBackPressedDispatcher.onBackPressed()
+            it.findNavController().popBackStack()
         }
         val gson = Gson()
         (activity as? HomeActivity)?.showBottomNavigationView(false)
@@ -73,6 +76,18 @@ class TopicTypeContentFragment : Fragment() {
         binding.tvTopicTypeName.text = folder_Name?:""
 
         binding.tvTopicContentCount.text = "0${subContentsList.size}"
+
+        view.setFocusableInTouchMode(true)
+        view.requestFocus()
+        view.setOnKeyListener(object : View.OnKeyListener {
+            override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    v?.findNavController()?.popBackStack()
+                    return true
+                }
+                return false
+            }
+        })
 
     }
 

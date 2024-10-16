@@ -63,7 +63,7 @@ class StudyMaterialDetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        retainInstance = true
         (activity as? HomeActivity)?.showBottomNavigationView(true)
         (activity as? HomeActivity)?.showFloatingButton(true)
 
@@ -128,9 +128,7 @@ class StudyMaterialDetailsFragment : Fragment() {
                     bottomSheet.setOnTopicTypeSelectedListener(object :
                         OnTopicTypeSelectedListener {
                         override fun onTopicTypeSelected(selectedTopic: TopicTypeModel) {
-                            selectedTopic
                             binding.tvTopicType.text = selectedTopic.title
-
                             folderProgress(selectedTopic.id)
                         }
                     })
@@ -477,7 +475,7 @@ class StudyMaterialDetailsFragment : Fragment() {
         }
     }
 
-    fun videoProgress(courseFolderContentId: String, currentDuration: Int) {
+    private fun videoProgress(courseFolderContentId: String, currentDuration: Int) {
 
 
         // Observe the result of the updateVideoProgress mutation
@@ -563,7 +561,7 @@ class StudyMaterialDetailsFragment : Fragment() {
                                 putString("studyMaterial", "studyMaterial")
 
                             }
-                            findNavController().navigate(R.id.TopicTYPEContentFragment, bundle)
+                            findNavController().navigate(R.id.action_StudyMaterialDetailsFragment_to_TopicTYPEContentFragment, bundle)
                         }
                     } else {
                         Log.e("studymatfile", "No content available")
@@ -605,5 +603,4 @@ class StudyMaterialDetailsFragment : Fragment() {
             }
         }
     }
-
-    }
+}

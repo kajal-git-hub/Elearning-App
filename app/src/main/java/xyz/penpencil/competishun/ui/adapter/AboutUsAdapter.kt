@@ -11,7 +11,6 @@ import xyz.penpencil.competishun.R
 
 class AboutUsAdapter(private val items: List<AboutUsItem>) : RecyclerView.Adapter<AboutUsAdapter.AboutUsViewHolder>() {
 
-    // ViewHolder class to hold references to the views
     class AboutUsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val image: ImageView = itemView.findViewById(R.id.igTeacher_bg)
         val teacherName: TextView = itemView.findViewById(R.id.etTeacher_name)
@@ -19,43 +18,49 @@ class AboutUsAdapter(private val items: List<AboutUsItem>) : RecyclerView.Adapte
         val teacherYear: TextView = itemView.findViewById(R.id.tv_exp_year)
         val courseAndCollege: TextView = itemView.findViewById(R.id.tv_CourseAndCollege)
         val mentorDescRecyclerView: RecyclerView = itemView.findViewById(R.id.rv_mentorsdesc)
+        val seeMore: TextView = itemView.findViewById(R.id.tvSeeMoreLess)
 
     }
 
-    // Inflate the item layout and return a ViewHolder
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AboutUsViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.mentors_item, parent, false)
         return AboutUsViewHolder(view)
     }
 
-    // Bind data to the views in the ViewHolder
     override fun onBindViewHolder(holder: AboutUsViewHolder, position: Int) {
         val item = items[position]
-        holder.image.setBackgroundResource(R.drawable.iv_mentor)
+        holder.image.setImageResource(item.image)
         holder.teacherName.text = item.teacherName
         holder.teacherSub.text = item.teacherSub
         holder.teacherYear.text = item.teacherYear
         holder.courseAndCollege.text = item.courseAndCollege
 
-        val mentorDescAdapter = MentorDescAdapter(item.mentorDescriptions)
+        val descriptionsToShow = if (item.isExpanded) item.mentorDescriptions else item.mentorDescriptions.take(2)
+
+        val mentorDescAdapter = MentorDescAdapter(descriptionsToShow)
         holder.mentorDescRecyclerView.apply {
             layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
             adapter = mentorDescAdapter
         }
+        holder.seeMore.text = if (item.isExpanded) "See Less" else "See More"
+
+        holder.seeMore.setOnClickListener {
+            item.isExpanded = !item.isExpanded
+            notifyItemChanged(position)
+        }
     }
 
-    // Return the total number of items in the list
     override fun getItemCount(): Int = items.size
 }
 
-// Data class representing each item
 data class AboutUsItem(
     val image:Int,
     val teacherName:String,
     val teacherSub:String,
     val teacherYear:String,
     val courseAndCollege:String,
-    val mentorDescriptions: List<String>
+    val mentorDescriptions: List<String>,
+    var isExpanded: Boolean = false
 
 )

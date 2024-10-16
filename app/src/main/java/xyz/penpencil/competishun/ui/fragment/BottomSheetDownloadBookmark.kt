@@ -1,6 +1,7 @@
 package xyz.penpencil.competishun.ui.fragment
 
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -32,6 +33,8 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import xyz.penpencil.competishun.download.DownloadWorker
+import android.Manifest
+import androidx.activity.result.contract.ActivityResultContracts
 
 @AndroidEntryPoint
 class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
@@ -41,6 +44,10 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
 
     @Inject
     lateinit var appController: AppController
+
+    var fileName: String = ""
+    var videoUrl: String = ""
+    var videoFile : File?=null
 
     fun setItemDetails(details: TopicContentModel) {
         this.itemDetails = details
@@ -89,6 +96,7 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
                 storeItemInPreferences(details)
 
                 if (details.fileType == "VIDEO") {
+                    videoUrl =  details.url
                     downloadVideo(requireContext(), details.url, details.topicName)
                 } else {
                     downloadPdf(details)
@@ -180,15 +188,23 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
     private fun downloadVideo(context: Context, videoUrl: String, name: String) {
         Log.d("DownloadVideo", "Starting download for: $videoUrl with name: $name")
 
-        val fileName = "$name.mp4"
-        val videoFile = File(context.filesDir, fileName)
+        fileName = "$name.mp4"
+        videoFile = File(context.filesDir, fileName)
 
-        if (videoFile.exists()) {
+        if (videoFile?.exists() == true) {
             Toast.makeText(context, "Video already downloaded choose Other", Toast.LENGTH_SHORT).show()
             dismiss()
             return
         }
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            permissionRequest.launch(Manifest.permission.POST_NOTIFICATIONS)
+        }else {
+            checkPermissionNotification(videoUrl, fileName, videoFile.toString())
+        }
+    }
+
+    private fun checkPermissionNotification(videoUrl: String, fileName: String, videoFile: String){
         val inputData = Data.Builder()
             .putString("url", videoUrl)
             .putString("fileName", fileName)
@@ -199,5 +215,14 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
             .build()
         WorkManager.getInstance(requireActivity()).enqueue(downloadWork)
     }
+
+    private val permissionRequest =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { permission ->
+            if (permission){
+                checkPermissionNotification(videoUrl, fileName, videoFile.toString())
+            }else {
+                Toast.makeText(requireContext(), "Allow permission to download file", Toast.LENGTH_SHORT).show()
+            }
+        }
 
 }

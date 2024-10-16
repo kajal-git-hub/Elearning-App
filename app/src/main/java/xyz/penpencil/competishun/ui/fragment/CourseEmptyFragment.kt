@@ -28,6 +28,7 @@ import xyz.penpencil.competishun.utils.SharedPreferencesManager
 import dagger.hilt.android.AndroidEntryPoint
 import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.databinding.FragmentCourseEmptyBinding
+import xyz.penpencil.competishun.ui.viewmodel.UserViewModel
 
 
 @AndroidEntryPoint
@@ -36,6 +37,7 @@ class CourseEmptyFragment : Fragment() {
     private var _binding: FragmentCourseEmptyBinding? = null
     private val binding get() = _binding!!
     lateinit var sharedPreferencesManager: SharedPreferencesManager
+    private val userViewModel: UserViewModel by viewModels()
     private lateinit var drawerLayout: DrawerLayout
 
     private val ordersViewModel: OrdersViewModel by viewModels()
@@ -68,6 +70,9 @@ class CourseEmptyFragment : Fragment() {
 
         drawerLayout = (activity as HomeActivity).findViewById(R.id.drwaer_layout)
 
+        observeUserDetails()
+        userViewModel.fetchUserDetails()
+
         binding.menuIcon.setOnClickListener {
             drawerLayout.openDrawer(GravityCompat.START)
         }
@@ -97,13 +102,6 @@ class CourseEmptyFragment : Fragment() {
 
         sharedPreferencesManager = SharedPreferencesManager(requireContext())
         myCoursesBind()
-        var userId = arguments?.getString("user_id").toString()
-        if (!sharedPreferencesManager.name.isNullOrEmpty()) {
-            val fullName = sharedPreferencesManager.name
-            val firstName = fullName?.split(" ")?.firstOrNull() ?: ""
-            binding.welcomeUserTxt.text = "Hello, $firstName"
-        }
-
        binding.profileIcon.setOnClickListener {
            findNavController().navigate(R.id.action_courseEmptyFragment_to_ProfileFragment)
        }
@@ -188,6 +186,27 @@ class CourseEmptyFragment : Fragment() {
 //            getCourseByIDViewModel.fetchCourseById(order.entityId)
 //        }
 //    }
+
+    private fun observeUserDetails() {
+        userViewModel.userDetails.observe(viewLifecycleOwner) { result ->
+            result.onSuccess { data ->
+                val rollNo = data.getMyDetails.userInformation.rollNumber
+
+                if(rollNo!=null){
+                    binding.etRollNo.text = "( ${rollNo} )"
+                }else{
+                    binding.etRollNo.text = ""
+                }
+
+                val fullName = data.getMyDetails.fullName
+                val firstName = fullName?.split(" ")?.firstOrNull() ?: ""
+                binding.welcomeUserTxt.text = "Hello, $firstName"
+//
+            }.onFailure { exception ->
+                Toast.makeText(requireContext(), "Error fetching details: ${exception.message}", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
 
     fun myCoursesBind() {
         binding.progressBar.visibility = View.VISIBLE
