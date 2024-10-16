@@ -128,13 +128,11 @@ class AdditionalDetailsFragment : DrawerVisibility() {
                     )
                     Log.d("uploadedIdUri",uploadedIdUri.toString())
                     Log.d("uploadedIdUri",uploadedIdUri.toString())
-                    userUpdate(updateUserInput, uploadedIdUri?.let {
-                        uriToByteArray(requireContext(),it)
-                    }?:null, uploadedPhotoUri?.let {
-                        uriToByteArray(requireContext(),it)
-                    }?:null)
                     val bitmapdocumentPhotoFile = byteArrayAdhar?.let { byteArrayToBitmap(it) }
                     val passportPhotoFile = byteArrayPassPort?.let { byteArrayToBitmap(it) }
+                    userUpdate(updateUserInput, bitmapdocumentPhotoFile.toString(),
+                        passportPhotoFile.toString()
+                    )
                     Log.e(
                         "printvalue $passportPhotoFile",
                         bitmapdocumentPhotoFile?.let { it1 -> encodeBitmapToBase64(it1) }.toString()
@@ -189,40 +187,39 @@ class AdditionalDetailsFragment : DrawerVisibility() {
         updateButtonState()
     }
 
-    fun uriToByteArray(context: Context, uri: Uri): String? {
-        try {
-            // Get the input stream from the URI
-            val inputStream: InputStream? = context.contentResolver.openInputStream(uri)
-            inputStream?.let {
-                // Create a ByteArrayOutputStream to store the binary data
-                val byteArrayOutputStream = ByteArrayOutputStream()
-
-                // Create a buffer for reading the data in chunks
-                val buffer = ByteArray(1024)
-                var bytesRead: Int
-
-                // Read the input stream into the buffer, and write it to the ByteArrayOutputStream
-                while (inputStream.read(buffer).also { bytesRead = it } != -1) {
-                    byteArrayOutputStream.write(buffer, 0, bytesRead)
-                }
-
-                // Close the input stream
-                inputStream.close()
-
-                // Convert the output stream to a byte array
-                val data = byteArrayOutputStream.toByteArray()
-
-                // Log the size of the data and encode it in Base64 for further use
-                Log.e("uriToByteArray", "Byte array size: ${data.size}")
-
-                // Encode the byte array to Base64 and return as a string
-                return android.util.Base64.encodeToString(data, android.util.Base64.DEFAULT)
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
+    @Throws(IOException::class)
+    fun uriToByteArray(context: Context, uri: Uri): ByteArray? {
+        return context.contentResolver.openInputStream(uri)?.use { inputStream ->
+            inputStream.readBytes()
         }
-        return null
     }
+
+//    fun uriToByteArray(context: Context, uri: Uri): String? {
+//        try {
+//            val inputStream: InputStream? = context.contentResolver.openInputStream(uri)
+//            inputStream?.let {
+//                val byteArrayOutputStream = ByteArrayOutputStream()
+//
+//                val buffer = ByteArray(1024)
+//                var bytesRead: Int
+//
+//                while (inputStream.read(buffer).also { bytesRead = it } != -1) {
+//                    byteArrayOutputStream.write(buffer, 0, bytesRead)
+//                }
+//
+//                inputStream.close()
+//
+//                val data = byteArrayOutputStream.toByteArray()
+//
+//                Log.e("uriToByteArray", "Byte array size: ${data.size}")
+//
+//                return android.util.Base64.encodeToString(data, android.util.Base64.DEFAULT)
+//            }
+//        } catch (e: Exception) {
+//            e.printStackTrace()
+//        }
+//        return null
+//    }
 
     // Function to get a File from a Uri
     fun getFileFromUri(context: Context, uri: Uri): File? {
