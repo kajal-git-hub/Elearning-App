@@ -1,4 +1,4 @@
-package com.student.competishun.ui.fragment.test
+package xyz.penpencil.competishun.ui.fragment.test
 
 import android.os.Bundle
 import android.util.Log

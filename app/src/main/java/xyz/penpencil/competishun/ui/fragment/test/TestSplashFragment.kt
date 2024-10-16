@@ -1,4 +1,4 @@
-package com.student.competishun.ui.fragment.test
+package xyz.penpencil.competishun.ui.fragment.test
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -11,10 +11,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.findNavController
 import com.bumptech.glide.Glide
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.databinding.FragmentTestSplashBinding
 

@@ -1,8 +1,6 @@
-package com.student.competishun.ui.fragment.test
+package xyz.penpencil.competishun.ui.fragment.test
 
-import android.R.attr.fragment
 import android.app.Dialog
-import android.content.DialogInterface
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.text.Html
@@ -10,8 +8,6 @@ import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import android.widget.RadioButton
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController

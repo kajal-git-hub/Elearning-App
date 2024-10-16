@@ -387,7 +387,7 @@
     </fragment>
     <fragment
         android:id="@+id/testDashboardFragment"
-        android:name="com.student.competishun.ui.fragment.test.TestDashboardFragment"
+        android:name="xyz.penpencil.competishun.ui.fragment.test.TestDashboardFragment"
         android:label="fragment_test_dashboard"
         tools:layout="@layout/fragment_test_dashboard" >
         <action
@@ -398,7 +398,7 @@
     </fragment>
     <fragment
         android:id="@+id/academicTestFragment"
-        android:name="com.student.competishun.ui.fragment.test.AcademicTestFragment"
+        android:name="xyz.penpencil.competishun.ui.fragment.test.AcademicTestFragment"
         android:label="fragment_academic_test"
         tools:layout="@layout/fragment_academic_test" >
         <action
@@ -412,7 +412,7 @@
     </fragment>
     <fragment
         android:id="@+id/testDetailFragment"
-        android:name="com.student.competishun.ui.fragment.test.TestDetailFragment"
+        android:name="xyz.penpencil.competishun.ui.fragment.test.TestDetailFragment"
         android:label="fragment_test_detail"
         tools:layout="@layout/fragment_test_detail" >
         <action
@@ -421,7 +421,7 @@
     </fragment>
     <fragment
         android:id="@+id/testSplashFragment"
-        android:name="com.student.competishun.ui.fragment.test.TestSplashFragment"
+        android:name="xyz.penpencil.competishun.ui.fragment.test.TestSplashFragment"
         android:label="fragment_test_splash"
         tools:layout="@layout/fragment_test_splash" >
         <action
@@ -433,7 +433,7 @@
     </fragment>
     <fragment
         android:id="@+id/testFragment"
-        android:name="com.student.competishun.ui.fragment.test.TestFragment"
+        android:name="xyz.penpencil.competishun.ui.fragment.test.TestFragment"
         android:label="fragment_test"
         tools:layout="@layout/fragment_test" >
         <action
@@ -445,12 +445,12 @@
     </fragment>
     <fragment
         android:id="@+id/viewSolutionFragment"
-        android:name="com.student.competishun.ui.fragment.test.ViewSolutionFragment"
+        android:name="xyz.penpencil.competishun.ui.fragment.test.ViewSolutionFragment"
         android:label="fragment_view_solution"
         tools:layout="@layout/fragment_view_solution" />
     <fragment
         android:id="@+id/testSubmissionFragment"
-        android:name="com.student.competishun.ui.fragment.test.TestSubmissionFragment"
+        android:name="xyz.penpencil.competishun.ui.fragment.test.TestSubmissionFragment"
         android:label="fragment_test_submission"
         tools:layout="@layout/fragment_test_submission" >
         <action
