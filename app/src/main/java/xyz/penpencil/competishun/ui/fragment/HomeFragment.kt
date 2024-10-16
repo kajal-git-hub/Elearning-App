@@ -337,7 +337,7 @@ class HomeFragment : Fragment() {
 
         }
 
-//        fetchCoursesAndUpdateUI()
+    //    fetchCoursesAndUpdateUI()
 
     }
 

@@ -233,7 +233,7 @@
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tv_topic_type"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_16sp"
             android:layout_marginStart="@dimen/_16dp"
@@ -251,7 +251,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/nunito"
-            android:text="(04)"
+            android:text=""
+            android:layout_marginStart="@dimen/_2dp"
             android:textColor="#2B2829"
             android:textSize="@dimen/_14sp"
             android:textStyle="bold"
