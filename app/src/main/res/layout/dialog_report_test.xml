@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:paddingStart="@dimen/_16dp"
+        android:paddingEnd="@dimen/_16dp"
+        android:clickable="false"
+        android:id="@+id/mHeader"
+        android:focusable="false"
+        android:paddingBottom="@dimen/_16dp"
+        android:paddingTop="@dimen/_16dp"
+        android:background="@drawable/bg_rounded_dialog">
+        <View
+            android:layout_width="60dp"
+            android:layout_height="@dimen/_4dp"
+            android:background="@color/gray"
+            android:layout_margin="@dimen/_10dp"
+            android:id="@+id/line"
+            android:layout_alignParentTop="true"
+            android:layout_centerInParent="true"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/line"
+            android:id="@+id/icon"
+            android:src="@drawable/ic_test_report"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/_20dp"
+            android:fontFamily="@font/nunito"
+            android:id="@+id/header"
+            android:textStyle="bold"
+            android:paddingBottom="@dimen/_10dp"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_16sp"
+            android:layout_below="@+id/icon"
+            android:text="Report"/>
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/_20dp"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:textColor="@color/_726c6c"
+            android:layout_toEndOf="@+id/header"
+            android:fontFamily="@font/nunito"
+            android:id="@+id/noOfQuestions"
+            android:layout_marginEnd="@dimen/_4dp"
+            android:textStyle="bold"
+            android:paddingBottom="@dimen/_10dp"
+            android:textSize="@dimen/_14sp"
+            android:layout_below="@+id/icon"
+            android:text="(Question - 24)"/>
+
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/rbReport"
+            android:layout_marginTop="@dimen/_16dp"
+            android:layout_marginBottom="@dimen/_20dp"
+            android:layout_below="@+id/noOfQuestions">
+
+            <RadioButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/RadioButton"
+                android:drawablePadding="@dimen/_16sp"
+                android:button="@null"
+                android:id="@+id/incorrect"
+                android:layout_marginBottom="4dp"
+                android:background="@drawable/selector_report_test"
+                android:drawableStart="@drawable/selector_test_submit"
+                android:text="Options given are incorrect"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/_10dp"
+                android:visibility="gone"
+                android:id="@+id/incorrectController">
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_16dp"
+                    android:textSize="@dimen/_16sp"
+                    android:fontFamily="@font/nunito"
+                    android:id="@+id/incorrectTitle"
+                    android:text="Reason"/>
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/incorrectTitle"
+                    android:layout_marginTop="@dimen/_16dp"
+                    android:id="@+id/etIncorrect"
+                    android:background="@drawable/rounded_r8_grey"
+                    android:minHeight="80dp" />
+
+            </RelativeLayout>
+
+            <RadioButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/RadioButton"
+                android:drawablePadding="@dimen/_16sp"
+                android:button="@null"
+                android:id="@+id/missing"
+                android:layout_marginBottom="4dp"
+                android:background="@drawable/selector_report_test"
+                android:drawableStart="@drawable/selector_test_submit"
+                android:text="Missing information  in question"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:layout_marginBottom="@dimen/_10dp"
+                android:id="@+id/missingController">
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_16dp"
+                    android:textSize="@dimen/_16sp"
+                    android:fontFamily="@font/nunito"
+                    android:id="@+id/missingTitle"
+                    android:text="Reason"/>
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/missingTitle"
+                    android:layout_marginTop="@dimen/_16dp"
+                    android:id="@+id/etMissing"
+                    android:background="@drawable/rounded_r8_grey"
+                    android:minHeight="80dp" />
+
+            </RelativeLayout>
+
+            <RadioButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/RadioButton"
+                android:drawablePadding="@dimen/_16sp"
+                android:button="@null"
+                android:id="@+id/other1"
+                android:layout_marginBottom="4dp"
+                android:background="@drawable/selector_report_test"
+                android:drawableStart="@drawable/selector_test_submit"
+                android:text="Other Reason (not mentioned above)"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:id="@+id/otherController">
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_16dp"
+                    android:textSize="@dimen/_16sp"
+                    android:fontFamily="@font/nunito"
+                    android:id="@+id/otherTitle"
+                    android:text="Other Reason"/>
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/otherTitle"
+                    android:layout_marginTop="@dimen/_16dp"
+                    android:id="@+id/etOther"
+                    android:background="@drawable/rounded_r8_grey"
+                    android:minHeight="80dp" />
+
+            </RelativeLayout>
+
+        </RadioGroup>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/submit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_16dp"
+            android:layout_marginEnd="@dimen/_16dp"
+            android:layout_marginBottom="@dimen/_16dp"
+            android:text="Submit"
+            app:cornerRadius="@dimen/_8dp"
+            android:layout_below="@+id/rbReport"
+            android:enabled="false"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/PrimaryColor"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+    </RelativeLayout>
+
+</RelativeLayout>

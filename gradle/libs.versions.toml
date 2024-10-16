@@ -42,6 +42,8 @@ zoomlayoutVersion = "1.9.0"
 playServicesDrive = "17.0.0"
 coreI18n = "1.0.0-alpha01"
 googleGmsGoogleServices = "4.4.2"
+firebaseAuth = "23.0.0"
+circularProgressIndicator = "1.3.0"
 
 [libraries]
 android-gif-drawable = { module = "pl.droidsonroids.gif:android-gif-drawable", version.ref = "androidGifDrawable" }
@@ -88,6 +90,8 @@ play-services-wallet = { module = "com.google.android.gms:play-services-wallet",
 razorpay-checkout = { module = "com.razorpay:checkout", version.ref = "checkoutVersion" }
 play-services-drive = { group = "com.google.android.gms", name = "play-services-drive", version.ref = "playServicesDrive" }
 androidx-core-i18n = { group = "androidx.core", name = "core-i18n", version.ref = "coreI18n" }
+firebase-auth = { group = "com.google.firebase", name = "firebase-auth", version.ref = "firebaseAuth" }
+circular-progress-indicator = { group = "com.github.antonKozyriatskyi", name = "CircularProgressIndicator", version.ref = "circularProgressIndicator" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

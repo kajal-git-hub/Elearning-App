@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/_10dp"
+    android:layout_margin="@dimen/_10dp"
+    android:background="@drawable/card_bg">
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout2"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:background="@drawable/rounded_bg_c2e7bf"
+        android:gravity="center"
+        android:layout_marginBottom="@dimen/_10dp"
+        android:padding="@dimen/_10dp"
+        app:layout_constraintBottom_toBottomOf="@+id/view5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/star"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerInParent="true"
+            android:src="@drawable/ic_test_star_cffca88"
+            app:tint="@color/c_c2e7bf" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/shift"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/star"
+            android:layout_centerInParent="true"
+            android:fontFamily="@font/nunito"
+            android:text="Shift 1"
+            android:textColor="@color/_357f2f"
+            android:textStyle="normal" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/year"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/shift"
+            android:layout_centerInParent="true"
+            android:fontFamily="@font/nunito"
+            android:text="2023"
+            android:textColor="@color/_357f2f"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_10dp"
+        android:fontFamily="@font/nunito"
+        android:textColor="@color/black"
+        android:text="JEE Mains Paper With \nSolutions - 24 Jun, 23"
+        app:layout_constraintStart_toEndOf="@+id/relativeLayout2"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/question"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_10dp"
+        android:fontFamily="@font/nunito"
+        android:text="Questions: 90"
+        android:drawableStart="@drawable/ic_question_f28a49"
+        android:drawablePadding="@dimen/_10dp"
+        android:textColor="@color/_726c6c"
+        android:layout_marginStart="@dimen/_10dp"
+        app:layout_constraintStart_toEndOf="@+id/relativeLayout2"
+        app:layout_constraintTop_toBottomOf="@+id/title" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/duration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/nunito"
+        android:layout_marginStart="@dimen/_10dp"
+        android:text="Duration: 120 Mins"
+        android:drawableStart="@drawable/ic_duration_f28a49"
+        android:drawablePadding="@dimen/_10dp"
+        android:textColor="@color/_726c6c"
+        app:layout_constraintStart_toEndOf="@+id/relativeLayout2"
+        app:layout_constraintTop_toBottomOf="@+id/question" />
+
+    <View
+        android:id="@+id/view5"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_2dp"
+        android:layout_marginTop="@dimen/_12dp"
+        android:background="@drawable/dottedline"
+        app:layout_constraintTop_toBottomOf="@+id/duration"
+        tools:layout_editor_absoluteX="10dp" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_12dp"
+        android:id="@+id/attempt"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@+id/view5">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Attempt Now"
+            android:paddingTop="@dimen/_8dp"
+            android:paddingBottom="@dimen/_8dp"
+            android:textStyle="bold"
+            android:fontFamily="@font/nunito"
+            android:textColor="@color/PrimaryColor"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_alignParentEnd="true"
+            android:rotation="180"
+            android:src="@drawable/arrow_left"
+            app:tint="@color/PrimaryColor" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_12dp"
+        android:id="@+id/reattempt"
+        app:layout_constraintTop_toBottomOf="@+id/view5">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="View Report"
+            android:paddingTop="@dimen/_8dp"
+            android:paddingBottom="@dimen/_8dp"
+            android:id="@+id/viewReport"
+            android:textStyle="normal"
+            android:fontFamily="@font/nunito"
+            android:textColor="@color/black"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Attempt Now"
+            android:paddingTop="@dimen/_8dp"
+            android:paddingBottom="@dimen/_8dp"
+            android:textStyle="bold"
+            android:id="@+id/reAttempt"
+            android:drawableStart="@drawable/ic_refresh"
+            android:drawablePadding="@dimen/_10dp"
+            android:layout_alignParentEnd="true"
+            android:fontFamily="@font/nunito"
+            android:textColor="@color/PrimaryColor"/>
+
+    </RelativeLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
