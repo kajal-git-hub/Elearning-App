@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -19,17 +20,27 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import xyz.penpencil.competishun.AppController
 import xyz.penpencil.competishun.databinding.FragmentBottomSheetDownloadBookmarkBinding
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.InputStream
+import javax.inject.Inject
+import androidx.work.Data
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkInfo
+import androidx.work.WorkManager
+import xyz.penpencil.competishun.download.DownloadWorker
 
 @AndroidEntryPoint
 class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
     private var itemDetails: TopicContentModel? = null
     private lateinit var binding: FragmentBottomSheetDownloadBookmarkBinding
     private lateinit var viewModel: VideourlViewModel
+
+    @Inject
+    lateinit var appController: AppController
 
     fun setItemDetails(details: TopicContentModel) {
         this.itemDetails = details
@@ -49,7 +60,6 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.tvBookmark.setOnClickListener {
-            // Bookmark functionality
             itemDetails?.let { details ->
                 Log.d("bookmark","Clicked")
                 storeItemInPreferencesBm(details)
@@ -179,45 +189,15 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
             return
         }
 
-        Toast.makeText(context, "Download started....", Toast.LENGTH_SHORT).show()
-
-        lifecycleScope.launch {
-            try {
-                withContext(Dispatchers.IO) {
-                    val fileName = "$name.mp4"
-                    Log.d("DownloadVideo", "File name set to: $fileName")
-                    val client = OkHttpClient()
-                    val request = Request.Builder().url(videoUrl).build()
-
-                    client.newCall(request).execute().use { response ->
-                        if (!response.isSuccessful) throw IOException("Failed to download file: $response")
-
-                        val videoFile = File(context.filesDir, fileName)
-                        val inputStream: InputStream? = response.body?.byteStream()
-                        val outputStream = FileOutputStream(videoFile)
-
-                        inputStream?.use { input ->
-                            outputStream.use { output ->
-                                input.copyTo(output)
-                                Log.d("DownloadVideo", "File downloaded successfully.")
-                                Log.e("FilePath", "File exists: ${videoFile.exists()}, Path: ${videoFile.absolutePath}")
-                            }
-                        }
-                    }
-                }
-
-                withContext(Dispatchers.Main) {
-                    Log.d("DownloadVideo", "Download success, showing toast.")
-                    Toast.makeText(context, "Download successful", Toast.LENGTH_SHORT).show()
-                    dismiss()
-                }
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    Log.e("DownloadVideo", "Download failed: ${e.message}")
-                    Toast.makeText(context, "Download failed: ${e.message}", Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
+        val inputData = Data.Builder()
+            .putString("url", videoUrl)
+            .putString("fileName", fileName)
+            .putString("filePath", videoFile.toString())
+            .build()
+        val downloadWork = OneTimeWorkRequestBuilder<DownloadWorker>()
+            .setInputData(inputData)
+            .build()
+        WorkManager.getInstance(requireActivity()).enqueue(downloadWork)
     }
 
 }

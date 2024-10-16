@@ -110,7 +110,7 @@ class LoginFragment : Fragment() {
             Log.d("account", "No account signed in.")
         }
 
-        binding.btnGoogleLogin.setOnClickListener {
+        binding.roundedConstraintView.setOnClickListener {
                 Log.d("GoogleSignIn", "Signed out successfully, triggering new sign-in.")
                 googleCredential() // Trigger Google Sign-In
          }
