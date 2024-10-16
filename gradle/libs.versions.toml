@@ -37,6 +37,7 @@ dotsindicatorVersion = "5.0"
 pdfViewer = "2.1.1"
 playServicesAuth = "21.2.0"
 playServicesWallet = "19.4.0"
+workRuntime = "2.9.1"
 zoomlayoutVersion = "1.9.0"
 playServicesDrive = "17.0.0"
 coreI18n = "1.0.0-alpha01"
@@ -57,6 +58,7 @@ androidx-media3-exoplayer-dash = { module = "androidx.media3:media3-exoplayer-da
 androidx-media3-ui = { module = "androidx.media3:media3-ui", version.ref = "media3Exoplayer" }
 androidx-navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "navigationFragmentKtx" }
 androidx-navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigationFragmentKtx" }
+androidx-work-runtime = { module = "androidx.work:work-runtime", version.ref = "workRuntime" }
 apollo-coroutines-support = { module = "com.apollographql.apollo:apollo-coroutines-support", version.ref = "apolloCoroutinesSupport" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
 apollo-logging = { module = "com.apollographql.apollo3:apollo-logging", version.ref = "apolloCoroutinesSupport" }

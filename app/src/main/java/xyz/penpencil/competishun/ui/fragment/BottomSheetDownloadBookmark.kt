@@ -7,20 +7,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.ketch.Ketch
-import com.ketch.Status
-import com.rajat.pdfviewer.util.DownloadStatus
 import xyz.penpencil.competishun.data.model.TopicContentModel
 import xyz.penpencil.competishun.ui.viewmodel.VideourlViewModel
 import xyz.penpencil.competishun.utils.SharedPreferencesManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
@@ -32,6 +27,11 @@ import java.io.FileOutputStream
 import java.io.IOException
 import java.io.InputStream
 import javax.inject.Inject
+import androidx.work.Data
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkInfo
+import androidx.work.WorkManager
+import xyz.penpencil.competishun.download.DownloadWorker
 
 @AndroidEntryPoint
 class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
@@ -60,7 +60,6 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.tvBookmark.setOnClickListener {
-            // Bookmark functionality
             itemDetails?.let { details ->
                 Log.d("bookmark","Clicked")
                 storeItemInPreferencesBm(details)
@@ -190,77 +189,15 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
             return
         }
 
-        videoFile.createNewFile()
-        val ketch = Ketch.builder().build(requireActivity())
-        val id = ketch.download(
-            url = videoUrl,
-            fileName = fileName,
-            path = videoFile.toString())
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                ketch.observeDownloadById(id)
-                    .flowOn(Dispatchers.IO)
-                    .collect { downloadModel ->
-                        when (downloadModel.status) {
-                            Status.STARTED -> {
-                                Toast.makeText(context, "Download in progress: ${downloadModel.progress}%", Toast.LENGTH_SHORT).show()
-                            }
-
-                            Status.SUCCESS -> {
-                                Toast.makeText(context, "Download completed!", Toast.LENGTH_SHORT).show()
-                            }
-
-                            Status.FAILED -> {
-                                Log.e("sdhsajdhjhasdj", "downloadVideo: "+downloadModel.failureReason)
-                                Toast.makeText(context, "Download failed. Please try again.", Toast.LENGTH_SHORT).show()
-                            }
-
-                            else -> {
-                                Toast.makeText(context, "Download failed. Please try again.", Toast.LENGTH_SHORT).show()
-                            }
-                        }
-                    }
-            }
-        }
-
-
-        /*        lifecycleScope.launch {
-                    try {
-                        withContext(Dispatchers.IO) {
-                            val fileName = "$name.mp4"
-                            Log.d("DownloadVideo", "File name set to: $fileName")
-                            val client = OkHttpClient()
-                            val request = Request.Builder().url(videoUrl).build()
-
-                            client.newCall(request).execute().use { response ->
-                                if (!response.isSuccessful) throw IOException("Failed to download file: $response")
-
-                                val videoFile = File(context.filesDir, fileName)
-                                val inputStream: InputStream? = response.body?.byteStream()
-                                val outputStream = FileOutputStream(videoFile)
-
-                                inputStream?.use { input ->
-                                    outputStream.use { output ->
-                                        input.copyTo(output)
-                                        Log.d("DownloadVideo", "File downloaded successfully.")
-                                        Log.e("FilePath", "File exists: ${videoFile.exists()}, Path: ${videoFile.absolutePath}")
-                                    }
-                                }
-                            }
-                        }
-
-                        withContext(Dispatchers.Main) {
-                            Log.d("DownloadVideo", "Download success, showing toast.")
-                            Toast.makeText(context, "Download successful", Toast.LENGTH_SHORT).show()
-                            dismiss()
-                        }
-                    } catch (e: Exception) {
-                        withContext(Dispatchers.Main) {
-                            Log.e("DownloadVideo", "Download failed: ${e.message}")
-                            Toast.makeText(context, "Download failed: ${e.message}", Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                }*/
+        val inputData = Data.Builder()
+            .putString("url", videoUrl)
+            .putString("fileName", fileName)
+            .putString("filePath", videoFile.toString())
+            .build()
+        val downloadWork = OneTimeWorkRequestBuilder<DownloadWorker>()
+            .setInputData(inputData)
+            .build()
+        WorkManager.getInstance(requireActivity()).enqueue(downloadWork)
     }
 
 }

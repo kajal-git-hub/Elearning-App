@@ -117,4 +117,6 @@ dependencies {
 
     implementation(libs.ketch)
 
+    implementation(libs.androidx.work.runtime)
+
 }
