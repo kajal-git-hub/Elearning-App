@@ -2,8 +2,9 @@ package xyz.penpencil.competishun.ui.fragment
 
 import RecommendViewAllAdapter
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,7 +23,7 @@ import xyz.penpencil.competishun.ui.viewmodel.StudentCoursesViewModel
 import xyz.penpencil.competishun.ui.viewmodel.UserViewModel
 import kotlinx.coroutines.launch
 import xyz.penpencil.competishun.R
-import xyz.penpencil.competishun.databinding.FragmentRecommendViewDetailBinding
+import xyz.penpencil.competishun.databinding.FragmentSearchBinding
 
 @AndroidEntryPoint
 class SearchDetail : DrawerVisibility() {
@@ -30,7 +31,7 @@ class SearchDetail : DrawerVisibility() {
     private val userViewModel: UserViewModel by viewModels()
     private val studentCoursesViewModel: StudentCoursesViewModel by viewModels()
     private var courseType: String = ""
-    private var _binding: FragmentRecommendViewDetailBinding? = null
+    private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
     private lateinit var adapter: RecommendViewAllAdapter
 
@@ -40,7 +41,7 @@ class SearchDetail : DrawerVisibility() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentRecommendViewDetailBinding.inflate(inflater, container, false)
+        _binding = FragmentSearchBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -57,21 +58,46 @@ class SearchDetail : DrawerVisibility() {
             }
             findNavController().navigate(R.id.exploreFragment, bundle)
         }
-
+        binding.appbar.setNavigationOnClickListener {
+            findNavController().navigate(R.id.homeFragment)
+        }
+        var searchQuery = arguments?.getString("searchQuery")
         binding.rvRecommendedCourses.layoutManager = LinearLayoutManager(context)
         binding.rvRecommendedCourses.adapter = adapter
-
-        setupToolbar()
-
-        getMyDetails()
-
-        binding.appbar.setNavigationOnClickListener {
-            findNavController().navigateUp()
+        if (searchQuery != null) {
+            binding.tittleTb.setText(searchQuery)
+            getAllCoursesForStudent(searchQuery)
         }
+        setupTextWatchers()
+
     }
 
-    private fun getAllCoursesForStudent(search: String) {
-        var search = search
+    private fun setupTextWatchers() {
+        val textWatcher = object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                val typedText = s?.toString()?.trim() ?: ""
+
+                // Check if the length is at least 3 characters
+                if (typedText.isNotEmpty()) {
+                    // Call your function with the typed text
+                    getAllCoursesForStudent(typedText)
+                    binding.rvRecommendedCourses.visibility = View.GONE
+                } else {
+                    binding.rvRecommendedCourses.visibility = View.GONE
+                    binding.llEmpty.visibility = View.VISIBLE
+                    binding.progressBarRec.visibility = View.GONE
+                    binding.coursesCountTv.visibility = View.GONE
+                    binding.tvCourseNotExits.visibility = View.GONE
+                }
+            }
+        }
+        binding.tittleTb.addTextChangedListener(textWatcher)
+    }
+
+    private fun getAllCoursesForStudent(searchQuery: String) {
+        var search = searchQuery
         Log.d("courseTypeRecommend", search)
 
         val filters = FindAllCourseInputStudent(
@@ -85,44 +111,57 @@ class SearchDetail : DrawerVisibility() {
             studentCoursesViewModel.courses.collect { result ->
                 result?.onSuccess { data ->
                     Log.d("Getting Student Courses", data.toString())
-                    val courses = data.getAllCourseForStudent.courses.map { course ->
-                        courseTypeRecommend = course.course_type.toString()
-                        AllCourseForStudentQuery.Course(
-                            discount = course.discount,
-                            name = course.name,
-                            course_start_date = course.course_start_date,
-                            course_validity_end_date = course.course_validity_end_date,
-                            price = course.price,
-                            target_year = course.target_year,
-                            id = course.id,
-                            academic_year = course.academic_year,
-                            complementary_course = course.complementary_course,
-                            course_features = course.course_features,
-                            course_class = course.course_class,
-                            course_tags = course.course_tags,
-                            banner_image = course.banner_image,
-                            status = course.status,
-                            category_id = course.category_id,
-                            category_name = course.category_name,
-                            course_primary_teachers = course.course_primary_teachers,
-                            course_support_teachers = course.course_support_teachers,
-                            course_type = course.course_type,
-                            entity_type = course.entity_type,
-                            exam_type = course.exam_type,
-                            live_date = course.live_date,
-                            planner_description = course.planner_description,
-                            with_installment_price = course.with_installment_price,
-                            course_end_date = course.course_end_date,
-                        )
+                    val courseList = data.getAllCourseForStudent.courses
+                    if (courseList.isEmpty()){
+
+                        binding.rvRecommendedCourses.visibility = View.GONE
+                        binding.llEmpty.visibility = View.VISIBLE
+                        binding.progressBarRec.visibility = View.GONE
+                        binding.coursesCountTv.visibility = View.GONE
+                        binding.tvCourseNotExits.text = getString(R.string.course_not_exits, searchQuery)
+                    } else {
+                        binding.rvRecommendedCourses.visibility = View.VISIBLE
+                        binding.llEmpty.visibility = View.GONE
+                        binding.coursesCountTv.visibility = View.VISIBLE
+                        binding.coursesCountTv.text = getString(R.string.showing_results, courseList.size.toString())
+                        val courses = courseList.map { course ->
+                            courseTypeRecommend = course.course_type.toString()
+                            AllCourseForStudentQuery.Course(
+                                discount = course.discount,
+                                name = course.name,
+                                course_start_date = course.course_start_date,
+                                course_validity_end_date = course.course_validity_end_date,
+                                price = course.price,
+                                target_year = course.target_year,
+                                id = course.id,
+                                academic_year = course.academic_year,
+                                complementary_course = course.complementary_course,
+                                course_features = course.course_features,
+                                course_class = course.course_class,
+                                course_tags = course.course_tags,
+                                banner_image = course.banner_image,
+                                status = course.status,
+                                category_id = course.category_id,
+                                category_name = course.category_name,
+                                course_primary_teachers = course.course_primary_teachers,
+                                course_support_teachers = course.course_support_teachers,
+                                course_type = course.course_type,
+                                entity_type = course.entity_type,
+                                exam_type = course.exam_type,
+                                live_date = course.live_date,
+                                planner_description = course.planner_description,
+                                with_installment_price = course.with_installment_price,
+                                course_end_date = course.course_end_date,
+                            )
+                        }
+
+                        // Update the adapter with the fetched courses
+                        adapter.updateData(courses)
+
+                        // Update visibility
+                        binding.progressBarRec.visibility = View.GONE
+                        binding.rvRecommendedCourses.visibility = View.VISIBLE
                     }
-
-                    // Update the adapter with the fetched courses
-                    adapter.updateData(courses)
-
-                    // Update visibility
-                    binding.progressBarRec.visibility = View.GONE
-                    binding.rvRecommendedCourses.visibility = View.VISIBLE
-
                 }?.onFailure { exception ->
                     Log.e("Student Courses Failed", exception.toString())
                     Toast.makeText(requireContext(), "Error fetching courses: ${exception.message}", Toast.LENGTH_LONG).show()
@@ -131,39 +170,6 @@ class SearchDetail : DrawerVisibility() {
         }
     }
 
-    private fun setupToolbar() {
-        val searchView = binding.appbar.menu.findItem(R.id.action_search)?.actionView as? SearchView
-        searchView?.queryHint = "Search Courses"
-        searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean = false
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                adapter.filter.filter(newText)
-                return true
-            }
-        })
-    }
-
-    private fun getMyDetails() {
-        userViewModel.fetchUserDetails()
-        userViewModel.userDetails.observe(viewLifecycleOwner) { result ->
-            result.onSuccess { data ->
-                val userDetails = data.getMyDetails
-                courseType = userDetails.userInformation.preparingFor ?: ""
-                Log.d("CourseType Retrieved", courseType)
-
-                // Call getAllCoursesForStudent() only after courseType is received
-                if (courseType.isNotEmpty()) {
-                    getAllCoursesForStudent(courseType)
-                } else {
-                    // If no courseType, default to "IIT-JEE"
-                    getAllCoursesForStudent("IIT-JEE")
-                }
-            }.onFailure { exception ->
-                Toast.makeText(requireContext(), "Error fetching details: ${exception.message}", Toast.LENGTH_LONG).show()
-            }
-        }
-    }
 
     override fun onDestroyView() {
         super.onDestroyView()
