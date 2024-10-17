@@ -346,7 +346,8 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
                 }
                 faqItems = getFaqItemsByCategory(categoryName)
                 limitedFaqItems = faqItems.take(4)
-                faqAdapter?.notifyDataSetChanged()
+                faqAdapter?.updateAdapter(limitedFaqItems)
+//                faqAdapter?.notifyDataSetChanged()
             })
         }
 

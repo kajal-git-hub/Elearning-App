@@ -25,7 +25,7 @@
         android:textSize="@dimen/_14sp"
         android:fontFamily="@font/nunito"
         android:layout_marginStart="@dimen/_6dp"
-        android:maxLines="2"
+        android:maxLines="3"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toEndOf="@id/iv_dot"
         app:layout_constraintEnd_toEndOf="parent"

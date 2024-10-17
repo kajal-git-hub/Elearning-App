@@ -19,6 +19,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
+import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.databinding.FragmentMyDetailsBinding
 import xyz.penpencil.competishun.ui.viewmodel.UserViewModel
 import xyz.penpencil.competishun.utils.HelperFunctions
@@ -70,26 +71,13 @@ class MyDetailsFragment : Fragment() {
 
         val etGender = binding.etGender
 
-        etGender.setOnTouchListener { v: View?, event: MotionEvent ->
-            if (event.action == MotionEvent.ACTION_UP) {
-                if (event.rawX >= (etGender.right - etGender.compoundDrawables[2].bounds.width())
-                ) {
-                    showGenderDropdown(etGender)
-                    return@setOnTouchListener true
-                }
-            }
-            false
+        binding.etGender.setOnClickListener {
+            showGenderDropdown(etGender)
         }
 
         etDob = binding.etDob
-        etDob.setOnTouchListener { v, event ->
-            if (event.action == MotionEvent.ACTION_UP) {
-                if (event.rawX >= (etDob.right - etDob.compoundDrawables[2].bounds.width())) {
-                    showDatePickerDialog()
-                    return@setOnTouchListener true
-                }
-            }
-            false
+        binding.etDob.setOnClickListener {
+            showDatePickerDialog()
         }
 
         binding.clNowEdit.setOnClickListener {
@@ -97,20 +85,9 @@ class MyDetailsFragment : Fragment() {
             binding.clSaveChanges.visibility = View.VISIBLE
 
             binding.etAddress.isEnabled = true
+            binding.etAddress.setBackgroundResource(R.drawable.rounded_edittext_background)
             binding.etDob.isEnabled = true
             binding.etGender.isEnabled = true
-
-            binding.etAddress.requestFocus()
-     /*       val imm = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.showSoftInput(binding.etAddress, InputMethodManager.SHOW_IMPLICIT)
-
-            binding.etDob.requestFocus()
-            val imm2 = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm2.showSoftInput(binding.etDob, InputMethodManager.SHOW_IMPLICIT)
-
-            binding.etGender.requestFocus()
-            val imm3 = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm3.showSoftInput(binding.etGender, InputMethodManager.SHOW_IMPLICIT)*/
         }
         binding.clSaveChanges.setOnClickListener {
             Toast.makeText(requireContext(),"Update Successfully",Toast.LENGTH_LONG).show()
@@ -135,7 +112,7 @@ class MyDetailsFragment : Fragment() {
         val popupMenu: PopupMenu = PopupMenu(requireContext(), editText, Gravity.NO_GRAVITY,0, xyz.penpencil.competishun.R.style.CustomPopupMenu)
         popupMenu.getMenu().add("Male")
         popupMenu.getMenu().add("Female")
-        popupMenu.getMenu().add("Other")
+        popupMenu.getMenu().add("Prefer not to say")
 
         popupMenu.setOnMenuItemClickListener { item ->
             val selectedGender: String = item.getTitle().toString()
@@ -158,17 +135,17 @@ class MyDetailsFragment : Fragment() {
 
                 if(name!=null || rollNo!=null || phoneNo!=null || emailId!=null || joiningDate!=null || address!=null){
                     binding.etFullName.setText(name)
-                    binding.etFullName.setBackgroundResource(xyz.penpencil.competishun.R.drawable.rounded_filled_bg)
+                    binding.etFullName.setBackgroundResource(R.drawable.rounded_filled_bg)
                     binding.etRollNumber.setText(rollNo)
-                    binding.etRollNumber.setBackgroundResource(xyz.penpencil.competishun.R.drawable.rounded_filled_bg)
+                    binding.etRollNumber.setBackgroundResource(R.drawable.rounded_filled_bg)
                     binding.etEnterNoText.setText(phoneNo)
-                    binding.etEnterNoText.setBackgroundResource(xyz.penpencil.competishun.R.drawable.rounded_filled_bg)
+                    binding.etEnterNoText.setBackgroundResource(R.drawable.rounded_filled_bg)
                     binding.etEmail.setText(emailId)
-                    binding.etEmail.setBackgroundResource(xyz.penpencil.competishun.R.drawable.rounded_filled_bg)
+                    binding.etEmail.setBackgroundResource(R.drawable.rounded_filled_bg)
                     binding.etJoiningDate.setText(joiningDate)
-                    binding.etJoiningDate.setBackgroundResource(xyz.penpencil.competishun.R.drawable.rounded_filled_bg)
+                    binding.etJoiningDate.setBackgroundResource(R.drawable.rounded_filled_bg)
                     binding.etAddress.setText(address)
-                    binding.etAddress.setBackgroundResource(xyz.penpencil.competishun.R.drawable.rounded_filled_bg)
+                    binding.etAddress.setBackgroundResource(R.drawable.rounded_filled_bg)
 
                 }
             }.onFailure { exception ->

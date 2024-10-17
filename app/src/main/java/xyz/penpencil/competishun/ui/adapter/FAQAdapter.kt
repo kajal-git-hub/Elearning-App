@@ -24,6 +24,10 @@ class FAQAdapter(private var faqList: List<FAQItem>) :
     }
 
     override fun getItemCount(): Int = faqList.size
+    fun updateAdapter(limitedFaqItems: List<FAQItem>) {
+        faqList =  limitedFaqItems
+        notifyDataSetChanged()
+    }
 
     inner class FAQViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val questionText: TextView = itemView.findViewById(R.id.questionText)
