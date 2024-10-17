@@ -334,13 +334,13 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
         val isFatherNameValid = if (binding.etFathersName.visibility == View.VISIBLE) fatherName.isNotEmpty() else true
         val isWhatsappNumberValid = if (binding.etWhatsappNumber.visibility == View.VISIBLE) whatsappNumber.isNotEmpty() else true
         val isTshirtSizeValid = if (binding.spinnerTshirtSize.visibility == View.VISIBLE) tShirtSize.isNotEmpty() else true
+        val isFatherNumberValid = if (binding.etFathersNumber.visibility == View.VISIBLE) fatherNumber.isNotEmpty() else true
 
         return fullName.isNotEmpty()
                 && isFatherNameValid
                 && isWhatsappNumberValid
                 && isTshirtSizeValid
-                && fatherNumber.isNotEmpty()
-                && fatherNumber.length!=10
+                && isFatherNumberValid
     }
 
     private fun updateButtonState() {
