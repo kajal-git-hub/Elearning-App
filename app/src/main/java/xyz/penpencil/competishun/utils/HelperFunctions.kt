@@ -121,6 +121,21 @@ class HelperFunctions {
         }
     }
 
+    fun formatCoursesDateTime(date: String?): String {
+
+        Log.e("dataeis ",date.toString())
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
+
+        val outputFormat = SimpleDateFormat("dd MMM, yy hh:mm a", Locale.getDefault())
+        return try {
+            val parsedDate = inputFormat.parse(date)
+            outputFormat.format(parsedDate ?: return "-")
+        } catch (e: Exception) {
+            e.printStackTrace()
+            "-"
+        }
+    }
+
     fun calculateDiscountPercentage(price: Int, discountPrice: Int): Double {
         if (price <= 0) {
             throw IllegalArgumentException("Price must be greater than 0")

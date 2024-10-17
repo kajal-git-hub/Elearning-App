@@ -23,6 +23,7 @@ query MyDetails {
             targetYear
             address {
                 city
+                state
                 addressLine1
             }
             rollNumber
