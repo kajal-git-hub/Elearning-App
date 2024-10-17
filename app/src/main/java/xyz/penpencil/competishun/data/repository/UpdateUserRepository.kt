@@ -61,8 +61,10 @@ class UpdateUserRepository @Inject constructor(@Gatekeeper private val apolloCli
                                     documentPhoto = info.documentPhoto,
                                     schoolName = info.schoolName,
                                     waCountryCode = info.waCountryCode,
-                                    address = info.address?.let { address-> Address(city = address.city) }
-
+                                    dob = info.dob,
+                                    gender = info.gender,
+                                    address = info.address?.let { address-> Address(city = address.city)
+                                    },
                                 )
                             } ?: UserInformation(
                                 id = user.id,
@@ -73,7 +75,9 @@ class UpdateUserRepository @Inject constructor(@Gatekeeper private val apolloCli
                                 documentPhoto = null,
                                 schoolName = null,
                                 waCountryCode = null,
-                                address = null
+                                address = null,
+                                dob = null,
+                                gender = null,
                             )
                         )
                     }
@@ -126,6 +130,8 @@ class UpdateUserRepository @Inject constructor(@Gatekeeper private val apolloCli
                                 documentPhoto = info.documentPhoto,
                                 schoolName = info.schoolName,
                                 waCountryCode = info.waCountryCode,
+                                dob = info.dob,
+                                gender = info.gender,
                                 address = info.address?.let { address -> Address(city = address.city) }
                             )
                         } ?: UserInformation(
@@ -137,7 +143,9 @@ class UpdateUserRepository @Inject constructor(@Gatekeeper private val apolloCli
                             documentPhoto = null,
                             schoolName = null,
                             waCountryCode = null,
-                            address = null
+                            address = null,
+                            dob = null,
+                            gender = null,
                         )
                     )
 
