@@ -108,7 +108,10 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
             if (isFormValid()) {
                 updateUserDetails()
                 it.findNavController().let { nav->
-                   nav.navigate(getFragmentId())
+                   nav.navigate(getFragmentId(), Bundle().apply {
+                       putStringArray("IDS_FIELDS_LIST", fieldsToVisible.toTypedArray())
+                       putString("IDS", courseId)
+                   })
                    /* val navOptions = NavOptions.Builder()
                         .setPopUpTo(nav.graph.startDestinationId, true)
                         .build()
@@ -149,10 +152,12 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
             }
         })
     }
+    //987eab08-607c-4e0e-91be-3d44a5ab5ef5
 
     private fun getFragmentId(): Int {
         if (fieldsToVisible.isEmpty()){
-            sharedPreferencesManager.putBoolean(courseId, value = true)
+            sharedPreferencesManager.putBoolean(courseId, true)
+            sharedPreferencesManager.putString("current$courseId", "")
             R.id.courseEmptyFragment
         }
         return if (fieldsToVisible.contains("PASSPORT_SIZE_PHOTO") || fieldsToVisible.contains("AADHAR_CARD")) {
@@ -162,7 +167,8 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
             sharedPreferencesManager.putString("current$courseId", "address")
             R.id.AddressDetailFragment
         }else {
-            sharedPreferencesManager.removeKey("current$courseId")
+            sharedPreferencesManager.putString("current$courseId", "")
+            sharedPreferencesManager.putBoolean(courseId, true)
             R.id.courseEmptyFragment
         }
     }
@@ -222,7 +228,10 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
             }
         }
         findNavController().let { nav->
-            nav.navigate(id)
+            nav.navigate(id, Bundle().apply {
+                putStringArray("IDS_FIELDS_LIST", fieldsToVisible.toTypedArray())
+                putString("IDS", courseId)
+            })
            /* val navOptions = NavOptions.Builder()
                 .setPopUpTo(nav.graph.startDestinationId, true)
                 .build()
@@ -334,13 +343,13 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
         val isFatherNameValid = if (binding.etFathersName.visibility == View.VISIBLE) fatherName.isNotEmpty() else true
         val isWhatsappNumberValid = if (binding.etWhatsappNumber.visibility == View.VISIBLE) whatsappNumber.isNotEmpty() else true
         val isTshirtSizeValid = if (binding.spinnerTshirtSize.visibility == View.VISIBLE) tShirtSize.isNotEmpty() else true
+        val isFatherNumberValid = if (binding.etFathersNumber.visibility == View.VISIBLE) fatherNumber.isNotEmpty() else true
 
         return fullName.isNotEmpty()
                 && isFatherNameValid
                 && isWhatsappNumberValid
                 && isTshirtSizeValid
-                && fatherNumber.isNotEmpty()
-                && fatherNumber.length!=10
+                && isFatherNumberValid
     }
 
     private fun updateButtonState() {
