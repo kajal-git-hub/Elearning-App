@@ -500,6 +500,12 @@
         tools:layout="@layout/fragment_drawer_visibility">
     </fragment>
 
+    <fragment
+        android:id="@+id/ProfileMyDetails"
+        android:name="xyz.penpencil.competishun.ui.fragment.MyDetailsFragment"
+        tools:layout="@layout/fragment_my_details">
+    </fragment>
+
 
 
 

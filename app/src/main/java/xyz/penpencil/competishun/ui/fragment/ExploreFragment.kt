@@ -346,7 +346,8 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
                 }
                 faqItems = getFaqItemsByCategory(categoryName)
                 limitedFaqItems = faqItems.take(4)
-                faqAdapter?.notifyDataSetChanged()
+                faqAdapter?.updateAdapter(limitedFaqItems)
+//                faqAdapter?.notifyDataSetChanged()
             })
         }
 
@@ -872,7 +873,7 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
 
     private fun mapFolderToOurContentItem(folder: GetCourseByIdQuery.Folder): OurContentItem {
         val isFreeCourse = folder.name.split(" ")[0].equals("Class", ignoreCase = true)
-        val drawableRes = if (isFreeCourse) R.drawable.group_1272628768 else R.drawable.lock
+        val drawableRes = if (isFreeCourse) R.drawable.group_1272628769 else R.drawable.lock
         Log.e("getFolderID ${folder.id}", "courseID" + folder.course_id)
         return OurContentItem.OtherItem(
             OtherContentItem(
