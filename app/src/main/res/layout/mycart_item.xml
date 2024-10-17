@@ -51,8 +51,9 @@
 
     <ImageView
         android:id="@+id/ig_deleteIcon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/_40dp"
+        android:layout_height="@dimen/_40dp"
+        android:padding="@dimen/_10dp"
         android:src="@drawable/frame_1707480886"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/cl_cart_item" />
@@ -64,6 +65,8 @@
         android:layout_marginTop="@dimen/_12sp"
         android:text="View Details"
         android:textColor="@color/blue"
+        android:drawablePadding="@dimen/_8dp"
+        android:drawableEnd="@drawable/cart_arrow_right"
         app:layout_constraintStart_toStartOf="@+id/cl_cart_item"
         app:layout_constraintTop_toBottomOf="@+id/cl_cart_item" />
 
@@ -72,6 +75,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="4sp"
+        android:visibility="gone"
         android:layout_marginTop="1dp"
         android:src="@drawable/cart_arrow_right"
         app:layout_constraintBottom_toBottomOf="@+id/et_cartViewDetails"

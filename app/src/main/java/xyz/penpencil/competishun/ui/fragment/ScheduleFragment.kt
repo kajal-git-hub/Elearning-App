@@ -116,6 +116,7 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
             ScheduleData(
                 dayOfWeek,
                 dayOfMonth,
+                duration = 0,
                 groupedContentList.map { content ->
                     ScheduleData.InnerScheduleItem(
                         content.folderPath?:"",
@@ -125,8 +126,8 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
                         content.content.file_url.toString(),
                         content.content.file_type.name,
                         content.content.id,
-                        content.content.scheduled_time.toString()
-
+                        content.content.scheduled_time.toString(),
+                        completedDuration = content.studentTrack?.completed_duration ?:0
                     )
                 }
             )
