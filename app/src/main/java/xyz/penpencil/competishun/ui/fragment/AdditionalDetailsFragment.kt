@@ -81,7 +81,7 @@ class AdditionalDetailsFragment : DrawerVisibility() {
         (activity as? HomeActivity)?.showFloatingButton(false)
 
         arguments?.let {
-            fieldsToVisible = it.getStringArray("IDS") ?: emptyArray()
+            fieldsToVisible = it.getStringArray("IDS_FIELDS_LIST") ?: emptyArray()
             if (fieldsToVisible.contains("PASSPORT_SIZE_PHOTO")) {
                 binding.clUploadPhoto.visibility = View.VISIBLE
             } else {
@@ -143,7 +143,11 @@ class AdditionalDetailsFragment : DrawerVisibility() {
                         }
                     }
                     it.findNavController().let { nav ->
-                        nav.navigate(getFragmentId())/* val navOptions = NavOptions.Builder()
+                        nav.navigate(getFragmentId(), Bundle().apply {
+                            putStringArray("IDS", fieldsToVisible)
+                            putString("IDS", courseId)
+                        })
+                            /* val navOptions = NavOptions.Builder()
                              .setPopUpTo(nav.graph.startDestinationId, true)
                              .build()
                          nav.navigate(getFragmentId(), Bundle().apply {
@@ -243,8 +247,8 @@ class AdditionalDetailsFragment : DrawerVisibility() {
             sharedPreferencesManager.putString("current$courseId", "address")
             R.id.action_AdditionalDetail_to_AddressDetail
         } else {
-            sharedPreferencesManager.removeKey("current$courseId")
-            sharedPreferencesManager.putBoolean(courseId, value = true)
+            sharedPreferencesManager.putString("current$courseId", "")
+            sharedPreferencesManager.putBoolean(courseId, true)
             R.id.courseEmptyFragment
         }
     }
