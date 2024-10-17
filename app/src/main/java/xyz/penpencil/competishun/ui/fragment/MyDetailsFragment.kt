@@ -174,7 +174,7 @@ class MyDetailsFragment : Fragment() {
                 }
                 joiningDate =
                     if(myCourseJoinDate!=null){
-                        helperFunctions.formatCourseDate(data.getMyDetails.courses[0]?.createdAt.toString())
+                        helperFunctions.formatCourseDate(myCourseJoinDate)
                     }else{
                         helperFunctions.formatCourseDate(data.getMyDetails.createdAt.toString())
                     }
