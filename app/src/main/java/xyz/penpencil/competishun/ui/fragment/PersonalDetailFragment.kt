@@ -305,7 +305,7 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
                     waMobileNumber = Optional.Present(whatsappNumber),
                     fatherName = Optional.Present(fatherName),
                     tShirtSize = Optional.Present(tShirtSize),
-                    fatherMobileNumber = Optional.Present(tShirtSize)
+                    fatherMobileNumber = Optional.Present(fatherNumber)
                 )
                 userUpdate(updateUserInput, null, null)
                 sharedPreferencesManager.name = userDetails.fullName
