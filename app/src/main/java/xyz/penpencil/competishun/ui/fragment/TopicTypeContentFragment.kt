@@ -98,7 +98,7 @@ class TopicTypeContentFragment : Fragment() {
 
         Log.e("asdasjhdjasdkAS", "newContent: "+folderContents )
         val topicContents = folderContents?.map { content ->
-            val date = content.content?.scheduled_time.toString()?:""
+            val date = content.content?.scheduled_time.toString()
             var time = ""
             var studyMaterial = arguments?.getString("studyMaterial")
 

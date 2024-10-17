@@ -484,7 +484,16 @@
         android:label="fragment_y_t_course"
         tools:layout="@layout/fragment_y_t_course">
     </fragment>
+    <fragment
+        android:id="@+id/SearchDetail"
+        android:name="xyz.penpencil.competishun.ui.fragment.SearchDetail"
+        tools:layout="@layout/fragment_search">
 
+    <argument
+        android:name="query"
+        app:argType="string" />
+
+    </fragment>
     <fragment
         android:id="@+id/DrawerVisibility"
         android:name="xyz.penpencil.competishun.ui.fragment.DrawerVisibility"
