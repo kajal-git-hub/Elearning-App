@@ -1,0 +1,374 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".ui.fragment.MyDetailsFragment">
+
+    <!-- Top View with Title and Edit button -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/ProfileTopViewEdit"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="#FFFFFF"
+        android:elevation="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/et_bTDetails"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_16dp"
+            android:drawableStart="@drawable/arrow_left"
+            android:drawablePadding="@dimen/_10dp"
+            android:fontFamily="@font/nunito"
+            android:text="My Details"
+            android:textColor="#2B2829"
+            android:textSize="@dimen/_18sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_saveChanges"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/et_saveChanges"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/_10dp"
+                android:fontFamily="@font/nunito"
+                android:text="Save Changes"
+                android:textColor="@color/blue_3E3EF7"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_nowEdit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/ig_edit_call"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/_8dp"
+                android:src="@drawable/edit_2"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/et_EditDetail"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/et_EditDetail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/_16dp"
+                android:fontFamily="@font/nunito"
+                android:text="Edit"
+                android:textColor="@color/blue_3E3EF7"
+                android:textSize="@dimen/_14sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:clipToPadding="true"
+        android:fitsSystemWindows="true"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ProfileTopViewEdit">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_EditFields"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_16sp"
+                android:layout_marginTop="22dp">
+
+                <!-- Full Name -->
+                <TextView
+                    android:id="@+id/tv_full_name_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_20dp"
+                    android:fontFamily="@font/nunito"
+                    android:text="Full Name"
+                    android:textColor="#2B2829"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <EditText
+                    android:id="@+id/et_full_name"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:enabled="false"
+                    android:background="@drawable/rounded_edittext_background"
+                    android:fontFamily="@font/nunito"
+                    android:hint="Enter here"
+                    android:inputType="textPersonName"
+                    android:padding="12dp"
+                    android:textColor="#0A0A0B"
+                    android:textColorHint="#898384"
+                    android:textSize="@dimen/_14sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_full_name_label" />
+
+                <!-- Phone Number -->
+                <TextView
+                    android:id="@+id/tv_phoneNO"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_20dp"
+                    android:fontFamily="@font/nunito"
+                    android:text="Phone No."
+                    android:textColor="#2B2829"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/et_full_name" />
+
+                <EditText
+                    android:id="@+id/et_EnterNoText"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/rounded_edittext_background"
+                    android:fontFamily="@font/nunito"
+                    android:hint="Enter here"
+                    android:enabled="false"
+                    android:inputType="phone"
+                    android:padding="12dp"
+                    android:textColor="#0A0A0B"
+                    android:textColorHint="#898384"
+                    android:textSize="@dimen/_14sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_phoneNO" />
+
+                <!-- Gender -->
+                <TextView
+                    android:id="@+id/tv_gender_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_20dp"
+                    android:fontFamily="@font/nunito"
+                    android:text="Gender"
+                    android:textColor="#2B2829"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/et_EnterNoText" />
+
+                <EditText
+                    android:id="@+id/et_gender"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:drawableEnd="@drawable/arrow_down"
+                    android:background="@drawable/rounded_edittext_background"
+                    android:fontFamily="@font/nunito"
+                    android:hint="Enter here"
+                    android:enabled="false"
+                    android:inputType="textPersonName"
+                    android:padding="12dp"
+                    android:textColor="#0A0A0B"
+                    android:textColorHint="#898384"
+                    android:textSize="@dimen/_14sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_gender_label" />
+
+                <!-- Email ID -->
+                <TextView
+                    android:id="@+id/tv_email_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_20dp"
+                    android:fontFamily="@font/nunito"
+                    android:text="Email ID"
+                    android:textColor="#2B2829"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/et_gender" />
+
+                <EditText
+                    android:id="@+id/et_email"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/rounded_edittext_background"
+                    android:fontFamily="@font/nunito"
+                    android:hint="Enter here"
+                    android:inputType="textEmailAddress"
+                    android:padding="12dp"
+                    android:enabled="false"
+                    android:textColor="#0A0A0B"
+                    android:textColorHint="#898384"
+                    android:textSize="@dimen/_14sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_email_label" />
+
+                <!-- Date of Birth -->
+                <TextView
+                    android:id="@+id/tv_dob_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_20dp"
+                    android:fontFamily="@font/nunito"
+                    android:text="Date of Birth"
+                    android:textColor="#2B2829"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/et_email" />
+
+                <EditText
+                    android:id="@+id/et_dob"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:drawableEnd="@drawable/calendar"
+                    android:background="@drawable/rounded_edittext_background"
+                    android:fontFamily="@font/nunito"
+                    android:hint="Enter here"
+                    android:maxLines="1"
+                    android:inputType="none"
+                    android:enabled="false"
+                    android:padding="12dp"
+                    android:textColor="#0A0A0B"
+                    android:textColorHint="#898384"
+                    android:textSize="@dimen/_14sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_dob_label" />
+
+                <!-- Joining Date -->
+                <TextView
+                    android:id="@+id/tv_joining_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_20dp"
+                    android:fontFamily="@font/nunito"
+                    android:text="Joining Date"
+                    android:textColor="#2B2829"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/et_dob" />
+
+                <EditText
+                    android:id="@+id/et_joining_date"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/rounded_edittext_background"
+                    android:fontFamily="@font/nunito"
+                    android:hint="Enter here"
+                    android:enabled="false"
+                    android:inputType="date"
+                    android:padding="12dp"
+                    android:textColor="#0A0A0B"
+                    android:textColorHint="#898384"
+                    android:textSize="@dimen/_14sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_joining_label" />
+
+                <!-- Address -->
+                <TextView
+                    android:id="@+id/tv_address_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_20dp"
+                    android:fontFamily="@font/nunito"
+                    android:text="Address"
+                    android:textColor="#2B2829"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/et_joining_date" />
+
+                <EditText
+                    android:id="@+id/et_address"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/rounded_edittext_background"
+                    android:fontFamily="@font/nunito"
+                    android:enabled="false"
+                    android:hint="Enter here"
+                    android:inputType="textPostalAddress"
+                    android:padding="12dp"
+                    android:textColor="#0A0A0B"
+                    android:textColorHint="#898384"
+                    android:textSize="@dimen/_14sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_address_label" />
+
+                <!-- Roll Number -->
+                <TextView
+                    android:id="@+id/tv_roll_number_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_20dp"
+                    android:fontFamily="@font/nunito"
+                    android:text="Roll Number"
+                    android:textColor="#2B2829"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/et_address" />
+
+                <EditText
+                    android:id="@+id/et_roll_number"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/rounded_edittext_background"
+                    android:fontFamily="@font/nunito"
+                    android:hint="Enter here"
+                    android:enabled="false"
+                    android:inputType="number"
+                    android:padding="12dp"
+                    android:textColor="#0A0A0B"
+                    android:textColorHint="#898384"
+                    android:textSize="@dimen/_14sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_roll_number_label" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
+    </ScrollView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
