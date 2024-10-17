@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -67,9 +68,8 @@ class MyDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        gender = binding.etGender.text.toString()
-        dob = binding.etDob.text.toString()
-        address = binding.etAddress.text.toString()
+//        gender = binding.etGender.text.toString()
+//        dob = binding.etDob.text.toString()
 
         requireActivity().onBackPressedDispatcher.addCallback(
             viewLifecycleOwner,
@@ -105,19 +105,21 @@ class MyDetailsFragment : Fragment() {
             binding.clNowEdit.visibility = View.GONE
             binding.clSaveChanges.visibility = View.VISIBLE
 
-            binding.etAddress.isEnabled = true
-            binding.etAddress.setBackgroundResource(R.drawable.rounded_edittext_background)
+//            binding.etAddress.isEnabled = true
+//            binding.etAddress.setBackgroundResource(R.drawable.rounded_edittext_background)
             binding.etDob.isEnabled = true
             binding.etGender.isEnabled = true
         }
         binding.clSaveChanges.setOnClickListener {
+            Log.d("dobUpdate", dob)
+            Log.d("genderUpdate", gender)
             val updateUserInput = UpdateUserInput(
                 dob = Optional.present(dob),
                 gender = Optional.present(gender),
-                addressLine1 = Optional.present(address)
             )
             updateUserViewModel.updateUser(updateUserInput, null, null)
             Toast.makeText(requireContext(), "Update Successfully", Toast.LENGTH_LONG).show()
+            findNavController().popBackStack()
         }
     }
 
@@ -130,9 +132,9 @@ class MyDetailsFragment : Fragment() {
 
         val datePickerDialog =
             DatePickerDialog(requireContext(), { _, selectedYear, selectedMonth, selectedDay ->
-                etDob.setText("$selectedDay/${selectedMonth + 1}/$selectedYear")
+                dob = "$selectedDay/${selectedMonth + 1}/$selectedYear"
+                binding.etDob.setText(dob)
             }, year, month, day)
-
         datePickerDialog.show()
     }
 
@@ -150,6 +152,7 @@ class MyDetailsFragment : Fragment() {
 
         popupMenu.setOnMenuItemClickListener { item ->
             val selectedGender: String = item.getTitle().toString()
+            gender = selectedGender
             editText.setText(selectedGender)
             true
         }
@@ -160,29 +163,47 @@ class MyDetailsFragment : Fragment() {
     private fun observeUserDetails() {
         userViewModel.userDetails.observe(viewLifecycleOwner) { result ->
             result.onSuccess { data ->
-                 name = data.getMyDetails.fullName.toString()
-                 rollNo = data.getMyDetails.userInformation.rollNumber.toString()
-                 phoneNo = data.getMyDetails.mobileNumber.toString()
-                 emailId = data.getMyDetails.email.toString()
-                 joiningDate =
+                name = data.getMyDetails.fullName.toString()
+                rollNo = data.getMyDetails.userInformation.rollNumber.toString()
+                phoneNo = data.getMyDetails.mobileNumber.toString()
+                emailId = data.getMyDetails.email.toString()
+                joiningDate =
                     helperFunctions.formatCourseDate(data.getMyDetails.createdAt.toString())
-                 address = data.getMyDetails.userInformation.address?.addressLine1.toString()
+                address = data.getMyDetails.userInformation.address?.addressLine1.toString()
 
-                if (name != null || rollNo != null || phoneNo != null || emailId != null || joiningDate != null || address != null) {
-                    binding.etFullName.setText(name)
+                Log.d("address", address)
+
+                if (name != null && name != "null" || rollNo != null && rollNo != "null" || phoneNo != null && phoneNo != "null" || emailId != null && emailId != "null" || joiningDate != null && joiningDate != "null" || address != null && address != "null") {
+
+                    binding.etFullName.setText(if (name != null && name != "null") name else "")
                     binding.etFullName.setBackgroundResource(R.drawable.rounded_filled_bg)
-                    binding.etRollNumber.setText(rollNo)
+
+                    binding.etRollNumber.setText(if (rollNo != null && rollNo != "null") rollNo else "")
                     binding.etRollNumber.setBackgroundResource(R.drawable.rounded_filled_bg)
-                    binding.etEnterNoText.setText(phoneNo)
+
+                    binding.etEnterNoText.setText(if (phoneNo != null && phoneNo != "null") phoneNo else "")
                     binding.etEnterNoText.setBackgroundResource(R.drawable.rounded_filled_bg)
-                    binding.etEmail.setText(emailId)
+
+                    binding.etEmail.setText(if (emailId != null && emailId != "null") emailId else "")
                     binding.etEmail.setBackgroundResource(R.drawable.rounded_filled_bg)
-                    binding.etJoiningDate.setText(joiningDate)
+
+                    binding.etJoiningDate.setText(if (joiningDate != null && joiningDate != "null") joiningDate else "")
                     binding.etJoiningDate.setBackgroundResource(R.drawable.rounded_filled_bg)
-                    binding.etAddress.setText(address)
+
+                    Log.d("addressBelow", address ?: "null")
+                    binding.etAddress.setText(if (address != null && address != "null") address else "")
                     binding.etAddress.setBackgroundResource(R.drawable.rounded_filled_bg)
 
+                } else {
+                    // Clear the fields if everything is null
+                    binding.etFullName.setText("")
+                    binding.etRollNumber.setText("")
+                    binding.etEnterNoText.setText("")
+                    binding.etEmail.setText("")
+                    binding.etJoiningDate.setText("")
+                    binding.etAddress.setText("")
                 }
+
             }.onFailure { exception ->
                 Toast.makeText(
                     requireContext(),
