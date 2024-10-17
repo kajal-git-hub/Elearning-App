@@ -4,6 +4,8 @@ type AddressDto {
   city: String
 
   pinCode: String
+
+  state: String
 }
 
 type Admin {
@@ -69,6 +71,10 @@ input CreateStudentByAdminInput {
 
   email: String!
 
+  fatherMobileCountryCode: String
+
+  fatherMobileNumber: String
+
   fullName: String!
 
   gender: String
@@ -80,6 +86,8 @@ input CreateStudentByAdminInput {
   pinCode: String!
 
   schoolName: String
+
+  state: String
 
   tenth_marks: String
 
@@ -215,6 +223,18 @@ type GetUserMetricsDto {
   totalUsers: MetricDto!
 }
 
+type GetUsersInternalDto {
+  countryCode: String
+
+  email: String
+
+  id: ID!
+
+  mobileNumber: String
+
+  rollNumber: String
+}
+
 type MarksDto {
   tenth: String
 
@@ -246,7 +266,7 @@ type Mutation {
 
   updateStudentByAdmin(updateStudentByAdminInput: UpdateStudentByAdminInput!): User!
 
-  updateUser(documentPhoto: Upload, passportPhoto: Upload, updateUserInput: UpdateUserInput!): User!
+  updateUser(documentPhoto: Upload, passportPhoto: Upload, updateUserInput: UpdateUserInput!): GetMyDetailsDto!
 
   verifyOtp(verifyOtpInput: VerifyOtpInput!): Auth!
 }
@@ -261,6 +281,8 @@ type Query {
   getStudentsWithoutPagination(courseIds: [ID!], endDate: DateTime, examType: ExamTypeEnum, isEnrolled: Boolean, paymentStatuses: [StudentPaymentStatuses!], search: String, sort: String = "DESC", startDate: DateTime, studentId: String, targetYear: [Float!]): GetStudentsDto!
 
   getUserMetrics: GetUserMetricsDto!
+
+  getUsersFromUserIdsInternal(ids: [ID!]!): [GetUsersInternalDto]!
 
   sayHello: String!
 }
@@ -316,6 +338,10 @@ input UpdateStudentByAdminInput {
 
   email: String
 
+  fatherMobileCountryCode: String
+
+  fatherMobileNumber: String
+
   fullName: String
 
   gender: String
@@ -330,6 +356,8 @@ input UpdateStudentByAdminInput {
 
   schoolName: String
 
+  state: String
+
   tenth_marks: String
 
   twelfth_marks: String
@@ -342,9 +370,19 @@ input UpdateUserInput {
 
   countryCode: String
 
+  dob: DateTime
+
+  email: String
+
+  fatherMobileCountryCode: String
+
+  fatherMobileNumber: String
+
   fatherName: String
 
   fullName: String
+
+  gender: String
 
   mobileNumber: String
 
@@ -353,6 +391,8 @@ input UpdateUserInput {
   preparingFor: String
 
   reference: String
+
+  state: String
 
   tShirtSize: String
 
@@ -434,6 +474,10 @@ type UserInformation {
   dob: DateTime
 
   documentPhoto: String
+
+  fatherMobileCountryCode: String
+
+  fatherMobileNumber: String
 
   fatherName: String
 
