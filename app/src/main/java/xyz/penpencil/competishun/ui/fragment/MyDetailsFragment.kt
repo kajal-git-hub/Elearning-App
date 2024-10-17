@@ -18,9 +18,12 @@ import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.apollographql.apollo3.api.Optional
+import com.student.competishun.gatekeeper.type.UpdateUserInput
 import dagger.hilt.android.AndroidEntryPoint
 import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.databinding.FragmentMyDetailsBinding
+import xyz.penpencil.competishun.ui.viewmodel.UpdateUserViewModel
 import xyz.penpencil.competishun.ui.viewmodel.UserViewModel
 import xyz.penpencil.competishun.utils.HelperFunctions
 import java.util.Calendar
@@ -33,6 +36,7 @@ class MyDetailsFragment : Fragment() {
     private val userViewModel: UserViewModel by viewModels()
     private lateinit var etDob: EditText
     private var helperFunctions  = HelperFunctions()
+    private val updateUserViewModel: UpdateUserViewModel by viewModels()
 
     private var gender = ""
 
@@ -54,6 +58,13 @@ class MyDetailsFragment : Fragment() {
     @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
+        val updateUserInput = UpdateUserInput(
+            
+//            fullName = Optional.Present(sharedPreferencesManager.name),
+        )
+        updateUserViewModel.updateUser(updateUserInput,null,null)
 
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {

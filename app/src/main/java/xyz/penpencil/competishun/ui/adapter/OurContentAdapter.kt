@@ -84,7 +84,7 @@ class OurContentAdapter(
             if (item.name.startsWith("Class")) {
 
                 iconImageView.setImageResource(R.drawable.frame_1707480918)
-                freeBadgeImageView.setImageResource(R.drawable.group_1272628768)
+                freeBadgeImageView.setImageResource(R.drawable.group_1272628769)
             } else {
                 iconImageView.visibility = View.GONE
                 freeBadgeImageView.visibility = View.GONE
