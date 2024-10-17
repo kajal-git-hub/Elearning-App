@@ -28,12 +28,12 @@ class UpdateUserRepository @Inject constructor(@Gatekeeper private val apolloCli
     ): UpdateUserResponse? {
         val mutation = UpdateUserMutation(
             updateUserInput = updateUserInput,
-            documentPhoto = Optional.present(documentPhoto)?:Optional.absent(),
-            passportPhoto = Optional.present(passportPhoto)?:Optional.absent()
+            documentPhoto = documentPhoto?.let { Optional.present(it) } ?: Optional.absent(),
+            passportPhoto = passportPhoto?.let { Optional.present(it) } ?: Optional.absent()
         )
 
         return try {
-            val response = apolloClient.mutate(mutation).execute()
+            val response = apolloClient.mutation(mutation).execute()
 
             if (response.hasErrors()) {
                 response.errors?.forEach {
