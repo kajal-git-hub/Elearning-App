@@ -200,7 +200,6 @@ TopicContentAdapter(
             }
         }
         fun isDateTodayOrPast(dateString: String): Boolean {
-            if (dateString == "-") return true else {
                 // Clean up the date string
                 val cleanedDateString = dateString.replace("Sept", "Sep").trim()
                     .replace("pm".toRegex(), "PM")
@@ -225,13 +224,10 @@ TopicContentAdapter(
                     )
                     false
                 }
-            }
         }
 
     }
     fun isDateTodayOrPast(dateString: String): Boolean {
-        if (dateString == "-" )return true
-        else {
             // Clean up the date string
             val cleanedDateString = dateString.replace("Sept", "Sep").trim()
                 .replace("pm".toRegex(), "PM")
@@ -254,9 +250,8 @@ TopicContentAdapter(
                     "DateParsingError",
                     "Error parsing date: ${e.message}. Input date string: '$cleanedDateString'"
                 )
-                true
+                false
             }
-        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

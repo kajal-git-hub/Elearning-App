@@ -600,18 +600,28 @@ class HomeFragment : Fragment() {
     private fun setupToolbar() {
         val searchView =
             binding.topAppBar.menu.findItem(R.id.action_search)?.actionView as? SearchView
-        searchView?.queryHint = "Search Recommended Courses"
+        searchView?.queryHint = "Search Courses"
         searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean = false
 
             override fun onQueryTextChange(newText: String?): Boolean {
-
-                adapterRecommend.filter.filter(newText)
-                //  adapterRecommend.updateCourses(filteredCourses)
+                if (newText?.length ?: 0 >= 3) {
+                    // Perform fragment transaction when 3 or more characters are entered
+                    openSearchResultsFragment(newText)
+                }
 
                 return true
             }
         })
+    }
+
+    private fun openSearchResultsFragment(searchQuery: String?) {
+        val newBundle = Bundle().apply {
+            putString("searchQuery", searchQuery)
+
+        }
+
+        findNavController().navigate(R.id.SearchDetail, newBundle)
     }
 
 
