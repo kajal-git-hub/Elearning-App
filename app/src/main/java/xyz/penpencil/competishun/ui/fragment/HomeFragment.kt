@@ -337,7 +337,7 @@ class HomeFragment : Fragment() {
 
         }
 
-//        fetchCoursesAndUpdateUI()
+        fetchCoursesAndUpdateUI()
         clickListener()
     }
 
@@ -358,8 +358,7 @@ class HomeFragment : Fragment() {
         myCoursesViewModel.myCourses.observe(viewLifecycleOwner) { result ->
             result.onSuccess { data ->
                 data.myCourses.forEach { courseList ->
-                    if (sharedPreferencesManager.hasKey("current${courseList.course.id}")
-                        && !sharedPreferencesManager.getString("current${courseList.course.id}", "").isNullOrBlank()) {
+                    if (!sharedPreferencesManager.getBoolean(courseList.course.id, false)) {
                         findNavController().navigate(R.id.action_homeFragment_to_PersonalDetailFragment)
                         return@observe
                     }
