@@ -14,7 +14,7 @@
         android:layout_height="0dp"
         android:layout_marginHorizontal="16dp"
         android:layout_marginTop="40dp"
-        android:layout_marginBottom="60dp"
+        android:layout_marginBottom="30dp"
         android:background="@drawable/rounded_getstartedscreen"
         android:paddingBottom="32dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -201,12 +201,42 @@
                         android:inputType="text"
                         android:paddingLeft="16dp"
                         android:paddingTop="12dp"
+                        android:drawableEnd="@drawable/arrow_down"
                         android:paddingRight="16dp"
                         android:paddingBottom="12dp"
                         android:textColorHint="#898384"
                         android:textSize="16sp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/etCityText" />
+
+                    <TextView
+                        android:id="@+id/etStateText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:fontFamily="@font/nunito"
+                        android:text="State"
+                        android:textSize="14sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/etEnterCityText" />
+
+                    <EditText
+                        android:id="@+id/etEnterStateText"
+                        android:layout_width="288dp"
+                        android:layout_height="48dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/full_name_background"
+                        android:hint="Ex. Haryana"
+                        android:inputType="text"
+                        android:paddingLeft="16dp"
+                        android:drawableEnd="@drawable/arrow_down"
+                        android:paddingTop="12dp"
+                        android:paddingRight="16dp"
+                        android:paddingBottom="12dp"
+                        android:textColorHint="#898384"
+                        android:textSize="16sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/etStateText" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

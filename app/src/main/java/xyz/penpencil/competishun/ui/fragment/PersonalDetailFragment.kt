@@ -123,6 +123,7 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
 
         binding.etFullName.addTextChangedListener(textWatcher)
         binding.etFathersName.addTextChangedListener(textWatcher)
+        binding.etFathersNo.addTextChangedListener(textWatcher)
         binding.etWhatsappNumber.addTextChangedListener(mobileNumberTextWatcher)
 
         updateButtonState()
@@ -235,6 +236,7 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
         // Update visibility based on fieldsToVisible list
         binding.tvFathersNameLabel.visibility = if (fieldsToVisible.contains("FATHERS_NAME")) View.VISIBLE else View.GONE
         binding.etFathersName.visibility = if (fieldsToVisible.contains("FATHERS_NAME")) View.VISIBLE else View.GONE
+        binding.etFathersNo.visibility = if (fieldsToVisible.contains("FATHERS_NO")) View.VISIBLE else View.GONE
         binding.tvWhatsappNumberLabel.visibility = if (fieldsToVisible.contains("WHATSAPP_NUMBER")) View.VISIBLE else View.GONE
         binding.etWhatsappNumber.visibility = if (fieldsToVisible.contains("WHATSAPP_NUMBER")) View.VISIBLE else View.GONE
         binding.tvTshirtSizeLabel.visibility = if (fieldsToVisible.contains("T_SHIRTS")) View.VISIBLE else View.GONE
@@ -247,6 +249,7 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
     private fun populateSavedData() {
         binding.etFullName.setText(sharedPreferencesManager.name ?: "")
         binding.etFathersName.setText(sharedPreferencesManager.fatherName ?: "")
+        binding.etFathersNo.setText(sharedPreferencesManager.fatherName ?: "")
         binding.etWhatsappNumber.setText(sharedPreferencesManager.whatsUpNo ?: "")
         tShirtSize = sharedPreferencesManager.shirtSize ?: ""
         if (tShirtSize.isNotEmpty()) {

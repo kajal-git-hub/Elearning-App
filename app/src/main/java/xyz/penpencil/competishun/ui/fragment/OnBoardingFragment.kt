@@ -54,12 +54,16 @@ class OnBoardingFragment : Fragment() {
 
         val savedName = sharedPreferencesManager.name
         val savedCity = sharedPreferencesManager.city
+        val savedState = sharedPreferencesManager.state
         val phoneNo = sharedPreferencesManager.mobileNo
         savedName?.let {
             binding.etEnterHereText.setText(it)
         }
         savedCity?.let {
             binding.etEnterCityText.setText(it)
+        }
+        savedState?.let {
+            binding.etEnterStateText.setText(it)
         }
         phoneNo?.let {
             binding.etEnterMob.setText(it)
@@ -93,6 +97,7 @@ class OnBoardingFragment : Fragment() {
                 saveNameAndCity()
                 val updateUserInput = UpdateUserInput(
                     city = Optional.Present(sharedPreferencesManager.city),
+                    state = Optional.present(sharedPreferencesManager.state),
                     fullName = Optional.Present(sharedPreferencesManager.name),
                     )
                 updateUserViewModel.updateUser(updateUserInput,null,null)
@@ -111,6 +116,7 @@ class OnBoardingFragment : Fragment() {
                 Log.d("userDetails",data.getMyDetails.userInformation.address?.city.toString())
                 val name = data.getMyDetails.fullName
                 val city = data.getMyDetails.userInformation.address?.city
+                val state = data.getMyDetails.userInformation.address?.state
 
 //                if (!name.isNullOrEmpty()) {
 //                    binding.etEnterHereText.setText(name)
@@ -119,8 +125,13 @@ class OnBoardingFragment : Fragment() {
                     binding.etEnterCityText.setText(city)
                 }
 
+                if (!state.isNullOrEmpty()) {
+                    binding.etEnterCityText.setText(city)
+                }
+
                 sharedPreferencesManager.name = name
                 sharedPreferencesManager.city = city
+                sharedPreferencesManager.state = state
 
                 updateNextButtonState()
 
@@ -141,14 +152,16 @@ class OnBoardingFragment : Fragment() {
         binding.etEnterHereText.addTextChangedListener(textWatcher)
         binding.etEnterCityText.addTextChangedListener(textWatcher)
         binding.etEnterMob.addTextChangedListener(textWatcher)
+        binding.etEnterStateText.addTextChangedListener(textWatcher)
     }
 
     private fun updateNextButtonState() {
         val isNameValid = binding.etEnterHereText.text.toString().trim().length >= 3
         val isCityValid = binding.etEnterCityText.text.toString().trim().length >= 3
         val isPhoneValid = binding.etEnterMob.text.toString().trim().length >= 10
+        val isStateValid = binding.etEnterStateText.text.toString().trim().length >= 10
         Log.e("PhoneNoText",isPhoneValid.toString())
-        if (isNameValid && isCityValid && isPhoneValid) {
+        if (isNameValid && isCityValid && isPhoneValid && isStateValid) {
             binding.NextOnBoarding.setBackgroundResource(R.drawable.second_getstarteddone)
         } else {
             binding.NextOnBoarding.setBackgroundResource(R.drawable.second_getstarted)
@@ -159,21 +172,24 @@ class OnBoardingFragment : Fragment() {
         val name = binding.etEnterHereText.text.toString().trim()
         val city = binding.etEnterCityText.text.toString().trim()
         val phone = binding.etEnterMob.text.toString().trim()
+        val state = binding.etEnterStateText.text.toString().trim()
         Log.e("phoneNumbertext",phone)
-        return name.length >= 3 && city.length >= 3 && phone.length >= 10
+        return name.length >= 3 && city.length >= 3 && phone.length >= 10 && state.length >= 3
     }
 
     private fun saveNameAndCity() {
         val name = binding.etEnterHereText.text.toString().trim()
         val city = binding.etEnterCityText.text.toString().trim()
+        val state = binding.etEnterStateText.text.toString().trim()
         val phone = binding.etEnterMob.text.toString().trim()
         sharedPreferencesManager.name = name
         sharedPreferencesManager.city = city
+        sharedPreferencesManager.state = state
         sharedPreferencesManager.mobileNo = phone
 
 //        userViewModel.updateUserDetails(name, city)
 
-        Log.d("OnBoardingFragment", "Name, City, phone saved: $name, $city, $phone")
+        Log.d("OnBoardingFragment", "Name, City, phone state: $name, $city, $phone, $state")
     }
 
     override fun onDestroyView() {
