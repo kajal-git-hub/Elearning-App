@@ -164,6 +164,35 @@
                 app:layout_constraintTop_toBottomOf="@id/tv_fathers_name_label" />
 
             <TextView
+                android:id="@+id/tv_fathers_number_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:fontFamily="@font/nunito"
+                android:text="Father's Number"
+                android:textColor="#2B2829"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/et_fathers_name" />
+
+            <EditText
+                android:id="@+id/et_fathers_number"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/rounded_edittext_background"
+                android:fontFamily="@font/nunito"
+                android:hint="Enter here"
+                android:inputType="number"
+                android:maxLength="10"
+                android:padding="12dp"
+                android:textColor="#0A0A0B"
+                android:textColorHint="#898384"
+                android:textSize="@dimen/_14sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_fathers_number_label" />
+            <TextView
                 android:id="@+id/tv_whatsapp_number_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -173,7 +202,7 @@
                 android:textColor="#2B2829"
                 android:textSize="14sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/et_fathers_name" />
+                app:layout_constraintTop_toBottomOf="@id/et_fathers_number" />
 
             <EditText
                 android:id="@+id/et_whatsapp_number"

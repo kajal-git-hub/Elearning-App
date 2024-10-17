@@ -541,7 +541,7 @@ class SubjectContentFragment : DrawerVisibility() {
     fun newContent(folderContents: List<FindCourseFolderProgressQuery.FolderContent>,folderId:String)
     {
         val topicContents = folderContents?.map { content ->
-            val date = content.content?.scheduled_time.toString()?:""
+            val date = content.content?.scheduled_time.toString()
             var time = ""
             var studyMaterial = arguments?.getString("studyMaterial")
 

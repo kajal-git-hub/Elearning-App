@@ -191,7 +191,12 @@ class CourseEmptyFragment : Fragment() {
         userViewModel.userDetails.observe(viewLifecycleOwner) { result ->
             result.onSuccess { data ->
                 val rollNo = data.getMyDetails.userInformation.rollNumber
-                binding.etRollNo.text = "( ${rollNo} )"
+
+                if(rollNo!=null){
+                    binding.etRollNo.text = "( ${rollNo} )"
+                }else{
+                    binding.etRollNo.text = ""
+                }
 
                 val fullName = data.getMyDetails.fullName
                 val firstName = fullName?.split(" ")?.firstOrNull() ?: ""

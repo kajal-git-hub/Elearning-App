@@ -122,6 +122,7 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
         }
 
         binding.etFullName.addTextChangedListener(textWatcher)
+        binding.etFathersNumber.addTextChangedListener(textWatcher)
         binding.etFathersName.addTextChangedListener(textWatcher)
         binding.etWhatsappNumber.addTextChangedListener(mobileNumberTextWatcher)
 
@@ -237,6 +238,10 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
         binding.etFathersName.visibility = if (fieldsToVisible.contains("FATHERS_NAME")) View.VISIBLE else View.GONE
         binding.tvWhatsappNumberLabel.visibility = if (fieldsToVisible.contains("WHATSAPP_NUMBER")) View.VISIBLE else View.GONE
         binding.etWhatsappNumber.visibility = if (fieldsToVisible.contains("WHATSAPP_NUMBER")) View.VISIBLE else View.GONE
+
+        binding.tvFathersNumberLabel.visibility = if (fieldsToVisible.contains("FATHERS_NUMBER")) View.VISIBLE else View.GONE
+        binding.etFathersNumber.visibility = if (fieldsToVisible.contains("FATHERS_NUMBER")) View.VISIBLE else View.GONE
+
         binding.tvTshirtSizeLabel.visibility = if (fieldsToVisible.contains("T_SHIRTS")) View.VISIBLE else View.GONE
         binding.spinnerTshirtSize.visibility = if (fieldsToVisible.contains("T_SHIRTS")) View.VISIBLE else View.GONE
         binding.tvTshirtNote.visibility = if (fieldsToVisible.contains("T_SHIRTS")) View.VISIBLE else View.GONE
@@ -314,6 +319,7 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
 
     private fun isFormValid(): Boolean {
         val fullName = binding.etFullName.text.toString().trim()
+        val fathersNumber = binding.etFathersNumber.text.toString().trim()
         fatherName = binding.etFathersName.text.toString().trim()
         sharedPreferencesManager.fatherName = fatherName
         whatsappNumber = binding.etWhatsappNumber.text.toString().trim()
@@ -327,7 +333,12 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
         val isWhatsappNumberValid = if (binding.etWhatsappNumber.visibility == View.VISIBLE) whatsappNumber.isNotEmpty() else true
         val isTshirtSizeValid = if (binding.spinnerTshirtSize.visibility == View.VISIBLE) tShirtSize.isNotEmpty() else true
 
-        return fullName.isNotEmpty() && isFatherNameValid && isWhatsappNumberValid && isTshirtSizeValid
+        return fullName.isNotEmpty()
+                && isFatherNameValid
+                && isWhatsappNumberValid
+                && isTshirtSizeValid
+                && fathersNumber.isNotEmpty()
+                && fathersNumber.length!=10
     }
 
     private fun updateButtonState() {
