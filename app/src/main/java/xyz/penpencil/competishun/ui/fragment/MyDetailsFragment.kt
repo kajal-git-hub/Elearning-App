@@ -32,13 +32,21 @@ import java.util.Calendar
 @AndroidEntryPoint
 class MyDetailsFragment : Fragment() {
 
-    private lateinit var binding : FragmentMyDetailsBinding
+    private lateinit var binding: FragmentMyDetailsBinding
     private val userViewModel: UserViewModel by viewModels()
     private lateinit var etDob: EditText
-    private var helperFunctions  = HelperFunctions()
+    private var helperFunctions = HelperFunctions()
     private val updateUserViewModel: UpdateUserViewModel by viewModels()
 
     private var gender = ""
+    private var dob = ""
+
+    private var name = ""
+    private var rollNo = ""
+    private var phoneNo = ""
+    private var emailId = ""
+    private var joiningDate = ""
+    private var address = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,7 +59,7 @@ class MyDetailsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        binding = FragmentMyDetailsBinding.inflate(inflater,container,false)
+        binding = FragmentMyDetailsBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -59,13 +67,21 @@ class MyDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        gender = binding.etGender.text.toString()
+        dob = binding.etDob.text.toString()
+        address = binding.etAddress.text.toString()
+
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    findNavController().popBackStack()
+                }
+            })
 
 
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                findNavController().popBackStack()
-            }
-        })
+
+
 
         observeUserDetails()
         userViewModel.fetchUserDetails()
@@ -95,7 +111,13 @@ class MyDetailsFragment : Fragment() {
             binding.etGender.isEnabled = true
         }
         binding.clSaveChanges.setOnClickListener {
-            Toast.makeText(requireContext(),"Update Successfully",Toast.LENGTH_LONG).show()
+            val updateUserInput = UpdateUserInput(
+                dob = Optional.present(dob),
+                gender = Optional.present(gender),
+                addressLine1 = Optional.present(address)
+            )
+            updateUserViewModel.updateUser(updateUserInput, null, null)
+            Toast.makeText(requireContext(), "Update Successfully", Toast.LENGTH_LONG).show()
         }
     }
 
@@ -106,15 +128,22 @@ class MyDetailsFragment : Fragment() {
         val month = calendar.get(Calendar.MONTH)
         val day = calendar.get(Calendar.DAY_OF_MONTH)
 
-        val datePickerDialog = DatePickerDialog(requireContext(), { _, selectedYear, selectedMonth, selectedDay ->
-            etDob.setText("$selectedDay/${selectedMonth + 1}/$selectedYear")
-        }, year, month, day)
+        val datePickerDialog =
+            DatePickerDialog(requireContext(), { _, selectedYear, selectedMonth, selectedDay ->
+                etDob.setText("$selectedDay/${selectedMonth + 1}/$selectedYear")
+            }, year, month, day)
 
         datePickerDialog.show()
     }
 
     private fun showGenderDropdown(editText: EditText) {
-        val popupMenu: PopupMenu = PopupMenu(requireContext(), editText, Gravity.NO_GRAVITY,0, xyz.penpencil.competishun.R.style.CustomPopupMenu)
+        val popupMenu: PopupMenu = PopupMenu(
+            requireContext(),
+            editText,
+            Gravity.NO_GRAVITY,
+            0,
+            xyz.penpencil.competishun.R.style.CustomPopupMenu
+        )
         popupMenu.getMenu().add("Male")
         popupMenu.getMenu().add("Female")
         popupMenu.getMenu().add("Prefer not to say")
@@ -131,14 +160,15 @@ class MyDetailsFragment : Fragment() {
     private fun observeUserDetails() {
         userViewModel.userDetails.observe(viewLifecycleOwner) { result ->
             result.onSuccess { data ->
-                val name = data.getMyDetails.fullName
-                val rollNo = data.getMyDetails.userInformation.rollNumber
-                val phoneNo  = data.getMyDetails.mobileNumber
-                val emailId = data.getMyDetails.email
-                val joiningDate = helperFunctions.formatCourseDate(data.getMyDetails.createdAt.toString())
-                val address = data.getMyDetails.userInformation.address?.addressLine1
+                 name = data.getMyDetails.fullName.toString()
+                 rollNo = data.getMyDetails.userInformation.rollNumber.toString()
+                 phoneNo = data.getMyDetails.mobileNumber.toString()
+                 emailId = data.getMyDetails.email.toString()
+                 joiningDate =
+                    helperFunctions.formatCourseDate(data.getMyDetails.createdAt.toString())
+                 address = data.getMyDetails.userInformation.address?.addressLine1.toString()
 
-                if(name!=null || rollNo!=null || phoneNo!=null || emailId!=null || joiningDate!=null || address!=null){
+                if (name != null || rollNo != null || phoneNo != null || emailId != null || joiningDate != null || address != null) {
                     binding.etFullName.setText(name)
                     binding.etFullName.setBackgroundResource(R.drawable.rounded_filled_bg)
                     binding.etRollNumber.setText(rollNo)
@@ -154,7 +184,11 @@ class MyDetailsFragment : Fragment() {
 
                 }
             }.onFailure { exception ->
-                Toast.makeText(requireContext(), "Error fetching details: ${exception.message}", Toast.LENGTH_LONG).show()
+                Toast.makeText(
+                    requireContext(),
+                    "Error fetching details: ${exception.message}",
+                    Toast.LENGTH_LONG
+                ).show()
             }
         }
     }

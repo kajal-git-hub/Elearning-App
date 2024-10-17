@@ -25,6 +25,7 @@ class SharedPreferencesManager(context: Context) {
         private const val KEY_NAME = "name"
         private const val KEY_EMAIL = "email"
         private const val KEY_CITY = "city"
+        private const val KEY_STATE = "state"
         private const val KEY_USER_ID = "userId"
         private const val KEY_PAYMENT_TYPE = "paymentType"
         private const val KEY_PREPARATION_FOR = "preparingFor"
@@ -206,6 +207,12 @@ class SharedPreferencesManager(context: Context) {
         set(value){
             sharedPreferences.edit().putString(KEY_CITY, value).apply()
             Log.e("sharedPrefcity sa", city.toString() )
+        }
+    var state:String?
+        get() = sharedPreferences.getString(KEY_STATE, null)
+        set(value){
+            sharedPreferences.edit().putString(KEY_STATE, value).apply()
+            Log.e("sharedPrefcity STATE", city.toString() )
         }
     var preparingFor:String?
         get() = sharedPreferences.getString(KEY_PREPARATION_FOR, null)

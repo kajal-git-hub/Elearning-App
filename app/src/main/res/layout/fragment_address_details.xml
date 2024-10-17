@@ -90,10 +90,23 @@
             app:layout_constraintTop_toBottomOf="@id/progress_indicator" />
 
         <TextView
-            android:id="@+id/tv_flat_no_label"
+            android:id="@+id/tv_deliver"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
+            android:fontFamily="@font/nunito"
+            android:text="Get your study materials \ndelivered at your doorstep \nin next 10-15 days"
+            android:textColor="#0A0A0B"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/progress_indicator" />
+
+        <TextView
+            android:id="@+id/tv_flat_no_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="34dp"
             android:fontFamily="@font/nunito"
             android:text="Flat/floor/plot no./building name"
             android:textColor="#0A0A0B"
