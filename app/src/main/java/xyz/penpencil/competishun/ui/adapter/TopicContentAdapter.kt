@@ -13,6 +13,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.startActivity
@@ -62,6 +63,7 @@ TopicContentAdapter(
             }
         } else {
             // Disable the click listener for locked items
+            holder.itemView.findViewById<ImageView>(R.id.iv_MoreInfoLec).visibility = View.GONE
             holder.itemView.setOnClickListener(null)
         }
     }

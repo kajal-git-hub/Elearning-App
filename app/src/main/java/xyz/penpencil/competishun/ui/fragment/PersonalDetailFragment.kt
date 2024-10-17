@@ -47,6 +47,7 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
     private var fatherName = ""
     private var whatsappNumber = ""
     private var tShirtSize = ""
+    private var fatherNumber = ""
     private var updateUserInput: UpdateUserInput? = null
     private var fieldsToVisible = mutableListOf<String>()
     private var bottomSheetTSizeFragment = BottomSheetTSizeFragment()
@@ -294,7 +295,8 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
                     waCountryCode = Optional.Present("+91"),
                     waMobileNumber = Optional.Present(whatsappNumber),
                     fatherName = Optional.Present(fatherName),
-                    tShirtSize = Optional.Present(tShirtSize)
+                    tShirtSize = Optional.Present(tShirtSize),
+                    fatherMobileNumber = Optional.Present(tShirtSize)
                 )
                 userUpdate(updateUserInput, null, null)
                 sharedPreferencesManager.name = userDetails.fullName
@@ -319,7 +321,7 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
 
     private fun isFormValid(): Boolean {
         val fullName = binding.etFullName.text.toString().trim()
-        val fathersNumber = binding.etFathersNumber.text.toString().trim()
+        fatherNumber = binding.etFathersNumber.text.toString().trim()
         fatherName = binding.etFathersName.text.toString().trim()
         sharedPreferencesManager.fatherName = fatherName
         whatsappNumber = binding.etWhatsappNumber.text.toString().trim()
@@ -337,8 +339,8 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
                 && isFatherNameValid
                 && isWhatsappNumberValid
                 && isTshirtSizeValid
-                && fathersNumber.isNotEmpty()
-                && fathersNumber.length!=10
+                && fatherNumber.isNotEmpty()
+                && fatherNumber.length!=10
     }
 
     private fun updateButtonState() {

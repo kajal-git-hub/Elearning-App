@@ -3,6 +3,7 @@ mutation UpdateUser($updateUserInput: UpdateUserInput!, $documentPhoto: Upload, 
         fullName
         mobileNumber
         userInformation {
+            fatherMobileNumber
             reference
             preparingFor
             targetYear
