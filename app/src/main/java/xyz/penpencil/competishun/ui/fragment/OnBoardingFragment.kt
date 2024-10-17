@@ -126,7 +126,7 @@ class OnBoardingFragment : Fragment() {
                 }
 
                 if (!state.isNullOrEmpty()) {
-                    binding.etEnterCityText.setText(city)
+                    binding.etEnterStateText.setText(city)
                 }
 
                 sharedPreferencesManager.name = name
@@ -159,7 +159,7 @@ class OnBoardingFragment : Fragment() {
         val isNameValid = binding.etEnterHereText.text.toString().trim().length >= 3
         val isCityValid = binding.etEnterCityText.text.toString().trim().length >= 3
         val isPhoneValid = binding.etEnterMob.text.toString().trim().length >= 10
-        val isStateValid = binding.etEnterStateText.text.toString().trim().length >= 10
+        val isStateValid = binding.etEnterStateText.text.toString().trim().length >= 3
         Log.e("PhoneNoText",isPhoneValid.toString())
         if (isNameValid && isCityValid && isPhoneValid && isStateValid) {
             binding.NextOnBoarding.setBackgroundResource(R.drawable.second_getstarteddone)
