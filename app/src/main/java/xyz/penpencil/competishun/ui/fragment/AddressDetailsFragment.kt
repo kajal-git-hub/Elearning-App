@@ -13,12 +13,16 @@ import androidx.navigation.fragment.findNavController
 import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.databinding.FragmentAddressDetailsBinding
 import xyz.penpencil.competishun.ui.main.HomeActivity
+import xyz.penpencil.competishun.utils.SharedPreferencesManager
 
 class AddressDetailsFragment : DrawerVisibility() {
 
     private var _binding: FragmentAddressDetailsBinding?=null
     private val binding get() = _binding!!
+    lateinit var sharedPreferencesManager: SharedPreferencesManager
 
+    private var fieldsToVisible = arrayOf<String>()
+    private var courseId: String = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,10 +34,14 @@ class AddressDetailsFragment : DrawerVisibility() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        sharedPreferencesManager = SharedPreferencesManager(requireContext())
 
         (activity as? HomeActivity)?.showBottomNavigationView(false)
         (activity as? HomeActivity)?.showFloatingButton(false)
+        arguments?.let {
+            fieldsToVisible = it.getStringArray("IDS_FIELDS_LIST") ?: emptyArray()
+            courseId = it.getString("IDS", "")
+        }
 
         setupCharacterCounter()
         pinCodeCheck()
@@ -44,6 +52,8 @@ class AddressDetailsFragment : DrawerVisibility() {
 
         binding.btnAddressDetails.setOnClickListener {
             if(isAddressFormValid()){
+                sharedPreferencesManager.putString("current$courseId", "")
+                sharedPreferencesManager.putBoolean(courseId, true)
                 findNavController().navigate(R.id.action_AddressDetail_to_CourseEmpty)
             }else {
                 Toast.makeText(requireContext(), "Please fill all fields.", Toast.LENGTH_SHORT)

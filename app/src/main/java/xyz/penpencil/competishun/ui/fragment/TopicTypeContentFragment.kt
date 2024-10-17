@@ -103,7 +103,7 @@ class TopicTypeContentFragment : Fragment() {
             var studyMaterial = arguments?.getString("studyMaterial")
 
             if (studyMaterial.isNullOrEmpty())
-             time = helperFunctions.formatCourseDateTime(date) else  time = helperFunctions.formatCourseDateTime("2024-10-11T17:27:00.000Z")
+             time = helperFunctions.formatCoursesDateTime(date) else  time = helperFunctions.formatCoursesDateTime("2024-10-11T17:27:00.000Z")
 
             val homeworkUrl = content.content?.homework?.map { it.file_url?:"" } ?:""
             val homeworkFileName = content.content?.homework?.map { it.file_name?:"" } ?: ""
@@ -176,7 +176,7 @@ class TopicTypeContentFragment : Fragment() {
                         var studyMaterial = arguments?.getString("studyMaterial")
 
                         if (studyMaterial.isNullOrEmpty())
-                            time = helperFunctions.formatCourseDateTime(content.content?.scheduled_time.toString()) else  time = helperFunctions.formatCourseDateTime("2024-10-11T17:27:00.000Z")
+                            time = helperFunctions.formatCoursesDateTime(content.content?.scheduled_time.toString()) else  time = helperFunctions.formatCoursesDateTime("2024-10-11T17:27:00.000Z")
                         Log.e("scheduletimes",time.toString())
 
                         TopicContentModel(

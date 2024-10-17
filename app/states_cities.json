@@ -1,0 +1,20 @@
+{
+  "states": [
+    {
+      "name": "Maharashtra",
+      "cities": ["Mumbai", "Pune", "Nagpur", "Nashik"]
+    },
+    {
+      "name": "Karnataka",
+      "cities": ["Bangalore", "Mysore", "Hubli", "Mangalore"]
+    },
+    {
+      "name": "Tamil Nadu",
+      "cities": ["Chennai", "Coimbatore", "Madurai", "Salem"]
+    },
+    {
+      "name": "Delhi",
+      "cities": ["New Delhi", "Delhi"]
+    }
+  ]
+}

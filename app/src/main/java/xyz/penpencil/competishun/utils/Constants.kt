@@ -20,14 +20,23 @@ object Constants {
     const val FRIENDS_FAMILY = "Family/Friends"
     const val SOCIAL_MEDIA = "Social Media"
     const val ADVERTISEMENT = "Advertisement"
+    const val COMPETISHUN_STUDENT = "Competishun Student"
+    const val YOUTUBE_CHANNEL = "YouTube Channel"
+    const val INSTAGRAM_FACEBOOK = "Instagram/Facebook"
+    const val INTERNET_EMAIL_SMS = "Internet/Email/SMS"
+    const val SEMINAR_WEBINARS = "Seminars/Webinars"
+    const val SCHOOL_TEACHER = "School/Teacher"
+    const val GOOGLE_SEARCH = "Google Search"
+    const val NEWSPAPER_MAGAZINE = "Newspaper/Magazine"
+    const val WHATSAPP_TELEGRAM = "WhatsApp/Telegram"
     const val OTHER = "Other"
 
     // Define data sets as lists of constants
     val DATA_SETS = listOf(
         listOf(IIT_JEE, NEET, BOARD, UCET, OTHERS),
         listOf(YEAR_2025, YEAR_2026, YEAR_2027, YEAR_2028),
-        listOf(SOCIAL_MEDIA, ADVERTISEMENT, FRIENDS_FAMILY, OTHER)
-    )
+        listOf(FRIENDS_FAMILY, COMPETISHUN_STUDENT, YOUTUBE_CHANNEL, INSTAGRAM_FACEBOOK, GOOGLE_SEARCH, INTERNET_EMAIL_SMS,
+            SEMINAR_WEBINARS, SCHOOL_TEACHER, NEWSPAPER_MAGAZINE, WHATSAPP_TELEGRAM, ADVERTISEMENT, OTHER) )
 
     // Define page texts as constants
     const val PAGE_TEXT_1 = "2"
