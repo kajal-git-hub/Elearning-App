@@ -67,6 +67,10 @@ class ProfileFragment : DrawerVisibility() {
             }
         })
 
+        binding.llMyDetails.setOnClickListener {
+            findNavController().navigate(R.id.ProfileMyDetails)
+        }
+
         binding.igEditProfile.setOnClickListener {
             val bottomSheetDescriptionFragment = ProfileEditFragment(){ year,course ->
                 binding.tvYear.text =  year

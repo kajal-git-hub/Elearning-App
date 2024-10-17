@@ -480,7 +480,7 @@
     </fragment>
     <fragment
         android:id="@+id/YTCourseFragment"
-        android:name="com.student.competishun.ui.fragment.YTCourseFragment"
+        android:name="xyz.penpencil.competishun.ui.fragment.YTCourseFragment"
         android:label="fragment_y_t_course"
         tools:layout="@layout/fragment_y_t_course">
     </fragment>
@@ -498,6 +498,12 @@
         android:id="@+id/DrawerVisibility"
         android:name="xyz.penpencil.competishun.ui.fragment.DrawerVisibility"
         tools:layout="@layout/fragment_drawer_visibility">
+    </fragment>
+
+    <fragment
+        android:id="@+id/ProfileMyDetails"
+        android:name="xyz.penpencil.competishun.ui.fragment.MyDetailsFragment"
+        tools:layout="@layout/fragment_my_details">
     </fragment>
 
 

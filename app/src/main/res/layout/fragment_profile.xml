@@ -263,9 +263,8 @@
             android:padding="16dp"
             app:layout_constraintTop_toBottomOf="@+id/et_MoreOptionsText">
 
-            <!-- My Cart Item -->
             <LinearLayout
-                android:id="@+id/llMyCart"
+                android:id="@+id/llMyDetails"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_item_selector"
@@ -274,6 +273,46 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/bag_2" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:text="My Details"
+                    android:textColor="@color/_2b2829"
+                    android:textSize="14dp"
+                    android:textStyle="bold" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="end"
+                    android:src="@drawable/arrow_right__1_" />
+            </LinearLayout>
+
+            <!-- My Cart Item -->
+            <LinearLayout
+                android:id="@+id/llMyCart"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_8dp"
+                android:background="@drawable/bg_item_selector"
+                android:orientation="horizontal"
+                android:padding="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/llMyDetails"
+                >
 
                 <ImageView
                     android:layout_width="24dp"

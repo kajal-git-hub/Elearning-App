@@ -13,7 +13,7 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/Select_Size"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:drawableStart="@drawable/property_default"
         android:drawablePadding="12dp"

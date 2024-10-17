@@ -3,6 +3,7 @@ package xyz.penpencil.competishun.data.model
 data class ScheduleData (
     val day: String,
     val date: String,
+    val duration:Int = 0,
     val innerItems: List<InnerScheduleItem>
 ) {
     data class InnerScheduleItem (
@@ -13,6 +14,7 @@ data class ScheduleData (
         val file_url:String,
         val fileType:String,
         val contentId:String,
-        val scheduleTimer:String
+        val scheduleTimer:String,
+        val completedDuration:Int= -1
     )
 }

@@ -90,6 +90,7 @@
             android:layout_height="wrap_content"
             android:drawableStart="@drawable/tick_circle"
             android:drawablePadding="@dimen/_4dp"
+            app:drawableTint="@color/green"
             android:text="Class Attended"
             android:visibility="gone"
             android:textColor="#4BB543"

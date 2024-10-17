@@ -47,6 +47,7 @@
             android:exported="false" />
         <activity
             android:name="xyz.penpencil.competishun.ui.main.HomeActivity"
+            android:windowSoftInputMode="adjustResize"
             android:configChanges="orientation|screenSize|layoutDirection"
             android:exported="false"
 
