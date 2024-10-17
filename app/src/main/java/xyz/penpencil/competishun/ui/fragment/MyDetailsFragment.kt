@@ -30,6 +30,8 @@ import xyz.penpencil.competishun.ui.viewmodel.UserViewModel
 import xyz.penpencil.competishun.utils.HelperFunctions
 import java.text.SimpleDateFormat
 import java.time.Instant
+import java.time.LocalDateTime
+import java.time.OffsetDateTime
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
@@ -134,6 +136,14 @@ class MyDetailsFragment : Fragment() {
             )
             updateUserViewModel.updateUser(updateUserInput, null, null)
         }
+    }
+
+    fun getDateFormated(): String {
+        val localDateTime = LocalDateTime.of(year, month, day, 18, 30)
+        val offsetDateTime = OffsetDateTime.of(localDateTime, ZoneOffset.UTC)
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX")
+        val formattedDate = offsetDateTime.format(formatter)
+        return formattedDate
     }
 
     private fun showDatePickerDialog() {
