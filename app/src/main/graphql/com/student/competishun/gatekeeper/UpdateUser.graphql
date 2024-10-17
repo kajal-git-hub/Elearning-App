@@ -13,6 +13,7 @@ mutation UpdateUser($updateUserInput: UpdateUserInput!, $documentPhoto: Upload, 
             schoolName
             tShirtSize
             gender
+            dob
             address {
                 city
                 addressLine1

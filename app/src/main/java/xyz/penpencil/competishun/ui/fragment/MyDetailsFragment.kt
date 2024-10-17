@@ -60,12 +60,6 @@ class MyDetailsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
 
-        val updateUserInput = UpdateUserInput(
-            
-//            fullName = Optional.Present(sharedPreferencesManager.name),
-        )
-        updateUserViewModel.updateUser(updateUserInput,null,null)
-
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
