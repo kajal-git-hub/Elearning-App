@@ -1,7 +1,6 @@
 package xyz.penpencil.competishun.ui.adapter
 
 import android.content.Context
-import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
@@ -21,7 +20,7 @@ import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.ZoneId
 import android.os.CountDownTimer
-import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
 import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.databinding.ItemCurrentSchedulesBinding
 import xyz.penpencil.competishun.databinding.ItemCurrentSchedulesInnerChildBinding
@@ -35,7 +34,6 @@ class ScheduleAdapter(private val scheduleItems: List<ScheduleData>, private val
         return ScheduleViewHolder(binding)
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     fun findPositionByDate(date: String): Int {
         val today = LocalDate.now().toString() // Convert today's date to string format
         val todayIndex = scheduleItems.indexOfFirst { it.date == today }
@@ -56,12 +54,16 @@ class ScheduleAdapter(private val scheduleItems: List<ScheduleData>, private val
             binding.tvDay.text = scheduleItem.day
             binding.tvDate.text = scheduleItem.date
 
-            val innerAdapter = InnerScheduleAdapter(scheduleItem.innerItems,toolbarListener)
+            val innerAdapter = InnerScheduleAdapter(scheduleItem.innerItems,toolbarListener, scheduleItem.duration)
             binding.rvScheduleInnerItem.adapter = innerAdapter
             binding.rvScheduleInnerItem.layoutManager = LinearLayoutManager(binding.root.context, LinearLayoutManager.VERTICAL, false)
         }
     }
-    inner class InnerScheduleAdapter(private val innerItems: List<ScheduleData.InnerScheduleItem>, private val toolbarListener: ToolbarCustomizationListener) : RecyclerView.Adapter<InnerScheduleAdapter.InnerViewHolder>() {
+    inner class InnerScheduleAdapter(
+        private val innerItems: List<ScheduleData.InnerScheduleItem>,
+        private val toolbarListener: ToolbarCustomizationListener,
+        private val duration: Int
+    ) : RecyclerView.Adapter<InnerScheduleAdapter.InnerViewHolder>() {
 
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): InnerViewHolder {
@@ -71,7 +73,7 @@ class ScheduleAdapter(private val scheduleItems: List<ScheduleData>, private val
 
         override fun onBindViewHolder(holder: InnerViewHolder, position: Int) {
             val innerItem = innerItems[position]
-            holder.bind(innerItem)
+            holder.bind(innerItem, duration)
         }
 
         override fun getItemCount(): Int = innerItems.size
@@ -81,7 +83,7 @@ class ScheduleAdapter(private val scheduleItems: List<ScheduleData>, private val
             private val handler = Handler(Looper.getMainLooper())
             private val updateInterval: Long = 1000
 
-            fun bind(innerItem: ScheduleData.InnerScheduleItem) {
+            fun bind(innerItem: ScheduleData.InnerScheduleItem, duration: Int) {
 
                 binding.tvSubjectName.text = innerItem.subject_name
                 binding.tvTopicName.text = innerItem.topic_name
@@ -90,7 +92,7 @@ class ScheduleAdapter(private val scheduleItems: List<ScheduleData>, private val
 
                     binding.tvClassTimings.text = "${innerItem.lecture_start_time+"-"+innerItem.lecture_end_time}"
                     binding.tvHoursRemaining.text = ""
-                  //  binding.videoIV.setImageResource(R.drawable.pdf_bg)
+                    binding.videoIV.setImageResource(R.drawable.video_bg)
                 }else if (innerItem.fileType=="PDF"){
                  //   startCountdownTimer(innerItem.scheduleTimer, innerItem.file_url, "PDF",innerItem.contentId)
                     binding.videoIV.setImageResource(R.drawable.pdf_bg)
@@ -98,38 +100,51 @@ class ScheduleAdapter(private val scheduleItems: List<ScheduleData>, private val
                 }
                 val lectureStartTime = innerItem.lecture_start_time
                 val lectureEndTime = innerItem.lecture_end_time
-                Log.e("startedtime $lectureStartTime", lectureEndTime)
-//                val lectureStatus = innerItem.lecture_status
 
-//                Log.d("StatusAndTime",lectureStartTime+ "---"+lectureEndTime+"---"+lectureStatus)
-//                if (lectureStatus=="Class Attended" || lectureStatus=="Class Missed" || lectureStatus=="Class Cancelled") {
-//                    binding.tvClassStatus.text = lectureStatus
-//                    binding.tvClassStatus.visibility = View.VISIBLE
-//                    binding.tvClassTimings.visibility = View.GONE
-//                    if (lectureStatus=="Class Cancelled") {
-//                        binding.tvClassStatus.setTextColor(ContextCompat.getColor(context, R.color.red))
-//                        binding.tvClassStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.info_class_cancelled, 0, 0, 0)
-//                        binding.view.visibility = View.VISIBLE
-//                        binding.dottedLine.visibility = View.GONE
-//                        binding.clLectureTimer.visibility = View.GONE
-//                        binding.clJoinLecture.visibility = View.GONE
-//                    } else if (lectureStatus=="Class Attended") {
-//                        binding.tvClassStatus.setTextColor(ContextCompat.getColor(context, R.color.green))
-//                        binding.tvClassStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.tick_circle_schedule, 0, 0, 0)
-//                        binding.clLectureTimer.visibility = View.GONE
-//                        binding.clJoinLecture.visibility = View.GONE
-//                    }else {
-//                        binding.tvClassStatus.setTextColor(ContextCompat.getColor(context, R.color.gray))
-//                        binding.tvClassStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.info_class_missed, 0, 0, 0)
-//                        binding.clLectureTimer.visibility = View.GONE
-//                        binding.clJoinLecture.visibility = View.GONE
-//                    }
-//                } else {
-//                    binding.tvClassStatus.visibility = View.GONE
-//                    binding.tvClassTimings.visibility = View.VISIBLE
-//                    binding.tvClassTimings.text = "$lectureStartTime - $lectureEndTime"
-//                    startCountdown(lectureStartTime, lectureEndTime)
-//                }
+                if (innerItem.completedDuration == duration){
+                    //completed
+                    binding.tvClassTimings.visibility = View.GONE
+                    binding.tvClassStatus.visibility = View.VISIBLE
+                    binding.tvClassStatus.text = "Class Attended"
+
+                }else if (innerItem.completedDuration!=0){
+                    //started
+                    binding.tvClassStatus.visibility = View.VISIBLE
+                    binding.tvClassTimings.visibility = View.GONE
+                }else {
+                    //not started
+                    binding.tvClassStatus.visibility = View.GONE
+                    binding.tvClassTimings.visibility = View.VISIBLE
+                }
+
+             /*   if (itemView=="Class Attended" || lectureStatus=="Class Missed" || lectureStatus=="Class Cancelled") {
+                    binding.tvClassStatus.text = lectureStatus
+                    binding.tvClassStatus.visibility = View.VISIBLE
+                    binding.tvClassTimings.visibility = View.GONE
+                    if (lectureStatus=="Class Cancelled") {
+                        binding.tvClassStatus.setTextColor(ContextCompat.getColor(context, R.color.red))
+                        binding.tvClassStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.info_class_cancelled, 0, 0, 0)
+                        binding.view.visibility = View.VISIBLE
+                        binding.dottedLine.visibility = View.GONE
+                        binding.clLectureTimer.visibility = View.GONE
+                        binding.clJoinLecture.visibility = View.GONE
+                    } else if (lectureStatus=="Class Attended") {
+                        binding.tvClassStatus.setTextColor(ContextCompat.getColor(context, R.color.green))
+                        binding.tvClassStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.tick_circle_schedule, 0, 0, 0)
+                        binding.clLectureTimer.visibility = View.GONE
+                        binding.clJoinLecture.visibility = View.GONE
+                    }else {
+                        binding.tvClassStatus.setTextColor(ContextCompat.getColor(context, R.color.gray))
+                        binding.tvClassStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.info_class_missed, 0, 0, 0)
+                        binding.clLectureTimer.visibility = View.GONE
+                        binding.clJoinLecture.visibility = View.GONE
+                    }
+                } else {
+                    binding.tvClassStatus.visibility = View.GONE
+                    binding.tvClassTimings.visibility = View.VISIBLE
+                    binding.tvClassTimings.text = "$lectureStartTime - $lectureEndTime"
+                    startCountdown(lectureStartTime, lectureEndTime)
+                }*/
             }
 
             private fun startCountdown(startTime: String, endTime: String) {
@@ -215,8 +230,8 @@ class ScheduleAdapter(private val scheduleItems: List<ScheduleData>, private val
 
                 val hours = duration.toHours()
                 val minutes = duration.toMinutes() % 60
-                val seconds = duration.toSeconds() % 60
-
+                val seconds = duration.seconds % 60
+                duration.seconds
                 // Format the remaining time as a string
                 return String.format("Time Remaining: %02d:%02d:%02d", hours, minutes, seconds)
             }
