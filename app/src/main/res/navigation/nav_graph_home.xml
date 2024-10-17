@@ -480,7 +480,7 @@
     </fragment>
     <fragment
         android:id="@+id/YTCourseFragment"
-        android:name="com.student.competishun.ui.fragment.YTCourseFragment"
+        android:name="xyz.penpencil.competishun.ui.fragment.YTCourseFragment"
         android:label="fragment_y_t_course"
         tools:layout="@layout/fragment_y_t_course">
     </fragment>

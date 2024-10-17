@@ -1,6 +1,8 @@
 package xyz.penpencil.competishun.ui.adapter
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.text.SpannableString
 import android.text.Spanned
@@ -11,15 +13,16 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import android.widget.ImageView
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.startActivity
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
-import xyz.penpencil.competishun.data.model.TopicContentModel
-import xyz.penpencil.competishun.ui.fragment.BottomSheetDownloadBookmark
 import xyz.penpencil.competishun.R
+import xyz.penpencil.competishun.data.model.TopicContentModel
 import xyz.penpencil.competishun.databinding.ItemTopicTypeContentBinding
+import xyz.penpencil.competishun.ui.fragment.BottomSheetDownloadBookmark
 import xyz.penpencil.competishun.utils.HelperFunctions
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -27,6 +30,7 @@ import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 import java.time.format.ResolverStyle
 import java.util.Locale
+
 
 class
 TopicContentAdapter(
@@ -59,6 +63,7 @@ TopicContentAdapter(
             }
         } else {
             // Disable the click listener for locked items
+            holder.itemView.findViewById<ImageView>(R.id.iv_MoreInfoLec).visibility = View.GONE
             holder.itemView.setOnClickListener(null)
         }
     }
@@ -71,6 +76,8 @@ TopicContentAdapter(
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(topicContent: TopicContentModel, fragmentActivity: FragmentActivity) {
+
+            Log.e("nzxbNZBxbZNXbnZ", "bind: "+topicContent.fileType)
             binding.ivSubjectBookIcon.setImageResource(topicContent.subjectIcon)
 
             var helperFunctions = HelperFunctions()
@@ -96,8 +103,7 @@ TopicContentAdapter(
                     }
                     binding.videoicon.setImageResource(R.drawable.frame_1707481707)
                     binding.ivPersonIdentifier.setBackgroundResource(R.drawable.clock_black)
-                }
-                else if (topicContent.fileType == "PDF"){
+                } else if (topicContent.fileType == "PDF"){
                     binding.etHomeWorkPdf.visibility = View.GONE
                     binding.etHomeWorkText.visibility = View.GONE
 
@@ -106,13 +112,19 @@ TopicContentAdapter(
                 binding.ivPersonIdentifier.setBackgroundResource(R.drawable.download_person)
 
 
-            } else {
+            } else if (topicContent.fileType == "UNKNOWN__"  || topicContent.fileType == "URL"){
+                binding.clReadAndPlay.visibility = View.GONE
+                binding.ivMoreInfoLec.visibility = View.GONE
+            }else {
                 binding.videoicon.visibility = View.VISIBLE
                 binding.videoicon.setImageResource(R.drawable.frame_1707481080)
             }
 
             binding.tvLecture.text = topicContent.lecture
             binding.tvLecturerName.text = topicContent.lecturerName
+            if (topicContent.fileType == "UNKNOWN__"  || topicContent.fileType == "URL"){
+                binding.tvLecture.text = "Link"
+            }
             binding.tvTopicName.text = topicContent.topicName
 
             // Handle the topic description with truncation and "Read More"
@@ -161,6 +173,12 @@ TopicContentAdapter(
                     }
                 } else {
                     binding.tvCourseDescription.text = topicContent.topicDescription
+                }
+            }
+
+            binding.tvTopicName.setOnClickListener {
+                if (topicContent.fileType == "UNKNOWN__"  || topicContent.fileType == "URL"){
+                    it.context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(topicContent.url)))
                 }
             }
 

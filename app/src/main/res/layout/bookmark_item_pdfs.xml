@@ -157,8 +157,9 @@
 
     <ImageView
         android:id="@+id/iv_bm_read_pdf"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/_40dp"
+        android:layout_height="@dimen/_40dp"
+        android:padding="@dimen/_10dp"
         android:layout_marginEnd="12dp"
         android:src="@drawable/frame_1707481707_1_"
         app:layout_constraintEnd_toEndOf="parent"
@@ -181,8 +182,9 @@
 
     <ImageView
         android:id="@+id/bookmark_extra"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/_40dp"
+        android:layout_height="@dimen/_40dp"
+        android:padding="@dimen/_10dp"
         android:layout_marginEnd="12dp"
         android:layout_marginTop="18dp"
         android:src="@drawable/three_dot"

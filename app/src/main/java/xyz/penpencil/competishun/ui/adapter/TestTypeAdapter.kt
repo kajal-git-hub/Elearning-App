@@ -1,9 +1,8 @@
-package com.student.competishun.ui.adapter
+package xyz.penpencil.competishun.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
@@ -13,14 +12,14 @@ import xyz.penpencil.competishun.R
 
 class TestTypeAdapter(private var testTypeList: List<TestItem>, private var listener: ItemClickListener):
     RecyclerView.Adapter<TestTypeAdapter.TestTypeViewHolder>() {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TestTypeAdapter.TestTypeViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TestTypeViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_test_type, parent, false)
         return TestTypeViewHolder(view)
     }
 
     override fun getItemCount(): Int = testTypeList.size
 
-    override fun onBindViewHolder(holder: TestTypeAdapter.TestTypeViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: TestTypeViewHolder, position: Int) {
         val item = testTypeList[position]
         holder.bind(item)
 

@@ -54,7 +54,9 @@ class TopicTypeContentFragment : Fragment() {
 
         helperFunctions = HelperFunctions()
         binding.backIcon.setOnClickListener {
-            it.findNavController().popBackStack()
+//            it.findNavController().popBackStack()
+            it.findNavController().popBackStack(R.id.StudyMaterialDetailsFragment, false)
+
         }
         val gson = Gson()
         (activity as? HomeActivity)?.showBottomNavigationView(false)
@@ -82,7 +84,7 @@ class TopicTypeContentFragment : Fragment() {
         view.setOnKeyListener(object : View.OnKeyListener {
             override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
                 if (keyCode == KeyEvent.KEYCODE_BACK) {
-                    v?.findNavController()?.popBackStack()
+                    v?.findNavController()?.popBackStack(R.id.StudyMaterialDetailsFragment, false)
                     return true
                 }
                 return false
@@ -93,6 +95,8 @@ class TopicTypeContentFragment : Fragment() {
 
     fun newContent(folderContents: List<FindCourseFolderProgressQuery.FolderContent>,folderId:String)
     {
+
+        Log.e("asdasjhdjasdkAS", "newContent: "+folderContents )
         val topicContents = folderContents?.map { content ->
             val date = content.content?.scheduled_time.toString()
             var time = ""
