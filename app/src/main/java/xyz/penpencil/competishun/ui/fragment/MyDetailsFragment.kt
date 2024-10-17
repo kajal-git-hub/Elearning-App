@@ -48,6 +48,7 @@ class MyDetailsFragment : Fragment() {
     private var emailId = ""
     private var joiningDate = ""
     private var address = ""
+    private var myCourseJoinDate = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -167,11 +168,16 @@ class MyDetailsFragment : Fragment() {
                 rollNo = data.getMyDetails.userInformation.rollNumber.toString()
                 phoneNo = data.getMyDetails.mobileNumber.toString()
                 emailId = data.getMyDetails.email.toString()
-                joiningDate =
-                    helperFunctions.formatCourseDate(data.getMyDetails.createdAt.toString())
                 address = data.getMyDetails.userInformation.address?.addressLine1.toString()
-
-                Log.d("address", address)
+                if(data.getMyDetails.courses.isNotEmpty()){
+                    myCourseJoinDate = data.getMyDetails.courses[0]?.createdAt.toString()
+                }
+                joiningDate =
+                    if(myCourseJoinDate!=null){
+                        helperFunctions.formatCourseDate(data.getMyDetails.courses[0]?.createdAt.toString())
+                    }else{
+                        helperFunctions.formatCourseDate(data.getMyDetails.createdAt.toString())
+                    }
 
                 if (name != null && name != "null" || rollNo != null && rollNo != "null" || phoneNo != null && phoneNo != "null" || emailId != null && emailId != "null" || joiningDate != null && joiningDate != "null" || address != null && address != "null") {
 
