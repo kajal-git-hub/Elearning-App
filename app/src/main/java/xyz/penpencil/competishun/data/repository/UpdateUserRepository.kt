@@ -30,15 +30,29 @@ class UpdateUserRepository @Inject constructor(@Gatekeeper private val apolloCli
         documentPhoto: String?,
         passportPhoto: String?
     ): UpdateUserResponse? {
+//        val mutation = UpdateUserMutation(
+//            updateUserInput = updateUserInput,
+//            passportPhoto = if (passportPhoto != null) {
+//                Optional.presentIfNotNull(FileUpload(File(passportPhoto), "image/*"))
+//            } else {
+//                Optional.absent()
+//            },
+//            documentPhoto = if (documentPhoto != null) {
+//                Optional.presentIfNotNull(FileUpload(File(documentPhoto), "image/*"))
+//            } else {
+//                Optional.absent()
+//            }
+//        )
+
         val mutation = UpdateUserMutation(
             updateUserInput = updateUserInput,
             passportPhoto = if (passportPhoto != null) {
-                Optional.presentIfNotNull(FileUpload(File(passportPhoto), "image/*"))
+                Optional.presentIfNotNull(passportPhoto)
             } else {
                 Optional.absent()
             },
             documentPhoto = if (documentPhoto != null) {
-                Optional.presentIfNotNull(FileUpload(File(documentPhoto), "image/*"))
+                Optional.presentIfNotNull(documentPhoto)
             } else {
                 Optional.absent()
             }
