@@ -110,6 +110,7 @@ class ReferenceFragment : Fragment() {
                         fullName = Optional.Present(sharedPreferencesManager.name),
                         preparingFor = Optional.Present(sharedPreferencesManager.preparingFor),
                         reference = Optional.Present(sharedPreferencesManager.reference),
+                          email = Optional.present(sharedPreferencesManager.email),
                         targetYear = Optional.Present(sharedPreferencesManager.targetYear),
                     )
                     updateUserViewModel.updateUserErrorHandled(updateUserInput,null,null)
