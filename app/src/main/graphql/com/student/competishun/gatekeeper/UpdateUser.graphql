@@ -17,6 +17,8 @@ mutation UpdateUser($updateUserInput: UpdateUserInput!, $documentPhoto: Upload, 
             dob
             address {
                 city
+                pinCode
+                state
                 addressLine1
             }
         }
