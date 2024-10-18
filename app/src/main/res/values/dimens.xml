@@ -48,4 +48,5 @@
     <dimen name="_53dp">53dp</dimen>
     <dimen name="dialog_max_width">300dp</dimen>
     <dimen name="_20sp">20sp</dimen>
+    <dimen name="_47dp">47dp</dimen>
 </resources>

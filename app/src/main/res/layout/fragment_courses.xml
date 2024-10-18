@@ -30,6 +30,69 @@
 
     </com.google.android.material.appbar.MaterialToolbar>
 
+    <LinearLayout
+        android:id="@+id/ll_empty"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@+id/tab_cl"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/_10dp"
+            android:background="@color/white"
+            android:src="@drawable/header"/>
+
+        <pl.droidsonroids.gif.GifImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_85dp"
+            android:background="#F6F6FF"
+            android:src="@drawable/coming_soon"
+            />
+
+        <LinearLayout
+            android:id="@+id/ll_empty_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="@dimen/_16sp"
+            android:layout_margin="@dimen/_25dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+            <TextView
+                android:id="@+id/tv_not_found"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/coming_soon"
+                android:textStyle="bold"
+                android:textSize="@dimen/_20sp"
+                android:textColor="@color/_2b2b29"
+                android:gravity="center"
+                android:fontFamily="@font/nunito"
+                />
+
+            <TextView
+                android:id="@+id/tv_course_not_exits"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/new_text_Add"
+                android:textSize="@dimen/_14sp"
+                android:minLines="2"
+                android:textColor="@color/_5a5555"
+                android:gravity="center"
+                android:fontFamily="@font/nunito"
+                />
+        </LinearLayout>
+    </LinearLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
