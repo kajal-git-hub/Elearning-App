@@ -1,5 +1,7 @@
 package xyz.penpencil.competishun.ui.adapter
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -12,6 +14,7 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.data.model.WhyCompetishun
+import xyz.penpencil.competishun.ui.main.YoutubeActivity
 
 class WhyCompetishunAdapter(private val listWhyCompetishun: List<WhyCompetishun>): RecyclerView.Adapter<WhyCompetishunAdapter.WhyCompetishunViewHolder>() {
 
@@ -27,19 +30,17 @@ class WhyCompetishunAdapter(private val listWhyCompetishun: List<WhyCompetishun>
         holder.tvtag1.text = itemWhyCompetishun.tag1
         holder.tvtag2.text = itemWhyCompetishun.tag2
         holder.itemplay.setOnClickListener{
-            goToPlayerPage(holder.itemView.findNavController(), itemWhyCompetishun.videourl,"About this Course")
+            goToPlayerPage(holder.itemView.context, itemWhyCompetishun.videourl,"About this Course")
         }
     }
 
-    private fun goToPlayerPage(navController: NavController, videourl: String,name:String) {
-        val bundle = Bundle().apply {
-            putString("url", videourl)
-            putString("url_name", name)
+    private fun goToPlayerPage(context: Context, videoUrl: String, name: String) {
+        val intent = Intent(context, YoutubeActivity::class.java).apply {
+            putExtra("url", videoUrl)
         }
-        Log.d("videourl",videourl)
-        Log.d("Navigating to Explore","Navigating")
-        navController.navigate(R.id.action_homeFragment_to_mediaFragment,bundle)
+        context.startActivity(intent)
     }
+
 
     override fun getItemCount(): Int {
         return listWhyCompetishun.size

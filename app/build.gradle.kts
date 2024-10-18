@@ -119,4 +119,7 @@ dependencies {
 
     implementation(libs.circular.progress.indicator)
 
+    implementation ("com.pierfrancescosoffritti.androidyoutubeplayer:core:11.0.1")
+
+
 }
