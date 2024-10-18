@@ -37,6 +37,9 @@
         android:id="@+id/onboardingFragment"
         android:name="xyz.penpencil.competishun.ui.fragment.OnBoardingFragment"
         tools:layout="@layout/fragment_on_boarding">
+        <argument
+            android:name="loginType"
+            app:argType="string" />
         <action
             android:id="@+id/action_OnBoardingFragment_to_loginFragment"
             app:destination="@+id/loginFragment" />

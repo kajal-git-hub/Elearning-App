@@ -262,7 +262,7 @@ class LoginFragment : Fragment() {
                         else {
                             // Store necessary data in SharedPreferencesManager
                             sharedPreferencesManager.mobileNo = userDetails.mobileNumber
-                            navigateToHome()
+                            navigateToHome("email")
                         }
                     }.onFailure { exception ->
                         Log.e("mainActivitydetails", exception.message.toString())
@@ -350,8 +350,11 @@ class LoginFragment : Fragment() {
     }
 
 
-    private fun navigateToHome() {
-        findNavController().navigate(R.id.onboardingFragment)
+    private fun navigateToHome(loginType:String) {
+        val bundle = Bundle().apply {
+            putString("loginType", loginType)
+        }
+        findNavController().navigate(R.id.onboardingFragment,bundle)
     }
 
     private fun createAccountWithGoogle(account: GoogleSignInAccount) {

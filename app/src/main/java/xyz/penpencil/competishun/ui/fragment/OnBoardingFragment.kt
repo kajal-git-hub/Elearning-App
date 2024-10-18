@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -56,6 +57,7 @@ class OnBoardingFragment : Fragment() {
         val savedCity = sharedPreferencesManager.city
         val savedState = sharedPreferencesManager.state
         val phoneNo = sharedPreferencesManager.mobileNo
+        val email = sharedPreferencesManager.email
         savedName?.let {
             binding.etEnterHereText.setText(it)
         }
@@ -68,11 +70,24 @@ class OnBoardingFragment : Fragment() {
         phoneNo?.let {
             binding.etEnterMob.setText(it)
         }
+        email?.let {
+            binding.etEnterEmailText.setText(it)
+        }
 
         //condition need to check for google
-        if (sharedPreferencesManager.mobileNo.isNullOrEmpty()){
+        Log.e("getmobl",sharedPreferencesManager.mobileNo.toString())
+        Log.e("getEmail",sharedPreferencesManager.email.toString())
+        val loginType = arguments?.getString("loginType")
+        if (loginType != null && loginType == "email"){
             binding.clEnterNo.visibility = View.VISIBLE
             binding.etPhoneNoText.visibility = View.VISIBLE
+            binding.etEmailText.visibility = View.GONE
+            binding.etEnterEmailText.visibility = View.GONE
+        }else {
+            binding.clEnterNo.visibility = View.GONE
+            binding.etPhoneNoText.visibility = View.GONE
+            binding.etEmailText.visibility = View.VISIBLE
+            binding.etEnterEmailText.visibility = View.VISIBLE
         }
 
         userViewModel.userDetails.observe(requireActivity()) { result ->
@@ -152,6 +167,7 @@ class OnBoardingFragment : Fragment() {
         binding.etEnterHereText.addTextChangedListener(textWatcher)
         binding.etEnterCityText.addTextChangedListener(textWatcher)
         binding.etEnterMob.addTextChangedListener(textWatcher)
+        binding.etEnterEmailText.addTextChangedListener(textWatcher)
         binding.etEnterStateText.addTextChangedListener(textWatcher)
     }
 
@@ -159,9 +175,10 @@ class OnBoardingFragment : Fragment() {
         val isNameValid = binding.etEnterHereText.text.toString().trim().length >= 3
         val isCityValid = binding.etEnterCityText.text.toString().trim().length >= 3
         val isPhoneValid = binding.etEnterMob.text.toString().trim().length >= 10
+        val isEmailValid = isValidEmail(binding.etEnterEmailText.text.toString().trim())
         val isStateValid = binding.etEnterStateText.text.toString().trim().length >= 3
         Log.e("PhoneNoText",isPhoneValid.toString())
-        if (isNameValid && isCityValid && isPhoneValid && isStateValid) {
+        if (isNameValid && isCityValid && (isPhoneValid || isEmailValid)  && isStateValid) {
             binding.NextOnBoarding.setBackgroundResource(R.drawable.second_getstarteddone)
         } else {
             binding.NextOnBoarding.setBackgroundResource(R.drawable.second_getstarted)
@@ -173,8 +190,13 @@ class OnBoardingFragment : Fragment() {
         val city = binding.etEnterCityText.text.toString().trim()
         val phone = binding.etEnterMob.text.toString().trim()
         val state = binding.etEnterStateText.text.toString().trim()
-        Log.e("phoneNumbertext",phone)
-        return name.length >= 3 && city.length >= 3 && phone.length >= 10 && state.length >= 3
+        val email = binding.etEnterEmailText.text.toString().trim()
+        Log.e("phoneNumberOR email",phone + email)
+        return name.length >= 3 && city.length >= 3 &&( phone.length >= 10 || isValidEmail(email)) && state.length >= 3
+    }
+
+    private fun isValidEmail(email: String): Boolean {
+        return Patterns.EMAIL_ADDRESS.matcher(email).matches()
     }
 
     private fun saveNameAndCity() {
@@ -182,14 +204,16 @@ class OnBoardingFragment : Fragment() {
         val city = binding.etEnterCityText.text.toString().trim()
         val state = binding.etEnterStateText.text.toString().trim()
         val phone = binding.etEnterMob.text.toString().trim()
+        val email = binding.etEnterEmailText.text.toString().trim()
         sharedPreferencesManager.name = name
         sharedPreferencesManager.city = city
         sharedPreferencesManager.state = state
         sharedPreferencesManager.mobileNo = phone
+        sharedPreferencesManager.email = email
 
 //        userViewModel.updateUserDetails(name, city)
 
-        Log.d("OnBoardingFragment", "Name, City, phone state: $name, $city, $phone, $state")
+        Log.d("OnBoardingFragment email", " $email Name, City, phone state: $name, $city, $phone, $state")
     }
 
     override fun onDestroyView() {
