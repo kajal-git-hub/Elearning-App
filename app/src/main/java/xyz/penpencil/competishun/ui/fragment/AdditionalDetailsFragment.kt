@@ -156,11 +156,11 @@ class AdditionalDetailsFragment : DrawerVisibility() {
                          }, navOptions)*/
                     }
                 }.onFailure { exception ->
-                    Toast.makeText(
+                 /*   Toast.makeText(
                         requireContext(),
                         "Error fetching details: ${exception.message}",
                         Toast.LENGTH_LONG
-                    ).show()
+                    ).show()*/
                 }
             }
 
@@ -435,7 +435,7 @@ class AdditionalDetailsFragment : DrawerVisibility() {
 
             } else {
                 Log.e("gettingUserUpdatefail", result.toString())
-                Toast.makeText(context, "Update failed", Toast.LENGTH_SHORT).show()
+//                Toast.makeText(context, "Update failed", Toast.LENGTH_SHORT).show()
             }
         })
     }
