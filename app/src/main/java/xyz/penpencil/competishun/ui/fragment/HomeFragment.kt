@@ -359,20 +359,19 @@ class HomeFragment : Fragment() {
     private fun fetchCoursesAndUpdateUI(
         userDetails: MyDetailsQuery.GetMyDetails
     ) {
-        // Build lists based on user details
-        val personal = mutableListOf<String>().apply {
-            if (userDetails.fullName?.isNotEmpty() == true) add("FULL_NAME")
-            if (userDetails.mobileNumber?.isNotEmpty() == true) add("WHATSAPP_NUMBER")
-            if (userDetails.userInformation.fatherName?.isNotEmpty() == true) add("FATHERS_NAME")
-            if (userDetails.userInformation.tShirtSize?.isNotEmpty() == true) add("T_SHIRTS")
+        val missingPersonalFields = mutableListOf<String>().apply {
+            if (!userDetails.fullName.isNullOrEmpty()) add("FULL_NAME")
+            if (!userDetails.mobileNumber.isNullOrEmpty()) add("WHATSAPP_NUMBER")
+            if (!userDetails.userInformation.fatherName.isNullOrEmpty()) add("FATHERS_NAME")
+            if (!userDetails.userInformation.tShirtSize.isNullOrEmpty()) add("T_SHIRTS")
         }
 
-        val document = mutableListOf<String>().apply {
-            if (userDetails.userInformation.documentPhoto?.isNotEmpty() == true) add("AADHAR_CARD")
-            if (userDetails.userInformation.passportPhoto?.isNotEmpty() == true) add("PASSPORT_SIZE_PHOTO")
+        val missingDocumentFields = mutableListOf<String>().apply {
+            if (!userDetails.userInformation.documentPhoto.isNullOrEmpty()) add("AADHAR_CARD")
+            if (!userDetails.userInformation.passportPhoto.isNullOrEmpty()) add("PASSPORT_SIZE_PHOTO")
         }
 
-        val address = if (userDetails.userInformation.address == null) {
+        val missingAddressFields = if (userDetails.userInformation.address == null) {
             listOf("FULL_ADDRESS")
         } else {
             emptyList()
@@ -380,14 +379,19 @@ class HomeFragment : Fragment() {
 
         myCoursesViewModel.myCourses.observe(viewLifecycleOwner) { result ->
             result.onSuccess { data ->
-                val hashMap = data.myCourses
+                val courseRequirements = data.myCourses
                     .flatMap { it.course.other_requirements.orEmpty() }
                     .map { it.rawValue }
                     .toHashSet()
 
-                if (hashMap.contains("ALL")) return@onSuccess
-                if ((personal + document + address).any { it in hashMap }) {
-                    findNavController().navigate(R.id.action_homeFragment_to_PersonalDetailFragment)
+                if (courseRequirements.contains("ALL")) return@onSuccess
+
+                val allMissingFields = missingPersonalFields + missingDocumentFields + missingAddressFields
+                val filteredCourseRequirements = courseRequirements.filterNot { it in allMissingFields }.toSet()
+                if (filteredCourseRequirements.isNotEmpty()) {
+                    findNavController().navigate(R.id.action_homeFragment_to_PersonalDetailFragment, Bundle().apply {
+                        putStringArray("FIELD_REQUIRED", filteredCourseRequirements.toTypedArray())
+                    })
                 }
             }.onFailure {
                 Log.e("MyCoursesFail", it.message.toString())
@@ -405,6 +409,10 @@ class HomeFragment : Fragment() {
     }
 
     fun getMyDetails() {
+
+        findNavController().navigate(R.id.action_homeFragment_to_PersonalDetailFragment, Bundle().also {
+            it.putStringArray("FIELD_REQUIRED",  arrayOf("FULL_NAME", "WHATSAPP_NUMBER", "FATHERS_NAME", "T_SHIRTS", "AADHAR_CARD", "FULL_ADDRESS"))
+        })
         userViewModel.fetchUserDetails()
         userViewModel.userDetails.observe(viewLifecycleOwner) { result ->
             result.onSuccess { data ->

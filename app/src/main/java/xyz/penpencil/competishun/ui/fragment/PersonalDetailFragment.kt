@@ -86,8 +86,11 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
         (activity as? HomeActivity)?.showBottomNavigationView(false)
         (activity as? HomeActivity)?.showFloatingButton(false)
 
+        arguments?.getStringArrayList("FIELD_REQUIRED")
         sharedPreferencesManager = SharedPreferencesManager(requireContext())
 
+
+        Log.e("asdhasjkdhjaksdhasj", "onViewCreated: $fieldsToVisible")
         // Populate saved data from SharedPreferences
         populateSavedData()
 
@@ -151,7 +154,6 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
             }
         })
     }
-    //987eab08-607c-4e0e-91be-3d44a5ab5ef5
 
     private fun getFragmentId(): Int {
         if (fieldsToVisible.isEmpty()){
@@ -177,10 +179,10 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
         myCoursesViewModel.myCourses.observe(viewLifecycleOwner) { result ->
             result.onSuccess { data ->
                 formRootStatus(isRunning = false)
-                fieldsToVisible.clear()
+//                fieldsToVisible.clear()
                 var shouldExitLoop = false
 
-                data.myCourses.forEach { courselist ->
+           /*     data.myCourses.forEach { courselist ->
                     if (shouldExitLoop) return@forEach
 
                     courselist.course.other_requirements?.let { requirements ->
@@ -198,7 +200,7 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
                         }
                     }
                 }
-
+*/
                 Log.d("fieldsToVisible", fieldsToVisible.toString())
                 // Update UI visibility after fetching courses
                 updateUIVisibility()
