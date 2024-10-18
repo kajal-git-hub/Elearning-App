@@ -167,7 +167,7 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
                 isActive = false
                 findNavController().let { nav ->
                     nav.navigate(getFragmentId(), Bundle().apply {
-                        putStringArray("IDS_FIELDS_LIST", fieldsToVisible.toTypedArray())
+                        putStringArray("FIELD_REQUIRED", fieldsToVisible.toTypedArray())
                     })
                 }
                 Log.e("User update success", result.user.toString())

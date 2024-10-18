@@ -2,6 +2,7 @@ package xyz.penpencil.competishun.data.repository
 
 import android.util.Log
 import com.apollographql.apollo3.ApolloClient
+import com.apollographql.apollo3.api.DefaultUpload
 import com.apollographql.apollo3.api.Optional
 import com.apollographql.apollo3.exception.ApolloException
 import com.student.competishun.gatekeeper.UpdateUserMutation
@@ -30,29 +31,39 @@ class UpdateUserRepository @Inject constructor(@Gatekeeper private val apolloCli
         documentPhoto: String?,
         passportPhoto: String?
     ): UpdateUserResponse? {
-//        val mutation = UpdateUserMutation(
-//            updateUserInput = updateUserInput,
-//            passportPhoto = if (passportPhoto != null) {
-//                Optional.presentIfNotNull(FileUpload(File(passportPhoto), "image/*"))
-//            } else {
-//                Optional.absent()
-//            },
-//            documentPhoto = if (documentPhoto != null) {
-//                Optional.presentIfNotNull(FileUpload(File(documentPhoto), "image/*"))
-//            } else {
-//                Optional.absent()
-//            }
-//        )
+
+        val passport = if (passportPhoto == null) {
+            null
+        }else {
+            DefaultUpload.Builder()
+                .content { sink -> sink.writeAll(File(passportPhoto).source()) }
+                .contentType("image/jpeg")
+                .contentLength(File(passportPhoto).length())
+                .fileName(File(passportPhoto).name)
+                .build()
+        }
+
+        val document = if (documentPhoto == null) {
+            null
+        }else {
+            DefaultUpload.Builder()
+                .content { sink -> sink.writeAll(File(documentPhoto).source()) }
+                .contentType("image/jpeg")
+                .contentLength(File(documentPhoto).length())
+                .fileName(File(documentPhoto).name)
+                .build()
+        }
+
 
         val mutation = UpdateUserMutation(
             updateUserInput = updateUserInput,
             passportPhoto = if (passportPhoto != null) {
-                Optional.presentIfNotNull(passportPhoto)
+                Optional.presentIfNotNull(passport)
             } else {
                 Optional.absent()
             },
             documentPhoto = if (documentPhoto != null) {
-                Optional.presentIfNotNull(documentPhoto)
+                Optional.presentIfNotNull(document)
             } else {
                 Optional.absent()
             }

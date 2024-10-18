@@ -56,7 +56,7 @@ class AddressDetailsFragment : DrawerVisibility() {
         (activity as? HomeActivity)?.showBottomNavigationView(false)
         (activity as? HomeActivity)?.showFloatingButton(false)
         arguments?.let {
-            fieldsToVisible = it.getStringArray("IDS_FIELDS_LIST") ?: emptyArray()
+            fieldsToVisible = it.getStringArray("FIELD_REQUIRED") ?: emptyArray()
             courseId = it.getString("IDS", "")
         }
 
