@@ -52,9 +52,11 @@ class CoursesFragment : DrawerVisibility() {
         val examIIT = "IIT-JEE"
         val examNEET = "NEET"
         Log.e("getcaourws $categoryId",categoryName.toString())
-        if (categoryName == "Digital Book" && categoryName == "Chapter coWise Test"){
+        if (categoryName == "Digital Book" && categoryName == "Chapter Wise Test"){
             binding.llEmpty.visibility = View.VISIBLE
             binding.tabCl.visibility = View.GONE
+            tabToolbar.title = ""
+            binding.tvHeaderText.text = categoryName
         }else{
             binding.llEmpty.visibility = View.GONE
             binding.tabCl.visibility = View.VISIBLE
