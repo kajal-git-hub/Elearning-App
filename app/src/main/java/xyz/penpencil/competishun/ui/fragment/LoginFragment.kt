@@ -2,6 +2,7 @@ package xyz.penpencil.competishun.ui.fragment
 
 import android.content.Intent
 import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.InputFilter
@@ -99,6 +100,13 @@ class LoginFragment : Fragment() {
         setupObservers()
 
 //
+
+        binding.etHelpText.setOnClickListener {
+            val phoneNumber = "8888000021"
+            val intent = Intent(Intent.ACTION_DIAL)
+            intent.data = Uri.parse("tel:$phoneNumber")
+            startActivity(intent)
+        }
 
         binding.btnVerify.setOnClickListener {
             handleVerifyButtonClick()
@@ -262,7 +270,7 @@ class LoginFragment : Fragment() {
                         else {
                             // Store necessary data in SharedPreferencesManager
                             sharedPreferencesManager.mobileNo = userDetails.mobileNumber
-                            navigateToHome()
+                            navigateToHome("email")
                         }
                     }.onFailure { exception ->
                         Log.e("mainActivitydetails", exception.message.toString())
@@ -350,8 +358,11 @@ class LoginFragment : Fragment() {
     }
 
 
-    private fun navigateToHome() {
-        findNavController().navigate(R.id.onboardingFragment)
+    private fun navigateToHome(loginType:String) {
+        val bundle = Bundle().apply {
+            putString("loginType", loginType)
+        }
+        findNavController().navigate(R.id.onboardingFragment,bundle)
     }
 
     private fun createAccountWithGoogle(account: GoogleSignInAccount) {

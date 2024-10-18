@@ -119,6 +119,9 @@
     <string name="course_not_exits">“%s” does not exist in the search. Search another keyword.</string>
     <string name="showing_results">Showing results (%s):</string>
     <string name="no_result">No Result Found!\n</string>
+    <string name="email">Email</string>
+    <string name="coming_soon">Coming Soon: New Tests!</string>
+    <string name="new_text_Add">New tests are being added to our platform soon. Stay tuned and keep up the great work!</string>
 
 
 </resources>

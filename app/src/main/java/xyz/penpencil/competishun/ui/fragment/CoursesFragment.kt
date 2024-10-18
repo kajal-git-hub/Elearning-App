@@ -16,16 +16,20 @@ import xyz.penpencil.competishun.ui.main.HomeActivity
 import xyz.penpencil.competishun.ui.viewmodel.StudentCoursesViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import xyz.penpencil.competishun.R
+import xyz.penpencil.competishun.databinding.FragmentCourseBinding
+import xyz.penpencil.competishun.databinding.FragmentCoursesBinding
 
 @AndroidEntryPoint
 class CoursesFragment : DrawerVisibility() {
     private val  studentCoursesViewModel: StudentCoursesViewModel by viewModels()
     var categoryName = ""
+    private lateinit var binding: FragmentCoursesBinding
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        return inflater.inflate(R.layout.fragment_courses, container, false)
+        binding = FragmentCoursesBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -46,6 +50,13 @@ class CoursesFragment : DrawerVisibility() {
         tabToolbar.title = ""
         tabToolbar.title = categoryName
         Log.e("getcaourws $categoryId",categoryName.toString())
+        if (categoryName == "Digital Book" && categoryName == "Chapter-Wise Tests"){
+            binding.llEmpty.visibility = View.VISIBLE
+            binding.tabCl.visibility = View.GONE
+        }else{
+            binding.llEmpty.visibility = View.GONE
+            binding.tabCl.visibility = View.VISIBLE
+        }
         val examIIT = "IIT-JEE"
         val examNEET = "NEET"
 

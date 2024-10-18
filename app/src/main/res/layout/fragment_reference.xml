@@ -157,7 +157,7 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/clExamConstraint"
                     android:layout_width="match_parent"
-                    android:layout_height="350dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="22dp"
                     android:visibility="visible"
                     app:layout_constraintStart_toStartOf="parent"
@@ -166,7 +166,7 @@
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/refRecyclerview"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="260dp"
                         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
