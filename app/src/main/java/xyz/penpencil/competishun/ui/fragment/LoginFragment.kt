@@ -2,6 +2,7 @@ package xyz.penpencil.competishun.ui.fragment
 
 import android.content.Intent
 import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.InputFilter
@@ -99,6 +100,13 @@ class LoginFragment : Fragment() {
         setupObservers()
 
 //
+
+        binding.etHelpText.setOnClickListener {
+            val phoneNumber = "8888000021"
+            val intent = Intent(Intent.ACTION_DIAL)
+            intent.data = Uri.parse("tel:$phoneNumber")
+            startActivity(intent)
+        }
 
         binding.btnVerify.setOnClickListener {
             handleVerifyButtonClick()
