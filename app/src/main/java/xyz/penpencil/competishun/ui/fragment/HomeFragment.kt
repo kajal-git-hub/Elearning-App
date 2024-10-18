@@ -392,6 +392,16 @@ class HomeFragment : Fragment() {
                 sharedPreferencesManager.reference = userDetails.userInformation.reference
                 sharedPreferencesManager.preparingFor = userDetails.userInformation.preparingFor
                 sharedPreferencesManager.targetYear = userDetails.userInformation.targetYear
+                val bottomNavigationView: BottomNavigationView? = activity?.findViewById(R.id.bottomNav)
+                val menu = bottomNavigationView?.menu
+                if(userDetails.courses.isNotEmpty()){
+                    menu?.findItem(R.id.Bookmark)?.isVisible = true
+                    menu?.findItem(R.id.Store)?.isVisible = false
+                } else {
+                    menu?.findItem(R.id.Bookmark)?.isVisible = false
+                    menu?.findItem(R.id.Store)?.isVisible = true
+                }
+
                 Log.d("HomeCourseType", courseType)
                 if (courseType.isNotEmpty()) {
                     Log.d("Comingggg...", "Yes Working")
