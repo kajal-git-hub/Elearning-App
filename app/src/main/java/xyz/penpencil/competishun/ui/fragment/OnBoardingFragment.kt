@@ -6,9 +6,12 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.util.Patterns
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
@@ -149,6 +152,28 @@ class OnBoardingFragment : Fragment() {
                 Toast.makeText(context, "Please select a name and city", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    private fun showDropdown(editText: EditText) {
+        val popupMenu: PopupMenu = PopupMenu(
+            requireContext(),
+            editText,
+            Gravity.NO_GRAVITY,
+            0,
+            xyz.penpencil.competishun.R.style.CustomPopupMenu
+        )
+        popupMenu.menu.add("Male")
+        popupMenu.menu.add("Female")
+        popupMenu.menu.add("Prefer not to say")
+
+        popupMenu.setOnMenuItemClickListener { item ->
+            val selectedGender: String = item.title.toString()
+          //  gender = selectedGender
+            editText.setText(selectedGender)
+            true
+        }
+
+        popupMenu.show()
     }
 
     private fun observeUserDetails() {

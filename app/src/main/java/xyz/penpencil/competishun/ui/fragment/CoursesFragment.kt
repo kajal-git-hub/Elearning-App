@@ -49,16 +49,22 @@ class CoursesFragment : DrawerVisibility() {
         val categoryId = arguments?.getString("category_id")
         tabToolbar.title = ""
         tabToolbar.title = categoryName
+        val examIIT = "IIT-JEE"
+        val examNEET = "NEET"
         Log.e("getcaourws $categoryId",categoryName.toString())
-        if (categoryName == "Digital Book" && categoryName == "Chapter-Wise Tests"){
+        if (categoryName == "Digital Book" && categoryName == "Chapter coWise Test"){
             binding.llEmpty.visibility = View.VISIBLE
             binding.tabCl.visibility = View.GONE
         }else{
             binding.llEmpty.visibility = View.GONE
             binding.tabCl.visibility = View.VISIBLE
+            setupViewPager(tabViewPager,examIIT,examNEET)
+            tabTabLayout.setupWithViewPager(tabViewPager)
+            tabTabLayout.getTabAt(0)?.select()
         }
-        val examIIT = "IIT-JEE"
-        val examNEET = "NEET"
+        tabToolbar.setNavigationOnClickListener {
+            requireActivity().onBackPressed()
+        }
 
         clickedViewMessage?.let {
             val tittle = view.findViewById<TextView>(R.id.tittle_tb)
@@ -66,12 +72,7 @@ class CoursesFragment : DrawerVisibility() {
             tittle.text = it
 
         }
-        setupViewPager(tabViewPager,examIIT,examNEET)
-        tabToolbar.setNavigationOnClickListener {
-            requireActivity().onBackPressed()
-        }
-        tabTabLayout.setupWithViewPager(tabViewPager)
-        tabTabLayout.getTabAt(0)?.select()
+
     }
 
     private fun setupViewPager(viewPager: ViewPager, examIIT: String, examNEET: String) {
