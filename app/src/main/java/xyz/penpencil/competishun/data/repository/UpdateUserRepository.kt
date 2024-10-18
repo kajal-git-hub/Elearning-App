@@ -4,16 +4,20 @@ import android.util.Log
 import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.api.Optional
 import com.apollographql.apollo3.exception.ApolloException
-import xyz.penpencil.competishun.data.api.Gatekeeper
-import xyz.penpencil.competishun.data.model.Address
 import com.student.competishun.gatekeeper.UpdateUserMutation
-import xyz.penpencil.competishun.data.model.UpdateUserResponse
-import xyz.penpencil.competishun.data.model.UserInformation
 import com.student.competishun.gatekeeper.type.UpdateUserInput
 import xyz.penpencil.competishun.data.api.ApiProcess
+import xyz.penpencil.competishun.data.api.Gatekeeper
+import xyz.penpencil.competishun.data.model.Address
+import xyz.penpencil.competishun.data.model.UpdateUserResponse
 import xyz.penpencil.competishun.data.model.User
+import xyz.penpencil.competishun.data.model.UserInformation
 import javax.inject.Inject
 import javax.inject.Singleton
+import okio.source
+import com.apollographql.apollo3.api.Upload
+import xyz.penpencil.competishun.utils.FileUpload
+import java.io.File
 
 
 @Singleton
@@ -28,8 +32,16 @@ class UpdateUserRepository @Inject constructor(@Gatekeeper private val apolloCli
     ): UpdateUserResponse? {
         val mutation = UpdateUserMutation(
             updateUserInput = updateUserInput,
-            documentPhoto = documentPhoto?.let { Optional.present(it) } ?: Optional.absent(),
-            passportPhoto = passportPhoto?.let { Optional.present(it) } ?: Optional.absent()
+            passportPhoto = if (passportPhoto != null) {
+                Optional.presentIfNotNull(FileUpload(File(passportPhoto), "image/*"))
+            } else {
+                Optional.absent()
+            },
+            documentPhoto = if (documentPhoto != null) {
+                Optional.presentIfNotNull(FileUpload(File(documentPhoto), "image/*"))
+            } else {
+                Optional.absent()
+            }
         )
 
         return try {
