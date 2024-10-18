@@ -89,24 +89,28 @@ class ReferenceFragment : Fragment() {
 
                 sharedPreferencesManager.isReferenceSelectionInProgress = false
                 Log.e("emailpresen",sharedPreferencesManager.email.toString())
-                if (sharedPreferencesManager.email.isNullOrEmpty()) {
-                    Log.e("emailpresen",sharedPreferencesManager.email.toString())
+                val loginType = arguments?.getString("loginType")
+                if (loginType != null && loginType == "email" ) {
+                    Log.e("emailType",sharedPreferencesManager.email.toString())
                     val updateUserInput = UpdateUserInput(
                         city = Optional.Present(sharedPreferencesManager.city),
                         fullName = Optional.Present(sharedPreferencesManager.name),
                         preparingFor = Optional.Present(sharedPreferencesManager.preparingFor),
                         reference = Optional.Present(sharedPreferencesManager.reference),
+                        mobileNumber = Optional.present(sharedPreferencesManager.mobileNo),
+                        countryCode = Optional.present("+91"),
+                        email = Optional.present(sharedPreferencesManager.email),
                         targetYear = Optional.Present(sharedPreferencesManager.targetYear),
                     )
                     updateUserViewModel.updateUserErrorHandled(updateUserInput,null,null)
                 } else {
-                    Log.e("emailpresenELSE",sharedPreferencesManager.email.toString())
+                    Log.e("nopresenELSE",sharedPreferencesManager.mobileNo.toString())
                       val updateUserInput = UpdateUserInput(
                         city = Optional.Present(sharedPreferencesManager.city),
                         fullName = Optional.Present(sharedPreferencesManager.name),
                         preparingFor = Optional.Present(sharedPreferencesManager.preparingFor),
                         reference = Optional.Present(sharedPreferencesManager.reference),
-                        targetYear = Optional.Present(sharedPreferencesManager.targetYear), mobileNumber = Optional.present(sharedPreferencesManager.mobileNo), countryCode = Optional.present("+91")
+                        targetYear = Optional.Present(sharedPreferencesManager.targetYear),
                     )
                     updateUserViewModel.updateUserErrorHandled(updateUserInput,null,null)
                 }
@@ -126,7 +130,9 @@ class ReferenceFragment : Fragment() {
                         Log.e("gettingUserUpdateTarget", userInfo.targetYear?.toString() ?: "null")
                         Log.e("gettingUserUpdaterefer", userInfo.reference?.toString() ?: "null")
                         Log.e("gettingUserUpdateprep", userInfo.preparingFor?.toString() ?: "null")
-                        Log.e("gettingUserUpdatecity", userInfo.address?.city?.toString() ?: "null")
+                        Log.e("gettingUseremai", data.user.email ?: "null")
+                        Log.e("gettingUserno", data.user.mobileNumber ?: "null")
+                        Log.e("gettingUserstate", data.user.userInformation.address?.state ?: "null")
                     }
 
                     // Call the navigation method after successful update
@@ -162,6 +168,11 @@ class ReferenceFragment : Fragment() {
         SharedSelectedItem = selectedItem
         if (!selectedItem.isNullOrEmpty()) {
             isItemSelected = true
+            if (selectedItem == "Other") {
+                binding.etContentBox.visibility = View.VISIBLE
+            } else {
+                binding.etContentBox.visibility = View.GONE
+            }
         } else {
             isItemSelected = false
         }
@@ -183,8 +194,16 @@ class ReferenceFragment : Fragment() {
             isItemSelected = true
             this.selectedItem = selectedItem
             SharedSelectedItem = selectedItem
-            sharedPreferencesManager.isReferenceSelectionInProgress = true
+           // sharedPreferencesManager.isReferenceSelectionInProgress = true
+            sharedPreferencesManager.reference = selectedItem
+            Log.e("selectedItem",selectedItem)
 
+            if (selectedItem == "Other") {
+                binding.etContentBox.visibility = View.VISIBLE
+            } else {
+                binding.etContentBox.visibility = View.GONE
+                isItemSelected = true
+            }
             updateButtonBackground()
         }
 

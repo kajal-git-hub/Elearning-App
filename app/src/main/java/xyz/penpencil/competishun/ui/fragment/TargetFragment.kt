@@ -59,10 +59,13 @@ class TargetFragment : Fragment() {
         binding.TargetBack.setOnClickListener {
             findNavController().navigate(R.id.PrepForFragment)
         }
-
+        val loginType = arguments?.getString("loginType")
         binding.TargetNext.setOnClickListener {
             if (isItemSelected) {
-                findNavController().navigate(R.id.action_TargetFragment_to_reference)
+                val bundle = Bundle().apply {
+                    putString("loginType", loginType)
+                }
+                findNavController().navigate(R.id.action_TargetFragment_to_reference,bundle)
             } else {
                 Toast.makeText(context, "Please select an option", Toast.LENGTH_SHORT).show()
             }

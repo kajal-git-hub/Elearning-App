@@ -1,26 +1,34 @@
 package xyz.penpencil.competishun.ui.fragment
 
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.addCallback
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.apollographql.apollo3.api.Optional
+import com.google.gson.Gson
 import com.student.competishun.gatekeeper.type.UpdateUserInput
 import xyz.penpencil.competishun.ui.viewmodel.UpdateUserViewModel
 import xyz.penpencil.competishun.ui.viewmodel.UserViewModel
 import xyz.penpencil.competishun.utils.SharedPreferencesManager
 import dagger.hilt.android.AndroidEntryPoint
 import xyz.penpencil.competishun.R
+import xyz.penpencil.competishun.data.model.State
+import xyz.penpencil.competishun.data.model.StateCity
 import xyz.penpencil.competishun.databinding.FragmentOnBoardingBinding
 import xyz.penpencil.competishun.ui.main.MainActivity
+import java.io.IOException
+import java.io.InputStream
 
 @AndroidEntryPoint
 class OnBoardingFragment : Fragment() {
@@ -56,6 +64,25 @@ class OnBoardingFragment : Fragment() {
         val savedCity = sharedPreferencesManager.city
         val savedState = sharedPreferencesManager.state
         val phoneNo = sharedPreferencesManager.mobileNo
+        val email = sharedPreferencesManager.email
+        val statesAndCities = loadStatesAndCities(requireContext())
+        binding.etEnterStateText.setOnClickListener {
+            statesAndCities?.let {
+                val stateNames = it.map { state -> state.name }
+                showStateDialog(stateNames)
+            }
+        }
+
+        binding.etEnterCityText.setOnClickListener {
+            val selectedState = binding.etEnterStateText.text.toString()
+            val selectedStateObj = statesAndCities?.find { it.name == selectedState }
+
+            selectedStateObj?.let { state ->
+                showCityDialog(state.cities)
+            } ?: run {
+                Toast.makeText(requireContext(), "Please select a state first", Toast.LENGTH_SHORT).show()
+            }
+        }
         savedName?.let {
             binding.etEnterHereText.setText(it)
         }
@@ -68,11 +95,24 @@ class OnBoardingFragment : Fragment() {
         phoneNo?.let {
             binding.etEnterMob.setText(it)
         }
+        email?.let {
+            binding.etEnterEmailText.setText(it)
+        }
 
         //condition need to check for google
-        if (sharedPreferencesManager.mobileNo.isNullOrEmpty()){
+        Log.e("getmobl",sharedPreferencesManager.mobileNo.toString())
+        Log.e("getEmail",sharedPreferencesManager.email.toString())
+        val loginType = arguments?.getString("loginType")
+        if (loginType != null && loginType == "email"){
             binding.clEnterNo.visibility = View.VISIBLE
             binding.etPhoneNoText.visibility = View.VISIBLE
+            binding.etEmailText.visibility = View.GONE
+            binding.etEnterEmailText.visibility = View.GONE
+        }else {
+            binding.clEnterNo.visibility = View.GONE
+            binding.etPhoneNoText.visibility = View.GONE
+            binding.etEmailText.visibility = View.VISIBLE
+            binding.etEnterEmailText.visibility = View.VISIBLE
         }
 
         userViewModel.userDetails.observe(requireActivity()) { result ->
@@ -101,8 +141,10 @@ class OnBoardingFragment : Fragment() {
                     fullName = Optional.Present(sharedPreferencesManager.name),
                     )
                 updateUserViewModel.updateUser(updateUserInput,null,null)
-
-                findNavController().navigate(R.id.action_OnBoardingFragment_to_prepForFragment)
+                val bundle = Bundle().apply {
+                    putString("loginType", loginType)
+                }
+                findNavController().navigate(R.id.action_OnBoardingFragment_to_prepForFragment,bundle)
             } else {
                 Toast.makeText(context, "Please select a name and city", Toast.LENGTH_SHORT).show()
             }
@@ -117,7 +159,7 @@ class OnBoardingFragment : Fragment() {
                 val name = data.getMyDetails.fullName
                 val city = data.getMyDetails.userInformation.address?.city
                 val state = data.getMyDetails.userInformation.address?.state
-
+                Log.d("userDState",data.getMyDetails.userInformation.address?.state.toString())
 //                if (!name.isNullOrEmpty()) {
 //                    binding.etEnterHereText.setText(name)
 //                }
@@ -126,7 +168,7 @@ class OnBoardingFragment : Fragment() {
                 }
 
                 if (!state.isNullOrEmpty()) {
-                    binding.etEnterStateText.setText(city)
+                    binding.etEnterStateText.setText(state)
                 }
 
                 sharedPreferencesManager.name = name
@@ -152,16 +194,76 @@ class OnBoardingFragment : Fragment() {
         binding.etEnterHereText.addTextChangedListener(textWatcher)
         binding.etEnterCityText.addTextChangedListener(textWatcher)
         binding.etEnterMob.addTextChangedListener(textWatcher)
+        binding.etEnterEmailText.addTextChangedListener(textWatcher)
         binding.etEnterStateText.addTextChangedListener(textWatcher)
     }
+
+    private fun loadStatesAndCities(context: Context): List<State>? {
+        val jsonString = loadJSONFromAsset(context, "states_cities.json")
+        return if (!jsonString.isNullOrEmpty()) {
+            val gson = Gson()
+            val stateCity = gson.fromJson(jsonString, StateCity::class.java)
+            stateCity.states
+        } else {
+            null
+        }
+    }
+
+    private fun showStateDialog(states: List<String>) {
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle("Select State")
+
+        builder.setItems(states.toTypedArray()) { dialog, which ->
+            // Set the selected state to the EditText
+            binding.etEnterStateText.setText(states[which])
+            // Reset the city field when a state is changed
+            binding.etEnterCityText.text = null
+            dialog.dismiss()
+        }
+
+        val dialog = builder.create()
+        dialog.show()
+    }
+
+    private fun showCityDialog(cities: List<String>) {
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle("Select City")
+
+        builder.setItems(cities.toTypedArray()) { dialog, which ->
+            // Set the selected city to the EditText
+            binding.etEnterCityText.setText(cities[which])
+            dialog.dismiss()
+        }
+
+        val dialog = builder.create()
+        dialog.show()
+    }
+
+
+
+    private fun loadJSONFromAsset(context: Context, fileName: String): String? {
+        return try {
+            val inputStream: InputStream = context.assets.open(fileName)
+            val size: Int = inputStream.available()
+            val buffer = ByteArray(size)
+            inputStream.read(buffer)
+            inputStream.close()
+            String(buffer, Charsets.UTF_8)
+        } catch (ex: IOException) {
+            ex.printStackTrace()
+            null
+        }
+    }
+
 
     private fun updateNextButtonState() {
         val isNameValid = binding.etEnterHereText.text.toString().trim().length >= 3
         val isCityValid = binding.etEnterCityText.text.toString().trim().length >= 3
         val isPhoneValid = binding.etEnterMob.text.toString().trim().length >= 10
+        val isEmailValid = isValidEmail(binding.etEnterEmailText.text.toString().trim())
         val isStateValid = binding.etEnterStateText.text.toString().trim().length >= 3
         Log.e("PhoneNoText",isPhoneValid.toString())
-        if (isNameValid && isCityValid && isPhoneValid && isStateValid) {
+        if (isNameValid && isCityValid && (isPhoneValid || isEmailValid)  && isStateValid) {
             binding.NextOnBoarding.setBackgroundResource(R.drawable.second_getstarteddone)
         } else {
             binding.NextOnBoarding.setBackgroundResource(R.drawable.second_getstarted)
@@ -173,8 +275,14 @@ class OnBoardingFragment : Fragment() {
         val city = binding.etEnterCityText.text.toString().trim()
         val phone = binding.etEnterMob.text.toString().trim()
         val state = binding.etEnterStateText.text.toString().trim()
-        Log.e("phoneNumbertext",phone)
-        return name.length >= 3 && city.length >= 3 && phone.length >= 10 && state.length >= 3
+        val email = binding.etEnterEmailText.text.toString().trim()
+        Log.e("phoneNumberOR email",phone + email)
+        return name.length >= 3 && city.length >= 3 &&( phone.length >= 10 || isValidEmail(email)) && state.length >= 3
+    }
+
+    private fun isValidEmail(email: String): Boolean {
+        val emailPattern = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$"
+        return email.trim().matches(emailPattern.toRegex())
     }
 
     private fun saveNameAndCity() {
@@ -182,14 +290,16 @@ class OnBoardingFragment : Fragment() {
         val city = binding.etEnterCityText.text.toString().trim()
         val state = binding.etEnterStateText.text.toString().trim()
         val phone = binding.etEnterMob.text.toString().trim()
+        val email = binding.etEnterEmailText.text.toString().trim()
         sharedPreferencesManager.name = name
         sharedPreferencesManager.city = city
         sharedPreferencesManager.state = state
         sharedPreferencesManager.mobileNo = phone
+        sharedPreferencesManager.email = email
 
 //        userViewModel.updateUserDetails(name, city)
 
-        Log.d("OnBoardingFragment", "Name, City, phone state: $name, $city, $phone, $state")
+        Log.d("OnBoardingFragment email", " $email Name, City, phone state: $name, $city, $phone, $state")
     }
 
     override fun onDestroyView() {

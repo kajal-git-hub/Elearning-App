@@ -24,6 +24,7 @@ query MyDetails {
             address {
                 city
                 state
+                pinCode
                 addressLine1
             }
             rollNumber

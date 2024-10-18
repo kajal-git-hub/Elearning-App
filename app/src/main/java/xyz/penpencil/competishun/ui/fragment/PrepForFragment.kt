@@ -33,7 +33,7 @@ class PrepForFragment : Fragment() {
     private val pageTexts = Constants.PAGE_TEXTS
     private val stepTexts = Constants.STEP_TEXTS
     private val spanCount = listOf(2, 2, 1)
-
+    private var SharedSelectedItem: String? = null
     private var selectedItem: String? = null
 
     override fun onCreateView(
@@ -63,11 +63,14 @@ class PrepForFragment : Fragment() {
         binding.PrepBack.setOnClickListener {
             findNavController().navigate(R.id.onboardingFragment)
         }
-
+        val loginType = arguments?.getString("loginType")
         binding.PrepNext.setOnClickListener {
             if (isItemSelected) {
                 sharedPreferencesManager.descriptionText = binding.etContent.text.toString()
-                findNavController().navigate(R.id.action_PrepForFragment_to_TargetFragment)
+                val bundle = Bundle().apply {
+                    putString("loginType", loginType)
+                }
+                findNavController().navigate(R.id.action_PrepForFragment_to_TargetFragment,bundle)
             } else {
                 Toast.makeText(context, "Please select an option", Toast.LENGTH_SHORT).show()
             }
@@ -84,6 +87,7 @@ class PrepForFragment : Fragment() {
         ) { selectedItem ->
             isItemSelected = true
             this.selectedItem = selectedItem
+            SharedSelectedItem = selectedItem
             sharedPreferencesManager.preparingFor = selectedItem
             binding.PrepNext.setBackgroundResource(R.drawable.second_getstarteddone)
 
