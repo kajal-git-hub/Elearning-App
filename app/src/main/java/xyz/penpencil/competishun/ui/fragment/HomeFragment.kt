@@ -409,6 +409,10 @@ class HomeFragment : Fragment() {
     }
 
     fun getMyDetails() {
+    // Test Code
+   /*findNavController().navigate(R.id.action_homeFragment_to_PersonalDetailFragment, Bundle().also {
+            it.putStringArray("FIELD_REQUIRED",  arrayOf("FULL_NAME", "WHATSAPP_NUMBER", "FATHERS_NAME", "T_SHIRTS", "AADHAR_CARD", "FULL_ADDRESS"))
+        })*/
         userViewModel.fetchUserDetails()
         userViewModel.userDetails.observe(viewLifecycleOwner) { result ->
             result.onSuccess { data ->
