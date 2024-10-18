@@ -53,6 +53,7 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
     private var bottomSheetTSizeFragment = BottomSheetTSizeFragment()
     private var courseId: String = ""
     var userDetails: MyDetailsQuery.GetMyDetails?=null
+    var isActive = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -104,6 +105,7 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
 
         binding.btnAddDetails.setOnClickListener {
             if (isFormValid()) {
+                isActive = true
                 updateData()
             } else {
                 Toast.makeText(requireContext(), "Please fill all fields.", Toast.LENGTH_SHORT).show()
@@ -160,9 +162,9 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
             }
         }
 
-
         updateUserViewModel.updateUserResult.observe(viewLifecycleOwner) { result ->
-            if (result?.user != null) {
+            if (result?.user != null && isActive) {
+                isActive = false
                 findNavController().let { nav ->
                     nav.navigate(getFragmentId(), Bundle().apply {
                         putStringArray("IDS_FIELDS_LIST", fieldsToVisible.toTypedArray())
@@ -173,6 +175,15 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
                 Log.e("User update failed", result.toString())
             }
         }
+    }
+
+    private fun removeObserver(){
+        updateUserViewModel.updateUserResult.removeObservers(viewLifecycleOwner)
+    }
+
+    override fun onStop() {
+        removeObserver()
+        super.onStop()
     }
 
     private fun updateData(){
