@@ -90,8 +90,7 @@ class UpdateUserRepository @Inject constructor(@Gatekeeper private val apolloCli
                                     dob = info.dob,
                                     gender = info.gender,
                                     addressLine1 = info.address?.addressLine1,
-                                    address = Address(city = info.city)
-                                    address = info.address?.let { address-> Address(city = address.city, state = address.state) }
+                                    address = Address(city = info.address?.city, state = info.address?.state)
 
                                 )
                             } ?: UserInformation(
@@ -162,8 +161,9 @@ class UpdateUserRepository @Inject constructor(@Gatekeeper private val apolloCli
                                 dob = info.dob,
                                 gender = info.gender,
                                 addressLine1 = info.address?.addressLine1,
-                                address = Address(city = info.city)
-                                address = info.address?.let { address -> Address(city = address.city, state = address.state) }
+                                address = Address(city = info.address?.city, state = info.address?.state)
+
+
                             )
                         } ?: UserInformation(
                             id = result.id,
