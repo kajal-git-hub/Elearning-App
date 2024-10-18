@@ -41,7 +41,7 @@ class VerifyOtpRepository @Inject constructor(@Gatekeeper private val apolloClie
                             countryCode = user.countryCode?:"",
                             id = "",
                             email = "",
-                            userInformation = UserInformation(0,"","","","","","","",null, gender = "", dob = "")
+                            userInformation = UserInformation(0,"","","","","","","",null, gender = "", dob = "", addressLine1 = "")
                         )
                     },
                     refreshToken = result.refreshToken,
@@ -78,7 +78,7 @@ class VerifyOtpRepository @Inject constructor(@Gatekeeper private val apolloClie
                             countryCode = user.countryCode?:"",
                             id = "",
                             email = "",
-                            userInformation = UserInformation(0,"","","","","","","",null, gender = "", dob = "")
+                            userInformation = UserInformation(0,"","","","","","","",null, gender = "", dob = "", addressLine1 = "")
                         )
                     },
                     refreshToken = result.refreshToken,

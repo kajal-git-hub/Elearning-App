@@ -13,6 +13,7 @@ data class UserInformation(
     public val schoolName: String?,
     public val tShirtSize: String?,
     public val address: Address?,
+    public val addressLine1: String?,
     public val gender:String?,
     public val dob:Any?
 )

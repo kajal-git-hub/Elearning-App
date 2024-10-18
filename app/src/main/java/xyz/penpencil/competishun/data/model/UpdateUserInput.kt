@@ -8,5 +8,5 @@ data class UpdateUserInput(
     val fullName: Optional<String?> = Optional.Absent,
     val preparingFor: Optional<String?> = Optional.Absent,
     val reference: Optional<String?> = Optional.Absent,
-    val targetYear: Optional<Int?> = Optional.Absent
+    val targetYear: Optional<Int?> = Optional.Absent,
 )

@@ -63,8 +63,8 @@ class UpdateUserRepository @Inject constructor(@Gatekeeper private val apolloCli
                                     waCountryCode = info.waCountryCode,
                                     dob = info.dob,
                                     gender = info.gender,
-                                    address = info.address?.let { address-> Address(city = address.city)
-                                    },
+                                    addressLine1 = info.address?.addressLine1,
+                                    address = Address(city = info.city)
                                 )
                             } ?: UserInformation(
                                 id = user.id,
@@ -78,6 +78,7 @@ class UpdateUserRepository @Inject constructor(@Gatekeeper private val apolloCli
                                 address = null,
                                 dob = null,
                                 gender = null,
+                                addressLine1 = "",
                             )
                         )
                     }
@@ -132,7 +133,8 @@ class UpdateUserRepository @Inject constructor(@Gatekeeper private val apolloCli
                                 waCountryCode = info.waCountryCode,
                                 dob = info.dob,
                                 gender = info.gender,
-                                address = info.address?.let { address -> Address(city = address.city) }
+                                addressLine1 = info.address?.addressLine1,
+                                address = Address(city = info.city)
                             )
                         } ?: UserInformation(
                             id = result.id,
@@ -146,6 +148,7 @@ class UpdateUserRepository @Inject constructor(@Gatekeeper private val apolloCli
                             address = null,
                             dob = null,
                             gender = null,
+                            addressLine1 = ""
                         )
                     )
 

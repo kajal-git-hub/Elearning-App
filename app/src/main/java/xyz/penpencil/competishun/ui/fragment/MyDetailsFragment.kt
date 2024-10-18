@@ -2,20 +2,16 @@ package xyz.penpencil.competishun.ui.fragment
 
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
-import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -28,18 +24,7 @@ import xyz.penpencil.competishun.databinding.FragmentMyDetailsBinding
 import xyz.penpencil.competishun.ui.viewmodel.UpdateUserViewModel
 import xyz.penpencil.competishun.ui.viewmodel.UserViewModel
 import xyz.penpencil.competishun.utils.HelperFunctions
-import java.text.SimpleDateFormat
-import java.time.Instant
-import java.time.LocalDateTime
-import java.time.OffsetDateTime
-import java.time.ZoneOffset
-import java.time.ZonedDateTime
-import java.time.format.DateTimeFormatter
 import java.util.Calendar
-import java.util.Date
-import java.util.Locale
-import java.util.TimeZone
-
 
 @AndroidEntryPoint
 class MyDetailsFragment : Fragment() {
@@ -125,25 +110,15 @@ class MyDetailsFragment : Fragment() {
             binding.etGender.isEnabled = true
         }
         binding.clSaveChanges.setOnClickListener {
-            Log.d("dobUpdate", dob)
-            Log.d("genderUpdate", gender)
             val m = if (month.toString().length == 1) "0$month" else month.toString()
             val d = if (day.toString().length == 1) "0$day" else day.toString()
-//            val instant = Instant.parse()
+            val year = "$year-$m-${d}T18:30:00.000Z"
             val updateUserInput = UpdateUserInput(
-                dob = Optional.present("$year-$m-${d}T18:30:00.000Z"),
+                dob = Optional.present(year),
                 gender = Optional.present(gender),
             )
             updateUserViewModel.updateUser(updateUserInput, null, null)
         }
-    }
-
-    fun getDateFormated(): String {
-        val localDateTime = LocalDateTime.of(year, month, day, 18, 30)
-        val offsetDateTime = OffsetDateTime.of(localDateTime, ZoneOffset.UTC)
-        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX")
-        val formattedDate = offsetDateTime.format(formatter)
-        return formattedDate
     }
 
     private fun showDatePickerDialog() {
