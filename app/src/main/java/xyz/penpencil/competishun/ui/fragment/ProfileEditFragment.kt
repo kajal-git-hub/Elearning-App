@@ -31,6 +31,9 @@ class ProfileEditFragment(val updateCourse:(year:String,course:String )->Unit) :
     private var selectedExam: String? = null
     private var selectedYear: Int? = null
 
+    private var targetYear = ""
+    private var preparingFor = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -48,6 +51,9 @@ class ProfileEditFragment(val updateCourse:(year:String,course:String )->Unit) :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val prevSelectedYear = sharedPreferencesManager.targetYear
+        val prevSelectedCourse = sharedPreferencesManager.preparingFor
 
 
         binding.closeBottomClass.setOnClickListener {
@@ -85,8 +91,17 @@ class ProfileEditFragment(val updateCourse:(year:String,course:String )->Unit) :
 
         binding.mbSaveButton.setOnClickListener {
 
-            val targetYear = selectedYear
-            val preparingFor = selectedExam
+            targetYear = if(selectedYear!=null){
+                selectedYear.toString()
+            }else{
+                prevSelectedYear.toString()
+            }
+
+            preparingFor = if(selectedExam!=null){
+                selectedExam.toString()
+            }else{
+                prevSelectedCourse.toString()
+            }
 
             val updatedUserInput = UpdateUserInput(
                 city = Optional.Present(sharedPreferencesManager.city),
