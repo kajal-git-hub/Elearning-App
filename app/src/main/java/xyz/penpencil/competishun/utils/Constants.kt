@@ -52,6 +52,8 @@ object Constants {
 
     val STEP_TEXTS = listOf(STEP_TEXT_1, STEP_TEXT_2, STEP_TEXT_3)
 
+    val OTHER_REQUIREMENT_FIELDS = listOf("AADHAR_CARD", "PASSPORT_SIZE_PHOTO", "ALL", "FATHERS_NAME", "FULL_ADDRESS", "T_SHIRTS", "WHATSAPP_NUMBER")
+
     val recommendedCourseList = listOf(
         RecommendedCourseDataModel(
             discount = "11% OFF",

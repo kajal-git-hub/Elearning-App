@@ -156,11 +156,11 @@ class AdditionalDetailsFragment : DrawerVisibility() {
                          }, navOptions)*/
                     }
                 }.onFailure { exception ->
-                    Toast.makeText(
+                 /*   Toast.makeText(
                         requireContext(),
                         "Error fetching details: ${exception.message}",
                         Toast.LENGTH_LONG
-                    ).show()
+                    ).show()*/
                 }
             }
 
@@ -435,12 +435,10 @@ class AdditionalDetailsFragment : DrawerVisibility() {
 
             } else {
                 Log.e("gettingUserUpdatefail", result.toString())
-                Toast.makeText(context, "Update failed", Toast.LENGTH_SHORT).show()
             }
         })
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     fun encodeBitmapToBase64(bitmap: Bitmap): String {
         val outputStream = ByteArrayOutputStream()
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
