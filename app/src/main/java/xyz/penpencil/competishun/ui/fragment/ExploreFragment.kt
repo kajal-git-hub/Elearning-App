@@ -25,6 +25,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.apollographql.apollo3.api.Optional
 import com.bumptech.glide.Glide
 import androidx.media3.common.MediaItem
+import androidx.navigation.NavOptions
+import androidx.navigation.findNavController
 import com.bumptech.glide.request.target.Target
 import com.google.android.material.tabs.TabLayout
 import com.student.competishun.curator.AllCourseForStudentQuery
@@ -86,6 +88,7 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
     private var checkInstallOrNot = 0
 
     private var categoryName = ""
+    private var courselreadyBuy = false
     var faqAdapter : FAQAdapter?=null
 
 
@@ -157,7 +160,16 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
         getCourseTagsData()
 
         binding.clBuynow.setOnClickListener {
-            createCart(createCartViewModel, "FullPayment")
+            if (courselreadyBuy){
+                it.findNavController().let { nav->
+                    val navOptions = NavOptions.Builder()
+                        .setPopUpTo(nav.graph.startDestinationId, true)
+                        .build()
+                    nav.navigate(R.id.homeFragment, Bundle(), navOptions)
+                }
+            }else {
+                createCart(createCartViewModel, "FullPayment")
+            }
         }
 
         var lectureCount = arguments?.getString("LectureCount")
@@ -664,7 +676,8 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
             if (result.isFailure) return@observe
             result.onSuccess {
                 it.getMyDetails.courses?.map { data->
-                    if (courseId == data?.id){
+                    if (courseId == data?.enrolledCourseId){
+                        courselreadyBuy = true
                         binding.submit.text = "Continue"
                     }
                 }
