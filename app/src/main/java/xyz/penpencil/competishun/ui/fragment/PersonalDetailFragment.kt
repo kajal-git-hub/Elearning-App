@@ -249,8 +249,8 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
         binding.tvWhatsappNumberLabel.visibility = if (fieldsToVisible.contains("WHATSAPP_NUMBER")) View.VISIBLE else View.GONE
         binding.etWhatsappNumber.visibility = if (fieldsToVisible.contains("WHATSAPP_NUMBER")) View.VISIBLE else View.GONE
 
-        binding.tvFathersNumberLabel.visibility = if (fieldsToVisible.contains("FATHERS_NUMBER")) View.VISIBLE else View.GONE
-        binding.etFathersNumber.visibility = if (fieldsToVisible.contains("FATHERS_NUMBER")) View.VISIBLE else View.GONE
+        binding.tvFathersNumberLabel.visibility = if (fieldsToVisible.contains("FATHERS_NAME")) View.VISIBLE else View.GONE
+        binding.etFathersNumber.visibility = if (fieldsToVisible.contains("FATHERS_NAME")) View.VISIBLE else View.GONE
 
         binding.tvTshirtSizeLabel.visibility = if (fieldsToVisible.contains("T_SHIRTS")) View.VISIBLE else View.GONE
         binding.spinnerTshirtSize.visibility = if (fieldsToVisible.contains("T_SHIRTS")) View.VISIBLE else View.GONE
