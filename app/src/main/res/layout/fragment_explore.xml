@@ -1018,6 +1018,7 @@
                         android:layout_marginHorizontal="32dp"
                         android:layout_marginVertical="12dp"
                         android:text="Buy Now"
+                        android:id="@+id/submit"
                         android:textColor="@color/white"
                         android:textSize="16sp"
                         android:textStyle="bold"

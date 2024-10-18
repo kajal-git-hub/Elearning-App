@@ -55,7 +55,7 @@ class MyPurchaseFragment : DrawerVisibility() {
         (activity as? HomeActivity)?.showFloatingButton(false)
 
         binding.MyPurchaseTopView.setOnClickListener {
-            findNavController().navigate(R.id.ProfileFragment)
+            findNavController().popBackStack()
         }
 
 

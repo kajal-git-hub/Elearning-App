@@ -5,15 +5,19 @@ import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.api.Optional
 import com.apollographql.apollo3.exception.ApolloException
 import com.student.competishun.gatekeeper.UpdateUserMutation
-import xyz.penpencil.competishun.data.api.Gatekeeper
-import xyz.penpencil.competishun.data.model.UpdateUserResponse
-import xyz.penpencil.competishun.data.model.UserInformation
 import com.student.competishun.gatekeeper.type.UpdateUserInput
 import xyz.penpencil.competishun.data.api.ApiProcess
+import xyz.penpencil.competishun.data.api.Gatekeeper
 import xyz.penpencil.competishun.data.model.Address
+import xyz.penpencil.competishun.data.model.UpdateUserResponse
 import xyz.penpencil.competishun.data.model.User
+import xyz.penpencil.competishun.data.model.UserInformation
 import javax.inject.Inject
 import javax.inject.Singleton
+import okio.source
+import com.apollographql.apollo3.api.Upload
+import xyz.penpencil.competishun.utils.FileUpload
+import java.io.File
 
 
 @Singleton
@@ -26,14 +30,36 @@ class UpdateUserRepository @Inject constructor(@Gatekeeper private val apolloCli
         documentPhoto: String?,
         passportPhoto: String?
     ): UpdateUserResponse? {
+//        val mutation = UpdateUserMutation(
+//            updateUserInput = updateUserInput,
+//            passportPhoto = if (passportPhoto != null) {
+//                Optional.presentIfNotNull(FileUpload(File(passportPhoto), "image/*"))
+//            } else {
+//                Optional.absent()
+//            },
+//            documentPhoto = if (documentPhoto != null) {
+//                Optional.presentIfNotNull(FileUpload(File(documentPhoto), "image/*"))
+//            } else {
+//                Optional.absent()
+//            }
+//        )
+
         val mutation = UpdateUserMutation(
             updateUserInput = updateUserInput,
-            documentPhoto = Optional.present(documentPhoto)?:Optional.absent(),
-            passportPhoto = Optional.present(passportPhoto)?:Optional.absent()
+            passportPhoto = if (passportPhoto != null) {
+                Optional.presentIfNotNull(passportPhoto)
+            } else {
+                Optional.absent()
+            },
+            documentPhoto = if (documentPhoto != null) {
+                Optional.presentIfNotNull(documentPhoto)
+            } else {
+                Optional.absent()
+            }
         )
 
         return try {
-            val response = apolloClient.mutate(mutation).execute()
+            val response = apolloClient.mutation(mutation).execute()
 
             if (response.hasErrors()) {
                 response.errors?.forEach {
@@ -61,6 +87,10 @@ class UpdateUserRepository @Inject constructor(@Gatekeeper private val apolloCli
                                     documentPhoto = info.documentPhoto,
                                     schoolName = info.schoolName,
                                     waCountryCode = info.waCountryCode,
+                                    dob = info.dob,
+                                    gender = info.gender,
+                                    addressLine1 = info.address?.addressLine1,
+                                    address = Address(city = info.city)
                                     address = info.address?.let { address-> Address(city = address.city, state = address.state) }
 
                                 )
@@ -73,7 +103,10 @@ class UpdateUserRepository @Inject constructor(@Gatekeeper private val apolloCli
                                 documentPhoto = null,
                                 schoolName = null,
                                 waCountryCode = null,
-                                address = null
+                                address = null,
+                                dob = null,
+                                gender = null,
+                                addressLine1 = "",
                             )
                         )
                     }
@@ -126,6 +159,10 @@ class UpdateUserRepository @Inject constructor(@Gatekeeper private val apolloCli
                                 documentPhoto = info.documentPhoto,
                                 schoolName = info.schoolName,
                                 waCountryCode = info.waCountryCode,
+                                dob = info.dob,
+                                gender = info.gender,
+                                addressLine1 = info.address?.addressLine1,
+                                address = Address(city = info.city)
                                 address = info.address?.let { address -> Address(city = address.city, state = address.state) }
                             )
                         } ?: UserInformation(
@@ -137,7 +174,10 @@ class UpdateUserRepository @Inject constructor(@Gatekeeper private val apolloCli
                             documentPhoto = null,
                             schoolName = null,
                             waCountryCode = null,
-                            address = null
+                            address = null,
+                            dob = null,
+                            gender = null,
+                            addressLine1 = ""
                         )
                     )
 

@@ -3,26 +3,43 @@ package xyz.penpencil.competishun.ui.fragment
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import com.apollographql.apollo3.api.Optional
+import dagger.hilt.android.AndroidEntryPoint
 import xyz.penpencil.competishun.R
+import xyz.penpencil.competishun.data.api.ApiProcess
+import xyz.penpencil.competishun.data.model.UpdateUserResponse
 import xyz.penpencil.competishun.databinding.FragmentAddressDetailsBinding
 import xyz.penpencil.competishun.ui.main.HomeActivity
+import xyz.penpencil.competishun.ui.viewmodel.UpdateUserViewModel
 import xyz.penpencil.competishun.utils.SharedPreferencesManager
 
+@AndroidEntryPoint
 class AddressDetailsFragment : DrawerVisibility() {
 
     private var _binding: FragmentAddressDetailsBinding?=null
     private val binding get() = _binding!!
     lateinit var sharedPreferencesManager: SharedPreferencesManager
+    private val updateUserViewModel: UpdateUserViewModel by viewModels()
 
     private var fieldsToVisible = arrayOf<String>()
     private var courseId: String = ""
+
+    private var flatAddress = ""
+    private var pinCode = ""
+    private var city = ""
+    private var state = ""
+    private var cityToEnter = ""
+    private var stateToEnter = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,6 +60,9 @@ class AddressDetailsFragment : DrawerVisibility() {
             courseId = it.getString("IDS", "")
         }
 
+        binding.etState.setText(sharedPreferencesManager.state)
+        binding.etCity.setText(sharedPreferencesManager.city)
+
         setupCharacterCounter()
         pinCodeCheck()
 
@@ -55,21 +75,62 @@ class AddressDetailsFragment : DrawerVisibility() {
                 sharedPreferencesManager.putString("current$courseId", "")
                 sharedPreferencesManager.putBoolean(courseId, true)
                 findNavController().navigate(R.id.action_AddressDetail_to_CourseEmpty)
+                cityToEnter = city.ifEmpty {
+                    sharedPreferencesManager.city.toString()
+                }
+
+                stateToEnter = state.ifEmpty {
+                    sharedPreferencesManager.state.toString()
+                }
+
+                val updateUserInput = com.student.competishun.gatekeeper.type.UpdateUserInput(
+                    pinCode = Optional.present(pinCode),
+                    addressLine1 = Optional.present(flatAddress),
+                    city = Optional.present(cityToEnter),
+                    state = Optional.present(stateToEnter)
+                )
+                updateUserViewModel.updateUser(updateUserInput, null, null)
             }else {
                 Toast.makeText(requireContext(), "Please fill all fields.", Toast.LENGTH_SHORT)
                     .show()
             }
         }
+
+        updateUserViewModel.updateUserErrorHandledResult.observe(viewLifecycleOwner, Observer { result ->
+            when (result) {
+                is ApiProcess.Success -> {
+                    val data: UpdateUserResponse = result.data
+                    Log.d("Address",result.data.user?.userInformation?.addressLine1.toString())
+
+
+                }
+                is ApiProcess.Failure -> {
+                    Log.e("gettingUserUpdatefail", "Error: ${result.message}")
+                    Toast.makeText(context, result.message, Toast.LENGTH_SHORT).show()
+                }
+                ApiProcess.Loading -> {
+                    Log.d("UpdateUser", "Loading user update...")
+                }
+                else -> {
+                    Log.e("gettingUserUpdatefail", "Unexpected result")
+                }
+            }
+        })
+
+
+
+
+
         binding.etContentAddress.addTextChangedListener(textWatcher)
         binding.etPincode.addTextChangedListener(textWatcher)
         binding.etCity.addTextChangedListener(textWatcher)
         binding.etState.addTextChangedListener(textWatcher)
     }
     private fun isAddressFormValid(): Boolean {
-        val flatAddress = binding.etContentAddress.text.toString()
-        val pinCode = binding.etPincode.text.toString()
-        val city = binding.etCity.text.toString()
-        val state = binding.etState.text.toString()
+         flatAddress = binding.etContentAddress.text.toString()
+         pinCode = binding.etPincode.text.toString()
+         city = binding.etCity.text.toString()
+         state = binding.etState.text.toString()
 
         return flatAddress.isNotEmpty() && pinCode.isNotEmpty() && city.isNotEmpty() && state.isNotEmpty()
     }
