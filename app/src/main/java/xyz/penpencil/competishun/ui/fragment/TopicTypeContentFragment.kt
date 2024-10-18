@@ -54,9 +54,7 @@ class TopicTypeContentFragment : Fragment() {
 
         helperFunctions = HelperFunctions()
         binding.backIcon.setOnClickListener {
-//            it.findNavController().popBackStack()
-            it.findNavController().popBackStack(R.id.StudyMaterialDetailsFragment, false)
-
+            it.findNavController().popBackStack()
         }
         val gson = Gson()
         (activity as? HomeActivity)?.showBottomNavigationView(false)
@@ -84,7 +82,7 @@ class TopicTypeContentFragment : Fragment() {
         view.setOnKeyListener(object : View.OnKeyListener {
             override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
                 if (keyCode == KeyEvent.KEYCODE_BACK) {
-                    v?.findNavController()?.popBackStack(R.id.StudyMaterialDetailsFragment, false)
+                    v?.findNavController()?.popBackStack()
                     return true
                 }
                 return false
