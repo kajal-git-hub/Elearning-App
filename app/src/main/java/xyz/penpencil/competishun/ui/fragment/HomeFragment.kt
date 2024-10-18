@@ -33,6 +33,7 @@ import com.student.competishun.curator.AllCourseForStudentQuery
 import com.student.competishun.curator.GetAllCourseCategoriesQuery
 import com.student.competishun.curator.type.FindAllBannersInput
 import com.student.competishun.curator.type.FindAllCourseInputStudent
+import com.student.competishun.gatekeeper.MyDetailsQuery
 import xyz.penpencil.competishun.data.model.PromoBannerModel
 import xyz.penpencil.competishun.data.model.RecommendedCourseDataModel
 import xyz.penpencil.competishun.data.model.Testimonial
@@ -56,6 +57,7 @@ import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.databinding.FragmentHomeBinding
 import xyz.penpencil.competishun.ui.main.MainActivity
 import xyz.penpencil.competishun.ui.viewmodel.MyCoursesViewModel
+import xyz.penpencil.competishun.utils.Constants.OTHER_REQUIREMENT_FIELDS
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
@@ -354,21 +356,48 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun fetchCoursesAndUpdateUI() {
+    private fun fetchCoursesAndUpdateUI(
+        userDetails: MyDetailsQuery.GetMyDetails
+    ) {
+        // Build lists based on user details
+        val personal = mutableListOf<String>().apply {
+            if (userDetails.fullName?.isNotEmpty() == true) add("FULL_NAME")
+            if (userDetails.mobileNumber?.isNotEmpty() == true) add("WHATSAPP_NUMBER")
+            if (userDetails.userInformation.fatherName?.isNotEmpty() == true) add("FATHERS_NAME")
+            if (userDetails.userInformation.tShirtSize?.isNotEmpty() == true) add("T_SHIRTS")
+        }
+
+        val document = mutableListOf<String>().apply {
+            if (userDetails.userInformation.documentPhoto?.isNotEmpty() == true) add("AADHAR_CARD")
+            if (userDetails.userInformation.passportPhoto?.isNotEmpty() == true) add("PASSPORT_SIZE_PHOTO")
+        }
+
+        val address = if (userDetails.userInformation.address == null) {
+            listOf("FULL_ADDRESS")
+        } else {
+            emptyList()
+        }
+
         myCoursesViewModel.myCourses.observe(viewLifecycleOwner) { result ->
             result.onSuccess { data ->
-                data.myCourses.forEach { courseList ->
-                    if (!sharedPreferencesManager.getBoolean(courseList.course.id, false)) {
-                        findNavController().navigate(R.id.action_homeFragment_to_PersonalDetailFragment)
-                        return@observe
-                    }
+                val hashMap = data.myCourses
+                    .flatMap { it.course.other_requirements.orEmpty() }
+                    .map { it.rawValue }
+                    .toHashSet()
+
+                if (hashMap.contains("ALL")) return@onSuccess
+                if ((personal + document + address).any { it in hashMap }) {
+                    findNavController().navigate(R.id.action_homeFragment_to_PersonalDetailFragment)
                 }
             }.onFailure {
                 Log.e("MyCoursesFail", it.message.toString())
             }
         }
+
+        // Fetch the courses
         myCoursesViewModel.fetchMyCourses()
     }
+
 
 
     private fun preventToMultiCall(id: Int) {
@@ -410,6 +439,8 @@ class HomeFragment : Fragment() {
                     getAllCoursesForStudent("IIT-JEE")
                 }
                 Log.e("courseeTypehome", courseType)
+
+                fetchCoursesAndUpdateUI(data.getMyDetails)
 
             }.onFailure { exception ->
                 Toast.makeText(
@@ -634,7 +665,7 @@ class HomeFragment : Fragment() {
     }
 
 
-    fun getAllLectureCount(courseId: String, callback: (String, Int) -> Unit) {
+    private fun getAllLectureCount(courseId: String, callback: (String, Int) -> Unit) {
 
         studentCoursesViewModel.fetchLectures(courseId)
         Log.e("getcourseIds", courseId)
