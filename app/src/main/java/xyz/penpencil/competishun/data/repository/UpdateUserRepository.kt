@@ -4,13 +4,13 @@ import android.util.Log
 import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.api.Optional
 import com.apollographql.apollo3.exception.ApolloException
-import xyz.penpencil.competishun.data.api.Gatekeeper
-import xyz.penpencil.competishun.data.model.Address
 import com.student.competishun.gatekeeper.UpdateUserMutation
+import xyz.penpencil.competishun.data.api.Gatekeeper
 import xyz.penpencil.competishun.data.model.UpdateUserResponse
 import xyz.penpencil.competishun.data.model.UserInformation
 import com.student.competishun.gatekeeper.type.UpdateUserInput
 import xyz.penpencil.competishun.data.api.ApiProcess
+import xyz.penpencil.competishun.data.model.Address
 import xyz.penpencil.competishun.data.model.User
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -61,7 +61,7 @@ class UpdateUserRepository @Inject constructor(@Gatekeeper private val apolloCli
                                     documentPhoto = info.documentPhoto,
                                     schoolName = info.schoolName,
                                     waCountryCode = info.waCountryCode,
-                                    address = info.address?.let { address-> Address(city = address.city) }
+                                    address = info.address?.let { address-> Address(city = address.city, state = address.state) }
 
                                 )
                             } ?: UserInformation(
@@ -126,7 +126,7 @@ class UpdateUserRepository @Inject constructor(@Gatekeeper private val apolloCli
                                 documentPhoto = info.documentPhoto,
                                 schoolName = info.schoolName,
                                 waCountryCode = info.waCountryCode,
-                                address = info.address?.let { address -> Address(city = address.city) }
+                                address = info.address?.let { address -> Address(city = address.city, state = address.state) }
                             )
                         } ?: UserInformation(
                             id = result.id,

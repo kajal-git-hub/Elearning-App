@@ -8,7 +8,6 @@ mutation UpdateUser($updateUserInput: UpdateUserInput!, $documentPhoto: Upload, 
             preparingFor
             targetYear
             collegeName
-            city
             waCountryCode
             documentPhoto
             schoolName
@@ -17,7 +16,9 @@ mutation UpdateUser($updateUserInput: UpdateUserInput!, $documentPhoto: Upload, 
             dob
             address {
                 city
+                state
                 addressLine1
+                pinCode
             }
         }
         id

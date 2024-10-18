@@ -116,8 +116,10 @@ class OnBoardingFragment : Fragment() {
                     fullName = Optional.Present(sharedPreferencesManager.name),
                     )
                 updateUserViewModel.updateUser(updateUserInput,null,null)
-
-                findNavController().navigate(R.id.action_OnBoardingFragment_to_prepForFragment)
+                val bundle = Bundle().apply {
+                    putString("loginType", loginType)
+                }
+                findNavController().navigate(R.id.action_OnBoardingFragment_to_prepForFragment,bundle)
             } else {
                 Toast.makeText(context, "Please select a name and city", Toast.LENGTH_SHORT).show()
             }
@@ -132,7 +134,7 @@ class OnBoardingFragment : Fragment() {
                 val name = data.getMyDetails.fullName
                 val city = data.getMyDetails.userInformation.address?.city
                 val state = data.getMyDetails.userInformation.address?.state
-
+                Log.d("userDState",data.getMyDetails.userInformation.address?.state.toString())
 //                if (!name.isNullOrEmpty()) {
 //                    binding.etEnterHereText.setText(name)
 //                }
@@ -141,7 +143,7 @@ class OnBoardingFragment : Fragment() {
                 }
 
                 if (!state.isNullOrEmpty()) {
-                    binding.etEnterStateText.setText(city)
+                    binding.etEnterStateText.setText(state)
                 }
 
                 sharedPreferencesManager.name = name
@@ -196,7 +198,8 @@ class OnBoardingFragment : Fragment() {
     }
 
     private fun isValidEmail(email: String): Boolean {
-        return Patterns.EMAIL_ADDRESS.matcher(email).matches()
+        val emailPattern = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$"
+        return email.trim().matches(emailPattern.toRegex())
     }
 
     private fun saveNameAndCity() {

@@ -15,5 +15,7 @@ data class UserInformation(
 
 public data class Address(
     public val city: String?,
+    public val state: String?,
+
 )
 
