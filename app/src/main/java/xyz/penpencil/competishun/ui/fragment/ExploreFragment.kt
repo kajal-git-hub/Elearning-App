@@ -54,6 +54,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.databinding.FragmentExploreBinding
 import xyz.penpencil.competishun.ui.main.PdfViewActivity
+import xyz.penpencil.competishun.ui.viewmodel.UserViewModel
 
 
 @AndroidEntryPoint
@@ -86,6 +87,9 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
 
     private var categoryName = ""
     var faqAdapter : FAQAdapter?=null
+
+
+    private val userViewModel: UserViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -160,6 +164,7 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
         courseId = arguments?.getString("course_id").toString()
         folderlist = emptyList()
         getAllLectureCount(courseId)
+        initObserver()
         if (lectureCount.isNullOrEmpty()) {
             lectureCount = "0"
         }
@@ -651,6 +656,21 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
             }
         })
 
+    }
+
+
+    private fun initObserver(){
+        userViewModel.userDetails.observe(viewLifecycleOwner) { result ->
+            if (result.isFailure) return@observe
+            result.onSuccess {
+                it.getMyDetails.courses?.map { data->
+                    if (courseId == data?.id){
+                        binding.submit.text = "Continue"
+                    }
+                }
+            }
+        }
+        userViewModel.fetchUserDetails()
     }
 
     private fun getCourseTagsData() {

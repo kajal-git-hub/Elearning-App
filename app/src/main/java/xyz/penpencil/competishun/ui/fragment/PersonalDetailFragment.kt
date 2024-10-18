@@ -1,7 +1,6 @@
 package xyz.penpencil.competishun.ui.fragment
 
 
-import android.R.attr.fragment
 import android.os.Bundle
 import android.text.Editable
 import android.text.InputFilter
