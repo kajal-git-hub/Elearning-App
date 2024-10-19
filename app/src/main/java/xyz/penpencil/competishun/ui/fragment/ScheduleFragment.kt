@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -375,11 +376,22 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
         }
 
     }
+
+    override fun onResume() {
+        super.onResume()
+        requireActivity().window.statusBarColor = ContextCompat.getColor(requireContext(), R.color._e25b49)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        requireActivity().window.statusBarColor = ContextCompat.getColor(requireContext(), R.color._white_F6F6FF)
+    }
+
     private fun videoUrlApi(viewModel: VideourlViewModel, folderContentId: String, name: String) {
 
         viewModel.fetchVideoStreamUrl(folderContentId, "480")
          Log.e("foldfdfd",folderContentId)
-        viewModel.videoStreamUrl.observe(viewLifecycleOwner, { signedUrl ->
+        viewModel.videoStreamUrl.observe(viewLifecycleOwner) { signedUrl ->
             Log.d("Videourl", "Signed URL: $signedUrl")
             if (signedUrl != null) {
                 val bundle = Bundle().apply {
@@ -392,7 +404,7 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
             } else {
                 // Handle error or null URL
             }
-        })
+        }
     }
 
 
