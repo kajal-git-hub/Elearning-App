@@ -98,7 +98,7 @@ class LoginFragment : Fragment() {
 
         setupUI()
         setupObservers()
-
+        navigateToHome("email")
 //
 
         binding.etHelpText.setOnClickListener {

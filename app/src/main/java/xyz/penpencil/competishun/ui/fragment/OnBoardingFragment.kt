@@ -2,6 +2,8 @@ package xyz.penpencil.competishun.ui.fragment
 
 import android.content.Context
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -10,6 +12,7 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.PopupMenu
 import android.widget.Toast
@@ -41,7 +44,11 @@ class OnBoardingFragment : Fragment() {
     private lateinit var sharedPreferencesManager: SharedPreferencesManager
     private val updateUserViewModel: UpdateUserViewModel by viewModels()
     private val userViewModel: UserViewModel by viewModels()
-
+    private val handler = Handler(Looper.getMainLooper())
+    private var isSelectingState = false
+    private var isSelectingCity = false
+    private var cityRunnable: Runnable? = null
+    private var runnable: Runnable? = null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -69,23 +76,94 @@ class OnBoardingFragment : Fragment() {
         val phoneNo = sharedPreferencesManager.mobileNo
         val email = sharedPreferencesManager.email
         val statesAndCities = loadStatesAndCities(requireContext())
-//        binding.etEnterStateText.setOnClickListener {
+
+        binding.etEnterStateText.setOnClickListener {
+            binding.etEnterStateText.setText("")
+            hideKeyboard(binding.etEnterStateText)
+//            Log.e("statesAndCites",statesAndCities.toString())
 //            statesAndCities?.let {
 //                val stateNames = it.map { state -> state.name }
-//                showStateDialog(stateNames)
+//                showStateDropdown(binding.etEnterStateText, stateNames) // Call the updated function
 //            }
-//        }
-//
-//        binding.etEnterCityText.setOnClickListener {
+
+        }
+        binding.etEnterStateText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                if (!isSelectingState) {
+                    runnable?.let { handler.removeCallbacks(it) }
+                    runnable = Runnable {
+                    val query = s.toString()
+                    val filteredStates = statesAndCities?.filter { state ->
+                        state.name.contains(
+                            query,
+                            ignoreCase = true
+                        ) // Filter states based on input
+                    }?.map { it.name } ?: emptyList()
+
+                    // Show the dropdown menu with filtered states
+                    if (filteredStates.isNotEmpty()) {
+                        showStateDropdown(binding.etEnterStateText, filteredStates)
+                    }
+                }
+                    handler.postDelayed(runnable!!, 300)
+                } else {
+
+                }
+            }
+
+            override fun afterTextChanged(s: Editable?) {}
+        })
+
+
+        binding.etEnterCityText.setOnClickListener {
+            binding.etEnterCityText.setText("")
 //            val selectedState = binding.etEnterStateText.text.toString()
 //            val selectedStateObj = statesAndCities?.find { it.name == selectedState }
-//
+//            Log.e("selectedStateObj",selectedStateObj.toString())
 //            selectedStateObj?.let { state ->
-//                showCityDialog(state.cities)
+//                showCityDropdown(binding.etEnterCityText, state.cities)
 //            } ?: run {
 //                Toast.makeText(requireContext(), "Please select a state first", Toast.LENGTH_SHORT).show()
 //            }
-//        }
+        }
+
+
+        binding.etEnterCityText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                // Only filter cities if we are not selecting one
+                if (!isSelectingCity) {
+                    // Cancel any existing runnable
+                    cityRunnable?.let { handler.removeCallbacks(it) }
+
+                    // Create a new runnable for debouncing
+                    cityRunnable = Runnable {
+                        val query = s.toString().trim()
+                        val selectedState = binding.etEnterStateText.text.toString()
+                        val selectedStateObj = statesAndCities?.find { it.name == selectedState }
+
+                        // Filter cities based on the selected state and user input
+                        val filteredCities = selectedStateObj?.cities?.filter { city ->
+                            city.contains(query, ignoreCase = true) // Filter cities based on input
+                        } ?: emptyList()
+
+                        // Show the dropdown menu with filtered cities
+                        if (filteredCities.isNotEmpty()) {
+                            showCityDropdown(binding.etEnterCityText, filteredCities)
+                        }
+                    }
+                    // Post the runnable with a delay (e.g., 300 milliseconds)
+                    handler.postDelayed(cityRunnable!!, 300)
+                }
+            }
+
+            override fun afterTextChanged(s: Editable?) {}
+        })
+
+
         savedName?.let {
             binding.etEnterHereText.setText(it)
         }
@@ -154,26 +232,32 @@ class OnBoardingFragment : Fragment() {
         }
     }
 
-    private fun showDropdown(editText: EditText) {
-        val popupMenu: PopupMenu = PopupMenu(
-            requireContext(),
-            editText,
-            Gravity.NO_GRAVITY,
-            0,
-            xyz.penpencil.competishun.R.style.CustomPopupMenu
-        )
-        popupMenu.menu.add("Male")
-        popupMenu.menu.add("Female")
-        popupMenu.menu.add("Prefer not to say")
+    private fun showCityDropdown(etEnterCityText: EditText, cities: List<String>) {
+        val popupMenu = PopupMenu(requireContext(), etEnterCityText, Gravity.NO_GRAVITY, 0, xyz.penpencil.competishun.R.style.CustomPopupMenu)
+        popupMenu.menu.clear()
 
+        // Add cities to the popup menu
+        for (city in cities) {
+            popupMenu.menu.add(city)
+        }
+
+        // Set the selected city to the EditText
         popupMenu.setOnMenuItemClickListener { item ->
-            val selectedGender: String = item.title.toString()
-          //  gender = selectedGender
-            editText.setText(selectedGender)
+            isSelectingCity = true
+            val selectedCity: String = item.title.toString()
+            etEnterCityText.setText(selectedCity)
+            hideKeyboard(etEnterCityText)
+            isSelectingCity = false
             true
         }
 
         popupMenu.show()
+    }
+
+
+    private fun hideKeyboard(view: View) {
+        val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
     private fun observeUserDetails() {
@@ -234,35 +318,32 @@ class OnBoardingFragment : Fragment() {
         }
     }
 
-    private fun showStateDialog(states: List<String>) {
-        val builder = AlertDialog.Builder(requireContext())
-        builder.setTitle("Select State")
+    private fun showStateDropdown(editText: EditText, states: List<String>) {
+        val popupMenu = PopupMenu(requireContext(), editText, Gravity.NO_GRAVITY, 0, xyz.penpencil.competishun.R.style.CustomPopupMenu)
+        // Clear previous menu items
+        popupMenu.menu.clear()
 
-        builder.setItems(states.toTypedArray()) { dialog, which ->
-            // Set the selected state to the EditText
-            binding.etEnterStateText.setText(states[which])
-            // Reset the city field when a state is changed
+        // Add states to the popup menu
+        for (state in states) {
+            popupMenu.menu.add(state)
+        }
+
+        // Set the selected state to the EditText and reset the city field
+        popupMenu.setOnMenuItemClickListener { item ->
+            isSelectingState = true
+            val selectedState: String = item.title.toString()
+            editText.setText(selectedState)
             binding.etEnterCityText.text = null
-            dialog.dismiss()
+            hideKeyboard(editText)
+            isSelectingState = false
+            editText.clearFocus()
+            // Reset city field when state is changed
+            true
         }
 
-        val dialog = builder.create()
-        dialog.show()
+        popupMenu.show()
     }
 
-    private fun showCityDialog(cities: List<String>) {
-        val builder = AlertDialog.Builder(requireContext())
-        builder.setTitle("Select City")
-
-        builder.setItems(cities.toTypedArray()) { dialog, which ->
-            // Set the selected city to the EditText
-            binding.etEnterCityText.setText(cities[which])
-            dialog.dismiss()
-        }
-
-        val dialog = builder.create()
-        dialog.show()
-    }
 
 
 
@@ -275,6 +356,7 @@ class OnBoardingFragment : Fragment() {
             inputStream.close()
             String(buffer, Charsets.UTF_8)
         } catch (ex: IOException) {
+            Log.e("exceptionjson",ex.toString())
             ex.printStackTrace()
             null
         }
