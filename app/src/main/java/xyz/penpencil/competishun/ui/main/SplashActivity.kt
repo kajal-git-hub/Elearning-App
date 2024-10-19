@@ -7,6 +7,7 @@ import android.os.Looper
 import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import xyz.penpencil.competishun.ui.viewmodel.UserViewModel
 import xyz.penpencil.competishun.utils.SharedPreferencesManager
 import dagger.hilt.android.AndroidEntryPoint
@@ -91,5 +92,14 @@ class SplashActivity : AppCompatActivity() {
     }
 
 
+    override fun onResume() {
+        super.onResume()
+        window.statusBarColor = ContextCompat.getColor(this, R.color.splash_blue)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        window.statusBarColor = ContextCompat.getColor(this, R.color.white)
+    }
 
 }
