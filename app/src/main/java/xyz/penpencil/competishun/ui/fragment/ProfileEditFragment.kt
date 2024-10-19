@@ -112,6 +112,8 @@ class ProfileEditFragment(val updateCourse:(year:String,course:String )->Unit) :
             Toast.makeText(requireContext(), "Updated Successfully", Toast.LENGTH_SHORT).show()
 
             // Trigger the callback with the appropriate values
+            sharedPreferencesManager.targetYear = targetYear.toInt()
+            sharedPreferencesManager.preparingFor = preparingFor
             updateCourse(targetYear, preparingFor)
 
             // Dismiss the bottom sheet
