@@ -36,6 +36,10 @@ class OurCoursesAdapter(private val listOurCoursesItem: List<GetAllCourseCategor
         if (itemOurCourse.name == "Study Material") {
             holder.itemView.visibility = View.GONE
         }else holder.itemView.visibility = View.VISIBLE
+
+        if (itemOurCourse.name == "Digital Book" || itemOurCourse.name == "Chapter Wise Test"){
+            holder.fullYearComing.visibility = View.VISIBLE
+        } else { holder.fullYearComing.visibility = View.GONE }
         val imageResource = images[position % images.size]
         holder.fullYearCourseImage.setImageResource(imageResource)
         holder.itemView.setOnClickListener {
@@ -50,6 +54,7 @@ class OurCoursesAdapter(private val listOurCoursesItem: List<GetAllCourseCategor
     class OurCourseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val tvCourseName: TextView =itemView.findViewById(R.id.tvCourseName)
         val fullYearCourseImage: ImageView = itemView.findViewById(R.id.fullYearCourseImage)
+        val fullYearComing: ImageView = itemView.findViewById(R.id.fullYearcoming)
     }
 
 }

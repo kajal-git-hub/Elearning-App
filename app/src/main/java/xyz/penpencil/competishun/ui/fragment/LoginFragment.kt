@@ -98,7 +98,6 @@ class LoginFragment : Fragment() {
 
         setupUI()
         setupObservers()
-
 //
 
         binding.etHelpText.setOnClickListener {
