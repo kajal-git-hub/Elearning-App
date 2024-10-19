@@ -66,14 +66,14 @@
 
         <pl.droidsonroids.gif.GifImageView
             android:id="@+id/gif"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="130dp"
+            android:layout_height="130dp"
             android:layout_marginTop="@dimen/_85dp"
             app:layout_constraintTop_toBottomOf="@+id/ivHeader"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             android:background="#F6F6FF"
-            android:src="@drawable/coming_soon"
+            android:src="@drawable/clock_gif"
             />
 
         <LinearLayout

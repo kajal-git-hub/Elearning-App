@@ -233,15 +233,17 @@ class HomeFragment : Fragment() {
             _binding?.progressBar?.visibility = View.GONE
 
             if (!category.isNullOrEmpty()) {
+                // Filter out the "Study Material" category
+                val filteredCategory = category.filter { it.name != "Study Material" }
+
                 _binding?.rvOurCourses?.visibility = View.VISIBLE
-                listOurCoursesItem = category
+                listOurCoursesItem = filteredCategory
                 adapterOurCourses = OurCoursesAdapter(listOurCoursesItem!!, object :
                     OnCourseItemClickListener {
                     override fun onCourseItemClick(course: GetAllCourseCategoriesQuery.GetAllCourseCategory) {
                         val bundle = Bundle().apply {
                             putString("course_name", course.name)
                             putString("category_id", course.id)
-
                         }
                         findNavController().navigate(
                             R.id.action_homeFragment_to_coursesFragment,

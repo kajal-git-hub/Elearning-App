@@ -31,6 +31,9 @@ class ProfileEditFragment(val updateCourse:(year:String,course:String )->Unit) :
     private var selectedExam: String? = null
     private var selectedYear: Int? = null
 
+    private var targetYear = ""
+    private var preparingFor = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -48,6 +51,9 @@ class ProfileEditFragment(val updateCourse:(year:String,course:String )->Unit) :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val prevSelectedYear = sharedPreferencesManager.targetYear
+        val prevSelectedCourse = sharedPreferencesManager.preparingFor
 
 
         binding.closeBottomClass.setOnClickListener {
@@ -84,10 +90,11 @@ class ProfileEditFragment(val updateCourse:(year:String,course:String )->Unit) :
 
 
         binding.mbSaveButton.setOnClickListener {
+            // Retrieve the target year and course from selected values or fallback to SharedPreferences
+            targetYear = selectedYear?.toString() ?: prevSelectedYear.toString()
+            preparingFor = (selectedExam ?: prevSelectedCourse).toString()
 
-            val targetYear = selectedYear
-            val preparingFor = selectedExam
-
+            // Create the updatedUserInput object
             val updatedUserInput = UpdateUserInput(
                 city = Optional.Present(sharedPreferencesManager.city),
                 fullName = Optional.Present(sharedPreferencesManager.name),
@@ -97,9 +104,17 @@ class ProfileEditFragment(val updateCourse:(year:String,course:String )->Unit) :
                 reference = Optional.Present(sharedPreferencesManager.reference),
                 targetYear = Optional.Present(selectedYear ?: sharedPreferencesManager.targetYear)
             )
+
+            // Update user data through ViewModel
             updateUserViewModel.updateUser(updatedUserInput, null, null)
+
+            // Show confirmation message
             Toast.makeText(requireContext(), "Updated Successfully", Toast.LENGTH_SHORT).show()
-            updateCourse(targetYear.toString(), preparingFor.toString())
+
+            // Trigger the callback with the appropriate values
+            updateCourse(targetYear, preparingFor)
+
+            // Dismiss the bottom sheet
             dismiss()
         }
     }

@@ -28,6 +28,7 @@ import androidx.media3.common.MediaItem
 import androidx.navigation.NavOptions
 import androidx.navigation.findNavController
 import com.bumptech.glide.request.target.Target
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.tabs.TabLayout
 import com.student.competishun.curator.AllCourseForStudentQuery
 import com.student.competishun.curator.GetCourseByIdQuery
@@ -165,7 +166,9 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
                     val navOptions = NavOptions.Builder()
                         .setPopUpTo(nav.graph.startDestinationId, true)
                         .build()
-                    nav.navigate(R.id.homeFragment, Bundle(), navOptions)
+                    nav.navigate(R.id.courseEmptyFragment, Bundle(), navOptions)
+                    val bottomNavigationView: BottomNavigationView? = activity?.findViewById(R.id.bottomNav)
+                    bottomNavigationView?.selectedItemId = R.id.myCourse
                 }
             }else {
                 createCart(createCartViewModel, "FullPayment")
@@ -678,7 +681,7 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
                 it.getMyDetails.courses?.map { data->
                     if (courseId == data?.enrolledCourseId){
                         courselreadyBuy = true
-                        binding.submit.text = "Continue"
+                        binding.submit.text = "Start Now"
                     }
                 }
             }

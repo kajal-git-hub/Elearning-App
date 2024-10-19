@@ -69,23 +69,23 @@ class OnBoardingFragment : Fragment() {
         val phoneNo = sharedPreferencesManager.mobileNo
         val email = sharedPreferencesManager.email
         val statesAndCities = loadStatesAndCities(requireContext())
-        binding.etEnterStateText.setOnClickListener {
-            statesAndCities?.let {
-                val stateNames = it.map { state -> state.name }
-                showStateDialog(stateNames)
-            }
-        }
-
-        binding.etEnterCityText.setOnClickListener {
-            val selectedState = binding.etEnterStateText.text.toString()
-            val selectedStateObj = statesAndCities?.find { it.name == selectedState }
-
-            selectedStateObj?.let { state ->
-                showCityDialog(state.cities)
-            } ?: run {
-                Toast.makeText(requireContext(), "Please select a state first", Toast.LENGTH_SHORT).show()
-            }
-        }
+//        binding.etEnterStateText.setOnClickListener {
+//            statesAndCities?.let {
+//                val stateNames = it.map { state -> state.name }
+//                showStateDialog(stateNames)
+//            }
+//        }
+//
+//        binding.etEnterCityText.setOnClickListener {
+//            val selectedState = binding.etEnterStateText.text.toString()
+//            val selectedStateObj = statesAndCities?.find { it.name == selectedState }
+//
+//            selectedStateObj?.let { state ->
+//                showCityDialog(state.cities)
+//            } ?: run {
+//                Toast.makeText(requireContext(), "Please select a state first", Toast.LENGTH_SHORT).show()
+//            }
+//        }
         savedName?.let {
             binding.etEnterHereText.setText(it)
         }
