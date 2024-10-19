@@ -30,6 +30,8 @@ query MyDetails {
             rollNumber
             passportPhoto
             documentPhoto
+            dob
+            gender
             fatherName
             tShirtSize
         }
