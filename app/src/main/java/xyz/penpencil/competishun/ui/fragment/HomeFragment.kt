@@ -340,8 +340,6 @@ class HomeFragment : Fragment() {
             true
 
         }
-
-//        fetchCoursesAndUpdateUI()
         clickListener()
     }
 
@@ -373,7 +371,7 @@ class HomeFragment : Fragment() {
             if (!userDetails.userInformation.passportPhoto.isNullOrEmpty()) add("PASSPORT_SIZE_PHOTO")
         }
 
-        val missingAddressFields = if (userDetails.userInformation.address == null) {
+        val missingAddressFields = if (userDetails.userInformation.address != null) {
             listOf("FULL_ADDRESS")
         } else {
             emptyList()
@@ -411,10 +409,6 @@ class HomeFragment : Fragment() {
     }
 
     fun getMyDetails() {
-    // Test Code
-   /*findNavController().navigate(R.id.action_homeFragment_to_PersonalDetailFragment, Bundle().also {
-            it.putStringArray("FIELD_REQUIRED",  arrayOf("FULL_NAME", "WHATSAPP_NUMBER", "FATHERS_NAME", "T_SHIRTS", "AADHAR_CARD", "FULL_ADDRESS"))
-        })*/
         userViewModel.fetchUserDetails()
         userViewModel.userDetails.observe(viewLifecycleOwner) { result ->
             result.onSuccess { data ->
@@ -448,9 +442,8 @@ class HomeFragment : Fragment() {
                 } else {
                     getAllCoursesForStudent("IIT-JEE")
                 }
-                Log.e("courseeTypehome", courseType)
 
-               // fetchCoursesAndUpdateUI(data.getMyDetails)
+                fetchCoursesAndUpdateUI(data.getMyDetails)
 
             }.onFailure { exception ->
                 Toast.makeText(
@@ -578,7 +571,7 @@ class HomeFragment : Fragment() {
         }
     }
 
-    fun getAllBanners() {
+    private fun getAllBanners() {
         val filtersbanner = FindAllBannersInput(
             limit = Optional.Absent
         )

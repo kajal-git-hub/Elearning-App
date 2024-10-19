@@ -30,6 +30,7 @@ android {
             packageName.set("com.student.competishun.gatekeeper")
             schemaFile.set(file("src/main/graphql/com/student/competishun/gatekeeper/schema-gatekeeper.graphqls"))
             sourceFolder.set("com/student/competishun/gatekeeper")
+            mapScalarToUpload("Upload")
             generateKotlinModels.set(true)
         }
         service("curator") {
@@ -119,7 +120,7 @@ dependencies {
 
     implementation(libs.circular.progress.indicator)
 
-    implementation ("com.pierfrancescosoffritti.androidyoutubeplayer:core:11.0.1")
+    implementation (libs.core)
 
 
 }

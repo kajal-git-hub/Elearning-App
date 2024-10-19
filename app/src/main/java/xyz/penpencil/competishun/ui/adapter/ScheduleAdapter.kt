@@ -101,7 +101,7 @@ class ScheduleAdapter(private val scheduleItems: List<ScheduleData>, private val
                 val lectureStartTime = innerItem.lecture_start_time
                 val lectureEndTime = innerItem.lecture_end_time
 
-                if (innerItem.completedDuration == duration){
+                if (innerItem.completedDuration!=0 && (innerItem.completedDuration == duration)){
                     //completed
                     binding.tvClassTimings.visibility = View.GONE
                     binding.tvClassStatus.visibility = View.VISIBLE
@@ -236,69 +236,64 @@ class ScheduleAdapter(private val scheduleItems: List<ScheduleData>, private val
                 return String.format("Time Remaining: %02d:%02d:%02d", hours, minutes, seconds)
             }
 
-            private fun startCountdownTimer(targetTimestamp: String, fileUrl: String,fileType:String,ContentId:String) { // Define UTC and IST zones
+            private fun startCountdownTimer(targetTimestamp: String, fileUrl: String, fileType: String, ContentId: String) {
                 val utcZone = ZoneId.of("UTC")
                 val istZone = ZoneId.of("Asia/Kolkata")
-
-                // Parse the target timestamp into a ZonedDateTime object in UTC
                 val targetTimeUtc = ZonedDateTime.parse(targetTimestamp, DateTimeFormatter.ISO_DATE_TIME.withZone(utcZone))
 
-                // Convert target time to IST
                 val targetTimeIst = targetTimeUtc.withZoneSameInstant(istZone)
 
-                // Calculate initial duration in milliseconds from current time in IST
                 val nowInIst = ZonedDateTime.now(istZone)
                 val initialDuration = Duration.between(nowInIst, targetTimeIst).toMillis()
 
-                // Initialize the countdown timer
                 val timer = object : CountDownTimer(initialDuration, 1000) {
                     override fun onTick(millisUntilFinished: Long) {
                         val secondsRemaining = millisUntilFinished / 1000
-                        val days = secondsRemaining / 86400 // 60*60*24
+                        val days = secondsRemaining / 86400 // 60 * 60 * 24
                         val hours = (secondsRemaining % 86400) / 3600
                         val minutes = (secondsRemaining % 3600) / 60
                         val seconds = secondsRemaining % 60
                         val totalHours = (days * 24) + hours
-                        binding.clJoinLecture.visibility = View.GONE
-                        binding.clLectureTimer.visibility = View.VISIBLE
+                        if (binding.clLectureTimer.visibility != View.VISIBLE) {
+                            binding.clLectureTimer.visibility = View.VISIBLE
+                            binding.clJoinLecture.visibility = View.GONE
+                        }
                         binding.tvHoursRemaining.text = "$totalHours"
                         binding.tvMinRemaining.text = "$minutes"
                         binding.tvSecRemaining.text = "$seconds"
-                        // Update the TextView on the main thread
-
                     }
 
                     override fun onFinish() {
                         val nowInIst = ZonedDateTime.now(istZone)
+                        Log.e("CountdownTimer", "Target Time: $targetTimeIst | onFinish: $nowInIst")
+
+                        // Calculate time passed since the target time
                         val durationSinceEnd = Duration.between(targetTimeIst, nowInIst)
                         val daysPassed = durationSinceEnd.toDays()
                         val hoursPassed = durationSinceEnd.toHours() % 24
                         val minutesPassed = durationSinceEnd.toMinutes() % 60
 
-
-                        // Build the message based on the duration
-                        val timePassedMessage = when {
-                            daysPassed > 0 ->binding.tvClassStartedStatus.text = String.format("Started %d days ago", daysPassed)
-                            hoursPassed > 0 -> binding.tvClassStartedStatus.text =String.format("Started %d hours ago", hoursPassed)
-                            else -> binding.tvClassStartedStatus.text = String.format("Started %d minutes ago", minutesPassed)
+                        val message = when {
+                            daysPassed > 0 -> "Started $daysPassed days ago"
+                            hoursPassed > 0 -> "Started $hoursPassed hours ago"
+                            else -> "Started $minutesPassed minutes ago"
                         }
+                        binding.tvClassStartedStatus.text = message
                         binding.clLectureTimer.visibility = View.GONE
                         binding.clJoinLecture.visibility = View.VISIBLE
+
+                        // Handle the join lecture button click
                         binding.btnJoinLecture.setOnClickListener {
-                            Log.e("fileypee","$fileUrl ftyp:- $fileType Id $ContentId")
-                            toolbarListener.onCustomizeToolbar(fileUrl, fileType,ContentId)
+                            Log.e("File Info", "$fileUrl | Type: $fileType | Content ID: $ContentId")
+                            toolbarListener.onCustomizeToolbar(fileUrl, fileType, ContentId)
                         }
-                    //    binding.tvClassStartedStatus.text = String.format("Started %d hours and %d minutes ago", hoursPassed, minutesPassed)
-
-
                     }
                 }
 
-                timer.start()}
-
-
-
-    }
+                // Start the timer
+                timer.start()
+            }
+        }
     }
 
 

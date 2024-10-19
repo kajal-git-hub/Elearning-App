@@ -31,8 +31,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_gravity="center"
-            android:keepScreenOn="true"
-            app:resize_mode="zoom" />
+            android:keepScreenOn="true"/>
 
         <!-- Back Button -->
         <ImageButton

@@ -124,4 +124,7 @@
     <string name="new_text_Add">New tests are being added to our platform soon. Stay tuned and keep up the great work!</string>
 
 
+    <string name="fill_all_fields">Please fill all fields.</string>
+    <string name="pincode_limit">Pincode cannot be more than 6 digits.</string>
+    <string name="char_limit_exceeded">Character limit exceeded. Maximum 100 characters allowed.</string>
 </resources>

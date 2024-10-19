@@ -19,6 +19,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.apollographql.apollo3.api.Optional
+import com.student.competishun.gatekeeper.MyDetailsQuery
 import com.student.competishun.gatekeeper.type.UpdateUserInput
 import dagger.hilt.android.AndroidEntryPoint
 import xyz.penpencil.competishun.R
@@ -51,6 +52,8 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
     private var fieldsToVisible = mutableListOf<String>()
     private var bottomSheetTSizeFragment = BottomSheetTSizeFragment()
     private var courseId: String = ""
+    var userDetails: MyDetailsQuery.GetMyDetails?=null
+    var isActive = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -85,22 +88,16 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
 
         (activity as? HomeActivity)?.showBottomNavigationView(false)
         (activity as? HomeActivity)?.showFloatingButton(false)
-
-        arguments?.getStringArrayList("FIELD_REQUIRED")
+        fieldsToVisible = arguments?.getStringArray("FIELD_REQUIRED")?.toMutableList()?: mutableListOf()
         sharedPreferencesManager = SharedPreferencesManager(requireContext())
 
-
-        Log.e("asdhasjkdhjaksdhasj", "onViewCreated: $fieldsToVisible")
-        // Populate saved data from SharedPreferences
+        initObserver()
         populateSavedData()
 
         // Show bottom sheet description if not shown before
         showBottomSheetIfFirstTime()
+        fetchData()
 
-        // Fetch courses and then update visibility
-        fetchCoursesAndUpdateUI()
-
-        userViewModel.fetchUserDetails()
 
         binding.spinnerTshirtSize.setOnClickListener {
             showBottomSheetTSize()
@@ -108,20 +105,8 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
 
         binding.btnAddDetails.setOnClickListener {
             if (isFormValid()) {
-                updateUserDetails()
-                it.findNavController().let { nav->
-                   nav.navigate(getFragmentId(), Bundle().apply {
-                       putStringArray("IDS_FIELDS_LIST", fieldsToVisible.toTypedArray())
-                       putString("IDS", courseId)
-                   })
-                   /* val navOptions = NavOptions.Builder()
-                        .setPopUpTo(nav.graph.startDestinationId, true)
-                        .build()
-                    nav.navigate(getFragmentId(), Bundle().apply {
-                        putStringArray("IDS", fieldsToVisible.toTypedArray())
-                        putString("IDS", courseId)
-                    }, navOptions)*/
-                }
+                isActive = true
+                updateData()
             } else {
                 Toast.makeText(requireContext(), "Please fill all fields.", Toast.LENGTH_SHORT).show()
             }
@@ -155,6 +140,73 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
         })
     }
 
+    private fun initObserver(){
+        userViewModel.userDetails.observe(viewLifecycleOwner) { result ->
+            result.onSuccess { data ->
+                userDetails = data.getMyDetails
+                initializeUpdateUI()
+            }.onFailure {
+                Log.e("Error fetching details", it.message.toString())
+            }
+        }
+
+        formRootStatus(isRunning = true)
+        myCoursesViewModel.myCourses.observe(viewLifecycleOwner) { result ->
+            result.onSuccess { data ->
+                formRootStatus(isRunning = false)
+                updateUIVisibility()
+            }.onFailure {
+                formRootStatus(isRunning = false)
+                Log.e("MyCoursesFail", it.message.toString())
+                Toast.makeText(requireContext(), "Failed to load courses: ${it.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        updateUserViewModel.updateUserResult.observe(viewLifecycleOwner) { result ->
+            if (result?.user != null && isActive) {
+                isActive = false
+                findNavController().let { nav ->
+                    nav.navigate(getFragmentId(), Bundle().apply {
+                        putStringArray("FIELD_REQUIRED", fieldsToVisible.toTypedArray())
+                    })
+                }
+                Log.e("User update success", result.user.toString())
+            } else {
+                Log.e("User update failed", result.toString())
+            }
+        }
+    }
+
+    private fun removeObserver(){
+        updateUserViewModel.updateUserResult.removeObservers(viewLifecycleOwner)
+    }
+
+    override fun onStop() {
+        removeObserver()
+        super.onStop()
+    }
+
+    private fun updateData(){
+        updateUserInput = UpdateUserInput(
+            city = Optional.Present(userDetails?.userInformation?.city),
+            fullName = Optional.Present(userDetails?.fullName),
+            preparingFor = Optional.Present(userDetails?.userInformation?.preparingFor),
+            reference = Optional.Present(userDetails?.userInformation?.reference),
+            targetYear = Optional.Present(userDetails?.userInformation?.targetYear),
+            waCountryCode = Optional.Present("+91"),
+            waMobileNumber = Optional.Present(whatsappNumber),
+            fatherName = Optional.Present(fatherName),
+            tShirtSize = Optional.Present(tShirtSize),
+            fatherMobileNumber = Optional.Present(fatherNumber)
+        )
+        userUpdate(updateUserInput, null, null)
+    }
+
+    private fun fetchData(){
+        userViewModel.fetchUserDetails()
+        myCoursesViewModel.fetchMyCourses()
+    }
+
     private fun getFragmentId(): Int {
         if (fieldsToVisible.isEmpty()){
             sharedPreferencesManager.putBoolean(courseId, true)
@@ -171,75 +223,6 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
             sharedPreferencesManager.putString("current$courseId", "")
             sharedPreferencesManager.putBoolean(courseId, true)
             R.id.courseEmptyFragment
-        }
-    }
-
-    private fun fetchCoursesAndUpdateUI() {
-        formRootStatus(isRunning = true)
-        myCoursesViewModel.myCourses.observe(viewLifecycleOwner) { result ->
-            result.onSuccess { data ->
-                formRootStatus(isRunning = false)
-//                fieldsToVisible.clear()
-                var shouldExitLoop = false
-
-           /*     data.myCourses.forEach { courselist ->
-                    if (shouldExitLoop) return@forEach
-
-                    courselist.course.other_requirements?.let { requirements ->
-                        courseId = courselist.course.id
-                        val isSaved = sharedPreferencesManager.getBoolean(courseId, false)
-                        val isRunning = sharedPreferencesManager.getString("current$courseId", "")
-                        if (!isRunning.isNullOrEmpty() && (isRunning == "document" || isRunning == "address")){
-                            fieldsToVisible.addAll(requirements.map { it.toString() })
-                            moveToSaveState(isRunning)
-                            shouldExitLoop = true
-                        }else if (!isSaved) {
-                            sharedPreferencesManager.putBoolean(courseId, true)
-                            fieldsToVisible.addAll(requirements.map { it.toString() })
-                            shouldExitLoop = true
-                        }
-                    }
-                }
-*/
-                Log.d("fieldsToVisible", fieldsToVisible.toString())
-                // Update UI visibility after fetching courses
-                updateUIVisibility()
-            }.onFailure {
-                formRootStatus(isRunning = false)
-                Log.e("MyCoursesFail", it.message.toString())
-                Toast.makeText(requireContext(), "Failed to load courses: ${it.message}", Toast.LENGTH_SHORT).show()
-            }
-        }
-
-
-        // Fetch the courses
-        myCoursesViewModel.fetchMyCourses()
-    }
-
-    private fun moveToSaveState(isRunning: String) {
-        val id = when (isRunning) {
-            "document" -> {
-                R.id.AdditionalDetailsFragment
-            }
-            "address" -> {
-                R.id.AddressDetailFragment
-            }
-            else -> {
-                return
-            }
-        }
-        findNavController().let { nav->
-            nav.navigate(id, Bundle().apply {
-                putStringArray("IDS_FIELDS_LIST", fieldsToVisible.toTypedArray())
-                putString("IDS", courseId)
-            })
-           /* val navOptions = NavOptions.Builder()
-                .setPopUpTo(nav.graph.startDestinationId, true)
-                .build()
-            nav.navigate(id, Bundle().apply {
-                putStringArray("IDS", fieldsToVisible.toTypedArray())
-                putString("IDS", courseId)
-            }, navOptions)*/
         }
     }
 
@@ -292,41 +275,31 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
         }
     }
 
-    private fun updateUserDetails() {
-        userViewModel.userDetails.observe(viewLifecycleOwner) { result ->
-            result.onSuccess { data ->
-                val userDetails = data.getMyDetails
-                updateUserInput = UpdateUserInput(
-                    city = Optional.Present(userDetails.userInformation.city),
-                    fullName = Optional.Present(userDetails.fullName),
-                    preparingFor = Optional.Present(userDetails.userInformation.preparingFor),
-                    reference = Optional.Present(userDetails.userInformation.reference),
-                    targetYear = Optional.Present(userDetails.userInformation.targetYear),
-                    waCountryCode = Optional.Present("+91"),
-                    waMobileNumber = Optional.Present(whatsappNumber),
-                    fatherName = Optional.Present(fatherName),
-                    tShirtSize = Optional.Present(tShirtSize),
-                    fatherMobileNumber = Optional.Present(fatherNumber)
-                )
-                userUpdate(updateUserInput, null, null)
-                sharedPreferencesManager.name = userDetails.fullName
-            }.onFailure {
-                Log.e("Error fetching details", it.message.toString())
+    /**
+     * populate UI
+     * */
+    private fun initializeUpdateUI(){
+        binding.etFullName.setText(userDetails?.fullName?:"")
+        binding.etFathersName.setText(userDetails?.userInformation?.fatherName?:"")
+        binding.etFathersNumber.setText(userDetails?.userInformation?.fatherMobileNumber?:"")
+        binding.etWhatsappNumber.setText(userDetails?.mobileNumber?:"")
+        binding.spinnerTshirtSize.text = "L"
+        if (tShirtSize.isNotEmpty()) {
+            userDetails?.userInformation?.tShirtSize?.let {
+                binding.spinnerTshirtSize.text = it
+                isTshirtSizeSelected = true
             }
         }
     }
 
+    /**
+     * send data to server
+     *  and move to next screen
+     * */
     private fun userUpdate(updateUserInput: UpdateUserInput?, documentPhotoFile: String?, passportPhotoFile: String?) {
         updateUserInput?.let {
             updateUserViewModel.updateUser(it, documentPhotoFile, passportPhotoFile)
         }
-        updateUserViewModel.updateUserResult.observe(viewLifecycleOwner, Observer { result ->
-            if (result?.user != null) {
-                Log.e("User update success", result.user.toString())
-            } else {
-                Log.e("User update failed", result.toString())
-            }
-        })
     }
 
     private fun isFormValid(): Boolean {

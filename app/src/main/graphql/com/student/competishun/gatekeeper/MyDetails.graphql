@@ -33,6 +33,7 @@ query MyDetails {
             dob
             gender
             fatherName
+            fatherMobileNumber
             tShirtSize
         }
         countryCode

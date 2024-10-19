@@ -2,14 +2,13 @@ package xyz.penpencil.competishun.ui.fragment
 
 import android.content.Intent
 import xyz.penpencil.competishun.utils.HorizontalCalendarSetUp
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -49,10 +48,14 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
     private val myCourseViewModel: MyCoursesViewModel by viewModels()
     lateinit var scheduleData:ZonedDateTime
     var matchingPosition: Int? = null
+    var courseName  =  ""
+    var courseId  =  ""
+    var courseStart  =  ""
+    var courseEnd  =  ""
+    var courses =  ""
 
     var hasScheduleList= mutableListOf<String>()
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -60,7 +63,6 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
         return binding.root
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun setupCalendar(scheduleTime:String) {
         calendarSetUp = HorizontalCalendarSetUp()
 
@@ -95,14 +97,12 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
       //  calendarSetUp.scrollToSpecificDate(binding.rvCalenderDates, convertIST(scheduleTime))
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun setUpScheduleAvailable(hasScheduleList: MutableList<String>) {
-        calendarSetUp.setUpScheduleAvailable(binding.rvCalenderDates, hasScheduleList,requireContext(),{ calendarDate ->
-            //  scrollToDate(calendarDate)
-        })
+        calendarSetUp.setUpScheduleAvailable(binding.rvCalenderDates, hasScheduleList,requireContext()) { calendarDate ->
+              scrollToDate(calendarDate)
+        }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun setupRecyclerView(contentList: List<FindAllCourseFolderContentByScheduleTimeQuery.FindAllCourseFolderContentByScheduleTime>) {
     Log.e("foldevontent" ,contentList.toString())
         var courseDate:CalendarDate = CalendarDate("","","",null)
@@ -138,16 +138,11 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
         binding.rvCalenderSchedule.adapter = scheduleAdapter
         binding.rvCalenderSchedule.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         scrollToDate(courseDate)
-
-
-
-
         scheduleDataList.forEach { scheduleData ->
             Log.e("ScheduleDatakaj", scheduleData.toString())
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     fun FindAllCourseFolderContentByScheduleTimeQuery(){
         myCourseViewModel.courseFolderContent.observe(viewLifecycleOwner) { result ->
             Log.e("getdatafschedr",result.toString())
@@ -213,13 +208,11 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
       //  myCourseViewModel.getCourseFolderContent("08-27-2024", "10-30-2025", "31296a0b-6dea-42e5-b273-668744bf34a4")
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     fun convertIST(dateString: String): ZonedDateTime {
         val zonedDateTime = ZonedDateTime.parse(dateString) // Adjust this according to your input format
         return zonedDateTime.withZoneSameInstant(ZoneId.of("Asia/Kolkata"))
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     fun convertLastDuration(timeString: String, secondsToAdd: Long): String {
         Log.e("getSWtring",timeString)
 
@@ -237,7 +230,6 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
 
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -246,23 +238,27 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
         (activity as? HomeActivity)?.showBottomNavigationView(false)
         (activity as? HomeActivity)?.showFloatingButton(false)
         helperFunctions = HelperFunctions()
-        val courseName  =  arguments?.getString("courseName")
-        val courseId  =  arguments?.getString("courseId")?:""
-        val courseStart  =  arguments?.getString("courseStart")
-        val courseEnd  =  arguments?.getString("courseEnd")
-        val courses =  arguments?.getString("courses")
-        var start = helperFunctions.formatCourseDate(courseStart)
-        var end = helperFunctions.formatCourseDate(courseEnd)
-        Log.e("dataschec $start $end",dateFormate(start.toString()) + dateFormate(end.toString())  + courseId)
+        courseName  =  arguments?.getString("courseName")?:""
+        courseId  =  arguments?.getString("courseId")?:""
+        courseStart  =  arguments?.getString("courseStart")?:""
+        courseEnd  =  arguments?.getString("courseEnd")?:""
+        courses =  arguments?.getString("courses")?:""
+
         scheduleData = ZonedDateTime.now()
         binding.backIconSchedule.setOnClickListener {
             requireActivity().onBackPressedDispatcher.onBackPressed()
         }
         binding.clEmptySchedule.visibility = View.VISIBLE
+        FindAllCourseFolderContentByScheduleTimeQuery()
+        fetchData()
+    }
+
+    private fun fetchData(){
+        var start = helperFunctions.formatCourseDate(courseStart)
+        var end = helperFunctions.formatCourseDate(courseEnd)
         var starts = getDateBeforeDays(dateFormate(start),7)
         var ends = getDateAfterDays(dateFormate(end),7)
         myCourseViewModel.getCourseFolderContent(starts,ends, courseId)
-        FindAllCourseFolderContentByScheduleTimeQuery()
     }
 
     fun dateFormate(inputDate:String):String{
@@ -280,7 +276,7 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
+    
     fun convertToIST(time: String): ISTTime {
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX")
         val utcTime = ZonedDateTime.parse(time, formatter)
@@ -298,8 +294,6 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
     )
 
 
-
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun scrollToDate(calendarDate: CalendarDate) {
         val position = scheduleAdapter.findPositionByDate(calendarDate.date)
         Log.e("scrollpostions $matchingPosition",position.toString())
@@ -308,7 +302,7 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
+    
     fun convertCalender(scheduledTime: Any): CalendarDate {
         // Parse the scheduledTime to a ZonedDateTime object
         val zonedDateTime = ZonedDateTime.parse(scheduledTime.toString())
@@ -325,8 +319,8 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
         // Return a CalendarDate object
         return CalendarDate(date, day, time, zonedDateTime)
     }
-    @RequiresApi(Build.VERSION_CODES.O)
-    fun formatTime(zonedDateTime: ZonedDateTime): String {
+    
+    private fun formatTime(zonedDateTime: ZonedDateTime): String {
         val formatter = DateTimeFormatter.ofPattern("hh:mm a")
         return zonedDateTime.format(formatter)
     }
@@ -350,7 +344,7 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
         }
     }
 
-    fun getDateAfterDays(endDate: String, daysAfter: Int): String {
+    private fun getDateAfterDays(endDate: String, daysAfter: Int): String {
         Log.e("startendd",endDate.toString())
         val inputFormat = SimpleDateFormat("MM-dd-yyyy", Locale.getDefault())
         val outputFormat = SimpleDateFormat("MM-dd-yyyy", Locale.getDefault())
@@ -382,11 +376,22 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
         }
 
     }
-    fun videoUrlApi(viewModel: VideourlViewModel, folderContentId: String,name: String) {
+
+    override fun onResume() {
+        super.onResume()
+        requireActivity().window.statusBarColor = ContextCompat.getColor(requireContext(), R.color._e25b49)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        requireActivity().window.statusBarColor = ContextCompat.getColor(requireContext(), R.color._white_F6F6FF)
+    }
+
+    private fun videoUrlApi(viewModel: VideourlViewModel, folderContentId: String, name: String) {
 
         viewModel.fetchVideoStreamUrl(folderContentId, "480")
          Log.e("foldfdfd",folderContentId)
-        viewModel.videoStreamUrl.observe(viewLifecycleOwner, { signedUrl ->
+        viewModel.videoStreamUrl.observe(viewLifecycleOwner) { signedUrl ->
             Log.d("Videourl", "Signed URL: $signedUrl")
             if (signedUrl != null) {
                 val bundle = Bundle().apply {
@@ -399,7 +404,7 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
             } else {
                 // Handle error or null URL
             }
-        })
+        }
     }
 
 
