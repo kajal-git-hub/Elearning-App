@@ -32,6 +32,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_gravity="center"
             android:keepScreenOn="true"
+            app:show_next_button="false"
+            app:show_previous_button="false"
             app:resize_mode="zoom" />
 
         <!-- Back Button -->
