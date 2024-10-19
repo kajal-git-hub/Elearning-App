@@ -2,7 +2,9 @@ package xyz.penpencil.competishun.data.repository
 
 import android.util.Log
 import com.apollographql.apollo3.ApolloClient
+import com.apollographql.apollo3.api.DefaultUpload
 import com.apollographql.apollo3.api.Optional
+import com.apollographql.apollo3.api.Upload
 import com.apollographql.apollo3.exception.ApolloException
 import com.student.competishun.gatekeeper.UpdateUserMutation
 import com.student.competishun.gatekeeper.type.UpdateUserInput
@@ -15,7 +17,12 @@ import xyz.penpencil.competishun.data.model.UserInformation
 import javax.inject.Inject
 import javax.inject.Singleton
 import com.apollographql.apollo3.api.toUpload
+import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaType
+import okio.buffer
+import okio.source
 import java.io.File
+import java.io.FileInputStream
 
 
 @Singleton
@@ -28,10 +35,19 @@ class UpdateUserRepository @Inject constructor(@Gatekeeper private val apolloCli
         documentPhoto: String?,
         passportPhoto: String?
     ): UpdateUserResponse? {
+
+        val passportPhotoUpload: Optional<Upload?> = passportPhoto?.let {
+            Optional.present(File(it).toUpload("application/json"))
+        } ?: Optional.absent()
+
+        val documentPhotoUpload: Optional<Upload?> = documentPhoto?.let {
+            Optional.present(File(it).toUpload("application/json"))
+        } ?: Optional.absent()
+
         val mutation = UpdateUserMutation(
             updateUserInput = updateUserInput,
- /*           passportPhoto = passportPhoto?.let { Optional.present(File(it).toUpload("image/jpeg")) } ?: Optional.absent(),
-            documentPhoto = documentPhoto?.let { Optional.present(File(it).toUpload("image/jpeg")) } ?: Optional.absent()*/
+            passportPhoto = passportPhotoUpload,
+            documentPhoto = documentPhotoUpload
         )
 
         return try {

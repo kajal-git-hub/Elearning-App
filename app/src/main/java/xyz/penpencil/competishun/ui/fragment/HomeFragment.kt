@@ -340,8 +340,6 @@ class HomeFragment : Fragment() {
             true
 
         }
-
-//        fetchCoursesAndUpdateUI()
         clickListener()
     }
 
@@ -373,7 +371,7 @@ class HomeFragment : Fragment() {
             if (!userDetails.userInformation.passportPhoto.isNullOrEmpty()) add("PASSPORT_SIZE_PHOTO")
         }
 
-        val missingAddressFields = if (userDetails.userInformation.address == null) {
+        val missingAddressFields = if (userDetails.userInformation.address != null) {
             listOf("FULL_ADDRESS")
         } else {
             emptyList()
@@ -448,9 +446,8 @@ class HomeFragment : Fragment() {
                 } else {
                     getAllCoursesForStudent("IIT-JEE")
                 }
-                Log.e("courseeTypehome", courseType)
 
-//                fetchCoursesAndUpdateUI(data.getMyDetails)
+                fetchCoursesAndUpdateUI(data.getMyDetails)
 
             }.onFailure { exception ->
                 Toast.makeText(
