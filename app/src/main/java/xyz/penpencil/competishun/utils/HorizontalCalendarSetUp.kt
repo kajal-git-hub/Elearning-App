@@ -1,6 +1,7 @@
 package xyz.penpencil.competishun.utils
 import android.content.Context
 import android.os.Build
+import android.util.Log
 import android.widget.ImageView
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -10,13 +11,13 @@ import xyz.penpencil.competishun.ui.adapter.CalendarDateAdapter
 import java.text.SimpleDateFormat
 import java.time.ZoneId
 import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 class HorizontalCalendarSetUp {
 
     private var currentMonth = Calendar.getInstance()
 
-    @RequiresApi(Build.VERSION_CODES.O)
     fun scrollToSpecificDate(
         recyclerView: RecyclerView,
         zonedDateTime: ZonedDateTime,
@@ -31,7 +32,6 @@ class HorizontalCalendarSetUp {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     fun setUpCalendarAdapter(
         recyclerView: RecyclerView,
         context: Context,
@@ -39,17 +39,11 @@ class HorizontalCalendarSetUp {
         hasScheduleList: MutableList<String>,
     ): String {
         val dates = getDatesForMonth(currentMonth)
-        val adapter = CalendarDateAdapter(dates, onDateSelected,hasScheduleList)
+        val adapter = CalendarDateAdapter(dates, onDateSelected, hasScheduleList)
         recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         recyclerView.adapter = adapter
 
-
-        val currentDate = getCurrentDate()
-        val currentPosition = dates.indexOfFirst { it.date == currentDate.date }
-        if (currentPosition != -1) {
-            (recyclerView.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(currentPosition, 0)
-            adapter.setSelectedPosition(currentPosition)
-        }
+        selectCurrentDate(dates, adapter, recyclerView)
 
         return getCurrentMonthYear(currentMonth)
     }
@@ -59,7 +53,7 @@ class HorizontalCalendarSetUp {
         recyclerView: RecyclerView,
         hasScheduleList: MutableList<String>,
         context: Context,
-        onDateSelected: (CalendarDate)  -> Unit
+        onDateSelected: (CalendarDate) -> Unit
     ) {
         val adapter = recyclerView.adapter as? CalendarDateAdapter
             ?: CalendarDateAdapter(getDatesForMonth(currentMonth), onDateSelected, hasScheduleList).also {
@@ -67,8 +61,9 @@ class HorizontalCalendarSetUp {
                 recyclerView.adapter = it
             }
         adapter.updateHasScheduleList(hasScheduleList)
-    }
 
+        selectCurrentDate(adapter.dates, adapter, recyclerView) // Ensure current date is selected
+    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun setUpCalendarPrevNextClickListener(
@@ -110,7 +105,7 @@ class HorizontalCalendarSetUp {
             val date = dateFormat.format(calendar.time)
             val day = dayFormat.format(calendar.time)
             val zonedDateTime = ZonedDateTime.ofInstant(calendar.toInstant(), ZoneId.systemDefault())
-            dates.add(CalendarDate(date,day ,null,zonedDateTime))
+            dates.add(CalendarDate(date, day, null, zonedDateTime))
             calendar.add(Calendar.DAY_OF_MONTH, 1)
         }
 
@@ -120,22 +115,25 @@ class HorizontalCalendarSetUp {
         return dates
     }
 
+    private fun selectCurrentDate(dates: List<CalendarDate>, adapter: CalendarDateAdapter, recyclerView: RecyclerView) {
+        val currentDate = getCurrentDate()
+        val currentPosition = dates.indexOfFirst { it.date == currentDate.date }
+        if (currentPosition != -1) {
+            (recyclerView.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(currentPosition, 0)
+            adapter.setSelectedPosition(currentPosition)
+        }
+    }
+
     private fun getCurrentMonthYear(calendar: Calendar): String {
         val dateFormat = SimpleDateFormat("MMMM yyyy", Locale.getDefault())
         return dateFormat.format(calendar.time)
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    fun getCurrentDate(): CalendarDate {
-        val calendar = Calendar.getInstance()
-        val dateFormat = SimpleDateFormat("dd", Locale.getDefault())
-        val dayFormat = SimpleDateFormat("EEE", Locale.getDefault())
-        val zonedDateTime = ZonedDateTime.ofInstant(calendar.toInstant(), ZoneId.systemDefault())
-        val date = dateFormat.format(calendar.time)
-        val day = dayFormat.format(calendar.time)
-
-        return CalendarDate(date, day, null,zonedDateTime)
+    private fun getCurrentDate(): CalendarDate {
+        val zonedDateTime = ZonedDateTime.now(ZoneId.systemDefault())
+        val date = zonedDateTime.format(DateTimeFormatter.ofPattern("dd", Locale.getDefault()))
+        val day = zonedDateTime.format(DateTimeFormatter.ofPattern("EEE", Locale.getDefault()))
+        return CalendarDate(date, day, null, zonedDateTime)
     }
-
 }
 

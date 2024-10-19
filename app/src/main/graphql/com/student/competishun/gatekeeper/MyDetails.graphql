@@ -31,6 +31,7 @@ query MyDetails {
             passportPhoto
             documentPhoto
             fatherName
+            fatherMobileNumber
             tShirtSize
         }
         countryCode

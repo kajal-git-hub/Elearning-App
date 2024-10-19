@@ -52,7 +52,6 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
 
     var hasScheduleList= mutableListOf<String>()
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -60,7 +59,6 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
         return binding.root
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun setupCalendar(scheduleTime:String) {
         calendarSetUp = HorizontalCalendarSetUp()
 

@@ -450,7 +450,7 @@ class HomeFragment : Fragment() {
                 }
                 Log.e("courseeTypehome", courseType)
 
-               // fetchCoursesAndUpdateUI(data.getMyDetails)
+//                fetchCoursesAndUpdateUI(data.getMyDetails)
 
             }.onFailure { exception ->
                 Toast.makeText(

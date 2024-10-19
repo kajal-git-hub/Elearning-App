@@ -42,14 +42,13 @@ class BottomSheetTSizeFragment : BottomSheetDialogFragment() {
 
         selectedSize = arguments?.getString("selectedSize")
 
-
         val tSizeList = listOf(
-            TSizeModel("Small (S)(36)"),
-            TSizeModel("Medium (M)(38)"),
-            TSizeModel("Large (L)(40)"),
-            TSizeModel("Extra Large (XL)(42)"),
-            TSizeModel("Extra - Extra Large (XXL)(44)"),
-            TSizeModel("Extra - Extra Large (XXXL)(46)")
+            TSizeModel("S (36)"),
+            TSizeModel("M (38)"),
+            TSizeModel("L (40)"),
+            TSizeModel("XL (42))"),
+            TSizeModel("XXL (44)"),
+            TSizeModel("XXXL (46)")
         )
 
         val tshirtSizeAdapter = TshirtSizeAdapter(tSizeList, selectedSize) { selectedSize ->
