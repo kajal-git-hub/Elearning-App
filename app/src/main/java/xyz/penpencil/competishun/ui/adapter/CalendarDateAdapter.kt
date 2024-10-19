@@ -9,7 +9,7 @@ import xyz.penpencil.competishun.data.model.CalendarDate
 import xyz.penpencil.competishun.databinding.CalenderDateItemBinding
 
 class CalendarDateAdapter(
-    private val dates: List<CalendarDate>,
+    val dates: List<CalendarDate>,
     private val onClick: (CalendarDate) -> Unit,
     private var hasScheduleList: MutableList<String>
 ) : RecyclerView.Adapter<CalendarDateAdapter.CalendarDateViewHolder>() {
