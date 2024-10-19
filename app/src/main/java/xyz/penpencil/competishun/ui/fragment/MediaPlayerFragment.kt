@@ -261,11 +261,6 @@ class MediaPlayerFragment : DrawerVisibility() {
     private fun playNextVideo() {
 
        // initializePlaylist()
-        videoUrls = listOf(
-            "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
-            "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/VolkswagenGTIReview.mp4",
-            "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"
-        )
         videourlViewModel.fetchVideoStreamUrl(courseFolderContentIds[currentVideoIndex], "480p")
         Log.e("foldfdfd",courseFolderContentId)
         videourlViewModel.videoStreamUrl.observe(viewLifecycleOwner) { signedUrl ->
