@@ -267,8 +267,8 @@ class StudyMaterialDetailsFragment : Fragment() {
                                         homeworkUrl = homeworkUrl.toString()  // Add this field in your TopicContentModel if it doesn't exist
                                     )
                                 }
-                            val folderContentIds = folderProgressContent.mapNotNull { it.content?.id }.toCollection(ArrayList())
-                            val folderContentNames = folderProgressContent.mapNotNull { it.content?.file_name }.toCollection(ArrayList())
+                            val folderContentIds = folderProgressContent.filter { it.content?.file_type?.name  == "VIDEO" }.mapNotNull { it.content?.id }.toCollection(ArrayList())
+                            val folderContentNames = folderProgressContent.filter { it.content?.file_type?.name  == "VIDEO" }.mapNotNull { it.content?.file_name }.toCollection(ArrayList())
                             Log.e("getfoldersubject2",folderContentNames.toString())
                             binding.rvStudyMaterial.adapter = TopicContentAdapter(
                                 topicContentList,
@@ -423,8 +423,8 @@ class StudyMaterialDetailsFragment : Fragment() {
                                     )
                                 }
                             binding.tvContentCount.text = "(${subjectContentList.size + (folderProgressContent?.size ?: 0)})"
-                            val folderContentIds = folderProgressContent.mapNotNull { it.content?.id }.toCollection(ArrayList())
-                            val folderContentNames = folderProgressContent.mapNotNull { it.content?.file_name }.toCollection(ArrayList())
+                            val folderContentIds = folderProgressContent.filter { it.content?.file_type?.name  == "VIDEO" }.mapNotNull { it.content?.id }.toCollection(ArrayList())
+                            val folderContentNames = folderProgressContent.filter { it.content?.file_type?.name  == "VIDEO" }.mapNotNull { it.content?.file_name }.toCollection(ArrayList())
                             Log.e("getfoldersubject1",folderContentNames.toString())
                             binding.rvStudyMaterial.adapter = TopicContentAdapter(
                                 subjectContentList,
