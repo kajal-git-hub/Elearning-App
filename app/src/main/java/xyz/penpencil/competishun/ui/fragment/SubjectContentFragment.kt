@@ -192,7 +192,7 @@ class SubjectContentFragment : DrawerVisibility() {
                                 folderProgressContent.mapIndexed { index, files ->
                                     Log.e("folderContentLog", files.content?.file_url.toString())
                                     Log.e("homeworkLog", files.content?.homework.toString())
-                                    val time = helperFunctions.formatCourseDateTime(files.content?.scheduled_time.toString())
+                                    val time = helperFunctions.formatCoursesDateTime(files.content?.scheduled_time.toString())
                                     Log.e("foldertimes", time)
 
                                     // Extract homework URL and filename if they exist
@@ -219,8 +219,8 @@ class SubjectContentFragment : DrawerVisibility() {
                                         homeworkUrl = homeworkUrl.toString()  // Add this field in your TopicContentModel if it doesn't exist
                                     )
                                 }
-                                val folderContentIds = folderProgressContent.mapNotNull { it.content?.id }.toCollection(ArrayList())
-                                val folderContentNames = folderProgressContent.mapNotNull { it.content?.file_name }.toCollection(ArrayList())
+                                val folderContentIds = folderProgressContent.filter { it.content?.file_type?.name  == "VIDEO" }.mapNotNull { it.content?.id }.toCollection(ArrayList())
+                                val folderContentNames = folderProgressContent.filter { it.content?.file_type?.name  == "VIDEO" }.mapNotNull { it.content?.file_name }.toCollection(ArrayList())
                                 Log.e("getfoldersubject2",folderContentNames.toString())
                             binding.rvTopicContent.adapter = TopicContentAdapter(
                                 topicContentList,
@@ -269,7 +269,7 @@ class SubjectContentFragment : DrawerVisibility() {
                                 Log.e("folderContentLog", folders.id)
                                 val id = folders.id
                                 val date = folders.scheduled_time.toString()
-                                val time = helperFunctions.formatCourseDateTime(date)
+                                val time = helperFunctions.formatCoursesDateTime(date)
                                 SubjectContentItem(
                                     id = id,
                                     chapterNumber = index + 1,
@@ -314,7 +314,7 @@ class SubjectContentFragment : DrawerVisibility() {
                                 val id = folders.id
                                 val date = folders.scheduled_time.toString()
                                 Log.e("foldertimes", date)
-                                val time = helperFunctions.formatCourseDateTime(date)
+                                val time = helperFunctions.formatCoursesDateTime(date)
                                 SubjectContentItem(
                                     id = id,
                                     chapterNumber = index + 1,
@@ -350,7 +350,7 @@ class SubjectContentFragment : DrawerVisibility() {
                                     val homeworkFileName = contents.content?.homework?.map { it.file_name } ?: ""
 
 
-                                    val time = helperFunctions.formatCourseDateTime(contents.content?.scheduled_time.toString())
+                                    val time = helperFunctions.formatCoursesDateTime(contents.content?.scheduled_time.toString())
                                     Log.e("foldertime", time)
                                     TopicContentModel(
                                         subjectIcon = if (contents.content?.file_type?.name == "PDF") R.drawable.content_bg else R.drawable.group_1707478994,
@@ -372,8 +372,8 @@ class SubjectContentFragment : DrawerVisibility() {
                                         homeworkName = homeworkFileName.toString()
                                     )
                                 }
-                            val folderContentIds = folderProgressContent.mapNotNull { it.content?.id }.toCollection(ArrayList())
-                            val folderContentNames = folderProgressContent.mapNotNull { it.content?.file_name }.toCollection(ArrayList())
+                            val folderContentIds = folderProgressContent.filter { it.content?.file_type?.name  == "VIDEO" }.mapNotNull { it.content?.id }.toCollection(ArrayList())
+                            val folderContentNames = folderProgressContent.filter { it.content?.file_type?.name  == "VIDEO" }.mapNotNull { it.content?.file_name }.toCollection(ArrayList())
                             Log.e("getfoldersubject1",folderContentNames.toString())
                             binding.rvTopicContent.adapter = TopicContentAdapter(
                                 subjectContentList,
@@ -465,7 +465,7 @@ class SubjectContentFragment : DrawerVisibility() {
                                     val homeworkFileName = contents.content?.homework?.map { it.file_name } ?: ""
 
 
-                                    val time = helperFunctions.formatCourseDateTime(contents.content?.scheduled_time.toString())
+                                    val time = helperFunctions.formatCoursesDateTime(contents.content?.scheduled_time.toString())
                                     Log.e("foldertime", time)
                                     TopicContentModel(
                                         subjectIcon = if (contents.content?.file_type?.name == "PDF") R.drawable.content_bg else R.drawable.group_1707478994,
@@ -487,8 +487,8 @@ class SubjectContentFragment : DrawerVisibility() {
                                         homeworkName = homeworkFileName.toString()
                                     )
                                 }
-                            val folderContentIds = folderProgressContent.mapNotNull { it.content?.id }.toCollection(ArrayList())
-                            val folderContentNames = folderProgressContent.mapNotNull { it.content?.file_name }.toCollection(ArrayList())
+                            val folderContentIds = folderProgressContent.filter { it.content?.file_type?.name  == "VIDEO" }.mapNotNull { it.content?.id }.toCollection(ArrayList())
+                            val folderContentNames = folderProgressContent.filter { it.content?.file_type?.name  == "VIDEO" }.mapNotNull { it.content?.file_name }.toCollection(ArrayList())
                             Log.e("getfoldersubject1",folderContentNames.toString())
                             binding.rvsubjectTopicContent.adapter = TopicContentAdapter(
                                 subjectContentList,
@@ -546,7 +546,7 @@ class SubjectContentFragment : DrawerVisibility() {
             var studyMaterial = arguments?.getString("studyMaterial")
 
             if (studyMaterial.isNullOrEmpty())
-                time = helperFunctions.formatCourseDateTime(date) else  time = helperFunctions.formatCourseDateTime("2024-10-11T17:27:00.000Z")
+                time = helperFunctions.formatCoursesDateTime(date) else  time = helperFunctions.formatCoursesDateTime("2024-10-11T17:27:00.000Z")
 
             val homeworkUrl = content.content?.homework?.map { it.file_url?:"" } ?:""
             val homeworkFileName = content.content?.homework?.map { it.file_name?:"" } ?: ""
@@ -569,8 +569,10 @@ class SubjectContentFragment : DrawerVisibility() {
                 homeworkName = homeworkFileName.toString()
             )
         } ?: emptyList()
-        val folderContentIds = folderContents?.mapNotNull { it.content?.id }?.toCollection(ArrayList())
-        val folderContentNames = folderContents?.mapNotNull { it.content?.file_name }?.toCollection(ArrayList())
+
+        val folderContentIds = folderContents.filter { it.content?.file_type?.name  == "VIDEO" }.mapNotNull { it.content?.id }?.toCollection(ArrayList())
+        val folderContentNames = folderContents.filter { it.content?.file_type?.name  == "VIDEO" }.mapNotNull { it.content?.file_name }?.toCollection(ArrayList())
+
         val adapter = TopicContentAdapter(topicContents, folderId,requireActivity(),requireContext()) { topicContent, folderContentId ->
             when (topicContent.fileType) {
                 "VIDEO" -> videoUrlApi(videourlViewModel, topicContent.id,topicContent.topicName,folderContentIds,folderContentNames)
