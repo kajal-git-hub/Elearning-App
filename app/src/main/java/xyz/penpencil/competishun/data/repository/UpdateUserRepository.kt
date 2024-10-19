@@ -2,7 +2,6 @@ package xyz.penpencil.competishun.data.repository
 
 import android.util.Log
 import com.apollographql.apollo3.ApolloClient
-import com.apollographql.apollo3.api.DefaultUpload
 import com.apollographql.apollo3.api.Optional
 import com.apollographql.apollo3.exception.ApolloException
 import com.student.competishun.gatekeeper.UpdateUserMutation
@@ -15,9 +14,7 @@ import xyz.penpencil.competishun.data.model.User
 import xyz.penpencil.competishun.data.model.UserInformation
 import javax.inject.Inject
 import javax.inject.Singleton
-import okio.source
-import com.apollographql.apollo3.api.Upload
-import xyz.penpencil.competishun.utils.FileUpload
+import com.apollographql.apollo3.api.toUpload
 import java.io.File
 
 
@@ -31,42 +28,10 @@ class UpdateUserRepository @Inject constructor(@Gatekeeper private val apolloCli
         documentPhoto: String?,
         passportPhoto: String?
     ): UpdateUserResponse? {
-
-        val passport = if (passportPhoto == null) {
-            null
-        }else {
-            DefaultUpload.Builder()
-                .content { sink -> sink.writeAll(File(passportPhoto).source()) }
-                .contentType("image/jpeg")
-                .contentLength(File(passportPhoto).length())
-                .fileName(File(passportPhoto).name)
-                .build()
-        }
-
-        val document = if (documentPhoto == null) {
-            null
-        }else {
-            DefaultUpload.Builder()
-                .content { sink -> sink.writeAll(File(documentPhoto).source()) }
-                .contentType("image/jpeg")
-                .contentLength(File(documentPhoto).length())
-                .fileName(File(documentPhoto).name)
-                .build()
-        }
-
-
         val mutation = UpdateUserMutation(
             updateUserInput = updateUserInput,
-            passportPhoto = if (passportPhoto != null) {
-                Optional.presentIfNotNull(passport)
-            } else {
-                Optional.absent()
-            },
-            documentPhoto = if (documentPhoto != null) {
-                Optional.presentIfNotNull(document)
-            } else {
-                Optional.absent()
-            }
+ /*           passportPhoto = passportPhoto?.let { Optional.present(File(it).toUpload("image/jpeg")) } ?: Optional.absent(),
+            documentPhoto = documentPhoto?.let { Optional.present(File(it).toUpload("image/jpeg")) } ?: Optional.absent()*/
         )
 
         return try {
@@ -76,21 +41,19 @@ class UpdateUserRepository @Inject constructor(@Gatekeeper private val apolloCli
                 response.errors?.forEach {
                     Log.e("GraphQL Error", it.message)
                 }
-                return null
-            }
-
-            response.data?.updateUser?.let { result ->
-                UpdateUserResponse(
-                    user = result.let { user ->
-                        User(
-                            id = user.id,
-                            mobileNumber = user.mobileNumber?:"",
-                            fullName = user.fullName,
-                            countryCode = user.countryCode?:"",
-                            email = user.email.toString(),
-                            userInformation = user.userInformation?.let { info ->
+                null
+            } else {
+                response.data?.updateUser?.let { result ->
+                    UpdateUserResponse(
+                        user = User(
+                            id = result.id,
+                            mobileNumber = result.mobileNumber ?: "",
+                            fullName = result.fullName,
+                            countryCode = result.countryCode ?: "",
+                            email = result.email.toString(),
+                            userInformation = result.userInformation?.let { info ->
                                 UserInformation(
-                                    id = user.id,
+                                    id = result.id,
                                     preparingFor = info.preparingFor,
                                     targetYear = info.targetYear,
                                     reference = info.reference,
@@ -102,10 +65,9 @@ class UpdateUserRepository @Inject constructor(@Gatekeeper private val apolloCli
                                     gender = info.gender,
                                     addressLine1 = info.address?.addressLine1,
                                     address = Address(city = info.address?.city, state = info.address?.state)
-
                                 )
                             } ?: UserInformation(
-                                id = user.id,
+                                id = result.id,
                                 preparingFor = null,
                                 targetYear = null,
                                 reference = null,
@@ -119,8 +81,8 @@ class UpdateUserRepository @Inject constructor(@Gatekeeper private val apolloCli
                                 addressLine1 = "",
                             )
                         )
-                    }
-                )
+                    )
+                }
             }
         } catch (e: ApolloException) {
             Log.e(TAG, e.message ?: "Unknown error")
@@ -136,10 +98,9 @@ class UpdateUserRepository @Inject constructor(@Gatekeeper private val apolloCli
     ): ApiProcess<UpdateUserResponse> {
         val mutation = UpdateUserMutation(
             updateUserInput = updateUserInput,
-            documentPhoto = documentPhoto?.let { Optional.Present(it) } ?: Optional.Absent,
-            passportPhoto = passportPhoto?.let { Optional.Present(it) } ?: Optional.Absent
+      /*      passportPhoto = passportPhoto?.let { Optional.present(File(it).toUpload("image/jpeg")) } ?: Optional.absent(),
+            documentPhoto = documentPhoto?.let { Optional.present(File(it).toUpload("image/jpeg")) } ?: Optional.absent()*/
         )
-
         return try {
             val response = apolloClient.mutation(mutation).execute()
 

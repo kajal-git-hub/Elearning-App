@@ -101,7 +101,7 @@ class ScheduleAdapter(private val scheduleItems: List<ScheduleData>, private val
                 val lectureStartTime = innerItem.lecture_start_time
                 val lectureEndTime = innerItem.lecture_end_time
 
-                if (innerItem.completedDuration == duration){
+                if (innerItem.completedDuration!=0 && (innerItem.completedDuration == duration)){
                     //completed
                     binding.tvClassTimings.visibility = View.GONE
                     binding.tvClassStatus.visibility = View.VISIBLE
