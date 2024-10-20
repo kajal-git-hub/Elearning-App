@@ -24,7 +24,9 @@ import xyz.penpencil.competishun.databinding.FragmentMyDetailsBinding
 import xyz.penpencil.competishun.ui.viewmodel.UpdateUserViewModel
 import xyz.penpencil.competishun.ui.viewmodel.UserViewModel
 import xyz.penpencil.competishun.utils.HelperFunctions
+import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Locale
 
 @AndroidEntryPoint
 class MyDetailsFragment : Fragment() {
@@ -104,17 +106,16 @@ class MyDetailsFragment : Fragment() {
             binding.clNowEdit.visibility = View.GONE
             binding.clSaveChanges.visibility = View.VISIBLE
 
-//            binding.etAddress.isEnabled = true
-//            binding.etAddress.setBackgroundResource(R.drawable.rounded_edittext_background)
             binding.etDob.isEnabled = true
+            binding.etDob.setBackgroundResource(R.drawable.rounded_edittext_background)
             binding.etGender.isEnabled = true
+            binding.etGender.setBackgroundResource(R.drawable.rounded_edittext_background)
         }
         binding.clSaveChanges.setOnClickListener {
-            val m = if (month.toString().length == 1) "0$month" else month.toString()
-            val d = if (day.toString().length == 1) "0$day" else day.toString()
-            val year = "$year-$m-${d}T18:30:00.000Z"
+            binding.etDob.setText(dob)
+            binding.etGender.setText(gender)
             val updateUserInput = UpdateUserInput(
-                dob = Optional.present(year),
+                dob = Optional.present(dob),
                 gender = Optional.present(gender),
             )
             updateUserViewModel.updateUser(updateUserInput, null, null)
@@ -122,7 +123,6 @@ class MyDetailsFragment : Fragment() {
     }
 
     private fun showDatePickerDialog() {
-        // Get current date
         val calendar = Calendar.getInstance()
         year = calendar.get(Calendar.YEAR)
         month = calendar.get(Calendar.MONTH)
@@ -130,8 +130,13 @@ class MyDetailsFragment : Fragment() {
 
         val datePickerDialog =
             DatePickerDialog(requireContext(), { _, selectedYear, selectedMonth, selectedDay ->
-                dob = "$selectedDay/${selectedMonth + 1}/$selectedYear"
-                binding.etDob.setText(dob)
+                val selectedDate = Calendar.getInstance()
+                selectedDate.set(selectedYear, selectedMonth, selectedDay)
+
+                val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
+                dob = dateFormat.format(selectedDate.time)
+
+                binding.etDob.setText(SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(selectedDate.time))
             }, year, month, day)
         datePickerDialog.show()
     }
@@ -160,10 +165,10 @@ class MyDetailsFragment : Fragment() {
 
     private fun observeUserDetails() {
         updateUserViewModel.updateUserResult.observe(viewLifecycleOwner, Observer { result ->
-            if (result!=null){
+            if (result != null) {
                 Toast.makeText(requireContext(), "Update Successfully", Toast.LENGTH_LONG).show()
                 findNavController().popBackStack()
-            }else {
+            } else {
                 Toast.makeText(requireContext(), "Failed to update", Toast.LENGTH_LONG).show()
             }
         })
@@ -177,38 +182,46 @@ class MyDetailsFragment : Fragment() {
                 joiningDate =
                     helperFunctions.formatCourseDate(data.getMyDetails.createdAt.toString())
                 address = data.getMyDetails.userInformation.address?.addressLine1.toString()
+                dob = data.getMyDetails.userInformation.dob.toString()
+                gender = data.getMyDetails.userInformation.gender.toString()
 
                 Log.d("address", address)
 
-                if (name != null && name != "null" || rollNo != null && rollNo != "null" || phoneNo != null && phoneNo != "null" || emailId != null && emailId != "null" || joiningDate != null && joiningDate != "null" || address != null && address != "null") {
 
-                    binding.etFullName.setText(if (name != null && name != "null") name else "")
-                    binding.etFullName.setBackgroundResource(R.drawable.rounded_filled_bg)
 
-                    binding.etRollNumber.setText(if (rollNo != null && rollNo != "null") rollNo else "")
-                    binding.etRollNumber.setBackgroundResource(R.drawable.rounded_filled_bg)
-
-                    binding.etEnterNoText.setText(if (phoneNo != null && phoneNo != "null") phoneNo else "")
-                    binding.etEnterNoText.setBackgroundResource(R.drawable.rounded_filled_bg)
-
-                    binding.etEmail.setText(if (emailId != null && emailId != "null") emailId else "")
-                    binding.etEmail.setBackgroundResource(R.drawable.rounded_filled_bg)
-
-                    binding.etJoiningDate.setText(if (joiningDate != null && joiningDate != "null") joiningDate else "")
-                    binding.etJoiningDate.setBackgroundResource(R.drawable.rounded_filled_bg)
-
-                    Log.d("addressBelow", address ?: "null")
-                    binding.etAddress.setText(if (address != null && address != "null") address else "")
-                    binding.etAddress.setBackgroundResource(R.drawable.rounded_filled_bg)
+                binding.etDob.setText(if (dob != null && dob != "null") helperFunctions.formatCourseDate(dob) else "")
+                binding.etDob.setBackgroundResource(if (dob != null && dob != "null") {
+                    R.drawable.rounded_filled_bg
                 } else {
-                    // Clear the fields if everything is null
-                    binding.etFullName.setText("")
-                    binding.etRollNumber.setText("")
-                    binding.etEnterNoText.setText("")
-                    binding.etEmail.setText("")
-                    binding.etJoiningDate.setText("")
-                    binding.etAddress.setText("")
-                }
+                    R.drawable.rounded_edittext_background
+                })
+                binding.etGender.setText(if(gender!=null && gender!="null")gender else "")
+
+                binding.etGender.setBackgroundResource(if (gender != null && gender != "null") {
+                    R.drawable.rounded_filled_bg
+                } else {
+                    R.drawable.rounded_edittext_background
+                })
+
+
+                binding.etFullName.setText(if (name != null && name != "null") name else "")
+                binding.etFullName.setBackgroundResource(R.drawable.rounded_filled_bg)
+
+                binding.etRollNumber.setText(if (rollNo != null && rollNo != "null") rollNo else "")
+                binding.etRollNumber.setBackgroundResource(R.drawable.rounded_filled_bg)
+
+                binding.etEnterNoText.setText(if (phoneNo != null && phoneNo != "null") phoneNo else "")
+                binding.etEnterNoText.setBackgroundResource(R.drawable.rounded_filled_bg)
+
+                binding.etEmail.setText(if (emailId != null && emailId != "null") emailId else "")
+                binding.etEmail.setBackgroundResource(R.drawable.rounded_filled_bg)
+
+                binding.etJoiningDate.setText(if (joiningDate != null && joiningDate != "null") joiningDate else "")
+                binding.etJoiningDate.setBackgroundResource(R.drawable.rounded_filled_bg)
+
+                Log.d("addressBelow", address ?: "null")
+                binding.etAddress.setText(if (address != null && address != "null") address else "")
+                binding.etAddress.setBackgroundResource(R.drawable.rounded_filled_bg)
 
             }.onFailure { exception ->
                 Toast.makeText(

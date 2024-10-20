@@ -45,6 +45,9 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
     private var DetailAvailable = false
     val bundle = Bundle()
     private var navigateToFragment = false
+
+    private var previousSelectedItemId: Int = R.id.home
+
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
@@ -118,23 +121,29 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
         bottomNavigationView.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.home -> {
+//                    previousSelectedItemId = binding.bottomNav.selectedItemId
                     if (navController.currentDestination?.id != R.id.homeFragment) {
                         navController.navigate(R.id.homeFragment)
                     }
                     true
                 }
                 R.id.myCourse -> {
+//                    previousSelectedItemId = binding.bottomNav.selectedItemId
+
                     if (navController.currentDestination?.id != R.id.PersonalDetailsFragment) {
                         navController.navigate(R.id.courseEmptyFragment)
                     }
                     true
                 }
                 R.id.Download -> {
-                        navController.navigate(R.id.DownloadFragment)
+//                    previousSelectedItemId = binding.bottomNav.selectedItemId
+                    navController.navigate(R.id.DownloadFragment)
                     true
                 }
                 R.id.Bookmark -> {
-                        navController.navigate(R.id.BookMarkFragment)
+//                    previousSelectedItemId = binding.bottomNav.selectedItemId
+
+                    navController.navigate(R.id.BookMarkFragment)
                     true
                 }
                 else -> {
@@ -149,7 +158,17 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
     private val backPressListener = object : OnBackPressedCallback(true){
         override fun handleOnBackPressed() {
             when (navController.currentDestination?.id) {
-                R.id.courseEmptyFragment -> {
+
+                R.id.BookMarkFragment ->{
+                    navController.popBackStack(R.id.homeFragment,false)
+                    binding.bottomNav.selectedItemId = R.id.home
+                }
+
+                R.id.DownloadFragment -> {
+                    navController   .popBackStack(R.id.homeFragment,false)
+                    binding.bottomNav.selectedItemId = R.id.home
+                }
+                    R.id.courseEmptyFragment -> {
                     navController.popBackStack(R.id.homeFragment,false)
                     binding.bottomNav.selectedItemId = R.id.home
                 }
