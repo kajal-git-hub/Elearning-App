@@ -24,7 +24,9 @@ import xyz.penpencil.competishun.databinding.FragmentMyDetailsBinding
 import xyz.penpencil.competishun.ui.viewmodel.UpdateUserViewModel
 import xyz.penpencil.competishun.ui.viewmodel.UserViewModel
 import xyz.penpencil.competishun.utils.HelperFunctions
+import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Locale
 
 @AndroidEntryPoint
 class MyDetailsFragment : Fragment() {
@@ -110,13 +112,10 @@ class MyDetailsFragment : Fragment() {
             binding.etGender.setBackgroundResource(R.drawable.rounded_edittext_background)
         }
         binding.clSaveChanges.setOnClickListener {
-            val m = if (month.toString().length == 1) "0$month" else month.toString()
-            val d = if (day.toString().length == 1) "0$day" else day.toString()
-            val year = "$year-$m-${d}T18:30:00.000Z"
-            binding.etDob.setText(year)
+            binding.etDob.setText(dob)
             binding.etGender.setText(gender)
             val updateUserInput = UpdateUserInput(
-                dob = Optional.present(year),
+                dob = Optional.present(dob),
                 gender = Optional.present(gender),
             )
             updateUserViewModel.updateUser(updateUserInput, null, null)
@@ -124,7 +123,6 @@ class MyDetailsFragment : Fragment() {
     }
 
     private fun showDatePickerDialog() {
-        // Get current date
         val calendar = Calendar.getInstance()
         year = calendar.get(Calendar.YEAR)
         month = calendar.get(Calendar.MONTH)
@@ -132,8 +130,13 @@ class MyDetailsFragment : Fragment() {
 
         val datePickerDialog =
             DatePickerDialog(requireContext(), { _, selectedYear, selectedMonth, selectedDay ->
-                dob = "$selectedDay/${selectedMonth + 1}/$selectedYear"
-                binding.etDob.setText(dob)
+                val selectedDate = Calendar.getInstance()
+                selectedDate.set(selectedYear, selectedMonth, selectedDay)
+
+                val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
+                dob = dateFormat.format(selectedDate.time)
+
+                binding.etDob.setText(SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(selectedDate.time))
             }, year, month, day)
         datePickerDialog.show()
     }
