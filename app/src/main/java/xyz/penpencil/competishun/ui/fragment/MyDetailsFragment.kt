@@ -110,17 +110,34 @@ class MyDetailsFragment : Fragment() {
             binding.etGender.setBackgroundResource(R.drawable.rounded_edittext_background)
         }
         binding.clSaveChanges.setOnClickListener {
-            val m = if (month.toString().length == 1) "0$month" else month.toString()
-            val d = if (day.toString().length == 1) "0$day" else day.toString()
-            val year = "$year-$m-${d}T18:30:00.000Z"
-            binding.etDob.setText(year)
-            binding.etGender.setText(gender)
-            val updateUserInput = UpdateUserInput(
-                dob = Optional.present(year),
-                gender = Optional.present(gender),
-            )
-            updateUserViewModel.updateUser(updateUserInput, null, null)
+            var updatedDob: Optional<String> = Optional.Absent
+            var updatedGender: Optional<String> = Optional.Absent
+
+            // Check if the date of birth field was modified
+            if (dob != binding.etDob.text.toString()) {
+                val m = if (month.toString().length == 1) "0$month" else month.toString()
+                val d = if (day.toString().length == 1) "0$day" else day.toString()
+                val formattedDob = "$year-$m-${d}T18:30:00.000Z"
+                updatedDob = Optional.present(formattedDob)
+            }
+
+            // Check if the gender field was modified
+            if (gender != binding.etGender.text.toString()) {
+                updatedGender = Optional.present(gender)
+            }
+
+            // Only trigger the update if at least one field was modified
+            if (updatedDob is Optional.Present || updatedGender is Optional.Present) {
+                val updateUserInput = UpdateUserInput(
+                    dob = updatedDob,
+                    gender = updatedGender
+                )
+                updateUserViewModel.updateUser(updateUserInput, null, null)
+            } else {
+                Toast.makeText(requireContext(), "No changes to save", Toast.LENGTH_SHORT).show()
+            }
         }
+
     }
 
     private fun showDatePickerDialog() {

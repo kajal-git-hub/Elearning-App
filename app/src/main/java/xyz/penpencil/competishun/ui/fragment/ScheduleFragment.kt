@@ -8,10 +8,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.student.competishun.curator.FindAllCourseFolderContentByScheduleTimeQuery
 import xyz.penpencil.competishun.data.model.CalendarDate
 import xyz.penpencil.competishun.data.model.ScheduleData
@@ -232,6 +234,17 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
+        val bottomNavigationView = requireActivity().findViewById<BottomNavigationView>(R.id.bottomNav)
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                findNavController().popBackStack()
+                bottomNavigationView.selectedItemId = R.id.myCourse
+
+            }
+        })
 
         calendarSetUp = HorizontalCalendarSetUp()
 

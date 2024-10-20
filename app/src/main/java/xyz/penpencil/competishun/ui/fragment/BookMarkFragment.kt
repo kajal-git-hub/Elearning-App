@@ -7,9 +7,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.widget.SearchView
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.tabs.TabLayout
 import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.data.model.TopicContentModel
@@ -41,6 +43,16 @@ class BookMarkFragment : DrawerVisibility(), BookMarkAdapter.OnVideoClickListene
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val bottomNavigationView = requireActivity().findViewById<BottomNavigationView>(R.id.bottomNav)
+
+
+//        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+//            override fun handleOnBackPressed() {
+//                findNavController().navigateUp()
+////                bottomNavigationView.selectedItemId = R.id.myCourse
+//            }
+//        })
 
         savedInstanceState?.let { selectedTabPosition = it.getInt("SELECTED_TAB_POSITION", 0) }
 

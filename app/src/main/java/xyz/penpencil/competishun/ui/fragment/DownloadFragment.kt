@@ -8,10 +8,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.tabs.TabLayout
 import xyz.penpencil.competishun.data.model.TopicContentModel
 import xyz.penpencil.competishun.ui.adapter.DownloadedItemAdapter
@@ -48,6 +50,15 @@ class DownloadFragment : DrawerVisibility(), DownloadedItemAdapter.OnVideoClickL
 
         savedInstanceState?.let {    selectedTabPosition = it.getInt("SELECTED_TAB_POSITION", 0)}
 
+//        val bottomNavigationView = requireActivity().findViewById<BottomNavigationView>(R.id.bottomNav)
+//
+//        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+//            override fun handleOnBackPressed() {
+//                findNavController().navigateUp()
+////                bottomNavigationView.selectedItemId = R.id.myCourse
+//
+//            }
+//        })
 
         binding.studentTabLayout.getTabAt(selectedTabPosition)?.select()
 
@@ -173,15 +184,15 @@ class DownloadFragment : DrawerVisibility(), DownloadedItemAdapter.OnVideoClickL
 
     override fun onResume() {
         super.onResume()
-//        requireActivity().window.setFlags(
-//            WindowManager.LayoutParams.FLAG_SECURE,
-//            WindowManager.LayoutParams.FLAG_SECURE
-//        )
+        requireActivity().window.setFlags(
+            WindowManager.LayoutParams.FLAG_SECURE,
+            WindowManager.LayoutParams.FLAG_SECURE
+        )
     }
 
     override fun onPause() {
         super.onPause()
-//        requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
+        requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
     }
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
