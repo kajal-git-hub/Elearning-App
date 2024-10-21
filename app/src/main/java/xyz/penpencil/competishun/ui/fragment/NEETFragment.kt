@@ -28,7 +28,7 @@ import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.databinding.FragmentCourseBinding
 
 
-private const val TAG = "NEETFragment"
+internal const val TAG = "NEETFragment"
 @AndroidEntryPoint
 class NEETFragment : DrawerVisibility(), StudentCourseItemClickListener {
     private lateinit var recyclerView: RecyclerView

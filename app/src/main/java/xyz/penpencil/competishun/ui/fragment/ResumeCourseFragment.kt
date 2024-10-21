@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
@@ -23,6 +24,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.databinding.FragmentResumeCourseBinding
 import xyz.penpencil.competishun.di.Result
+import xyz.penpencil.competishun.utils.setLightStatusBars
 
 @AndroidEntryPoint
 class ResumeCourseFragment : DrawerVisibility() {

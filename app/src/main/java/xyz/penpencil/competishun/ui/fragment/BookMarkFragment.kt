@@ -193,6 +193,17 @@ class BookMarkFragment : DrawerVisibility(), BookMarkAdapter.OnVideoClickListene
         val searchView =
             binding.TopViewBookMark.menu.findItem(R.id.action_search_download)?.actionView as? SearchView
         searchView?.queryHint = "Search Pdf/Video"
+
+
+        searchView?.setOnSearchClickListener {
+            binding.screenBmTitleBookmark.visibility = View.GONE
+        }
+
+        searchView?.setOnCloseListener {
+            binding.screenBmTitleBookmark.visibility = View.VISIBLE
+            false
+        }
+
         searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean = false
 

@@ -9,6 +9,7 @@ import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.telephony.SmsManager
 import android.text.Editable
 import android.text.SpannableString
 import android.text.TextWatcher
@@ -24,7 +25,6 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -32,15 +32,15 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.auth.api.phone.SmsRetriever
+import dagger.hilt.android.AndroidEntryPoint
+import xyz.penpencil.competishun.R
+import xyz.penpencil.competishun.databinding.FragmentVerifyBinding
 import xyz.penpencil.competishun.ui.main.HomeActivity
+import xyz.penpencil.competishun.ui.main.MainActivity
 import xyz.penpencil.competishun.ui.viewmodel.GetOtpViewModel
 import xyz.penpencil.competishun.ui.viewmodel.UserViewModel
 import xyz.penpencil.competishun.ui.viewmodel.VerifyOtpViewModel
 import xyz.penpencil.competishun.utils.SharedPreferencesManager
-import dagger.hilt.android.AndroidEntryPoint
-import xyz.penpencil.competishun.R
-import xyz.penpencil.competishun.databinding.FragmentVerifyBinding
-import xyz.penpencil.competishun.ui.main.MainActivity
 import xyz.penpencil.competishun.utils.SmsBroadcastReceiver
 
 @AndroidEntryPoint
@@ -124,6 +124,8 @@ class VerifyOTPFragment : Fragment() {
         smsBroadcastReceiver!!.smsBroadcastReceiverListener = object : SmsBroadcastReceiver.SmsBroadcastReceiverListener{
             override fun onSuccess(intent: Intent?) {
                 if (intent != null) {
+                    Log.e("dfkjbfjkdskf", "onSuccess: "
+                    +intent.data)
                    startActivityForResult(intent,REQ_USER_CONSENT)
                 }
             }
@@ -372,6 +374,7 @@ class VerifyOTPFragment : Fragment() {
                     sendOTPRequest()
                     registerBroadcastReceiver()
                     startAutoFillOtp()
+//                    forMessage()
 
                 }
             }
@@ -409,6 +412,14 @@ class VerifyOTPFragment : Fragment() {
         super.onDestroyView()
         _binding = null
         countDownTimer.cancel()
+    }
+
+
+    fun forMessage(){
+//        val smsNumber: String = ed_otp.getText().toString()
+        val smsText = "<#> Your App_Name code is: 659654\n+uZ3/NqJ0eV"
+        val smsManager: SmsManager = SmsManager.getDefault()
+        smsManager.sendTextMessage("9958411046", null, smsText, null, null)
     }
 }
 
