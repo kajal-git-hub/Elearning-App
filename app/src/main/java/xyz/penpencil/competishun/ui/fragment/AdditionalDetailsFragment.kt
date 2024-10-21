@@ -145,8 +145,7 @@ class AdditionalDetailsFragment : DrawerVisibility() {
             if (result!=null){
                 findNavController().let { nav ->
                     nav.navigate(getFragmentId(), Bundle().apply {
-                        putStringArray("IDS", fieldsToVisible)
-                        putString("IDS", courseId)
+                        putStringArray("FIELD_REQUIRED", fieldsToVisible)
                     })
                 }
                 Log.d("User Update Success", result.toString())

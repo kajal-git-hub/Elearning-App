@@ -240,6 +240,7 @@ class ScheduleAdapter(private val scheduleItems: List<ScheduleData>, private val
             private fun startCountdownTimer(targetTimestamp: String, fileUrl: String, fileType: String, ContentId: String) {
                 val utcZone = ZoneId.of("UTC")
                 val istZone = ZoneId.of("UTC")
+
                 val targetTimeUtc = ZonedDateTime.parse(targetTimestamp, DateTimeFormatter.ISO_DATE_TIME.withZone(utcZone))
 
                 val targetTimeIst = targetTimeUtc.withZoneSameInstant(istZone)
