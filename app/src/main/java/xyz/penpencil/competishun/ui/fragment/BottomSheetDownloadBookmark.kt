@@ -35,6 +35,7 @@ import androidx.work.WorkManager
 import xyz.penpencil.competishun.download.DownloadWorker
 import android.Manifest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.NotificationManagerCompat
 
 @AndroidEntryPoint
 class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
@@ -197,8 +198,12 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
             return
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            permissionRequest.launch(Manifest.permission.POST_NOTIFICATIONS)
+        if (NotificationManagerCompat.from(context).areNotificationsEnabled()) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU){
+                permissionRequest.launch(Manifest.permission.POST_NOTIFICATIONS)
+            }else {
+                checkPermissionNotification(videoUrl, fileName, videoFile.toString())
+            }
         }else {
             checkPermissionNotification(videoUrl, fileName, videoFile.toString())
         }

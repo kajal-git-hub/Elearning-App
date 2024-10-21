@@ -418,6 +418,8 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
                     putString("url", signedUrl)
                     putString("url_name", name)
                     putString("ContentId", folderContentId)
+                    putStringArrayList("folderContentIds", arrayListOf())
+                    putStringArrayList("folderContentNames", arrayListOf())
                 }
                 findNavController().navigate(R.id.mediaFragment, bundle)
 

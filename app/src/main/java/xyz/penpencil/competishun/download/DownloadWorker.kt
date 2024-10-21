@@ -111,7 +111,7 @@ class DownloadWorker(
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setPriority(NotificationCompat.PRIORITY_LOW)
             .setOngoing(true)
-            .setProgress(maxProgress, progress, false) // Set progress bar here
+            .setProgress(maxProgress, progress, false)
             .build()
     }
 }
