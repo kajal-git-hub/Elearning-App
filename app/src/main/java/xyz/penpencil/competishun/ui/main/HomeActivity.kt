@@ -17,17 +17,19 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.ObservableField
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.navigation.NavigationView
+import com.google.common.eventbus.Subscribe
 import com.razorpay.PaymentResultListener
-import xyz.penpencil.competishun.utils.SharedPreferencesManager
 import dagger.hilt.android.AndroidEntryPoint
 import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.databinding.ActivityHomeBinding
 import xyz.penpencil.competishun.ui.viewmodel.UserViewModel
+import xyz.penpencil.competishun.utils.EventBusSingleton
+import xyz.penpencil.competishun.utils.MyEvent
+import xyz.penpencil.competishun.utils.SharedPreferencesManager
+
 
 @AndroidEntryPoint
 class HomeActivity : AppCompatActivity(), PaymentResultListener {
@@ -248,6 +250,21 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
                 Toast.makeText(this, "Error fetching details: ${exception.message}", Toast.LENGTH_LONG).show()
             }
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        EventBusSingleton.getInstance().register(this)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        EventBusSingleton.getInstance().unregister(this)
+    }
+
+    @Subscribe
+    fun onEvent(event: MyEvent) {
+        Toast.makeText(this, event.message, Toast.LENGTH_SHORT).show()
     }
 
 

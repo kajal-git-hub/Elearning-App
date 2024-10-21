@@ -30,11 +30,13 @@ class ScheduleAdapter(private val scheduleItems: List<ScheduleData>, private val
     }
 
     fun findPositionByDate(date: String): Int {
-        val today = LocalDate.now().toString() // Convert today's date to string format
+        val today = LocalDate.now().toString()
         val todayIndex = scheduleItems.indexOfFirst { it.date == today }
-        if (todayIndex != -1) {
-            return todayIndex
-        } else {return scheduleItems.indexOfFirst { it.date == date }}
+        return if (todayIndex != -1) {
+            todayIndex
+        } else {
+            scheduleItems.indexOfFirst { it.date == date }
+        }
     }
 
     override fun onBindViewHolder(holder: ScheduleViewHolder, position: Int) {

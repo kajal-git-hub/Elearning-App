@@ -185,49 +185,54 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
         }
     }
 
-
     private fun downloadVideo(context: Context, videoUrl: String, name: String) {
         Log.d("DownloadVideo", "Starting download for: $videoUrl with name: $name")
 
-        fileName = "$name.mp4"
-        videoFile = File(context.filesDir, fileName)
+        // Store the video details for later use
+        this.videoUrl = videoUrl
+        this.fileName = "$name.mp4"
+        this.videoFile = File(context.filesDir, fileName!!)
 
         if (videoFile?.exists() == true) {
-            Toast.makeText(context, "Video already downloaded choose Other", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Video already downloaded, choose other", Toast.LENGTH_SHORT).show()
             dismiss()
             return
         }
 
-        if (NotificationManagerCompat.from(context).areNotificationsEnabled()) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU){
+        if (!NotificationManagerCompat.from(context).areNotificationsEnabled()) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 permissionRequest.launch(Manifest.permission.POST_NOTIFICATIONS)
-            }else {
-                checkPermissionNotification(videoUrl, fileName, videoFile.toString())
+            } else {
+                checkPermissionAndDownload(context)
             }
-        }else {
-            checkPermissionNotification(videoUrl, fileName, videoFile.toString())
+        } else {
+            checkPermissionAndDownload(context)
         }
     }
 
-    private fun checkPermissionNotification(videoUrl: String, fileName: String, videoFile: String){
-        val inputData = Data.Builder()
-            .putString("url", videoUrl)
-            .putString("fileName", fileName)
-            .putString("filePath", videoFile.toString())
-            .build()
-        val downloadWork = OneTimeWorkRequestBuilder<DownloadWorker>()
-            .setInputData(inputData)
-            .build()
-        WorkManager.getInstance(requireActivity()).enqueue(downloadWork)
+    private fun checkPermissionAndDownload(context: Context) {
+        Toast.makeText(context, "Download started", Toast.LENGTH_SHORT).show()
+        if (videoUrl != null && fileName != null && videoFile != null) {
+            val inputData = Data.Builder()
+                .putString("url", videoUrl)
+                .putString("fileName", fileName)
+                .putString("filePath", videoFile.toString())
+                .build()
+
+            val downloadWork = OneTimeWorkRequestBuilder<DownloadWorker>()
+                .setInputData(inputData)
+                .build()
+
+            WorkManager.getInstance(requireActivity()).enqueue(downloadWork)
+        }
     }
 
     private val permissionRequest =
-        registerForActivityResult(ActivityResultContracts.RequestPermission()) { permission ->
-            if (permission){
-                checkPermissionNotification(videoUrl, fileName, videoFile.toString())
-            }else {
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+            if (granted) {
+                checkPermissionAndDownload(requireContext())
+            } else {
                 Toast.makeText(requireContext(), "Allow permission to download file", Toast.LENGTH_SHORT).show()
             }
         }
-
 }
