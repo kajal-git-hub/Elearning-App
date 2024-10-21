@@ -10,21 +10,16 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import xyz.penpencil.competishun.data.model.ScheduleData
-import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Date
-import java.util.Locale
-import java.util.concurrent.TimeUnit
 import java.time.Duration
 import java.time.ZonedDateTime
-import java.time.format.DateTimeFormatter
 import java.time.ZoneId
 import android.os.CountDownTimer
-import androidx.core.content.ContextCompat
 import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.databinding.ItemCurrentSchedulesBinding
 import xyz.penpencil.competishun.databinding.ItemCurrentSchedulesInnerChildBinding
 import xyz.penpencil.competishun.utils.ToolbarCustomizationListener
+import xyz.penpencil.competishun.utils.utcToIst
+import xyz.penpencil.competishun.utils.toIstZonedDateTime
 import java.time.LocalDate
 
 class ScheduleAdapter(private val scheduleItems: List<ScheduleData>, private val context: Context, private val toolbarListener: ToolbarCustomizationListener) : RecyclerView.Adapter<ScheduleAdapter.ScheduleViewHolder>() {
@@ -238,12 +233,16 @@ class ScheduleAdapter(private val scheduleItems: List<ScheduleData>, private val
             }
 */
             private fun startCountdownTimer(targetTimestamp: String, fileUrl: String, fileType: String, ContentId: String) {
-                val utcZone = ZoneId.of("UTC")
-                val istZone = ZoneId.of("UTC")
+           /*   val utcZone = ZoneId.of("UTC")
+              val istZone = ZoneId.of("UTC")
 
-                val targetTimeUtc = ZonedDateTime.parse(targetTimestamp, DateTimeFormatter.ISO_DATE_TIME.withZone(utcZone))
+              val targetTimeUtc = ZonedDateTime.parse(targetTimestamp, DateTimeFormatter.ISO_DATE_TIME.withZone(utcZone))
 
-                val targetTimeIst = targetTimeUtc.withZoneSameInstant(istZone)
+              val targetTimeIst = targetTimeUtc.withZoneSameInstant(istZone)
+                */
+
+                val istZone = ZoneId.of("Asia/Kolkata")
+                val targetTimeIst = targetTimestamp.utcToIst().toIstZonedDateTime()
 
                 val nowInIst = ZonedDateTime.now(istZone)
                 val initialDuration = Duration.between(nowInIst, targetTimeIst).toMillis()
@@ -263,6 +262,10 @@ class ScheduleAdapter(private val scheduleItems: List<ScheduleData>, private val
                         binding.tvHoursRemaining.text = "$totalHours"
                         binding.tvMinRemaining.text = "$minutes"
                         binding.tvSecRemaining.text = "$seconds"
+
+                        Log.e("shdjkashjdkashds", "$targetTimestamp || ${binding.tvTopicName.text} ||  onTick:  $totalHours  || $minutes   $seconds", )
+
+
                     }
 
                     override fun onFinish() {

@@ -91,6 +91,7 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
         fieldsToVisible = arguments?.getStringArray("FIELD_REQUIRED")?.toMutableList()?: mutableListOf()
         sharedPreferencesManager = SharedPreferencesManager(requireContext())
         Log.e("dsaashdsad", "onViewCreated: " +fieldsToVisible )
+        updateUIVisibility()
         initObserver()
         populateSavedData()
 
@@ -138,7 +139,6 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
                 return false
             }
         })
-        updateUIVisibility()
     }
 
     private fun initObserver(){
