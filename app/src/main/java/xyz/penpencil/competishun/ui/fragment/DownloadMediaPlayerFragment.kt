@@ -71,7 +71,7 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
         }
         player = ExoPlayer.Builder(requireContext()).build()
         binding.playerView.player = player
-        binding.playerView.videoSurfaceView?.rotation = 90F;
+//        binding.playerView.videoSurfaceView?.rotation = 90F;
 
 
         playVideo(videoUrl)

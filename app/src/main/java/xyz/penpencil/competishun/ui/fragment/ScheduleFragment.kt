@@ -3,6 +3,8 @@ package xyz.penpencil.competishun.ui.fragment
 import android.content.Intent
 import xyz.penpencil.competishun.utils.HorizontalCalendarSetUp
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -36,6 +38,7 @@ import java.time.ZonedDateTime
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Calendar
+import java.util.Date
 
 @AndroidEntryPoint
 class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
@@ -108,8 +111,13 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
 
     private fun setupRecyclerView(contentList: List<FindAllCourseFolderContentByScheduleTimeQuery.FindAllCourseFolderContentByScheduleTime>) {
     Log.e("foldevontent" ,contentList.toString())
-        var courseDate:CalendarDate = CalendarDate("","","",null)
-        Log.e("foldevonten" ,courseDate.toString())
+        val currentDate = LocalDate.now()
+        val day: Int = currentDate.dayOfMonth
+        val month: Int = currentDate.monthValue
+        val year: Int = currentDate.year
+        val d = if (day<10) "0$day" else day.toString()
+        val m = if (month<10) "0$month" else month.toString()
+        val courseDate = CalendarDate(d,"$day","",null)
 
         val scheduleDataList = contentList.groupBy {
             val scheduledTime = convertIST(it.content.scheduled_time.toString())
@@ -140,7 +148,11 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
         scheduleAdapter = ScheduleAdapter(scheduleDataList, requireContext(),this)
         binding.rvCalenderSchedule.adapter = scheduleAdapter
         binding.rvCalenderSchedule.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        scrollToDate(courseDate)
+
+        Handler(Looper.getMainLooper()).postDelayed({
+            scrollToDate(courseDate)
+        }, 2000)
+
         scheduleDataList.forEach { scheduleData ->
             Log.e("ScheduleDatakaj", scheduleData.toString())
         }
@@ -310,9 +322,9 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
 
     private fun scrollToDate(calendarDate: CalendarDate) {
         val position = scheduleAdapter.findPositionByDate(calendarDate.date)
-        Log.e("scrollpostions $matchingPosition",position.toString())
         if (position != -1) {
-            binding.rvCalenderSchedule.scrollToPosition(position)
+            val layoutManager = binding.rvCalenderSchedule.layoutManager as LinearLayoutManager
+            layoutManager.scrollToPositionWithOffset(position, 0)
         }
     }
 
@@ -418,6 +430,8 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
                     putString("url", signedUrl)
                     putString("url_name", name)
                     putString("ContentId", folderContentId)
+                    putStringArrayList("folderContentIds", arrayListOf())
+                    putStringArrayList("folderContentNames", arrayListOf())
                 }
                 findNavController().navigate(R.id.mediaFragment, bundle)
 

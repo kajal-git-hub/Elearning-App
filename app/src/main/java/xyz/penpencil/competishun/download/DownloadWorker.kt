@@ -7,23 +7,27 @@ import android.content.Context
 import android.content.pm.ServiceInfo
 import android.os.Build
 import android.util.Log
+import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
+import com.google.common.eventbus.EventBus
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import xyz.penpencil.competishun.R
+import xyz.penpencil.competishun.utils.EventBusSingleton
+import xyz.penpencil.competishun.utils.MyEvent
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.InputStream
 
 
 class DownloadWorker(
-    context: Context,
+    val context: Context,
     workerParams: WorkerParameters
 ) : CoroutineWorker(context, workerParams) {
 
@@ -64,14 +68,13 @@ class DownloadWorker(
                                 output.write(buffer, 0, bytesRead)
                                 downloadedBytes += bytesRead
 
-                                // Update the notification progress
-                                if (totalBytes > 0) { // Only update progress if we know the total size
+                                if (totalBytes > 0) {
                                     val progress = (downloadedBytes * 100 / totalBytes).toInt()
                                     setForeground(createForegroundInfo(progress, 100))
                                 }
                             }
-
-                            Log.d("DownloadVideo", "File downloaded successfully.")
+                            Log.e("EventBusSingleton", "doWork: ", )
+                            EventBusSingleton.getInstance().post(MyEvent("File downloaded successfully."))
                             return@async Result.success()
                         }
                     }
@@ -102,17 +105,21 @@ class DownloadWorker(
 
     private fun createNotification(contentText: String, progress: Int, maxProgress: Int): Notification {
         val notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        val channel = NotificationChannel(CHANNEL_ID, "Download", NotificationManager.IMPORTANCE_LOW)
+
+        Log.e("cxczXCZXCZXCZX", "createNotification:  $progress || $maxProgress ", )
+        val channel = NotificationChannel(CHANNEL_ID, "Download", NotificationManager.IMPORTANCE_HIGH)
+        channel.description = "Download progress"
         notificationManager.createNotificationChannel(channel)
 
         return NotificationCompat.Builder(applicationContext, CHANNEL_ID)
             .setContentTitle("Downloading")
             .setContentText(contentText)
             .setSmallIcon(R.drawable.ic_launcher_foreground)
-            .setPriority(NotificationCompat.PRIORITY_LOW)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setOngoing(true)
-            .setProgress(maxProgress, progress, false) // Set progress bar here
+            .setProgress(maxProgress, progress, false)
             .build()
     }
+
 }
 
