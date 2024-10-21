@@ -88,6 +88,7 @@ class ScheduleAdapter(private val scheduleItems: List<ScheduleData>, private val
                 binding.tvSubjectName.text = innerItem.subject_name
                 binding.tvTopicName.text = innerItem.topic_name
                 startCountdownTimer(innerItem.scheduleTimer,innerItem.file_url , innerItem.fileType,innerItem.contentId)
+                Log.e("sbAHGSHahsghaGHS", "bind: " +innerItem.scheduleTimer)
                 if (innerItem.fileType=="VIDEO") {
 
                     binding.tvClassTimings.text = "${innerItem.lecture_start_time+"-"+innerItem.lecture_end_time}"
@@ -147,7 +148,7 @@ class ScheduleAdapter(private val scheduleItems: List<ScheduleData>, private val
                 }*/
             }
 
-            private fun startCountdown(startTime: String, endTime: String) {
+          /*  private fun startCountdown(startTime: String, endTime: String) {
                 val dateFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
                 val startTimeParsed: Date = dateFormat.parse(startTime) ?: return
                 val endTimeParsed: Date = dateFormat.parse(endTime) ?: return
@@ -235,10 +236,10 @@ class ScheduleAdapter(private val scheduleItems: List<ScheduleData>, private val
                 // Format the remaining time as a string
                 return String.format("Time Remaining: %02d:%02d:%02d", hours, minutes, seconds)
             }
-
+*/
             private fun startCountdownTimer(targetTimestamp: String, fileUrl: String, fileType: String, ContentId: String) {
                 val utcZone = ZoneId.of("UTC")
-                val istZone = ZoneId.of("Asia/Kolkata")
+                val istZone = ZoneId.of("UTC")
                 val targetTimeUtc = ZonedDateTime.parse(targetTimestamp, DateTimeFormatter.ISO_DATE_TIME.withZone(utcZone))
 
                 val targetTimeIst = targetTimeUtc.withZoneSameInstant(istZone)
