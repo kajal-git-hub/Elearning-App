@@ -34,3 +34,20 @@ fun String.toIstZonedDateTime(): ZonedDateTime {
     val istZone = ZoneId.of("Asia/Kolkata")
     return ZonedDateTime.of(localDateTime, istZone)
 }
+
+private fun formatTimeDuration(totalDuration: Int): String {
+    return when {
+        totalDuration < 60 -> "${totalDuration} sec"
+        totalDuration == 60 -> "1h"
+        else -> {
+            val hours = totalDuration / 3600
+            val minutes = (totalDuration % 3600) / 60
+            val seconds = totalDuration % 60
+            listOf(
+                if (hours > 0) "${hours} hr${if (hours > 1) "s" else ""}" else "",
+                if (minutes > 0) "${minutes} min${if (minutes > 1) "s" else ""}" else "",
+                if (seconds > 0) "${seconds} sec" else ""
+            ).filter { it.isNotEmpty() }.joinToString(" ").trim()
+        }
+    }
+}

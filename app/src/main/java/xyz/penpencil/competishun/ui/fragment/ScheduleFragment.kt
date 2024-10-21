@@ -129,11 +129,13 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
                 dayOfMonth,
                 duration = 0,
                 groupedContentList.map { content ->
+                    //TODO Add schedule time + video duration
+                    Log.e("hghjghsahdgas", "setupRecyclerView: ${content.content.scheduled_time}", )
                     ScheduleData.InnerScheduleItem(
                         content.folderPath?:"",
                         content.content.file_name,
-                        formatTime(convertIST(content.content.scheduled_time.toString())),
-                        convertLastDuration(formatTime(convertIST(content.content.scheduled_time.toString())),content.content.video_duration?.toLong()?:0),
+                        lecture_start_time = formatTime(convertIST(content.content.scheduled_time.toString())),
+                        lecture_end_time = convertLastDuration(formatTime(convertIST(content.content.scheduled_time.toString())),content.content.video_duration?.toLong()?:0),
                         content.content.file_url.toString(),
                         content.content.file_type.name,
                         content.content.id,
