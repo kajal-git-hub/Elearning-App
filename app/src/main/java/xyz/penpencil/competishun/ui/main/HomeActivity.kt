@@ -121,14 +121,12 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
         bottomNavigationView.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.home -> {
-//                    previousSelectedItemId = binding.bottomNav.selectedItemId
                     if (navController.currentDestination?.id != R.id.homeFragment) {
                         navController.navigate(R.id.homeFragment)
                     }
                     true
                 }
                 R.id.myCourse -> {
-//                    previousSelectedItemId = binding.bottomNav.selectedItemId
 
                     if (navController.currentDestination?.id != R.id.PersonalDetailsFragment) {
                         navController.navigate(R.id.courseEmptyFragment)
@@ -136,13 +134,10 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
                     true
                 }
                 R.id.Download -> {
-//                    previousSelectedItemId = binding.bottomNav.selectedItemId
                     navController.navigate(R.id.DownloadFragment)
                     true
                 }
                 R.id.Bookmark -> {
-//                    previousSelectedItemId = binding.bottomNav.selectedItemId
-
                     navController.navigate(R.id.BookMarkFragment)
                     true
                 }
