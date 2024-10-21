@@ -90,7 +90,7 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
         (activity as? HomeActivity)?.showFloatingButton(false)
         fieldsToVisible = arguments?.getStringArray("FIELD_REQUIRED")?.toMutableList()?: mutableListOf()
         sharedPreferencesManager = SharedPreferencesManager(requireContext())
-
+        Log.e("dsaashdsad", "onViewCreated: " +fieldsToVisible )
         initObserver()
         populateSavedData()
 
@@ -120,9 +120,9 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
         updateButtonState()
 
 
-        getView()?.setFocusableInTouchMode(true)
-        getView()?.requestFocus()
-        getView()?.setOnKeyListener(object : View.OnKeyListener {
+        view?.setFocusableInTouchMode(true)
+        view?.requestFocus()
+        view?.setOnKeyListener(object : View.OnKeyListener {
             override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
                 if (keyCode == KeyEvent.KEYCODE_BACK) {
                     findNavController().let { nav->
@@ -138,6 +138,7 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
                 return false
             }
         })
+        updateUIVisibility()
     }
 
     private fun initObserver(){
