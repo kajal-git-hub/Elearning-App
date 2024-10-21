@@ -30,6 +30,7 @@ import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.databinding.FragmentScheduleBinding
 import xyz.penpencil.competishun.ui.main.PdfViewActivity
 import xyz.penpencil.competishun.utils.setLightStatusBars
+import xyz.penpencil.competishun.utils.timeStatus
 import java.text.SimpleDateFormat
 import java.time.LocalTime
 import java.time.ZoneId
@@ -129,8 +130,6 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
                 dayOfMonth,
                 duration = 0,
                 groupedContentList.map { content ->
-                    //TODO Add schedule time + video duration
-                    Log.e("hghjghsahdgas", "setupRecyclerView: ${content.content.scheduled_time}", )
                     ScheduleData.InnerScheduleItem(
                         content.folderPath?:"",
                         content.content.file_name,
@@ -140,7 +139,8 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
                         content.content.file_type.name,
                         content.content.id,
                         content.content.scheduled_time.toString(),
-                        completedDuration = content.studentTrack?.completed_duration ?:0
+                        completedDuration = content.studentTrack?.completed_duration ?:0,
+                        statusTime = content.content.scheduled_time.toString().timeStatus(content.content.video_duration?:0)
                     )
                 }
             )

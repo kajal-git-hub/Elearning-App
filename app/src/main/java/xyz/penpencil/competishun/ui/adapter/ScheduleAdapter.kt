@@ -88,7 +88,7 @@ class ScheduleAdapter(private val scheduleItems: List<ScheduleData>, private val
                 Log.e("sbAHGSHahsghaGHS", "bind: " +innerItem.scheduleTimer)
                 if (innerItem.fileType=="VIDEO") {
 
-                    binding.tvClassTimings.text = "${innerItem.lecture_start_time+"-"+innerItem.lecture_end_time}"
+                    binding.tvClassTimings.text = innerItem.statusTime
                     binding.tvHoursRemaining.text = ""
                     binding.videoIV.setImageResource(R.drawable.video_bg)
                 }else if (innerItem.fileType=="PDF"){
