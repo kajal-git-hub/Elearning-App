@@ -21,6 +21,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -203,15 +204,15 @@ class HomeFragment : Fragment() {
 
 
             override fun onDrawerClosed(drawerView: View) {
-                if (findNavController().currentDestination?.id  == R.id.homeFragment){
+                if (drawerView.findNavController().currentDestination?.id  == R.id.homeFragment){
                     bottomNav.visibility = View.VISIBLE
                     contactImage.visibility = View.VISIBLE
                 }
-                if(findNavController().currentDestination?.id == R.id.courseEmptyFragment){
+                if(drawerView.findNavController().currentDestination?.id == R.id.courseEmptyFragment){
                     bottomNav.visibility = View.VISIBLE
                     contactImage.visibility = View.GONE
                 }
-                if(findNavController().currentDestination?.id == R.id.coursesFragment){
+                if(drawerView.findNavController().currentDestination?.id == R.id.coursesFragment){
                     bottomNav.visibility = View.GONE
                     contactImage.visibility = View.VISIBLE
                 }

@@ -1,29 +1,30 @@
 package xyz.penpencil.competishun.ui.fragment
 
+import android.R.attr.fragment
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.Toast
-import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.tabs.TabLayout
+import dagger.hilt.android.AndroidEntryPoint
+import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.data.model.TopicContentModel
+import xyz.penpencil.competishun.databinding.FragmentDownloadBinding
 import xyz.penpencil.competishun.ui.adapter.DownloadedItemAdapter
 import xyz.penpencil.competishun.ui.main.HomeActivity
 import xyz.penpencil.competishun.ui.viewmodel.VideourlViewModel
 import xyz.penpencil.competishun.utils.SharedPreferencesManager
-import dagger.hilt.android.AndroidEntryPoint
-import xyz.penpencil.competishun.R
-import xyz.penpencil.competishun.databinding.FragmentDownloadBinding
 import java.io.File
+
 
 @AndroidEntryPoint
 class DownloadFragment : DrawerVisibility(), DownloadedItemAdapter.OnVideoClickListener {
@@ -50,15 +51,19 @@ class DownloadFragment : DrawerVisibility(), DownloadedItemAdapter.OnVideoClickL
 
         savedInstanceState?.let {    selectedTabPosition = it.getInt("SELECTED_TAB_POSITION", 0)}
 
-//        val bottomNavigationView = requireActivity().findViewById<BottomNavigationView>(R.id.bottomNav)
-//
-//        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
-//            override fun handleOnBackPressed() {
-//                findNavController().navigateUp()
-////                bottomNavigationView.selectedItemId = R.id.myCourse
-//
-//            }
-//        })
+
+        view.setFocusableInTouchMode(true)
+        view.requestFocus()
+        view.setOnKeyListener(object : View.OnKeyListener{
+            override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    v?.findNavController()?.popBackStack()
+                    return true
+                }
+                return false
+            }
+
+        })
 
         binding.studentTabLayout.getTabAt(selectedTabPosition)?.select()
 
