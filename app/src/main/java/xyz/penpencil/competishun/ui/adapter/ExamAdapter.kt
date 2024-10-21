@@ -92,7 +92,7 @@ class ExampleAdapter(
             val drawableResId = if (isSelected) R.drawable.property_selected else R.drawable.property_default
             val drawable = ContextCompat.getDrawable(binding.root.context, drawableResId)
             binding.radioButton.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
-            binding.radioButton.setOnClickListener {
+            binding.root.setOnClickListener {
                 selectedPosition = adapterPosition
                 selectedItems[currentStep] = item
                 notifyDataSetChanged()
@@ -110,7 +110,7 @@ class ExampleAdapter(
             val drawableResId = if (isSelected) R.drawable.property_selected else R.drawable.property_default
             val drawable = ContextCompat.getDrawable(binding.root.context, drawableResId)
             binding.radioButton.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
-            binding.radioButton.setOnClickListener {
+            binding.root.setOnClickListener {
                 selectedPosition = adapterPosition
                 selectedItems[currentStep] = item
                 notifyDataSetChanged()
@@ -128,7 +128,7 @@ class ExampleAdapter(
             val drawableResId = if (isSelected) R.drawable.property_selected else R.drawable.property_default
             val drawable = ContextCompat.getDrawable(binding.root.context, drawableResId)
             binding.radioButton.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
-            binding.radioButton.setOnClickListener {
+            binding.getStartedBgLayoutSecond.setOnClickListener {
                 selectedPosition = adapterPosition
                 selectedItems[currentStep] = item
                 notifyDataSetChanged()
