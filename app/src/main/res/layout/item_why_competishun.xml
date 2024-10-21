@@ -3,8 +3,7 @@
     android:id="@+id/item_why_comp"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="160dp"
-    android:layout_marginEnd="@dimen/_10dp"
+    android:layout_height="180dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
@@ -12,7 +11,7 @@
         android:id="@+id/bg_ytThumbnail"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="fitXY"
+        android:scaleType="centerCrop"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
