@@ -177,6 +177,18 @@ class DownloadFragment : DrawerVisibility(), DownloadedItemAdapter.OnVideoClickL
     private fun setupToolbar() {
         val searchView = binding.TopViewDownloads.menu.findItem(R.id.action_search_download)?.actionView as? SearchView
         searchView?.queryHint = "Search Pdf/Video"
+
+        searchView?.setOnSearchClickListener {
+            binding.tittleTb.visibility = View.GONE
+            binding.clNote.visibility = View.GONE
+        }
+
+        searchView?.setOnCloseListener {
+            binding.tittleTb.visibility = View.VISIBLE
+            binding.clNote.visibility = View.GONE
+            false
+        }
+
         searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean = false
 
