@@ -27,6 +27,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.databinding.FragmentScheduleBinding
 import xyz.penpencil.competishun.ui.main.PdfViewActivity
+import xyz.penpencil.competishun.utils.setLightStatusBars
 import java.text.SimpleDateFormat
 import java.time.LocalTime
 import java.time.ZoneId
@@ -392,12 +393,18 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
 
     override fun onResume() {
         super.onResume()
-        requireActivity().window.statusBarColor = ContextCompat.getColor(requireContext(), R.color._e25b49)
+        requireActivity().window?.let {
+            it.statusBarColor = ContextCompat.getColor(requireContext(), R.color._e25b49)
+            it.setLightStatusBars(true)
+        }
     }
 
     override fun onStop() {
         super.onStop()
-        requireActivity().window.statusBarColor = ContextCompat.getColor(requireContext(), R.color._white_F6F6FF)
+        requireActivity().window?.let {
+            it.statusBarColor = ContextCompat.getColor(requireContext(), R.color._white_F6F6FF)
+            it.setLightStatusBars(false)
+        }
     }
 
     private fun videoUrlApi(viewModel: VideourlViewModel, folderContentId: String, name: String) {
