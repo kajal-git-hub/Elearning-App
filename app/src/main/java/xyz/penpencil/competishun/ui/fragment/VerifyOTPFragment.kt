@@ -421,6 +421,7 @@ class VerifyOTPFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        requireContext().unregisterReceiver(mySMSBroadcastReceiver)
         countDownTimer.cancel()
     }
 }
