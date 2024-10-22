@@ -96,6 +96,7 @@ class ReferenceFragment : Fragment() {
                     Log.e("emailType",sharedPreferencesManager.email.toString())
                     val updateUserInput = UpdateUserInput(
                         city = Optional.Present(sharedPreferencesManager.city),
+                        state = Optional.Present(sharedPreferencesManager.state),
                         fullName = Optional.Present(sharedPreferencesManager.name),
                         preparingFor = Optional.Present(sharedPreferencesManager.preparingFor),
                         reference = Optional.Present(sharedPreferencesManager.reference),
@@ -109,6 +110,7 @@ class ReferenceFragment : Fragment() {
                     Log.e("nopresenELSE",sharedPreferencesManager.mobileNo.toString())
                       val updateUserInput = UpdateUserInput(
                         city = Optional.Present(sharedPreferencesManager.city),
+                          state = Optional.Present(sharedPreferencesManager.state),
                         fullName = Optional.Present(sharedPreferencesManager.name),
                         preparingFor = Optional.Present(sharedPreferencesManager.preparingFor),
                         reference = Optional.Present(sharedPreferencesManager.reference),

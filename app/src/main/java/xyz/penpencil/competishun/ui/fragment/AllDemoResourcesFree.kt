@@ -67,12 +67,15 @@ class AllDemoResourcesFree : DrawerVisibility() {
 
         helperFunctions = HelperFunctions()
         var folderName = arguments?.getString("folderName")
+        var isPurchased = arguments?.getBoolean("isPurchased")?:false
         binding.igDemoBackButton.setOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed() }
         binding.tvDemoTitle.text = folderName
         if (folderName?.split(" ")?.get(0)?.equals("Class") == true) {
             binding.igFreeImage.visibility = View.VISIBLE
             binding.igFreeImage.setImageResource(R.drawable.frame_1707480952)
-        } else {
+        } else if (isPurchased) {
+            binding.igFreeImage.visibility = View.GONE
+        }else {
             binding.igFreeImage.visibility = View.VISIBLE
             binding.igFreeImage.setImageResource(R.drawable.lock)
         }

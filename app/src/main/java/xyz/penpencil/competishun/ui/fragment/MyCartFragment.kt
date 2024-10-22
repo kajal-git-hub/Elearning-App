@@ -236,9 +236,11 @@ class MyCartFragment : DrawerVisibility(), OnCartItemRemovedListener, MyCartAdap
             Log.e("orderAinput",input.toString())
             input?.let { orderInput ->
                 orderViewModel.createOrder(orderInput)
+                sharedPreferencesManager.COURSEID = orderInput.entityId
                 Log.e("orderAmountss",orderInput.toString())
                 orderViewModel.orderResult.observe(viewLifecycleOwner, Observer { result ->
                     result.onSuccess { data ->
+                       Log.e("PaidOrderID", data.createOrder.id)
                         processPayment(data.createOrder)
                     }.onFailure { exception ->
                         Log.e("payemen",exception.message.toString(),exception.cause)
