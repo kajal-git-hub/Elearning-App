@@ -124,9 +124,9 @@ class TopicTypeContentFragment : Fragment() {
                 homeworkName = homeworkFileName.toString()
             )
         } ?: emptyList()
-        val folderContentIds = folderContents.filter { it.content?.file_type?.name  == "VIDEO" }.mapNotNull { it.content?.id }?.toCollection(ArrayList())
-        val folderContentNames = folderContents.filter { it.content?.file_type?.name  == "VIDEO" }.mapNotNull { it.content?.file_name }?.toCollection(ArrayList())
-        val adapter = TopicContentAdapter(topicContents, folderId,requireActivity(),requireContext()) { topicContent, folderContentId ->
+        val folderContentis = folderContents.filter { it.content?.file_type?.name  == "VIDEO" }.mapNotNull { it.content?.id }?.toCollection(ArrayList())
+        val folderContentNs = folderContents.filter { it.content?.file_type?.name  == "VIDEO" }.mapNotNull { it.content?.file_name }?.toCollection(ArrayList())
+        val adapter = TopicContentAdapter(topicContents, folderId,requireActivity(),requireContext()) { topicContent, folderContentId, folderContentIds,folderContentNames->
             when (topicContent.fileType) {
                 "VIDEO" -> videoUrlApi(videourlViewModel, topicContent.id,topicContent.topicName,folderContentIds,folderContentNames)
                 "PDF" -> {
@@ -194,9 +194,9 @@ class TopicTypeContentFragment : Fragment() {
                             homeworkName = homeworkFileName.toString()
                         )
                     } ?: emptyList()
-                    val folderContentIds = folderContents?.filter { it.content?.file_type?.name  == "VIDEO" }?.mapNotNull { it.content?.id }?.toCollection(ArrayList())
-                    val folderContentNames = folderContents?.filter { it.content?.file_type?.name  == "VIDEO" }?.mapNotNull { it.content?.file_name }?.toCollection(ArrayList())
-                    val adapter = TopicContentAdapter(topicContents, folderId,requireActivity(),requireContext()) { topicContent, folderContentId ->
+                    val folderContentIs = folderContents?.filter { it.content?.file_type?.name  == "VIDEO" }?.mapNotNull { it.content?.id }?.toCollection(ArrayList())
+                    val folderContentNs = folderContents?.filter { it.content?.file_type?.name  == "VIDEO" }?.mapNotNull { it.content?.file_name }?.toCollection(ArrayList())
+                    val adapter = TopicContentAdapter(topicContents, folderId,requireActivity(),requireContext()) { topicContent, folderContentId, folderContentIds,folderContentNames ->
                         when (topicContent.fileType) {
                             "VIDEO" -> videoUrlApi(videourlViewModel, topicContent.id,topicContent.topicName,folderContentIds,folderContentNames)
                             "PDF" -> {
