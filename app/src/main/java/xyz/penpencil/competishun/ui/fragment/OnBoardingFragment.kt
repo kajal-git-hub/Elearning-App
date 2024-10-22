@@ -77,20 +77,14 @@ class OnBoardingFragment : Fragment() {
         val email = sharedPreferencesManager.email
         val statesAndCities = loadStatesAndCities(requireContext())
 
-        binding.etEnterStateText.setOnClickListener {
-            binding.etEnterStateText.setText("")
-            hideKeyboard(binding.etEnterStateText)
-//            Log.e("statesAndCites",statesAndCities.toString())
-//            statesAndCities?.let {
-//                val stateNames = it.map { state -> state.name }
-//                showStateDropdown(binding.etEnterStateText, stateNames) // Call the updated function
-//            }
-
-        }
         binding.etEnterStateText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+
+                if (binding.etEnterStateText.text.toString().isNotBlank()) {
+                    return
+                }
                 if (!isSelectingState) {
                     runnable?.let { handler.removeCallbacks(it) }
                     runnable = Runnable {
@@ -117,23 +111,13 @@ class OnBoardingFragment : Fragment() {
         })
 
 
-        binding.etEnterCityText.setOnClickListener {
-            binding.etEnterCityText.setText("")
-//            val selectedState = binding.etEnterStateText.text.toString()
-//            val selectedStateObj = statesAndCities?.find { it.name == selectedState }
-//            Log.e("selectedStateObj",selectedStateObj.toString())
-//            selectedStateObj?.let { state ->
-//                showCityDropdown(binding.etEnterCityText, state.cities)
-//            } ?: run {
-//                Toast.makeText(requireContext(), "Please select a state first", Toast.LENGTH_SHORT).show()
-//            }
-        }
-
-
         binding.etEnterCityText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                if (binding.etEnterCityText.text.toString().isNotBlank()) {
+                    return
+                }
                 // Only filter cities if we are not selecting one
                 if (!isSelectingCity) {
                     // Cancel any existing runnable
