@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/onboarding"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
     android:background="@drawable/onboarding_background"
     tools:context=".ui.fragment.OnBoardingFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/outerConstraint"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="match_parent"
         android:layout_marginHorizontal="16dp"
         android:layout_marginTop="40dp"
         android:layout_marginBottom="30dp"
@@ -22,322 +24,335 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/etInnerConstraint"
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="20dp"
-            android:layout_marginTop="32dp"
-            android:background="@color/white"
-            android:paddingBottom="30dp"
-            android:visibility="visible"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-
-            <ImageView
-                android:id="@+id/etCircleLogo"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:backgroundTint="@color/blue"
-                android:src="@drawable/circleimage"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-
-            <TextView
-                android:id="@+id/et_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="1"
-                android:textColor="#2B2829"
-                android:textSize="16dp"
-                app:layout_constraintBottom_toBottomOf="@+id/etCircleLogo"
-                app:layout_constraintEnd_toStartOf="@+id/et_text2" />
-
-            <TextView
-                android:id="@id/et_text2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="19dp"
-                android:text="/4"
-                android:textColor="#9F9C9C"
-                android:textSize="12dp"
-                app:layout_constraintBottom_toBottomOf="@+id/etCircleLogo"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/etCircleLogo" />
-
+            android:layout_height="wrap_content">
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/clAnimConstraint"
+                android:id="@+id/etInnerConstraint"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
                 android:layout_marginTop="32dp"
+                android:background="@color/white"
+                android:paddingBottom="30dp"
+                android:visibility="visible"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/etCircleLogo">
+                app:layout_constraintTop_toTopOf="parent">
 
-                <TextView
-                    android:id="@+id/etStartedText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/nunito"
-                    android:lineHeight="@dimen/_28dp"
-                    android:text="@string/let_s_get_started"
-                    android:textColor="#2B2829"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
+
+                <ImageView
+                    android:id="@+id/etCircleLogo"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:backgroundTint="@color/blue"
+                    android:src="@drawable/circleimage"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/etNameConstraint"
+
+                <TextView
+                    android:id="@+id/et_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="22dp"
-                    android:visibility="visible"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/etStartedText">
+                    android:text="1"
+                    android:textColor="#2B2829"
+                    android:textSize="16dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/etCircleLogo"
+                    app:layout_constraintEnd_toStartOf="@+id/et_text2" />
 
-                    <TextView
-                        android:id="@+id/etFullNameText"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/nunito"
-                        android:text="@string/full_name"
-                        android:textColor="#0A0A0B"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <EditText
-                        android:id="@+id/etEnterHereText"
-                        android:layout_width="288dp"
-                        android:layout_height="48dp"
-                        android:layout_marginTop="10dp"
-                        android:background="@drawable/full_name_background"
-                        android:hint="@string/enter_here"
-                        android:inputType="text"
-                        android:paddingLeft="16dp"
-                        android:paddingTop="12dp"
-                        android:paddingRight="16dp"
-                        android:paddingBottom="12dp"
-                        android:textColorHint="#898384"
-                        android:textSize="16sp"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/etFullNameText" />
-
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/clEmailphone"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintStart_toStartOf="parent"
-                        android:layout_marginTop="20dp"
-                        app:layout_constraintTop_toBottomOf="@+id/etEnterHereText">
-
-
-                    <TextView
-                        android:id="@+id/etPhoneNoText"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/nunito"
-                        android:text="@string/phone_no"
-                        android:visibility="gone"
-                        android:textColor="#0A0A0B"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"/>
-
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/clEnterNo"
-                        android:layout_width="288dp"
-                        android:layout_height="48dp"
-                        android:visibility="visible"
-                        android:layout_marginTop="16dp"
-                        android:background="@drawable/rounded_home_edittext"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/etPhoneNoText">
-
-                        <TextView
-                            android:id="@+id/etCountryCode"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:paddingStart="@dimen/_16dp"
-                            android:paddingTop="@dimen/_12dp"
-                            android:paddingEnd="@dimen/_8dp"
-                            android:paddingBottom="@dimen/_12dp"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            android:text="91"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            android:textColor="#151314"
-                            android:textSize="16sp" />
-
-                        <EditText
-                            android:id="@+id/etEnterMob"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:hint="Enter Number"
-                            android:inputType="phone"
-                            android:paddingTop="@dimen/_12dp"
-                            android:paddingEnd="@dimen/_8dp"
-                            android:paddingBottom="@dimen/_12dp"
-                            android:background="@null"
-                            android:textColor="#2B2829"
-                            android:textColorHint="#898384"
-                            android:maxLength="10"
-                            android:textSize="16sp"
-                            app:layout_constraintStart_toEndOf="@+id/etCountryCode"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintBottom_toBottomOf="parent" />
-
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-
-                    <TextView
-                        android:id="@+id/etEmailText"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/nunito"
-                        android:text="@string/email"
-                        android:visibility="gone"
-                        android:textColor="#0A0A0B"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <EditText
-                        android:id="@+id/etEnterEmailText"
-                        android:layout_width="288dp"
-                        android:layout_height="48dp"
-                        android:layout_marginTop="10dp"
-                        android:background="@drawable/full_name_background"
-                        android:hint="Enter email"
-                        android:visibility="gone"
-                        android:inputType="textEmailAddress"
-                        android:paddingLeft="16dp"
-                        android:paddingTop="12dp"
-                        android:paddingRight="16dp"
-                        android:paddingBottom="12dp"
-                        android:textColorHint="#898384"
-                        android:textSize="16sp"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/etEmailText" />
-
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-                    <TextView
-                        android:id="@+id/etCityText"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:fontFamily="@font/nunito"
-                        android:text="City"
-                        android:textSize="14sp"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/etEnterStateText" />
-
-                    <EditText
-                        android:id="@+id/etEnterCityText"
-                        android:layout_width="288dp"
-                        android:layout_height="48dp"
-                        android:layout_marginTop="10dp"
-                        android:background="@drawable/full_name_background"
-                        android:hint="Ex. Gurugram"
-                        android:inputType="text"
-                        android:drawableEnd="@drawable/arrow_down"
-                        android:paddingLeft="16dp"
-                        android:paddingTop="12dp"
-                        android:paddingRight="16dp"
-                        android:paddingBottom="12dp"
-                        android:textColorHint="#898384"
-                        android:textSize="16sp"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/etCityText" />
-
-                    <TextView
-                        android:id="@+id/etStateText"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:fontFamily="@font/nunito"
-                        android:text="State"
-                        android:textSize="14sp"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/clEmailphone" />
-
-                    <EditText
-                        android:id="@+id/etEnterStateText"
-                        android:layout_width="288dp"
-                        android:layout_height="48dp"
-                        android:layout_marginTop="10dp"
-                        android:background="@drawable/full_name_background"
-                        android:hint="Ex. Haryana"
-                        android:inputType="text"
-                        android:paddingLeft="16dp"
-                        android:drawableEnd="@drawable/arrow_down"
-                        android:paddingTop="12dp"
-                        android:paddingRight="16dp"
-                        android:paddingBottom="12dp"
-                        android:textColorHint="#898384"
-                        android:textSize="16sp"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/etStateText" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                <TextView
+                    android:id="@id/et_text2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="19dp"
+                    android:text="/4"
+                    android:textColor="#9F9C9C"
+                    android:textSize="12dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/etCircleLogo"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/etCircleLogo" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/clExamConstraint"
+                    android:id="@+id/clAnimConstraint"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="22dp"
-                    android:visibility="gone"
+                    android:layout_marginTop="32dp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/etStartedText">
+                    app:layout_constraintTop_toBottomOf="@id/etCircleLogo">
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/examRecyclerview"
-                        android:layout_width="match_parent"
+                    <TextView
+                        android:id="@+id/etStartedText"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                        android:fontFamily="@font/nunito"
+                        android:lineHeight="@dimen/_28dp"
+                        android:text="@string/let_s_get_started"
+                        android:textColor="#2B2829"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:spanCount="1"
-                        tools:itemCount="4"
-                        tools:listitem="@layout/getstarted_itemlayout" />
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/etContentBox"
-                        android:layout_width="match_parent"
-                        android:layout_height="74dp"
-                        android:background="@drawable/getstarted_itembg_unselected"
+                        android:id="@+id/etNameConstraint"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="22dp"
                         android:visibility="visible"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginHorizontal="6dp"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/examRecyclerview">
+                        app:layout_constraintTop_toBottomOf="@id/etStartedText">
 
-                        <EditText
-                            android:id="@+id/etContent"
-                            android:layout_width="match_parent"
+                        <TextView
+                            android:id="@+id/etFullNameText"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:background="@null"
-                            android:hint="Enter here"
-                            android:inputType="text"
-                            android:maxLines="100"
-                            android:padding="10dp"
-                            android:textColor="#898384"
+                            android:fontFamily="@font/nunito"
+                            android:text="@string/full_name"
+                            android:textColor="#0A0A0B"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
 
+                        <EditText
+                            android:id="@+id/etEnterHereText"
+                            android:layout_width="288dp"
+                            android:layout_height="48dp"
+                            android:layout_marginTop="10dp"
+                            android:background="@drawable/full_name_background"
+                            android:hint="@string/enter_here"
+                            android:inputType="text"
+                            android:paddingLeft="16dp"
+                            android:paddingTop="12dp"
+                            android:paddingRight="16dp"
+                            android:paddingBottom="12dp"
+                            android:textColorHint="#898384"
+                            android:textSize="16sp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/etFullNameText" />
+
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/clEmailphone"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintStart_toStartOf="parent"
+                            android:layout_marginTop="20dp"
+                            app:layout_constraintTop_toBottomOf="@+id/etEnterHereText">
+
+
+                            <TextView
+                                android:id="@+id/etPhoneNoText"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/nunito"
+                                android:text="@string/phone_no"
+                                android:visibility="gone"
+                                android:textColor="#0A0A0B"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"/>
+
+
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:id="@+id/clEnterNo"
+                                android:layout_width="288dp"
+                                android:layout_height="48dp"
+                                android:visibility="visible"
+                                android:layout_marginTop="16dp"
+                                android:background="@drawable/rounded_home_edittext"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@+id/etPhoneNoText">
+
+                                <TextView
+                                    android:id="@+id/etCountryCode"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:paddingStart="@dimen/_16dp"
+                                    android:paddingTop="@dimen/_12dp"
+                                    android:paddingEnd="@dimen/_8dp"
+                                    android:paddingBottom="@dimen/_12dp"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    android:text="91"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    android:textColor="#151314"
+                                    android:textSize="16sp" />
+
+                                <EditText
+                                    android:id="@+id/etEnterMob"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:hint="Enter Number"
+                                    android:inputType="phone"
+                                    android:paddingTop="@dimen/_12dp"
+                                    android:paddingEnd="@dimen/_8dp"
+                                    android:paddingBottom="@dimen/_12dp"
+                                    android:background="@null"
+                                    android:textColor="#2B2829"
+                                    android:textColorHint="#898384"
+                                    android:maxLength="10"
+                                    android:textSize="16sp"
+                                    app:layout_constraintStart_toEndOf="@+id/etCountryCode"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:layout_constraintBottom_toBottomOf="parent" />
+
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+
+                            <TextView
+                                android:id="@+id/etEmailText"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/nunito"
+                                android:text="@string/email"
+                                android:visibility="gone"
+                                android:textColor="#0A0A0B"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <EditText
+                                android:id="@+id/etEnterEmailText"
+                                android:layout_width="288dp"
+                                android:layout_height="48dp"
+                                android:layout_marginTop="10dp"
+                                android:background="@drawable/full_name_background"
+                                android:hint="Enter email"
+                                android:visibility="gone"
+                                android:inputType="textEmailAddress"
+                                android:paddingLeft="16dp"
+                                android:paddingTop="12dp"
+                                android:paddingRight="16dp"
+                                android:paddingBottom="12dp"
+                                android:textColorHint="#898384"
+                                android:textSize="16sp"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@id/etEmailText" />
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
                         <TextView
-                            android:id="@+id/tvWordCounter"
+                            android:id="@+id/etCityText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginEnd="10dp"
-                            android:gravity="center"
-                            android:text="0/100"
-                            android:textColor="#898384"
-                            app:layout_constraintBottom_toBottomOf="@+id/etContentBox"
-                            app:layout_constraintEnd_toEndOf="@+id/etContentBox"
-                            app:layout_constraintTop_toBottomOf="@+id/etContent" />
+                            android:layout_marginTop="20dp"
+                            android:fontFamily="@font/nunito"
+                            android:text="City"
+                            android:textSize="14sp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/etEnterStateText" />
+
+                        <AutoCompleteTextView
+                            android:id="@+id/etEnterCityText"
+                            android:layout_width="288dp"
+                            android:layout_height="48dp"
+                            android:layout_marginTop="10dp"
+                            android:background="@drawable/full_name_background"
+                            android:hint="Ex. Gurugram"
+                            android:inputType="text"
+                            android:drawableEnd="@drawable/arrow_down"
+                            android:paddingLeft="16dp"
+                            android:paddingTop="12dp"
+                            android:paddingRight="16dp"
+                            android:paddingBottom="12dp"
+                            android:textColorHint="#898384"
+                            android:textSize="16sp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/etCityText" />
+
+                        <View
+                            android:id="@+id/viewToVisible"
+                            android:layout_width="match_parent"
+                            android:layout_height="36dp"
+                            app:layout_constraintTop_toBottomOf="@+id/etEnterCityText"
+                            android:background="@android:color/transparent" />
+
+                        <TextView
+                            android:id="@+id/etStateText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:fontFamily="@font/nunito"
+                            android:text="State"
+                            android:textSize="14sp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/clEmailphone" />
+
+                        <AutoCompleteTextView
+                            android:id="@+id/etEnterStateText"
+                            android:layout_width="288dp"
+                            android:layout_height="48dp"
+                            android:layout_marginTop="10dp"
+                            android:background="@drawable/full_name_background"
+                            android:hint="Ex. Haryana"
+                            android:inputType="text"
+                            android:paddingLeft="16dp"
+                            android:drawableEnd="@drawable/arrow_down"
+                            android:paddingTop="12dp"
+                            android:paddingRight="16dp"
+                            android:paddingBottom="12dp"
+                            android:textColorHint="#898384"
+                            android:textSize="16sp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/etStateText" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/clExamConstraint"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="22dp"
+                        android:visibility="gone"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/etStartedText">
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/examRecyclerview"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:spanCount="1"
+                            tools:itemCount="4"
+                            tools:listitem="@layout/getstarted_itemlayout" />
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/etContentBox"
+                            android:layout_width="match_parent"
+                            android:layout_height="74dp"
+                            android:background="@drawable/getstarted_itembg_unselected"
+                            android:visibility="visible"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginHorizontal="6dp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/examRecyclerview">
+
+                            <EditText
+                                android:id="@+id/etContent"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@null"
+                                android:hint="Enter here"
+                                android:inputType="text"
+                                android:maxLines="100"
+                                android:padding="10dp"
+                                android:textColor="#898384"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <TextView
+                                android:id="@+id/tvWordCounter"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="10dp"
+                                android:gravity="center"
+                                android:text="0/100"
+                                android:textColor="#898384"
+                                app:layout_constraintBottom_toBottomOf="@+id/etContentBox"
+                                app:layout_constraintEnd_toEndOf="@+id/etContentBox"
+                                app:layout_constraintTop_toBottomOf="@+id/etContent" />
+
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
 
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -345,10 +360,11 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
-
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </ScrollView>
+
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/buttonContainer"
@@ -389,6 +405,6 @@
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
 
 
