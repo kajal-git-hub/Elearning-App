@@ -417,8 +417,21 @@ class VerifyOTPFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-        requireContext().unregisterReceiver(mySMSBroadcastReceiver)
+        unRegister()
         countDownTimer.cancel()
+    }
+
+    override fun onStop() {
+        unRegister()
+        super.onStop()
+    }
+
+    private fun unRegister(){
+        try {
+            requireContext().unregisterReceiver(mySMSBroadcastReceiver)
+        }catch (e:Exception){
+            e.printStackTrace()
+        }
     }
 }
 
