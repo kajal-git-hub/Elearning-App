@@ -254,7 +254,7 @@ class StudyMaterialDetailsFragment : Fragment() {
                                         lecture = if (contents.content?.file_type?.name == "VIDEO") "Lecture" else "Study Material",
                                         lecturerName = if(contents.content?.file_type?.name == "VIDEO") formatTimeDuration(
                                             contents.content.video_duration ?: 0
-                                        ) else "Ashok",
+                                        ) else "",
                                         topicName = contents.content?.file_name ?: "",
                                         topicDescription = contents.content?.description?:"",
                                         progress = 1,
@@ -267,15 +267,15 @@ class StudyMaterialDetailsFragment : Fragment() {
                                         homeworkUrl = homeworkUrl.toString()  // Add this field in your TopicContentModel if it doesn't exist
                                     )
                                 }
-                            val folderContentIds = folderProgressContent.filter { it.content?.file_type?.name  == "VIDEO" }.mapNotNull { it.content?.id }.toCollection(ArrayList())
-                            val folderContentNames = folderProgressContent.filter { it.content?.file_type?.name  == "VIDEO" }.mapNotNull { it.content?.file_name }.toCollection(ArrayList())
-                            Log.e("getfoldersubject2",folderContentNames.toString())
+                            val folderContentIs = folderProgressContent.filter { it.content?.file_type?.name  == "VIDEO" }.mapNotNull { it.content?.id }.toCollection(ArrayList())
+                            val folderContentNmes = folderProgressContent.filter { it.content?.file_type?.name  == "VIDEO" }.mapNotNull { it.content?.file_name }.toCollection(ArrayList())
+                            Log.e("getfoldersubject2",folderContentNmes.toString())
                             binding.rvStudyMaterial.adapter = TopicContentAdapter(
                                 topicContentList,
                                 folderId,
                                 requireActivity(),
                                 requireContext()
-                            ) { topicContent, folderContentId ->
+                            ) { topicContent, folderContentId, folderContentIds,folderContentNames->
                                 when (topicContent.fileType) {
                                     "VIDEO" -> {
                                         videoUrlApi(videourlViewModel, topicContent.id,topicContent.topicName,folderContentIds,folderContentNames)
@@ -409,7 +409,7 @@ class StudyMaterialDetailsFragment : Fragment() {
                                         lecture = if (contents.content?.file_type?.name == "VIDEO") "Lecture" else "Study Material",
                                         lecturerName = if(contents.content?.file_type?.name == "VIDEO") formatTimeDuration(
                                             contents.content.video_duration ?: 0
-                                        ) else "Ashok" ,
+                                        ) else "" ,
                                         topicName = contents.content?.file_name ?: "",
                                         topicDescription = contents.content?.description?:"",
                                         progress = 1,
@@ -423,15 +423,15 @@ class StudyMaterialDetailsFragment : Fragment() {
                                     )
                                 }
                             binding.tvContentCount.text = "(${subjectContentList.size + (folderProgressContent?.size ?: 0)})"
-                            val folderContentIds = folderProgressContent.filter { it.content?.file_type?.name  == "VIDEO" }.mapNotNull { it.content?.id }.toCollection(ArrayList())
-                            val folderContentNames = folderProgressContent.filter { it.content?.file_type?.name  == "VIDEO" }.mapNotNull { it.content?.file_name }.toCollection(ArrayList())
-                            Log.e("getfoldersubject1",folderContentNames.toString())
+                            val folderContentIs = folderProgressContent.filter { it.content?.file_type?.name  == "VIDEO" }.mapNotNull { it.content?.id }.toCollection(ArrayList())
+                            val folderContentNes = folderProgressContent.filter { it.content?.file_type?.name  == "VIDEO" }.mapNotNull { it.content?.file_name }.toCollection(ArrayList())
+                            Log.e("getfoldersubject1",folderContentNes.toString())
                             binding.rvStudyMaterial.adapter = TopicContentAdapter(
                                 subjectContentList,
                                 folderId,
                                 requireActivity(),
                                 requireContext()
-                            ) { topicContent, folderContentId ->
+                            ) { topicContent, folderContentId, folderContentIds,folderContentNames ->
                                 when (topicContent.fileType) {
 
                                     "VIDEO" -> {

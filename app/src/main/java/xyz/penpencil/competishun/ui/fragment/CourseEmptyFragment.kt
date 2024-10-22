@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.viewModels
@@ -31,6 +32,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.databinding.FragmentCourseEmptyBinding
 import xyz.penpencil.competishun.ui.viewmodel.UserViewModel
+import xyz.penpencil.competishun.utils.setLightStatusBars
 
 
 @AndroidEntryPoint
@@ -340,12 +342,12 @@ class CourseEmptyFragment : Fragment() {
 //
 //    }
 
-    override fun onPause() {
-        super.onPause()
-        (activity as? HomeActivity)?.showBottomNavigationView(true)
-        (activity as? HomeActivity)?.showFloatingButton(false)
-    }
 
+    override fun onResume() {
+        super.onResume()
+//        activity?.window?.statusBarColor = ContextCompat.getColor(requireContext(), R.color.blue_3E3EF7)
+
+    }
 
 
     override fun onDestroyView() {

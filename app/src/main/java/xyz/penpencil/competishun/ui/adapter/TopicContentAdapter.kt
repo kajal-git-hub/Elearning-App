@@ -38,7 +38,7 @@ TopicContentAdapter(
     private val folderContentId: String,
     private val fragmentActivity: FragmentActivity,
     private val context: Context, // Pass context
-    private val onItemClick: (TopicContentModel, String) -> Unit
+    private val onItemClick: (TopicContentModel, String,ArrayList<String>,ArrayList<String>) -> Unit
 ) :
     RecyclerView.Adapter<TopicContentAdapter.TopicContentViewHolder>() {
 
@@ -55,11 +55,19 @@ TopicContentAdapter(
         val topicContent = topicContents[position]
         holder.bind(topicContents[position], fragmentActivity)
         Log.e("valuesss ${isDateTodayOrPast(topicContent.lockTime)} ", topicContent.lockTime.toString())
+        val unlockedTopicContentIds = topicContents
+            .filter { isDateTodayOrPast(it.lockTime) && it.fileType == "VIDEO" }
+            .map { it.id }.toCollection(ArrayList())
+        val unlockedTopicContentNames = topicContents
+            .filter { isDateTodayOrPast(it.lockTime) && it.fileType == "VIDEO" }
+            .map { it.topicName }.toCollection(ArrayList())
+        Log.e("unlockedTopics",unlockedTopicContentIds.toString())
+        Log.e("unlockedTopic",unlockedTopicContentNames.toString())
         // Disable click if locked, enable if not
         if ( isDateTodayOrPast(topicContent.lockTime)) {
             // Enable the click listener for unlocked items
             holder.itemView.setOnClickListener {
-                onItemClick(topicContent, folderContentId)
+                onItemClick(topicContent, folderContentId,unlockedTopicContentIds,unlockedTopicContentNames)
             }
         } else {
             // Disable the click listener for locked items
@@ -270,42 +278,6 @@ TopicContentAdapter(
                 )
                 false
             }
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    fun showDateIfFutureOrToday(dateString: String): Boolean {
-        // Correct the date string if necessary
-        Log.e("dateString2",dateString)
-        val cleanedDateString = dateString.replace("Sept", "Sep").trim()
-
-        // Define the corrected primary date format pattern (assuming '24' refers to 2024)
-        val primaryFormatter = DateTimeFormatter.ofPattern("dd MMM, yy hh:mm a", Locale.ENGLISH)
-            .withResolverStyle(ResolverStyle.SMART) // Handle ambiguous year formats like '24'
-
-        // Define the fallback format pattern for date only
-        val fallbackFormatter = DateTimeFormatter.ofPattern("dd MMM, yy", Locale.ENGLISH)
-        Log.e("getingtind $fallbackFormatter",primaryFormatter.toString())
-        return try {
-            // Try to parse using the primary formatter
-            val dateTime = LocalDateTime.parse(cleanedDateString, primaryFormatter)
-            // Get today's date
-            val today = LocalDateTime.now()
-            Log.e("getingtind",dateTime.toString())
-            // Compare the dates (check if date is today or in the future)
-            dateTime.isAfter(today) || dateTime.isEqual(today)
-        } catch (e: DateTimeParseException) {
-            Log.e("DateParsingError", "Primary format parsing error: ${e.message}. Input date string: '$cleanedDateString'")
-            try {
-                // Try parsing using the fallback formatter (without time)
-                val dateTime = LocalDate.parse(cleanedDateString, fallbackFormatter)
-                val today = LocalDate.now()
-                // Compare the dates (check if date is today or in the future)
-                dateTime.isAfter(today) || dateTime.isEqual(today)
-            } catch (fallbackException: DateTimeParseException) {
-                Log.e("DateParsingError", "Fallback format parsing error: ${fallbackException.message}. Input date string: '$cleanedDateString'")
-                false
-            }
-        }
     }
 
 

@@ -144,6 +144,16 @@ class MediaPlayerFragment : DrawerVisibility() {
                             Log.e("videoEnded",player.toString())
                             binding.playerView.visibility = View.GONE
                             binding.upNextOverlay.visibility = View.VISIBLE
+                            videoTitles = courseFolderContentNames
+                            if (currentVideoIndex < courseFolderContentIds.size - 1) {
+                                Log.e("currentVideoIndexSize", currentVideoIndex.toString())
+                                currentVideoIndex++
+                                val nextVideoTittle = videoTitles[currentVideoIndex]
+                                binding.nextVideoTitle.text = nextVideoTittle
+                             } else {
+                        // No more videos in the playlist
+                        Toast.makeText(requireContext(), "No more videos to play", Toast.LENGTH_SHORT).show()
+                             }
                             binding.startNextButton.setOnClickListener {
                                 Log.e("nextButtonclick","nectButton")
                                 playNextVideo()
@@ -151,6 +161,7 @@ class MediaPlayerFragment : DrawerVisibility() {
                             }
                             binding.cancelNextButton.setOnClickListener {
                                 binding.upNextOverlay.visibility = View.GONE
+                                findNavController().popBackStack()
                             }
                             // When the video ends, play the next one if available
                             Log.e("withoutclickclick","withoutclick")
@@ -160,8 +171,8 @@ class MediaPlayerFragment : DrawerVisibility() {
                        Player.STATE_IDLE -> {
                             Log.e("videoEndedIdle",player.toString())
                             // Hide the progress bar in case of idle or ended states
-                            binding.progressBar.visibility = View.GONE
-                            binding.playerView.visibility = View.VISIBLE
+                            binding.progressBar.visibility = View.VISIBLE
+                            binding.playerView.visibility = View.GONE
                         }
                     }
                 }
@@ -194,7 +205,7 @@ class MediaPlayerFragment : DrawerVisibility() {
         binding.progressBar.visibility = View.VISIBLE
         binding.playerView.visibility = View.GONE
         val mediaItem = MediaItem.fromUri(videoUrl)
-        Log.e("getting $startPosition",videoUrl)
+        Log.e("getting $startPosition $videoTittle",videoUrl)
         player.setMediaItem(mediaItem)
         player.prepare()
         player.play()
@@ -226,7 +237,6 @@ class MediaPlayerFragment : DrawerVisibility() {
                         binding.nextVideoTime.text = "1 min"
                         binding.startNextButton.setOnClickListener {
                             playNextVideo()
-                            binding.upNextOverlay.visibility = View.GONE
                             binding.upNextOverlay.visibility = View.GONE
                         }
                         binding.cancelNextButton.setOnClickListener {
@@ -275,19 +285,13 @@ class MediaPlayerFragment : DrawerVisibility() {
         }
 
         videoTitles = courseFolderContentNames
-        if (currentVideoIndex < courseFolderContentIds.size - 1) {
-            Log.e("currentVideoIndexSize",currentVideoIndex.toString())
-            currentVideoIndex++
+
            // val nextVideoUrl = videoUrls[currentVideoIndex]
             val nextVideoUrl = urlVideo
             val nextVideoTittle = videoTitles[currentVideoIndex]
             binding.tittleBtn.text = nextVideoTittle
             playVideo(nextVideoUrl,0,nextVideoTittle)
             Log.e("currentVideoAfter",currentVideoIndex.toString())
-        } else {
-            // No more videos in the playlist
-            Toast.makeText(requireContext(), "No more videos to play", Toast.LENGTH_SHORT).show()
-        }
     }
 
 
@@ -319,7 +323,7 @@ class MediaPlayerFragment : DrawerVisibility() {
 
     fun changeQuality(formate:String):String{
         videourlViewModel.fetchVideoStreamUrl(courseFolderContentId, formate)
-        Log.e("foldfdfd",courseFolderContentId)
+        Log.e("APIcontentId",courseFolderContentId)
         videourlViewModel.videoStreamUrl.observe(viewLifecycleOwner, { signedUrl ->
             Log.d("Videourl", "Signed URL: $signedUrl")
             if (signedUrl != null) {

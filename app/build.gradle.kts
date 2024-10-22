@@ -122,5 +122,7 @@ dependencies {
 
     implementation (libs.core)
 
+    implementation (libs.play.services.auth.api.phone)
+
 
 }

@@ -112,7 +112,7 @@ class TopicTypeContentFragment : Fragment() {
                 id = content.content?.id ?: "",
                 playIcon = if (content.content?.file_type?.name == "VIDEO") R.drawable.video_bg else 0,
                 lecture = if (content.content?.file_type?.name == "VIDEO") "Lecture" else "Study Material",
-                lecturerName = "Ashok",
+                lecturerName = "",
                 topicName = content.content?.file_name ?: "",
                 topicDescription = content.content?.description ?:"",
                 progress = 1,
@@ -124,9 +124,9 @@ class TopicTypeContentFragment : Fragment() {
                 homeworkName = homeworkFileName.toString()
             )
         } ?: emptyList()
-        val folderContentIds = folderContents.filter { it.content?.file_type?.name  == "VIDEO" }.mapNotNull { it.content?.id }?.toCollection(ArrayList())
-        val folderContentNames = folderContents.filter { it.content?.file_type?.name  == "VIDEO" }.mapNotNull { it.content?.file_name }?.toCollection(ArrayList())
-        val adapter = TopicContentAdapter(topicContents, folderId,requireActivity(),requireContext()) { topicContent, folderContentId ->
+        val folderContentis = folderContents.filter { it.content?.file_type?.name  == "VIDEO" }.mapNotNull { it.content?.id }?.toCollection(ArrayList())
+        val folderContentNs = folderContents.filter { it.content?.file_type?.name  == "VIDEO" }.mapNotNull { it.content?.file_name }?.toCollection(ArrayList())
+        val adapter = TopicContentAdapter(topicContents, folderId,requireActivity(),requireContext()) { topicContent, folderContentId, folderContentIds,folderContentNames->
             when (topicContent.fileType) {
                 "VIDEO" -> videoUrlApi(videourlViewModel, topicContent.id,topicContent.topicName,folderContentIds,folderContentNames)
                 "PDF" -> {
@@ -182,7 +182,7 @@ class TopicTypeContentFragment : Fragment() {
                             id = content.content?.id.orEmpty(),
                             playIcon = R.drawable.video_bg, // Replace with dynamic icon if needed
                             lecture = "Lecture", // Replace with dynamic data if available
-                            lecturerName = content.content?.file_name.orEmpty(),
+                            lecturerName = "",
                             topicName = content.content?.file_name.orEmpty(),
                             topicDescription = content.content?.file_name.orEmpty(),
                             progress = content.videoCompletionPercentage?.toInt() ?: 0,
@@ -194,9 +194,9 @@ class TopicTypeContentFragment : Fragment() {
                             homeworkName = homeworkFileName.toString()
                         )
                     } ?: emptyList()
-                    val folderContentIds = folderContents?.filter { it.content?.file_type?.name  == "VIDEO" }?.mapNotNull { it.content?.id }?.toCollection(ArrayList())
-                    val folderContentNames = folderContents?.filter { it.content?.file_type?.name  == "VIDEO" }?.mapNotNull { it.content?.file_name }?.toCollection(ArrayList())
-                    val adapter = TopicContentAdapter(topicContents, folderId,requireActivity(),requireContext()) { topicContent, folderContentId ->
+                    val folderContentIs = folderContents?.filter { it.content?.file_type?.name  == "VIDEO" }?.mapNotNull { it.content?.id }?.toCollection(ArrayList())
+                    val folderContentNs = folderContents?.filter { it.content?.file_type?.name  == "VIDEO" }?.mapNotNull { it.content?.file_name }?.toCollection(ArrayList())
+                    val adapter = TopicContentAdapter(topicContents, folderId,requireActivity(),requireContext()) { topicContent, folderContentId, folderContentIds,folderContentNames ->
                         when (topicContent.fileType) {
                             "VIDEO" -> videoUrlApi(videourlViewModel, topicContent.id,topicContent.topicName,folderContentIds,folderContentNames)
                             "PDF" -> {
