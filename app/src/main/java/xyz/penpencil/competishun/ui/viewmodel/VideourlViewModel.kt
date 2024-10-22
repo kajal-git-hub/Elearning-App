@@ -22,7 +22,10 @@ class VideourlViewModel @Inject constructor(
 
     fun fetchVideoStreamUrl(courseFolderContentId: String, format: String) {
         viewModelScope.launch {
-            _videoStreamUrl.value = videoRepository.getVideoStreamUrl(courseFolderContentId, format)
+            _videoStreamUrl.value = null
+            val url = videoRepository.getVideoStreamUrl(courseFolderContentId, format)
+            _videoStreamUrl.value = url
+
         }
     }
 

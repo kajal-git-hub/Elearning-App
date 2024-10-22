@@ -93,7 +93,6 @@
             android:ellipsize="end"
             android:lineHeight="21sp"
             android:maxLines="3"
-            android:gravity="center"
             setTextViewHtml=""
             android:textColor="#726C6C"
             android:textSize="14sp"
