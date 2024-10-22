@@ -183,7 +183,8 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
         if (lectureCount.isNullOrEmpty()) {
             lectureCount = "0"
         }
-        val ourContentAdapter = OurContentAdapter(folderlist, isItemSize, this)
+
+        val ourContentAdapter = OurContentAdapter(folderlist, isItemSize,courselreadyBuy, this)
         binding.rvOurContent.apply {
             layoutManager =
                 LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
