@@ -26,6 +26,7 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
@@ -131,7 +132,6 @@ class VerifyOTPFragment : Fragment() {
             }
 
             override fun onFailure() {
-                TODO("Not yet implemented")
             }
 
         }
@@ -401,6 +401,8 @@ class VerifyOTPFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         registerBroadcastReceiver()
+        activity?.window?.statusBarColor = ContextCompat.getColor(requireContext(), R.color.white)
+
     }
 
     override fun onPause() {
@@ -421,5 +423,6 @@ class VerifyOTPFragment : Fragment() {
         val smsManager: SmsManager = SmsManager.getDefault()
         smsManager.sendTextMessage("9958411046", null, smsText, null, null)
     }
+
 }
 

@@ -254,7 +254,7 @@ class StudyMaterialDetailsFragment : Fragment() {
                                         lecture = if (contents.content?.file_type?.name == "VIDEO") "Lecture" else "Study Material",
                                         lecturerName = if(contents.content?.file_type?.name == "VIDEO") formatTimeDuration(
                                             contents.content.video_duration ?: 0
-                                        ) else "Ashok",
+                                        ) else "",
                                         topicName = contents.content?.file_name ?: "",
                                         topicDescription = contents.content?.description?:"",
                                         progress = 1,
@@ -409,7 +409,7 @@ class StudyMaterialDetailsFragment : Fragment() {
                                         lecture = if (contents.content?.file_type?.name == "VIDEO") "Lecture" else "Study Material",
                                         lecturerName = if(contents.content?.file_type?.name == "VIDEO") formatTimeDuration(
                                             contents.content.video_duration ?: 0
-                                        ) else "Ashok" ,
+                                        ) else "" ,
                                         topicName = contents.content?.file_name ?: "",
                                         topicDescription = contents.content?.description?:"",
                                         progress = 1,

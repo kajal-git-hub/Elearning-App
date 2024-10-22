@@ -112,7 +112,7 @@ class TopicTypeContentFragment : Fragment() {
                 id = content.content?.id ?: "",
                 playIcon = if (content.content?.file_type?.name == "VIDEO") R.drawable.video_bg else 0,
                 lecture = if (content.content?.file_type?.name == "VIDEO") "Lecture" else "Study Material",
-                lecturerName = "Ashok",
+                lecturerName = "",
                 topicName = content.content?.file_name ?: "",
                 topicDescription = content.content?.description ?:"",
                 progress = 1,
@@ -182,7 +182,7 @@ class TopicTypeContentFragment : Fragment() {
                             id = content.content?.id.orEmpty(),
                             playIcon = R.drawable.video_bg, // Replace with dynamic icon if needed
                             lecture = "Lecture", // Replace with dynamic data if available
-                            lecturerName = content.content?.file_name.orEmpty(),
+                            lecturerName = "",
                             topicName = content.content?.file_name.orEmpty(),
                             topicDescription = content.content?.file_name.orEmpty(),
                             progress = content.videoCompletionPercentage?.toInt() ?: 0,

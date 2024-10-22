@@ -4,6 +4,7 @@ import android.content.Intent
 import xyz.penpencil.competishun.utils.HorizontalCalendarSetUp
 import android.os.Bundle
 import android.util.Log
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,7 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -235,6 +237,19 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        view.setFocusableInTouchMode(true)
+        view.requestFocus()
+        view.setOnKeyListener(object : View.OnKeyListener{
+            override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    v?.findNavController()?.popBackStack()
+                    return true
+                }
+                return false
+            }
+
+        })
 
 
         val bottomNavigationView = requireActivity().findViewById<BottomNavigationView>(R.id.bottomNav)
