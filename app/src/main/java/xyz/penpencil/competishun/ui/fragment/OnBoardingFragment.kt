@@ -71,12 +71,6 @@ class OnBoardingFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setEventListener(
-            activity!!,
-            KeyboardVisibilityEventListener {
-                binding.viewToVisible.visibility = View.VISIBLE
-            })
-
         val savedName = sharedPreferencesManager.name
         val savedCity = sharedPreferencesManager.city
         val savedState = sharedPreferencesManager.state
