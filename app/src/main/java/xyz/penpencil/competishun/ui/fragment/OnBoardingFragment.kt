@@ -39,8 +39,8 @@ import java.io.InputStream
 @AndroidEntryPoint
 class OnBoardingFragment : Fragment() {
 
-    private var _binding: FragmentOnBoardingBinding? = null
-    private val binding get() = _binding!!
+    private lateinit var binding: FragmentOnBoardingBinding
+
     private lateinit var sharedPreferencesManager: SharedPreferencesManager
     private val updateUserViewModel: UpdateUserViewModel by viewModels()
     private val userViewModel: UserViewModel by viewModels()
@@ -55,9 +55,8 @@ class OnBoardingFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentOnBoardingBinding.inflate(inflater, container, false)
+        binding = FragmentOnBoardingBinding.inflate(inflater,container,false)
         sharedPreferencesManager = (requireActivity() as MainActivity).sharedPreferencesManager
-
         requireActivity().onBackPressedDispatcher.addCallback(this) {
             handleBackPressed()
         }
@@ -380,10 +379,6 @@ class OnBoardingFragment : Fragment() {
         )
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
 
     override fun onResume() {
         super.onResume()
