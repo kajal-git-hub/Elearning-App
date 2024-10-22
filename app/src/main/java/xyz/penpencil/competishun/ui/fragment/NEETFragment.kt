@@ -77,20 +77,18 @@ class NEETFragment : DrawerVisibility(), StudentCourseItemClickListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 tab?.let {
                     when (it.position) {
-                        0 ->  fetchCoursesForClass("11th")
-                        1 -> fetchCoursesForClass("12th")
-                        2 -> fetchCoursesForClass("12+")
+                        0 ->  courseViewModel.coursesState(0)
+                        1 -> courseViewModel.coursesState(1)
+                        2 -> courseViewModel.coursesState(2)
+                        else -> {
+                            courseViewModel.coursesState(0)
+                        }
                     }
                 }
             }
 
-            override fun onTabUnselected(tab: TabLayout.Tab?) {
-                // Handle tab unselected if needed
-            }
-
-            override fun onTabReselected(tab: TabLayout.Tab?) {
-                // Handle tab reselected if needed
-            }
+            override fun onTabUnselected(tab: TabLayout.Tab?) { }
+            override fun onTabReselected(tab: TabLayout.Tab?) { }
         })
     }
 
@@ -103,11 +101,29 @@ class NEETFragment : DrawerVisibility(), StudentCourseItemClickListener {
             exam_type = Optional.present(examType),
             is_recommended = Optional.present(false)
         )
-        setupTabLayout()
         courseViewModel.fetchCourses(filters)
     }
 
     private fun observeCourses() {
+        lifecycleScope.launch {
+            courseViewModel.coursesState.collect { result ->
+                result?.onSuccess { data ->
+                    when (data) {
+                        0 ->  fetchCoursesForClass("11th")
+                        1 -> fetchCoursesForClass("12th")
+                        2 -> fetchCoursesForClass("12+")
+                    }
+                    binding.studentTabLayout.post {
+                        binding.studentTabLayout.getTabAt(data)?.select()
+                    }
+                }?.onFailure { exception ->
+                    binding.studentTabLayout.getTabAt(0)?.select()
+                    fetchCoursesForClass("11th")
+                }
+            }
+        }
+
+
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             courseViewModel.courses.collect { result ->
                 result?.onSuccess { data ->

@@ -14,12 +14,16 @@ import java.util.regex.Pattern
 
 @AndroidEntryPoint
 class MySMSBroadcastReceiver : BroadcastReceiver() {
+
+    // Listener for receiving OTP
     private var otpReceiveListener: OTPReceiveListener? = null
 
+    // Function to add listener
     fun addListener(otpReceiveListener: OTPReceiveListener?) {
         this.otpReceiveListener = otpReceiveListener
     }
 
+    // This function will be called when an SMS is retrieved
     override fun onReceive(context: Context, intent: Intent) {
         if (SmsRetriever.SMS_RETRIEVED_ACTION == intent.action) {
             val extras = intent.extras
@@ -30,40 +34,34 @@ class MySMSBroadcastReceiver : BroadcastReceiver() {
                         // Get SMS message contents
                         val message = extras[SmsRetriever.EXTRA_SMS_MESSAGE] as String?
                         if (message != null) {
-                            val pattern = Pattern.compile("(\\d{4})")
-                            //   \d is for a digit
-                            //   {} is the number of digits here 4.
+                            val pattern = Pattern.compile("(\\d{4})") // Regex to capture 4-digit OTP
                             val matcher = pattern.matcher(message)
                             var otp: String? = ""
                             if (matcher.find()) {
                                 otp = matcher.group(0)
-                                // 4 digit number
-                                if (this.otpReceiveListener != null)
-                                    otpReceiveListener!!.onOTPReceived(otp)
-                                else {
-                                    Log.e("dasdasjhdasjd", "onReceive: ")
-                                }
+                                otpReceiveListener?.onOTPReceived(otp) ?: Log.e("Receiver", "No listener attached")
 
+                                // Broadcast OTP locally within the app
                                 Intent("otp-receiver").apply {
                                     putExtra("OTP", otp.toString())
                                     LocalBroadcastManager.getInstance(context).sendBroadcast(this)
                                 }
                             } else {
-                                if (this.otpReceiveListener != null) otpReceiveListener!!.onOTPReceived(
-                                    null
-                                )
+                                otpReceiveListener?.onOTPReceived(null)
                             }
                         } else {
-                            Log.e("dasdansbdnbasnd", "onReceive: ")
+                            Log.e("Receiver", "Message is null")
                         }
                     }
-
-                    CommonStatusCodes.TIMEOUT -> if (this.otpReceiveListener != null) otpReceiveListener?.onOTPTimeOut()
+                    CommonStatusCodes.TIMEOUT -> {
+                        otpReceiveListener?.onOTPTimeOut()
+                    }
                 }
             }
         }
     }
 
+    // Listener interface to handle OTP events
     interface OTPReceiveListener {
         fun onOTPReceived(otp: String?)
         fun onOTPTimeOut()
