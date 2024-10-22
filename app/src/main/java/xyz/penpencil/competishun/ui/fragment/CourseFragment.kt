@@ -112,22 +112,25 @@ class CourseFragment : DrawerVisibility(), StudentCourseItemClickListener {
                 result?.onSuccess { data ->
                     Log.e(TAG , data.toString())
                     val courseSize = data.getAllCourseForStudent.courses.size
-
-                    val courses = data.getAllCourseForStudent.courses.map { course ->
-
-                        getAllLectureCount(course.id) { courseId, lectureCount ->
-                            lectureCounts[courseId] = lectureCount
-                            binding.recyclerView.adapter?.notifyDataSetChanged()
-                        }
-                        val courseClass = course.course_class?.name?:""
-                        Log.e("NEETcouseacal",helperFunctions.toDisplayString(courseClass))
+                    val courses = data.getAllCourseForStudent.courses
+                    if (courses.isEmpty()){
+                        Log.e("courseFramget", courses.toString())
+                    }else if (!courses.isEmpty()) {
+                        courses.map{ course ->
+                            getAllLectureCount(course.id) { courseId, lectureCount ->
+                                lectureCounts[courseId] = lectureCount
+                                binding.recyclerView.adapter?.notifyDataSetChanged()
+                            }
+                            val courseClass = course.course_class?.name ?: ""
+                            Log.e("NEETcouseacal", helperFunctions.toDisplayString(courseClass))
 //                        when (helperFunctions.toDisplayString(courseClass)) {
 //                            "11th" -> updateTabText(0, courseSize)
 //                            "12th" -> updateTabText(1, courseSize)
 //                            "12+" -> updateTabText(2, courseSize)
 //                        }
-                        course.toCourse()
-                    } ?: emptyList()
+                            course.toCourse()
+                        } ?: emptyList()
+                    }
                     Log.d("NEETFragment", courses.toString())
                     binding.recyclerView.adapter = CourseAdapter(courses,lectureCounts, this@CourseFragment)
                 }?.onFailure { exception ->
