@@ -64,10 +64,10 @@ class CoursesFragment : DrawerVisibility() {
             setupViewPager(tabViewPager,examIIT,examNEET)
             tabTabLayout.setupWithViewPager(tabViewPager)
 
-       /*     savedInstanceState?.let {
-                val selectedTabPosition = it.getInt("selected_tab_position", 0)
-                tabTabLayout.getTabAt(selectedTabPosition)?.select()
-            }*/
+            /*     savedInstanceState?.let {
+                     val selectedTabPosition = it.getInt("selected_tab_position", 0)
+                     tabTabLayout.getTabAt(selectedTabPosition)?.select()
+                 }*/
         }
         tabToolbar.setNavigationOnClickListener {
             requireActivity().onBackPressed()
@@ -102,10 +102,10 @@ class CoursesFragment : DrawerVisibility() {
         viewPager.adapter = adapter
     }
 
-/*    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        val selectedTabPosition = binding.tabTablayout.selectedTabPosition
-        outState.putInt("selected_tab_position", selectedTabPosition)
-    }*/
+    /*    override fun onSaveInstanceState(outState: Bundle) {
+            super.onSaveInstanceState(outState)
+            val selectedTabPosition = binding.tabTablayout.selectedTabPosition
+            outState.putInt("selected_tab_position", selectedTabPosition)
+        }*/
 
 }
