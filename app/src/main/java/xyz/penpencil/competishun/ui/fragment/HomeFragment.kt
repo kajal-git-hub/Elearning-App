@@ -377,11 +377,13 @@ class HomeFragment : Fragment() {
             if (!userDetails.userInformation.passportPhoto.isNullOrEmpty()) add("PASSPORT_SIZE_PHOTO")
         }
 
-        val missingAddressFields = if (userDetails.userInformation.address != null) {
-            listOf("FULL_ADDRESS")
-        } else {
-            emptyList()
-        }
+        val missingAddressFields = userDetails.userInformation.address?.let { data ->
+            if (data.pinCode != null || data.addressLine1 != null) {
+                listOf("FULL_ADDRESS")
+            } else {
+                emptyList()
+            }
+        } ?: emptyList()
 
         myCoursesViewModel.myCourses.observe(viewLifecycleOwner) { result ->
             result.onSuccess { data ->
@@ -394,6 +396,7 @@ class HomeFragment : Fragment() {
 
                 val allMissingFields = missingPersonalFields + missingDocumentFields + missingAddressFields
                 val filteredCourseRequirements = courseRequirements.filterNot { it in allMissingFields }.toSet()
+                Log.e("fsdfasdfsdfsd", "fetchCoursesAndUpdateUI: $filteredCourseRequirements")
                 if (filteredCourseRequirements.isNotEmpty()) {
                     findNavController().navigate(R.id.action_homeFragment_to_PersonalDetailFragment, Bundle().apply {
                         putStringArray("FIELD_REQUIRED", filteredCourseRequirements.toTypedArray())
