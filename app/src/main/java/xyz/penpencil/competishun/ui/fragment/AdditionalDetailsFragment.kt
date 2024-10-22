@@ -196,7 +196,7 @@ class AdditionalDetailsFragment : DrawerVisibility() {
                     uploadedIdUri = uri
                 }
                 if (currentFileType == "PHOTO"){
-                    uploadedIdUri = uri
+                    uploadedPhotoUri = uri
                 }
 
                 val fileSizeMB = getFileSizeMB(requireContext(), uri)
