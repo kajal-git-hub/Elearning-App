@@ -75,6 +75,10 @@ class OurContentAdapter(
         notifyDataSetChanged()
     }
 
+    fun updateContent(b: Boolean) {
+
+    }
+
     class FirstItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val titleTextView: TextView = itemView.findViewById(R.id.titleTextView)
         private val iconImageView: ImageView = itemView.findViewById(R.id.iconImageView)
