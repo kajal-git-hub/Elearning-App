@@ -169,6 +169,8 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
         getCourseTagsData()
 
         binding.clBuynow.setOnClickListener {
+            Log.d("courselreadyBuy",courselreadyBuy.toString())
+            Log.d("courseData",courseData.toString())
             if (courselreadyBuy && courseData!=null){
                 val bundle = Bundle().apply {
                     val gson = Gson()
@@ -190,9 +192,7 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
 
                 Log.e("sdjfkjsdhfjsad", "onViewCreated: ", )
 
-                it.findNavController().let { nav->
-                    nav.navigate(R.id.ResumeCourseFragment, bundle)
-                }
+                findNavController().navigate(R.id.ResumeCourseFragment, bundle)
             }else {
                 createCart(createCartViewModel, "FullPayment")
             }
@@ -721,6 +721,7 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
                     data.myCourses.forEach { myCourse ->
                         if (myCourse.course.id == courseId) {
                             courseData = myCourse
+                            Log.d("courseDataGet",courseData.toString())
                         }
                     }
                 }
