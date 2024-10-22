@@ -1,19 +1,20 @@
 query CoursePaymentsByUserId($courseId: String!, $userId: String!) {
     coursePaymentsByUserId(courseId: $courseId, userId: $userId) {
-        amount
+        userName
         courseName
         createdAt
-        currency
-        entityId
+        paymentType
         entityType
-        id
+        entityId
+        currency
+        amount
         installmentId
         orderId
         paymentMode
-        paymentType
-        rzpOrderId
+        id
         status
         userId
-        userName
+        rzpOrderId
+        updatedAt
     }
 }

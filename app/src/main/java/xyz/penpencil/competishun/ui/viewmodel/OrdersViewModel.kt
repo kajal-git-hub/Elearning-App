@@ -28,7 +28,9 @@ class OrdersViewModel @Inject constructor(
 
     fun fetchOrdersByUserIds(userIds: List<String>) {
         viewModelScope.launch {
-            _ordersByUserIds.value = ordersRepository.getOrdersByUserIds(userIds)
+            _ordersByUserIds.value = null
+          val orders = ordersRepository.getOrdersByUserIds(userIds)
+            _ordersByUserIds.value = orders
         }
     }
 

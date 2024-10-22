@@ -80,6 +80,7 @@ class PaymentFragment : Fragment() {
         //  startActivity(Intent(requireContext(), HomeActivity::class.java))
         if (!sharedPreferencesManager.userId.isNullOrEmpty()) {
             orderdetails(ordersViewModel,sharedPreferencesManager.userId.toString())
+
         }else orderdetails(ordersViewModel,userId)
         binding.paymentTickGif.visibility = View.VISIBLE
 
@@ -148,6 +149,10 @@ class PaymentFragment : Fragment() {
             result.onSuccess { data ->
                 val userDetails = data.getMyDetails
                 binding.tvRollNumber.text = userDetails.userInformation.rollNumber
+                val courseId = sharedPreferencesManager.COURSEID
+                if (courseId != null) {
+                    coursePayment(ordersViewModel, userDetails.id,courseId )
+                }
             }.onFailure { exception ->
                 Toast.makeText(requireContext(), "Error fetching details: ${exception.message}", Toast.LENGTH_LONG).show()
             }
@@ -160,13 +165,14 @@ class PaymentFragment : Fragment() {
         binding.progressBar.visibility = View.VISIBLE
         val userIds = listOf(userId)
         ordersViewModel.fetchOrdersByUserIds(userIds)
-        ordersViewModel.ordersByUserIds.observe(viewLifecycleOwner, Observer { orders ->
+        ordersViewModel.ordersByUserIds.observe(viewLifecycleOwner) { orders ->
             Log.e("getorderDetails",orders.toString())
             binding.progressBar.visibility = View.GONE
             binding.clMypurchase.visibility = View.VISIBLE
             orders?.let {
 
                 for (order in orders) {
+                    Log.e("orderDataEntity",order.entityId)
                     binding.tvAmount.text = "₹ ${order.amountPaid}"
                     binding.paymentSuccessText.text = "Payment Sucessfully"
                     if (sharedPreferencesManager.paymentType == "partial"){
@@ -174,7 +180,7 @@ class PaymentFragment : Fragment() {
                     }else if (sharedPreferencesManager.paymentType == "full"){
                         binding.tvPaymentType.text = "One-Time Payment"
                     }
-                    observeCourseById(order.entityId)
+                    sharedPreferencesManager.COURSEID?.let { it1 -> observeCourseById(it1) }
                     binding.tvPaidDate.text =  getCurrentDateString()
                   val cartItemId =   sharedPreferencesManager.getString("cartItemId","")
                     if (cartItemId!="" && cartItemId != null){
@@ -197,10 +203,28 @@ class PaymentFragment : Fragment() {
                 // Handle the case where orders is null
                 Log.e("OrdersFragment", "No orders found")
             }
-        })
+        }
 
         // Fetch orders by user IDs
 
+    }
+
+    private fun coursePayment(ordersViewModel: OrdersViewModel, userId:String, courseId: String){
+        binding.progressBar.visibility = View.VISIBLE
+        ordersViewModel.getPaymentBreakdown(courseId,userId)
+        ordersViewModel.paymentResult.observe(viewLifecycleOwner) { order ->
+            binding.progressBar.visibility = View.GONE
+            binding.clMypurchase.visibility = View.VISIBLE
+            order?.forEach {
+                binding.tvCourseName.text = it.courseName
+                binding.tvAmount.text = it.amount.toString()
+                if (it.paymentType == "partial"){
+                    binding.tvPaymentType.text = "Installment"
+                }else if (it.paymentType == "full"){
+                    binding.tvPaymentType.text = "One-Time Payment"
+                }
+            }
+        }
     }
     private fun animateLayout() {
         val clTickSuccess = binding.clTickSuccess
@@ -253,13 +277,13 @@ class PaymentFragment : Fragment() {
             if (courses != null) {
                 Log.e("listcourses", courses.toString())
                 val courseName = "${courses.name}"
-                binding.tvCourseName.text = courseName
-                binding.className.text = helperFunctions.toDisplayString(courses.course_class?.name) +" Class"
-                binding.targettv.text = "Target ${courses.target_year}"
+              //  binding.tvCourseName.text = courseName
+             //   binding.className.text = helperFunctions.toDisplayString(courses.course_class?.name) +" Class"
+             //   binding.targettv.text = "Target ${courses.target_year}"
                 binding.starts.text = helperFunctions.formatCourseDate(courses.course_start_date.toString())
                 val categoryName = courses.category_name?.split(" ") ?: emptyList()
                 val wordsWithoutLast = categoryName.dropLast(1)
-                binding.category.text = wordsWithoutLast.joinToString(" ")
+            //  binding.category.text = wordsWithoutLast.joinToString(" ")
 
 
             }
@@ -273,6 +297,7 @@ class PaymentFragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         sharedPreferencesManager.paymentType = ""
+        sharedPreferencesManager.COURSEID = ""
     }
 
 }

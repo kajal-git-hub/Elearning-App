@@ -1,5 +1,6 @@
 package xyz.penpencil.competishun.ui.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +14,7 @@ import xyz.penpencil.competishun.R
 class OurContentAdapter(
     private var folderItems: List<GetCourseByIdQuery.Folder>,
     private val isItemSize: ObservableField<Boolean>,
+    private val coursePurchased: Boolean,
     private var listener: OnItemClickListener
 
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>()
@@ -54,7 +56,7 @@ class OurContentAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val folderItem = folderItems[position]
         when (holder) {
-            is FirstItemViewHolder -> holder.bind(folderItem, listener)
+            is FirstItemViewHolder -> holder.bind(folderItem, listener,coursePurchased)
             is OtherItemViewHolder -> holder.bind(folderItem, listener)
         }
     }
@@ -78,11 +80,11 @@ class OurContentAdapter(
         private val iconImageView: ImageView = itemView.findViewById(R.id.iconImageView)
         private val freeBadgeImageView: ImageView = itemView.findViewById(R.id.freeBadgeImageView)
 
-        fun bind(item: GetCourseByIdQuery.Folder, listener: OnItemClickListener) {
-
+        fun bind(item: GetCourseByIdQuery.Folder, listener: OnItemClickListener,coursePurchased:Boolean) {
+            Log.e("coursePurchased", coursePurchased.toString())
             titleTextView.text = item.name
             if (item.name.startsWith("Class")) {
-
+               Log.e("coursePurchased", coursePurchased.toString())
                 iconImageView.setImageResource(R.drawable.frame_1707480918)
                 freeBadgeImageView.setImageResource(R.drawable.group_1272628769)
             } else {

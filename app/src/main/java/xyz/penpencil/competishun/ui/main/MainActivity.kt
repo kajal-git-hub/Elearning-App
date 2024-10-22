@@ -90,6 +90,8 @@ class MainActivity : AppCompatActivity() {
         navController.graph = navGraph
         setContentView(binding.root)
         navController.navigate(startDestination)
+        Log.e("sharedpre",sharedPreferencesManager.city.toString())
+        Log.e("sharedpreState",sharedPreferencesManager.state.toString())
         getUserInfo()
     }
 
@@ -115,7 +117,7 @@ class MainActivity : AppCompatActivity() {
             !sharedPreferencesManager.reference.isNullOrEmpty() -> navigateToHomeActivity(userId)
             !sharedPreferencesManager.preparingFor.isNullOrEmpty() -> navigateToTargetFragment()
             sharedPreferencesManager.targetYear != 0 -> navigateToRefFragment()
-            !sharedPreferencesManager.name.isNullOrEmpty() && !sharedPreferencesManager.city.isNullOrEmpty() -> navigateToPreparationFragment()
+            !sharedPreferencesManager.name.isNullOrEmpty() && !sharedPreferencesManager.state.isNullOrEmpty() && !sharedPreferencesManager.city.isNullOrEmpty()  -> navigateToPreparationFragment()
             else -> Unit
         }
     }

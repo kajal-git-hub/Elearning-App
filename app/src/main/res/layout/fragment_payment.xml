@@ -115,7 +115,7 @@
                     android:layout_marginStart="8dp"
                     android:fontFamily="@font/nunito"
                     android:padding="8dp"
-                    android:text=""
+                    android:text="dfdf"
                     android:textColor="#898384"
                     android:textSize="12sp"
                     android:textStyle="bold" />
@@ -288,7 +288,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/nunito"
-                android:text="01 Aug, 2024"
+                android:text=""
                 android:textColor="@android:color/white"
                 android:textSize="14sp" />
 

@@ -35,7 +35,7 @@ class SplashActivity : AppCompatActivity() {
     private fun observeUserDetails() {
         userViewModel.userDetails.observe(this) { result ->
             result.onSuccess { data ->
-                Log.d("userDetails", data.getMyDetails.fullName.toString())
+                Log.d("userfullName", data.getMyDetails.fullName.toString())
                 Log.d("userDetails", data.getMyDetails.userInformation.address?.city.toString())
 
                 isMyCourseAvailable  = data.getMyDetails.courses.isNotEmpty()
@@ -52,13 +52,16 @@ class SplashActivity : AppCompatActivity() {
     private fun proceedBasedOnUserType() {
         val token = sharedPreferencesManager.accessToken
         Log.e("token ", token.toString())
-        Log.d("userdata", checkUserData().toString())
+        Log.d("checkUserData", checkUserData().toString())
+        Log.d("checknewUserOrNot", newUserOrNot.toString())
+        Log.d("isMyCourseAvailable", isMyCourseAvailable.toString())
+
 
         if (newUserOrNot) {
             if (!token.isNullOrEmpty() && checkUserData() && !isMyCourseAvailable) {
                 startActivity(Intent(this, HomeActivity::class.java))
             } else if (!token.isNullOrEmpty() && isMyCourseAvailable){
-                val intent = Intent(this, HomeActivity::class.java)
+                val intent = Intent(this, MainActivity::class.java)
                 intent.putExtra("isMyCourseAvailable", true)
                 startActivity(intent)
             }
@@ -70,7 +73,7 @@ class SplashActivity : AppCompatActivity() {
             Handler(Looper.getMainLooper()).postDelayed({
                 setContentView(R.layout.welcome_screen)
                 Handler(Looper.getMainLooper()).postDelayed({
-                    if (!token.isNullOrEmpty() && checkUserData()) {
+                    if (!token.isNullOrEmpty() && checkUserData() && isMyCourseAvailable) {
                         startActivity(Intent(this, HomeActivity::class.java))
                     } else {
                         startActivity(Intent(this, MainActivity::class.java))
@@ -83,7 +86,10 @@ class SplashActivity : AppCompatActivity() {
 
 
     private fun checkUserData(): Boolean {
-        return if (!sharedPreferencesManager.name.isNullOrEmpty() || !sharedPreferencesManager.city.isNullOrEmpty() || !sharedPreferencesManager.reference.isNullOrEmpty() || !sharedPreferencesManager.preparingFor.isNullOrEmpty() || sharedPreferencesManager.targetYear != 0) {
+        Log.e("Datashared",sharedPreferencesManager.email.toString() + sharedPreferencesManager.name)
+        Log.e("Datashre1",sharedPreferencesManager.name.toString() + sharedPreferencesManager.state)
+        Log.e("Datashre1",sharedPreferencesManager.name.toString() + sharedPreferencesManager.state)
+        return if (!sharedPreferencesManager.name.isNullOrEmpty() ||  !sharedPreferencesManager.state.isNullOrEmpty() || !sharedPreferencesManager.city.isNullOrEmpty() || !sharedPreferencesManager.email.isNullOrEmpty() || !sharedPreferencesManager.reference.isNullOrEmpty() || !sharedPreferencesManager.preparingFor.isNullOrEmpty() || sharedPreferencesManager.targetYear != 0) {
             false
         } else{
             true
