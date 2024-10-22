@@ -449,7 +449,7 @@ class HomeFragment : Fragment() {
                     getAllCoursesForStudent("IIT-JEE")
                 }
 
-              //  fetchCoursesAndUpdateUI(data.getMyDetails)
+                fetchCoursesAndUpdateUI(data.getMyDetails)
 
             }.onFailure { exception ->
                 Toast.makeText(
