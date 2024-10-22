@@ -2,12 +2,14 @@ package xyz.penpencil.competishun.ui.fragment
 
 import android.os.Bundle
 import android.util.Log
+import android.view.KeyEvent
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.viewModels
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
@@ -48,6 +50,19 @@ class MyPurchaseFragment : DrawerVisibility() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        view.setFocusableInTouchMode(true)
+        view.requestFocus()
+        view.setOnKeyListener(object : View.OnKeyListener{
+            override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    v?.findNavController()?.popBackStack()
+                    return true
+                }
+                return false
+            }
+
+        })
+
         observeUserDetails()
         userViewModel.fetchUserDetails()
 
@@ -55,7 +70,7 @@ class MyPurchaseFragment : DrawerVisibility() {
         (activity as? HomeActivity)?.showFloatingButton(false)
 
         binding.MyPurchaseTopView.setOnClickListener {
-            findNavController().popBackStack()
+            findNavController().navigate(R.id.ProfileFragment)
         }
 
 

@@ -2,6 +2,7 @@ package xyz.penpencil.competishun.ui.fragment
 
 import android.os.Bundle
 import android.util.Log
+import android.view.KeyEvent
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +11,7 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.apollographql.apollo3.api.Optional
 import com.razorpay.Checkout
@@ -60,6 +62,19 @@ class MyPurchaseDetailsFragment : DrawerVisibility() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        view.setFocusableInTouchMode(true)
+        view.requestFocus()
+        view.setOnKeyListener(object : View.OnKeyListener{
+            override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    v?.findNavController()?.popBackStack()
+                    return true
+                }
+                return false
+            }
+
+        })
 
         binding.etBTPurchase.setOnClickListener {
             findNavController().navigate(R.id.MyPurchase)
