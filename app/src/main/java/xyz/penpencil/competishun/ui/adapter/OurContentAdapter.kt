@@ -14,15 +14,15 @@ import xyz.penpencil.competishun.R
 class OurContentAdapter(
     private var folderItems: List<GetCourseByIdQuery.Folder>,
     private val isItemSize: ObservableField<Boolean>,
-    private val coursePurchased: Boolean,
     private var listener: OnItemClickListener
 
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>()
 {
+    private var isPurchased: Boolean = false
 
     interface OnItemClickListener {
-        fun onFirstItemClick(folderId: String,folderName: String,free:Boolean)
-        fun onOtherItemClick(folderId: String,folderName: String)
+        fun onFirstItemClick(folderId: String,folderName: String,free:Boolean,isPurchased:Boolean)
+        fun onOtherItemClick(folderId: String,folderName: String,isPurchased:Boolean)
     }
 
     companion object {
@@ -56,8 +56,8 @@ class OurContentAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val folderItem = folderItems[position]
         when (holder) {
-            is FirstItemViewHolder -> holder.bind(folderItem, listener,coursePurchased)
-            is OtherItemViewHolder -> holder.bind(folderItem, listener)
+            is FirstItemViewHolder -> holder.bind(folderItem, listener,isPurchased)
+            is OtherItemViewHolder -> holder.bind(folderItem, listener,isPurchased)
         }
     }
 
@@ -75,29 +75,39 @@ class OurContentAdapter(
         notifyDataSetChanged()
     }
 
-    fun updateContent(b: Boolean) {
-
+    fun updateContent(purchased: Boolean) {
+      Log.e("purchasweData",purchased.toString())
+        isPurchased = purchased
     }
 
     class FirstItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val titleTextView: TextView = itemView.findViewById(R.id.titleTextView)
         private val iconImageView: ImageView = itemView.findViewById(R.id.iconImageView)
         private val freeBadgeImageView: ImageView = itemView.findViewById(R.id.freeBadgeImageView)
+        fun bind(item: GetCourseByIdQuery.Folder, listener: OnItemClickListener,isPurchased: Boolean) {
 
-        fun bind(item: GetCourseByIdQuery.Folder, listener: OnItemClickListener,coursePurchased:Boolean) {
-            Log.e("coursePurchased", coursePurchased.toString())
             titleTextView.text = item.name
-            if (item.name.startsWith("Class")) {
-               Log.e("coursePurchased", coursePurchased.toString())
+            if (isPurchased) {
                 iconImageView.setImageResource(R.drawable.frame_1707480918)
                 freeBadgeImageView.setImageResource(R.drawable.group_1272628769)
-            } else {
-                iconImageView.visibility = View.GONE
-                freeBadgeImageView.visibility = View.GONE
+                val layoutParams = freeBadgeImageView.layoutParams as ViewGroup.MarginLayoutParams
+                layoutParams.marginEnd = 0
+                freeBadgeImageView.layoutParams = layoutParams
+
             }
+            else {
+                iconImageView.setImageResource(R.drawable.frame_1707480918)
+                freeBadgeImageView.setImageResource(R.drawable.lock)
+                val paddingInPx = (4 * itemView.context.resources.displayMetrics.density).toInt()
+                freeBadgeImageView.setPadding(paddingInPx, paddingInPx, paddingInPx, paddingInPx)
+                val layoutParams = freeBadgeImageView.layoutParams as ViewGroup.MarginLayoutParams
+                layoutParams.marginEnd = (20 * itemView.context.resources.displayMetrics.density).toInt()
+                freeBadgeImageView.layoutParams = layoutParams
+            }
+            Log.e("isspurchased",isPurchased.toString())
 
             itemView.setOnClickListener {
-                listener.onFirstItemClick(item.id,item.name,true)
+                listener.onFirstItemClick(item.id,item.name,true,isPurchased)
             }
         }
     }
@@ -107,13 +117,17 @@ class OurContentAdapter(
         private val iconImageView: ImageView = itemView.findViewById(R.id.iconImageView)
         private val lockImage: ImageView = itemView.findViewById(R.id.ig_lockImage)
 
-        fun bind(item: GetCourseByIdQuery.Folder, listener: OnItemClickListener) {
+        fun bind(item: GetCourseByIdQuery.Folder, listener: OnItemClickListener,isPurchased: Boolean) {
             titleTextView.text = item.name
-            iconImageView.setImageResource(R.drawable.frame_1707480918)
-            lockImage.setImageResource(R.drawable.lock)
-
+            if (isPurchased) {
+                iconImageView.setImageResource(R.drawable.frame_1707480918)
+                lockImage.visibility = View.GONE
+            }else{
+                iconImageView.setImageResource(R.drawable.frame_1707480918)
+                lockImage.setImageResource(R.drawable.lock)
+            }
             itemView.setOnClickListener {
-                listener.onOtherItemClick(item.id,item.name)
+                listener.onOtherItemClick(item.id,item.name,isPurchased)
             }
         }
     }

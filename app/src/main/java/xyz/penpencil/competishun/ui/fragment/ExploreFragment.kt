@@ -706,8 +706,9 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
                     if (courseId == data?.enrolledCourseId){
                         courselreadyBuy = true
                         binding.submit.text = "Start Now"
-
+                        Log.e("purchasweDat",courselreadyBuy.toString())
                         ourContentAdapter?.updateContent(true)
+                        ourContentAdapter?.notifyDataSetChanged()
                     }
                 }
             }
@@ -794,11 +795,12 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
     }
 
 
-    override fun onFirstItemClick(folderId: String, folderName: String, free: Boolean) {
+    override fun onFirstItemClick(folderId: String, folderName: String, free: Boolean, isPurchased: Boolean) {
         val bundle = Bundle().apply {
             putString("folderId", folderId)
             putString("folderName", folderName)
             putBoolean("free", free)
+            putBoolean("isPurchased", isPurchased)
         }
         findNavController().navigate(R.id.action_exploreFragment_to_demoFreeFragment, bundle)
     }
@@ -837,11 +839,11 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
             .joinToString(" ") { it.toLowerCase().capitalize() }
     }
 
-    override fun onOtherItemClick(folderId: String, folderName: String) {
+    override fun onOtherItemClick(folderId: String, folderName: String, isPurchased: Boolean) {
         val bundle = Bundle().apply {
             putString("folderId", folderId)
             putString("folderName", folderName)
-
+            putBoolean("isPurchased", isPurchased)
         }
         findNavController().navigate(R.id.action_exploreFragment_to_demoFreeFragment, bundle)
     }
