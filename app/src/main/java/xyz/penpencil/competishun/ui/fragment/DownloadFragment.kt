@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
@@ -205,6 +206,8 @@ class DownloadFragment : DrawerVisibility(), DownloadedItemAdapter.OnVideoClickL
             WindowManager.LayoutParams.FLAG_SECURE,
             WindowManager.LayoutParams.FLAG_SECURE
         )
+//        activity?.window?.statusBarColor = ContextCompat.getColor(requireContext(), R.color.download_statusbar)
+
     }
 
     override fun onPause() {
