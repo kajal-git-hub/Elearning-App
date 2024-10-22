@@ -146,7 +146,7 @@
             android:ellipsize="end"
             app:layout_constraintEnd_toStartOf="@+id/videoicon"
             android:fontFamily="@font/nunito"
-            android:text="  Competishun.pdf"
+            android:text=""
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toEndOf="@+id/et_homeWorkText"/>
 

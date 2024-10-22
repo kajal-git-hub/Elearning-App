@@ -93,10 +93,7 @@ class PaymentFragment : Fragment() {
             animateLayout()
         }, 3000)
 
-        binding.clStartBottomBar.setOnClickListener{
-
-         findNavController().navigate(R.id.PersonalDetailsFragment)
-        }
+        binding.clStartBottomBar.setOnClickListener{ findNavController().navigate(R.id.homeFragment) }
         getUserDetails()
         binding.btReceipt.setOnClickListener {
             binding.btReceipt.isEnabled = false

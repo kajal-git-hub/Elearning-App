@@ -1,8 +1,9 @@
 package xyz.penpencil.competishun.ui.fragment
 
+import android.R.attr.fragment
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,18 +11,20 @@ import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.tabs.TabLayout
+import dagger.hilt.android.AndroidEntryPoint
+import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.data.model.TopicContentModel
+import xyz.penpencil.competishun.databinding.FragmentDownloadBinding
 import xyz.penpencil.competishun.ui.adapter.DownloadedItemAdapter
 import xyz.penpencil.competishun.ui.main.HomeActivity
 import xyz.penpencil.competishun.ui.viewmodel.VideourlViewModel
 import xyz.penpencil.competishun.utils.SharedPreferencesManager
-import dagger.hilt.android.AndroidEntryPoint
-import xyz.penpencil.competishun.R
-import xyz.penpencil.competishun.databinding.FragmentDownloadBinding
 import java.io.File
+
 
 @AndroidEntryPoint
 class DownloadFragment : DrawerVisibility(), DownloadedItemAdapter.OnVideoClickListener {
@@ -48,6 +51,19 @@ class DownloadFragment : DrawerVisibility(), DownloadedItemAdapter.OnVideoClickL
 
         savedInstanceState?.let {    selectedTabPosition = it.getInt("SELECTED_TAB_POSITION", 0)}
 
+
+        view.setFocusableInTouchMode(true)
+        view.requestFocus()
+        view.setOnKeyListener(object : View.OnKeyListener{
+            override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    v?.findNavController()?.popBackStack()
+                    return true
+                }
+                return false
+            }
+
+        })
 
         binding.studentTabLayout.getTabAt(selectedTabPosition)?.select()
 
@@ -161,6 +177,18 @@ class DownloadFragment : DrawerVisibility(), DownloadedItemAdapter.OnVideoClickL
     private fun setupToolbar() {
         val searchView = binding.TopViewDownloads.menu.findItem(R.id.action_search_download)?.actionView as? SearchView
         searchView?.queryHint = "Search Pdf/Video"
+
+        searchView?.setOnSearchClickListener {
+            binding.tittleTb.visibility = View.GONE
+            binding.clNote.visibility = View.GONE
+        }
+
+        searchView?.setOnCloseListener {
+            binding.tittleTb.visibility = View.VISIBLE
+            binding.clNote.visibility = View.GONE
+            false
+        }
+
         searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean = false
 
@@ -173,15 +201,15 @@ class DownloadFragment : DrawerVisibility(), DownloadedItemAdapter.OnVideoClickL
 
     override fun onResume() {
         super.onResume()
-//        requireActivity().window.setFlags(
-//            WindowManager.LayoutParams.FLAG_SECURE,
-//            WindowManager.LayoutParams.FLAG_SECURE
-//        )
+        requireActivity().window.setFlags(
+            WindowManager.LayoutParams.FLAG_SECURE,
+            WindowManager.LayoutParams.FLAG_SECURE
+        )
     }
 
     override fun onPause() {
         super.onPause()
-//        requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
+        requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
     }
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)

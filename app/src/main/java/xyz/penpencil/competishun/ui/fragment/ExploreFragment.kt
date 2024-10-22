@@ -30,8 +30,10 @@ import androidx.navigation.findNavController
 import com.bumptech.glide.request.target.Target
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.tabs.TabLayout
+import com.google.gson.Gson
 import com.student.competishun.curator.AllCourseForStudentQuery
 import com.student.competishun.curator.GetCourseByIdQuery
+import com.student.competishun.curator.MyCoursesQuery
 import com.student.competishun.curator.type.CreateCartItemDto
 import com.student.competishun.curator.type.EntityType
 import com.student.competishun.curator.type.FindAllCourseInputStudent
@@ -55,8 +57,11 @@ import xyz.penpencil.competishun.utils.SharedPreferencesManager
 import xyz.penpencil.competishun.utils.StudentCourseItemClickListener
 import dagger.hilt.android.AndroidEntryPoint
 import xyz.penpencil.competishun.R
+import xyz.penpencil.competishun.data.model.ExploreCourse
 import xyz.penpencil.competishun.databinding.FragmentExploreBinding
+import xyz.penpencil.competishun.ui.adapter.ExploreCourseAdapter
 import xyz.penpencil.competishun.ui.main.PdfViewActivity
+import xyz.penpencil.competishun.ui.viewmodel.MyCoursesViewModel
 import xyz.penpencil.competishun.ui.viewmodel.UserViewModel
 
 
@@ -73,6 +78,7 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
     private val createCartViewModel: CreateCartViewModel by viewModels()
     private val cartViewModel: CreateCartViewModel by viewModels()
     private val courseViewModel: StudentCoursesViewModel by viewModels()
+    private val viewModel: MyCoursesViewModel by viewModels()
     private var showMoreOrLess = ObservableField("View More")
     private lateinit var sharedPreferencesManager: SharedPreferencesManager
     var isItemSize = ObservableField(true)
@@ -91,6 +97,8 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
     private var categoryName = ""
     private var courselreadyBuy = false
     var faqAdapter : FAQAdapter?=null
+
+    var courseData: MyCoursesQuery.MyCourse?=null
 
 
     private val userViewModel: UserViewModel by viewModels()
@@ -161,14 +169,32 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
         getCourseTagsData()
 
         binding.clBuynow.setOnClickListener {
-            if (courselreadyBuy){
+            if (courselreadyBuy && courseData!=null){
+                val bundle = Bundle().apply {
+                    val gson = Gson()
+                    val course = courseData?.course
+                    val folderJson  = courseData?.progress?.subfolderDurations?.map {
+                        it.folder
+                    }
+                    val progressPercentages  =  courseData?.progress?.subfolderDurations
+                        ?.map { it.completionPercentage }
+
+                    putString("folderJson", gson.toJson(folderJson))
+                    putString("courseJson", gson.toJson(course))
+                    putString("courseName", course?.name)
+                    putString("courseId", course?.id)
+                    putString("courseStart",course?.course_start_date.toString())
+                    putString("courseEnd",course?.course_end_date.toString())
+                    putString("completionPercentages", gson.toJson(progressPercentages))
+                }
+
+                Log.e("sdjfkjsdhfjsad", "onViewCreated: ", )
+
                 it.findNavController().let { nav->
                     val navOptions = NavOptions.Builder()
                         .setPopUpTo(nav.graph.startDestinationId, true)
                         .build()
-                    nav.navigate(R.id.courseEmptyFragment, Bundle(), navOptions)
-                    val bottomNavigationView: BottomNavigationView? = activity?.findViewById(R.id.bottomNav)
-                    bottomNavigationView?.selectedItemId = R.id.myCourse
+                    nav.navigate(R.id.ResumeCourseFragment, bundle, navOptions)
                 }
             }else {
                 createCart(createCartViewModel, "FullPayment")
@@ -688,7 +714,26 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
             }
         }
         userViewModel.fetchUserDetails()
+
+        viewModel.myCourses.observe(viewLifecycleOwner) { result ->
+            result.onSuccess { data ->
+                if (data.myCourses.isNotEmpty()) {
+                    data.myCourses.forEach { myCourse ->
+                        if (myCourse.course.id == courseId) {
+                            courseData = myCourse
+                        }
+                    }
+                }
+            }.onFailure {
+                Log.e("MyCoursesFail", it.message.toString())
+                Toast.makeText(requireContext(), "Failed to load courses: ${it.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        viewModel.fetchMyCourses()
+
     }
+
 
     private fun getCourseTagsData() {
         viewLifecycleOwner.lifecycleScope.launch {
@@ -991,6 +1036,9 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
             }
         }
     }
+
+
+
 
 
 }

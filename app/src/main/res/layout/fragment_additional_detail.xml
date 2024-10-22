@@ -351,6 +351,18 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/progress"
+            app:layout_constraintBottom_toTopOf="@+id/btn_addaddress_details"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:indeterminate="true"
+            android:visibility="gone"
+            android:indeterminateTintMode="src_atop"
+            android:indeterminateTint="@color/PrimaryColor"
+            android:layout_marginBottom="@dimen/_20dp"/>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_addaddress_details"

@@ -85,16 +85,13 @@ class ProfileEditFragment(val updateCourse:(year:String,course:String )->Unit) :
                 this@ProfileEditFragment.selectedYear = selectedYear
             }
         }
-//        val bundle = Bundle()
-//        bundle.putString("StudentClass",selectedClass)
 
 
         binding.mbSaveButton.setOnClickListener {
-            // Retrieve the target year and course from selected values or fallback to SharedPreferences
+
             targetYear = selectedYear?.toString() ?: prevSelectedYear.toString()
             preparingFor = (selectedExam ?: prevSelectedCourse).toString()
 
-            // Create the updatedUserInput object
             val updatedUserInput = UpdateUserInput(
                 city = Optional.Present(sharedPreferencesManager.city),
                 fullName = Optional.Present(sharedPreferencesManager.name),
@@ -105,16 +102,14 @@ class ProfileEditFragment(val updateCourse:(year:String,course:String )->Unit) :
                 targetYear = Optional.Present(selectedYear ?: sharedPreferencesManager.targetYear)
             )
 
-            // Update user data through ViewModel
             updateUserViewModel.updateUser(updatedUserInput, null, null)
 
-            // Show confirmation message
             Toast.makeText(requireContext(), "Updated Successfully", Toast.LENGTH_SHORT).show()
 
-            // Trigger the callback with the appropriate values
+            sharedPreferencesManager.targetYear = targetYear.toInt()
+            sharedPreferencesManager.preparingFor = preparingFor
             updateCourse(targetYear, preparingFor)
 
-            // Dismiss the bottom sheet
             dismiss()
         }
     }

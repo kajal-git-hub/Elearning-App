@@ -28,6 +28,7 @@
 # Razorpay specific ProGuard rules
 -keepclassmembers class * {
     @android.webkit.JavascriptInterface <methods>;
+    @com.google.common.eventbus.Subscribe <methods>;
 }
 
 -keepattributes JavascriptInterface

@@ -15,6 +15,7 @@ data class ScheduleData (
         val fileType:String,
         val contentId:String,
         val scheduleTimer:String,
-        val completedDuration:Int= -1
+        val completedDuration:Int= -1,
+        val statusTime:String?=null
     )
 }

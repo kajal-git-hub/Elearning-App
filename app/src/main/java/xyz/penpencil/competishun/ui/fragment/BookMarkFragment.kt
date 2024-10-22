@@ -2,14 +2,18 @@ package xyz.penpencil.competishun.ui.fragment
 
 import android.os.Bundle
 import android.util.Log
+import android.view.KeyEvent
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.widget.SearchView
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.tabs.TabLayout
 import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.data.model.TopicContentModel
@@ -43,6 +47,19 @@ class BookMarkFragment : DrawerVisibility(), BookMarkAdapter.OnVideoClickListene
         super.onViewCreated(view, savedInstanceState)
 
         savedInstanceState?.let { selectedTabPosition = it.getInt("SELECTED_TAB_POSITION", 0) }
+
+        view.setFocusableInTouchMode(true)
+        view.requestFocus()
+        view.setOnKeyListener(object : View.OnKeyListener{
+            override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    v?.findNavController()?.popBackStack()
+                    return true
+                }
+                return false
+            }
+
+        })
 
 
         binding.BookmarkTabLayout.getTabAt(selectedTabPosition)?.select()
@@ -176,6 +193,17 @@ class BookMarkFragment : DrawerVisibility(), BookMarkAdapter.OnVideoClickListene
         val searchView =
             binding.TopViewBookMark.menu.findItem(R.id.action_search_download)?.actionView as? SearchView
         searchView?.queryHint = "Search Pdf/Video"
+
+
+        searchView?.setOnSearchClickListener {
+            binding.screenBmTitleBookmark.visibility = View.GONE
+        }
+
+        searchView?.setOnCloseListener {
+            binding.screenBmTitleBookmark.visibility = View.VISIBLE
+            false
+        }
+
         searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean = false
 

@@ -3,15 +3,21 @@ package xyz.penpencil.competishun.ui.fragment
 import android.content.Intent
 import xyz.penpencil.competishun.utils.HorizontalCalendarSetUp
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.student.competishun.curator.FindAllCourseFolderContentByScheduleTimeQuery
 import xyz.penpencil.competishun.data.model.CalendarDate
 import xyz.penpencil.competishun.data.model.ScheduleData
@@ -25,6 +31,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.databinding.FragmentScheduleBinding
 import xyz.penpencil.competishun.ui.main.PdfViewActivity
+import xyz.penpencil.competishun.utils.setLightStatusBars
+import xyz.penpencil.competishun.utils.timeStatus
 import java.text.SimpleDateFormat
 import java.time.LocalTime
 import java.time.ZoneId
@@ -33,6 +41,7 @@ import java.time.ZonedDateTime
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Calendar
+import java.util.Date
 
 @AndroidEntryPoint
 class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
@@ -105,8 +114,13 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
 
     private fun setupRecyclerView(contentList: List<FindAllCourseFolderContentByScheduleTimeQuery.FindAllCourseFolderContentByScheduleTime>) {
     Log.e("foldevontent" ,contentList.toString())
-        var courseDate:CalendarDate = CalendarDate("","","",null)
-        Log.e("foldevonten" ,courseDate.toString())
+        val currentDate = LocalDate.now()
+        val day: Int = currentDate.dayOfMonth
+        val month: Int = currentDate.monthValue
+        val year: Int = currentDate.year
+        val d = if (day<10) "0$day" else day.toString()
+        val m = if (month<10) "0$month" else month.toString()
+        val courseDate = CalendarDate(d,"$day","",null)
 
         val scheduleDataList = contentList.groupBy {
             val scheduledTime = convertIST(it.content.scheduled_time.toString())
@@ -121,13 +135,14 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
                     ScheduleData.InnerScheduleItem(
                         content.folderPath?:"",
                         content.content.file_name,
-                        formatTime(convertIST(content.content.scheduled_time.toString())),
-                        convertLastDuration(formatTime(convertIST(content.content.scheduled_time.toString())),content.content.video_duration?.toLong()?:0),
+                        lecture_start_time = formatTime(convertIST(content.content.scheduled_time.toString())),
+                        lecture_end_time = convertLastDuration(formatTime(convertIST(content.content.scheduled_time.toString())),content.content.video_duration?.toLong()?:0),
                         content.content.file_url.toString(),
                         content.content.file_type.name,
                         content.content.id,
                         content.content.scheduled_time.toString(),
-                        completedDuration = content.studentTrack?.completed_duration ?:0
+                        completedDuration = content.studentTrack?.completed_duration ?:0,
+                        statusTime = content.content.scheduled_time.toString().timeStatus(content.content.video_duration?:0)
                     )
                 }
             )
@@ -137,7 +152,11 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
         scheduleAdapter = ScheduleAdapter(scheduleDataList, requireContext(),this)
         binding.rvCalenderSchedule.adapter = scheduleAdapter
         binding.rvCalenderSchedule.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        scrollToDate(courseDate)
+
+        Handler(Looper.getMainLooper()).postDelayed({
+            scrollToDate(courseDate)
+        }, 2000)
+
         scheduleDataList.forEach { scheduleData ->
             Log.e("ScheduleDatakaj", scheduleData.toString())
         }
@@ -233,6 +252,30 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        view.setFocusableInTouchMode(true)
+        view.requestFocus()
+        view.setOnKeyListener(object : View.OnKeyListener{
+            override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    v?.findNavController()?.popBackStack()
+                    return true
+                }
+                return false
+            }
+
+        })
+
+
+        val bottomNavigationView = requireActivity().findViewById<BottomNavigationView>(R.id.bottomNav)
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                findNavController().popBackStack()
+                bottomNavigationView.selectedItemId = R.id.myCourse
+
+            }
+        })
+
         calendarSetUp = HorizontalCalendarSetUp()
 
         (activity as? HomeActivity)?.showBottomNavigationView(false)
@@ -296,9 +339,9 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
 
     private fun scrollToDate(calendarDate: CalendarDate) {
         val position = scheduleAdapter.findPositionByDate(calendarDate.date)
-        Log.e("scrollpostions $matchingPosition",position.toString())
         if (position != -1) {
-            binding.rvCalenderSchedule.scrollToPosition(position)
+            val layoutManager = binding.rvCalenderSchedule.layoutManager as LinearLayoutManager
+            layoutManager.scrollToPositionWithOffset(position, 0)
         }
     }
 
@@ -379,12 +422,18 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
 
     override fun onResume() {
         super.onResume()
-        requireActivity().window.statusBarColor = ContextCompat.getColor(requireContext(), R.color._e25b49)
+        requireActivity().window?.let {
+            it.statusBarColor = ContextCompat.getColor(requireContext(), R.color._e25b49)
+            it.setLightStatusBars(true)
+        }
     }
 
     override fun onStop() {
         super.onStop()
-        requireActivity().window.statusBarColor = ContextCompat.getColor(requireContext(), R.color._white_F6F6FF)
+        requireActivity().window?.let {
+            it.statusBarColor = ContextCompat.getColor(requireContext(), R.color._white_F6F6FF)
+            it.setLightStatusBars(false)
+        }
     }
 
     private fun videoUrlApi(viewModel: VideourlViewModel, folderContentId: String, name: String) {
@@ -398,6 +447,8 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
                     putString("url", signedUrl)
                     putString("url_name", name)
                     putString("ContentId", folderContentId)
+                    putStringArrayList("folderContentIds", arrayListOf())
+                    putStringArrayList("folderContentNames", arrayListOf())
                 }
                 findNavController().navigate(R.id.mediaFragment, bundle)
 

@@ -1,6 +1,5 @@
 package xyz.penpencil.competishun.ui.fragment
 
-import xyz.penpencil.competishun.ui.adapter.RecommendedCoursesAdapter
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -21,6 +20,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -34,30 +34,32 @@ import com.student.competishun.curator.GetAllCourseCategoriesQuery
 import com.student.competishun.curator.type.FindAllBannersInput
 import com.student.competishun.curator.type.FindAllCourseInputStudent
 import com.student.competishun.gatekeeper.MyDetailsQuery
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.data.model.PromoBannerModel
 import xyz.penpencil.competishun.data.model.RecommendedCourseDataModel
 import xyz.penpencil.competishun.data.model.Testimonial
 import xyz.penpencil.competishun.data.model.WhyCompetishun
+import xyz.penpencil.competishun.databinding.FragmentHomeBinding
 import xyz.penpencil.competishun.ui.adapter.OurCoursesAdapter
 import xyz.penpencil.competishun.ui.adapter.PromoBannerAdapter
+import xyz.penpencil.competishun.ui.adapter.RecommendedCoursesAdapter
 import xyz.penpencil.competishun.ui.adapter.TestimonialsAdapter
 import xyz.penpencil.competishun.ui.adapter.WhyCompetishunAdapter
 import xyz.penpencil.competishun.ui.main.HomeActivity
+import xyz.penpencil.competishun.ui.main.MainActivity
 import xyz.penpencil.competishun.ui.viewmodel.CoursesCategoryViewModel
+import xyz.penpencil.competishun.ui.viewmodel.MyCoursesViewModel
 import xyz.penpencil.competishun.ui.viewmodel.StudentCoursesViewModel
 import xyz.penpencil.competishun.ui.viewmodel.UserViewModel
 import xyz.penpencil.competishun.ui.viewmodel.VerifyOtpViewModel
+import xyz.penpencil.competishun.utils.AppSignatureHashHelper
 import xyz.penpencil.competishun.utils.Constants
 import xyz.penpencil.competishun.utils.HelperFunctions
 import xyz.penpencil.competishun.utils.OnCourseItemClickListener
 import xyz.penpencil.competishun.utils.SharedPreferencesManager
-import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
-import xyz.penpencil.competishun.R
-import xyz.penpencil.competishun.databinding.FragmentHomeBinding
-import xyz.penpencil.competishun.ui.main.MainActivity
-import xyz.penpencil.competishun.ui.viewmodel.MyCoursesViewModel
-import xyz.penpencil.competishun.utils.Constants.OTHER_REQUIREMENT_FIELDS
+
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
@@ -113,6 +115,10 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
+        val appSignatureHashHelper = AppSignatureHashHelper(requireContext())
+        Log.e(TAG, "Apps Hash Key: " + appSignatureHashHelper.getAppSignatures()[0])
 
         (activity as? HomeActivity)?.showBottomNavigationView(true)
         (activity as? HomeActivity)?.showFloatingButton(true)
@@ -371,11 +377,13 @@ class HomeFragment : Fragment() {
             if (!userDetails.userInformation.passportPhoto.isNullOrEmpty()) add("PASSPORT_SIZE_PHOTO")
         }
 
-        val missingAddressFields = if (userDetails.userInformation.address != null) {
-            listOf("FULL_ADDRESS")
-        } else {
-            emptyList()
-        }
+        val missingAddressFields = userDetails.userInformation.address?.let { data ->
+            if (data.pinCode != null || data.addressLine1 != null) {
+                listOf("FULL_ADDRESS")
+            } else {
+                emptyList()
+            }
+        } ?: emptyList()
 
         myCoursesViewModel.myCourses.observe(viewLifecycleOwner) { result ->
             result.onSuccess { data ->
@@ -388,6 +396,7 @@ class HomeFragment : Fragment() {
 
                 val allMissingFields = missingPersonalFields + missingDocumentFields + missingAddressFields
                 val filteredCourseRequirements = courseRequirements.filterNot { it in allMissingFields }.toSet()
+                Log.e("fsdfasdfsdfsd", "fetchCoursesAndUpdateUI: $filteredCourseRequirements")
                 if (filteredCourseRequirements.isNotEmpty()) {
                     findNavController().navigate(R.id.action_homeFragment_to_PersonalDetailFragment, Bundle().apply {
                         putStringArray("FIELD_REQUIRED", filteredCourseRequirements.toTypedArray())
@@ -443,7 +452,7 @@ class HomeFragment : Fragment() {
                     getAllCoursesForStudent("IIT-JEE")
                 }
 
-              //  fetchCoursesAndUpdateUI(data.getMyDetails)
+                fetchCoursesAndUpdateUI(data.getMyDetails)
 
             }.onFailure { exception ->
                 Toast.makeText(

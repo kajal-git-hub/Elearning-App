@@ -206,7 +206,7 @@ class SubjectContentFragment : DrawerVisibility() {
                                         lecture = if (files.content?.file_type?.name == "VIDEO") "Lecture" else "Study Material",
                                         lecturerName = if(files.content?.file_type?.name == "VIDEO") formatTimeDuration(
                                             files.content.video_duration ?: 0
-                                        ) else "Ashok",
+                                        ) else "",
                                         topicName = files.content?.file_name ?: "",
                                         topicDescription = files.content?.description.toString(),
                                         progress = 1,
@@ -360,7 +360,7 @@ class SubjectContentFragment : DrawerVisibility() {
                                         lecture = if (contents.content?.file_type?.name == "VIDEO") "Lecture" else "Study Material",
                                         lecturerName = if(contents.content?.file_type?.name == "VIDEO") formatTimeDuration(
                                             contents.content.video_duration ?: 0
-                                        ) else "Ashok" ,
+                                        ) else "" ,
                                         topicName = contents.content?.file_name ?: "",
                                         topicDescription = contents.content?.description.toString(),
                                         progress = 1,
@@ -475,7 +475,7 @@ class SubjectContentFragment : DrawerVisibility() {
                                         lecture = if (contents.content?.file_type?.name == "VIDEO") "Lecture" else "Study Material",
                                         lecturerName = if(contents.content?.file_type?.name == "VIDEO") formatTimeDuration(
                                             contents.content.video_duration ?: 0
-                                        ) else "Ashok" ,
+                                        ) else "" ,
                                         topicName = contents.content?.file_name ?: "",
                                         topicDescription = contents.content?.description.toString(),
                                         progress = 1,
@@ -558,7 +558,7 @@ class SubjectContentFragment : DrawerVisibility() {
                 id = content.content?.id ?: "",
                 playIcon = if (content.content?.file_type?.name == "VIDEO") R.drawable.video_bg else 0,
                 lecture = if (content.content?.file_type?.name == "VIDEO") "Lecture" else "Study Material",
-                lecturerName = "Ashok",
+                lecturerName = "",
                 topicName = content.content?.file_name ?: "",
                 topicDescription = content.content?.description ?:"",
                 progress = 1,

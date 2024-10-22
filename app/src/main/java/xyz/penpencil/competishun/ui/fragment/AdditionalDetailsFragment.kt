@@ -1,6 +1,5 @@
 package xyz.penpencil.competishun.ui.fragment
 
-import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -27,7 +26,6 @@ import xyz.penpencil.competishun.databinding.FragmentAdditionalDetailBinding
 import xyz.penpencil.competishun.utils.FileUtils
 import xyz.penpencil.competishun.utils.FileUtils.getFileName
 import xyz.penpencil.competishun.utils.FileUtils.getFileSizeMB
-import xyz.penpencil.competishun.utils.ImageUtils
 import xyz.penpencil.competishun.utils.SharedPreferencesManager
 
 @AndroidEntryPoint
@@ -111,6 +109,8 @@ class AdditionalDetailsFragment : DrawerVisibility() {
     }
 
     private fun handleUserUpdate() {
+        binding.progress.visibility = View.VISIBLE
+        updateButtonState(false)
         userViewModel.fetchUserDetails()
         userViewModel.userDetails.observe(viewLifecycleOwner) { result ->
             result.onSuccess { data ->
@@ -143,14 +143,15 @@ class AdditionalDetailsFragment : DrawerVisibility() {
         updateUserViewModel.updateUser(updateUserInput, documentPhotoFile, passportPhotoFile)
         updateUserViewModel.updateUserResult.observe(viewLifecycleOwner) { result ->
             if (result!=null){
+                binding.progress.visibility = View.GONE
                 findNavController().let { nav ->
                     nav.navigate(getFragmentId(), Bundle().apply {
-                        putStringArray("IDS", fieldsToVisible)
-                        putString("IDS", courseId)
+                        putStringArray("FIELD_REQUIRED", fieldsToVisible)
                     })
                 }
                 Log.d("User Update Success", result.toString())
             }else{
+                binding.progress.visibility = View.GONE
                 Log.e("User Update Failure", "Unknown error")
             }
         }
@@ -160,20 +161,18 @@ class AdditionalDetailsFragment : DrawerVisibility() {
         binding.clUploadedAadhar.visibility = View.GONE
         binding.clUploadId.visibility = View.VISIBLE
         uploadedIdUri = null
-        updateButtonState()
+        updateButtonState(uploadedIdUri != null || uploadedPhotoUri != null)
     }
 
     private fun resetPhotoUpload() {
         binding.clUploadedPassport.visibility = View.GONE
         binding.clUploadPhoto.visibility = View.VISIBLE
         uploadedPhotoUri = null
-        updateButtonState()
+        updateButtonState(uploadedIdUri != null || uploadedPhotoUri != null)
     }
 
-    private fun updateButtonState() {
-        var isEnabled = uploadedIdUri != null || uploadedPhotoUri != null
+    private fun updateButtonState(isEnabled: Boolean) {
         binding.btnAddaddressDetails.apply {
-            isEnabled = isEnabled
             setBackgroundColor(
                 ContextCompat.getColor(requireContext(), if (isEnabled) R.color.blue_3E3EF7 else R.color.gray_border)
             )
@@ -197,7 +196,7 @@ class AdditionalDetailsFragment : DrawerVisibility() {
                     uploadedIdUri = uri
                 }
                 if (currentFileType == "PHOTO"){
-                    uploadedIdUri = uri
+                    uploadedPhotoUri = uri
                 }
 
                 val fileSizeMB = getFileSizeMB(requireContext(), uri)
@@ -228,7 +227,7 @@ class AdditionalDetailsFragment : DrawerVisibility() {
             binding.fileSizePass.text = fileSize
             uploadedPhotoUri = uri
         }
-        updateButtonState()
+        updateButtonState(uploadedIdUri != null || uploadedPhotoUri != null)
     }
 
 }

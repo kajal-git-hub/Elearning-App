@@ -17,17 +17,19 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.ObservableField
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.navigation.NavigationView
+import com.google.common.eventbus.Subscribe
 import com.razorpay.PaymentResultListener
-import xyz.penpencil.competishun.utils.SharedPreferencesManager
 import dagger.hilt.android.AndroidEntryPoint
 import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.databinding.ActivityHomeBinding
 import xyz.penpencil.competishun.ui.viewmodel.UserViewModel
+import xyz.penpencil.competishun.utils.EventBusSingleton
+import xyz.penpencil.competishun.utils.MyEvent
+import xyz.penpencil.competishun.utils.SharedPreferencesManager
+
 
 @AndroidEntryPoint
 class HomeActivity : AppCompatActivity(), PaymentResultListener {
@@ -45,6 +47,9 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
     private var DetailAvailable = false
     val bundle = Bundle()
     private var navigateToFragment = false
+
+    private var previousSelectedItemId: Int = R.id.home
+
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
@@ -124,17 +129,18 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
                     true
                 }
                 R.id.myCourse -> {
+
                     if (navController.currentDestination?.id != R.id.PersonalDetailsFragment) {
                         navController.navigate(R.id.courseEmptyFragment)
                     }
                     true
                 }
                 R.id.Download -> {
-                        navController.navigate(R.id.DownloadFragment)
+                    navController.navigate(R.id.DownloadFragment)
                     true
                 }
                 R.id.Bookmark -> {
-                        navController.navigate(R.id.BookMarkFragment)
+                    navController.navigate(R.id.BookMarkFragment)
                     true
                 }
                 else -> {
@@ -149,7 +155,17 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
     private val backPressListener = object : OnBackPressedCallback(true){
         override fun handleOnBackPressed() {
             when (navController.currentDestination?.id) {
-                R.id.courseEmptyFragment -> {
+
+                R.id.BookMarkFragment ->{
+                    navController.popBackStack(R.id.homeFragment,false)
+                    binding.bottomNav.selectedItemId = R.id.home
+                }
+
+                R.id.DownloadFragment -> {
+                    navController   .popBackStack(R.id.homeFragment,false)
+                    binding.bottomNav.selectedItemId = R.id.home
+                }
+                    R.id.courseEmptyFragment -> {
                     navController.popBackStack(R.id.homeFragment,false)
                     binding.bottomNav.selectedItemId = R.id.home
                 }
@@ -234,6 +250,21 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
                 Toast.makeText(this, "Error fetching details: ${exception.message}", Toast.LENGTH_LONG).show()
             }
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        EventBusSingleton.getInstance().register(this)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        EventBusSingleton.getInstance().unregister(this)
+    }
+
+    @Subscribe
+    fun onEvent(event: MyEvent) {
+        Toast.makeText(this, event.message, Toast.LENGTH_SHORT).show()
     }
 
 
