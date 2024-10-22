@@ -372,7 +372,6 @@ class VerifyOTPFragment : Fragment() {
                 binding.etTimeText.text = "${secondsRemaining}s"
             }
 
-            @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
             override fun onFinish() {
                 binding.etEnterOtpText.text = "Didn’t receive any OTP?"
                 binding.etWaitText.visibility = View.GONE
@@ -388,8 +387,6 @@ class VerifyOTPFragment : Fragment() {
                     startTimer()  // Restart the timer
                     sendOTPRequest()
                     startAutoFillOtp()
-//                    forMessage()
-
                 }
             }
         }
@@ -411,7 +408,6 @@ class VerifyOTPFragment : Fragment() {
     }
 
 
-    @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
     override fun onResume() {
         super.onResume()
         registerBroadcastReceiver()
