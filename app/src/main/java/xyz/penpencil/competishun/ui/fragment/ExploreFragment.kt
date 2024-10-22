@@ -99,7 +99,7 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
     var faqAdapter : FAQAdapter?=null
 
     var courseData: MyCoursesQuery.MyCourse?=null
-
+    var ourContentAdapter : OurContentAdapter?=null
 
     private val userViewModel: UserViewModel by viewModels()
 
@@ -191,10 +191,7 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
                 Log.e("sdjfkjsdhfjsad", "onViewCreated: ", )
 
                 it.findNavController().let { nav->
-                    val navOptions = NavOptions.Builder()
-                        .setPopUpTo(nav.graph.startDestinationId, true)
-                        .build()
-                    nav.navigate(R.id.ResumeCourseFragment, bundle, navOptions)
+                    nav.navigate(R.id.ResumeCourseFragment, bundle)
                 }
             }else {
                 createCart(createCartViewModel, "FullPayment")
@@ -206,10 +203,11 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
         folderlist = emptyList()
         getAllLectureCount(courseId)
         initObserver()
+        Log.d("courselreadyBuyinit",courselreadyBuy.toString())
         if (lectureCount.isNullOrEmpty()) {
             lectureCount = "0"
         }
-        val ourContentAdapter = OurContentAdapter(folderlist, isItemSize, this)
+        ourContentAdapter = OurContentAdapter(folderlist, isItemSize, this)
         binding.rvOurContent.apply {
             layoutManager =
                 LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
@@ -388,7 +386,7 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
                     val freeCourse = courses.folder?.get(0)?.name?.split(" ")?.get(0)
                     Log.e("getFreeCourse", freeCourse.toString())
 
-                    ourContentAdapter.updateItems(sortedFolderList)
+                    ourContentAdapter?.updateItems(sortedFolderList)
                 }
                 faqItems = getFaqItemsByCategory(categoryName)
                 limitedFaqItems = faqItems.take(4)
@@ -461,7 +459,7 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
                 binding.tvOurContentSeeMore.text = "View More"
                 isItemSize.set(true) // Show only 3 items
             }
-            ourContentAdapter.notifyDataSetChanged()
+            ourContentAdapter?.notifyDataSetChanged()
         }
 
 
@@ -708,6 +706,8 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
                     if (courseId == data?.enrolledCourseId){
                         courselreadyBuy = true
                         binding.submit.text = "Start Now"
+
+                        ourContentAdapter?.updateContent(true)
                     }
                 }
             }
