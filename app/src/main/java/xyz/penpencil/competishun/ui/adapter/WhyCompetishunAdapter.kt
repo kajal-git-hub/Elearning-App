@@ -33,7 +33,7 @@ class WhyCompetishunAdapter(private val listWhyCompetishun: List<WhyCompetishun>
         Glide.with(holder.itemView)
             .load("https://img.youtube.com/vi/${extractYouTubeId(itemWhyCompetishun.videourl)}/0.jpg")
             .into(holder.thumbnail)
-        holder.itemplay.setOnClickListener{
+        holder.thumbnail.setOnClickListener{
             goToPlayerPage(holder.itemView.context, itemWhyCompetishun.videourl,"About this Course")
         }
     }
