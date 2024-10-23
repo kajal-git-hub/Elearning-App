@@ -41,6 +41,9 @@
             app:destination="@id/testDashboardFragment"
             app:popUpTo="@id/homeFragment"
             app:popUpToInclusive="true"/>
+        <action
+            android:id="@+id/action_homeFragment_to_courseEmptyFragment"
+            app:destination="@id/courseEmptyFragment" />
     </fragment>
 
     <fragment
