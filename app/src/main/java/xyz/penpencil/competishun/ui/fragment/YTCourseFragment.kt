@@ -7,18 +7,19 @@ import android.view.View
 import android.view.ViewGroup
 import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.databinding.FragmentYTCourseBinding
+import xyz.penpencil.competishun.utils.HelperFunctions
 
 
 class YTCourseFragment : Fragment() {
+    private lateinit var helperFunctions: HelperFunctions
+    private lateinit var binding : FragmentYTCourseBinding
 
-    private val binding by lazy {
-        FragmentYTCourseBinding.inflate(layoutInflater)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
+        binding = FragmentYTCourseBinding.inflate(inflater, container, false)
         return binding.root
     }
 

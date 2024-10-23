@@ -6,15 +6,25 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import xyz.penpencil.competishun.R
+import xyz.penpencil.competishun.databinding.FragmentStudyMaterialDetailsBinding
+import xyz.penpencil.competishun.databinding.FragmentYTCourseVideoPlayerBinding
+import xyz.penpencil.competishun.utils.HelperFunctions
 
 class YTCourseVideoPlayerFragment : Fragment() {
-
+    private lateinit var helperFunctions: HelperFunctions
+    private lateinit var binding : FragmentYTCourseVideoPlayerBinding
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_y_t_course_video_player, container, false)
+        binding = FragmentYTCourseVideoPlayerBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
     }
 
 }
