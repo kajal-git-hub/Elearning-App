@@ -67,10 +67,10 @@ class BottomSheetVideoQualityFragment : BottomSheetDialogFragment() {
         Log.d("BottomSheetVideoQualityFragment", "Video ID: $videoId")
 
         val videoQualityList = listOf(
-            VideoQualityItem("360p", "48.5 MB"),
-            VideoQualityItem("480p", "480.5 MB"),
-            VideoQualityItem("720p", "1.29 GB"),
-            VideoQualityItem("1080p", "2.45 GB"),
+            VideoQualityItem("360p", ""),
+            VideoQualityItem("480p", ""),
+            VideoQualityItem("720p", ""),
+            VideoQualityItem("1080p", ""),
         )
         binding.btnBmDownload.setOnClickListener {
             storeItemInPreferences(itemDetails)
