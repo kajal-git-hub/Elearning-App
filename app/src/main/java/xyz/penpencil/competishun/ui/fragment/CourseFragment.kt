@@ -2,7 +2,6 @@ package xyz.penpencil.competishun.ui.fragment
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -57,13 +56,10 @@ class CourseFragment : DrawerVisibility(), StudentCourseItemClickListener {
         (activity as? HomeActivity)?.showBottomNavigationView(false)
         (activity as? HomeActivity)?.showFloatingButton(true)
 
-
-
         helperFunctions = HelperFunctions()
         initializeTabLayout()
         setupTabLayout()
         setupRecyclerView()
-        fetchCoursesForClass("11th")
         observeCourses()
     }
 
@@ -76,20 +72,18 @@ class CourseFragment : DrawerVisibility(), StudentCourseItemClickListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 tab?.let {
                     when (it.position) {
-                        0 ->  fetchCoursesForClass("11th")
-                        1 -> fetchCoursesForClass("12th")
-                        2 -> fetchCoursesForClass("12+")
+                        0 ->  courseViewModel.coursesState(0)
+                        1 -> courseViewModel.coursesState(1)
+                        2 -> courseViewModel.coursesState(2)
+                        else -> {
+                            courseViewModel.coursesState(0)
+                        }
                     }
                 }
             }
 
-            override fun onTabUnselected(tab: TabLayout.Tab?) {
-                // Handle tab unselected if needed
-            }
-
-            override fun onTabReselected(tab: TabLayout.Tab?) {
-                // Handle tab reselected if needed
-            }
+            override fun onTabUnselected(tab: TabLayout.Tab?) { }
+            override fun onTabReselected(tab: TabLayout.Tab?) { }
         })
     }
 
@@ -102,11 +96,30 @@ class CourseFragment : DrawerVisibility(), StudentCourseItemClickListener {
             exam_type = Optional.present(examType),
             is_recommended = Optional.present(false)
         )
-        setupTabLayout()
+        courseViewModel.setCoursesEmpty()
         courseViewModel.fetchCourses(filters)
     }
 
     private fun observeCourses() {
+        lifecycleScope.launch {
+            courseViewModel.coursesState.collect { result ->
+                result?.onSuccess { data ->
+                    when (data) {
+                        0 ->  fetchCoursesForClass("11th")
+                        1 -> fetchCoursesForClass("12th")
+                        2 -> fetchCoursesForClass("12+")
+                    }
+                    binding.studentTabLayout.post {
+                        binding.studentTabLayout.getTabAt(data)?.select()
+                        Log.e("cvxcvzxcvxcvx", "observeCourses: " +binding.studentTabLayout.selectedTabPosition )
+                    }
+                }?.onFailure { exception ->
+                    binding.studentTabLayout.getTabAt(0)?.select()
+                    fetchCoursesForClass("11th")
+                }
+            }
+        }
+
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             courseViewModel.courses.collect { result ->
                 result?.onSuccess { data ->

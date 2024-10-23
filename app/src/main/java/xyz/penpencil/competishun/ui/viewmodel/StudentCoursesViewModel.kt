@@ -25,12 +25,22 @@ class StudentCoursesViewModel @Inject constructor(
     private val _courses = MutableStateFlow<Result<AllCourseForStudentQuery.Data>?>(null)
     val courses: StateFlow<Result<AllCourseForStudentQuery.Data>?> = _courses.asStateFlow()
 
+    private val _coursesState = MutableStateFlow<Result<Int>>(Result.success(0))
+    val coursesState: StateFlow<Result<Int>> = _coursesState.asStateFlow()
+
     private val _lectures = MutableStateFlow<Result<GetAllCourseLecturesCountQuery.Data>?>(null)
     val lectures: StateFlow<Result<GetAllCourseLecturesCountQuery.Data>?> = _lectures.asStateFlow()
 
     private val _banners = MutableStateFlow<List<GetAllBannersQuery.Banner?>?>(null)
     val banners: StateFlow<List<GetAllBannersQuery.Banner?>?> = _banners
 
+    fun coursesState(state: Int) = viewModelScope.launch {
+        _coursesState.value = Result.success(state)
+    }
+
+    fun setCoursesEmpty() = viewModelScope.launch {
+        _courses.emit(null)
+    }
 
     fun fetchCourses(filters: FindAllCourseInputStudent) {
         viewModelScope.launch {

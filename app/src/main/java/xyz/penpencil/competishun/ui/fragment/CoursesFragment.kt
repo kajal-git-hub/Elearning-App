@@ -1,22 +1,20 @@
 package xyz.penpencil.competishun.ui.fragment
 
 import android.os.Bundle
+import android.util.Log
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
 import xyz.penpencil.competishun.ui.adapter.ViewPagerAdapter
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.viewModels
-import androidx.media3.common.util.Log
 import com.google.android.material.appbar.MaterialToolbar
 import xyz.penpencil.competishun.ui.main.HomeActivity
 import xyz.penpencil.competishun.ui.viewmodel.StudentCoursesViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import xyz.penpencil.competishun.R
-import xyz.penpencil.competishun.databinding.FragmentCourseBinding
 import xyz.penpencil.competishun.databinding.FragmentCoursesBinding
 
 @AndroidEntryPoint
@@ -65,7 +63,11 @@ class CoursesFragment : DrawerVisibility() {
             binding.tabViewpager.visibility = View.VISIBLE
             setupViewPager(tabViewPager,examIIT,examNEET)
             tabTabLayout.setupWithViewPager(tabViewPager)
-            tabTabLayout.getTabAt(0)?.select()
+
+            savedInstanceState?.let {
+                val selectedTabPosition = it.getInt("selected_tab_position", 0)
+                tabTabLayout.getTabAt(selectedTabPosition)?.select()
+            }
         }
         tabToolbar.setNavigationOnClickListener {
             requireActivity().onBackPressed()
@@ -98,6 +100,12 @@ class CoursesFragment : DrawerVisibility() {
         adapter.addFragment(courseFragment, examIIT)
         adapter.addFragment(neetFragment, examNEET)
         viewPager.adapter = adapter
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+            super.onSaveInstanceState(outState)
+            val selectedTabPosition = binding.tabTablayout.selectedTabPosition
+            outState.putInt("selected_tab_position", selectedTabPosition)
     }
 
 }
