@@ -96,6 +96,8 @@
             setTextViewHtml=""
             android:textColor="#726C6C"
             android:textSize="14sp"
+            android:layout_marginStart="@dimen/_15dp"
+            android:layout_marginEnd="@dimen/_15dp"
             app:fontFamily="@font/nunito"
             app:layout_constraintTop_toBottomOf="@id/tv_topic_name"
             app:layout_constraintStart_toStartOf="parent"

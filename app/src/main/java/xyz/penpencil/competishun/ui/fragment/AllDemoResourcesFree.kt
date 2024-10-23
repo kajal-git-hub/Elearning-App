@@ -70,11 +70,12 @@ class AllDemoResourcesFree : DrawerVisibility() {
         var isPurchased = arguments?.getBoolean("isPurchased")?:false
         binding.igDemoBackButton.setOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed() }
         binding.tvDemoTitle.text = folderName
-        if (folderName?.split(" ")?.get(0)?.equals("Class") == true) {
-            binding.igFreeImage.visibility = View.VISIBLE
-            binding.igFreeImage.setImageResource(R.drawable.frame_1707480952)
-        } else if (isPurchased) {
+        if (isPurchased) {
             binding.igFreeImage.visibility = View.GONE
+            if (folderName?.split(" ")?.get(0)?.equals("Class") == true) {
+                binding.igFreeImage.visibility = View.VISIBLE
+                binding.igFreeImage.setImageResource(R.drawable.frame_1707480952)
+            }
         }else {
             binding.igFreeImage.visibility = View.VISIBLE
             binding.igFreeImage.setImageResource(R.drawable.lock)
@@ -111,7 +112,11 @@ class AllDemoResourcesFree : DrawerVisibility() {
 
     private fun folderProgress(folderId:String){
         Log.e("folderProgress",folderId)
-        val free = arguments?.getBoolean("free")
+        var isPurchased = arguments?.getBoolean("isPurchased")?:false
+        var free = false
+        if (isPurchased) {
+             free = arguments?.getBoolean("free")?:false
+        }
         if (folderId != null) {
             // Trigger the API call
             coursesViewModel.findCourseFolderProgress(folderId)
