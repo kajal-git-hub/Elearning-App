@@ -129,9 +129,15 @@ class NEETFragment : DrawerVisibility(), StudentCourseItemClickListener {
                 result?.onSuccess { data ->
                     Log.e(TAG , data.toString())
                     val courseSize = data.getAllCourseForStudent.courses.size
-
-                    val courses = data.getAllCourseForStudent.courses.map { course ->
-
+                    val courses = data.getAllCourseForStudent.courses
+                    if (courses.isEmpty()){
+                        binding.clNoEmptyView.visibility = View.VISIBLE
+                        binding.recyclerView.visibility = View.GONE
+                    }else if(!courses.isEmpty()){
+                        binding.clNoEmptyView.visibility = View.GONE
+                        binding.recyclerView.visibility = View.VISIBLE
+                    }
+                        courses.map{ course ->
                         getAllLectureCount(course.id) { courseId, lectureCount ->
                             lectureCounts[courseId] = lectureCount
                             binding.recyclerView.adapter?.notifyDataSetChanged()
