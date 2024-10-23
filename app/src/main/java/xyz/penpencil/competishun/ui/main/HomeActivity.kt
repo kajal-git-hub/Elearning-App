@@ -42,8 +42,8 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
     private var isCallingSupportVisible = ObservableField(true)
     private lateinit var toggle: ActionBarDrawerToggle
     lateinit var sharedPreferencesManager: SharedPreferencesManager
-    var courseType:String = ""
-     var userId:String = ""
+    var courseType: String = ""
+    var userId: String = ""
     private var DetailAvailable = false
     val bundle = Bundle()
     private var navigateToFragment = false
@@ -57,7 +57,7 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
         setContentView(binding.root)
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         sharedPreferencesManager = SharedPreferencesManager(this)
-        onBackPressedDispatcher.addCallback(this ,backPressListener)
+        onBackPressedDispatcher.addCallback(this, backPressListener)
 
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.fragmentNavigation) as NavHostFragment
@@ -75,16 +75,15 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
         bottomNavigationView = findViewById(R.id.bottomNav)
         callIcon = findViewById(R.id.ig_ContactImage)
 
-        navigateToFragment = intent.getBooleanExtra("isMyCourseAvailable",false)
+        navigateToFragment = intent.getBooleanExtra("isMyCourseAvailable", false)
         val navigateFromVerify = intent.getStringExtra("navigateTo")
         if (navigateToFragment) {
             navController.navigate(R.id.courseEmptyFragment)
             binding.bottomNav.selectedItemId = R.id.myCourse // Set the selected tab to My Course
-        }else if (navigateFromVerify == "CourseEmptyFragment"){
+        } else if (navigateFromVerify == "CourseEmptyFragment") {
             navController.navigate(R.id.courseEmptyFragment)
             binding.bottomNav.selectedItemId = R.id.myCourse
-        }
-        else{
+        } else {
             if (savedInstanceState == null) {
                 navController.navigate(R.id.homeFragment, bundle)
                 binding.bottomNav.selectedItemId = R.id.home
@@ -109,16 +108,30 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
             }
         }
 
-//        val bottomNavigationView = binding.bottomNav
-//        val menu = bottomNavigationView.menu
-//        if (navigateToFragment) {
-//            Log.d("DetailAvailable",DetailAvailable.toString())
-//            menu.findItem(R.id.Bookmark).isVisible = false
-//            menu.findItem(R.id.Store).isVisible = true
-//        } else {
-//            menu.findItem(R.id.Bookmark).isVisible = true
-//            menu.findItem(R.id.Store).isVisible = false
-//        }
+
+        navController.addOnDestinationChangedListener { controller, destination, arguments ->
+            when (destination.id) {
+                R.id.homeFragment -> {
+                    binding.bottomNav.selectedItemId = R.id.home
+                }
+                R.id.courseEmptyFragment ->{
+//                    binding.bottomNav.selectedItemId = R.id.myCourse
+                }
+                R.id.bookmark -> {
+                    binding.bottomNav.selectedItemId = R.id.bookmark
+                }
+
+                R.id.download -> {
+                    binding.bottomNav.selectedItemId = R.id.download
+                }
+
+
+                else -> {
+//                    supportActionBar?.show()
+                }
+            }
+        }
+
 
         bottomNavigationView.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
@@ -128,6 +141,7 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
                     }
                     true
                 }
+
                 R.id.myCourse -> {
 
                     if (navController.currentDestination?.id != R.id.PersonalDetailsFragment) {
@@ -135,14 +149,17 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
                     }
                     true
                 }
+
                 R.id.Download -> {
                     navController.navigate(R.id.DownloadFragment)
                     true
                 }
+
                 R.id.Bookmark -> {
                     navController.navigate(R.id.BookMarkFragment)
                     true
                 }
+
                 else -> {
                     false
                 }
@@ -151,39 +168,44 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
 
 
     }
+    private fun navigateToHomeFragment(navController: NavController, arguments: Bundle?) {
+//        navController.navigateTo(R.id.navigation_home, arguments)
+    }
 
-    private val backPressListener = object : OnBackPressedCallback(true){
+    private val backPressListener = object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
             when (navController.currentDestination?.id) {
 
-                R.id.BookMarkFragment ->{
-                    navController.popBackStack(R.id.homeFragment,false)
+                R.id.BookMarkFragment -> {
+                    navController.popBackStack(R.id.homeFragment, false)
                     binding.bottomNav.selectedItemId = R.id.home
                 }
 
                 R.id.DownloadFragment -> {
-                    navController   .popBackStack(R.id.homeFragment,false)
+                    navController.popBackStack(R.id.homeFragment, false)
                     binding.bottomNav.selectedItemId = R.id.home
                 }
-                    R.id.courseEmptyFragment -> {
-                    navController.popBackStack(R.id.homeFragment,false)
+
+                R.id.courseEmptyFragment -> {
+                    navController.popBackStack(R.id.homeFragment, false)
                     binding.bottomNav.selectedItemId = R.id.home
                 }
-                R.id.ResumeCourseFragment ->
-                {
+
+                R.id.ResumeCourseFragment -> {
                     navController.navigate(R.id.courseEmptyFragment)
                     binding.bottomNav.selectedItemId = R.id.myCourse
                 }
-                R.id.SubjectContentFragment ->
-                {
+
+                R.id.SubjectContentFragment -> {
                     navController.navigate(R.id.ResumeCourseFragment)
                     binding.bottomNav.selectedItemId = R.id.myCourse
                 }
+
                 else -> {
-                    if (navController.currentDestination?.id == R.id.home){
+                    if (navController.currentDestination?.id == R.id.home) {
                         finish()
-                    }else{
-                        isEnabled=false
+                    } else {
+                        isEnabled = false
                         onBackPressedDispatcher.onBackPressed()
                     }
                 }
@@ -191,11 +213,12 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
         }
     }
 
-    fun showBottomNavigationView(show:Boolean){
-        bottomNavigationView.visibility = if(show) View.VISIBLE else View.GONE
+    fun showBottomNavigationView(show: Boolean) {
+        bottomNavigationView.visibility = if (show) View.VISIBLE else View.GONE
     }
-    fun showFloatingButton(show:Boolean){
-        callIcon.visibility =  if(show) View.VISIBLE else View.GONE
+
+    fun showFloatingButton(show: Boolean) {
+        callIcon.visibility = if (show) View.VISIBLE else View.GONE
     }
 
 
@@ -214,14 +237,14 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
     }
 
     private fun navigateToLoaderScreen() {
-    Log.e("homeuserIDload",userId.toString())
-       // navController.navigate(R.id.paymentLoaderFragment)
+        Log.e("homeuserIDload", userId.toString())
+        // navController.navigate(R.id.paymentLoaderFragment)
         val bundle = Bundle().apply {
             putString("userId", userId)
         }
 
         Handler(Looper.getMainLooper()).postDelayed({
-                navController.navigate(R.id.paymentFragment,bundle)
+            navController.navigate(R.id.paymentFragment, bundle)
         }, 2000)
     }
 
@@ -239,7 +262,7 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
                 val bottomNavigationView = binding.bottomNav
                 val menu = bottomNavigationView.menu
                 if (DetailAvailable) {
-                    Log.d("DetailAvailable",DetailAvailable.toString())
+                    Log.d("DetailAvailable", DetailAvailable.toString())
                     menu.findItem(R.id.Bookmark).isVisible = true
                     menu.findItem(R.id.Store).isVisible = false
                 } else {
@@ -247,10 +270,15 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
                     menu.findItem(R.id.Store).isVisible = true
                 }
             }.onFailure { exception ->
-                Toast.makeText(this, "Error fetching details: ${exception.message}", Toast.LENGTH_LONG).show()
+                Toast.makeText(
+                    this,
+                    "Error fetching details: ${exception.message}",
+                    Toast.LENGTH_LONG
+                ).show()
             }
         }
     }
+
 
     override fun onStart() {
         super.onStart()
