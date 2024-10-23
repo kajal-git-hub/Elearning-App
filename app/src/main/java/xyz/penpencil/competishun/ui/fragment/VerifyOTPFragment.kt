@@ -62,6 +62,9 @@ class VerifyOTPFragment : Fragment() {
     private lateinit var otpBoxes: List<EditText>
     private lateinit var countDownTimer: CountDownTimer
 
+    private var isReceiverRegistered = false
+
+
     private val REQ_USER_CONSENT=200
 //    var smsBroadcastReceiver: SmsBroadcastReceiver?=null
     private lateinit var smsRetrieverLauncher: ActivityResultLauncher<Intent>
@@ -135,11 +138,29 @@ class VerifyOTPFragment : Fragment() {
         )
     }
 
+//    override fun onDestroy() {
+//        super.onDestroy()
+//        if(isReceiverRegistered)
+//        LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(mMessageReceiver);
+//        requireContext().unregisterReceiver(mySMSBroadcastReceiver)
+//        isReceiverRegistered = false
+//    }
+
     override fun onDestroy() {
         super.onDestroy()
-        LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(mMessageReceiver);
-        requireContext().unregisterReceiver(mySMSBroadcastReceiver)
+        try {
+            LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(mMessageReceiver)
+        } catch (e: IllegalArgumentException) {
+            e.printStackTrace()
+        }
+
+        try {
+            requireContext().unregisterReceiver(mySMSBroadcastReceiver)
+        } catch (e: IllegalArgumentException) {
+            e.printStackTrace()
+        }
     }
+
 
     private fun startSMSRetrieverClient() {
         val client = SmsRetriever.getClient(requireActivity())
