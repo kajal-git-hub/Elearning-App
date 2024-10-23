@@ -31,6 +31,7 @@ import xyz.penpencil.competishun.utils.SharedPreferencesManager
 import dagger.hilt.android.AndroidEntryPoint
 import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.databinding.FragmentCourseEmptyBinding
+import xyz.penpencil.competishun.ui.adapter.MyCartAdapter
 import xyz.penpencil.competishun.ui.viewmodel.UserViewModel
 import xyz.penpencil.competishun.utils.setLightStatusBars
 
@@ -43,12 +44,13 @@ class CourseEmptyFragment : Fragment() {
     lateinit var sharedPreferencesManager: SharedPreferencesManager
     private val userViewModel: UserViewModel by viewModels()
     private lateinit var drawerLayout: DrawerLayout
-
+    private lateinit var exploreCourseAdapter:ExploreCourseAdapter
     private val ordersViewModel: OrdersViewModel by viewModels()
     private val viewModel: MyCoursesViewModel by viewModels()
     private var coursePercent=0
     private var currentCourseId=""
     private var folderId=""
+    private var complementryId = ""
     private val getCourseByIDViewModel: GetCourseByIDViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -238,7 +240,7 @@ class CourseEmptyFragment : Fragment() {
                 if (data.myCourses.isNotEmpty()) {
 //                    sharedPreferencesManager.isMyCourseAvailable = true
                     sharedPreferencesManager.isBottomSheetShown = false
-                    binding.progressBar?.visibility = View.GONE
+                    binding.progressBar.visibility = View.GONE
                     binding.clEmptyMyCourse.visibility = View.GONE
                     binding.rvExploreCourses.visibility = View.VISIBLE
                     // Create lists to hold courses and progress
@@ -260,6 +262,7 @@ class CourseEmptyFragment : Fragment() {
                             exam_type = course.exam_type,
                             category_name = course.category_name,
                             category_id = course.category_id,
+                            complementary_course = course.complementary_course,
                             entity_type = course.entity_type,
                             folder = course.folder,
                             course_end_date = course.course_end_date,
@@ -278,7 +281,7 @@ class CourseEmptyFragment : Fragment() {
 
 
                     // Create adapter with course and progress lists
-                    val adapter = ExploreCourseAdapter(courseList, progressList) { course, folders, progressPercentage  ->
+                     exploreCourseAdapter = ExploreCourseAdapter(courseList, progressList) { course, folders, progressPercentage  ->
                         // Handle the course click and navigate
                         val gson = Gson()
                         val folderJson = gson.toJson(folders)
@@ -301,7 +304,7 @@ class CourseEmptyFragment : Fragment() {
                         findNavController().navigate(R.id.action_courseEmptyFragment_to_ResumeCourseFragment, bundle)
                     }
 
-                    binding.rvExploreCourses.adapter = adapter
+                    binding.rvExploreCourses.adapter = exploreCourseAdapter
                     binding.rvExploreCourses.layoutManager =
                         LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
                 } else {
