@@ -115,7 +115,7 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
                     binding.bottomNav.selectedItemId = R.id.home
                 }
                 R.id.courseEmptyFragment ->{
-                    binding.bottomNav.selectedItemId = R.id.myCourse
+//                    binding.bottomNav.selectedItemId = R.id.myCourse
                 }
                 R.id.bookmark -> {
                     binding.bottomNav.selectedItemId = R.id.bookmark
@@ -145,7 +145,7 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
                 R.id.myCourse -> {
 
                     if (navController.currentDestination?.id != R.id.PersonalDetailsFragment) {
-                        navController.navigate(R.id.action_homeFragment_to_courseEmptyFragment)
+                        navController.navigate(R.id.courseEmptyFragment)
                     }
                     true
                 }
