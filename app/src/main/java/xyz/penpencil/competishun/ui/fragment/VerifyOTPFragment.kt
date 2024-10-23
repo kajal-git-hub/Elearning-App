@@ -135,11 +135,7 @@ class VerifyOTPFragment : Fragment() {
         )
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(mMessageReceiver);
-        requireContext().unregisterReceiver(mySMSBroadcastReceiver)
-    }
+
 
     private fun startSMSRetrieverClient() {
         val client = SmsRetriever.getClient(requireActivity())
@@ -428,10 +424,16 @@ class VerifyOTPFragment : Fragment() {
 
     private fun unRegister(){
         try {
+            LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(mMessageReceiver);
             requireContext().unregisterReceiver(mySMSBroadcastReceiver)
         }catch (e:Exception){
             e.printStackTrace()
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        unRegister()
     }
 }
 
