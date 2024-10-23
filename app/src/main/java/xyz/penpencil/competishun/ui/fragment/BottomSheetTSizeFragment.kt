@@ -46,7 +46,7 @@ class BottomSheetTSizeFragment : BottomSheetDialogFragment() {
             TSizeModel("S (36)"),
             TSizeModel("M (38)"),
             TSizeModel("L (40)"),
-            TSizeModel("XL (42))"),
+            TSizeModel("XL (42)"),
             TSizeModel("XXL (44)"),
             TSizeModel("XXXL (46)")
         )
