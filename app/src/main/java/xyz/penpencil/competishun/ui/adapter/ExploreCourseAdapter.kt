@@ -25,7 +25,18 @@ class ExploreCourseAdapter(
     override fun onBindViewHolder(holder: ExploreCourseViewHolder, position: Int) {
         val course = courses[position]
         val progress = progressList[position]
+        val complementaryCourseId = course.id
+        val complementaryCourse = courses.find { it.complementary_course == complementaryCourseId }
+        if (complementaryCourse != null) {
+            // Set the complementary course banner
+            holder.binding.ivFreeTag.visibility = View.VISIBLE
+        } else {
+            // Set the regular course banner
+            holder.binding.ivFreeTag.visibility = View.GONE
+        }
         holder.bind(course, progress)
+        Log.e("complementryno",course.complementary_course.toString())
+        Log.e("complementrynot",course.id.toString())
 
         Glide.with(holder.itemView.context)
             .load(course.banner_image)
@@ -33,6 +44,9 @@ class ExploreCourseAdapter(
             .error(R.drawable.default_image)
             .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
             .into(holder.binding.ivPurchased)
+
+        Log.e("complementaryadd",course.complementary_course.toString())
+        Log.e("courseIDs",course.id.toString())
 
         holder.itemView.setOnClickListener {
             val subFolder = progress.subfolderDurations
@@ -68,7 +82,6 @@ class ExploreCourseAdapter(
         fun bind(course: MyCoursesQuery.Course,progress: MyCoursesQuery.Progress?) {
             binding.tvExploreCourseName.text = course.name
             binding.tvTag2ExploreCourse.text = course.exam_type.toString()
-
             if(course.course_class.toString()=="ELEVENTH"){
                 binding.tvTag1ExploreCourse.text = "11th"
             }else if(course.course_class.toString()=="TWELFTH"){
@@ -76,7 +89,9 @@ class ExploreCourseAdapter(
             }else if (course.course_class.toString()=="TWELFTH_PLUS"){
                 binding.tvTag1ExploreCourse.text = "12+"
             }
-
+            Log.e("view complementry ",course.complementary_course.toString())
+            Log.e("view course",course.id.toString())
+            if (course.id == course.complementary_course){ Log.e("isnidecontdeion ",course.complementary_course.toString())}
             binding.tvTag3ExploreCourse.text = course.target_year.toString()
             var coursePercen = progress?.completionPercentage?.toInt()?:0
             Log.e("coursefef",coursePercen.toString())
@@ -87,8 +102,6 @@ class ExploreCourseAdapter(
                 toInt() ?: 0))
                 append("%")
             }
-
-            binding.ivFreeTag.visibility = View.GONE
             binding.customProgressIndicator.progress = progress?.completionPercentage?.toInt()?:0
         }
     }

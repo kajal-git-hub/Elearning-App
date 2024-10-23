@@ -155,7 +155,7 @@ class MediaPlayerFragment : DrawerVisibility() {
                         Toast.makeText(requireContext(), "No more videos to play", Toast.LENGTH_SHORT).show()
                              }
                             binding.startNextButton.setOnClickListener {
-                                Log.e("nextButtonclick","nectButton")
+                                Log.e("nextButtonclick",urlVideo)
                                 playNextVideo()
                                 binding.upNextOverlay.visibility = View.GONE
                             }
@@ -168,12 +168,12 @@ class MediaPlayerFragment : DrawerVisibility() {
                            // playNextVideo() //deffault calling on video end
                         }
 
-                       Player.STATE_IDLE -> {
-                            Log.e("videoEndedIdle",player.toString())
-                            // Hide the progress bar in case of idle or ended states
-                            binding.progressBar.visibility = View.VISIBLE
-                            binding.playerView.visibility = View.GONE
-                        }
+//                       Player.STATE_IDLE -> {
+//                            Log.e("videoEndedIdle",player.toString())
+//                            // Hide the progress bar in case of idle or ended states
+////                            binding.progressBar.visibility = View.VISIBLE
+////                            binding.playerView.visibility = View.VISIBLE
+//                        }
                     }
                 }
             })
@@ -189,16 +189,6 @@ class MediaPlayerFragment : DrawerVisibility() {
             showSpeedOrQualityDialog()
         }
 
-    }
-
-    private fun initializePlaylist() {
-        videoUrls = listOf(
-            "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
-            "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/VolkswagenGTIReview.mp4",
-            "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"
-        )
-
-        videoTitles = courseFolderContentNames
     }
 
     fun playVideo(videoUrl: String,  startPosition: Long = 0L,videoTittle: String) {
@@ -224,7 +214,7 @@ class MediaPlayerFragment : DrawerVisibility() {
                             Log.e("PlayerErrors", startPosition.toString())
                             player.seekTo(startPosition)
                         }
-
+//v1 - 45s v2 - 5min, v3 - 19s
                         player.play()
                         Log.e("dfafadf",player.toString())
                     }
@@ -242,30 +232,22 @@ class MediaPlayerFragment : DrawerVisibility() {
                         binding.cancelNextButton.setOnClickListener {
                             binding.upNextOverlay.visibility = View.GONE
                         }
-                        // When the video ends, play the next one if available
-                        playNextVideo()
                     }
 
-                    Player.STATE_ENDED, Player.STATE_IDLE -> {
-                        Log.e("videoEndedIdle",player.toString())
-                        // Hide the progress bar in case of idle or ended states
-                        binding.progressBar.visibility = View.GONE
-                        binding.playerView.visibility = View.VISIBLE
-                    }
                 }
             }
         })
-        gestureDetector = GestureDetector(requireContext(), DoubleTapGestureListener())
-        binding.playerView.setOnTouchListener { _, event ->
-            gestureDetector.onTouchEvent(event)
-            true
-        }
-
-        ViewCompat.setOnApplyWindowInsetsListener(binding.playerView) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
+//        gestureDetector = GestureDetector(requireContext(), DoubleTapGestureListener())
+//        binding.playerView.setOnTouchListener { _, event ->
+//            gestureDetector.onTouchEvent(event)
+//            true
+//        }
+//
+//        ViewCompat.setOnApplyWindowInsetsListener(binding.playerView) { v, insets ->
+//            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+//            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+//            insets
+//        }
     }
 
     private fun playNextVideo() {
@@ -274,23 +256,23 @@ class MediaPlayerFragment : DrawerVisibility() {
         videourlViewModel.fetchVideoStreamUrl(courseFolderContentIds[currentVideoIndex], "480p")
         Log.e("foldfdfd",courseFolderContentId)
         videourlViewModel.videoStreamUrl.observe(viewLifecycleOwner) { signedUrl ->
-            Log.d("Videourl", "Signed URL: $signedUrl")
+            urlVideo = ""
+            Log.d("NextURL", "Signed URL: $signedUrl")
             if (signedUrl != null) {
+                videoTitles = courseFolderContentNames
+
+                // val nextVideoUrl = videoUrls[currentVideoIndex]
+                val nextVideoUrl = urlVideo
+                val nextVideoTittle = videoTitles[currentVideoIndex]
+                binding.tittleBtn.text = nextVideoTittle
+                playVideo(signedUrl,0,nextVideoTittle)
                 urlVideo = signedUrl
 
             } else {
-                Log.e("url issues", signedUrl.toString())
+                Log.e("url issues", urlVideo.toString())
 
             }
         }
-
-        videoTitles = courseFolderContentNames
-
-           // val nextVideoUrl = videoUrls[currentVideoIndex]
-            val nextVideoUrl = urlVideo
-            val nextVideoTittle = videoTitles[currentVideoIndex]
-            binding.tittleBtn.text = nextVideoTittle
-            playVideo(nextVideoUrl,0,nextVideoTittle)
             Log.e("currentVideoAfter",currentVideoIndex.toString())
     }
 
@@ -427,7 +409,7 @@ class MediaPlayerFragment : DrawerVisibility() {
             Log.e("destroyy",player.toString())
             player.release()
         }
-
+        urlVideo = ""
         handler.removeCallbacks(updateTask)
         handler.removeCallbacksAndMessages(null)
         // updateSeekBarHandler.removeCallbacks(updateSeekBarRunnable)
