@@ -4,21 +4,18 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.apollographql.apollo3.api.Optional
 import com.student.competishun.gatekeeper.MyDetailsQuery
 import dagger.hilt.android.AndroidEntryPoint
 import xyz.penpencil.competishun.R
-import xyz.penpencil.competishun.data.api.ApiProcess
-import xyz.penpencil.competishun.data.model.UpdateUserResponse
 import xyz.penpencil.competishun.databinding.FragmentAddressDetailsBinding
 import xyz.penpencil.competishun.ui.main.HomeActivity
 import xyz.penpencil.competishun.ui.viewmodel.UpdateUserViewModel
@@ -116,7 +113,11 @@ class AddressDetailsFragment : DrawerVisibility() {
     private fun observeViewModel() {
         updateUserViewModel.updateUserResult.observe(viewLifecycleOwner) { result ->
             if (result!=null){
-                findNavController().navigate(R.id.action_AddressDetail_to_CourseEmpty)
+                val navOptions = NavOptions.Builder()
+                    .setPopUpTo(R.id.nav_graph_chome, true)
+                    .build()
+
+                findNavController().navigate(R.id.courseEmptyFragment, null, navOptions)
             }else {
                 showToast("try again later")
             }
@@ -133,7 +134,7 @@ class AddressDetailsFragment : DrawerVisibility() {
     }
 
     /**
-     * populate UI
+     * Populate UI
      * */
     private fun initializeUpdateUI(){
         binding.etContentAddress.setText(userDetails?.userInformation?.address?.addressLine1?:"")
