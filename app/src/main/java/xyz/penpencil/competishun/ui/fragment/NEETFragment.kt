@@ -29,6 +29,7 @@ import xyz.penpencil.competishun.databinding.FragmentCourseBinding
 
 
 internal const val TAG = "NEETFragment"
+
 @AndroidEntryPoint
 class NEETFragment : DrawerVisibility(), StudentCourseItemClickListener {
     private lateinit var recyclerView: RecyclerView
@@ -77,7 +78,7 @@ class NEETFragment : DrawerVisibility(), StudentCourseItemClickListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 tab?.let {
                     when (it.position) {
-                        0 ->  courseViewModel.coursesState(0)
+                        0 -> courseViewModel.coursesState(0)
                         1 -> courseViewModel.coursesState(1)
                         2 -> courseViewModel.coursesState(2)
                         else -> {
@@ -87,8 +88,8 @@ class NEETFragment : DrawerVisibility(), StudentCourseItemClickListener {
                 }
             }
 
-            override fun onTabUnselected(tab: TabLayout.Tab?) { }
-            override fun onTabReselected(tab: TabLayout.Tab?) { }
+            override fun onTabUnselected(tab: TabLayout.Tab?) {}
+            override fun onTabReselected(tab: TabLayout.Tab?) {}
         })
     }
 
@@ -99,7 +100,9 @@ class NEETFragment : DrawerVisibility(), StudentCourseItemClickListener {
             category_name = Optional.present(categoryName),
             course_class = Optional.present(courseClass),
             exam_type = Optional.present(examType),
-            is_recommended = Optional.present(false)
+            is_recommended = Optional.Absent,
+            sortOrder = Optional.Present("DESC")
+
         )
         courseViewModel.fetchCourses(filters)
     }
@@ -109,7 +112,7 @@ class NEETFragment : DrawerVisibility(), StudentCourseItemClickListener {
             courseViewModel.coursesState.collect { result ->
                 result?.onSuccess { data ->
                     when (data) {
-                        0 ->  fetchCoursesForClass("11th")
+                        0 -> fetchCoursesForClass("11th")
                         1 -> fetchCoursesForClass("12th")
                         2 -> fetchCoursesForClass("12+")
                     }
@@ -127,23 +130,23 @@ class NEETFragment : DrawerVisibility(), StudentCourseItemClickListener {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             courseViewModel.courses.collect { result ->
                 result?.onSuccess { data ->
-                    Log.e(TAG , data.toString())
+                    Log.e(TAG, data.toString())
                     val courseSize = data.getAllCourseForStudent.courses.size
                     val courses = data.getAllCourseForStudent.courses
-                    if (courses.isEmpty()){
+                    if (courses.isEmpty()) {
                         binding.clNoEmptyView.visibility = View.VISIBLE
                         binding.recyclerView.visibility = View.GONE
-                    }else if(!courses.isEmpty()){
+                    } else if (!courses.isEmpty()) {
                         binding.clNoEmptyView.visibility = View.GONE
                         binding.recyclerView.visibility = View.VISIBLE
                     }
-                        courses.map{ course ->
+                    courses.map { course ->
                         getAllLectureCount(course.id) { courseId, lectureCount ->
                             lectureCounts[courseId] = lectureCount
                             binding.recyclerView.adapter?.notifyDataSetChanged()
                         }
-                        val courseClass = course.course_class?.name?:""
-                       Log.e("NEETcouseacal",helperFunctions.toDisplayString(courseClass))
+                        val courseClass = course.course_class?.name ?: ""
+                        Log.e("NEETcouseacal", helperFunctions.toDisplayString(courseClass))
 //                        when (helperFunctions.toDisplayString(courseClass)) {
 //                            "11th" -> updateTabText(0, courseSize)
 //                            "12th" -> updateTabText(1, courseSize)
@@ -152,7 +155,8 @@ class NEETFragment : DrawerVisibility(), StudentCourseItemClickListener {
                         course.toCourse()
                     } ?: emptyList()
                     Log.d("NEETFragment", courses.toString())
-                    binding.recyclerView.adapter = CourseAdapter(courses,lectureCounts, this@NEETFragment)
+                    binding.recyclerView.adapter =
+                        CourseAdapter(courses, lectureCounts, this@NEETFragment)
                 }?.onFailure { exception ->
                     // Handle the failure case
                     Log.e(TAG, exception.toString())
@@ -161,8 +165,8 @@ class NEETFragment : DrawerVisibility(), StudentCourseItemClickListener {
         }
     }
 
-    override fun onCourseItemClicked(course: AllCourseForStudentQuery.Course,bundle: Bundle) {
-        val courseTags = bundle.getStringArrayList("course_tags")?: arrayListOf()
+    override fun onCourseItemClicked(course: AllCourseForStudentQuery.Course, bundle: Bundle) {
+        val courseTags = bundle.getStringArrayList("course_tags") ?: arrayListOf()
         val bundle = Bundle().apply {
             putString("course_id", course.id)
             putStringArrayList("course_tags", courseTags)
@@ -202,16 +206,16 @@ class NEETFragment : DrawerVisibility(), StudentCourseItemClickListener {
         )
     }
 
-    fun getAllLectureCount(courseId: String, callback: (String, Int) -> Unit){
+    fun getAllLectureCount(courseId: String, callback: (String, Int) -> Unit) {
 
         courseViewModel.fetchLectures(courseId)
-        Log.e("getcourseIds",courseId)
+        Log.e("getcourseIds", courseId)
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 courseViewModel.lectures.collect { result ->
                     result?.onSuccess { lecture ->
                         val count = lecture.getAllCourseLecturesCount.lecture_count.toInt()
-                        Log.e("lectureCount",count.toString())
+                        Log.e("lectureCount", count.toString())
                         callback(courseId, count)
                     }?.onFailure { exception ->
                         Log.e("LectureException", exception.toString())
