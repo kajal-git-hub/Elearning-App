@@ -65,7 +65,6 @@ class HorizontalCalendarSetUp {
         selectCurrentDate(adapter.dates, adapter, recyclerView) // Ensure current date is selected
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     fun setUpCalendarPrevNextClickListener(
         recyclerView: RecyclerView,
         nextButton: ImageView,

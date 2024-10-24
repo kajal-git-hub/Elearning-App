@@ -1,6 +1,5 @@
 package xyz.penpencil.competishun.ui.fragment
 
-import android.R.attr.fragment
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -45,9 +44,6 @@ class TopicTypeContentFragment : Fragment() {
 
         return binding.root
     }
-
-
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
