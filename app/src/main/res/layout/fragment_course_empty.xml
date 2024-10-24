@@ -117,87 +117,6 @@
             app:layout_constraintTop_toBottomOf="@id/et_rollNo" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cl_emptyMyCourse"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/upperViewCourse"
-        >
-
-        <ImageView
-            android:id="@+id/bookImage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/group__2_"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/crackIITJEETxt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:fontFamily="@font/nunito"
-            android:text="Crack IIT-JEE with Confidence!"
-            android:textColor="#2B2829"
-            android:textSize="@dimen/_18sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/bookImage" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/crackIITJEEDesc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_8dp"
-            android:fontFamily="@font/nunito"
-            android:text="Join our Top-Rated courses and start your \njourney to success today."
-            android:textAlignment="center"
-            android:textColor="#5A5555"
-            android:textSize="@dimen/_12sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/crackIITJEETxt" />
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/btnExploreCoursesEmpty"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:background="@drawable/rounded_button_course"
-            app:layout_constraintEnd_toEndOf="@id/crackIITJEETxt"
-            app:layout_constraintStart_toStartOf="@id/crackIITJEETxt"
-            app:layout_constraintTop_toBottomOf="@id/crackIITJEEDesc">
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/btn_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginVertical="@dimen/_16dp"
-                android:drawableStart="@drawable/book_white"
-                android:drawablePadding="@dimen/_8dp"
-                android:fontFamily="@font/nunito"
-                android:text="Explore Courses"
-                android:textColor="#FFFFFF"
-                android:textSize="@dimen/_14sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-
     <!-- ScrollView to wrap content that needs to be scrollable -->
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -228,6 +147,84 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
             <!-- cl_emptyMyCourse section -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_emptyMyCourse"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="100dp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/bookImage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/group__2_"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/crackIITJEETxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="32dp"
+                    android:fontFamily="@font/nunito"
+                    android:text="Crack IIT-JEE with Confidence!"
+                    android:textColor="#2B2829"
+                    android:textSize="@dimen/_18sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/bookImage" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/crackIITJEEDesc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8dp"
+                    android:fontFamily="@font/nunito"
+                    android:text="Join our Top-Rated courses and start your \njourney to success today."
+                    android:textAlignment="center"
+                    android:textColor="#5A5555"
+                    android:textSize="@dimen/_12sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/crackIITJEETxt" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/btnExploreCoursesEmpty"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="40dp"
+                    android:background="@drawable/rounded_button_course"
+                    app:layout_constraintEnd_toEndOf="@id/crackIITJEETxt"
+                    app:layout_constraintStart_toStartOf="@id/crackIITJEETxt"
+                    app:layout_constraintTop_toBottomOf="@id/crackIITJEEDesc">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/btn_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="@dimen/_16dp"
+                        android:drawableStart="@drawable/book_white"
+                        android:drawablePadding="@dimen/_8dp"
+                        android:fontFamily="@font/nunito"
+                        android:text="Explore Courses"
+                        android:textColor="#FFFFFF"
+                        android:textSize="@dimen/_14sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <!-- cl_myCoursePurchase section -->
             <androidx.constraintlayout.widget.ConstraintLayout
