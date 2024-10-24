@@ -1,23 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/item_why_comp"
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="180dp"
-    android:layout_marginEnd="@dimen/_10dp"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="@dimen/_10dp">
 
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/bg_ytThumbnail"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="190dp"
         android:scaleType="centerCrop"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:shapeAppearanceOverlay="@style/RoundedShapeImageView"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:shapeAppearanceOverlay="@style/RoundedShapeImageView" />
 
 
     <ImageView
@@ -25,11 +23,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/frame_1707480948"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
-
+        app:layout_constraintBottom_toBottomOf="@+id/bg_ytThumbnail"
+        app:layout_constraintEnd_toEndOf="@+id/bg_ytThumbnail"
+        app:layout_constraintStart_toStartOf="@+id/bg_ytThumbnail"
+        app:layout_constraintTop_toTopOf="@+id/bg_ytThumbnail" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
