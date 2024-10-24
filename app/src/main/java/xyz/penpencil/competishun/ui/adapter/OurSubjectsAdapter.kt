@@ -20,6 +20,7 @@ class OurSubjectsAdapter(private val listOurSubjectItem:List<FindCourseParentFol
         R.drawable.capa_1,
         R.drawable.group__5_,
         R.drawable.layer_1,
+        R.drawable.biology_icon,
         R.drawable.layer_1__1_
     )
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OurSubjectViewHolder {
@@ -31,8 +32,30 @@ class OurSubjectsAdapter(private val listOurSubjectItem:List<FindCourseParentFol
         val itemOurSubject = listOurSubjectItem[position]
         val duration = progress[position] as Double
         holder.tvSubjectName.text = itemOurSubject?.name?:""
-        val imageResource = images[position % images.size]
-        holder.ivMathematics.setImageResource(imageResource)
+        if (holder.tvSubjectName.text.contains("physics", ignoreCase = true)){
+            holder.ivMathematics.setImageResource(images[1])
+        }else if (holder.tvSubjectName.text.contains("Chemistry")){
+            holder.ivMathematics.setImageResource(images[2])
+        }
+        else if (holder.tvSubjectName.text.contains("Biology", ignoreCase = true)){
+            holder.ivMathematics.setImageResource(images[5])
+        }
+        else if (holder.tvSubjectName.text.contains("Text", ignoreCase = true)){
+            holder.ivMathematics.setImageResource(images[6])
+        }
+        else if (holder.tvSubjectName.text.contains("Other", ignoreCase = true)){
+            holder.ivMathematics.setImageResource(images[6])
+        }
+        else if (holder.tvSubjectName.text.contains("Class", ignoreCase = true )){
+            holder.ivMathematics.setImageResource(images[6])
+        }else if (holder.tvSubjectName.text.contains("Maths", ignoreCase = true )){
+            holder.ivMathematics.setImageResource(images[4])
+        }
+        else{
+            holder.ivMathematics.setImageResource(images[6])
+        }
+//        val imageResource = images[position % images.size]
+//        holder.ivMathematics.setImageResource(imageResource)
         holder.tvNoOfChaptersMathematics.text = itemOurSubject?.folder_count +" Chapters"
         holder.customProgressIndicatorMathematics.progress = duration.toInt()
         holder.tvPercentCompletedMathematics.text = "${duration.toInt()}%"

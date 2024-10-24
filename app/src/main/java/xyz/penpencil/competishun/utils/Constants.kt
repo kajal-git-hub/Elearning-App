@@ -119,34 +119,34 @@ object Constants {
 
     val testimonials = listOf(
         Testimonial(
-            "The classes are very good. Teachers explain topics very well. Must buy course for all aspiring students.",
-            "Aman Sharma",
-            "Class: 12th",
-            "IIT JEE"
+            "I Joined, Competishun because of Mohit Tyagi Sir and their best academic team. I loved their lectures  on YouTube so, I bought the course as well.  Their content, Test structure are so well designed that helped me in achieving my goal to IIT.",
+            "NIHAR HINGRAJIA",
+            "JEE ADVANCED – 2022",
+            "AIR : 56"
         ),
         Testimonial(
-            "The classes are very good. Teachers explain topics very well. Must buy course for all aspiring students.",
-            "Aman Sharma",
-            "Class: 12th",
-            "IIT JEE"
+            " I found out about Team Competishun over Youtube and I am glad that I joined their JEE Main & Adv. coaching classes. They helped me achieve really good results. They are really cost-effective, have good teachers and are always on-time. Thank you Team Competishun.",
+            "Harshit Srivastava",
+            "JEE ADVANCED – 2022",
+            "AIR : 215"
         ),
         Testimonial(
-            "The classes are very good. Teachers explain topics very well. Must buy course for all aspiring students.",
-            "Aman Sharma",
-            "Class: 12th",
-            "IIT JEE"
+            "Taking Online Course right here at Competishun has been a prime gain to me. The courses are well laid out and the faculties are supportive and responsible towards each doubt I asked. I want to devote my success to Team Competishun & Thank you for assisting me out in attaining my preferred goal.",
+            "RAJAT GOLECHHA",
+            "JEE ADVANCED – 2021",
+            "AIR : 100"
         ),
         Testimonial(
-            "The classes are very good. Teachers explain topics very well. Must buy course for all aspiring students.",
-            "Aman Sharma",
-            "Class: 12th",
-            "IIT JEE"
+            "I discovered Team Competishun through YouTube and later on I joined Competishun Online Classes, and I am delighted that I enrolled in their JEE Main & Adv. coaching classes. Their assistance played a vital role In my outstanding results and achieving AIR 811 is all because of guidance by top faculties' of Competishun. The classes are cost-effective, led by excellent teachers, and consistently punctual, their test series, doubt clearance facilities are very good. I express my gratitude to Team Competishun for their support and guidance.",
+            "Dhurv Gupta",
+            "",
+            "AIR 811"
         ),
         Testimonial(
-            "The classes are very good. Teachers explain topics very well. Must buy course for all aspiring students.",
-            "Aman Sharma",
-            "Class: 12th",
-            "IIT JEE"
+            "I have studies my class 11th & class 12th entirely from Team competishun and from my experience with Team competishun, I can say with certainty that they are great at guiding, helping you prepare, and boosting your confidence. Their scheduled zoom session for doubt clearance, test series and most important study material helped me in clearly concepts. Specially Mohit Tyagi Sir helped me in personal guidance. If you're determined to reach your goal, I'm sure Team Competishun will do everything they can to support you in acing your IIT objectives.",
+            "Vansh Agarwal",
+            "",
+            "AlR-185"
         )
     )
 //    val items = mutableListOf(
