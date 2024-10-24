@@ -141,6 +141,11 @@ class VerifyOTPFragment : Fragment() {
         val client = SmsRetriever.getClient(requireActivity())
         val task: Task<Void> = client.startSmsRetriever()
         task.addOnSuccessListener { void ->
+            mySMSBroadcastReceiver.addListener(object : MySMSBroadcastReceiver.OTPReceiveListener {
+                override fun onOTPReceived(otp: String?) { otp?.let { getOtpFromMessage(it) } }
+                override fun onOTPTimeOut() {}
+            })
+            registerBroadcastReceiver()
         }.addOnFailureListener { e -> }
 
         mySMSBroadcastReceiver.addListener(object : MySMSBroadcastReceiver.OTPReceiveListener {
