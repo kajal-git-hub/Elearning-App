@@ -247,7 +247,7 @@ class HomeFragment : Fragment() {
                 listOurCoursesItem = filteredCategory
                 UpdatedCourseItem = UpdateList(listOurCoursesItem)
                 Log.d("listOurCoursesItem",UpdatedCourseItem.toString())
-                adapterOurCourses = OurCoursesAdapter(listOurCoursesItem!!, object :
+                adapterOurCourses = OurCoursesAdapter(updatedListCourses(listOurCoursesItem), object :
                     OnCourseItemClickListener {
                     override fun onCourseItemClick(course: GetAllCourseCategoriesQuery.GetAllCourseCategory) {
                         val bundle = Bundle().apply {
@@ -351,6 +351,33 @@ class HomeFragment : Fragment() {
         }
         clickListener()
     }
+
+    private fun updatedListCourses(listOurCoursesItem: List<GetAllCourseCategoriesQuery.GetAllCourseCategory>?): List<GetAllCourseCategoriesQuery. GetAllCourseCategory> {
+
+
+        val listToReturn  = mutableListOf<GetAllCourseCategoriesQuery.GetAllCourseCategory>()
+
+        if (listOurCoursesItem == null) return  listToReturn
+        if(listOurCoursesItem.isNotEmpty()) listToReturn.add(listOurCoursesItem[0])
+        if(listOurCoursesItem.size>=3)
+        listToReturn.add(listOurCoursesItem[2])
+        if(listOurCoursesItem.size>=5)
+        listToReturn.add(listOurCoursesItem[4])
+        if(listOurCoursesItem.size>=2)
+        listToReturn.add(listOurCoursesItem[1])
+        if(listOurCoursesItem.size>=4)
+        listToReturn.add(listOurCoursesItem[3])
+        if(listOurCoursesItem.size>=6)
+        listToReturn.add(listOurCoursesItem[5])
+
+        for (i in listToReturn.size until listOurCoursesItem.size){
+            listToReturn.add(listOurCoursesItem[i])
+        }
+
+        return listToReturn
+    }
+
+
 
     private fun UpdateList(listOurCoursesItem: List<GetAllCourseCategoriesQuery.GetAllCourseCategory>?): List<GetAllCourseCategoriesQuery. GetAllCourseCategory> {
 
