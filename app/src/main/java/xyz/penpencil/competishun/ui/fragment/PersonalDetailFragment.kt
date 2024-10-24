@@ -284,7 +284,7 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
         binding.etFathersName.setText(userDetails?.userInformation?.fatherName?:"")
         binding.etFathersNumber.setText(userDetails?.userInformation?.fatherMobileNumber?:"")
         binding.etWhatsappNumber.setText(userDetails?.mobileNumber?:"")
-        binding.spinnerTshirtSize.text = "L"
+        binding.spinnerTshirtSize.text = "Select size"
         if (tShirtSize.isNotEmpty()) {
             userDetails?.userInformation?.tShirtSize?.let {
                 binding.spinnerTshirtSize.text = it
