@@ -20,7 +20,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -89,6 +88,8 @@ class HomeFragment : Fragment() {
     private val lectureCounts = mutableMapOf<String, Int>()
     private lateinit var recommendedCourseList: List<RecommendedCourseDataModel>
     private var filteredCourses: List<AllCourseForStudentQuery.Course> = listOf()
+
+    private lateinit var  UpdatedCourseItem: List<GetAllCourseCategoriesQuery. GetAllCourseCategory>
 
 
     private lateinit var helperFunctions: HelperFunctions
@@ -244,6 +245,8 @@ class HomeFragment : Fragment() {
 
                 _binding?.rvOurCourses?.visibility = View.VISIBLE
                 listOurCoursesItem = filteredCategory
+                UpdatedCourseItem = UpdateList(listOurCoursesItem)
+                Log.d("listOurCoursesItem",UpdatedCourseItem.toString())
                 adapterOurCourses = OurCoursesAdapter(listOurCoursesItem!!, object :
                     OnCourseItemClickListener {
                     override fun onCourseItemClick(course: GetAllCourseCategoriesQuery.GetAllCourseCategory) {
@@ -347,6 +350,26 @@ class HomeFragment : Fragment() {
 
         }
         clickListener()
+    }
+
+    private fun UpdateList(listOurCoursesItem: List<GetAllCourseCategoriesQuery.GetAllCourseCategory>?): List<GetAllCourseCategoriesQuery. GetAllCourseCategory> {
+
+
+        val listToReturn  = mutableListOf<GetAllCourseCategoriesQuery.GetAllCourseCategory>()
+
+        if (listOurCoursesItem == null) return  listToReturn
+
+        for (i in 0 until listOurCoursesItem.size) {
+            if (i % 2 == 0) {
+                listToReturn.add(listOurCoursesItem[i])
+            }
+        }
+        for (i in 0 until listOurCoursesItem.size) {
+            if (i % 2 != 0) {
+                listToReturn.add(listOurCoursesItem[i])
+            }
+        }
+        return listToReturn
     }
 
     /**
