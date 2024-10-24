@@ -242,7 +242,7 @@
                 android:drawableEnd="@drawable/arrow_down_black"
                 android:gravity="center_vertical"
                 android:padding="10dp"
-                android:text="Select"
+                android:text="Select size"
                 android:textColor="#898384"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
