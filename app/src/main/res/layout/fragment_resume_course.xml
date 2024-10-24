@@ -333,6 +333,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="100dp"
                     android:scaleType="fitXY"
+                    android:visibility="gone"
                     android:layout_marginHorizontal="@dimen/_16dp"
                     android:src="@drawable/have_any"
                     app:layout_constraintBottom_toBottomOf="parent"
