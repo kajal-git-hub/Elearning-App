@@ -77,7 +77,7 @@ class MyPurchaseDetailsFragment : DrawerVisibility() {
         })
 
         binding.etBTPurchase.setOnClickListener {
-            findNavController().navigate(R.id.MyPurchase)
+            findNavController().popBackStack()
         }
         sharedPreferencesManager = SharedPreferencesManager(requireContext())
 
