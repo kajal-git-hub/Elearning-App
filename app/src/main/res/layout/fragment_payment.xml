@@ -115,7 +115,7 @@
                     android:layout_marginStart="8dp"
                     android:fontFamily="@font/nunito"
                     android:padding="8dp"
-                    android:text="dfdf"
+                    android:text=""
                     android:textColor="#898384"
                     android:textSize="12sp"
                     android:textStyle="bold" />

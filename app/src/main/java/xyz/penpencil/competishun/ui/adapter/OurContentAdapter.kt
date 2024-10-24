@@ -31,8 +31,9 @@ class OurContentAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        return when (position) {
-            0 -> VIEW_TYPE_FIRST_ITEM
+        val itemName = folderItems[position].name
+        return when {
+            itemName.startsWith("Class", ignoreCase = true) -> VIEW_TYPE_FIRST_ITEM
             else -> VIEW_TYPE_OTHER_ITEM
         }
     }

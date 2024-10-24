@@ -386,7 +386,7 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
                     val freeCourse = courses.folder?.get(0)?.name?.split(" ")?.get(0)
                     Log.e("getFreeCourse", freeCourse.toString())
 
-                    ourContentAdapter?.updateItems(sortedFolderList)
+                    ourContentAdapter?.updateItems(folderlist)
                 }
                 faqItems = getFaqItemsByCategory(categoryName)
                 limitedFaqItems = faqItems.take(4)
