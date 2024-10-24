@@ -199,7 +199,7 @@ class ReferenceFragment : Fragment() {
             isItemSelected = true
             this.selectedItem = selectedItem
             SharedSelectedItem = selectedItem
-           // sharedPreferencesManager.isReferenceSelectionInProgress = true
+            sharedPreferencesManager.isReferenceSelectionInProgress = true
             sharedPreferencesManager.reference = selectedItem
             Log.e("selectedItem",selectedItem)
 
