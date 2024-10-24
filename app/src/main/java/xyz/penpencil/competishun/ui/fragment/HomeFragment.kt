@@ -354,21 +354,38 @@ class HomeFragment : Fragment() {
 
     private fun updatedListCourses(listOurCoursesItem: List<GetAllCourseCategoriesQuery.GetAllCourseCategory>?): List<GetAllCourseCategoriesQuery. GetAllCourseCategory> {
 
-
+        Log.e("gasdgashgdhashdghgasd", "updatedListCourses: " +listOurCoursesItem )
+        //Full Year Courses >>
+        // Revision Courses >>
+        // Crash Courses >>
+        // Test Series >>
+        // Distance Learning Program >>
+        // Digital Book >>
+        // Chapter-wise Test >>
+        // Books >>
         val listToReturn  = mutableListOf<GetAllCourseCategoriesQuery.GetAllCourseCategory>()
-
+        val arr = arrayOf(0, 1, 2, 3, 4, 5, 6, 7, 8, 9)
         if (listOurCoursesItem == null) return  listToReturn
-        if(listOurCoursesItem.isNotEmpty()) listToReturn.add(listOurCoursesItem[0])
+        if(listOurCoursesItem.isNotEmpty()) listToReturn.add(listOurCoursesItem[0]) //0
         if(listOurCoursesItem.size>=3)
-        listToReturn.add(listOurCoursesItem[2])
+        listToReturn.add(listOurCoursesItem[2]) //1
         if(listOurCoursesItem.size>=5)
-        listToReturn.add(listOurCoursesItem[4])
+        listToReturn.add(listOurCoursesItem[4]) //2
         if(listOurCoursesItem.size>=2)
-        listToReturn.add(listOurCoursesItem[1])
+        listToReturn.add(listOurCoursesItem[1]) //3
         if(listOurCoursesItem.size>=4)
-        listToReturn.add(listOurCoursesItem[3])
+        listToReturn.add(listOurCoursesItem[3]) //4
         if(listOurCoursesItem.size>=6)
-        listToReturn.add(listOurCoursesItem[5])
+        listToReturn.add(listOurCoursesItem[5]) //5
+//7 index
+        if(listOurCoursesItem.size>=7)
+            listToReturn.add(listOurCoursesItem[6]) //6
+        if(listOurCoursesItem.size>=9)
+            listToReturn.add(listOurCoursesItem[8]) //7
+        if(listOurCoursesItem.size>=10)
+            listToReturn.add(listOurCoursesItem[9]) //8
+        if(listOurCoursesItem.size>=8)
+            listToReturn.add(listOurCoursesItem[7]) //9
 
         for (i in listToReturn.size until listOurCoursesItem.size){
             listToReturn.add(listOurCoursesItem[i])
