@@ -38,6 +38,7 @@ class AllDemoResourcesFree : DrawerVisibility() {
     private val binding get() = _binding!!
     private val coursesViewModel: CoursesViewModel by viewModels()
     private lateinit var helperFunctions: HelperFunctions
+    var isPurchased = false
     private val videourlViewModel: VideourlViewModel by viewModels()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -67,18 +68,23 @@ class AllDemoResourcesFree : DrawerVisibility() {
 
         helperFunctions = HelperFunctions()
         var folderName = arguments?.getString("folderName")
-        var isPurchased = arguments?.getBoolean("isPurchased")?:false
+         isPurchased = arguments?.getBoolean("isPurchased")?:false
         binding.igDemoBackButton.setOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed() }
         binding.tvDemoTitle.text = folderName
+        Log.e("foldenaaamf",folderName.toString())
+
         if (isPurchased) {
             binding.igFreeImage.visibility = View.GONE
             if (folderName?.split(" ")?.get(0)?.equals("Class") == true) {
                 binding.igFreeImage.visibility = View.VISIBLE
-                binding.igFreeImage.setImageResource(R.drawable.frame_1707480952)
+                binding.igFreeImage.setImageResource(R.drawable.download_banner)
             }
-        }else {
+        }else if(!isPurchased)  {
             binding.igFreeImage.visibility = View.VISIBLE
             binding.igFreeImage.setImageResource(R.drawable.lock)
+        }
+        if( (folderName == "") ||(folderName == " ") ){
+            binding.igFreeImage.visibility = View.GONE
         }
 
         val folderId = arguments?.getString("folderId")
@@ -112,7 +118,7 @@ class AllDemoResourcesFree : DrawerVisibility() {
 
     private fun folderProgress(folderId:String){
         Log.e("folderProgress",folderId)
-        var isPurchased = arguments?.getBoolean("isPurchased")?:false
+      //  var isPurchased = arguments?.getBoolean("isPurchased")?:false
         var free = false
         if (isPurchased) {
              free = arguments?.getBoolean("free")?:false
@@ -136,8 +142,8 @@ class AllDemoResourcesFree : DrawerVisibility() {
                             Log.e("subfolderDurationszs", subfolderDurationFolders.toString())
                             getFolderList(subfolderDurationFolders)
                         } else {
-                            Log.e("folderContentsss", folderProgressContent.toString())
-                            getFileList(data, folderProgressContent, free)
+                            Log.e("folderContentsss", isPurchased.toString())
+                            getFileList(data, folderProgressContent, isPurchased)
                         }
                     }
                 }
