@@ -448,7 +448,7 @@ class HomeFragment : Fragment() {
                 val filteredCourseRequirements = courseRequirements.filterNot { it in allMissingFields }.toSet()
                 Log.e("fsdfasdfsdfsd", "fetchCoursesAndUpdateUI: $filteredCourseRequirements")
                 if (filteredCourseRequirements.isNotEmpty()) {
-                    findNavController().navigate(R.id.action_homeFragment_to_PersonalDetailFragment, Bundle().apply {
+                    findNavController().navigate(R.id.PersonalDetailsFragment, Bundle().apply {
                         putStringArray("FIELD_REQUIRED", filteredCourseRequirements.toTypedArray())
                     })
                 }
