@@ -30,6 +30,13 @@ class ContactUsFragment : DrawerVisibility() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
+        binding.ivMapImage.setOnClickListener {
+            openMapWithLocation(getString(R.string.competishun_location))
+        }
+
+
         binding.etBTHomeAddress.setOnClickListener {
             findNavController().navigate(R.id.action_ContactUs_to_homePage)
         }
@@ -54,6 +61,28 @@ class ContactUsFragment : DrawerVisibility() {
         }
 
     }
+
+
+    private fun openMapWithLocation(address: String) {
+        val geoUri = Uri.parse("geo:0,0?q=$address")
+        val intent = Intent(Intent.ACTION_VIEW, geoUri)
+        intent.setPackage("com.google.android.apps.maps")
+
+        if (intent.resolveActivity(requireActivity().packageManager) != null) {
+            startActivity(intent)
+        }
+    }
+
+//    private fun openMapWithCoordinates(latitude: Double, longitude: Double) {
+//        val geoUri = Uri.parse("geo:$latitude,$longitude")
+//        val intent = Intent(Intent.ACTION_VIEW, geoUri)
+//        intent.setPackage("com.google.android.apps.maps")
+//
+//        if (intent.resolveActivity(requireActivity().packageManager) != null) {
+//            startActivity(intent)
+//        }
+//    }
+
     override fun onResume() {
         super.onResume()
         (activity as? HomeActivity)?.showBottomNavigationView(false)
