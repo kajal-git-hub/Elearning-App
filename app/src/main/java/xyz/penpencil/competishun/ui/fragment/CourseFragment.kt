@@ -94,7 +94,7 @@ class CourseFragment : DrawerVisibility(), StudentCourseItemClickListener {
             category_name = Optional.present(categoryName),
             course_class = Optional.present(courseClass),
             exam_type = Optional.present(examType),
-            is_recommended = Optional.present(false)
+            is_recommended = Optional.Absent
         )
         courseViewModel.setCoursesEmpty()
         courseViewModel.fetchCourses(filters)

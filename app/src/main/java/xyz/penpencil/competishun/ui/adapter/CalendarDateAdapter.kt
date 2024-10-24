@@ -4,6 +4,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import xyz.penpencil.competishun.data.model.CalendarDate
 import xyz.penpencil.competishun.databinding.CalenderDateItemBinding
@@ -39,8 +40,12 @@ class CalendarDateAdapter(
 
             binding.viewIndicator.visibility = if (isSelected) View.VISIBLE else View.GONE
             binding.root.setOnClickListener {
+                if (binding.dotContentAvailable.visibility != View.VISIBLE) {
+                    Toast.makeText(it.context, "No classes have been scheduled on this date", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
                 val previousSelectedPosition = selectedPosition
-                selectedPosition = adapterPosition
+                selectedPosition = absoluteAdapterPosition
                 notifyItemChanged(previousSelectedPosition)
                 notifyItemChanged(selectedPosition)
                 onClick(calendarDate)

@@ -127,4 +127,5 @@
     <string name="fill_all_fields">Please fill all fields.</string>
     <string name="pincode_limit">Pincode cannot be more than 6 digits.</string>
     <string name="char_limit_exceeded">Character limit exceeded. Maximum 100 characters allowed.</string>
+    <string name="competishun_location">Competishun Tower-2, Plot number 35, Gopalpura Bypass Rd, near Riddhi Siddhi Circle, 10 B Scheme, Triveni Nagar, Gopal Pura Mode, Jaipur, Rajasthan 302020</string>
 </resources>

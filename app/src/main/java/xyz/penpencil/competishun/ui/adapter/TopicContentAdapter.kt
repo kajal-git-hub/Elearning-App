@@ -14,6 +14,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.startActivity
@@ -64,15 +65,16 @@ TopicContentAdapter(
         Log.e("unlockedTopics",unlockedTopicContentIds.toString())
         Log.e("unlockedTopic",unlockedTopicContentNames.toString())
         // Disable click if locked, enable if not
-        if ( isDateTodayOrPast(topicContent.lockTime)) {
-            // Enable the click listener for unlocked items
-            holder.itemView.setOnClickListener {
+        holder.itemView.setOnClickListener {
+            if (isDateTodayOrPast(topicContent.lockTime)){
                 onItemClick(topicContent, folderContentId,unlockedTopicContentIds,unlockedTopicContentNames)
+            }else {
+                Toast.makeText(it.context, "Content is locked!", Toast.LENGTH_SHORT).show()
             }
-        } else {
-            // Disable the click listener for locked items
+        }
+        if (!isDateTodayOrPast(topicContent.lockTime)) {
+            // Enable the click listener for unlocked items
             holder.itemView.findViewById<ImageView>(R.id.iv_MoreInfoLec).visibility = View.GONE
-            holder.itemView.setOnClickListener(null)
         }
     }
 

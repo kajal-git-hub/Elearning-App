@@ -229,7 +229,7 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
 
     private fun updateUIVisibility() {
         // Update visibility based on fieldsToVisible list
-        binding.tvFathersNameLabel.visibility = if (fieldsToVisible.contains("FATHERS_NAME")) View.VISIBLE else View.GONE
+/*        binding.tvFathersNameLabel.visibility = if (fieldsToVisible.contains("FATHERS_NAME")) View.VISIBLE else View.GONE
         binding.etFathersName.visibility = if (fieldsToVisible.contains("FATHERS_NAME")) View.VISIBLE else View.GONE
         binding.tvWhatsappNumberLabel.visibility = if (fieldsToVisible.contains("WHATSAPP_NUMBER")) View.VISIBLE else View.GONE
         binding.etWhatsappNumber.visibility = if (fieldsToVisible.contains("WHATSAPP_NUMBER")) View.VISIBLE else View.GONE
@@ -239,7 +239,7 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
 
         binding.tvTshirtSizeLabel.visibility = if (fieldsToVisible.contains("T_SHIRTS")) View.VISIBLE else View.GONE
         binding.spinnerTshirtSize.visibility = if (fieldsToVisible.contains("T_SHIRTS")) View.VISIBLE else View.GONE
-        binding.tvTshirtNote.visibility = if (fieldsToVisible.contains("T_SHIRTS")) View.VISIBLE else View.GONE
+        binding.tvTshirtNote.visibility = if (fieldsToVisible.contains("T_SHIRTS")) View.VISIBLE else View.GONE*/
 
         updateButtonState()
     }
@@ -284,7 +284,7 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
         binding.etFathersName.setText(userDetails?.userInformation?.fatherName?:"")
         binding.etFathersNumber.setText(userDetails?.userInformation?.fatherMobileNumber?:"")
         binding.etWhatsappNumber.setText(userDetails?.mobileNumber?:"")
-        binding.spinnerTshirtSize.text = "L"
+        binding.spinnerTshirtSize.text = "Select size"
         if (tShirtSize.isNotEmpty()) {
             userDetails?.userInformation?.tShirtSize?.let {
                 binding.spinnerTshirtSize.text = it
