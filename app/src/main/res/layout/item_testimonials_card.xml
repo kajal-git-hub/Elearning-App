@@ -40,7 +40,9 @@
         android:layout_marginTop="22dp"
         android:text="The classes are very good. \nTeachers explains topics \nvery well. Must buy course \nfor all aspiring students."
         android:textColor="#2B2829"
-        android:textSize="16sp"
+        android:ellipsize="end"
+        android:textSize="14sp"
+        android:maxLines="6"
         app:fontFamily="@font/nunito"
         app:layout_constraintStart_toStartOf="@+id/quoteIcon"
         app:layout_constraintTop_toBottomOf="@+id/quoteIcon"
@@ -80,7 +82,7 @@
         android:layout_marginTop="5dp"
         android:text="Class: 12th"
         android:textColor="#433E3F"
-        android:textSize="16sp"
+        android:textSize="14sp"
         app:fontFamily="@font/nunito"
         app:layout_constraintStart_toEndOf="@id/userProfileIcon"
         app:layout_constraintTop_toBottomOf="@+id/userName" />
@@ -103,14 +105,15 @@
         android:layout_marginTop="5dp"
         android:text="IIT JEE"
         android:textColor="#433E3F"
-        android:textSize="16sp"
+        android:textSize="14sp"
         app:fontFamily="@font/nunito"
         app:layout_constraintStart_toEndOf="@id/dot"
         app:layout_constraintTop_toBottomOf="@+id/userName" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="25dp"
+        android:layout_height="20dp"
+        android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/userProfileIcon" />
