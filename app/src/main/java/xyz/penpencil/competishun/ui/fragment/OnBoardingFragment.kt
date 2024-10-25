@@ -350,7 +350,12 @@ class OnBoardingFragment : Fragment() {
 
     private fun isValidEmail(email: String): Boolean {
         val emailPattern = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$"
-        return email.trim().matches(emailPattern.toRegex())
+        return if (email.trim().matches(emailPattern.toRegex())) {
+            true
+        } else {
+            Toast.makeText(context, "Enter a valid Email ", Toast.LENGTH_SHORT).show()
+            false
+        }
     }
 
     private fun saveNameAndCity() {
