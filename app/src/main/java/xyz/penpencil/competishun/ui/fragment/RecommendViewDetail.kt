@@ -82,7 +82,8 @@ class RecommendViewDetail : DrawerVisibility() {
             category_name = Optional.Absent,
             course_class = Optional.Absent,
             exam_type = Optional.present(courseTypes),
-            is_recommended = Optional.present(true)
+            is_recommended = Optional.present(true),
+            sortOrder = Optional.present("DESC")
         )
         studentCoursesViewModel.fetchCourses(filters)
         binding.progressBarRec.visibility = View.VISIBLE

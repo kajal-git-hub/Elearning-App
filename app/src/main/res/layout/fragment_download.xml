@@ -12,6 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:elevation="@dimen/_4dp"
+        android:theme="@style/AppTheme.AppBarOverlay"
         app:navigationIcon="@drawable/arrow_left_white"
         app:menu="@menu/search_bar_white"
         android:background="@drawable/gradiant_bg_downloads"
