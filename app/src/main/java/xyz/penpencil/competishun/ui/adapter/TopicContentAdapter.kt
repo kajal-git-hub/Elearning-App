@@ -17,7 +17,6 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.startActivity
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import xyz.penpencil.competishun.R
@@ -187,13 +186,13 @@ TopicContentAdapter(
             }
 
             binding.tvTopicName.setOnClickListener {
-                if (topicContent.fileType == "UNKNOWN__"  || topicContent.fileType == "URL"){
+                if (topicContent.url.contains("http") && (topicContent.fileType == "UNKNOWN__"  || topicContent.fileType == "URL")){
                     it.context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(topicContent.url)))
                 }
             }
 
         }
-        @RequiresApi(Build.VERSION_CODES.O)
+
         fun showDateIfFutureOrToday(dateString: String): Boolean {
             // Correct the date string if necessary
             Log.e("dateStrings",dateString)
