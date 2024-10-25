@@ -102,6 +102,7 @@ class SearchDetail : DrawerVisibility() {
 
         val filters = FindAllCourseInputStudent(
             search = Optional.present(search),
+            sortOrder = Optional.present("DESC")
         )
         studentCoursesViewModel.fetchCourses(filters)
         binding.progressBarRec.visibility = View.VISIBLE
