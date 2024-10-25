@@ -91,7 +91,6 @@ class HorizontalCalendarSetUp {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun getDatesForMonth(calendar: Calendar): List<CalendarDate> {
         val dates = mutableListOf<CalendarDate>()
         val month = calendar.get(Calendar.MONTH)
@@ -105,6 +104,7 @@ class HorizontalCalendarSetUp {
             val day = dayFormat.format(calendar.time)
             val zonedDateTime = ZonedDateTime.ofInstant(calendar.toInstant(), ZoneId.systemDefault())
             dates.add(CalendarDate(date, day, null, zonedDateTime))
+            Log.e("TYTYTUTUT", "getDatesForMonth: $zonedDateTime")
             calendar.add(Calendar.DAY_OF_MONTH, 1)
         }
 
