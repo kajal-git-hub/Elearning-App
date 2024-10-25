@@ -348,14 +348,18 @@ class OnBoardingFragment : Fragment() {
         return name.length >= 3 && city.length >= 3 && (phone.length >= 10 || isValidEmail(email)) && state.length >= 3
     }
 
+//    private fun isValidEmail(email: String): Boolean {
+//        val emailPattern = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$"
+//        return if (email.trim().matches(emailPattern.toRegex())) {
+//            true
+//        } else {
+//            Toast.makeText(context, "Enter a valid Email ", Toast.LENGTH_SHORT).show()
+//            false
+//        }
+//    }
     private fun isValidEmail(email: String): Boolean {
         val emailPattern = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$"
-        return if (email.trim().matches(emailPattern.toRegex())) {
-            true
-        } else {
-            Toast.makeText(context, "Enter a valid Email ", Toast.LENGTH_SHORT).show()
-            false
-        }
+        return email.trim().matches(emailPattern.toRegex())
     }
 
     private fun saveNameAndCity() {
