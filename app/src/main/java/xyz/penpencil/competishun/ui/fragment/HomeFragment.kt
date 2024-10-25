@@ -352,48 +352,29 @@ class HomeFragment : Fragment() {
         clickListener()
     }
 
-    private fun updatedListCourses(listOurCoursesItem: List<GetAllCourseCategoriesQuery.GetAllCourseCategory>?): List<GetAllCourseCategoriesQuery. GetAllCourseCategory> {
+    private fun updatedListCourses(listOurCoursesItem: List<GetAllCourseCategoriesQuery.GetAllCourseCategory>?): List<GetAllCourseCategoriesQuery.GetAllCourseCategory> {
 
-        Log.e("gasdgashgdhashdghgasd", "updatedListCourses: " +listOurCoursesItem )
-        //Full Year Courses >>
-        // Revision Courses >>
-        // Crash Courses >>
-        // Test Series >>
-        // Distance Learning Program >>
-        // Digital Book >>
-        // Chapter-wise Test >>
-        // Books >>
-        val listToReturn  = mutableListOf<GetAllCourseCategoriesQuery.GetAllCourseCategory>()
-        val arr = arrayOf(0, 1, 2, 3, 4, 5, 6, 7, 8, 9)
-        if (listOurCoursesItem == null) return  listToReturn
-        if(listOurCoursesItem.isNotEmpty()) listToReturn.add(listOurCoursesItem[0]) //0
-        if(listOurCoursesItem.size>=3)
-        listToReturn.add(listOurCoursesItem[2]) //1
-        if(listOurCoursesItem.size>=5)
-        listToReturn.add(listOurCoursesItem[4]) //2
-        if(listOurCoursesItem.size>=2)
-        listToReturn.add(listOurCoursesItem[1]) //3
-        if(listOurCoursesItem.size>=4)
-        listToReturn.add(listOurCoursesItem[3]) //4
-        if(listOurCoursesItem.size>=6)
-        listToReturn.add(listOurCoursesItem[5]) //5
-//7 index
-        if(listOurCoursesItem.size>=7)
-            listToReturn.add(listOurCoursesItem[6]) //6
-        if(listOurCoursesItem.size>=9)
-            listToReturn.add(listOurCoursesItem[8]) //7
-        if(listOurCoursesItem.size>=10)
-            listToReturn.add(listOurCoursesItem[9]) //8
-        if(listOurCoursesItem.size>=8)
-            listToReturn.add(listOurCoursesItem[7]) //9
+        // Define the desired indices to include
+        val indicesToInclude = listOf(0, 2, 4, 1, 3, 5, 6, 8, 9, 7)
+        val listToReturn = mutableListOf<GetAllCourseCategoriesQuery.GetAllCourseCategory>()
 
-        for (i in listToReturn.size until listOurCoursesItem.size){
-            listToReturn.add(listOurCoursesItem[i])
+        if (listOurCoursesItem.isNullOrEmpty()) return listToReturn
+
+        // Add elements based on predefined indices, respecting the list size
+        for (index in indicesToInclude) {
+            if (index < listOurCoursesItem.size) {
+                listToReturn.add(listOurCoursesItem[index])
+            }
+        }
+
+        // Append any remaining elements from the original list
+        val startIndex = listToReturn.size
+        if (startIndex < listOurCoursesItem.size) {
+            listToReturn.addAll(listOurCoursesItem.subList(startIndex, listOurCoursesItem.size))
         }
 
         return listToReturn
     }
-
 
 
     private fun UpdateList(listOurCoursesItem: List<GetAllCourseCategoriesQuery.GetAllCourseCategory>?): List<GetAllCourseCategoriesQuery. GetAllCourseCategory> {
