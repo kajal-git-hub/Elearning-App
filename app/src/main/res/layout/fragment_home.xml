@@ -511,8 +511,9 @@
                         android:layout_marginHorizontal="16dp"
                         android:layout_marginTop="24dp"
                         app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/clWhyCompetishun"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/clWhyCompetishun">
+                        >
 
 
                         <com.google.android.material.textview.MaterialTextView
@@ -520,48 +521,33 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/nunito"
-                            android:text="Succeed"
-                            android:textColor="#5A5555"
-                            android:textSize="24sp"
+                            android:text="Jee Mains Result"
+                            android:textColor="@color/black_2B2829"
+                            android:textSize="18sp"
                             android:textStyle="bold"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
 
-                        <com.google.android.material.textview.MaterialTextView
-                            android:id="@+id/tvIn"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/nunito"
-                            android:text="In"
-                            android:textColor="#5A5555"
-                            android:textSize="24sp"
-                            android:textStyle="bold"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/tvSucceed" />
 
                         <com.google.android.material.textview.MaterialTextView
                             android:id="@+id/tvExam"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="3dp"
-                            android:drawableEnd="@drawable/vector_24"
-                            android:drawablePadding="8dp"
                             android:fontFamily="@font/nunito"
-                            android:text="Exam"
-                            android:textColor="#3E3EF7"
-                            android:textSize="24sp"
-                            android:textStyle="bold"
-                            app:layout_constraintStart_toEndOf="@+id/tvIn"
+                            android:text="Ranks under AIR 25000 Only."
+                            android:textColor="#898384"
+                            android:layout_marginTop="@dimen/_12sp"
+                            android:textSize="12sp"
+                            app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@id/tvSucceed" />
 
 
                         <androidx.constraintlayout.widget.ConstraintLayout
                             android:id="@+id/clBatchImage"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="32dp"
+                            android:layout_width="138dp"
+                            android:layout_height="102dp"
+                            android:layout_marginTop="16dp"
                             android:layout_marginBottom="24dp"
-                            app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@id/tvExam">
 
@@ -578,12 +564,13 @@
                                 android:id="@+id/tvtext500"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="45dp"
+                                android:layout_marginStart="40dp"
                                 android:fontFamily="@font/nunito"
-                                android:text="500+"
+                                android:text="1977+"
                                 android:textColor="#2B2829"
-                                android:textSize="24sp"
+                                android:textSize="20sp"
                                 android:textStyle="bold"
+                                app:layout_constraintStart_toEndOf="@+id/leafImageLeft"
                                 app:layout_constraintStart_toStartOf="@id/leafImageLeft"
                                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -605,7 +592,8 @@
                                 android:id="@+id/tvBatchYear"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="10dp"
+                                android:layout_marginTop="12dp"
+                                android:layout_marginStart="@dimen/_5dp"
                                 android:background="@drawable/year_bg"
                                 android:fontFamily="@font/nunito"
                                 android:paddingHorizontal="8dp"
@@ -632,15 +620,40 @@
 
                         </androidx.constraintlayout.widget.ConstraintLayout>
 
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/et_AdvancedResult"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="JEE Advanced Result"
+                            android:textColor="@color/_2b2829"
+                            android:textSize="18sp"
+                            android:layout_marginTop="32dp"
+                            android:textStyle="bold"
+                            android:fontFamily="@font/nunito"
+                            app:layout_constraintTop_toBottomOf="@+id/clBatchImage"
+                            app:layout_constraintStart_toStartOf="parent"/>
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/et_RankTest"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Ranks under AIR 10000 Only"
+                            android:textColor="#898384"
+                            android:textSize="12sp"
+                            android:layout_marginTop="12dp"
+                            android:textStyle="bold"
+                            android:fontFamily="@font/nunito"
+                            app:layout_constraintTop_toBottomOf="@+id/et_AdvancedResult"
+                            app:layout_constraintStart_toStartOf="parent"/>
+
                         <androidx.constraintlayout.widget.ConstraintLayout
                             android:id="@+id/clBatchImageRight"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/_32dp"
-                            android:layout_marginBottom="@dimen/_24dp"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toEndOf="@+id/clBatchImage"
-                            app:layout_constraintTop_toTopOf="@+id/clBatchImage">
+                            android:layout_marginTop="16sp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/et_RankTest">
 
                             <ImageView
                                 android:id="@+id/leafImageLeftRight"
@@ -655,12 +668,14 @@
                                 android:id="@+id/tvtext500Right"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="40dp"
+                                android:layout_marginStart="@dimen/_5dp"
                                 android:fontFamily="@font/nunito"
-                                android:text="500+"
+                                android:text="767+"
+                                android:gravity="end"
                                 android:textColor="#2B2829"
                                 android:textSize="24sp"
                                 android:textStyle="bold"
+                                app:layout_constraintEnd_toEndOf="@+id/leafImageRightRight"
                                 app:layout_constraintStart_toStartOf="@id/leafImageLeftRight"
                                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -668,12 +683,11 @@
                                 android:id="@+id/tvJEEMainsRight"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="10dp"
                                 android:fontFamily="@font/nunito"
-                                android:text="JEE\nMains"
+                                android:text="JEE\nAdvanced"
                                 android:textAlignment="center"
                                 android:textColor="#898384"
-                                android:textSize="14sp"
+                                android:textSize="12sp"
                                 android:textStyle="bold"
                                 app:layout_constraintStart_toEndOf="@id/leafImageLeftRight"
                                 app:layout_constraintStart_toStartOf="@id/tvtext500Right"
@@ -683,7 +697,8 @@
                                 android:id="@+id/tvBatchYearRight"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="10dp"
+                                android:layout_marginTop="12dp"
+                                android:layout_marginStart="@dimen/_5dp"
                                 android:background="@drawable/year_bg"
                                 android:fontFamily="@font/nunito"
                                 android:paddingHorizontal="8dp"
