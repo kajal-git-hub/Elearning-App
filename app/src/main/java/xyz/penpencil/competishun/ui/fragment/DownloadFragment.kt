@@ -1,12 +1,15 @@
 package xyz.penpencil.competishun.ui.fragment
 
 import android.R.attr.fragment
+import android.app.Activity
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
@@ -206,15 +209,30 @@ class DownloadFragment : DrawerVisibility(), DownloadedItemAdapter.OnVideoClickL
             WindowManager.LayoutParams.FLAG_SECURE,
             WindowManager.LayoutParams.FLAG_SECURE
         )
-//        activity?.window?.statusBarColor = ContextCompat.getColor(requireContext(), R.color.download_statusbar)
+        setStatusBarGradiant(requireActivity())
 
     }
 
     override fun onPause() {
         super.onPause()
         requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
+
     }
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putInt("SELECTED_TAB_POSITION", selectedTabPosition)}
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        requireActivity().window.statusBarColor = ContextCompat.getColor(requireContext(), R.color.white)
+        requireActivity().window.setBackgroundDrawable(null)
+    }
+
+    private fun setStatusBarGradiant(activity: Activity) {
+        val window: Window = activity.window
+        val background =ContextCompat.getDrawable(activity, R.drawable.gradiant_bg_downloads)
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+        window.statusBarColor = ContextCompat.getColor(activity,android.R.color.transparent)
+        window.setBackgroundDrawable(background)
+    }
 }
