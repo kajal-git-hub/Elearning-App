@@ -55,7 +55,7 @@ class OnBoardingFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentOnBoardingBinding.inflate(inflater, container, false)
+        binding = FragmentOnBoardingBinding.inflate(inflater,container,false)
         sharedPreferencesManager = (requireActivity() as MainActivity).sharedPreferencesManager
         requireActivity().onBackPressedDispatcher.addCallback(this) {
             handleBackPressed()
@@ -115,12 +115,11 @@ class OnBoardingFragment : Fragment() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
 
             }
-
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val selectedState = binding.etEnterStateText.text.toString()
                 val selectedStateObj = statesAndCities?.find { it.name == selectedState }
                 val query = s.toString().trim()
-                if (query.length >= 3 && query.length <= 5) {
+                if(query.length>=3 && query.length<=5){
                     val filteredCities = selectedStateObj?.cities?.filter { city ->
                         city.contains(
                             query,
@@ -131,9 +130,9 @@ class OnBoardingFragment : Fragment() {
                     cityAdapter.addAll(filteredCities)
                     cityAdapter.notifyDataSetChanged()
 
-                    hideSoftKeyBoard(requireContext(), view)
+                    hideSoftKeyBoard(requireContext(),view)
 
-                } else {
+                }else{
                     val filteredCities = selectedStateObj?.cities?.filter { city ->
                         city.contains(
                             query,
@@ -207,8 +206,7 @@ class OnBoardingFragment : Fragment() {
         }
 
         binding.NextOnBoarding.setOnClickListener {
-
-            if (isValidForm()) {
+            if (isCurrentStepValid()) {
                 saveNameAndCity()
                 val updateUserInput = UpdateUserInput(
                     city = Optional.Present(sharedPreferencesManager.city),
@@ -223,37 +221,18 @@ class OnBoardingFragment : Fragment() {
                     R.id.action_OnBoardingFragment_to_prepForFragment,
                     bundle
                 )
+            } else {
+                Toast.makeText(context, "Please select a name and city", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
-    private fun isValidForm() : Boolean{
-
-        if (binding.etEmailText.visibility == View.VISIBLE && !isValidEmailEnable(binding.etEmailText.text.toString().trim())) {
-            Toast.makeText(requireContext(), "Email is not valid", Toast.LENGTH_SHORT).show()
-            return false
-        }
-
-        if (binding.etPhoneNoText.visibility == View.VISIBLE && binding.etPhoneNoText.text.toString().trim().length!=10) {
-            Toast.makeText(requireContext(), "Enter 10 digit mobile number", Toast.LENGTH_SHORT).show()
-            return false
-        }
-
-        if (!isCurrentStepValid()){
-            Toast.makeText(requireContext(), "Please fill all the details", Toast.LENGTH_SHORT).show()
-            return false
-        }
-
-
-         return true
-
-    }
-
     fun View.hideKeyboard() {
-        val inputManager =
-            context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val inputManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         inputManager.hideSoftInputFromWindow(windowToken, 0)
     }
+
+
 
 
     fun hideSoftKeyBoard(context: Context, view: View) {
@@ -266,7 +245,6 @@ class OnBoardingFragment : Fragment() {
         }
 
     }
-
     private fun observeUserDetails() {
         userViewModel.userDetails.observe(viewLifecycleOwner) { result ->
             result.onSuccess { data ->
@@ -350,8 +328,7 @@ class OnBoardingFragment : Fragment() {
         val isNameValid = binding.etEnterHereText.text.toString().trim().length >= 3
         val isCityValid = binding.etEnterCityText.text.toString().trim().length >= 3
         val isPhoneValid = binding.etEnterMob.text.toString().trim().length >= 10
-        val isEmailValid = binding.etEnterEmailText.text.isNotEmpty()
-//        val isEmailValid = isValidEmailEnable(binding.etEnterEmailText.text.toString().trim())
+        val isEmailValid = isValidEmail(binding.etEnterEmailText.text.toString().trim())
         val isStateValid = binding.etEnterStateText.text.toString().trim().length >= 3
         Log.e("PhoneNoText", isPhoneValid.toString())
         if (isNameValid && isCityValid && (isPhoneValid || isEmailValid) && isStateValid) {
@@ -368,20 +345,19 @@ class OnBoardingFragment : Fragment() {
         val state = binding.etEnterStateText.text.toString().trim()
         val email = binding.etEnterEmailText.text.toString().trim()
         Log.e("phoneNumberOR email", phone + email)
-        return name.length >= 3 && city.length >= 3 && state.length >= 3
+        return name.length >= 3 && city.length >= 3 && (phone.length >= 10 || isValidEmail(email)) && state.length >= 3
     }
 
+    //    private fun isValidEmail(email: String): Boolean {
+//        val emailPattern = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$"
+//        return if (email.trim().matches(emailPattern.toRegex())) {
+//            true
+//        } else {
+//            Toast.makeText(context, "Enter a valid Email ", Toast.LENGTH_SHORT).show()
+//            false
+//        }
+//    }
     private fun isValidEmail(email: String): Boolean {
-        val emailPattern = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$"
-        return if (email.trim().matches(emailPattern.toRegex())) {
-            true
-        } else {
-            Toast.makeText(context, "Enter a valid Email ", Toast.LENGTH_SHORT).show()
-            false
-        }
-    }
-
-    private fun isValidEmailEnable(email: String): Boolean {
         val emailPattern = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$"
         return email.trim().matches(emailPattern.toRegex())
     }
