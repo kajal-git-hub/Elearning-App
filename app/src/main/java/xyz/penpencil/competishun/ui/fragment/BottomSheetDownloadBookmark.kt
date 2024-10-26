@@ -28,14 +28,22 @@ import java.io.FileOutputStream
 import java.io.IOException
 import java.io.InputStream
 import javax.inject.Inject
-import androidx.work.Data
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkInfo
-import androidx.work.WorkManager
-import xyz.penpencil.competishun.download.DownloadWorker
 import android.Manifest
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
+import android.provider.Settings
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.app.NotificationManagerCompat
+import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
+import androidx.core.app.ActivityCompat
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.repeatOnLifecycle
+import com.ketch.Ketch
+import com.ketch.Status
+import kotlinx.coroutines.flow.flowOn
+import xyz.penpencil.competishun.download.DownloaderManager
+import xyz.penpencil.competishun.ui.main.HomeActivity
 
 @AndroidEntryPoint
 class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
@@ -198,41 +206,59 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
             dismiss()
             return
         }
+        checkNotificationPermission()
+    }
 
-        if (!NotificationManagerCompat.from(context).areNotificationsEnabled()) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                permissionRequest.launch(Manifest.permission.POST_NOTIFICATIONS)
-            } else {
-                checkPermissionAndDownload(context)
+    private fun checkNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            when {
+                ActivityCompat.checkSelfPermission(requireActivity(), Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED -> {
+                  /*  DownloaderManager.Builder(requireActivity())
+                        .setUrl(videoUrl)
+                        .setFilePath(videoFile!!.absolutePath)
+                        .setFileName(fileName)
+                        .build()*/
+                    (requireActivity() as HomeActivity).downloadFile(url = videoUrl, fileName = fileName)
+                }
+                else -> {
+                    requestNotificationPermission.launch(Manifest.permission.POST_NOTIFICATIONS)
+                }
             }
         } else {
-            checkPermissionAndDownload(context)
+            (requireActivity() as HomeActivity).downloadFile(url = videoUrl, fileName = fileName)
         }
     }
 
-    private fun checkPermissionAndDownload(context: Context) {
-        Toast.makeText(context, "Download started", Toast.LENGTH_SHORT).show()
-        if (videoUrl != null && fileName != null && videoFile != null) {
-            val inputData = Data.Builder()
-                .putString("url", videoUrl)
-                .putString("fileName", fileName)
-                .putString("filePath", videoFile.toString())
-                .build()
-
-            val downloadWork = OneTimeWorkRequestBuilder<DownloadWorker>()
-                .setInputData(inputData)
-                .build()
-
-            WorkManager.getInstance(requireActivity()).enqueue(downloadWork)
-        }
-    }
-
-    private val permissionRequest =
-        registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
-            if (granted) {
-                checkPermissionAndDownload(requireContext())
-            } else {
-                Toast.makeText(requireContext(), "Allow permission to download file", Toast.LENGTH_SHORT).show()
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    private fun showPermissionDeniedDialog() {
+        AlertDialog.Builder(requireActivity())
+            .setTitle("Notification Permission Needed")
+            .setMessage("To show download progress, please allow notification permission.")
+            .setPositiveButton("Retry") { dialog, _ ->
+                requestNotificationPermission.launch(Manifest.permission.POST_NOTIFICATIONS)
+                dialog.dismiss()
             }
+            .setNegativeButton("Cancel") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .setNeutralButton("Settings") { dialog, _ ->
+                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                    data = Uri.parse("package:${requireActivity().packageName}")
+                }
+                startActivity(intent)
+                dialog.dismiss()
+            }
+            .show()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    private val requestNotificationPermission = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            (requireActivity() as HomeActivity).downloadFile(url = videoUrl, fileName = fileName)
+        } else {
+            showPermissionDeniedDialog()
         }
+    }
 }
