@@ -17,18 +17,27 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.ObservableField
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.common.eventbus.Subscribe
+import com.ketch.Ketch
+import com.ketch.Status
 import com.razorpay.PaymentResultListener
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.launch
 import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.databinding.ActivityHomeBinding
 import xyz.penpencil.competishun.ui.viewmodel.UserViewModel
 import xyz.penpencil.competishun.utils.EventBusSingleton
 import xyz.penpencil.competishun.utils.MyEvent
 import xyz.penpencil.competishun.utils.SharedPreferencesManager
+import javax.inject.Inject
 
 
 @AndroidEntryPoint
@@ -49,6 +58,9 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
     private var navigateToFragment = false
 
     private var previousSelectedItemId: Int = R.id.home
+
+    @Inject
+    lateinit var ketch: Ketch
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -280,20 +292,43 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
     }
 
 
-    override fun onStart() {
-        super.onStart()
-        EventBusSingleton.getInstance().register(this)
+    fun downloadFile(url: String, fileName: String, path: String = filesDir.absolutePath){
+        val id = ketch.download(
+            url = url,
+            fileName = fileName,
+            path = path
+        )
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                ketch.observeDownloadById(id)
+                    .flowOn(Dispatchers.IO)
+                    .collect { downloadModel ->
+                        when (downloadModel.status) {
+                            Status.STARTED -> {
+                                showStatus("Download has started.")
+                            }
+                            Status.SUCCESS -> {
+                                showStatus("Download completed successfully.")
+                            }
+                            Status.CANCELLED -> {
+                                showStatus("Download was cancelled.")
+                            }
+                            Status.FAILED -> {
+                                showStatus("Download failed.")
+                            }
+
+                            Status.QUEUED -> {}
+                            Status.PROGRESS -> {}
+                            Status.PAUSED -> {}
+                            Status.DEFAULT -> {}
+                        }
+                    }
+            }
+        }
     }
 
-    override fun onStop() {
-        super.onStop()
-        EventBusSingleton.getInstance().unregister(this)
+    private fun showStatus(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
-
-    @Subscribe
-    fun onEvent(event: MyEvent) {
-        Toast.makeText(this, event.message, Toast.LENGTH_SHORT).show()
-    }
-
-
 }

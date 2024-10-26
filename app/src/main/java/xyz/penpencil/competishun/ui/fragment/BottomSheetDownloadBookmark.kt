@@ -43,6 +43,7 @@ import com.ketch.Ketch
 import com.ketch.Status
 import kotlinx.coroutines.flow.flowOn
 import xyz.penpencil.competishun.download.DownloaderManager
+import xyz.penpencil.competishun.ui.main.HomeActivity
 
 @AndroidEntryPoint
 class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
@@ -52,8 +53,6 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
 
     @Inject
     lateinit var appController: AppController
-    @Inject
-    lateinit var ketch: Ketch
 
     var fileName: String = ""
     var videoUrl: String = ""
@@ -207,66 +206,26 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
             dismiss()
             return
         }
-
-        val id = ketch.download(
-            url = videoUrl,
-            fileName = fileName,
-            path = requireActivity().filesDir.absolutePath
-        )
-
-        requireActivity().lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                ketch.observeDownloadById(id)
-                    .flowOn(Dispatchers.IO)
-                    .collect { downloadModel ->
-                        when (downloadModel.status) {
-                            Status.STARTED -> {
-                                showStatus("Download has started.")
-                            }
-                            Status.SUCCESS -> {
-                                showStatus("Download completed successfully.")
-                            }
-                            Status.CANCELLED -> {
-                                showStatus("Download was cancelled.")
-                            }
-                            Status.FAILED -> {
-                                showStatus("Download failed.")
-                            }
-
-                            Status.QUEUED -> {}
-                            Status.PROGRESS -> {}
-                            Status.PAUSED -> {}
-                            Status.DEFAULT -> {}
-                        }
-                    }
-            }
-        }
-    }
-
-    private fun showStatus(message: String) {
-        Toast.makeText(requireActivity(), message, Toast.LENGTH_SHORT).show()
+        checkNotificationPermission()
     }
 
     private fun checkNotificationPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             when {
                 ActivityCompat.checkSelfPermission(requireActivity(), Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED -> {
-                    DownloaderManager.Builder(requireActivity())
+                  /*  DownloaderManager.Builder(requireActivity())
                         .setUrl(videoUrl)
                         .setFilePath(videoFile!!.absolutePath)
                         .setFileName(fileName)
-                        .build()
+                        .build()*/
+                    (requireActivity() as HomeActivity).downloadFile(url = videoUrl, fileName = fileName)
                 }
                 else -> {
                     requestNotificationPermission.launch(Manifest.permission.POST_NOTIFICATIONS)
                 }
             }
         } else {
-            DownloaderManager.Builder(requireActivity())
-                .setUrl(videoUrl)
-                .setFilePath(videoFile!!.absolutePath)
-                .setFileName(fileName)
-                .build()
+            (requireActivity() as HomeActivity).downloadFile(url = videoUrl, fileName = fileName)
         }
     }
 
@@ -297,11 +256,7 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
         ActivityResultContracts.RequestPermission()
     ) { isGranted ->
         if (isGranted) {
-            DownloaderManager.Builder(requireActivity())
-                .setUrl(videoUrl)
-                .setFilePath(videoFile!!.absolutePath)
-                .setFileName(fileName)
-                .build()
+            (requireActivity() as HomeActivity).downloadFile(url = videoUrl, fileName = fileName)
         } else {
             showPermissionDeniedDialog()
         }
