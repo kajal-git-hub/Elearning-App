@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/clSucceed"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="34dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tvSucceed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/nunito"
+            android:text="Jee Mains Result"
+            android:textColor="@color/black_2B2829"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tvExam"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/nunito"
+            android:text="All ranks are under AIR 25,000 only."
+            android:textColor="#898384"
+            android:layout_marginTop="@dimen/_12sp"
+            android:textSize="12sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvSucceed" />
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/clBatchImage"
+            android:layout_width="138dp"
+            android:layout_height="102dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="24dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvExam">
+
+            <ImageView
+                android:id="@+id/leafImageLeft"
+                android:layout_width="57dp"
+                android:layout_height="85dp"
+                android:layout_marginTop="10dp"
+                android:src="@drawable/group_1171276773"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tvtext500"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="45dp"
+                android:fontFamily="@font/nunito"
+                android:text="500+"
+                android:textColor="#2B2829"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@id/leafImageLeft"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tvJEEMains"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:fontFamily="@font/nunito"
+                android:text="JEE\nMains"
+                android:textAlignment="center"
+                android:textColor="#898384"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/tvtext500"
+                app:layout_constraintTop_toBottomOf="@id/tvtext500" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tvBatchYear"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/year_bg"
+                android:fontFamily="@font/nunito"
+                android:paddingHorizontal="8dp"
+                android:text="2024"
+                android:textAlignment="center"
+                android:textColor="#5757F7"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="@+id/tvJEEMains"
+                app:layout_constraintStart_toEndOf="@+id/leafImageLeft"
+                app:layout_constraintStart_toStartOf="@+id/tvJEEMains"
+                app:layout_constraintTop_toBottomOf="@id/tvJEEMains" />
+
+            <ImageView
+                android:id="@+id/leafImageRight"
+                android:layout_width="57dp"
+                android:layout_height="85dp"
+                android:layout_marginStart="42dp"
+                android:layout_marginTop="10dp"
+                android:src="@drawable/group_1171276772"
+                app:layout_constraintStart_toEndOf="@+id/tvtext500"
+                app:layout_constraintStart_toStartOf="@id/tvtext500"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/et_AdvancedResult"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="JEE Advanced Result"
+            android:textColor="@color/_2b2829"
+            android:textSize="18sp"
+            android:layout_marginTop="32dp"
+            android:textStyle="bold"
+            android:fontFamily="@font/nunito"
+            app:layout_constraintTop_toBottomOf="@+id/clBatchImage"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/et_RankTest"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="All ranks are under AIR 25,000 only."
+            android:textColor="#898384"
+            android:textSize="12sp"
+            android:layout_marginTop="12dp"
+            android:textStyle="bold"
+            android:fontFamily="@font/nunito"
+            app:layout_constraintTop_toBottomOf="@+id/et_AdvancedResult"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/clBatchImageRight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_12sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/et_RankTest">
+
+            <ImageView
+                android:id="@+id/leafImageLeftRight"
+                android:layout_width="57dp"
+                android:layout_height="85dp"
+                android:layout_marginTop="10dp"
+                android:src="@drawable/group_1171276773"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tvtext500Right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="40dp"
+                android:fontFamily="@font/nunito"
+                android:text="500+"
+                android:textColor="#2B2829"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@id/leafImageLeftRight"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tvJEEMainsRight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:fontFamily="@font/nunito"
+                android:text="JEE\nMains"
+                android:textAlignment="center"
+                android:textColor="#898384"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@id/leafImageLeftRight"
+                app:layout_constraintStart_toStartOf="@id/tvtext500Right"
+                app:layout_constraintTop_toBottomOf="@id/tvtext500Right" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tvBatchYearRight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/year_bg"
+                android:fontFamily="@font/nunito"
+                android:paddingHorizontal="8dp"
+                android:text="2024"
+                android:textAlignment="center"
+                android:textColor="#5757F7"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="@+id/tvJEEMainsRight"
+                app:layout_constraintStart_toStartOf="@+id/tvJEEMainsRight"
+                app:layout_constraintTop_toBottomOf="@id/tvJEEMainsRight" />
+
+            <ImageView
+                android:id="@+id/leafImageRightRight"
+                android:layout_width="57dp"
+                android:layout_height="85dp"
+                android:layout_marginStart="42dp"
+                android:layout_marginTop="10dp"
+                android:src="@drawable/group_1171276772"
+                app:layout_constraintStart_toStartOf="@id/tvtext500Right"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
