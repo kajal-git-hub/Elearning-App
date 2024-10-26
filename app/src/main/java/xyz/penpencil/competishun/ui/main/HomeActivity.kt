@@ -14,6 +14,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.ObservableField
@@ -70,6 +71,7 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         sharedPreferencesManager = SharedPreferencesManager(this)
         onBackPressedDispatcher.addCallback(this, backPressListener)
+        window.navigationBarColor = ContextCompat.getColor(this,android.R.color.white)
 
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.fragmentNavigation) as NavHostFragment

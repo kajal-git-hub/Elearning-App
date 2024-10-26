@@ -1,11 +1,14 @@
 package xyz.penpencil.competishun.ui.fragment
 
+import android.app.Activity
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
+import android.view.WindowManager
 import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
@@ -254,6 +257,26 @@ class ResumeCourseFragment : DrawerVisibility() {
 
         }
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        setStatusBarGradiant(requireActivity())
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        requireActivity().window.statusBarColor = ContextCompat.getColor(requireContext(), R.color.white)
+        requireActivity().window.setBackgroundDrawable(null)
+    }
+
+    private fun setStatusBarGradiant(activity: Activity) {
+        val window: Window = activity.window
+        val background = ContextCompat.getDrawable(activity, R.drawable.gradiant_bg)
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+        window.statusBarColor = ContextCompat.getColor(activity,android.R.color.transparent)
+        window.setLightStatusBars(true)
+        window.setBackgroundDrawable(background)
     }
 
 }
