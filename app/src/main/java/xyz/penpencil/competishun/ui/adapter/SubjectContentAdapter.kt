@@ -27,7 +27,6 @@ class SubjectContentAdapter(
         return SubjectContentViewHolder(binding)
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: SubjectContentViewHolder, position: Int) {
         val course = items[position]
         holder.bind(course)
@@ -37,8 +36,6 @@ class SubjectContentAdapter(
     }
 
 
-
-    @RequiresApi(Build.VERSION_CODES.O)
     fun showDateIfFutureOrToday(dateString: String): Boolean {
         // Define the primary date format pattern
         val dateString = dateString.replace("Sept", "Sep").trim()
@@ -100,7 +97,6 @@ class SubjectContentAdapter(
     inner class SubjectContentViewHolder(private val binding: ItemCourseContentBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        @RequiresApi(Build.VERSION_CODES.O)
         fun bind(item: SubjectContentItem) {
             binding.tvChapterNumber.text = String.format("%02d", item.chapterNumber)
             binding.tvTopicName.text = item.topicName

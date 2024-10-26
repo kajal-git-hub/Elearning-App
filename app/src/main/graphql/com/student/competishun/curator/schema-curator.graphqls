@@ -613,6 +613,8 @@ enum FileType {
   PDF
 
   VIDEO
+
+  URL
 }
 
 enum FileUpload {
