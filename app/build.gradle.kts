@@ -124,7 +124,10 @@ dependencies {
 
     implementation (libs.play.services.auth.api.phone)
 
-    implementation ("net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:3.0.0-RC3")
+    implementation (libs.keyboardvisibilityevent)
+
+    implementation (libs.androidx.hilt.work)
+    kapt(libs.androidx.hilt.compiler)
 
 
 }
