@@ -546,7 +546,7 @@
                             android:id="@+id/clBatchImage"
                             android:layout_width="138dp"
                             android:layout_height="102dp"
-                            android:layout_marginTop="12dp"
+                            android:layout_marginTop="16dp"
                             android:layout_marginBottom="24dp"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@id/tvExam">
@@ -651,7 +651,7 @@
                             android:id="@+id/clBatchImageRight"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/_12sp"
+                            android:layout_marginTop="16sp"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/et_RankTest">
 
@@ -668,12 +668,14 @@
                                 android:id="@+id/tvtext500Right"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="40dp"
+                                android:layout_marginStart="@dimen/_5dp"
                                 android:fontFamily="@font/nunito"
                                 android:text="767+"
+                                android:gravity="end"
                                 android:textColor="#2B2829"
                                 android:textSize="24sp"
                                 android:textStyle="bold"
+                                app:layout_constraintEnd_toEndOf="@+id/leafImageRightRight"
                                 app:layout_constraintStart_toStartOf="@id/leafImageLeftRight"
                                 app:layout_constraintTop_toTopOf="parent" />
 
