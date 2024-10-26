@@ -14,6 +14,7 @@ import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
+import kotlinx.coroutines.delay
 
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -47,8 +48,9 @@ class DownloadWorker @AssistedInject constructor(
 
             client.newCall(request).execute().use { response ->
                 if (!response.isSuccessful) {
+                    Log.e("dsdyatsdtyastd", "doWork: failure" )
                     updateNotification(0, 0, 0)
-                    Result.failure()
+                    return Result.failure()
                 }
 
                 val inputStream = response.body?.byteStream() ?: return Result.failure()
@@ -89,7 +91,7 @@ class DownloadWorker @AssistedInject constructor(
         Log.e("vmnbvbcxvbnxc", "createNotification: ", )
 
         return NotificationCompat.Builder(applicationContext, CHANNEL_ID)
-            .setContentTitle("Downloading...")
+            .setContentTitle(content)
             .setContentText(content)
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setPriority(NotificationCompat.PRIORITY_HIGH)

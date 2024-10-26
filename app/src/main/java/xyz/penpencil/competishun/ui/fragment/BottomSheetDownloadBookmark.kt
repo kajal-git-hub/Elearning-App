@@ -34,8 +34,14 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.provider.Settings
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.repeatOnLifecycle
+import com.ketch.Ketch
+import com.ketch.Status
+import kotlinx.coroutines.flow.flowOn
 import xyz.penpencil.competishun.download.DownloaderManager
 
 @AndroidEntryPoint
@@ -46,6 +52,8 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
 
     @Inject
     lateinit var appController: AppController
+    @Inject
+    lateinit var ketch: Ketch
 
     var fileName: String = ""
     var videoUrl: String = ""
@@ -199,7 +207,44 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
             dismiss()
             return
         }
-        checkNotificationPermission()
+
+        val id = ketch.download(
+            url = videoUrl,
+            fileName = fileName,
+            path = requireActivity().filesDir.absolutePath
+        )
+
+        requireActivity().lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                ketch.observeDownloadById(id)
+                    .flowOn(Dispatchers.IO)
+                    .collect { downloadModel ->
+                        when (downloadModel.status) {
+                            Status.STARTED -> {
+                                showStatus("Download has started.")
+                            }
+                            Status.SUCCESS -> {
+                                showStatus("Download completed successfully.")
+                            }
+                            Status.CANCELLED -> {
+                                showStatus("Download was cancelled.")
+                            }
+                            Status.FAILED -> {
+                                showStatus("Download failed.")
+                            }
+
+                            Status.QUEUED -> {}
+                            Status.PROGRESS -> {}
+                            Status.PAUSED -> {}
+                            Status.DEFAULT -> {}
+                        }
+                    }
+            }
+        }
+    }
+
+    private fun showStatus(message: String) {
+        Toast.makeText(requireActivity(), message, Toast.LENGTH_SHORT).show()
     }
 
     private fun checkNotificationPermission() {
@@ -225,6 +270,7 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     private fun showPermissionDeniedDialog() {
         AlertDialog.Builder(requireActivity())
             .setTitle("Notification Permission Needed")
@@ -246,6 +292,7 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
             .show()
     }
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     private val requestNotificationPermission = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted ->
