@@ -24,7 +24,7 @@
             android:layout_width="219dp"
             android:layout_height="50dp"
             android:layout_marginStart="@dimen/_10dp"
-            android:src="@drawable/svg_logo_competishun_1"
+            android:src="@drawable/welcome_screen_png"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:contentDescription="Company Logo" />
