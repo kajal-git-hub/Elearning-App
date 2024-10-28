@@ -245,4 +245,10 @@ class NEETFragment : DrawerVisibility(), StudentCourseItemClickListener {
     companion object {
         private const val TAG = "CourseFragment"
     }
+
+    override fun onResume() {
+        super.onResume()
+        (activity as? HomeActivity)?.hideCallingSupport()
+
+    }
 }

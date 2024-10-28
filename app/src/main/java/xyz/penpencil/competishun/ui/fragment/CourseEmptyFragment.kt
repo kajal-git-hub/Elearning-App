@@ -351,6 +351,8 @@ class CourseEmptyFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         setStatusBarGradiant(requireActivity())
+        (activity as? HomeActivity)?.hideCallingSupport()
+
     }
 
     override fun onDestroy() {
