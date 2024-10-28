@@ -264,7 +264,8 @@ class StudyMaterialDetailsFragment : Fragment() {
                                         lockTime = time,
                                         // Assign homework name and URL here
                                         homeworkName = homeworkFileName.toString(),
-                                        homeworkUrl = homeworkUrl.toString()  // Add this field in your TopicContentModel if it doesn't exist
+                                        homeworkUrl = homeworkUrl.toString(), // Add this field in your TopicContentModel if it doesn't exist
+                                        isDPP = contents.content?.file_name?.contains("DPPs") == true
                                     )
                                 }
                             val folderContentIs = folderProgressContent.filter { it.content?.file_type?.name  == "VIDEO" }.mapNotNull { it.content?.id }.toCollection(ArrayList())
@@ -419,7 +420,8 @@ class StudyMaterialDetailsFragment : Fragment() {
                                         fileType = contents.content?.file_type?.name ?: "",
                                         lockTime =  time,
                                         homeworkUrl = homeworkUrl.toString(),
-                                        homeworkName = homeworkFileName.toString()
+                                        homeworkName = homeworkFileName.toString(),
+                                        isDPP = contents.content?.file_name?.contains("DPPs") == true
                                     )
                                 }
                             binding.tvContentCount.text = "(${subjectContentList.size + (folderProgressContent?.size ?: 0)})"

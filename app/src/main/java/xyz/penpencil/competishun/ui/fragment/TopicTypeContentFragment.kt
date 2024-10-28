@@ -117,7 +117,8 @@ class TopicTypeContentFragment : Fragment() {
                 fileType = content.content?.file_type?.name ?: "",
                 lockTime = time,
                 homeworkUrl = homeworkUrl.toString(),
-                homeworkName = homeworkFileName.toString()
+                homeworkName = homeworkFileName.toString(),
+                isDPP = content.content?.file_name?.contains("DPPs") == true
             )
         } ?: emptyList()
         val folderContentis = folderContents.filter { it.content?.file_type?.name  == "VIDEO" }.mapNotNull { it.content?.id }?.toCollection(ArrayList())
@@ -187,7 +188,8 @@ class TopicTypeContentFragment : Fragment() {
                             fileType = content.content?.file_type?.name.orEmpty(),
                             lockTime = time,
                             homeworkUrl = homeworkUrl.toString(),
-                            homeworkName = homeworkFileName.toString()
+                            homeworkName = homeworkFileName.toString(),
+                            isDPP = content.content?.file_name?.contains("DPPs") == true
                         )
                     } ?: emptyList()
                     val folderContentIs = folderContents?.filter { it.content?.file_type?.name  == "VIDEO" }?.mapNotNull { it.content?.id }?.toCollection(ArrayList())

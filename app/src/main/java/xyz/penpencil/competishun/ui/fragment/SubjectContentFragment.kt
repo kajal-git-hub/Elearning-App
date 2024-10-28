@@ -568,7 +568,8 @@ class SubjectContentFragment : DrawerVisibility() {
                 fileType = content.content?.file_type?.name ?: "",
                 lockTime = time,
                 homeworkUrl = homeworkUrl.toString(),
-                homeworkName = homeworkFileName.toString()
+                homeworkName = homeworkFileName.toString(),
+                isDPP = content.content?.file_name?.contains("DPPs") == true
             )
         } ?: emptyList()
 
