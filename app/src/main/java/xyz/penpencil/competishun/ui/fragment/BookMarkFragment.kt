@@ -218,6 +218,7 @@ class BookMarkFragment : DrawerVisibility(), BookMarkAdapter.OnVideoClickListene
         })
     }
 
+
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putInt("SELECTED_TAB_POSITION", selectedTabPosition)
@@ -226,6 +227,8 @@ class BookMarkFragment : DrawerVisibility(), BookMarkAdapter.OnVideoClickListene
     override fun onResume() {
         super.onResume()
         setStatusBarGradiant(requireActivity())
+        (activity as? HomeActivity)?.hideCallingSupport()
+
     }
 
     override fun onDestroyView() {

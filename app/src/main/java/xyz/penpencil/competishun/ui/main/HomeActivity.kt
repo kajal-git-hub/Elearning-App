@@ -293,6 +293,12 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
         }
     }
 
+    fun hideCallingSupport() {
+        binding.clCallingSupport.visibility = View.GONE
+        binding.igContactImage.setImageResource(R.drawable.ic_call)
+        isCallingSupportVisible.set(true)
+    }
+
 
     fun downloadFile(url: String, fileName: String, path: String = filesDir.absolutePath){
         val id = ketch.download(
