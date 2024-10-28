@@ -210,6 +210,8 @@ class DownloadFragment : DrawerVisibility(), DownloadedItemAdapter.OnVideoClickL
             WindowManager.LayoutParams.FLAG_SECURE
         )
         setStatusBarGradiant(requireActivity())
+        (activity as? HomeActivity)?.hideCallingSupport()
+
 
     }
 
