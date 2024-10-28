@@ -40,6 +40,7 @@ dotsindicatorVersion = "5.0"
 pdfViewer = "2.1.1"
 playServicesAuth = "21.2.0"
 playServicesAuthApiPhone = "18.1.0"
+playServicesAuthVersion = "20.4.0"
 playServicesWallet = "19.4.0"
 workRuntime = "2.9.1"
 zoomlayoutVersion = "1.9.0"
@@ -96,6 +97,7 @@ otaliastudios-zoomlayout = { module = "com.otaliastudios:zoomlayout", version.re
 pdf-viewer = { module = "io.github.afreakyelf:Pdf-Viewer", version.ref = "pdfViewer" }
 play-services-auth = { module = "com.google.android.gms:play-services-auth", version.ref = "playServicesAuth" }
 play-services-auth-api-phone = { module = "com.google.android.gms:play-services-auth-api-phone", version.ref = "playServicesAuthApiPhone" }
+play-services-auth-v2040 = { module = "com.google.android.gms:play-services-auth", version.ref = "playServicesAuthVersion" }
 play-services-wallet = { module = "com.google.android.gms:play-services-wallet", version.ref = "playServicesWallet" }
 razorpay-checkout = { module = "com.razorpay:checkout", version.ref = "checkoutVersion" }
 play-services-drive = { group = "com.google.android.gms", name = "play-services-drive", version.ref = "playServicesDrive" }

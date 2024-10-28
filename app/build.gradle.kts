@@ -126,6 +126,13 @@ dependencies {
 
     implementation (libs.keyboardvisibilityevent)
 
+//    implementation (libs.play.services.auth)
+
+//    implementation ("com.google.android.gms:play-services-auth:21.2.0")
+//    implementation ("com.google.android.gms:play-services-auth-api-phone:18.1.0")
+
+
+
     implementation (libs.androidx.hilt.work)
     kapt(libs.androidx.hilt.compiler)
 
