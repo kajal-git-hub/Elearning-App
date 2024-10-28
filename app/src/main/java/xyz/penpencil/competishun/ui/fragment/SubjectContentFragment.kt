@@ -216,7 +216,8 @@ class SubjectContentFragment : DrawerVisibility() {
                                         lockTime = time,
                                         // Assign homework name and URL here
                                         homeworkName = homeworkFileName.toString(),
-                                        homeworkUrl = homeworkUrl.toString()  // Add this field in your TopicContentModel if it doesn't exist
+                                        homeworkUrl = homeworkUrl.toString() , // Add this field in your TopicContentModel if it doesn't exist
+                                        isDPP = binding.tvSubjectName.text.contains("DPPs", ignoreCase = true)
                                     )
                                 }
 

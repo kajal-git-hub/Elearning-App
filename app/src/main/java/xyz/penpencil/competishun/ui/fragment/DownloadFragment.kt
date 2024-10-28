@@ -163,7 +163,10 @@ class DownloadFragment : DrawerVisibility(), DownloadedItemAdapter.OnVideoClickL
     }
 
     private fun playVideo(folderContentId: String, name: String) {
-        val file=File(context?.filesDir,"$name.mp4")
+        var file=File(context?.filesDir,"$name.mp4")
+        if (!file.isFile){
+            file = File("/storage/emulated/0/Download/$name.mp4")
+        }
         val videoFileURL = file.absolutePath
         Log.e("FilePath", "File exists: ${file.exists()}, Path: $videoFileURL")
 

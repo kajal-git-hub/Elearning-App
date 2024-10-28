@@ -16,5 +16,6 @@ data class TopicContentModel(
     val fileType: String,
     val lockTime:String,
     val homeworkUrl : String,
-    val homeworkName : String
+    val homeworkName : String,
+    val isDPP : Boolean = false
 ): Serializable

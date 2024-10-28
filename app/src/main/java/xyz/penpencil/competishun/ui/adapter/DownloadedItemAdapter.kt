@@ -86,15 +86,15 @@ class DownloadedItemAdapter(
             {
                 val fileName = "${item.topicName}.${item.fileType.lowercase()}"
                 val file = File(context.filesDir, fileName)
-                Log.d("DownloadDelete", file.exists().toString())
                 if (file.exists()) {
                     file.delete()
                 }
-            }else
-            {
+            } else {
                 val fileName = "${item.topicName}.mp4"
-                val file = File(context.filesDir, fileName)
-                Log.d("DownloadDelete", file.exists().toString())
+                var file = File(context.filesDir, fileName)
+                if (!file.isFile){
+                    file = File("/storage/emulated/0/Download/$fileName")
+                }
                 if (file.exists()) {
                     file.delete()
                 }

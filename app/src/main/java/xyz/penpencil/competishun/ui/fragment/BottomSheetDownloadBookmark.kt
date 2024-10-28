@@ -32,18 +32,23 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Environment
+import android.provider.MediaStore
 import android.provider.Settings
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
+import androidx.core.net.toFile
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.repeatOnLifecycle
 import com.ketch.Ketch
 import com.ketch.Status
+import com.student.competishun.curator.type.FileType
 import kotlinx.coroutines.flow.flowOn
 import xyz.penpencil.competishun.download.DownloaderManager
 import xyz.penpencil.competishun.ui.main.HomeActivity
+import xyz.penpencil.competishun.utils.permissionList
 
 @AndroidEntryPoint
 class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
@@ -55,8 +60,9 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
     lateinit var appController: AppController
 
     var fileName: String = ""
-    var videoUrl: String = ""
-    var videoFile : File?=null
+    private var videoUrl: String = ""
+    private var videoFile : File?=null
+    private var isExternal : Boolean = false
 
     fun setItemDetails(details: TopicContentModel) {
         this.itemDetails = details
@@ -194,12 +200,13 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
     }
 
     private fun downloadVideo(context: Context, videoUrl: String, name: String) {
-        Log.d("DownloadVideo", "Starting download for: $videoUrl with name: $name")
+        Log.d("DownloadVideo", "Starting download for: $videoUrl with name: $name  isExternal : ${itemDetails?.isDPP}")
 
         // Store the video details for later use
         this.videoUrl = videoUrl
         this.fileName = "$name.mp4"
-        this.videoFile = File(context.filesDir, fileName!!)
+        this.videoFile = if (itemDetails?.isDPP == true) File("/storage/emulated/0/Movies/") else context.filesDir
+        isExternal = itemDetails?.isDPP == true
 
         if (videoFile?.exists() == true) {
             Toast.makeText(context, "Video already downloaded, choose other", Toast.LENGTH_SHORT).show()
@@ -210,53 +217,59 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
     }
 
     private fun checkNotificationPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            when {
-                ActivityCompat.checkSelfPermission(requireActivity(), Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED -> {
-                  /*  DownloaderManager.Builder(requireActivity())
-                        .setUrl(videoUrl)
-                        .setFilePath(videoFile!!.absolutePath)
-                        .setFileName(fileName)
-                        .build()*/
-                    (requireActivity() as HomeActivity).downloadFile(url = videoUrl, fileName = fileName)
-                }
-                else -> {
-                    requestNotificationPermission.launch(Manifest.permission.POST_NOTIFICATIONS)
-                }
-            }
-        } else {
-            (requireActivity() as HomeActivity).downloadFile(url = videoUrl, fileName = fileName)
+        if (checkAndRequestPermissions()) {
+            (requireActivity() as HomeActivity).downloadFile(
+                url = videoUrl,
+                fileName = fileName,
+                isExternal = isExternal
+            )
+        }else {
+            showPermissionDeniedDialog()
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    private fun checkAndRequestPermissions(): Boolean {
+        val missingPermissions = permissionList().filter {
+            ActivityCompat.checkSelfPermission(requireActivity(), it) != PackageManager.PERMISSION_GRANTED
+        }
+        return if (missingPermissions.isEmpty()) {
+            true
+        } else {
+            requestNotificationPermission.launch(missingPermissions.toTypedArray())
+            false
+        }
+    }
+
     private fun showPermissionDeniedDialog() {
+        val activity = activity ?: return
         AlertDialog.Builder(requireActivity())
             .setTitle("Notification Permission Needed")
             .setMessage("To show download progress, please allow notification permission.")
-            .setPositiveButton("Retry") { dialog, _ ->
-                requestNotificationPermission.launch(Manifest.permission.POST_NOTIFICATIONS)
+            .setPositiveButton("Settings") { dialog, _ ->
+                activity.startActivity(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                    data = Uri.parse("package:${activity.packageName}")
+                })
                 dialog.dismiss()
             }
-            .setNegativeButton("Cancel") { dialog, _ ->
-                dialog.dismiss()
-            }
-            .setNeutralButton("Settings") { dialog, _ ->
-                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-                    data = Uri.parse("package:${requireActivity().packageName}")
-                }
-                startActivity(intent)
-                dialog.dismiss()
-            }
+            .setNegativeButton("Cancel") { dialog, _ -> dialog.dismiss() }
             .show()
     }
 
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-    private val requestNotificationPermission = registerForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { isGranted ->
-        if (isGranted) {
-            (requireActivity() as HomeActivity).downloadFile(url = videoUrl, fileName = fileName)
+    private val requestNotificationPermission = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+        val notificationPermissionGranted = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            permissions[Manifest.permission.POST_NOTIFICATIONS] == true
+        } else {
+            true
+        }
+
+        val allPermissionsGranted = permissionList().all { permissions[it] == true }
+
+        if (notificationPermissionGranted && allPermissionsGranted) {
+            (requireActivity() as HomeActivity).downloadFile(
+                url = videoUrl,
+                fileName = fileName,
+                isExternal = isExternal
+            )
         } else {
             showPermissionDeniedDialog()
         }
