@@ -227,6 +227,13 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
                 val imageUrl = courses?.video_thumbnail
                 val videoUrl = courses?.orientation_video
 
+                if(videoUrl.isNullOrEmpty()){
+                    binding.overviewButton.visibility = View.GONE
+                    binding.ivBannerExplore.isClickable = false
+                }else{
+                    binding.ivBannerExplore.isClickable = true
+                }
+
                 Log.d("CourseVideoThumbnail", imageUrl ?: "No URL")
                 Log.d("CourseOrientThumbnail", videoUrl ?: "No URL")
 
@@ -261,26 +268,6 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
 
                 }
 
-                installmentPrice1 = courses?.with_installment_price ?: 0
-                Log.d("installmentPrice114", installmentPrice1.toString())
-                firstInstallment = (installmentPrice1 * 0.6).toInt()
-                secondInstallment = (installmentPrice1.minus(firstInstallment))
-
-                if (firstInstallment <= 0) {
-                    Log.d("checkInstallOrNot", checkInstallOrNot.toString())
-                    binding.clInstallmentOptionView.visibility = View.GONE
-
-                } else {
-                    Log.d("checkInstallOrNot", checkInstallOrNot.toString())
-                    binding.clInstallmentOptionView.visibility = View.VISIBLE
-                    binding.clInstallmentOptionView.setOnClickListener {
-                        showInstallmentDetailsBottomSheet(
-                            firstInstallment,
-                            secondInstallment
-                        )
-                    }
-                }
-
                 binding.overviewButton.setOnClickListener {
                     if (!videoUrl.isNullOrEmpty()) {
                         if (isVideoPlaying) {
@@ -313,6 +300,30 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
                         Log.d("CourseVideoError", "Video URL is empty")
                     }
                 }
+
+
+
+
+                installmentPrice1 = courses?.with_installment_price ?: 0
+                Log.d("installmentPrice114", installmentPrice1.toString())
+                firstInstallment = (installmentPrice1 * 0.6).toInt()
+                secondInstallment = (installmentPrice1.minus(firstInstallment))
+
+                if (firstInstallment <= 0) {
+                    Log.d("checkInstallOrNot", checkInstallOrNot.toString())
+                    binding.clInstallmentOptionView.visibility = View.GONE
+
+                } else {
+                    Log.d("checkInstallOrNot", checkInstallOrNot.toString())
+                    binding.clInstallmentOptionView.visibility = View.VISIBLE
+                    binding.clInstallmentOptionView.setOnClickListener {
+                        showInstallmentDetailsBottomSheet(
+                            firstInstallment,
+                            secondInstallment
+                        )
+                    }
+                }
+
 
                 binding.progressBar.visibility = View.GONE
                 binding.ExpireValidity.text =

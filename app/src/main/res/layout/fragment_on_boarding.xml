@@ -119,7 +119,7 @@
                             android:layout_marginTop="10dp"
                             android:background="@drawable/full_name_background"
                             android:hint="@string/enter_here"
-                            android:inputType="text"
+                            android:inputType="textPersonName"
                             android:paddingLeft="16dp"
                             android:maxLength="32"
                             android:paddingTop="12dp"
