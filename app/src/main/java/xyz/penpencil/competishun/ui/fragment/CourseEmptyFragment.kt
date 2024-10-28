@@ -349,6 +349,7 @@ class CourseEmptyFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 //        activity?.window?.statusBarColor = ContextCompat.getColor(requireContext(), R.color.blue_3E3EF7)
+        (activity as? HomeActivity)?.hideCallingSupport()
 
     }
 

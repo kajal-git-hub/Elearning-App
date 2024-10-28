@@ -279,6 +279,12 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
         }
     }
 
+    fun hideCallingSupport() {
+        binding.clCallingSupport.visibility = View.GONE
+        binding.igContactImage.setImageResource(R.drawable.ic_call)
+        isCallingSupportVisible.set(true)
+    }
+
 
     override fun onStart() {
         super.onStart()

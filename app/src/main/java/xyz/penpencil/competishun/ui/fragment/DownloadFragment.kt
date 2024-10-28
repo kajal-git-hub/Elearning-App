@@ -206,6 +206,8 @@ class DownloadFragment : DrawerVisibility(), DownloadedItemAdapter.OnVideoClickL
             WindowManager.LayoutParams.FLAG_SECURE,
             WindowManager.LayoutParams.FLAG_SECURE
         )
+        (activity as? HomeActivity)?.hideCallingSupport()
+
 //        activity?.window?.statusBarColor = ContextCompat.getColor(requireContext(), R.color.download_statusbar)
 
     }

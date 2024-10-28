@@ -244,6 +244,12 @@ class CourseFragment : DrawerVisibility(), StudentCourseItemClickListener {
         private const val TAG = "CourseFragment"
     }
 
+    override fun onResume() {
+        super.onResume()
+        (activity as? HomeActivity)?.hideCallingSupport()
+
+    }
+
 //    override fun onCourseItemClicked(course: AllCourseForStudentQuery.Course, bundle: Bundle) {
 //        findNavController().navigate(R.id.action_coursesFragment_to_ExploreFragment, bundle)
 //
