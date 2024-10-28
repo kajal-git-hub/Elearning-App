@@ -17,7 +17,6 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.startActivity
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import xyz.penpencil.competishun.R
@@ -68,6 +67,11 @@ TopicContentAdapter(
         holder.itemView.setOnClickListener {
             if (isDateTodayOrPast(topicContent.lockTime)){
                 onItemClick(topicContent, folderContentId,unlockedTopicContentIds,unlockedTopicContentNames)
+            }else if ((topicContent.fileType == "URL")){
+                val url = if (topicContent.topicName.contains("http")) topicContent.url else "https://${topicContent.url}"
+                it.context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+            }else if (topicContent.fileType == "UNKNOWN__" ) {
+                Log.e("TAG", "onBindViewHolder: ")
             }else {
                 Toast.makeText(it.context, "Content is locked!", Toast.LENGTH_SHORT).show()
             }
@@ -132,7 +136,7 @@ TopicContentAdapter(
 
             binding.tvLecture.text = topicContent.lecture
             binding.tvLecturerName.text = topicContent.lecturerName
-            if (topicContent.fileType == "UNKNOWN__"  || topicContent.fileType == "URL"){
+            if (topicContent.url.contains("http") && (topicContent.fileType == "URL")){
                 binding.tvLecture.text = "Link"
             }
             binding.tvTopicName.text = topicContent.topicName
@@ -185,15 +189,8 @@ TopicContentAdapter(
                     binding.tvCourseDescription.text = topicContent.topicDescription
                 }
             }
-
-            binding.tvTopicName.setOnClickListener {
-                if (topicContent.fileType == "UNKNOWN__"  || topicContent.fileType == "URL"){
-                    it.context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(topicContent.url)))
-                }
-            }
-
         }
-        @RequiresApi(Build.VERSION_CODES.O)
+
         fun showDateIfFutureOrToday(dateString: String): Boolean {
             // Correct the date string if necessary
             Log.e("dateStrings",dateString)

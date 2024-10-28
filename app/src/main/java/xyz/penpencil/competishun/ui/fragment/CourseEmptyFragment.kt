@@ -1,18 +1,22 @@
 package xyz.penpencil.competishun.ui.fragment
 
+import android.app.Activity
 import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
+import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.Toast
-import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.GravityCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
@@ -21,19 +25,17 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import com.google.gson.Gson
 import com.student.competishun.curator.MyCoursesQuery
+import dagger.hilt.android.AndroidEntryPoint
+import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.data.model.ExploreCourse
+import xyz.penpencil.competishun.databinding.FragmentCourseEmptyBinding
 import xyz.penpencil.competishun.ui.adapter.ExploreCourseAdapter
 import xyz.penpencil.competishun.ui.main.HomeActivity
 import xyz.penpencil.competishun.ui.viewmodel.GetCourseByIDViewModel
 import xyz.penpencil.competishun.ui.viewmodel.MyCoursesViewModel
 import xyz.penpencil.competishun.ui.viewmodel.OrdersViewModel
-import xyz.penpencil.competishun.utils.SharedPreferencesManager
-import dagger.hilt.android.AndroidEntryPoint
-import xyz.penpencil.competishun.R
-import xyz.penpencil.competishun.databinding.FragmentCourseEmptyBinding
-import xyz.penpencil.competishun.ui.adapter.MyCartAdapter
 import xyz.penpencil.competishun.ui.viewmodel.UserViewModel
-import xyz.penpencil.competishun.utils.setLightStatusBars
+import xyz.penpencil.competishun.utils.SharedPreferencesManager
 
 
 @AndroidEntryPoint
@@ -348,14 +350,36 @@ class CourseEmptyFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-//        activity?.window?.statusBarColor = ContextCompat.getColor(requireContext(), R.color.blue_3E3EF7)
-        (activity as? HomeActivity)?.hideCallingSupport()
-
+        setStatusBarGradiant(requireActivity())
     }
 
-
-    override fun onDestroyView() {
-        super.onDestroyView()
+    override fun onDestroy() {
+        super.onDestroy()
         _binding = null
+    }
+
+    override fun onStop() {
+        super.onStop()
+        requireActivity().window?.apply {
+            statusBarColor = ContextCompat.getColor(requireContext(), R.color.white)
+            addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+            //for changing status bar text color
+          /*  WindowInsetsControllerCompat(
+                this,
+                this.decorView
+            ).isAppearanceLightStatusBars = false*/
+        }
+    }
+
+    private fun setStatusBarGradiant(activity: Activity) {
+        val window: Window = activity.window
+        val background = ContextCompat.getDrawable(activity, R.drawable.explore_course_top_bar_bg)
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+        window.statusBarColor = ContextCompat.getColor(activity,android.R.color.transparent)
+     /*   WindowInsetsControllerCompat(
+            window,
+            window.decorView
+        ).isAppearanceLightStatusBars = false*/
+        window.setBackgroundDrawable(background)
     }
 }

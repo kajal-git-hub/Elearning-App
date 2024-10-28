@@ -7,91 +7,73 @@ import android.content.Context
 import android.content.pm.ServiceInfo
 import android.os.Build
 import android.util.Log
-import android.widget.Toast
 import androidx.core.app.NotificationCompat
+import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
-import com.google.common.eventbus.EventBus
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
+import kotlinx.coroutines.delay
+
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import xyz.penpencil.competishun.R
-import xyz.penpencil.competishun.utils.EventBusSingleton
-import xyz.penpencil.competishun.utils.MyEvent
 import java.io.FileOutputStream
-import java.io.IOException
-import java.io.InputStream
 
-
-class DownloadWorker(
-    val context: Context,
-    workerParams: WorkerParameters
+@HiltWorker
+class DownloadWorker @AssistedInject constructor(
+    @Assisted context: Context,
+    @Assisted workerParams: WorkerParameters
 ) : CoroutineWorker(context, workerParams) {
-
-    private val TAG = "DownloadWorker"
 
     companion object {
         const val CHANNEL_ID = "DownloadNotificationChannel"
-        const val NOTIFICATION_ID = 1
+        const val NOTIFICATION_ID = 78778989
     }
 
-    override suspend fun doWork(): Result {
-        setForeground(createForegroundInfo(0, 100))
+    private val notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-        try {
+    override suspend fun doWork(): Result {
+        createNotificationChannel()
+        setForeground(createForegroundInfo())
+
+        return try {
             val url = inputData.getString("url")!!
             val name = inputData.getString("fileName")!!
             val path = inputData.getString("filePath")!!
 
-            val job = CoroutineScope(Dispatchers.IO).async {
-                val fileName = "$name.mp4"
-                val client = OkHttpClient()
-                val request = Request.Builder().url(url).build()
+            val client = OkHttpClient()
+            val request = Request.Builder().url(url).build()
 
-                client.newCall(request).execute().use { response ->
-                    if (!response.isSuccessful) throw IOException("Failed to download file: $response")
+            client.newCall(request).execute().use { response ->
+                if (!response.isSuccessful) {
+                    Log.e("dsdyatsdtyastd", "doWork: failure" )
+                    updateNotification(0, 0, 0)
+                    return Result.failure()
+                }
 
-                    val inputStream: InputStream? = response.body?.byteStream()
-                    val totalBytes = response.body?.contentLength() ?: -1L
-                    var downloadedBytes = 0L
-                    val outputStream = FileOutputStream(path)
+                val inputStream = response.body?.byteStream() ?: return Result.failure()
+                val totalBytes = response.body?.contentLength() ?: -1L
+                val outputStream = FileOutputStream(path)
 
-                    inputStream?.use { input ->
-                        outputStream.use { output ->
-                            val buffer = ByteArray(8 * 1024) // Buffer size
-                            var bytesRead: Int
-
-                            while (input.read(buffer).also { bytesRead = it } != -1) {
-                                output.write(buffer, 0, bytesRead)
-                                downloadedBytes += bytesRead
-
-                                if (totalBytes > 0) {
-                                    val progress = (downloadedBytes * 100 / totalBytes).toInt()
-                                    setForeground(createForegroundInfo(progress, 100))
-                                }
-                            }
-                            Log.e("EventBusSingleton", "doWork: ", )
-                            EventBusSingleton.getInstance().post(MyEvent("File downloaded successfully."))
-                            return@async Result.success()
+                inputStream.use { input ->
+                    outputStream.use { output ->
+                        input.copyTo(output, totalBytes).collect { downloadInfo ->
+                            updateNotification(downloadInfo.progress, 100, downloadInfo.speed)
                         }
                     }
                 }
+                Result.success()
             }
-            job.await()
-
         } catch (e: Exception) {
-            return Result.failure()
+            Result.failure()
         }
-
-        return Result.success()
     }
 
-    private fun createForegroundInfo(progress: Int, maxProgress: Int): ForegroundInfo {
-        val notification = createNotification("Download in progress", progress, maxProgress)
-        val foregroundInfo = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+    private fun createForegroundInfo(): ForegroundInfo {
+        val notification = createNotification(0, 100, 0)
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             ForegroundInfo(
                 NOTIFICATION_ID,
                 notification,
@@ -100,26 +82,35 @@ class DownloadWorker(
         } else {
             ForegroundInfo(NOTIFICATION_ID, notification)
         }
-        return foregroundInfo
     }
 
-    private fun createNotification(contentText: String, progress: Int, maxProgress: Int): Notification {
-        val notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+    private fun createNotification(progress: Int, maxProgress: Int, speed: Long): Notification {
+        val speedText = if (speed > 0) "${speed / 1024} KB/s" else "Calculating..."
+        val content = "$progress% at $speedText"
 
-        Log.e("cxczXCZXCZXCZX", "createNotification:  $progress || $maxProgress ", )
-        val channel = NotificationChannel(CHANNEL_ID, "Download", NotificationManager.IMPORTANCE_HIGH)
-        channel.description = "Download progress"
-        notificationManager.createNotificationChannel(channel)
+        Log.e("vmnbvbcxvbnxc", "createNotification: ", )
 
         return NotificationCompat.Builder(applicationContext, CHANNEL_ID)
-            .setContentTitle("Downloading")
-            .setContentText(contentText)
+            .setContentTitle(content)
+            .setContentText(content)
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setOngoing(true)
+            .setAutoCancel(false)
             .setProgress(maxProgress, progress, false)
             .build()
     }
 
+    private fun updateNotification(progress: Int, maxProgress: Int, speed: Long) {
+        val notification = createNotification(progress, maxProgress, speed)
+        notificationManager.notify(NOTIFICATION_ID, notification)
+    }
+
+    private fun createNotificationChannel() {
+        val channel = NotificationChannel(CHANNEL_ID, "Download...", NotificationManager.IMPORTANCE_DEFAULT).apply {
+            description = "Download progress"
+        }
+        notificationManager.createNotificationChannel(channel)
+    }
 }
 
