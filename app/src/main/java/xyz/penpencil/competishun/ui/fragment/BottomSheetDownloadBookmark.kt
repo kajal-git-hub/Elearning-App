@@ -8,45 +8,24 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import xyz.penpencil.competishun.data.model.TopicContentModel
 import xyz.penpencil.competishun.ui.viewmodel.VideourlViewModel
 import xyz.penpencil.competishun.utils.SharedPreferencesManager
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import okhttp3.OkHttpClient
-import okhttp3.Request
 import xyz.penpencil.competishun.AppController
 import xyz.penpencil.competishun.databinding.FragmentBottomSheetDownloadBookmarkBinding
 import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
-import java.io.InputStream
 import javax.inject.Inject
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
-import android.os.Environment
-import android.provider.MediaStore
 import android.provider.Settings
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
-import androidx.core.net.toFile
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.repeatOnLifecycle
-import com.ketch.Ketch
-import com.ketch.Status
-import com.student.competishun.curator.type.FileType
-import kotlinx.coroutines.flow.flowOn
-import xyz.penpencil.competishun.download.DownloaderManager
 import xyz.penpencil.competishun.ui.main.HomeActivity
 import xyz.penpencil.competishun.utils.permissionList
 
@@ -65,6 +44,7 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
     private var isExternal : Boolean = false
 
     fun setItemDetails(details: TopicContentModel) {
+        Log.e("jcxjchzxcjzx", "setItemDetails: " +details.isExternal )
         this.itemDetails = details
     }
 
@@ -112,9 +92,9 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
 
                 if (details.fileType == "VIDEO") {
                     videoUrl =  details.url
-                    downloadVideo(requireContext(), details.url, details.topicName)
+                    downloadVideo(requireContext(), details.url, details)
                 } else {
-                    downloadPdf(details)
+                    downloadPdf(details, requireContext())
                 }
                 dismiss()
             }
@@ -131,84 +111,33 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
         sharedPreferencesManager.saveDownloadedItem(item)
     }
 
-    private fun downloadPdf(details: TopicContentModel) {
-        Log.d("DownloadPdf", "Starting download for: ${details.url} with topic name: ${details.topicName}")
+    private fun downloadPdf(details: TopicContentModel, requireContext: Context) {
+        this.videoUrl = videoUrl
+        this.fileName = "${details.topicName}.${details.fileType.lowercase()}"
+        this.videoFile = if (itemDetails?.isExternal == true) File("/storage/emulated/0/Documents") else requireContext.filesDir
+       if (videoFile?.isDirectory != true){
+           videoFile?.mkdirs()
+       }
+        isExternal = itemDetails?.isExternal == true
 
-        val fileName = "${details.topicName}.${details.fileType.lowercase()}"
-        val pdfFile = File(requireContext().filesDir, fileName)
-
-        if (pdfFile.exists()) {
-            Toast.makeText(requireContext(), "PDF already downloaded Choose Other", Toast.LENGTH_SHORT).show()
+        if (File(videoFile?.absolutePath, fileName).exists()) {
+            Toast.makeText(context, "Video already downloaded, choose other", Toast.LENGTH_SHORT).show()
             dismiss()
             return
         }
-
-        Toast.makeText(requireContext(), "Download started....", Toast.LENGTH_SHORT).show()
-
-        lifecycleScope.launch {
-            val pdfUrl = details.url
-            val fileName = "${details.topicName}.${details.fileType.lowercase()}"
-
-            withContext(Dispatchers.IO) {
-                try {
-                    Log.d("DownloadPdf", "File name set to: $fileName")
-
-                    val client = OkHttpClient()
-                    val request = Request.Builder().url(pdfUrl).build()
-
-                    val response = client.newCall(request).execute()
-                    if (!response.isSuccessful) throw IOException("Failed to download file: $response")
-
-                    Log.d("DownloadPdf", "Response received, starting file download.")
-
-                    val pdfFile = File(requireContext().filesDir, fileName)
-                    Log.d("DownloadPdf", "Saving file to: ${pdfFile.absolutePath}")
-
-                    val inputStream: InputStream = response.body?.byteStream() ?: return@withContext
-                    val outputStream = FileOutputStream(pdfFile)
-
-                    inputStream.use { input ->
-                        outputStream.use { output ->
-                            input.copyTo(output)
-                            Log.d("DownloadPdf", "File downloaded successfully.")
-                        }
-                    }
-
-                    withContext(Dispatchers.Main) {
-                        if (isAdded) {
-                            Log.d("DownloadPdf", "Download success, showing toast.")
-                            Toast.makeText(requireContext(), "PDF Download completed: $fileName", Toast.LENGTH_SHORT).show()
-                            dismiss()
-                        }
-                    }
-
-                    details.url = pdfFile.absolutePath
-                    storeItemInPreferences(details)
-                    Log.d("DownloadPdf", "File path saved to preferences: ${pdfFile.absolutePath}")
-
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                    Log.e("DownloadPdf", "Download failed: ${e.message}")
-                    withContext(Dispatchers.Main) {
-                        if (isAdded) {
-                            Toast.makeText(requireContext(), "PDF Download failed: ${e.message}", Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                }
-            }
-        }
+        checkNotificationPermission()
     }
 
-    private fun downloadVideo(context: Context, videoUrl: String, name: String) {
-        Log.d("DownloadVideo", "Starting download for: $videoUrl with name: $name  isExternal : ${itemDetails?.isDPP}")
-
-        // Store the video details for later use
+    private fun downloadVideo(context: Context, videoUrl: String, topicContentModel: TopicContentModel) {
         this.videoUrl = videoUrl
-        this.fileName = "$name.mp4"
-        this.videoFile = if (itemDetails?.isDPP == true) File("/storage/emulated/0/Movies/") else context.filesDir
-        isExternal = itemDetails?.isDPP == true
+        this.fileName = "${topicContentModel.topicName}.mp4"
+        this.videoFile = if (itemDetails?.isExternal == true) File("/storage/emulated/0/Movies") else context.filesDir
+        if (videoFile?.isDirectory != true){
+            videoFile?.mkdirs()
+        }
+        isExternal = itemDetails?.isExternal == true
 
-        if (videoFile?.exists() == true) {
+        if (File(videoFile?.absolutePath, fileName).exists()) {
             Toast.makeText(context, "Video already downloaded, choose other", Toast.LENGTH_SHORT).show()
             dismiss()
             return
@@ -221,7 +150,7 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
             (requireActivity() as HomeActivity).downloadFile(
                 url = videoUrl,
                 fileName = fileName,
-                isExternal = isExternal
+                path = videoFile?.absolutePath!!
             )
         }else {
             showPermissionDeniedDialog()
@@ -268,7 +197,7 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
             (requireActivity() as HomeActivity).downloadFile(
                 url = videoUrl,
                 fileName = fileName,
-                isExternal = isExternal
+                path = videoFile?.absolutePath!!
             )
         } else {
             showPermissionDeniedDialog()

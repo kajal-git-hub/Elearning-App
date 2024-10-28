@@ -369,15 +369,9 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
         }
     }
 
-    fun downloadFile(url: String, fileName: String, isExternal: Boolean = false) {
+    fun downloadFile(url: String, fileName: String, path: String) {
 
-        Log.e("dkjsahdjsahjdas", "downloadFile: $isExternal")
-        val path = if (isExternal) {
-            "/storage/emulated/0/Download/"
-        } else {
-            filesDir.absolutePath
-        }
-
+        Log.e("DownloadError", "PATH: $path")
         val id = ketch.download(
             url = url,
             fileName = fileName,
