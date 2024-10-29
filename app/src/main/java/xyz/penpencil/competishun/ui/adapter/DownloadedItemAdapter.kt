@@ -6,6 +6,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Filter
+import android.widget.Filterable
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -20,6 +22,7 @@ import xyz.penpencil.competishun.ui.main.PdfViewActivity
 import xyz.penpencil.competishun.utils.OnDeleteClickListener
 import xyz.penpencil.competishun.utils.SharedPreferencesManager
 import java.io.File
+import java.util.Locale
 
 class DownloadedItemAdapter(
     private val context: Context,
@@ -27,36 +30,12 @@ class DownloadedItemAdapter(
     private val videoClickListener: OnVideoClickListener,
     private val fragmentManager: FragmentManager,
     private val fragment: DownloadFragment
-
-) : RecyclerView.Adapter<DownloadedItemAdapter.ViewHolder>(), OnDeleteClickListener {
+) : RecyclerView.Adapter<DownloadedItemAdapter.ViewHolder>(), OnDeleteClickListener, Filterable {
 
     private var filteredItems: MutableList<TopicContentModel> = items.toMutableList()
 
-
-    fun updateItems(newItems: List<TopicContentModel>) {
-        items.clear()
-        items.addAll(newItems)
-        filteredItems.clear()
-        filteredItems.addAll(newItems)
-        notifyDataSetChanged()
-    }
-    fun filter(query: String?) {
-        filteredItems.clear()
-        if (query.isNullOrEmpty()) {
-            filteredItems.addAll(items)
-        } else {
-            val filterPattern = query.lowercase().trim()
-            filteredItems.addAll(items.filter { item ->
-                item.topicName.lowercase().contains(filterPattern) ||
-                        item.lecture.lowercase().contains(filterPattern) ||
-                        item.topicDescription.lowercase().contains(filterPattern)
-            })
-        }
-        notifyDataSetChanged()
-    }
-
     interface OnVideoClickListener {
-        fun onVideoClick(folderContentId: String, name: String)
+        fun onVideoClick(topicContentModel: TopicContentModel)
         fun onDeleteClick(topicContentModel: TopicContentModel)
     }
 
@@ -73,38 +52,14 @@ class DownloadedItemAdapter(
         var dotExtraInfoDownload: ImageView = itemView.findViewById(R.id.dotExtraInfoDownload)
     }
 
-    override fun onDeleteClick(position: Int,item: TopicContentModel) {
+    override fun onDeleteClick(position: Int, item: TopicContentModel) {
         if (position >= 0 && position < items.size) {
-
-            val sharedPreferencesManager = SharedPreferencesManager(context)
-            sharedPreferencesManager.deleteDownloadedItem(item)
-
             items.removeAt(position)
+            filteredItems.removeAt(position) // Also remove from filtered list
             notifyItemRemoved(position)
             notifyItemRangeChanged(position, items.size)
-
-            if (item.fileType=="PDF")
-            {
-                val fileName = "${item.topicName}.${item.fileType.lowercase()}"
-                val file = File(context.filesDir, fileName)
-                if (file.exists()) {
-                    file.delete()
-                }
-            } else {
-                val fileName = "${item.topicName}.mp4"
-                var file = File(context.filesDir, fileName)
-                if (!file.isFile){
-                    file = File("/storage/emulated/0/Download/$fileName")
-                }
-                if (file.exists()) {
-                    file.delete()
-                }
-            }
-
-//            fragment.updateDownloadedItems(item.fileType)
-
+            videoClickListener.onDeleteClick(item)
         }
-
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -116,7 +71,6 @@ class DownloadedItemAdapter(
         val item = filteredItems[position]
         holder.studyMaterial.text = item.lecture
 
-        Log.e("dmfdmnbfsmndbmfn", "onBindViewHolder: " +item.isExternal )
         if (item.fileType == "PDF") {
             holder.lecTime.text = item.lecturerName
             holder.lecTime.setCompoundDrawablesWithIntrinsicBounds(R.drawable.download_person, 0, 0, 0)
@@ -129,11 +83,10 @@ class DownloadedItemAdapter(
 
             holder.dotExtraInfoDownload.setOnClickListener {
                 val bottomSheet = BottomSheetDeletePDFsFragment()
-                bottomSheet.setListener(this, position,item)
+                bottomSheet.setListener(this, position, item)
                 bottomSheet.show(fragmentManager, bottomSheet.tag)
             }
         } else {
-            // Handle video item
             holder.lecTime.setCompoundDrawablesWithIntrinsicBounds(R.drawable.clock_black, 0, 0, 0)
             holder.lecTime.text = formatTimeDuration(item.videoDuration)
             holder.forRead.visibility = View.GONE
@@ -145,7 +98,7 @@ class DownloadedItemAdapter(
 
             holder.dotExtraInfoDownload.setOnClickListener {
                 val bottomSheet = BottomSheetDeleteVideoFragment()
-                bottomSheet.setListener(this, position,item)
+                bottomSheet.setListener(this, position, item)
                 bottomSheet.show(fragmentManager, bottomSheet.tag)
             }
         }
@@ -155,21 +108,44 @@ class DownloadedItemAdapter(
 
         holder.forRead.setOnClickListener {
             val localPath = File(context.filesDir, item.topicName + ".pdf")
-            Log.d("localPath", localPath.toString())
-            Log.d("absolutePath", localPath.absolutePath)
-            val intent = Intent(context, PdfViewActivity::class.java)
-            intent.putExtra("PDF_URL", localPath.absolutePath)
-            intent.putExtra("PDF_TITLE",item.topicName)
+            val intent = Intent(context, PdfViewActivity::class.java).apply {
+                putExtra("PDF_URL", localPath.absolutePath)
+                putExtra("PDF_TITLE", item.topicName)
+            }
             context.startActivity(intent)
         }
 
         holder.forVideo.setOnClickListener {
-            videoClickListener.onVideoClick(item.id, item.topicName)
+            videoClickListener.onVideoClick(item)
         }
     }
 
     override fun getItemCount(): Int {
         return filteredItems.size
+    }
+
+    override fun getFilter(): Filter {
+        return object : Filter() {
+            override fun performFiltering(constraint: CharSequence?): FilterResults {
+                val filteredResults = FilterResults()
+                val query = constraint.toString().lowercase(Locale.getDefault())
+
+                filteredResults.values = if (query.isEmpty()) {
+                    items
+                } else {
+                    items.filter {
+                        it.topicName.lowercase(Locale.getDefault()).contains(query) ||
+                                it.lecture.lowercase(Locale.getDefault()).contains(query)
+                    }
+                }
+                return filteredResults
+            }
+
+            override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
+                filteredItems = results?.values as MutableList<TopicContentModel>
+                notifyDataSetChanged()
+            }
+        }
     }
 
     private fun formatTimeDuration(totalDuration: Int): String {
@@ -189,3 +165,4 @@ class DownloadedItemAdapter(
         }
     }
 }
+

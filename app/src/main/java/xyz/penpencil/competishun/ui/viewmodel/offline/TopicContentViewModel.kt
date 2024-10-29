@@ -56,6 +56,10 @@ class TopicContentViewModel @Inject constructor(
         }
     }
 
+    fun updateSelectedCount(newCount: Int) {
+        _topicContentCountFileType.value = _topicContentCountFileType.value.copy(selectedCount = newCount)
+    }
+
 }
 
 data class CountFileType(

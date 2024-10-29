@@ -146,7 +146,7 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
                 itemDetails?.let { item ->
                     item.also { data ->
                         data.isExternal = isExternal
-                        data.localPath = downloadPath
+                        data.localPath = File(downloadPath, fileName).absolutePath
                     }
                     topicContentViewModel.insertTopicContent(item)
                 }
