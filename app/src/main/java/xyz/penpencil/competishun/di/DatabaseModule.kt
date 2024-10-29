@@ -13,20 +13,18 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object RoomModule {
+object DatabaseModule {
 
     @Provides
     @Singleton
     fun provideDatabase(@ApplicationContext context: Context): CompetishunDatabase {
-        return Room.databaseBuilder(
-            context,
-            CompetishunDatabase::class.java,
-            "user_database"
-        ).build()
+        return Room.databaseBuilder(context, CompetishunDatabase::class.java, "competishun_database")
+            .fallbackToDestructiveMigration()
+            .build()
     }
 
     @Provides
-    fun provideUserDao(database: CompetishunDatabase): TopicContentModelDao {
+    fun provideTopicContentModelDao(database: CompetishunDatabase): TopicContentModelDao {
         return database.topicContentModelDao()
     }
 }

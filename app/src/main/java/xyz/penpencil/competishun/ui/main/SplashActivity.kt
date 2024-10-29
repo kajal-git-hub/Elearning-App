@@ -59,7 +59,7 @@ class SplashActivity : AppCompatActivity() {
 
 
         if (newUserOrNot) {
-            if (!token.isNullOrEmpty() && checkUserData() && !isMyCourseAvailable) {
+            if (!token.isNullOrEmpty() && checkUserData()) {
                 startActivity(Intent(this, HomeActivity::class.java))
             } else if (!token.isNullOrEmpty() && isMyCourseAvailable){
                 val intent = Intent(this, MainActivity::class.java)

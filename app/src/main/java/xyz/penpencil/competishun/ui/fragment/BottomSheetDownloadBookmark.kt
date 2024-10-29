@@ -1,6 +1,5 @@
 package xyz.penpencil.competishun.ui.fragment
 
-import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -38,128 +37,112 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
     @Inject
     lateinit var appController: AppController
 
-    var fileName: String = ""
+    private var fileName: String = ""
     private var videoUrl: String = ""
-    private var videoFile : File?=null
-    private var isExternal : Boolean = false
+    private var downloadPath: String = ""
+    private var isExternal: Boolean = false
 
     fun setItemDetails(details: TopicContentModel) {
-        Log.e("jcxjchzxcjzx", "setItemDetails: " +details.isExternal )
-        this.itemDetails = details
+        Log.e("Details", "isExternal: ${details.isExternal}")
+        itemDetails = details
     }
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentBottomSheetDownloadBookmarkBinding.inflate(inflater, container, false)
-        viewModel = ViewModelProvider(this).get(VideourlViewModel::class.java)
+        viewModel = ViewModelProvider(this)[VideourlViewModel::class.java]
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.tvBookmark.setOnClickListener {
-            itemDetails?.let { details ->
-                Log.d("bookmark","Clicked")
-                storeItemInPreferencesBm(details)
-                Toast.makeText(requireContext(),"Added in BookMark",Toast.LENGTH_SHORT).show()
-                dismiss()
-            }
-        }
-
-        binding.tvDownload.setOnClickListener {
-            itemDetails?.let { details ->
-                Log.d("download","Clicked")
-                Log.d("ItemDetails", details.toString())
-
-                val sharedPreferencesManager = SharedPreferencesManager(requireActivity())
-                val downloadedVideos = sharedPreferencesManager.getDownloadedVideos()
-                val downloadedPdfs = sharedPreferencesManager.getDownloadedPdfs()
-
-                // Check download limits
-                if (details.fileType == "VIDEO" && downloadedVideos.size >= 8) {
-                    Toast.makeText(requireContext(), "You can only download up to 8 videos. Please delete some.", Toast.LENGTH_SHORT).show()
-                    return@let
-                } else if (details.fileType == "PDF" && downloadedPdfs.size >= 8) {
-                    Toast.makeText(requireContext(), "You can only download up to 8 PDFs. Please delete some.", Toast.LENGTH_SHORT).show()
-                    return@let
-                }
-
-                storeItemInPreferences(details)
-
-                if (details.fileType == "VIDEO") {
-                    videoUrl =  details.url
-                    downloadVideo(requireContext(), details.url, details)
-                } else {
-                    downloadPdf(details, requireContext())
-                }
-                dismiss()
-            }
-        }
-
-    }
-    private fun storeItemInPreferencesBm(item: TopicContentModel) {
-        val sharedPreferencesManager = SharedPreferencesManager(requireActivity())
-        sharedPreferencesManager.saveDownloadedItemBm(item)
+        binding.tvBookmark.setOnClickListener { bookmarkItem() }
+        binding.tvDownload.setOnClickListener { downloadItem() }
     }
 
-    private fun storeItemInPreferences(item: TopicContentModel) {
-        val sharedPreferencesManager = SharedPreferencesManager(requireActivity())
-        sharedPreferencesManager.saveDownloadedItem(item)
-    }
-
-    private fun downloadPdf(details: TopicContentModel, requireContext: Context) {
-        this.videoUrl = videoUrl
-        this.fileName = "${details.topicName}.${details.fileType.lowercase()}"
-        this.videoFile = if (itemDetails?.isExternal == true) File("/storage/emulated/0/Documents") else requireContext.filesDir
-       if (videoFile?.isDirectory != true){
-           videoFile?.mkdirs()
-       }
-        isExternal = itemDetails?.isExternal == true
-
-        if (File(videoFile?.absolutePath, fileName).exists()) {
-            Toast.makeText(context, "Video already downloaded, choose other", Toast.LENGTH_SHORT).show()
+    private fun bookmarkItem() {
+        itemDetails?.let {
+            Log.d("Bookmark", "Clicked")
+            SharedPreferencesManager(requireActivity()).saveDownloadedItemBm(it)
+            Toast.makeText(requireContext(), "Added to Bookmarks", Toast.LENGTH_SHORT).show()
             dismiss()
-            return
         }
+    }
+
+    private fun downloadItem() {
+        itemDetails?.let { details ->
+            val sharedPreferencesManager = SharedPreferencesManager(requireActivity())
+            val downloadLimitExceeded = checkDownloadLimits(details, sharedPreferencesManager)
+
+            if (downloadLimitExceeded) return
+
+            SharedPreferencesManager(requireActivity()).saveDownloadedItem(details)
+            setupDownloadPaths(details)
+
+            when (details.fileType) {
+                "VIDEO" -> downloadVideo(details.url)
+                "PDF" -> downloadPdf(details.url)
+            }
+            dismiss()
+        }
+    }
+
+    private fun checkDownloadLimits(details: TopicContentModel, sharedPreferencesManager: SharedPreferencesManager): Boolean {
+        val downloadedVideos = sharedPreferencesManager.getDownloadedVideos()
+        val downloadedPdfs = sharedPreferencesManager.getDownloadedPdfs()
+
+        return when {
+            details.fileType == "VIDEO" && downloadedVideos.size >= 8 -> {
+                showToast("You can only download up to 8 videos. Please delete some.")
+                true
+            }
+            details.fileType == "PDF" && downloadedPdfs.size >= 8 -> {
+                showToast("You can only download up to 8 PDFs. Please delete some.")
+                true
+            }
+            else -> false
+        }
+    }
+
+    private fun setupDownloadPaths(details: TopicContentModel) {
+        isExternal = details.isExternal
+        downloadPath = if (isExternal) "/storage/emulated/0/Downloads" else requireContext().filesDir.absolutePath
+        val extension = if (details.fileType == "PDF")  ".pdf" else ".mp4"
+        fileName = "${details.topicName}$extension"
+    }
+
+    private fun downloadPdf(url: String) {
+        if (checkIfFileExists()) return
+        videoUrl = url
         checkNotificationPermission()
     }
 
-    private fun downloadVideo(context: Context, videoUrl: String, topicContentModel: TopicContentModel) {
-        this.videoUrl = videoUrl
-        this.fileName = "${topicContentModel.topicName}.mp4"
-        this.videoFile = if (itemDetails?.isExternal == true) File("/storage/emulated/0/Movies") else context.filesDir
-        if (videoFile?.isDirectory != true){
-            videoFile?.mkdirs()
-        }
-        isExternal = itemDetails?.isExternal == true
-
-        if (File(videoFile?.absolutePath, fileName).exists()) {
-            Toast.makeText(context, "Video already downloaded, choose other", Toast.LENGTH_SHORT).show()
-            dismiss()
-            return
-        }
+    private fun downloadVideo(url: String) {
+        videoUrl = url
+        if (checkIfFileExists()) return
         checkNotificationPermission()
+    }
+
+    private fun checkIfFileExists(): Boolean {
+        val fileExists = File(downloadPath, fileName).exists()
+        if (fileExists) showToast("File already downloaded, choose another")
+        return fileExists
     }
 
     private fun checkNotificationPermission() {
-        if (checkAndRequestPermissions()) {
-            (requireActivity() as HomeActivity).downloadFile(
-                url = videoUrl,
-                fileName = fileName,
-                path = videoFile?.absolutePath!!
-            )
-        }else {
+        if (arePermissionsGranted()) {
+            (requireActivity() as HomeActivity).downloadFile(videoUrl, fileName, isExternal)
+        } else {
             showPermissionDeniedDialog()
         }
     }
 
-    private fun checkAndRequestPermissions(): Boolean {
-        val missingPermissions = permissionList().filter {
-            ActivityCompat.checkSelfPermission(requireActivity(), it) != PackageManager.PERMISSION_GRANTED
+    private fun arePermissionsGranted(): Boolean {
+        val missingPermissions = permissionList().filterNot {
+            ActivityCompat.checkSelfPermission(requireActivity(), it) == PackageManager.PERMISSION_GRANTED
         }
         return if (missingPermissions.isEmpty()) {
             true
@@ -170,13 +153,12 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
     }
 
     private fun showPermissionDeniedDialog() {
-        val activity = activity ?: return
         AlertDialog.Builder(requireActivity())
             .setTitle("Notification Permission Needed")
             .setMessage("To show download progress, please allow notification permission.")
             .setPositiveButton("Settings") { dialog, _ ->
-                activity.startActivity(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-                    data = Uri.parse("package:${activity.packageName}")
+                startActivity(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                    data = Uri.parse("package:${requireActivity().packageName}")
                 })
                 dialog.dismiss()
             }
@@ -184,23 +166,23 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
             .show()
     }
 
-    private val requestNotificationPermission = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
-        val notificationPermissionGranted = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            permissions[Manifest.permission.POST_NOTIFICATIONS] == true
-        } else {
-            true
+    private val requestNotificationPermission =
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+            val notificationPermissionGranted = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                permissions[Manifest.permission.POST_NOTIFICATIONS] == true
+            } else {
+                true
+            }
+
+            val allPermissionsGranted = permissionList().all { permissions[it] == true }
+            if (notificationPermissionGranted && allPermissionsGranted) {
+                (requireActivity() as HomeActivity).downloadFile(videoUrl, fileName, isExternal)
+            } else {
+                showPermissionDeniedDialog()
+            }
         }
 
-        val allPermissionsGranted = permissionList().all { permissions[it] == true }
-
-        if (notificationPermissionGranted && allPermissionsGranted) {
-            (requireActivity() as HomeActivity).downloadFile(
-                url = videoUrl,
-                fileName = fileName,
-                path = videoFile?.absolutePath!!
-            )
-        } else {
-            showPermissionDeniedDialog()
-        }
+    private fun showToast(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
 }

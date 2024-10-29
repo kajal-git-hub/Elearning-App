@@ -368,10 +368,15 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
             Status.QUEUED, Status.PROGRESS, Status.PAUSED, Status.DEFAULT -> {}
         }
     }
+// //"/storage/emulated/0/Download/"
+    fun downloadFile(url: String, fileName: String, isExternal: Boolean = false) {
+        val path = if (isExternal) {
+            "/storage/emulated/0/Download/"
+        } else {
+            filesDir.absolutePath
+        }
 
-    fun downloadFile(url: String, fileName: String, path: String) {
-
-        Log.e("DownloadError", "PATH: $path")
+        Log.e("DownloadError", "PATH: $path/$fileName")
         val id = ketch.download(
             url = url,
             fileName = fileName,

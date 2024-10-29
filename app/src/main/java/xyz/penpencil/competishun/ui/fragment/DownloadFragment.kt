@@ -14,18 +14,26 @@ import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.tabs.TabLayout
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.FlowCollector
+import kotlinx.coroutines.launch
 import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.data.model.TopicContentModel
 import xyz.penpencil.competishun.databinding.FragmentDownloadBinding
 import xyz.penpencil.competishun.ui.adapter.DownloadedItemAdapter
 import xyz.penpencil.competishun.ui.main.HomeActivity
 import xyz.penpencil.competishun.ui.viewmodel.VideourlViewModel
+import xyz.penpencil.competishun.ui.viewmodel.offline.CountFileType
+import xyz.penpencil.competishun.ui.viewmodel.offline.TopicContentViewModel
 import xyz.penpencil.competishun.utils.SharedPreferencesManager
 import java.io.File
 
@@ -36,6 +44,9 @@ class DownloadFragment : DrawerVisibility(), DownloadedItemAdapter.OnVideoClickL
     private lateinit var viewModel: VideourlViewModel
     private lateinit var binding: FragmentDownloadBinding
     private lateinit var adapter: DownloadedItemAdapter
+
+    private val topicContentViewModel: TopicContentViewModel by viewModels()
+
     private var allDownloadedItems: List<TopicContentModel> = emptyList()
 
     private var pdfItemsSize = ""
@@ -90,8 +101,8 @@ class DownloadFragment : DrawerVisibility(), DownloadedItemAdapter.OnVideoClickL
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 tab?.let {
                     when (it.position) {
-                        0 -> showPdfItems()
-                        1 -> showVideoItems()
+                        0 -> loadData("PDF")
+                        1 -> loadData("VIDEO")
                     }
                     selectedTabPosition = it.position
                 }
@@ -102,35 +113,52 @@ class DownloadFragment : DrawerVisibility(), DownloadedItemAdapter.OnVideoClickL
         })
     }
 
-    fun loadDownloadedItems() {
-        val sharedPreferencesManager = SharedPreferencesManager(requireActivity())
-        allDownloadedItems = sharedPreferencesManager.getDownloadedItems()
-        Log.d("allDownloadedItems", allDownloadedItems.toString())
+    private fun loadDownloadedItems() {
+        lifecycleScope.launch {
+            lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                topicContentViewModel.topicContentCountFileType.collect {
+                    binding.studentTabLayout.getTabAt(0)?.text = "PDFs (${it.pdfCount})"
+                    binding.studentTabLayout.getTabAt(1)?.text = "Videos (${it.videoCount})"
+                    if (it.selectedCount == 0){
+                        loadData("PDF")
+                    }
 
-        val pdfItems = allDownloadedItems.filter { it.fileType == "PDF" }
-        val videoItems = allDownloadedItems.filter { it.fileType == "VIDEO" }
-
-        pdfItemsSize = pdfItems.size.toString()
-        videoItemsSize = videoItems.size.toString()
-
-        binding.studentTabLayout.getTabAt(0)?.text = "PDFs ($pdfItemsSize)"
-        binding.studentTabLayout.getTabAt(1)?.text = "Videos ($videoItemsSize)"
-
-        if (binding.studentTabLayout.getTabAt(selectedTabPosition)?.text == "PDFs ($pdfItemsSize)") {
-            updateRecyclerView(pdfItems)
+                    if (it.selectedCount == 1){
+                        loadData("VIDEO")
+                    }
+                }
+            }
         }
-        if (binding.studentTabLayout.getTabAt(selectedTabPosition)?.text == "Videos ($videoItemsSize)") {
-            updateRecyclerView(videoItems)
-        }
-
     }
 
-    fun updateDownloadedItems(fileType:String)
-    {
+    private fun loadData(fileType: String){
+
+        lifecycleScope.launch {
+            lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                topicContentViewModel.getTopicContentByFileType(fileType).collect { content ->
+                    when (fileType) {
+                        "PDF" -> {
+                            updateRecyclerView(content)
+                        }
+
+                        "VIDEO" -> {
+                            updateRecyclerView(content)
+                        }
+
+                        else -> {
+
+                        }
+                    }
+
+                }
+            }
+        }
+    }
+
+    fun updateDownloadedItems(fileType:String) {
         val sharedPreferencesManager = SharedPreferencesManager(requireActivity())
         allDownloadedItems = sharedPreferencesManager.getDownloadedItems()
-        if (fileType == "PDF")
-        {
+        if (fileType == "PDF") {
             val pdfItems = allDownloadedItems.filter { it.fileType == "PDF" }
             binding.studentTabLayout.getTabAt(0)?.text = "PDFs (${pdfItems.size})"
             updateRecyclerView(pdfItems)
