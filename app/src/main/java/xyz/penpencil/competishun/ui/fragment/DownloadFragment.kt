@@ -174,7 +174,7 @@ class DownloadFragment : DrawerVisibility(), DownloadedItemAdapter.OnVideoClickL
             lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
                 try {
                     if (File(topicContentModel.localPath).exists()){
-                        File(topicContentModel.localPath).deleteOnExit()
+                        File(topicContentModel.localPath).delete()
                     }
                 } catch (e: Exception) {
                     Log.e(TAG, "onDeleteClick: ${e.message}" )
