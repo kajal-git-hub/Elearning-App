@@ -57,6 +57,7 @@ class DownloadedItemAdapter(
 
     interface OnVideoClickListener {
         fun onVideoClick(folderContentId: String, name: String)
+        fun onDeleteClick(topicContentModel: TopicContentModel)
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -100,7 +101,7 @@ class DownloadedItemAdapter(
                 }
             }
 
-            fragment.updateDownloadedItems(item.fileType)
+//            fragment.updateDownloadedItems(item.fileType)
 
         }
 
@@ -115,7 +116,7 @@ class DownloadedItemAdapter(
         val item = filteredItems[position]
         holder.studyMaterial.text = item.lecture
 
-
+        Log.e("dmfdmnbfsmndbmfn", "onBindViewHolder: " +item.isExternal )
         if (item.fileType == "PDF") {
             holder.lecTime.text = item.lecturerName
             holder.lecTime.setCompoundDrawablesWithIntrinsicBounds(R.drawable.download_person, 0, 0, 0)

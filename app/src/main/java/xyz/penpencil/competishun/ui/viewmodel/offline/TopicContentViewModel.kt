@@ -21,11 +21,7 @@ class TopicContentViewModel @Inject constructor(
     val topicContentCountFileType: StateFlow<CountFileType> = _topicContentCountFileType.asStateFlow()
 
     init {
-        viewModelScope.launch {
-            repository.allTopicContent.collect { content ->
-                _topicContent.value = content
-            }
-        }
+        getTopicContentCountByFileType()
     }
 
     fun insertTopicContent(topicContent: TopicContentModel) {
@@ -46,7 +42,10 @@ class TopicContentViewModel @Inject constructor(
     }
 
     fun getTopicContentCountByFileType() = viewModelScope.launch {
-        combine(repository.getPdfCount(), repository.getVideoCount()) { pdfCount, videoCount ->
+        combine(
+            repository.getPdfCount(),
+            repository.getVideoCount()
+        ) { pdfCount, videoCount ->
             CountFileType(
                 pdfCount = pdfCount,
                 videoCount = videoCount,
@@ -56,6 +55,7 @@ class TopicContentViewModel @Inject constructor(
             _topicContentCountFileType.value = countFileType
         }
     }
+
 }
 
 data class CountFileType(

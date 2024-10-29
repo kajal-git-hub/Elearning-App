@@ -190,6 +190,11 @@ class DownloadFragment : DrawerVisibility(), DownloadedItemAdapter.OnVideoClickL
         playVideo(folderContentId, name)
     }
 
+    override fun onDeleteClick(topicContentModel: TopicContentModel) {
+
+
+    }
+
     private fun playVideo(folderContentId: String, name: String) {
         var file=File(context?.filesDir,"$name.mp4")
         if (!file.isFile){
