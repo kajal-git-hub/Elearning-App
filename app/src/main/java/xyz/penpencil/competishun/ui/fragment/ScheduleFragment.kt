@@ -53,6 +53,8 @@ import java.time.YearMonth
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.util.Calendar
+import java.util.Date
+import java.util.TimeZone
 
 @AndroidEntryPoint
 class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
@@ -196,9 +198,10 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
             result.onSuccess { data ->
                 Log.e("getdatafolder",data.toString())
                 if (data.findAllCourseFolderContentByScheduleTime.isEmpty()){
-                   binding.clEmptySchedule.visibility = View.VISIBLE
-                   binding.rvCalenderSchedule.visibility = View.GONE
-                   setupCalendar(courseStart)
+                    binding.clEmptySchedule.visibility = View.VISIBLE
+                    binding.rvCalenderSchedule.visibility = View.GONE
+                    hasScheduleList.clear()
+//                   setupCalendar(courseStart)
                 }else{
                     binding.clEmptySchedule.visibility = View.GONE
                     binding.rvCalenderSchedule.visibility = View.VISIBLE
@@ -306,8 +309,9 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
         helperFunctions = HelperFunctions()
         courseName  =  arguments?.getString("courseName")?:""
         courseId  =  arguments?.getString("courseId")?:""
-        courseStart  =  arguments?.getString("courseStart")?:""
-        courseEnd  =  arguments?.getString("courseEnd")?:""
+        val date = getStartAndEndOfMonth(Date())
+        courseStart  =  date.first
+        courseEnd  =  date.second
         courses =  arguments?.getString("courses")?:""
 
         Log.e("hjdhkjdskfksdkfj", "courseName = $courseName \n" +
@@ -326,12 +330,58 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
     }
 
     private fun fetchData(){
-        var start = helperFunctions.formatCourseDate(courseStart)
+      /*  var start = helperFunctions.formatCourseDate(courseStart)
         var end = helperFunctions.formatCourseDate(courseEnd)
         var starts = getDateBeforeDays(dateFormate(start),7)
-        var ends = getDateAfterDays(dateFormate(end),7)
+        var ends = getDateAfterDays(dateFormate(end),7)*/
+        val starts = courseStart.toFormattedDate()?:return
+        val ends = courseEnd.toFormattedDate()?:return
         myCourseViewModel.getCourseFolderContent(starts,ends, courseId)
     }
+
+    private fun String.toFormattedDate(): String? {
+        val inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX")
+        val outputFormatter = DateTimeFormatter.ofPattern("MM-dd-yyyy")
+
+        return try {
+            val dateTime = LocalDateTime.parse(this, inputFormatter)
+            dateTime.format(outputFormatter)
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    fun getStartAndEndOfMonth(date: Date): Pair<String, String> {
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX", Locale.getDefault()).apply {
+            timeZone = TimeZone.getTimeZone("UTC")
+        }
+
+        // Set startOfDay to the first day of the month
+        val startCalendar = Calendar.getInstance().apply {
+            time = date
+            set(Calendar.DAY_OF_MONTH, 1)
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+        }
+        val startOfDay = dateFormat.format(startCalendar.time)
+
+        // Set endOfDay to the last day of the month
+        val endCalendar = Calendar.getInstance().apply {
+            time = date
+            set(Calendar.DAY_OF_MONTH, getActualMaximum(Calendar.DAY_OF_MONTH))
+            set(Calendar.HOUR_OF_DAY, 23)
+            set(Calendar.MINUTE, 59)
+            set(Calendar.SECOND, 59)
+            set(Calendar.MILLISECOND, 999)
+        }
+        val endOfDay = dateFormat.format(endCalendar.time)
+
+        return Pair(startOfDay, endOfDay)
+    }
+
+
 
     fun dateFormate(inputDate:String):String{
 
@@ -339,8 +389,8 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
         val outputFormat = SimpleDateFormat("MM-dd-yyyy", Locale.getDefault())
 
         return try {
-            val date = inputFormat.parse(inputDate) // Parse the input date
-            val formattedDate = outputFormat.format(date) // Format it into the desired format
+            val date = inputFormat.parse(inputDate)
+            val formattedDate = outputFormat.format(date)
            formattedDate
         } catch (e: Exception) {
             e.printStackTrace()
