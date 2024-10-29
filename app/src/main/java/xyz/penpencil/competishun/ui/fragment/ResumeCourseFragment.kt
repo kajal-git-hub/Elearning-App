@@ -191,6 +191,7 @@ class ResumeCourseFragment : DrawerVisibility() {
                                 putString("folder_Name", name)
                                 putString("folder_Id", folderId)
                                 putString("parent_content",foldercontent)
+                                putBoolean("isExternal",name.contains("DPP", ignoreCase = true))
                             }
                             findNavController().navigate(R.id.SubjectContentFragment, bundle)
                         } else if (!folderProgressContent.isNullOrEmpty()) {
@@ -205,7 +206,7 @@ class ResumeCourseFragment : DrawerVisibility() {
                                 putString("folderContents", folderContentsJson)
                                 putString("folder_Id", folderId)
                                 putString("folderName", folderNames)
-
+                                putBoolean("isExternal",name.contains("DPP", ignoreCase = true))
                             }
                             findNavController().navigate(R.id.TopicTYPEContentFragment, bundle)
                         }

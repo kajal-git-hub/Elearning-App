@@ -11,7 +11,6 @@ import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.media3.common.Player
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
@@ -20,7 +19,6 @@ import com.google.gson.Gson
 import com.student.competishun.curator.GetCourseByIdQuery
 import dagger.hilt.android.AndroidEntryPoint
 import xyz.penpencil.competishun.R
-import xyz.penpencil.competishun.data.model.CourseFItem
 import xyz.penpencil.competishun.data.model.SubjectContentItem
 import xyz.penpencil.competishun.data.model.TopicContentModel
 import xyz.penpencil.competishun.data.model.TopicTypeModel
@@ -28,7 +26,6 @@ import xyz.penpencil.competishun.databinding.FragmentStudyMaterialBinding
 import xyz.penpencil.competishun.databinding.FragmentStudyMaterialDetailsBinding
 import xyz.penpencil.competishun.di.Result
 import xyz.penpencil.competishun.di.SharedVM
-import xyz.penpencil.competishun.ui.adapter.CourseFeaturesAdapter
 import xyz.penpencil.competishun.ui.adapter.SubjectContentAdapter
 import xyz.penpencil.competishun.ui.adapter.TopicContentAdapter
 import xyz.penpencil.competishun.ui.main.HomeActivity
@@ -104,6 +101,8 @@ class StudyMaterialDetailsFragment : Fragment() {
                 if (folderlist[0].id != null) {
                     var id = folderlist[0].id ?: ""
                     var name = folderlist[0].id ?: ""
+                    val data = folderlist[0].name
+                    Log.e("mndbnmbmasbmda", "onViewCreated: "+data)
                     binding.tvTopicType.text = folderlist[0].name
                     if (sharedPreferencesManager.hasKey("TOPIC_ID_STUDY") && !sharedPreferencesManager.getString("TOPIC_ID_STUDY", "").isNullOrEmpty()){
                         binding.tvTopicType.text = sharedPreferencesManager.getString("TOPIC_ID_STUDY_TYPE", "Physics")
@@ -264,7 +263,8 @@ class StudyMaterialDetailsFragment : Fragment() {
                                         lockTime = time,
                                         // Assign homework name and URL here
                                         homeworkName = homeworkFileName.toString(),
-                                        homeworkUrl = homeworkUrl.toString()  // Add this field in your TopicContentModel if it doesn't exist
+                                        homeworkUrl = homeworkUrl.toString(), // Add this field in your TopicContentModel if it doesn't exist
+                                        isExternal = contents.content?.file_name?.contains("DPPs") == true
                                     )
                                 }
                             val folderContentIs = folderProgressContent.filter { it.content?.file_type?.name  == "VIDEO" }.mapNotNull { it.content?.id }.toCollection(ArrayList())
@@ -419,7 +419,8 @@ class StudyMaterialDetailsFragment : Fragment() {
                                         fileType = contents.content?.file_type?.name ?: "",
                                         lockTime =  time,
                                         homeworkUrl = homeworkUrl.toString(),
-                                        homeworkName = homeworkFileName.toString()
+                                        homeworkName = homeworkFileName.toString(),
+                                        isExternal = contents.content?.file_name?.contains("DPPs") == true
                                     )
                                 }
                             binding.tvContentCount.text = "(${subjectContentList.size + (folderProgressContent?.size ?: 0)})"

@@ -32,8 +32,7 @@ import java.time.format.ResolverStyle
 import java.util.Locale
 
 
-class
-TopicContentAdapter(
+class TopicContentAdapter(
     private val topicContents: List<TopicContentModel>,
     private val folderContentId: String,
     private val fragmentActivity: FragmentActivity,
