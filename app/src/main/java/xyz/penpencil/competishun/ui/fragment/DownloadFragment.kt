@@ -144,6 +144,14 @@ class DownloadFragment : DrawerVisibility(), DownloadedItemAdapter.OnVideoClickL
 
 
     private fun updateRecyclerView(items: List<TopicContentModel>) {
+        if (items.isEmpty()){
+            binding.rvDownloads.visibility = View.GONE
+            binding.clEmptyDownloads.visibility = View.VISIBLE
+            return
+        }else {
+            binding.rvDownloads.visibility = View.VISIBLE
+            binding.clEmptyDownloads.visibility = View.GONE
+        }
         adapter = DownloadedItemAdapter(requireContext(), items.toMutableList(), this, parentFragmentManager, this)
         binding.rvDownloads.adapter = adapter
     }
