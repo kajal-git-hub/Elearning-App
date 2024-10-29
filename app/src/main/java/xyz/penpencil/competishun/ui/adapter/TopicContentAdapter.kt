@@ -64,12 +64,12 @@ class TopicContentAdapter(
         Log.e("unlockedTopic",unlockedTopicContentNames.toString())
         // Disable click if locked, enable if not
         holder.itemView.setOnClickListener {
-            if (isDateTodayOrPast(topicContent.lockTime)){
-                onItemClick(topicContent, folderContentId,unlockedTopicContentIds,unlockedTopicContentNames)
-            }else if ((topicContent.fileType == "URL")){
+            if ((topicContent.fileType == "URL")){
                 val url = if (topicContent.topicName.contains("http")) topicContent.url else "https://${topicContent.url}"
                 it.context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
-            }else if (topicContent.fileType == "UNKNOWN__" ) {
+            } else if (isDateTodayOrPast(topicContent.lockTime)){
+                onItemClick(topicContent, folderContentId,unlockedTopicContentIds,unlockedTopicContentNames)
+            } else if (topicContent.fileType == "UNKNOWN__" ) {
                 Log.e("TAG", "onBindViewHolder: ")
             }else {
                 Toast.makeText(it.context, "Content is locked!", Toast.LENGTH_SHORT).show()
