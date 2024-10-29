@@ -43,6 +43,7 @@ class SubjectContentFragment : DrawerVisibility() {
     val gson = Gson()
     private var isFirstTimeLoading = true
     private lateinit var sharedViewModel: SharedVM
+    private var isExternal: Boolean = false
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -79,6 +80,7 @@ class SubjectContentFragment : DrawerVisibility() {
         val parentContent = arguments?.getString("parent_content") ?: ""
         val folderId =  arguments?.getString("folder_Id") ?: ""
         var folder_Count = arguments?.getString("folder_Count") ?: "0"
+        isExternal = arguments?.getBoolean("isExternal", false) == true
         val subFolderList =
             object : TypeToken<List<FindCourseFolderProgressQuery.SubfolderDuration>>() {}.type
         val subFoldersList: List<FindCourseFolderProgressQuery.SubfolderDuration> =
@@ -216,7 +218,8 @@ class SubjectContentFragment : DrawerVisibility() {
                                         lockTime = time,
                                         // Assign homework name and URL here
                                         homeworkName = homeworkFileName.toString(),
-                                        homeworkUrl = homeworkUrl.toString()  // Add this field in your TopicContentModel if it doesn't exist
+                                        homeworkUrl = homeworkUrl.toString() , // Add this field in your TopicContentModel if it doesn't exist
+                                        isExternal = isExternal
                                     )
                                 }
 
@@ -370,7 +373,8 @@ class SubjectContentFragment : DrawerVisibility() {
                                         fileType = contents.content?.file_type?.name ?: "",
                                         lockTime =  time,
                                         homeworkUrl = homeworkUrl.toString(),
-                                        homeworkName = homeworkFileName.toString()
+                                        homeworkName = homeworkFileName.toString(),
+                                        isExternal = isExternal
                                     )
                                 }
                             val folderContentIds = folderProgressContent.filter { it.content?.file_type?.name  == "VIDEO" }.mapNotNull { it.content?.id }.toCollection(ArrayList())
@@ -485,7 +489,8 @@ class SubjectContentFragment : DrawerVisibility() {
                                         fileType = contents.content?.file_type?.name ?: "",
                                         lockTime =  time,
                                         homeworkUrl = homeworkUrl.toString(),
-                                        homeworkName = homeworkFileName.toString()
+                                        homeworkName = homeworkFileName.toString(),
+                                        isExternal = isExternal
                                     )
                                 }
                             val folderConteIds = folderProgressContent.filter { it.content?.file_type?.name  == "VIDEO" }.mapNotNull { it.content?.id }.toCollection(ArrayList())
@@ -567,7 +572,8 @@ class SubjectContentFragment : DrawerVisibility() {
                 fileType = content.content?.file_type?.name ?: "",
                 lockTime = time,
                 homeworkUrl = homeworkUrl.toString(),
-                homeworkName = homeworkFileName.toString()
+                homeworkName = homeworkFileName.toString(),
+                isExternal = isExternal
             )
         } ?: emptyList()
 

@@ -36,6 +36,7 @@ class TopicTypeContentFragment : Fragment() {
     private val videourlViewModel: VideourlViewModel by viewModels()
 
     private lateinit var helperFunctions: HelperFunctions
+    private var isExternal = false
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -56,8 +57,9 @@ class TopicTypeContentFragment : Fragment() {
         (activity as? HomeActivity)?.showBottomNavigationView(false)
         (activity as? HomeActivity)?.showFloatingButton(false)
         val folderId = arguments?.getString("folder_Id")?:""
-        var folder_Name = arguments?.getString("folderName")
-        var folderContents = arguments?.getString("folderContents")?:"0"
+        val folder_Name = arguments?.getString("folderName")
+        val folderContents = arguments?.getString("folderContents")?:"0"
+         isExternal = arguments?.getBoolean("isExternal", false) == true
         val subContentList = object : TypeToken< List<FindCourseFolderProgressQuery. FolderContent>>() {}.type
         val subContentsList:  List<FindCourseFolderProgressQuery. FolderContent> = gson.fromJson(folderContents, subContentList)
         binding.tvTopicTypeName.text = folder_Name?:""
@@ -117,7 +119,8 @@ class TopicTypeContentFragment : Fragment() {
                 fileType = content.content?.file_type?.name ?: "",
                 lockTime = time,
                 homeworkUrl = homeworkUrl.toString(),
-                homeworkName = homeworkFileName.toString()
+                homeworkName = homeworkFileName.toString(),
+                isExternal = content.content?.file_name?.contains("DPPs") == true
             )
         } ?: emptyList()
         val folderContentis = folderContents.filter { it.content?.file_type?.name  == "VIDEO" }.mapNotNull { it.content?.id }?.toCollection(ArrayList())
@@ -187,7 +190,8 @@ class TopicTypeContentFragment : Fragment() {
                             fileType = content.content?.file_type?.name.orEmpty(),
                             lockTime = time,
                             homeworkUrl = homeworkUrl.toString(),
-                            homeworkName = homeworkFileName.toString()
+                            homeworkName = homeworkFileName.toString(),
+                            isExternal = content.content?.file_name?.contains("DPPs") == true
                         )
                     } ?: emptyList()
                     val folderContentIs = folderContents?.filter { it.content?.file_type?.name  == "VIDEO" }?.mapNotNull { it.content?.id }?.toCollection(ArrayList())

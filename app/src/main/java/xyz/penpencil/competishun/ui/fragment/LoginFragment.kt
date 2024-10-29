@@ -1,5 +1,6 @@
 package xyz.penpencil.competishun.ui.fragment
 
+import android.app.PendingIntent
 import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
@@ -17,9 +18,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.content.FileProvider
 import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.IntentSenderRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
@@ -31,8 +34,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-
-import androidx.navigation.fragment.findNavController
+import com.google.android.gms.auth.api.identity.GetPhoneNumberHintIntentRequest
+import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -41,20 +44,20 @@ import com.google.android.gms.tasks.Task
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
-import xyz.penpencil.competishun.ui.main.HomeActivity
-import xyz.penpencil.competishun.ui.viewmodel.GetOtpViewModel
-import xyz.penpencil.competishun.ui.viewmodel.UserViewModel
-import xyz.penpencil.competishun.ui.viewmodel.VerifyOtpViewModel
-import xyz.penpencil.competishun.utils.SharedPreferencesManager
+import com.student.competishun.gatekeeper.type.Auth
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.databinding.FragmentLoginBinding
+import xyz.penpencil.competishun.ui.main.HomeActivity
 import xyz.penpencil.competishun.ui.main.MainActivity
+import xyz.penpencil.competishun.ui.viewmodel.GetOtpViewModel
+import xyz.penpencil.competishun.ui.viewmodel.UserViewModel
+import xyz.penpencil.competishun.ui.viewmodel.VerifyOtpViewModel
+import xyz.penpencil.competishun.utils.SharedPreferencesManager
+import java.io.File
 import java.security.MessageDigest
 import java.util.UUID
-import java.io.File
-
 
 
 @AndroidEntryPoint
@@ -72,8 +75,30 @@ class LoginFragment : Fragment() {
     private lateinit var googleSignInClient: GoogleSignInClient
     private lateinit var signInLauncher: ActivityResultLauncher<Intent>
 
+
     private lateinit var googleSignInLauncher: ActivityResultLauncher<Intent>
 
+    private val phoneNumberHintIntentResultLauncher = registerForActivityResult(
+        ActivityResultContracts.StartIntentSenderForResult()
+    ) { result ->
+        try {
+            val phoneNumber = Identity.getSignInClient(requireActivity())
+                .getPhoneNumberFromIntent(result.data)
+            if (phoneNumber != null) {
+                val formattedPhoneNumber  = removeNineOne(phoneNumber)
+                binding.etEnterMob.setText(formattedPhoneNumber)
+                Log.d(TAG, "Retrieved phone number: $phoneNumber")
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to retrieve phone number")
+        }
+    }
+
+    private fun removeNineOne(phoneNumber: String): String {
+        return phoneNumber.removePrefix("+91")
+    }
+
+    val request: GetPhoneNumberHintIntentRequest = GetPhoneNumberHintIntentRequest.builder().build()
 
 
     override fun onCreateView(
@@ -89,17 +114,12 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-//        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-//            .requestIdToken(getString(R.string.client_id))
-//            .requestEmail()
-//            .requestProfile()
-//            .build()
-//        googleSignInClient = GoogleSignIn.getClient(requireActivity(), gso)
-
-
         setupUI()
         setupObservers()
-//
+
+        binding.etEnterMob.setOnClickListener {
+            retrievePhoneNumberHint()
+        }
 
         binding.etHelpText.setOnClickListener {
             val phoneNumber = "8888000021"
@@ -122,13 +142,54 @@ class LoginFragment : Fragment() {
                 Log.d("GoogleSignIn", "Signed out successfully, triggering new sign-in.")
                 googleCredential() // Trigger Google Sign-In
          }
-
-        // Set up sign-in button listener
-//        binding.btnGoogleLogin.setOnClickListener {
-//                Log.d("GoogleSignIn", "Signed out successfully, triggering new sign-in.")
-//                googleCredential() // Trigger Google Sign-In
-//        }
     }
+
+
+    private fun retrievePhoneNumberHint() {
+        Identity.getSignInClient(requireActivity())
+            .getPhoneNumberHintIntent(request)
+            .addOnSuccessListener { result: PendingIntent ->
+                try {
+                    phoneNumberHintIntentResultLauncher.launch(
+                        IntentSenderRequest.Builder(result).build()
+                    )
+                } catch (e: Exception) {
+                    Log.e(TAG, "Launching the PendingIntent failed")
+                }
+            }
+            .addOnFailureListener {
+                Log.e(TAG, "Phone Number Hint failed")
+            }
+    }
+    private fun setupPhoneInput() {
+        binding.etEnterMob.apply {
+            filters = arrayOf(InputFilter.LengthFilter(10))
+
+            setOnFocusChangeListener { _, hasFocus ->
+                binding.phoneInputLayout.setBackgroundResource(
+                    if (hasFocus) R.drawable.rounded_homeeditext_clicked else R.drawable.rounded_homeditext_unclicked
+                )
+            }
+
+            addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
+                }
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    updateVerifyButtonState(s?.length == 10)
+                }
+
+                override fun afterTextChanged(s: Editable?) {}
+            })
+        }
+    }
+
+
     fun googleCredential() {
         val credentialManager = CredentialManager.create(requireContext())
         val rawNonce = UUID.randomUUID().toString()
@@ -303,33 +364,7 @@ class LoginFragment : Fragment() {
         setupTermsAndPrivacyText()
     }
 
-    private fun setupPhoneInput() {
-        binding.etEnterMob.apply {
-            filters = arrayOf(InputFilter.LengthFilter(10))
 
-            setOnFocusChangeListener { _, hasFocus ->
-                binding.phoneInputLayout.setBackgroundResource(
-                    if (hasFocus) R.drawable.rounded_homeeditext_clicked else R.drawable.rounded_homeditext_unclicked
-                )
-            }
-
-            addTextChangedListener(object : TextWatcher {
-                override fun beforeTextChanged(
-                    s: CharSequence?,
-                    start: Int,
-                    count: Int,
-                    after: Int
-                ) {
-                }
-
-                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                    updateVerifyButtonState(s?.length == 10)
-                }
-
-                override fun afterTextChanged(s: Editable?) {}
-            })
-        }
-    }
 
     private fun navigateToHomeActivity(userId:String) {
         sharedPreferencesManager.userId = userId
