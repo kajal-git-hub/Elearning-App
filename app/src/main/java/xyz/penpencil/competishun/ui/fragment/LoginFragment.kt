@@ -85,7 +85,8 @@ class LoginFragment : Fragment() {
             val phoneNumber = Identity.getSignInClient(requireActivity())
                 .getPhoneNumberFromIntent(result.data)
             if (phoneNumber != null) {
-                binding.etEnterMob.setText(phoneNumber)
+                val formattedPhoneNumber  = phoneNumber.removePrefix("+91")
+                binding.etEnterMob.setText(formattedPhoneNumber)
                 Log.d(TAG, "Retrieved phone number: $phoneNumber")
             }
         } catch (e: Exception) {
