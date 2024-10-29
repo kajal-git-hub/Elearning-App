@@ -376,7 +376,7 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
             filesDir.absolutePath
         }
 
-        Log.e("DownloadError", "PATH: $path/$fileName")
+        Log.e("DownloadError", "PATH: $path$fileName")
         val id = ketch.download(
             url = url,
             fileName = fileName,

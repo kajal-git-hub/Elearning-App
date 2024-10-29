@@ -25,7 +25,11 @@ import android.provider.Settings
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 import xyz.penpencil.competishun.ui.main.HomeActivity
+import xyz.penpencil.competishun.ui.viewmodel.offline.TopicContentViewModel
 import xyz.penpencil.competishun.utils.permissionList
 
 @AndroidEntryPoint
@@ -41,6 +45,9 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
     private var videoUrl: String = ""
     private var downloadPath: String = ""
     private var isExternal: Boolean = false
+
+    private val topicContentViewModel: TopicContentViewModel by viewModels()
+
 
     fun setItemDetails(details: TopicContentModel) {
         Log.e("Details", "isExternal: ${details.isExternal}")
@@ -109,7 +116,7 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
 
     private fun setupDownloadPaths(details: TopicContentModel) {
         isExternal = details.isExternal
-        downloadPath = if (isExternal) "/storage/emulated/0/Downloads" else requireContext().filesDir.absolutePath
+        downloadPath = if (isExternal) "/storage/emulated/0/Download" else requireContext().filesDir.absolutePath
         val extension = if (details.fileType == "PDF")  ".pdf" else ".mp4"
         fileName = "${details.topicName}$extension"
     }
@@ -127,7 +134,7 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
     }
 
     private fun checkIfFileExists(): Boolean {
-        val fileExists = File(downloadPath, fileName).exists()
+        val fileExists = File(downloadPath, fileName).isFile
         if (fileExists) showToast("File already downloaded, choose another")
         return fileExists
     }
@@ -135,6 +142,15 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
     private fun checkNotificationPermission() {
         if (arePermissionsGranted()) {
             (requireActivity() as HomeActivity).downloadFile(videoUrl, fileName, isExternal)
+            lifecycleScope.launch {
+                itemDetails?.let { item ->
+                    item.also { data ->
+                        data.isExternal = isExternal
+                        data.localPath = downloadPath
+                    }
+                    topicContentViewModel.insertTopicContent(item)
+                }
+            }
         } else {
             showPermissionDeniedDialog()
         }

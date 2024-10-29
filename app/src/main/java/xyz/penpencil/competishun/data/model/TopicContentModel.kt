@@ -51,8 +51,8 @@ data class TopicContentModel(
     val homeworkName: String,
 
     @ColumnInfo(name = "is_external")
-    val isExternal: Boolean = false,
+    var isExternal: Boolean = false,
 
     @ColumnInfo(name = "local_path")
-    val localPath: String = ""
+    var localPath: String = ""
 ) : Serializable
