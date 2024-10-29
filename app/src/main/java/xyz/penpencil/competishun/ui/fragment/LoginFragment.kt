@@ -85,13 +85,17 @@ class LoginFragment : Fragment() {
             val phoneNumber = Identity.getSignInClient(requireActivity())
                 .getPhoneNumberFromIntent(result.data)
             if (phoneNumber != null) {
-                val formattedPhoneNumber  = phoneNumber.removePrefix("+91")
+                val formattedPhoneNumber  = removeNineOne(phoneNumber)
                 binding.etEnterMob.setText(formattedPhoneNumber)
                 Log.d(TAG, "Retrieved phone number: $phoneNumber")
             }
         } catch (e: Exception) {
             Log.e(TAG, "Failed to retrieve phone number")
         }
+    }
+
+    private fun removeNineOne(phoneNumber: String): String {
+        return phoneNumber.removePrefix("+91")
     }
 
     val request: GetPhoneNumberHintIntentRequest = GetPhoneNumberHintIntentRequest.builder().build()
