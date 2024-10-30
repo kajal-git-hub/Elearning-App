@@ -16,14 +16,17 @@ import androidx.activity.addCallback
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.apollographql.apollo3.api.Optional
 import com.google.gson.Gson
 import com.student.competishun.gatekeeper.type.UpdateUserInput
 import dagger.hilt.android.AndroidEntryPoint
 import xyz.penpencil.competishun.R
+import xyz.penpencil.competishun.data.api.ApiProcess
 import xyz.penpencil.competishun.data.model.State
 import xyz.penpencil.competishun.data.model.StateCity
+import xyz.penpencil.competishun.data.model.UpdateUserResponse
 import xyz.penpencil.competishun.databinding.FragmentOnBoardingBinding
 import xyz.penpencil.competishun.ui.main.MainActivity
 import xyz.penpencil.competishun.ui.viewmodel.UpdateUserViewModel
@@ -80,8 +83,7 @@ class OnBoardingFragment : Fragment() {
             if (isCurrentStepValid(loginType)) {
                 sharedPreferencesManager.loginType  = loginType
                 saveUserDetails()
-                updateUser()
-                navigateToNextFragment(loginType)
+                updateUser(loginType)
             } else {
                 Toast.makeText(context, "Please fill all the details", Toast.LENGTH_SHORT).show()
             }
@@ -272,17 +274,37 @@ class OnBoardingFragment : Fragment() {
         }
     }
 
-    private fun updateUser() {
+    private fun updateUser(loginType: String?) {
+        Log.d("updateUserMob: ",sharedPreferencesManager.mobileNo.toString())
         val updateUserInput = UpdateUserInput(
             city = Optional.Present(sharedPreferencesManager.city),
             state = Optional.Present(sharedPreferencesManager.state),
             fullName = Optional.Present(sharedPreferencesManager.name),
-            mobileNumber = Optional.Present(sharedPreferencesManager.mobileNo),
+            mobileNumber = if(loginType=="email")  Optional.Present(sharedPreferencesManager.mobileNo)else Optional.Absent,
             email = Optional.Present(sharedPreferencesManager.email)
         )
 
-        updateUserViewModel.updateUser(updateUserInput,null,null)
+        updateUserViewModel.updateUserErrorHandled(updateUserInput, null, null)
+
+        updateUserViewModel.updateUserErrorHandledResult.observe(viewLifecycleOwner, Observer { result ->
+            when (result) {
+                is ApiProcess.Success -> {
+                    navigateToNextFragment(loginType)
+                }
+                is ApiProcess.Failure -> {
+                    Log.e("gettingUserUpdateFail", "Error: ${result.message}")
+                    Toast.makeText(context, result.message, Toast.LENGTH_SHORT).show()
+                }
+                ApiProcess.Loading -> {
+                    Log.d("UpdateUser", "Loading user update...")
+                }
+                else -> {
+                    Log.e("gettingUserUpdateFail", "Unexpected result")
+                }
+            }
+        })
     }
+
 
     //    private fun observeUserDetails() {
 //        userViewModel.userDetails.observe(viewLifecycleOwner) { user ->
@@ -314,9 +336,9 @@ class OnBoardingFragment : Fragment() {
 
     private fun navigateToNextFragment(loginType: String?) {
         if (loginType == "email") {
-            findNavController().navigate(R.id.action_OnBoardingFragment_to_prepForFragment)
+            findNavController().navigate(R.id.PrepForFragment)
         } else {
-            findNavController().navigate(R.id.action_OnBoardingFragment_to_prepForFragment)
+            findNavController().navigate(R.id.PrepForFragment)
         }
     }
 
