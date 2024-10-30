@@ -66,7 +66,8 @@ object GraphQlModule {
                     .build()
 
                 var response = chain.proceed(modifiedRequest)
-
+//{"errors":[{"message":"Unauthorized","statusCode":"UNAUTHENTICATED"}],"data":null}
+//                if (response.body?.readUtf8()?.contains("{\"message\":\"Unauthorized\",\"statusCode\":\"UNAUTHENTICATED\"}") == true) {
                 if (response.statusCode == 401) {
                     val newAccessToken = refreshToken(sharedPreferencesManager)
                     if (newAccessToken != null) {
@@ -96,7 +97,7 @@ object GraphQlModule {
     private suspend fun getNewAccessTokenFromRefreshToken(sharedPreferencesManager: SharedPreferencesManager): String? {
         val apolloClient = ApolloClient.Builder()
             .serverUrl(BASE_URL_GATEKEEPER)
-            .addHttpHeader("Authorization", "Bearer ${sharedPreferencesManager.accessToken}")
+            .addHttpHeader("Authorization", "Bearer ${sharedPreferencesManager.refreshToken}")
             .build()
 
         return try {

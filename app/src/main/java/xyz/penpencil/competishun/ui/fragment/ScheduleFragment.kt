@@ -75,6 +75,9 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
     var courseStart  =  ""
     var courseEnd  =  ""
     var courses =  ""
+    var selectedDate : ZonedDateTime = ZonedDateTime.now()
+
+    var listData: List<FindAllCourseFolderContentByScheduleTimeQuery.FindAllCourseFolderContentByScheduleTime> = mutableListOf()
 
     private var hasScheduleList = mutableListOf<String>()
 
@@ -92,7 +95,11 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
             binding.rvCalenderDates,
             requireContext(),
             onDateSelected = { calendarDate ->
-                scrollToDate(calendarDate)
+                calendarDate.zonedDateTime?.let {
+                    selectedDate = it
+                }
+                setupRecyclerView()
+//                scrollToDate(calendarDate)
             }
             ,hasScheduleList
         )
@@ -143,16 +150,14 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
         }
     }
 
-    private fun setupRecyclerView(contentList: List<FindAllCourseFolderContentByScheduleTimeQuery.FindAllCourseFolderContentByScheduleTime>) {
-        val currentDate = LocalDate.now()
-        val day: Int = currentDate.dayOfMonth
-        val month: Int = currentDate.monthValue
-        val year: Int = currentDate.year
-        val d = if (day<10) "0$day" else day.toString()
-        val m = if (month<10) "0$month" else month.toString()
-        val courseDate = CalendarDate(d,"$day","",null)
-//            val scheduledTime = ZonedDateTime.parse(it.content.scheduled_time.toString().utcToIst())
-        val scheduleDataList = contentList.groupBy {
+    private fun setupRecyclerView() {
+        val contentList = listData
+        val filteredContentList = contentList.filter {
+            val scheduledTime = it.content.scheduled_time.toString().utcToIst().toIstZonedDateTime()
+            scheduledTime.toLocalDate() == selectedDate.toLocalDate()
+        }
+
+        val scheduleDataList = filteredContentList.groupBy {
             val scheduledTime = it.content.scheduled_time.toString().utcToIst().toIstZonedDateTime()
             scheduledTime.dayOfWeek.toString().take(3) to scheduledTime.dayOfMonth.toString()
         }.map { (dateInfo, groupedContentList) ->
@@ -163,34 +168,41 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
                 duration = 0,
                 groupedContentList.map { content ->
                     ScheduleData.InnerScheduleItem(
-                        content.folderPath?:"",
+                        content.folderPath ?: "",
                         content.content.file_name,
                         lecture_start_time = formatTime(convertIST(content.content.scheduled_time.toString())),
-                        lecture_end_time = convertLastDuration(formatTime(convertIST(content.content.scheduled_time.toString())),content.content.video_duration?.toLong()?:0),
+                        lecture_end_time = convertLastDuration(formatTime(convertIST(content.content.scheduled_time.toString())), content.content.video_duration?.toLong() ?: 0),
                         content.content.file_url.toString(),
                         content.content.file_type.name,
                         content.content.id,
                         content.content.scheduled_time.toString(),
-                        completedDuration = content.studentTrack?.completed_duration ?:0,
-                        statusTime = content.content.scheduled_time.toString().timeStatus(content.content.video_duration?:0)
+                        completedDuration = content.studentTrack?.completed_duration ?: 0,
+                        statusTime = content.content.scheduled_time.toString().timeStatus(content.content.video_duration ?: 0)
                     )
                 }
             )
         }
 
-
-        scheduleAdapter = ScheduleAdapter(scheduleDataList, requireContext(),this)
+        scheduleAdapter = ScheduleAdapter(scheduleDataList, requireContext(), this)
         binding.rvCalenderSchedule.adapter = scheduleAdapter
         binding.rvCalenderSchedule.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 
-        Handler(Looper.getMainLooper()).postDelayed({
-            scrollToDate(courseDate)
+        if (scheduleDataList.isEmpty()){
+            binding.clEmptySchedule.visibility = View.VISIBLE
+            binding.rvCalenderSchedule.visibility = View.GONE
+        }else {
+            binding.clEmptySchedule.visibility = View.GONE
+            binding.rvCalenderSchedule.visibility = View.VISIBLE
+        }
+       /* Handler(Looper.getMainLooper()).postDelayed({
+//            scrollToDate(courseDate)
         }, 2000)
 
         scheduleDataList.forEach { scheduleData ->
-            Log.e("ScheduleDatakaj", scheduleData.toString())
-        }
+            Log.e("ScheduleData", scheduleData.toString())
+        }*/
     }
+
 
     private fun findAllCourseFolderContentByScheduleTimeQuery(){
         myCourseViewModel.courseFolderContent.observe(viewLifecycleOwner) { result ->
@@ -205,7 +217,8 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
                 }else{
                     binding.clEmptySchedule.visibility = View.GONE
                     binding.rvCalenderSchedule.visibility = View.VISIBLE
-                setupRecyclerView(data.findAllCourseFolderContentByScheduleTime)
+                    listData = data.findAllCourseFolderContentByScheduleTime
+                setupRecyclerView()
                 }
                 Log.e("timesize",data.findAllCourseFolderContentByScheduleTime.size.toString())
                 data.findAllCourseFolderContentByScheduleTime.forEachIndexed { index, scheduleContent ->
