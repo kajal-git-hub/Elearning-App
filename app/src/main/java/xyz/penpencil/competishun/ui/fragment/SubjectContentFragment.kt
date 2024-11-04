@@ -30,6 +30,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.databinding.FragmentSubjectContentBinding
 import xyz.penpencil.competishun.di.Result
+import xyz.penpencil.competishun.ui.adapter.RecommendedCoursesAdapter
 import xyz.penpencil.competishun.ui.main.PdfViewActivity
 
 @AndroidEntryPoint
@@ -38,6 +39,7 @@ class SubjectContentFragment : DrawerVisibility() {
     private lateinit var binding: FragmentSubjectContentBinding
     private val coursesViewModel: CoursesViewModel by viewModels()
     private lateinit var helperFunctions: HelperFunctions
+    private lateinit var subjectContentAdapter: SubjectContentAdapter
     private val videourlViewModel: VideourlViewModel by viewModels()
     var VwatchedDuration: Int = 0
     val gson = Gson()
@@ -228,10 +230,10 @@ class SubjectContentFragment : DrawerVisibility() {
                                 folderId,
                                 requireActivity(),
                                 requireContext()
-                            ) { topicContent, folderContentId, folderContentIds ,folderContentNames ->
+                            ) { topicContent, folderContentId, folderContentIds ,folderContentNames, folderContentDesc ->
                                 when (topicContent.fileType) {
                                     "VIDEO" -> {
-                                        videoUrlApi(videourlViewModel, topicContent.id,topicContent.topicName,folderContentIds,folderContentNames)
+                                        videoUrlApi(videourlViewModel, topicContent.id,topicContent.topicName,folderContentIds,folderContentNames,folderContentDesc)
                                     }
                                     "PDF" -> {
                                         val intent = Intent(context, PdfViewActivity::class.java).apply {
@@ -381,11 +383,11 @@ class SubjectContentFragment : DrawerVisibility() {
                                 folderId,
                                 requireActivity(),
                                 requireContext()
-                            ) { topicContent, folderContentId, folderContentIds, folderContentNames ->
+                            ) { topicContent, folderContentId, folderContentIds, folderContentNames, folderContentDesc ->
                                 when (topicContent.fileType) {
 
                                     "VIDEO" -> {
-                                        videoUrlApi(videourlViewModel, topicContent.id,topicContent.topicName,folderContentIds,folderContentNames)
+                                        videoUrlApi(videourlViewModel, topicContent.id,topicContent.topicName,folderContentIds,folderContentNames,folderContentDesc)
                                     }
                                     "PDF" -> {
                                         val intent = Intent(context, PdfViewActivity::class.java).apply {
@@ -496,11 +498,11 @@ class SubjectContentFragment : DrawerVisibility() {
                                 folderId,
                                 requireActivity(),
                                 requireContext()
-                            ) { topicContent, folderContentId, folderContentIds, folderContentNames ->
+                            ) { topicContent, folderContentId, folderContentIds, folderContentNames, folderContentDesc ->
                                 when (topicContent.fileType) {
 
                                     "VIDEO" -> {
-                                        videoUrlApi(videourlViewModel, topicContent.id,topicContent.topicName,folderContentIds,folderContentNames)
+                                        videoUrlApi(videourlViewModel, topicContent.id,topicContent.topicName,folderContentIds,folderContentNames, folderContentDesc)
                                     }
                                     "PDF" -> {
                                         val intent = Intent(context, PdfViewActivity::class.java).apply {
@@ -574,9 +576,9 @@ class SubjectContentFragment : DrawerVisibility() {
         val ContentIds = folderContents.filter { it.content?.file_type?.name  == "VIDEO" }.mapNotNull { it.content?.id }?.toCollection(ArrayList())
         val folderContentNas = folderContents.filter { it.content?.file_type?.name  == "VIDEO" }.mapNotNull { it.content?.file_name }?.toCollection(ArrayList())
 
-        val adapter = TopicContentAdapter(topicContents, folderId,requireActivity(),requireContext()) { topicContent, folderContentId , folderContentIds,folderContentNames->
+        val adapter = TopicContentAdapter(topicContents, folderId,requireActivity(),requireContext()) { topicContent, folderContentId , folderContentIds,folderContentNames, folderContentDesc->
             when (topicContent.fileType) {
-                "VIDEO" -> videoUrlApi(videourlViewModel, topicContent.id,topicContent.topicName,folderContentIds,folderContentNames)
+                "VIDEO" -> videoUrlApi(videourlViewModel, topicContent.id,topicContent.topicName,folderContentIds,folderContentNames, folderContentDesc)
                 "PDF" -> {
                     val intent = Intent(context, PdfViewActivity::class.java).apply {
                         putExtra("PDF_URL", topicContent.url)
@@ -614,7 +616,7 @@ class SubjectContentFragment : DrawerVisibility() {
 
     }
 
-    private fun videoUrlApi(viewModel: VideourlViewModel, folderContentId: String, name:String, folderContentIds: ArrayList<String>?, folderContentNames: ArrayList<String>?) {
+    private fun videoUrlApi(viewModel: VideourlViewModel, folderContentId: String, name:String, folderContentIds: ArrayList<String>?, folderContentNames: ArrayList<String>?,folderContentDescs: ArrayList<String>?) {
         Log.e("getfoldersubject",folderContentNames.toString())
         viewModel.fetchVideoStreamUrl(folderContentId, "480p")
 
@@ -627,6 +629,7 @@ class SubjectContentFragment : DrawerVisibility() {
                     putString("ContentId", folderContentId)
                     putStringArrayList("folderContentIds", folderContentIds)
                     putStringArrayList("folderContentNames", folderContentNames)
+                    putStringArrayList("folderContentDescs", folderContentDescs)
                 }
                 findNavController().navigate(R.id.mediaFragment, bundle)
 

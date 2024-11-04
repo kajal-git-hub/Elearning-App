@@ -10,21 +10,23 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.apollographql.apollo3.api.Optional
 import com.student.competishun.curator.type.FindAllCourseInputStudent
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.databinding.FragmentYTCourseBinding
-import xyz.penpencil.competishun.ui.adapter.CourseAdapter
+import xyz.penpencil.competishun.ui.adapter.StudyCoursesAdapter
 import xyz.penpencil.competishun.ui.adapter.YTCourseAdapter
-import xyz.penpencil.competishun.ui.fragment.CourseFragment.Companion
 import xyz.penpencil.competishun.ui.viewmodel.StudentCoursesViewModel
+import xyz.penpencil.competishun.utils.FilterSelectionListener
 import xyz.penpencil.competishun.utils.HelperFunctions
 
-
-class YTCourseFragment : Fragment() {
+@AndroidEntryPoint
+class YTCourseFragment : Fragment(), FilterSelectionListener {
     private lateinit var helperFunctions: HelperFunctions
     private lateinit var binding: FragmentYTCourseBinding
+    private val filterOptions = listOf("IIT-JEE", "NEET")
     private val courseViewModel: StudentCoursesViewModel by viewModels()
     private val TAG = "YTCourseFragment"
+    private var autoSelectedExam = ""
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -39,33 +41,56 @@ class YTCourseFragment : Fragment() {
         binding.backIcon.setOnClickListener {
             requireActivity().onBackPressed()
         }
-
+        binding.tvFilterTextYT.setOnClickListener {
+            val filterYTFragment = FilterStudyMaterialFragment()
+            filterYTFragment.show(childFragmentManager, "FilterStudyMaterialFragment")
+        }
+       fetchCoursesForClass("","")
+        setupToggleRecyclerView()
         binding.tvCourseMaterialCount.text = "36 Courses"
         binding.tvShowingResults.text = "Showing results (4):"
 
     }
 
-    private fun fetchCoursesForClass(courseClass: String) {
+    private fun setupToggleRecyclerView() {
+        val adapter = StudyCoursesAdapter(filterOptions,autoSelectedExam) { selectedOption ->
+            Log.d("SelectedOption", "Selected: $selectedOption")
+
+            val filters = FindAllCourseInputStudent(
+                category_name = Optional.present("Study Material"),
+                exam_type = Optional.present(selectedOption)
+            )
+            courseViewModel.fetchCourses(filters)
+            observeCourses()
+        }
+    }
+
+    private fun fetchCoursesForClass(courseClass: String, selectedExam: String?) {
         val categoryName = arguments?.getString("category_name")
         val examType = arguments?.getString("exam_type")
         val filters = FindAllCourseInputStudent(
-            category_name = Optional.present(categoryName),
+            category_name = Optional.present("Youtube Courses"),
             course_class = Optional.present(courseClass),
-            exam_type = Optional.present(examType),
-            is_recommended = Optional.present(false)
+            exam_type = Optional.present(selectedExam)
         )
-        courseViewModel.setCoursesEmpty()
+     //   courseViewModel.setCoursesEmpty()
         courseViewModel.fetchCourses(filters)
+        observeCourses()
     }
 
     private fun observeCourses() {
+        binding.progressBar.visibility = View.VISIBLE
+        binding.rvYTCourse.visibility = View.GONE
+        binding.tvShowingResults.visibility = View.GONE
         lifecycleScope.launch {
             courseViewModel.coursesState.collect { result ->
                 result.onSuccess { data ->
-
                     viewLifecycleOwner.lifecycleScope.launchWhenStarted {
                         courseViewModel.courses.collect { result ->
                             result?.onSuccess { data ->
+                                binding.progressBar.visibility = View.GONE
+                                binding.rvYTCourse.visibility = View.VISIBLE
+                                binding.tvShowingResults.visibility = View.VISIBLE
                                 Log.e(TAG, data.toString())
                                 val courseSize = data.getAllCourseForStudent.courses.size
                                 val courses = data.getAllCourseForStudent.courses
@@ -101,6 +126,14 @@ class YTCourseFragment : Fragment() {
                 }
 
             }
+        }
+    }
+
+    override fun onFiltersSelected(selectedExam: String?, selectedSubject: String?) {
+        Log.e(TAG,selectedExam + selectedSubject)
+        if (selectedSubject != null) {
+            fetchCoursesForClass(selectedSubject, selectedExam)
+            observeCourses()
         }
     }
 }

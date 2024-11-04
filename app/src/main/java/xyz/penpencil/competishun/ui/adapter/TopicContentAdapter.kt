@@ -39,7 +39,7 @@ TopicContentAdapter(
     private val folderContentId: String,
     private val fragmentActivity: FragmentActivity,
     private val context: Context, // Pass context
-    private val onItemClick: (TopicContentModel, String,ArrayList<String>,ArrayList<String>) -> Unit
+    private val onItemClick: (TopicContentModel, String,ArrayList<String>,ArrayList<String>, ArrayList<String>) -> Unit
 ) :
     RecyclerView.Adapter<TopicContentAdapter.TopicContentViewHolder>() {
 
@@ -62,12 +62,15 @@ TopicContentAdapter(
         val unlockedTopicContentNames = topicContents
             .filter { isDateTodayOrPast(it.lockTime) && it.fileType == "VIDEO" }
             .map { it.topicName }.toCollection(ArrayList())
+        val unlockedTopicContentDescs = topicContents
+            .filter { isDateTodayOrPast(it.lockTime) && it.fileType == "VIDEO" }
+            .map { it.topicDescription }.toCollection(ArrayList())
         Log.e("unlockedTopics",unlockedTopicContentIds.toString())
         Log.e("unlockedTopic",unlockedTopicContentNames.toString())
         // Disable click if locked, enable if not
         holder.itemView.setOnClickListener {
             if (isDateTodayOrPast(topicContent.lockTime)){
-                onItemClick(topicContent, folderContentId,unlockedTopicContentIds,unlockedTopicContentNames)
+                onItemClick(topicContent, folderContentId,unlockedTopicContentIds,unlockedTopicContentNames,unlockedTopicContentDescs)
             }else {
                 Toast.makeText(it.context, "Content is locked!", Toast.LENGTH_SHORT).show()
             }

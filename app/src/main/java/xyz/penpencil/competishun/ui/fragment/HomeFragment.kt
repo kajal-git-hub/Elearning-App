@@ -150,6 +150,9 @@ class HomeFragment : Fragment() {
         binding.clStudyMaterial.setOnClickListener {
             findNavController().navigate(R.id.StudyMaterialFragment)
         }
+        binding.clYLectures.setOnClickListener {
+            findNavController().navigate(R.id.YTCourseFragment)
+        }
 
         binding.clYLectures.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_YTCoursesFragment)

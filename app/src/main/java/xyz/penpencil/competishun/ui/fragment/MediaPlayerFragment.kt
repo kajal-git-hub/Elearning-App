@@ -1,6 +1,10 @@
 package xyz.penpencil.competishun.ui.fragment
 
+import android.Manifest
+import android.content.Context
 import android.content.pm.ActivityInfo
+import android.content.res.Configuration
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -14,6 +18,7 @@ import android.view.WindowManager
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.app.NotificationManagerCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
@@ -28,32 +33,49 @@ import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.trackselection.DefaultTrackSelector
 import androidx.navigation.fragment.findNavController
+import androidx.work.Data
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import com.google.android.exoplayer2.ui.AspectRatioFrameLayout
+import com.google.android.exoplayer2.ui.PlayerControlView
 import com.otaliastudios.zoom.ZoomLayout
 import xyz.penpencil.competishun.di.SharedVM
 import xyz.penpencil.competishun.ui.main.HomeActivity
 import xyz.penpencil.competishun.ui.viewmodel.VideourlViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import xyz.penpencil.competishun.R
+import xyz.penpencil.competishun.data.model.TopicContentModel
 import xyz.penpencil.competishun.databinding.FragmentMediaPlayerBinding
+import xyz.penpencil.competishun.download.DownloadWorker
+import xyz.penpencil.competishun.utils.SharedPreferencesManager
+import java.io.File
 
 @AndroidEntryPoint
 class MediaPlayerFragment : DrawerVisibility() {
 
     private lateinit var binding: FragmentMediaPlayerBinding
     private lateinit var player: ExoPlayer
+    private var itemDetails: TopicContentModel? = null
     private lateinit var gestureDetector: GestureDetector
     private lateinit var zoomLayout: ZoomLayout
     private lateinit var courseFolderContentId: String
     private lateinit var courseFolderContentIds: ArrayList<String>
     private lateinit var courseFolderContentNames: ArrayList<String>
+    private lateinit var courseFolderContentDescs: ArrayList<String>
     private val handler = Handler(Looper.getMainLooper())
     private val updateInterval: Long = 5000
     private var urlVideo:String = ""
+    private var isZoomed = false
     private var videoFormat:String = "480p"
     private lateinit var sharedViewModel: SharedVM
     private val videourlViewModel: VideourlViewModel by viewModels()
     private var videoUrls: List<String> = listOf()
     private var videoTitles: ArrayList<String> = ArrayList()
+    private var videoDescs: ArrayList<String> = ArrayList()
     private var currentVideoIndex: Int = 0
+    var fileName: String = ""
+    var videoUrl: String = ""
+    var videoFile : File?=null
     companion object {
         private const val SEEK_OFFSET_MS = 10000L
     }
@@ -62,7 +84,7 @@ class MediaPlayerFragment : DrawerVisibility() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         binding = FragmentMediaPlayerBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -84,6 +106,7 @@ class MediaPlayerFragment : DrawerVisibility() {
         return String.format("%02d:%02d", minutes, seconds)
     }
 
+    @androidx.annotation.OptIn(UnstableApi::class)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val progressBar: ProgressBar = binding.progressBar
@@ -104,12 +127,33 @@ class MediaPlayerFragment : DrawerVisibility() {
             binding.tittleBtn.visibility = View.VISIBLE
             binding.tittleBtn.text = title
         }
+
         courseFolderContentId = arguments?.getString("ContentId")?: return
         courseFolderContentIds = arguments?.getStringArrayList("folderContentIds")?: return
         courseFolderContentNames = arguments?.getStringArrayList("folderContentNames")?: return
+        courseFolderContentDescs = arguments?.getStringArrayList("folderContentDescs")?: return
         Log.e("getfolderNamess",courseFolderContentNames.toString())
         player = ExoPlayer.Builder(requireContext()).build()
+        requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        binding.playerView.resizeMode = androidx.media3.ui.AspectRatioFrameLayout.RESIZE_MODE_FIT
         binding.playerView.player = player
+        binding.fullscreenButton.setOnClickListener {
+            val isLandscape = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+
+            if (isLandscape) {
+               Log.e("landscape mode",isLandscape.toString())
+                binding.playerView.layoutParams = binding.playerView.layoutParams.apply {
+                    height = (300 * resources.displayMetrics.density).toInt()
+                }// Convert 300dp to pixels
+                    requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                binding.playerView.resizeMode = AspectRatioFrameLayout.RESIZE_MODE_FIT // Reset or use any mode you want in portrait
+            } else {
+                Log.e("landscapeport",isLandscape.toString())
+                // If in portrait, switch to landscape
+                requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+                binding.playerView.resizeMode = AspectRatioFrameLayout.RESIZE_MODE_ZOOM // Zoom for full-screen landscape
+            }
+        }
         // Setup video progress update task
         handler.post(object : Runnable {
             override fun run() {
@@ -120,8 +164,6 @@ class MediaPlayerFragment : DrawerVisibility() {
                 }
             }
         })
-
-
         try {
             changeQuality(videoFormat)
             val mediaItem = MediaItem.fromUri(videoUrl)
@@ -129,6 +171,7 @@ class MediaPlayerFragment : DrawerVisibility() {
             player.setMediaItem(mediaItem)
             player.prepare()
             player.play()
+            setupZoomFeature()
             player.addListener(object : Player.Listener {
                 override fun onPlayerError(error: PlaybackException) {
                     Log.e("PlayerError", "Playback Error: ${error.message}", error)
@@ -145,11 +188,15 @@ class MediaPlayerFragment : DrawerVisibility() {
                             binding.playerView.visibility = View.GONE
                             binding.upNextOverlay.visibility = View.VISIBLE
                             videoTitles = courseFolderContentNames
+                            videoTitles = courseFolderContentNames
                             if (currentVideoIndex < courseFolderContentIds.size - 1) {
                                 Log.e("currentVideoIndexSize", currentVideoIndex.toString())
                                 currentVideoIndex++
                                 val nextVideoTittle = videoTitles[currentVideoIndex]
+                                val nextVideoDesc = videoDescs[currentVideoIndex]
                                 binding.nextVideoTitle.text = nextVideoTittle
+                                binding.descTv.text = nextVideoDesc
+                                binding.tittleTv.text = nextVideoDesc
                              } else {
                         // No more videos in the playlist
                         Toast.makeText(requireContext(), "No more videos to play", Toast.LENGTH_SHORT).show()
@@ -191,7 +238,43 @@ class MediaPlayerFragment : DrawerVisibility() {
 
     }
 
-    fun playVideo(videoUrl: String,  startPosition: Long = 0L,videoTittle: String) {
+    private fun storeItemInPreferences(item: TopicContentModel) {
+        val sharedPreferencesManager = SharedPreferencesManager(requireActivity())
+        sharedPreferencesManager.saveDownloadedItem(item)
+    }
+
+    private fun storeItemInPreferencesBm(item: TopicContentModel) {
+        val sharedPreferencesManager = SharedPreferencesManager(requireActivity())
+        sharedPreferencesManager.saveDownloadedItemBm(item)
+    }
+
+    private fun setupZoomFeature() {
+        binding.fullscreenButton.setOnClickListener {
+            toggleZoom()
+        }
+    }
+
+
+    @androidx.annotation.OptIn(UnstableApi::class)
+    private fun toggleZoom() {
+        isZoomed = !isZoomed
+        val layoutParams =  binding.playerView.layoutParams
+
+        // Toggle between original size and full-screen
+        if (isZoomed) {
+            requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+            binding.playerView.resizeMode = androidx.media3.ui.AspectRatioFrameLayout.RESIZE_MODE_ZOOM
+            layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
+            layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT
+        } else {
+            layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
+            layoutParams.height = resources.getDimensionPixelSize(R.dimen.original_height) // original height
+        }
+
+        binding.playerView.layoutParams = layoutParams
+    }
+
+    fun playVideo(videoUrl: String,  startPosition: Long = 0L,videoTittle: String,videoDesc: String) {
         binding.progressBar.visibility = View.VISIBLE
         binding.playerView.visibility = View.GONE
         val mediaItem = MediaItem.fromUri(videoUrl)
@@ -224,6 +307,7 @@ class MediaPlayerFragment : DrawerVisibility() {
                         binding.playerView.visibility = View.GONE
                         binding.upNextOverlay.visibility = View.VISIBLE
                         binding.nextVideoTitle.text = videoTittle
+                        binding.descTv.text = videoDesc
                         binding.nextVideoTime.text = "1 min"
                         binding.startNextButton.setOnClickListener {
                             playNextVideo()
@@ -264,8 +348,11 @@ class MediaPlayerFragment : DrawerVisibility() {
                 // val nextVideoUrl = videoUrls[currentVideoIndex]
                 val nextVideoUrl = urlVideo
                 val nextVideoTittle = videoTitles[currentVideoIndex]
+                val nextVideoDesc = videoDescs[currentVideoIndex]
                 binding.tittleBtn.text = nextVideoTittle
-                playVideo(signedUrl,0,nextVideoTittle)
+                binding.tittleTv.text = nextVideoTittle
+                binding.descTv.text = nextVideoDesc
+                playVideo(signedUrl,0,nextVideoTittle,nextVideoDesc)
                 urlVideo = signedUrl
 
             } else {

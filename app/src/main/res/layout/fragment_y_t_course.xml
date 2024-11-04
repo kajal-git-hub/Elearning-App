@@ -182,7 +182,7 @@
         android:id="@+id/cl_NoEmptyView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -223,7 +223,7 @@
                 android:layout_marginTop="@dimen/_10dp"
                 android:fontFamily="@font/nunito"
                 android:gravity="center"
-                android:text="No courses found for applied categories. Please choose other category."
+                android:text=""
                 android:textColor="@color/_5a5555"
                 android:textSize="@dimen/_14sp"
                 android:textStyle="bold"
@@ -235,6 +235,15 @@
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/tvShowingResults"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvYTCourse"
