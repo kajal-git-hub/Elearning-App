@@ -1,17 +1,115 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/_white_F6F6FF"
+    android:orientation="vertical"
     tools:context=".ui.fragment.scoreboard.ScoreDashboardFragment">
 
     <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
+        android:background="@color/PrimaryColor"
+        app:title="Scoreboard"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        app:navigationIconTint="@color/white"
+        app:titleTextColor="@android:color/white"
+        app:navigationIcon="@drawable/arrow_left_white"
         app:layout_constraintEnd_toEndOf="parent"
-
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:menu="@menu/search_bar_menu" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        android:background="@android:color/transparent"
+        android:padding="@dimen/_10dp"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/filter"
+            android:background="@drawable/card_bg_r20"
+            android:textSize="@dimen/_14sp"
+            android:layout_marginStart="@dimen/_10dp"
+            android:layout_marginTop="@dimen/_8dp"
+            android:layout_marginEnd="@dimen/_10dp"
+            android:fontFamily="@font/nunito"
+            android:paddingStart="@dimen/_12dp"
+            android:drawableEnd="@drawable/ic_filter_c0a0a0b"
+            android:drawablePadding="@dimen/_10dp"
+            android:paddingEnd="@dimen/_12dp"
+            android:paddingTop="@dimen/_6dp"
+            android:paddingBottom="@dimen/_6dp"
+            android:text="JEE-Mains"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:id="@+id/rvTestType"
+            tools:itemCount="10"
+            android:layout_toEndOf="@+id/filter"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:background="@android:color/transparent"
+            android:layout_alignParentTop="true"
+            tools:listitem="@layout/item_test_type" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:id="@+id/viewReport"
+            android:layout_marginBottom="@dimen/_16dp"
+            android:layout_marginTop="@dimen/_16dp"
+            android:background="@drawable/card_bg"
+            android:paddingStart="@dimen/_16dp"
+            android:paddingEnd="@dimen/_0dp"
+            android:paddingTop="@dimen/_16dp"
+            android:layout_below="@+id/rvTestType">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:fontFamily="@font/nunito"
+                android:layout_marginEnd="@dimen/_16dp"
+                android:textSize="@dimen/_16sp"
+                android:text="@string/my_scope_student_s_comprehensive_overview_of_performance_amp_evaluation"
+                android:id="@+id/reportTitle"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/PrimaryColor"
+                app:cornerRadius="@dimen/_4dp"
+                android:layout_marginTop="@dimen/_16dp"
+                android:layout_below="@+id/reportTitle"
+                android:text="View Report"/>
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                app:shapeAppearanceOverlay="@style/RoundedShapeImageView"
+                android:src="@drawable/ic_scoreboard_analytics"/>
+
+        </RelativeLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvScore"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/viewReport"
+            android:background="@android:color/transparent" />
+
+
+    </RelativeLayout>
+
+
+</LinearLayout>

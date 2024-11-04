@@ -1,0 +1,369 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+    </data>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:background="@drawable/rounded_background_logout"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <RelativeLayout
+                android:id="@+id/toolbar"
+                android:layout_width="0dp"
+                android:layout_height="?attr/actionBarSize"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:id="@+id/tvHeader"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerInParent="true"
+                    android:layout_marginStart="32dp"
+                    android:fontFamily="@font/nunito"
+                    android:text="Filter"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+                    android:textSize="18sp" />
+
+                <ImageView
+                    android:id="@+id/close"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerInParent="true"
+                    android:layout_gravity="end"
+                    android:layout_marginEnd="@dimen/_20dp"
+                    android:contentDescription="Close"
+                    android:src="@drawable/ic_close_c000" />
+            </RelativeLayout>
+
+            <View
+                android:id="@+id/line"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_1dp"
+                android:background="@color/c_f2f2f2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/_16dp"
+                app:layout_constraintTop_toBottomOf="@+id/line">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tvTestType"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/nunito"
+                        android:text="Test Type"
+                        android:textColor="@color/_2b2829"
+                        android:textSize="@dimen/_16sp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <LinearLayout
+                        android:id="@+id/testTypeSection"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:orientation="vertical"
+                        app:layout_constraintTop_toBottomOf="@id/tvTestType">
+
+                        <!-- First row: NEET-UG and AIIMS -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:orientation="horizontal">
+
+                            <RelativeLayout
+                                android:layout_width="0dp"
+                                android:layout_height="50dp"
+                                android:layout_marginEnd="4dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/card_bg"
+                                android:gravity="center_vertical">
+
+                                <CheckBox
+                                    android:id="@+id/cbFullYear"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    style="@style/MyCheckboxStyle"
+                                    android:layout_marginStart="10dp" />
+
+                                <com.google.android.material.textview.MaterialTextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerInParent="true"
+                                    android:layout_toEndOf="@id/cbFullYear"
+                                    android:fontFamily="@font/nunito"
+                                    android:text="Full-Year Test" />
+                            </RelativeLayout>
+
+                            <RelativeLayout
+                                android:layout_width="0dp"
+                                android:layout_height="50dp"
+                                android:layout_marginStart="4dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/card_bg"
+                                android:gravity="center_vertical">
+
+                                <CheckBox
+                                    android:id="@+id/cbOpenTest"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    style="@style/MyCheckboxStyle"
+                                    android:layout_marginStart="10dp" />
+
+                                <com.google.android.material.textview.MaterialTextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerInParent="true"
+                                    android:layout_toEndOf="@id/cbOpenTest"
+                                    android:fontFamily="@font/nunito"
+                                    android:text="Open Test" />
+                            </RelativeLayout>
+                        </LinearLayout>
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:layout_marginEnd="4dp"
+                            android:layout_weight="1"
+                            android:layout_marginTop="@dimen/_10dp"
+                            android:background="@drawable/card_bg"
+                            android:gravity="center_vertical">
+
+                            <CheckBox
+                                android:id="@+id/cbShortTest"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                style="@style/MyCheckboxStyle"
+                                android:layout_marginStart="10dp" />
+
+                            <com.google.android.material.textview.MaterialTextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                android:layout_toEndOf="@id/cbShortTest"
+                                android:fontFamily="@font/nunito"
+                                android:text="Short-Term Test" />
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:layout_marginStart="4dp"
+                            android:layout_weight="1"
+                            android:layout_marginTop="@dimen/_10dp"
+                            android:background="@drawable/card_bg"
+                            android:gravity="center_vertical">
+
+                            <CheckBox
+                                android:id="@+id/cbPreviousYearTest"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                style="@style/MyCheckboxStyle"
+                                android:layout_marginStart="10dp" />
+
+                            <com.google.android.material.textview.MaterialTextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                android:layout_toEndOf="@id/cbPreviousYearTest"
+                                android:fontFamily="@font/nunito"
+                                android:text="Previous Year Test" />
+                        </RelativeLayout>
+                    </LinearLayout>
+
+
+
+                    <!-- Select Exam Section -->
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tvSelectExam"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/nunito"
+                        android:text="Select Exam"
+                        android:layout_marginTop="@dimen/_16dp"
+                        app:layout_constraintTop_toBottomOf="@id/testTypeSection"
+                        android:textColor="@color/_2b2829"
+                        android:textSize="@dimen/_16sp"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:id="@+id/examSection"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:orientation="vertical"
+                        app:layout_constraintTop_toBottomOf="@id/tvSelectExam">
+
+                        <!-- First row: NEET-UG and AIIMS -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:orientation="horizontal">
+
+                            <RelativeLayout
+                                android:layout_width="0dp"
+                                android:layout_height="50dp"
+                                android:layout_marginEnd="4dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/card_bg"
+                                android:gravity="center_vertical">
+
+                                <CheckBox
+                                    android:id="@+id/cbNeet"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    style="@style/MyCheckboxStyle"
+                                    android:layout_marginStart="10dp" />
+
+                                <com.google.android.material.textview.MaterialTextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerInParent="true"
+                                    android:layout_toEndOf="@id/cbNeet"
+                                    android:fontFamily="@font/nunito"
+                                    android:text="NEET-UG" />
+                            </RelativeLayout>
+
+                            <RelativeLayout
+                                android:layout_width="0dp"
+                                android:layout_height="50dp"
+                                android:layout_marginStart="4dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/card_bg"
+                                android:gravity="center_vertical">
+
+                                <CheckBox
+                                    android:id="@+id/cbAiims"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    style="@style/MyCheckboxStyle"
+                                    android:layout_marginStart="10dp" />
+
+                                <com.google.android.material.textview.MaterialTextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerInParent="true"
+                                    android:layout_toEndOf="@id/cbAiims"
+                                    android:fontFamily="@font/nunito"
+                                    android:text="AIIMS" />
+                            </RelativeLayout>
+                        </LinearLayout>
+
+                        <!-- Second row: JEE-Mains and JEE-Advanced -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:orientation="horizontal">
+
+                            <RelativeLayout
+                                android:layout_width="0dp"
+                                android:layout_height="50dp"
+                                android:layout_marginEnd="4dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/card_bg"
+                                android:gravity="center_vertical">
+
+                                <CheckBox
+                                    android:id="@+id/cbJeeMains"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    style="@style/MyCheckboxStyle"
+                                    android:layout_marginStart="10dp" />
+
+                                <com.google.android.material.textview.MaterialTextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerInParent="true"
+                                    android:layout_toEndOf="@id/cbJeeMains"
+                                    android:fontFamily="@font/nunito"
+                                    android:text="JEE-Mains" />
+                            </RelativeLayout>
+
+                            <RelativeLayout
+                                android:layout_width="0dp"
+                                android:layout_height="50dp"
+                                android:layout_marginStart="4dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/card_bg"
+                                android:gravity="center_vertical">
+
+                                <CheckBox
+                                    android:id="@+id/cbJeeAdvance"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    style="@style/MyCheckboxStyle"
+                                    android:layout_marginStart="10dp" />
+
+                                <com.google.android.material.textview.MaterialTextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerInParent="true"
+                                    android:layout_toEndOf="@id/cbJeeAdvance"
+                                    android:fontFamily="@font/nunito"
+                                    android:text="JEE-Advanced" />
+                            </RelativeLayout>
+                        </LinearLayout>
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:layout_marginTop="@dimen/_20dp"
+                        android:gravity="end"
+                        android:orientation="horizontal"
+                        app:layout_constraintTop_toBottomOf="@+id/examSection">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_cancel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:backgroundTint="#FFFFFF"
+                            android:text="Cancel"
+                            android:textColor="#4444ff"
+                            app:cornerRadius="@dimen/_10dp"
+                            app:strokeColor="#4444ff"
+                            app:strokeWidth="@dimen/_1dp" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_apply"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_weight="1"
+                            android:backgroundTint="#4444ff"
+                            android:text="Apply"
+                            android:textColor="@color/white"
+                            app:cornerRadius="@dimen/_8dp" />
+                    </LinearLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </ScrollView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
