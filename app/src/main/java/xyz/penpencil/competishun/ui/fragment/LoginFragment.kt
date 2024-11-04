@@ -95,7 +95,7 @@ class LoginFragment : Fragment() {
     }
 
     private fun removeNineOne(phoneNumber: String): String {
-        return phoneNumber.removePrefix("+91")
+        return phoneNumber.replace("^\\+91\\s*".toRegex(), "")
     }
 
     val request: GetPhoneNumberHintIntentRequest = GetPhoneNumberHintIntentRequest.builder().build()

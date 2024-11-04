@@ -40,6 +40,11 @@ class ScoreboardLeaderboardFragment : Fragment() {
         val adapter = LeaderBoardAdapter(userList)
         binding.rvNameScore.adapter = adapter
 
+
+        binding.studentTabLayout.getTabAt(0)?.text = "Result Analysis"
+        binding.studentTabLayout.getTabAt(1)?.text = "Leaderboard"
+
+
     }
 
 }

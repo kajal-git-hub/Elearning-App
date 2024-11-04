@@ -60,11 +60,11 @@
             app:tabTextColor="#5A5555">
 
             <com.google.android.material.tabs.TabItem
-                style="@style/TabLayoutStyleDownloads"
+                style="@style/TabLayoutStyleLeaderBoard"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:hint="PDFs (04)"
+                android:hint="Result Analysis"
                 android:textAllCaps="false" />
 
             <com.google.android.material.tabs.TabItem
