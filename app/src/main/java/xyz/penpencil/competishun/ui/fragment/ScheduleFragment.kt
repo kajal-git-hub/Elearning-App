@@ -55,7 +55,7 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
         FragmentScheduleBinding.inflate(layoutInflater)
     }
     private var foundMatchingDate = false
-    private val videourlViewModel: VideourlViewModel by viewModels()
+    private val videoUrlViewModel: VideourlViewModel by viewModels()
     private lateinit var scheduleAdapter: ScheduleAdapter
     private lateinit var helperFunctions: HelperFunctions
     private val myCourseViewModel: MyCoursesViewModel by viewModels()
@@ -108,6 +108,7 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
                 binding.tvCalenderCurrentMonth.text = newMonth.uppercase()
                 courseStart = getStartOfMonth(newMonth)
                 courseEnd = getEndOfMonth(newMonth)
+                selectedDate = courseStart.utcToIst().toIstZonedDateTime()
                 fetchData()
             },
             { calendarDate ->
@@ -353,7 +354,7 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
 
     override fun onCustomizeToolbar(fileurl: String, fileType: String,contentId:String) {
         if (fileType == "VIDEO"){
-            videoUrlApi(videourlViewModel,contentId,"About this Course")
+            videoUrlApi(videoUrlViewModel,contentId,"About this Course")
         }else if (fileType == "PDF"){
             val intent = Intent(context, PdfViewActivity::class.java).apply {
                 putExtra("PDF_URL", fileurl)
