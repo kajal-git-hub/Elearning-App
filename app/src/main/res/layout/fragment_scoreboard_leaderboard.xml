@@ -1,0 +1,445 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/f6f6ff"
+    tools:context=".ui.fragment.scoreboard.ScoreboardLeaderboardFragment">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/TopView_Leaderboard"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:elevation="@dimen/_4dp"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:menu="@menu/search_bar_white"
+        app:navigationIcon="@drawable/arrow_left">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tittle_tb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:fontFamily="@font/nunito"
+            android:maxLines="1"
+            android:text="JEE Mains Paper | 24 Jun, 23 | Shift -1c Maths"
+            android:textColor="@color/_2b2829"
+            android:textSize="@dimen/_18sp" />
+
+    </com.google.android.material.appbar.MaterialToolbar>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_tabLayout_leaderboard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/TopView_Leaderboard">
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/studentTabLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_16dp"
+            android:background="@color/white"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tabGravity="fill"
+            app:tabIndicatorColor="#3E3EF7"
+            app:tabIndicatorFullWidth="true"
+            app:tabIndicatorHeight="1dp"
+            app:tabMode="fixed"
+            app:tabRippleColor="@null"
+            app:tabSelectedTextColor="#3E3EF7"
+            app:tabTextColor="#5A5555">
+
+            <com.google.android.material.tabs.TabItem
+                style="@style/TabLayoutStyleDownloads"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="PDFs (04)"
+                android:textAllCaps="false" />
+
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+        </com.google.android.material.tabs.TabLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_RankPosition"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_16dp"
+        android:layout_marginTop="@dimen/_20dp"
+        android:background="@drawable/rounded_background"
+        android:backgroundTint="@color/white"
+        android:paddingHorizontal="@dimen/_12sp"
+        android:paddingVertical="@dimen/_12sp"
+        app:layout_constraintTop_toBottomOf="@+id/cl_tabLayout_leaderboard">
+
+
+        <ImageView
+            android:id="@+id/ev_leader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/leader_bg"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/et_RankNo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_7dp"
+            android:text="24"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_16sp"
+            app:layout_constraintEnd_toEndOf="@+id/ev_leader"
+            app:layout_constraintStart_toStartOf="@+id/ev_leader"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_4dp"
+            android:text="Rank"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_8dp"
+            app:layout_constraintEnd_toEndOf="@+id/ev_leader"
+            app:layout_constraintStart_toStartOf="@+id/ev_leader"
+            app:layout_constraintTop_toBottomOf="@+id/et_RankNo" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/et_leaderName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="18sp"
+            android:fontFamily="@font/nunito"
+            android:text="Shefali Puri"
+            android:textColor="@color/_2b2829"
+            android:textSize="@dimen/_14sp"
+            app:layout_constraintStart_toEndOf="@+id/ev_leader"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/et_totalScore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_8dp"
+            android:fontFamily="@font/nunito"
+            android:text="360"
+            android:textColor="@color/_2b2829"
+            android:textSize="@dimen/_14sp"
+            app:layout_constraintStart_toStartOf="@+id/et_leaderName"
+            app:layout_constraintTop_toBottomOf="@+id/et_leaderName" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_4dp"
+            android:layout_marginTop="@dimen/_8dp"
+            android:fontFamily="@font/nunito"
+            android:text="Marks"
+            android:textColor="#898384"
+            android:textSize="@dimen/_14sp"
+            app:layout_constraintStart_toEndOf="@+id/et_totalScore"
+            app:layout_constraintTop_toBottomOf="@+id/et_leaderName" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_17sp"
+        android:layout_marginTop="@dimen/_55dp"
+        app:layout_constraintTop_toBottomOf="@+id/cl_RankPosition">
+
+        <RelativeLayout
+            android:id="@+id/rl_secondPrice"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="26dp"
+            android:layout_marginTop="39dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+
+            <ImageView
+                android:id="@+id/iv_secondPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerInParent="true"
+                android:src="@drawable/second_price_bg"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/et_secondPriceName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/iv_secondPrice"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="@dimen/_8dp"
+                android:fontFamily="@font/nunito"
+                android:text="Shefali P."
+                android:textColor="@color/_2b2829"
+                android:textSize="@dimen/_12sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/iv_secondPrice" />
+
+            <ImageView
+                android:id="@+id/iv_waterNo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/cl_crownLayout"
+                android:layout_centerInParent="true"
+                android:src="@drawable/second_water_bg"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/cl_crownLayout" />
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_crownLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/et_secondPriceName"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="@dimen/_8dp"
+                android:layout_marginBottom="-18dp"
+                android:background="@drawable/badge_background"
+                android:paddingHorizontal="@dimen/_5dp"
+                android:paddingVertical="@dimen/_5dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/et_secondPriceName">
+
+                <ImageView
+                    android:id="@+id/crown_icon"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/crown_2"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <!-- Number Text -->
+                <TextView
+                    android:id="@+id/badge_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="240"
+                    android:textColor="#000000"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/crown_icon"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/rl_firstlayout"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="26dp"
+            app:layout_constraintStart_toEndOf="@+id/rl_secondPrice"
+            app:layout_constraintTop_toTopOf="parent">
+
+
+            <ImageView
+                android:id="@+id/iv_firstPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerInParent="true"
+                android:src="@drawable/first_bg_image"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/et_firstPriceName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/iv_firstPrice"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="@dimen/_8dp"
+                android:fontFamily="@font/nunito"
+                android:text="Abhishek J."
+                android:textColor="@color/_2b2829"
+                android:textSize="@dimen/_12sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/iv_firstPrice" />
+
+            <ImageView
+                android:id="@+id/iv_waterNoFirst"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/cl_crownLayoutFirst"
+                android:layout_centerInParent="true"
+                android:src="@drawable/water_bg_first"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/cl_crownLayoutFirst" />
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_crownLayoutFirst"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/et_firstPriceName"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="@dimen/_8dp"
+                android:layout_marginBottom="-18dp"
+                android:background="@drawable/badge_background"
+                android:paddingHorizontal="@dimen/_5dp"
+                android:paddingVertical="@dimen/_5dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/et_firstPriceName">
+
+                <ImageView
+                    android:id="@+id/crown_icon_first"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/crown_2"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <!-- Number Text -->
+                <TextView
+                    android:id="@+id/badge_text_first"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="360"
+                    android:textColor="#000000"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/crown_icon_first"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/rl_thirdPrice"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="26dp"
+            android:layout_marginTop="39dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/rl_firstlayout"
+            app:layout_constraintTop_toTopOf="parent">
+
+
+            <ImageView
+                android:id="@+id/iv_thirdPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerInParent="true"
+                android:src="@drawable/third_price_bg"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/et_thirdPriceName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/iv_thirdPrice"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="@dimen/_8dp"
+                android:fontFamily="@font/nunito"
+                android:text="Aryan M."
+                android:textColor="@color/_2b2829"
+                android:textSize="@dimen/_12sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/iv_thirdPrice" />
+
+            <ImageView
+                android:id="@+id/iv_waterNoThird"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/cl_crownLayoutThird"
+                android:src="@drawable/third_water"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/cl_crownLayoutThird" />
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_crownLayoutThird"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/et_thirdPriceName"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="@dimen/_8dp"
+                android:layout_marginBottom="-18dp"
+                android:background="@drawable/badge_background"
+                android:paddingHorizontal="@dimen/_5dp"
+                android:paddingVertical="@dimen/_5dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/et_thirdPriceName">
+
+                <ImageView
+                    android:id="@+id/crown_icon_third"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/crown_2"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <!-- Number Text -->
+                <TextView
+                    android:id="@+id/badge_text_third"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="160"
+                    android:textColor="#000000"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/crown_icon_third"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        </RelativeLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
