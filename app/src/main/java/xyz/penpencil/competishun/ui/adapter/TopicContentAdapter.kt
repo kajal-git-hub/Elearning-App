@@ -72,7 +72,7 @@ class TopicContentAdapter(
                 val url = if (topicContent.topicName.contains("http")) topicContent.url else "https://${topicContent.url}"
                 it.context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
             } else if (isDateTodayOrPast(topicContent.lockTime)){
-                onItemClick(topicContent, folderContentId,unlockedTopicContentIds,unlockedTopicContentNames)
+                onItemClick(topicContent, folderContentId,unlockedTopicContentIds,unlockedTopicContentNames,unlockedTopicContentDescs)
             } else if (topicContent.fileType == "UNKNOWN__" ) {
                 Log.e("TAG", "onBindViewHolder: ")
             }else {
