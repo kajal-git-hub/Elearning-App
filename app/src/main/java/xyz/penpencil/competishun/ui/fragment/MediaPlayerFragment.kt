@@ -124,16 +124,18 @@ class MediaPlayerFragment : DrawerVisibility() {
         val videoUrl = arguments?.getString("url") ?: return
         Log.e("howdfdf",videoUrl)
         val title = arguments?.getString("url_name") ?: return
+        courseFolderContentDescs = arguments?.getStringArrayList("folderContentDescs")?: return
         if (title != null) {
             binding.tittleBtn.visibility = View.VISIBLE
             binding.tittleBtn.text = title
             binding.tittleTv.text = title
+            binding.descTv.text = courseFolderContentDescs[0]
         }
 
         courseFolderContentId = arguments?.getString("ContentId")?: return
         courseFolderContentIds = arguments?.getStringArrayList("folderContentIds")?: return
         courseFolderContentNames = arguments?.getStringArrayList("folderContentNames")?: return
-        courseFolderContentDescs = arguments?.getStringArrayList("folderContentDescs")?: return
+
         Log.e("getfolderNamess",courseFolderContentNames.toString())
         Log.e("getfolderDess",courseFolderContentDescs.toString())
         player = ExoPlayer.Builder(requireContext()).build()
@@ -142,7 +144,7 @@ class MediaPlayerFragment : DrawerVisibility() {
         binding.playerView.player = player
         binding.fullscreenButton.setOnClickListener {
             val isLandscape = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
-
+            Log.e("landscapemode",isLandscape.toString())
             if (isLandscape) {
                Log.e("landscape mode",isLandscape.toString())
                 binding.fullscreenButton.visibility = View.VISIBLE
@@ -267,12 +269,17 @@ class MediaPlayerFragment : DrawerVisibility() {
 
         // Toggle between original size and full-screen
         if (isZoomed) {
+            Log.e("uszibivd",isZoomed.toString())
             requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
             binding.playerView.resizeMode = androidx.media3.ui.AspectRatioFrameLayout.RESIZE_MODE_ZOOM
             layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
             layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT
+          //  isZoomed = false
         } else {
+            Log.e("uszibelse",isZoomed.toString())
+            requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
             layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
+            binding.playerView.resizeMode = androidx.media3.ui.AspectRatioFrameLayout.RESIZE_MODE_FIT
             layoutParams.height = resources.getDimensionPixelSize(R.dimen.original_height) // original height
         }
 
