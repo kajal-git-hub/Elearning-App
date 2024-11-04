@@ -56,7 +56,6 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
     }
     private var foundMatchingDate = false
     private val videourlViewModel: VideourlViewModel by viewModels()
-    private lateinit var calendarSetUp: HorizontalCalendarSetUp
     private lateinit var scheduleAdapter: ScheduleAdapter
     private lateinit var helperFunctions: HelperFunctions
     private val myCourseViewModel: MyCoursesViewModel by viewModels()
@@ -72,6 +71,8 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
 
     private var hasScheduleList = mutableListOf<String>()
 
+    private val calendarSetUp : HorizontalCalendarSetUp by lazy { HorizontalCalendarSetUp() }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -80,7 +81,7 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
     }
 
     private fun setupCalendar(scheduleTime:String) {
-        calendarSetUp = HorizontalCalendarSetUp()
+
 
         calendarSetUp.setUpCalendarAdapter(
             binding.rvCalenderDates,
@@ -277,8 +278,6 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
                 bottomNavigationView.selectedItemId = R.id.myCourse
             }
         })
-
-        calendarSetUp = HorizontalCalendarSetUp()
 
         (activity as? HomeActivity)?.showBottomNavigationView(false)
         (activity as? HomeActivity)?.showFloatingButton(false)
