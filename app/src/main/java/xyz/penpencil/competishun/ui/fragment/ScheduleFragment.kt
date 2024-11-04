@@ -226,36 +226,50 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
                     Log.e("timea $index", scheduleContent.content.scheduled_time.toString())
                 }
 
-                data.findAllCourseFolderContentByScheduleTime.forEachIndexed {index, schedulecontent->
-                // Log.e("timea",schedulecontent.s.toString())
-                 schedulecontent.content.scheduled_time.let {
-                     val currentDate = ZonedDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
-                     val regex = Regex("""(\d{4}-\d{2}-\d{2})""")
-                     val matchResult = regex.find(it.toString().utcToIstYYYYMMDD())
-                     val extractedDate = matchResult?.value ?: "Invalid date"
-                     val date=extractedDate.split("-")[2]
-                     Log.e("scheduletimecu ","$extractedDate $it")
+                data.findAllCourseFolderContentByScheduleTime.forEachIndexed { index, scheduleContent ->
+                    scheduleContent.content.scheduled_time?.let {
+                        val currentDate = ZonedDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+                        val regex = Regex("""(\d{4}-\d{2}-\d{2})""")
+                        val extractedDate = regex.find(it.toString().utcToIstYYYYMMDD())?.value ?: "Invalid date"
 
-                     Log.e("aman",date)
+                        if (extractedDate != "Invalid date") {
+                            val dateParts = extractedDate.split("-")
+                            val extractedYear = dateParts[0]
+                            val extractedMonth = dateParts[1]
+                            val extractedDay = dateParts[2]
 
-                     if(!hasScheduleList.contains(date)) {
-                         hasScheduleList.add(date)
-                     }
+                            Log.e("scheduletimecu", "$extractedDate $it")
+                            Log.e("aman", extractedDay)
 
-                     Log.e("dasdaDADA", "findAllCourseFolderContentByScheduleTimeQuery: $hasScheduleList")
-                     if (!foundMatchingDate){
-                         setupCalendar(it.toString())
-                     }
-                     if (currentDate == extractedDate){
-                         matchingPosition = index
-                         foundMatchingDate = true
-                         binding.rvCalenderSchedule.scrollToPosition(index-2)
-                         setupCalendar(it.toString())
-                         return@forEachIndexed
-                     }
-                 }
+                            // Match current year and month
+                            val currentYearMonth = ZonedDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM"))
+                            val extractedYearMonth = "$extractedYear-$extractedMonth"
+
+//                            if (!hasScheduleList.contains(extractedDay) && currentYearMonth == extractedYearMonth) {
+                            if (!hasScheduleList.contains(extractedDay)) {
+                                hasScheduleList.add(extractedDay)
+                            }
+
+                            Log.e("dasdaDADA", "findAllCourseFolderContentByScheduleTimeQuery: $hasScheduleList")
+
+                            if (!foundMatchingDate) {
+                                setupCalendar(it.toString())
+                            }
+
+                            if (currentDate == extractedDate) {
+                                matchingPosition = index
+                                foundMatchingDate = true
+                                binding.rvCalenderSchedule.scrollToPosition(index - 2)
+                                setupCalendar(it.toString())
+                                return@forEachIndexed
+                            }
+                        }
+                    }
+
+                    // Update UI with current month and year
                     binding.tvCalenderCurrentMonth.text = "${convertIST(scheduleData.toString()).month} ${convertIST(scheduleData.toString()).year}"
                 }
+
 
                 setUpScheduleAvailable(hasScheduleList)
                 Log.e("hasScheduleList",hasScheduleList.toString())
@@ -323,16 +337,10 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
         helperFunctions = HelperFunctions()
         courseName  =  arguments?.getString("courseName")?:""
         courseId  =  arguments?.getString("courseId")?:""
-        val date = getStartAndEndOfMonth(Date())
+        val date = getStartAndEndOfMonth()
         courseStart  =  date.first
         courseEnd  =  date.second
         courses =  arguments?.getString("courses")?:""
-
-        Log.e("hjdhkjdskfksdkfj", "courseName = $courseName \n" +
-                "courseId : $courseId" +
-                "courseStart: $courseStart" +
-                "courseEnd: $courseEnd" +
-                "courses : $courses", )
 
         scheduleData = ZonedDateTime.now()
         binding.backIconSchedule.setOnClickListener {
@@ -350,6 +358,7 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
         var ends = getDateAfterDays(dateFormate(end),7)*/
         val starts = courseStart.toFormattedDate()?:return
         val ends = courseEnd.toFormattedDate()?:return
+        Log.e("sdashdghasdhgahs", "fetchData: $starts  ===  $ends", )
         myCourseViewModel.getCourseFolderContent(starts,ends, courseId)
     }
 
@@ -365,14 +374,13 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
         }
     }
 
-    fun getStartAndEndOfMonth(date: Date): Pair<String, String> {
+    private fun getStartAndEndOfMonth(): Pair<String, String> {
         val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX", Locale.getDefault()).apply {
             timeZone = TimeZone.getTimeZone("UTC")
         }
 
-        // Set startOfDay to the first day of the month
-        val startCalendar = Calendar.getInstance().apply {
-            time = date
+        // Set startOfDay to the first day of the current month and year in UTC
+        val startCalendar = Calendar.getInstance(TimeZone.getTimeZone("UTC")).apply {
             set(Calendar.DAY_OF_MONTH, 1)
             set(Calendar.HOUR_OF_DAY, 0)
             set(Calendar.MINUTE, 0)
@@ -381,9 +389,8 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
         }
         val startOfDay = dateFormat.format(startCalendar.time)
 
-        // Set endOfDay to the last day of the month
-        val endCalendar = Calendar.getInstance().apply {
-            time = date
+        // Set endOfDay to the last day of the current month and year in UTC
+        val endCalendar = Calendar.getInstance(TimeZone.getTimeZone("UTC")).apply {
             set(Calendar.DAY_OF_MONTH, getActualMaximum(Calendar.DAY_OF_MONTH))
             set(Calendar.HOUR_OF_DAY, 23)
             set(Calendar.MINUTE, 59)
@@ -392,8 +399,10 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
         }
         val endOfDay = dateFormat.format(endCalendar.time)
 
+        Log.e("DateRange", "getStartAndEndOfMonth: $startOfDay || $endOfDay")
         return Pair(startOfDay, endOfDay)
     }
+
 
 
 
