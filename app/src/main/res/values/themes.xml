@@ -54,6 +54,11 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="TabLayoutStyleLeaderBoard" parent="Widget.Material3.TabLayout">
+        <item name="android:textSize">@dimen/_14sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
 
     <style name="RoundedBackgroundBottomSheetDialog" parent="@style/ThemeOverlay.Material3.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/RoundedCornerStyle</item>

@@ -1,10 +1,13 @@
 package xyz.penpencil.competishun.ui.fragment
 
 import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
+import android.telephony.PhoneNumberUtils
+import android.telephony.TelephonyManager
 import android.text.Editable
 import android.text.InputFilter
 import android.text.SpannableString
@@ -57,6 +60,7 @@ import xyz.penpencil.competishun.ui.viewmodel.VerifyOtpViewModel
 import xyz.penpencil.competishun.utils.SharedPreferencesManager
 import java.io.File
 import java.security.MessageDigest
+import java.util.Locale
 import java.util.UUID
 
 
@@ -85,7 +89,8 @@ class LoginFragment : Fragment() {
             val phoneNumber = Identity.getSignInClient(requireActivity())
                 .getPhoneNumberFromIntent(result.data)
             if (phoneNumber != null) {
-                val formattedPhoneNumber  = removeNineOne(phoneNumber)
+                val formattedPhoneNumber  = removeCountryCode(requireContext(),phoneNumber)
+                Log.d("formateed",formattedPhoneNumber)
                 binding.etEnterMob.setText(formattedPhoneNumber)
                 Log.d(TAG, "Retrieved phone number: $phoneNumber")
             }
@@ -93,10 +98,38 @@ class LoginFragment : Fragment() {
             Log.e(TAG, "Failed to retrieve phone number")
         }
     }
+    private fun removeCountryCode(context: Context, phoneNumber: String): String {
+        Log.d("mobile", phoneNumber)
+
+        // Get the country ISO code (e.g., "IN", "US", etc.)
+        val telephonyManager = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+        val countryCodeIso = telephonyManager.networkCountryIso.uppercase(Locale.getDefault())
+
+        // Get the country dialing code (e.g., +91, +1)
+        val countryCodePrefix = getCountryDialCode(countryCodeIso)
+
+        return if (phoneNumber.startsWith(countryCodePrefix)) {
+            phoneNumber.removePrefix(countryCodePrefix)
+        } else {
+            phoneNumber
+        }
+    }
+    private fun getCountryDialCode(isoCode: String): String {
+        val countryDialCodes = mapOf(
+            "US" to "+1",
+            "IN" to "+91",
+            "GB" to "+44",
+            "CA" to "+1",
+            // Add more country codes as needed
+        )
+
+        return countryDialCodes[isoCode] ?: ""
+    }
 
     private fun removeNineOne(phoneNumber: String): String {
-        return phoneNumber.removePrefix("+91")
+        return phoneNumber.replace("^\\+91\\s*".toRegex(), "")
     }
+
 
     val request: GetPhoneNumberHintIntentRequest = GetPhoneNumberHintIntentRequest.builder().build()
 
