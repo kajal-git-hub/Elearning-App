@@ -17,6 +17,7 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.startActivity
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import xyz.penpencil.competishun.R
@@ -37,7 +38,7 @@ class TopicContentAdapter(
     private val folderContentId: String,
     private val fragmentActivity: FragmentActivity,
     private val context: Context, // Pass context
-    private val onItemClick: (TopicContentModel, String,ArrayList<String>,ArrayList<String>) -> Unit
+    private val onItemClick: (TopicContentModel, String,ArrayList<String>,ArrayList<String>, ArrayList<String>) -> Unit
 ) :
     RecyclerView.Adapter<TopicContentAdapter.TopicContentViewHolder>() {
 
@@ -60,6 +61,9 @@ class TopicContentAdapter(
         val unlockedTopicContentNames = topicContents
             .filter { isDateTodayOrPast(it.lockTime) && it.fileType == "VIDEO" }
             .map { it.topicName }.toCollection(ArrayList())
+        val unlockedTopicContentDescs = topicContents
+            .filter { isDateTodayOrPast(it.lockTime) && it.fileType == "VIDEO" }
+            .map { it.topicDescription }.toCollection(ArrayList())
         Log.e("unlockedTopics",unlockedTopicContentIds.toString())
         Log.e("unlockedTopic",unlockedTopicContentNames.toString())
         // Disable click if locked, enable if not
@@ -68,7 +72,7 @@ class TopicContentAdapter(
                 val url = if (topicContent.topicName.contains("http")) topicContent.url else "https://${topicContent.url}"
                 it.context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
             } else if (isDateTodayOrPast(topicContent.lockTime)){
-                onItemClick(topicContent, folderContentId,unlockedTopicContentIds,unlockedTopicContentNames)
+                onItemClick(topicContent, folderContentId,unlockedTopicContentIds,unlockedTopicContentNames,unlockedTopicContentDescs)
             } else if (topicContent.fileType == "UNKNOWN__" ) {
                 Log.e("TAG", "onBindViewHolder: ")
             }else {
@@ -135,7 +139,7 @@ class TopicContentAdapter(
 
             binding.tvLecture.text = topicContent.lecture
             binding.tvLecturerName.text = topicContent.lecturerName
-            if (topicContent.url.contains("http") && (topicContent.fileType == "URL")){
+            if (topicContent.fileType == "UNKNOWN__"  || topicContent.fileType == "URL" && topicContent.url.contains("http") ){
                 binding.tvLecture.text = "Link"
             }
             binding.tvTopicName.text = topicContent.topicName
@@ -188,8 +192,15 @@ class TopicContentAdapter(
                     binding.tvCourseDescription.text = topicContent.topicDescription
                 }
             }
-        }
 
+            binding.tvTopicName.setOnClickListener {
+                if (topicContent.fileType == "UNKNOWN__"  || topicContent.fileType == "URL"){
+                    it.context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(topicContent.url)))
+                }
+            }
+
+        }
+        @RequiresApi(Build.VERSION_CODES.O)
         fun showDateIfFutureOrToday(dateString: String): Boolean {
             // Correct the date string if necessary
             Log.e("dateStrings",dateString)
