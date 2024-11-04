@@ -6,6 +6,13 @@
         <item name="cornerSizeTopRight">50%</item>
     </style>
 
+    <style name="CustomImageShapeRounded">
+        <item name="cornerSizeTopLeft">50%</item>
+        <item name="cornerSizeTopRight">50%</item>
+        <item name="cornerSizeBottomLeft">50%</item>
+        <item name="cornerSizeBottomRight">50%</item>
+    </style>
+
 
     <style name="Base.Theme.Competishun" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->

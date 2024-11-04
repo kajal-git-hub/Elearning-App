@@ -1,5 +1,6 @@
 package xyz.penpencil.competishun.ui.fragment.scoreboard
 
+import android.app.Dialog
 import android.os.Bundle
 import android.view.ContextMenu
 import androidx.fragment.app.Fragment
@@ -21,6 +22,7 @@ import xyz.penpencil.competishun.ui.adapter.ItemClickListener
 import xyz.penpencil.competishun.ui.adapter.TestTypeAdapter
 import xyz.penpencil.competishun.ui.adapter.score.ScoreboardAdapter
 import xyz.penpencil.competishun.ui.main.HomeActivity
+import xyz.penpencil.competishun.utils.DialogTestUtils
 
 class ScoreDashboardFragment : Fragment() {
 
@@ -29,6 +31,8 @@ class ScoreDashboardFragment : Fragment() {
 
     private var scoreboardAdapter: ScoreboardAdapter?=null
     private var testTypeAdapter : TestTypeAdapter?=null
+    private var downloadDialog: Dialog?=null
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -86,6 +90,8 @@ class ScoreDashboardFragment : Fragment() {
         binding.toolbar.setNavigationOnClickListener {
             it.findNavController().popBackStack()
         }
+
+        downloadDialog = DialogTestUtils.showDownloadDialog(requireContext())
 
     }
 

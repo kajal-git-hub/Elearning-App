@@ -1,6 +1,7 @@
 package xyz.penpencil.competishun.ui.fragment
 
 import android.app.Activity
+import android.app.Dialog
 import android.content.Intent
 import xyz.penpencil.competishun.utils.HorizontalCalendarSetUp
 import android.os.Bundle
