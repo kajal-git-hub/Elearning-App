@@ -129,4 +129,5 @@
     <string name="char_limit_exceeded">Character limit exceeded. Maximum 100 characters allowed.</string>
     <string name="competishun_location">Competishun Tower-2, Plot number 35, Gopalpura Bypass Rd, near Riddhi Siddhi Circle, 10 B Scheme, Triveni Nagar, Gopal Pura Mode, Jaipur, Rajasthan 302020</string>
     <string name="my_scope_student_s_comprehensive_overview_of_performance_amp_evaluation"><![CDATA[My SCOPE: Student’s Comprehensive Overview of Performance & Evaluation]]></string>
+    <string name="current_month_year">%1$s %2$d</string>
 </resources>

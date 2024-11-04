@@ -1,13 +1,9 @@
 package xyz.penpencil.competishun.ui.fragment
 
 import android.app.Activity
-import android.app.Dialog
 import android.content.Intent
 import xyz.penpencil.competishun.utils.HorizontalCalendarSetUp
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -39,22 +35,17 @@ import xyz.penpencil.competishun.utils.setLightStatusBars
 import xyz.penpencil.competishun.utils.timeStatus
 import xyz.penpencil.competishun.utils.toIstZonedDateTime
 import xyz.penpencil.competishun.utils.utcToIst
-import xyz.penpencil.competishun.utils.utcToIstDate
-import xyz.penpencil.competishun.utils.utcToIstMonthYear
 import xyz.penpencil.competishun.utils.utcToIstYYYYMMDD
 import java.text.SimpleDateFormat
 import java.time.LocalTime
 import java.time.ZoneId
 import java.util.Locale
 import java.time.ZonedDateTime
-import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.OffsetDateTime
 import java.time.YearMonth
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.util.Calendar
-import java.util.Date
 import java.util.TimeZone
 
 @AndroidEntryPoint
@@ -69,7 +60,6 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
     private lateinit var scheduleAdapter: ScheduleAdapter
     private lateinit var helperFunctions: HelperFunctions
     private val myCourseViewModel: MyCoursesViewModel by viewModels()
-    private lateinit var scheduleData:ZonedDateTime
     private var matchingPosition: Int? = null
     var courseName  =  ""
     var courseId  =  ""
@@ -100,12 +90,13 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
                     selectedDate = it
                 }
                 setupRecyclerView()
-//                scrollToDate(calendarDate)
             }
             ,hasScheduleList
         )
 
-        binding.tvCalenderCurrentMonth.text = "${convertIST(scheduleData.toString()).month} ${convertIST(scheduleData.toString()).year} "
+        val month = convertIST(selectedDate.toString()).month
+        val year = convertIST(selectedDate.toString()).year
+        binding.tvCalenderCurrentMonth.text = String.format(getString(R.string.current_month_year), month, year)
 
         calendarSetUp.setUpCalendarPrevNextClickListener(
             binding.rvCalenderDates,
@@ -200,12 +191,14 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
                     binding.clEmptySchedule.visibility = View.VISIBLE
                     binding.rvCalenderSchedule.visibility = View.GONE
 //                    setupCalendar(courseStart)
+                    listData = mutableListOf()
                 }else{
                     binding.clEmptySchedule.visibility = View.GONE
                     binding.rvCalenderSchedule.visibility = View.VISIBLE
                     listData = data.findAllCourseFolderContentByScheduleTime
                     setupRecyclerView()
                 }
+                foundMatchingDate = false
                 hasScheduleList.clear()
 
                 data.findAllCourseFolderContentByScheduleTime.forEachIndexed { index, scheduleContent ->
@@ -216,23 +209,11 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
 
                         if (extractedDate != "Invalid date") {
                             val dateParts = extractedDate.split("-")
-                            val extractedYear = dateParts[0]
-                            val extractedMonth = dateParts[1]
                             val extractedDay = dateParts[2]
 
-                            Log.e("scheduletimecu", "$extractedDate $it")
-                            Log.e("aman", extractedDay)
-
-                            // Match current year and month
-                            val currentYearMonth = ZonedDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM"))
-                            val extractedYearMonth = "$extractedYear-$extractedMonth"
-
-//                            if (!hasScheduleList.contains(extractedDay) && currentYearMonth == extractedYearMonth) {
                             if (!hasScheduleList.contains(extractedDay)) {
                                 hasScheduleList.add(extractedDay)
                             }
-
-                            Log.e("dasdaDADA", "findAllCourseFolderContentByScheduleTimeQuery: $hasScheduleList")
 
                             if (!foundMatchingDate) {
                                 setupCalendar(it.toString())
@@ -247,7 +228,10 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
                             }
                         }
                     }
-                    binding.tvCalenderCurrentMonth.text = "${convertIST(scheduleData.toString()).month} ${convertIST(scheduleData.toString()).year}"
+                    val istDate = convertIST(selectedDate.toString())
+                    val month = istDate.month
+                    val year = istDate.year
+                    binding.tvCalenderCurrentMonth.text = String.format(getString(R.string.current_month_year), month, year)
                 }
 
                 setUpScheduleAvailable(hasScheduleList)
@@ -291,7 +275,6 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
             override fun handleOnBackPressed() {
                 findNavController().popBackStack()
                 bottomNavigationView.selectedItemId = R.id.myCourse
-
             }
         })
 
@@ -307,9 +290,8 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
         courseEnd  =  date.second
         courses =  arguments?.getString("courses")?:""
 
-        scheduleData = ZonedDateTime.now()
-        binding.backIconSchedule.setOnClickListener {
-            requireActivity().onBackPressedDispatcher.onBackPressed()
+       binding.backIconSchedule.setOnClickListener {
+            it.findNavController().popBackStack()
         }
         binding.clEmptySchedule.visibility = View.VISIBLE
         findAllCourseFolderContentByScheduleTimeQuery()
@@ -319,7 +301,6 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
     private fun fetchData(){
         val starts = courseStart.toFormattedDate()?:return
         val ends = courseEnd.toFormattedDate()?:return
-        Log.e("sdashdghasdhgahs", "fetchData: $starts  ===  $ends", )
         myCourseViewModel.getCourseFolderContent(starts,ends, courseId)
     }
 
@@ -424,8 +405,6 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
         window.statusBarColor = ContextCompat.getColor(activity,android.R.color.transparent)
         window.setBackgroundDrawable(background)
     }
-
-
 }
 
 
