@@ -9,7 +9,7 @@
         android:layout_width="278.73dp"
         android:layout_height="56dp"
         android:layout_marginHorizontal="40dp"
-        android:src="@drawable/splash_screen"
+        android:src="@drawable/welcome_screen_png"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

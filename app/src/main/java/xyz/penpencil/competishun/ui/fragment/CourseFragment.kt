@@ -94,7 +94,8 @@ class CourseFragment : DrawerVisibility(), StudentCourseItemClickListener {
             category_name = Optional.present(categoryName),
             course_class = Optional.present(courseClass),
             exam_type = Optional.present(examType),
-            is_recommended = Optional.Absent
+            is_recommended = Optional.Absent,
+            sortOrder = Optional.Present("DESC")
         )
         courseViewModel.setCoursesEmpty()
         courseViewModel.fetchCourses(filters)
@@ -241,6 +242,12 @@ class CourseFragment : DrawerVisibility(), StudentCourseItemClickListener {
 
     companion object {
         private const val TAG = "CourseFragment"
+    }
+
+    override fun onResume() {
+        super.onResume()
+        (activity as? HomeActivity)?.hideCallingSupport()
+
     }
 
 //    override fun onCourseItemClicked(course: AllCourseForStudentQuery.Course, bundle: Bundle) {

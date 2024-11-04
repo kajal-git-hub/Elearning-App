@@ -1,5 +1,6 @@
 package xyz.penpencil.competishun.ui.fragment
 
+import android.app.Activity
 import android.content.Intent
 import xyz.penpencil.competishun.utils.HorizontalCalendarSetUp
 import android.os.Bundle
@@ -10,6 +11,8 @@ import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
@@ -33,15 +36,25 @@ import xyz.penpencil.competishun.databinding.FragmentScheduleBinding
 import xyz.penpencil.competishun.ui.main.PdfViewActivity
 import xyz.penpencil.competishun.utils.setLightStatusBars
 import xyz.penpencil.competishun.utils.timeStatus
+import xyz.penpencil.competishun.utils.toIstZonedDateTime
+import xyz.penpencil.competishun.utils.utcToIst
+import xyz.penpencil.competishun.utils.utcToIstDate
+import xyz.penpencil.competishun.utils.utcToIstMonthYear
+import xyz.penpencil.competishun.utils.utcToIstYYYYMMDD
 import java.text.SimpleDateFormat
 import java.time.LocalTime
 import java.time.ZoneId
 import java.util.Locale
 import java.time.ZonedDateTime
 import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.OffsetDateTime
+import java.time.YearMonth
+import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.util.Calendar
 import java.util.Date
+import java.util.TimeZone
 
 @AndroidEntryPoint
 class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
@@ -62,8 +75,11 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
     var courseStart  =  ""
     var courseEnd  =  ""
     var courses =  ""
+    var selectedDate : ZonedDateTime = ZonedDateTime.now()
 
-    var hasScheduleList= mutableListOf<String>()
+    var listData: List<FindAllCourseFolderContentByScheduleTimeQuery.FindAllCourseFolderContentByScheduleTime> = mutableListOf()
+
+    private var hasScheduleList = mutableListOf<String>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -79,7 +95,11 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
             binding.rvCalenderDates,
             requireContext(),
             onDateSelected = { calendarDate ->
-                scrollToDate(calendarDate)
+                calendarDate.zonedDateTime?.let {
+                    selectedDate = it
+                }
+                setupRecyclerView()
+//                scrollToDate(calendarDate)
             }
             ,hasScheduleList
         )
@@ -92,10 +112,14 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
             binding.arrowLeftCalender,
             requireContext(),
             { newMonth ->
-              //  binding.tvCalenderCurrentMonth.text = newMonth
+                binding.tvCalenderCurrentMonth.text = newMonth.uppercase()
+                courseStart = getStartOfMonth(newMonth)
+                courseEnd = getEndOfMonth(newMonth)
+                Log.e("shgdfhdsgfgdsgfsd", "setupCalendar:\n  $courseStart \n courseEnd : $courseEnd\n\n", )
+                fetchData()
             },
             { calendarDate ->
-              //  scrollToDate(calendarDate)
+                scrollToDate(calendarDate)
             }
         )
 
@@ -106,24 +130,35 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
       //  calendarSetUp.scrollToSpecificDate(binding.rvCalenderDates, convertIST(scheduleTime))
     }
 
+    private fun getStartOfMonth(monthYear: String): String {
+        val yearMonth = YearMonth.parse(monthYear, DateTimeFormatter.ofPattern("MMMM yyyy"))
+        val startOfMonth = yearMonth.atDay(1).atStartOfDay().atOffset(ZoneOffset.UTC)
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX")
+        return startOfMonth.format(formatter)
+    }
+
+    private fun getEndOfMonth(monthYear: String): String {
+        val yearMonth = YearMonth.parse(monthYear, DateTimeFormatter.ofPattern("MMMM yyyy"))
+        val endOfMonth = yearMonth.atEndOfMonth().atTime(23, 59, 59, 999000000).atOffset(ZoneOffset.UTC)
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX")
+        return endOfMonth.format(formatter)
+    }
+
     private fun setUpScheduleAvailable(hasScheduleList: MutableList<String>) {
         calendarSetUp.setUpScheduleAvailable(binding.rvCalenderDates, hasScheduleList,requireContext()) { calendarDate ->
               scrollToDate(calendarDate)
         }
     }
 
-    private fun setupRecyclerView(contentList: List<FindAllCourseFolderContentByScheduleTimeQuery.FindAllCourseFolderContentByScheduleTime>) {
-    Log.e("foldevontent" ,contentList.toString())
-        val currentDate = LocalDate.now()
-        val day: Int = currentDate.dayOfMonth
-        val month: Int = currentDate.monthValue
-        val year: Int = currentDate.year
-        val d = if (day<10) "0$day" else day.toString()
-        val m = if (month<10) "0$month" else month.toString()
-        val courseDate = CalendarDate(d,"$day","",null)
+    private fun setupRecyclerView() {
+        val contentList = listData
+        val filteredContentList = contentList.filter {
+            val scheduledTime = it.content.scheduled_time.toString().utcToIst().toIstZonedDateTime()
+            scheduledTime.toLocalDate() == selectedDate.toLocalDate()
+        }
 
-        val scheduleDataList = contentList.groupBy {
-            val scheduledTime = convertIST(it.content.scheduled_time.toString())
+        val scheduleDataList = filteredContentList.groupBy {
+            val scheduledTime = it.content.scheduled_time.toString().utcToIst().toIstZonedDateTime()
             scheduledTime.dayOfWeek.toString().take(3) to scheduledTime.dayOfMonth.toString()
         }.map { (dateInfo, groupedContentList) ->
             val (dayOfWeek, dayOfMonth) = dateInfo
@@ -133,45 +168,57 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
                 duration = 0,
                 groupedContentList.map { content ->
                     ScheduleData.InnerScheduleItem(
-                        content.folderPath?:"",
+                        content.folderPath ?: "",
                         content.content.file_name,
                         lecture_start_time = formatTime(convertIST(content.content.scheduled_time.toString())),
-                        lecture_end_time = convertLastDuration(formatTime(convertIST(content.content.scheduled_time.toString())),content.content.video_duration?.toLong()?:0),
+                        lecture_end_time = convertLastDuration(formatTime(convertIST(content.content.scheduled_time.toString())), content.content.video_duration?.toLong() ?: 0),
                         content.content.file_url.toString(),
                         content.content.file_type.name,
                         content.content.id,
                         content.content.scheduled_time.toString(),
-                        completedDuration = content.studentTrack?.completed_duration ?:0,
-                        statusTime = content.content.scheduled_time.toString().timeStatus(content.content.video_duration?:0)
+                        completedDuration = content.studentTrack?.completed_duration ?: 0,
+                        statusTime = content.content.scheduled_time.toString().timeStatus(content.content.video_duration ?: 0)
                     )
                 }
             )
         }
 
-
-        scheduleAdapter = ScheduleAdapter(scheduleDataList, requireContext(),this)
+        scheduleAdapter = ScheduleAdapter(scheduleDataList, requireContext(), this)
         binding.rvCalenderSchedule.adapter = scheduleAdapter
         binding.rvCalenderSchedule.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 
-        Handler(Looper.getMainLooper()).postDelayed({
-            scrollToDate(courseDate)
+        if (scheduleDataList.isEmpty()){
+            binding.clEmptySchedule.visibility = View.VISIBLE
+            binding.rvCalenderSchedule.visibility = View.GONE
+        }else {
+            binding.clEmptySchedule.visibility = View.GONE
+            binding.rvCalenderSchedule.visibility = View.VISIBLE
+        }
+       /* Handler(Looper.getMainLooper()).postDelayed({
+//            scrollToDate(courseDate)
         }, 2000)
 
         scheduleDataList.forEach { scheduleData ->
-            Log.e("ScheduleDatakaj", scheduleData.toString())
-        }
+            Log.e("ScheduleData", scheduleData.toString())
+        }*/
     }
 
-    fun FindAllCourseFolderContentByScheduleTimeQuery(){
+
+    private fun findAllCourseFolderContentByScheduleTimeQuery(){
         myCourseViewModel.courseFolderContent.observe(viewLifecycleOwner) { result ->
             Log.e("getdatafschedr",result.toString())
             result.onSuccess { data ->
                 Log.e("getdatafolder",data.toString())
                 if (data.findAllCourseFolderContentByScheduleTime.isEmpty()){
-                   binding.clEmptySchedule.visibility = View.VISIBLE
+                    binding.clEmptySchedule.visibility = View.VISIBLE
+                    binding.rvCalenderSchedule.visibility = View.GONE
+                    hasScheduleList.clear()
+//                   setupCalendar(courseStart)
                 }else{
                     binding.clEmptySchedule.visibility = View.GONE
-                setupRecyclerView(data.findAllCourseFolderContentByScheduleTime)
+                    binding.rvCalenderSchedule.visibility = View.VISIBLE
+                    listData = data.findAllCourseFolderContentByScheduleTime
+                setupRecyclerView()
                 }
                 Log.e("timesize",data.findAllCourseFolderContentByScheduleTime.size.toString())
                 data.findAllCourseFolderContentByScheduleTime.forEachIndexed { index, scheduleContent ->
@@ -181,39 +228,31 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
                 data.findAllCourseFolderContentByScheduleTime.forEachIndexed {index, schedulecontent->
                 // Log.e("timea",schedulecontent.s.toString())
                  schedulecontent.content.scheduled_time.let {
-                    Log.e("scheduletimess", convertIST(it.toString()).toString())
                      val currentDate = ZonedDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
                      val regex = Regex("""(\d{4}-\d{2}-\d{2})""")
-                     val matchResult = regex.find(it.toString())
+                     val matchResult = regex.find(it.toString().utcToIstYYYYMMDD())
                      val extractedDate = matchResult?.value ?: "Invalid date"
                      val date=extractedDate.split("-")[2]
                      Log.e("scheduletimecu ","$extractedDate $it")
 
                      Log.e("aman",date)
 
-                     if(!hasScheduleList.contains(date))
-                     {
+                     if(!hasScheduleList.contains(date)) {
                          hasScheduleList.add(date)
                      }
 
+                     Log.e("dasdaDADA", "findAllCourseFolderContentByScheduleTimeQuery: $hasScheduleList")
                      if (!foundMatchingDate){
                          setupCalendar(it.toString())
                      }
                      if (currentDate == extractedDate){
                          matchingPosition = index
-                         Log.e("datematching $matchingPosition",it.toString())
                          foundMatchingDate = true
                          binding.rvCalenderSchedule.scrollToPosition(index-2)
                          setupCalendar(it.toString())
                          return@forEachIndexed
                      }
-
-
-//                     if (currentDate != it)
-//                         setupCalendar(it.toString()) else setupCalendar(currentDate)
-
                  }
-                    Log.e("schedule57 $scheduleData", convertIST(scheduleData.toString()).toString())
                     binding.tvCalenderCurrentMonth.text = "${convertIST(scheduleData.toString()).month} ${convertIST(scheduleData.toString()).year}"
                 }
 
@@ -227,12 +266,12 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
       //  myCourseViewModel.getCourseFolderContent("08-27-2024", "10-30-2025", "31296a0b-6dea-42e5-b273-668744bf34a4")
     }
 
-    fun convertIST(dateString: String): ZonedDateTime {
+    private fun convertIST(dateString: String): ZonedDateTime {
         val zonedDateTime = ZonedDateTime.parse(dateString) // Adjust this according to your input format
         return zonedDateTime.withZoneSameInstant(ZoneId.of("Asia/Kolkata"))
     }
 
-    fun convertLastDuration(timeString: String, secondsToAdd: Long): String {
+    private fun convertLastDuration(timeString: String, secondsToAdd: Long): String {
         Log.e("getSWtring",timeString)
 
         // Define the formatter for formatting the output
@@ -283,26 +322,79 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
         helperFunctions = HelperFunctions()
         courseName  =  arguments?.getString("courseName")?:""
         courseId  =  arguments?.getString("courseId")?:""
-        courseStart  =  arguments?.getString("courseStart")?:""
-        courseEnd  =  arguments?.getString("courseEnd")?:""
+        val date = getStartAndEndOfMonth(Date())
+        courseStart  =  date.first
+        courseEnd  =  date.second
         courses =  arguments?.getString("courses")?:""
+
+        Log.e("hjdhkjdskfksdkfj", "courseName = $courseName \n" +
+                "courseId : $courseId" +
+                "courseStart: $courseStart" +
+                "courseEnd: $courseEnd" +
+                "courses : $courses", )
 
         scheduleData = ZonedDateTime.now()
         binding.backIconSchedule.setOnClickListener {
             requireActivity().onBackPressedDispatcher.onBackPressed()
         }
         binding.clEmptySchedule.visibility = View.VISIBLE
-        FindAllCourseFolderContentByScheduleTimeQuery()
+        findAllCourseFolderContentByScheduleTimeQuery()
         fetchData()
     }
 
     private fun fetchData(){
-        var start = helperFunctions.formatCourseDate(courseStart)
+      /*  var start = helperFunctions.formatCourseDate(courseStart)
         var end = helperFunctions.formatCourseDate(courseEnd)
         var starts = getDateBeforeDays(dateFormate(start),7)
-        var ends = getDateAfterDays(dateFormate(end),7)
+        var ends = getDateAfterDays(dateFormate(end),7)*/
+        val starts = courseStart.toFormattedDate()?:return
+        val ends = courseEnd.toFormattedDate()?:return
         myCourseViewModel.getCourseFolderContent(starts,ends, courseId)
     }
+
+    private fun String.toFormattedDate(): String? {
+        val inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX")
+        val outputFormatter = DateTimeFormatter.ofPattern("MM-dd-yyyy")
+
+        return try {
+            val dateTime = LocalDateTime.parse(this, inputFormatter)
+            dateTime.format(outputFormatter)
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    fun getStartAndEndOfMonth(date: Date): Pair<String, String> {
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX", Locale.getDefault()).apply {
+            timeZone = TimeZone.getTimeZone("UTC")
+        }
+
+        // Set startOfDay to the first day of the month
+        val startCalendar = Calendar.getInstance().apply {
+            time = date
+            set(Calendar.DAY_OF_MONTH, 1)
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+        }
+        val startOfDay = dateFormat.format(startCalendar.time)
+
+        // Set endOfDay to the last day of the month
+        val endCalendar = Calendar.getInstance().apply {
+            time = date
+            set(Calendar.DAY_OF_MONTH, getActualMaximum(Calendar.DAY_OF_MONTH))
+            set(Calendar.HOUR_OF_DAY, 23)
+            set(Calendar.MINUTE, 59)
+            set(Calendar.SECOND, 59)
+            set(Calendar.MILLISECOND, 999)
+        }
+        val endOfDay = dateFormat.format(endCalendar.time)
+
+        return Pair(startOfDay, endOfDay)
+    }
+
+
 
     fun dateFormate(inputDate:String):String{
 
@@ -310,8 +402,8 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
         val outputFormat = SimpleDateFormat("MM-dd-yyyy", Locale.getDefault())
 
         return try {
-            val date = inputFormat.parse(inputDate) // Parse the input date
-            val formattedDate = outputFormat.format(date) // Format it into the desired format
+            val date = inputFormat.parse(inputDate)
+            val formattedDate = outputFormat.format(date)
            formattedDate
         } catch (e: Exception) {
             e.printStackTrace()
@@ -422,10 +514,7 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
 
     override fun onResume() {
         super.onResume()
-        requireActivity().window?.let {
-            it.statusBarColor = ContextCompat.getColor(requireContext(), R.color._e25b49)
-            it.setLightStatusBars(true)
-        }
+        setStatusBarGradiant(requireActivity())
     }
 
     override fun onStop() {
@@ -456,6 +545,20 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
                 // Handle error or null URL
             }
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        requireActivity().window.statusBarColor = ContextCompat.getColor(requireContext(), R.color.white)
+        requireActivity().window.setBackgroundDrawable(null)
+    }
+
+    private fun setStatusBarGradiant(activity: Activity) {
+        val window: Window = activity.window
+        val background = ContextCompat.getDrawable(activity, R.drawable.gradiant_bg_schedule)
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+        window.statusBarColor = ContextCompat.getColor(activity,android.R.color.transparent)
+        window.setBackgroundDrawable(background)
     }
 
 

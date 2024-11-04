@@ -30,6 +30,7 @@ class SharedPreferencesManager(context: Context) {
         private const val KEY_COURSE_ID = "courseId"
         private const val KEY_PAYMENT_TYPE = "paymentType"
         private const val KEY_PREPARATION_FOR = "preparingFor"
+        private const val KEY_LOGIN_TYPE = "loginType"
         private const val KEY_OTHER_PREP_FOR = "OtherFor"
         private const val KEY_TARGET_YEAR = "targetYear"
         private const val KEY_REFERENCE = "reference"
@@ -226,6 +227,12 @@ class SharedPreferencesManager(context: Context) {
         get() = sharedPreferences.getString(KEY_PREPARATION_FOR, null)
         set(value){
             sharedPreferences.edit().putString(KEY_PREPARATION_FOR, value).apply()
+            Log.e("sharedPrefpreparing sa", preparingFor.toString() )
+        }
+    var loginType:String?
+        get() = sharedPreferences.getString(KEY_LOGIN_TYPE, null)
+        set(value){
+            sharedPreferences.edit().putString(KEY_LOGIN_TYPE, value).apply()
             Log.e("sharedPrefpreparing sa", preparingFor.toString() )
         }
     var descriptionText:String?

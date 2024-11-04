@@ -148,5 +148,11 @@ class ProfileFragment : DrawerVisibility() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        (activity as? HomeActivity)?.hideCallingSupport()
+
+    }
+
 
 }

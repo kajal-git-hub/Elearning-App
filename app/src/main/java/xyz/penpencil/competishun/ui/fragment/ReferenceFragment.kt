@@ -72,6 +72,8 @@ class ReferenceFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        Log.d("MobileNoGet",sharedPreferencesManager.mobileNo.toString())
+
         selectedItem = sharedPreferencesManager.reference
         SharedSelectedItem = selectedItem
 
@@ -91,7 +93,7 @@ class ReferenceFragment : Fragment() {
 
                 sharedPreferencesManager.isReferenceSelectionInProgress = false
                 Log.e("emailpresen",sharedPreferencesManager.email.toString())
-                val loginType = arguments?.getString("loginType")
+                val loginType = sharedPreferencesManager.loginType
                 if (loginType != null && loginType == "email" ) {
                     Log.e("emailType",sharedPreferencesManager.email.toString())
                     val updateUserInput = UpdateUserInput(

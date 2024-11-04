@@ -355,31 +355,29 @@ class HomeFragment : Fragment() {
         clickListener()
     }
 
-    private fun updatedListCourses(listOurCoursesItem: List<GetAllCourseCategoriesQuery.GetAllCourseCategory>?): List<GetAllCourseCategoriesQuery. GetAllCourseCategory> {
+    private fun updatedListCourses(listOurCoursesItem: List<GetAllCourseCategoriesQuery.GetAllCourseCategory>?): List<GetAllCourseCategoriesQuery.GetAllCourseCategory> {
 
+        // Define the desired indices to include
+        val indicesToInclude = listOf(0, 2, 4, 1, 3, 5, 6, 8, 9, 7)
+        val listToReturn = mutableListOf<GetAllCourseCategoriesQuery.GetAllCourseCategory>()
 
-        val listToReturn  = mutableListOf<GetAllCourseCategoriesQuery.GetAllCourseCategory>()
+        if (listOurCoursesItem.isNullOrEmpty()) return listToReturn
 
-        if (listOurCoursesItem == null) return  listToReturn
-        if(listOurCoursesItem.isNotEmpty()) listToReturn.add(listOurCoursesItem[0])
-        if(listOurCoursesItem.size>=3)
-        listToReturn.add(listOurCoursesItem[2])
-        if(listOurCoursesItem.size>=5)
-        listToReturn.add(listOurCoursesItem[4])
-        if(listOurCoursesItem.size>=2)
-        listToReturn.add(listOurCoursesItem[1])
-        if(listOurCoursesItem.size>=4)
-        listToReturn.add(listOurCoursesItem[3])
-        if(listOurCoursesItem.size>=6)
-        listToReturn.add(listOurCoursesItem[5])
+        // Add elements based on predefined indices, respecting the list size
+        for (index in indicesToInclude) {
+            if (index < listOurCoursesItem.size) {
+                listToReturn.add(listOurCoursesItem[index])
+            }
+        }
 
-        for (i in listToReturn.size until listOurCoursesItem.size){
-            listToReturn.add(listOurCoursesItem[i])
+        // Append any remaining elements from the original list
+        val startIndex = listToReturn.size
+        if (startIndex < listOurCoursesItem.size) {
+            listToReturn.addAll(listOurCoursesItem.subList(startIndex, listOurCoursesItem.size))
         }
 
         return listToReturn
     }
-
 
 
     private fun UpdateList(listOurCoursesItem: List<GetAllCourseCategoriesQuery.GetAllCourseCategory>?): List<GetAllCourseCategoriesQuery. GetAllCourseCategory> {
@@ -528,7 +526,8 @@ class HomeFragment : Fragment() {
             category_name = Optional.Absent,
             course_class = Optional.Absent,
             exam_type = Optional.present(courseTypes),
-            is_recommended = Optional.present(true)
+            is_recommended = Optional.present(true),
+            sortOrder = Optional.present("DESC")
         )
         studentCoursesViewModel.fetchCourses(filters)
 

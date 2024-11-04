@@ -13,6 +13,7 @@
         android:layout_height="?attr/actionBarSize"
         android:elevation="@dimen/_4dp"
         app:menu="@menu/search_bar_white"
+        android:theme="@style/AppTheme.AppBarOverlay"
         app:navigationIcon="@drawable/arrow_left_white"
         android:background="@drawable/gradiant_bg_bookmark"
         app:layout_constraintStart_toStartOf="parent"

@@ -108,4 +108,9 @@ class CoursesFragment : DrawerVisibility() {
             outState.putInt("selected_tab_position", selectedTabPosition)
     }
 
+    override fun onResume() {
+        super.onResume()
+        (activity as? HomeActivity)?.hideCallingSupport()
+    }
+
 }

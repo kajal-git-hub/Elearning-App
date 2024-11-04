@@ -6,6 +6,7 @@ import com.apollographql.apollo3.api.http.HttpRequest
 import com.apollographql.apollo3.api.http.HttpResponse
 import com.apollographql.apollo3.network.http.HttpInterceptor
 import com.apollographql.apollo3.network.http.HttpInterceptorChain
+import com.student.competishun.gatekeeper.GetNewTokensMutation
 import xyz.penpencil.competishun.data.api.BASE_URL_COINKEEPER
 import xyz.penpencil.competishun.data.api.BASE_URL_CURATOR
 import xyz.penpencil.competishun.data.api.BASE_URL_GATEKEEPER
@@ -29,62 +30,102 @@ object GraphQlModule {
     @Provides
     @Singleton
     @Gatekeeper
-    fun provideApolloClient(sharedPreferencesManager: SharedPreferencesManager):ApolloClient{
+    fun provideApolloClient(sharedPreferencesManager: SharedPreferencesManager): ApolloClient {
         return ApolloClient.Builder()
             .serverUrl(BASE_URL_GATEKEEPER)
-            .addHttpInterceptor(object : HttpInterceptor {
-                override suspend fun intercept(request: HttpRequest, chain: HttpInterceptorChain): HttpResponse {
-
-                    val accessToken = sharedPreferencesManager.accessToken
-                    val modifiedRequest = request.newBuilder()
-                        .addHeader("Authorization", "Bearer $accessToken")
-                        .build()
-                    return chain.proceed(modifiedRequest)
-                }
-            })
+            .addHttpInterceptor(createHttpInterceptor(sharedPreferencesManager))
             .build()
     }
-
 
     @Provides
     @Singleton
     @Curator
-    fun provideApolloClientCurator(
-        sharedPreferencesManager: SharedPreferencesManager
-    ): ApolloClient {
+    fun provideApolloClientCurator(sharedPreferencesManager: SharedPreferencesManager): ApolloClient {
         return ApolloClient.Builder()
             .serverUrl(BASE_URL_CURATOR)
-            .addHttpInterceptor(object : HttpInterceptor {
-                override suspend fun intercept(request: HttpRequest, chain: HttpInterceptorChain): HttpResponse {
-
-                    val accessToken = sharedPreferencesManager.accessToken
-                    val modifiedRequest = request.newBuilder()
-                        .addHeader("Authorization", "Bearer $accessToken")
-                        .build()
-                    return chain.proceed(modifiedRequest)
-                }
-            })
+            .addHttpInterceptor(createHttpInterceptor(sharedPreferencesManager))
             .build()
     }
 
     @Provides
     @Singleton
     @Coinkeeper
-    fun provideClientCoinkeeper(sharedPreferencesManager: SharedPreferencesManager):ApolloClient{
+    fun provideClientCoinkeeper(sharedPreferencesManager: SharedPreferencesManager): ApolloClient {
         return ApolloClient.Builder()
             .serverUrl(BASE_URL_COINKEEPER)
-            .addHttpInterceptor(object : HttpInterceptor {
-                override suspend fun intercept(request: HttpRequest, chain: HttpInterceptorChain): HttpResponse {
-
-                    val accessToken = sharedPreferencesManager.accessToken
-                    val modifiedRequest = request.newBuilder()
-                        .addHeader("Authorization", "Bearer $accessToken")
-                        .build()
-                    return chain.proceed(modifiedRequest)
-                }
-            })
+            .addHttpInterceptor(createHttpInterceptor(sharedPreferencesManager))
             .build()
     }
+
+    private fun createHttpInterceptor(sharedPreferencesManager: SharedPreferencesManager): HttpInterceptor {
+        return object : HttpInterceptor {
+            override suspend fun intercept(request: HttpRequest, chain: HttpInterceptorChain): HttpResponse {
+                val accessToken = sharedPreferencesManager.accessToken
+                var modifiedRequest = request.newBuilder()
+                    .addHeader("Authorization", "Bearer $accessToken")
+                    .build()
+
+                var response = chain.proceed(modifiedRequest)
+//{"errors":[{"message":"Unauthorized","statusCode":"UNAUTHENTICATED"}],"data":null}
+//                if (response.body?.readUtf8()?.contains("{\"message\":\"Unauthorized\",\"statusCode\":\"UNAUTHENTICATED\"}") == true) {
+                if (response.statusCode == 401) {
+                    val newAccessToken = refreshToken(sharedPreferencesManager)
+                    if (newAccessToken != null) {
+                        modifiedRequest = request.newBuilder()
+                            .addHeader("Authorization", "Bearer $newAccessToken")
+                            .build()
+                        response = chain.proceed(modifiedRequest)
+                    }
+                }
+
+                return response
+            }
+        }
+    }
+
+    private suspend fun refreshToken(
+        sharedPreferencesManager: SharedPreferencesManager): String? {
+        val newAccessToken = getNewAccessTokenFromRefreshToken(sharedPreferencesManager)
+        return if (newAccessToken != null) {
+            sharedPreferencesManager.accessToken = newAccessToken
+            newAccessToken
+        } else {
+            null
+        }
+    }
+
+    private suspend fun getNewAccessTokenFromRefreshToken(sharedPreferencesManager: SharedPreferencesManager): String? {
+        val apolloClient = ApolloClient.Builder()
+            .serverUrl(BASE_URL_GATEKEEPER)
+            .addHttpHeader("Authorization", "Bearer ${sharedPreferencesManager.refreshToken}")
+            .build()
+
+        return try {
+            val mutation = GetNewTokensMutation()
+            val response = apolloClient.mutation(mutation).execute()
+
+            if (response.hasErrors()) {
+                response.errors?.forEach { error ->
+                    println("Apollo Error: ${error.message}")
+                }
+                null
+            } else {
+                val authData = response.data?.getNewTokens
+                if (authData != null) {
+                    sharedPreferencesManager.refreshToken = authData.refreshToken
+                    sharedPreferencesManager.accessToken = authData.accessToken
+                    authData.accessToken
+                } else {
+                    null
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+    }
+
+
 
     @Provides
     @Singleton

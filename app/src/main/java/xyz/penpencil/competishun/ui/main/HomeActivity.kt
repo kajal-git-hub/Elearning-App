@@ -1,11 +1,17 @@
 package xyz.penpencil.competishun.ui.main
 
+import android.content.ContentResolver
+import android.content.ContentValues
+import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.os.Handler
 import android.os.Looper
+import android.provider.MediaStore
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
@@ -14,21 +20,35 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.core.net.toFile
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.ObservableField
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.common.eventbus.Subscribe
+import com.ketch.DownloadModel
+import com.ketch.Ketch
+import com.ketch.Status
 import com.razorpay.PaymentResultListener
+import com.student.competishun.curator.type.FileType
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.launch
 import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.databinding.ActivityHomeBinding
 import xyz.penpencil.competishun.ui.viewmodel.UserViewModel
 import xyz.penpencil.competishun.utils.EventBusSingleton
 import xyz.penpencil.competishun.utils.MyEvent
 import xyz.penpencil.competishun.utils.SharedPreferencesManager
+import java.io.File
+import javax.inject.Inject
 
 
 @AndroidEntryPoint
@@ -50,6 +70,12 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
 
     private var previousSelectedItemId: Int = R.id.home
 
+    @Inject
+    lateinit var ketch: Ketch
+    private val VIDEO_MIME_TYPE = "video/mp4"
+    private val PDF_MIME_TYPE = "application/pdf"
+    private val RELATIVE_PATH = Environment.DIRECTORY_DOWNLOADS
+
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
@@ -58,6 +84,7 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         sharedPreferencesManager = SharedPreferencesManager(this)
         onBackPressedDispatcher.addCallback(this, backPressListener)
+        window.navigationBarColor = ContextCompat.getColor(this,android.R.color.white)
 
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.fragmentNavigation) as NavHostFragment
@@ -279,21 +306,90 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
         }
     }
 
-
-    override fun onStart() {
-        super.onStart()
-        EventBusSingleton.getInstance().register(this)
-    }
-
-    override fun onStop() {
-        super.onStop()
-        EventBusSingleton.getInstance().unregister(this)
-    }
-
-    @Subscribe
-    fun onEvent(event: MyEvent) {
-        Toast.makeText(this, event.message, Toast.LENGTH_SHORT).show()
+    fun hideCallingSupport() {
+        binding.clCallingSupport.visibility = View.GONE
+        binding.igContactImage.setImageResource(R.drawable.ic_call)
+        isCallingSupportVisible.set(true)
     }
 
 
+
+    private fun createFile(fileName: String): Uri? {
+        val relativePath = Environment.DIRECTORY_DOWNLOADS
+
+        val values = ContentValues().apply {
+            put(MediaStore.MediaColumns.RELATIVE_PATH, relativePath)
+        }
+
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            contentResolver.insert(MediaStore.Files.getContentUri("external"), values)
+        } else {
+            val dir = Environment.getExternalStoragePublicDirectory(relativePath)
+            val file = File(dir, fileName).apply { if (exists()) delete() }
+
+            return try {
+                if (file.createNewFile()) Uri.fromFile(file) else {
+                    Log.e("CreateFile", "Failed to create file: $fileName")
+                    null
+                }
+            } catch (e: Exception) {
+                Log.e("CreateFile", "IOException while creating file: ${e.message}")
+                null
+            }
+        }
+    }
+
+
+    private fun Uri.toFilePath(context: Context): String? {
+        return when (scheme) {
+            ContentResolver.SCHEME_CONTENT -> {
+                val projection = arrayOf(MediaStore.Video.Media.DATA)
+                context.contentResolver.query(this, projection, null, null, null)?.use { cursor ->
+                    if (cursor.moveToFirst()) {
+                        val columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA)
+                        cursor.getString(columnIndex)
+                    } else null
+                }
+            }
+            ContentResolver.SCHEME_FILE -> path
+            else -> null
+        }
+    }
+
+    private fun handleDownloadStatus(downloadModel: DownloadModel) {
+        when (downloadModel.status) {
+            Status.STARTED -> showStatus("Download has started.")
+            Status.SUCCESS -> showStatus("Download completed successfully.")
+            Status.CANCELLED -> showStatus("Download was cancelled.")
+            Status.FAILED -> {
+                Log.e("DownloadError", "Failed reason: ${downloadModel.failureReason}")
+                showStatus("Download failed.")
+            }
+            Status.QUEUED, Status.PROGRESS, Status.PAUSED, Status.DEFAULT -> {}
+        }
+    }
+    fun downloadFile(url: String, fileName: String, isExternal: Boolean = false) {
+        val path = if (isExternal) {
+            "/storage/emulated/0/Download/"
+        } else {
+            filesDir.absolutePath
+        }
+
+        Log.e("DownloadError", "PATH: $path$fileName")
+        val id = ketch.download(
+            url = url,
+            fileName = fileName,
+            path = path)
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                ketch.observeDownloadById(id)
+                    .flowOn(Dispatchers.IO)
+                    .collect { handleDownloadStatus(it) }
+            }
+        }
+    }
+
+    private fun showStatus(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    }
 }

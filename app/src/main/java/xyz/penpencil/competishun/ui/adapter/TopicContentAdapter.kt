@@ -33,8 +33,7 @@ import java.time.format.ResolverStyle
 import java.util.Locale
 
 
-class
-TopicContentAdapter(
+class TopicContentAdapter(
     private val topicContents: List<TopicContentModel>,
     private val folderContentId: String,
     private val fragmentActivity: FragmentActivity,
@@ -69,8 +68,13 @@ TopicContentAdapter(
         Log.e("unlockedTopic",unlockedTopicContentNames.toString())
         // Disable click if locked, enable if not
         holder.itemView.setOnClickListener {
-            if (isDateTodayOrPast(topicContent.lockTime)){
-                onItemClick(topicContent, folderContentId,unlockedTopicContentIds,unlockedTopicContentNames,unlockedTopicContentDescs)
+            if ((topicContent.fileType == "URL")){
+                val url = if (topicContent.topicName.contains("http")) topicContent.url else "https://${topicContent.url}"
+                it.context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+            } else if (isDateTodayOrPast(topicContent.lockTime)){
+                onItemClick(topicContent, folderContentId,unlockedTopicContentIds,unlockedTopicContentNames)
+            } else if (topicContent.fileType == "UNKNOWN__" ) {
+                Log.e("TAG", "onBindViewHolder: ")
             }else {
                 Toast.makeText(it.context, "Content is locked!", Toast.LENGTH_SHORT).show()
             }
@@ -135,7 +139,7 @@ TopicContentAdapter(
 
             binding.tvLecture.text = topicContent.lecture
             binding.tvLecturerName.text = topicContent.lecturerName
-            if (topicContent.fileType == "UNKNOWN__"  || topicContent.fileType == "URL"){
+            if (topicContent.fileType == "UNKNOWN__"  || topicContent.fileType == "URL" && topicContent.url.contains("http") ){
                 binding.tvLecture.text = "Link"
             }
             binding.tvTopicName.text = topicContent.topicName

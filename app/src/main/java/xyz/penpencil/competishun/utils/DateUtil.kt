@@ -27,6 +27,51 @@ fun String.utcToIst(): String {
     return "$d-$m-$year $h:$min:$sec"
 }
 
+
+fun String.utcToIstDate(): String {
+
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX")
+    val dateTime = LocalDateTime.parse(this, formatter)
+
+    val year = dateTime.year
+    val month = dateTime.monthValue
+    val day = dateTime.dayOfMonth
+
+    val d = if (day < 10) "0$day" else day.toString()
+    val m = if (month < 10) "0$month" else month.toString()
+    return "$d-$m-$year"
+}
+
+
+fun String.utcToIstYYYYMMDD(): String {
+
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX")
+    val dateTime = LocalDateTime.parse(this, formatter)
+
+    val year = dateTime.year
+    val month = dateTime.monthValue
+    val day = dateTime.dayOfMonth
+
+    val d = if (day < 10) "0$day" else day.toString()
+    val m = if (month < 10) "0$month" else month.toString()
+    return "$year-$m-$d"
+}
+
+
+fun String.utcToIstMonthYear(): String {
+
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX")
+    val dateTime = LocalDateTime.parse(this, formatter)
+
+    val year = dateTime.year
+    val month = dateTime.monthValue
+    val day = dateTime.dayOfMonth
+
+    val d = if (day < 10) "0$day" else day.toString()
+    val m = if (month < 10) "0$month" else month.toString()
+    return "$year $m"
+}
+
 fun String.timeStatus(duration: Int): String {
     try {
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX")
