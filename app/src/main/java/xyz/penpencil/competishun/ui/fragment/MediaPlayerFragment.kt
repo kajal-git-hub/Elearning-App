@@ -1,3 +1,4 @@
+
 package xyz.penpencil.competishun.ui.fragment
 
 import android.Manifest
@@ -84,7 +85,7 @@ class MediaPlayerFragment : DrawerVisibility() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
         binding = FragmentMediaPlayerBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -126,6 +127,7 @@ class MediaPlayerFragment : DrawerVisibility() {
         if (title != null) {
             binding.tittleBtn.visibility = View.VISIBLE
             binding.tittleBtn.text = title
+            binding.tittleTv.text = title
         }
 
         courseFolderContentId = arguments?.getString("ContentId")?: return
@@ -133,6 +135,7 @@ class MediaPlayerFragment : DrawerVisibility() {
         courseFolderContentNames = arguments?.getStringArrayList("folderContentNames")?: return
         courseFolderContentDescs = arguments?.getStringArrayList("folderContentDescs")?: return
         Log.e("getfolderNamess",courseFolderContentNames.toString())
+        Log.e("getfolderDess",courseFolderContentDescs.toString())
         player = ExoPlayer.Builder(requireContext()).build()
         requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         binding.playerView.resizeMode = androidx.media3.ui.AspectRatioFrameLayout.RESIZE_MODE_FIT
@@ -142,12 +145,14 @@ class MediaPlayerFragment : DrawerVisibility() {
 
             if (isLandscape) {
                Log.e("landscape mode",isLandscape.toString())
+                binding.fullscreenButton.visibility = View.VISIBLE
                 binding.playerView.layoutParams = binding.playerView.layoutParams.apply {
                     height = (300 * resources.displayMetrics.density).toInt()
                 }// Convert 300dp to pixels
                     requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
                 binding.playerView.resizeMode = AspectRatioFrameLayout.RESIZE_MODE_FIT // Reset or use any mode you want in portrait
             } else {
+                binding.fullscreenButton.visibility = View.VISIBLE
                 Log.e("landscapeport",isLandscape.toString())
                 // If in portrait, switch to landscape
                 requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
@@ -188,7 +193,7 @@ class MediaPlayerFragment : DrawerVisibility() {
                             binding.playerView.visibility = View.GONE
                             binding.upNextOverlay.visibility = View.VISIBLE
                             videoTitles = courseFolderContentNames
-                            videoTitles = courseFolderContentNames
+                            videoDescs = courseFolderContentDescs
                             if (currentVideoIndex < courseFolderContentIds.size - 1) {
                                 Log.e("currentVideoIndexSize", currentVideoIndex.toString())
                                 currentVideoIndex++
@@ -196,7 +201,7 @@ class MediaPlayerFragment : DrawerVisibility() {
                                 val nextVideoDesc = videoDescs[currentVideoIndex]
                                 binding.nextVideoTitle.text = nextVideoTittle
                                 binding.descTv.text = nextVideoDesc
-                                binding.tittleTv.text = nextVideoDesc
+                                binding.tittleTv.text = nextVideoTittle
                              } else {
                         // No more videos in the playlist
                         Toast.makeText(requireContext(), "No more videos to play", Toast.LENGTH_SHORT).show()
@@ -344,7 +349,7 @@ class MediaPlayerFragment : DrawerVisibility() {
             Log.d("NextURL", "Signed URL: $signedUrl")
             if (signedUrl != null) {
                 videoTitles = courseFolderContentNames
-
+                videoDescs = courseFolderContentDescs
                 // val nextVideoUrl = videoUrls[currentVideoIndex]
                 val nextVideoUrl = urlVideo
                 val nextVideoTittle = videoTitles[currentVideoIndex]
