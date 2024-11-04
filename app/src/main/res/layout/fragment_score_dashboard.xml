@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/_white_F6F6FF"
+    android:orientation="vertical"
     tools:context=".ui.fragment.scoreboard.ScoreDashboardFragment">
 
     <com.google.android.material.appbar.MaterialToolbar
@@ -12,6 +14,7 @@
         android:layout_height="?actionBarSize"
         android:background="@color/PrimaryColor"
         app:title="Scoreboard"
+        android:theme="@style/AppTheme.AppBarOverlay"
         app:navigationIconTint="@color/white"
         app:titleTextColor="@android:color/white"
         app:navigationIcon="@drawable/arrow_left_white"
@@ -88,11 +91,12 @@
                 android:layout_below="@+id/reportTitle"
                 android:text="View Report"/>
 
-            <ImageView
+            <com.google.android.material.imageview.ShapeableImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentBottom="true"
+                app:shapeAppearanceOverlay="@style/RoundedShapeImageView"
                 android:src="@drawable/ic_scoreboard_analytics"/>
 
         </RelativeLayout>
@@ -100,7 +104,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvScore"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_below="@+id/viewReport"
             android:background="@android:color/transparent" />
 
@@ -108,4 +112,4 @@
     </RelativeLayout>
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

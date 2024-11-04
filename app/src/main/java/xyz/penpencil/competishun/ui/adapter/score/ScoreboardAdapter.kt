@@ -11,15 +11,15 @@ import xyz.penpencil.competishun.R
 
 
 class ScoreboardAdapter(private var testTypeList: List<TestItem>):
-    RecyclerView.Adapter<ScoreboardAdapter.AcademicViewHolder>() {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AcademicViewHolder {
+    RecyclerView.Adapter<ScoreboardAdapter.ScoreboardViewHolder>() {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScoreboardViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_test_academic, parent, false)
-        return AcademicViewHolder(view)
+        return ScoreboardViewHolder(view)
     }
 
     override fun getItemCount(): Int = testTypeList.size
 
-    override fun onBindViewHolder(holder: AcademicViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ScoreboardViewHolder, position: Int) {
         val item = testTypeList[position]
 //        holder.bind(item)
         holder.itemView.setOnClickListener {
@@ -27,11 +27,11 @@ class ScoreboardAdapter(private var testTypeList: List<TestItem>):
                 putInt("testId", 0)
                 putString("testName", "")
             }
-            it.findNavController().navigate(R.id.action_academicTestFragment_to_testDetailFragment, bundle)
+//            it.findNavController().navigate(R.id.action_academicTestFragment_to_testDetailFragment, bundle)
         }
     }
 
-    inner class AcademicViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class ScoreboardViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         /* private val titleText: TextView = itemView.findViewById(R.id.title)
          private val type: ImageView = itemView.findViewById(R.id.type)
 
