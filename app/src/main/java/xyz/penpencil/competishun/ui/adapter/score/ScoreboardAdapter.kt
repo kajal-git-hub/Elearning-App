@@ -10,7 +10,7 @@ import androidx.navigation.findNavController
 import xyz.penpencil.competishun.R
 
 
-class ScoreboardAdapter(private var testTypeList: List<TestItem>):
+class ScoreboardAdapter(private var testTypeList: List<TestItem>, ):
     RecyclerView.Adapter<ScoreboardAdapter.ScoreboardViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScoreboardViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_test_academic, parent, false)
