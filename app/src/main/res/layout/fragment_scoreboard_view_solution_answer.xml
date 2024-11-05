@@ -38,8 +38,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_dateConstraint"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/_12sp"
+        android:background="@color/white"
+        android:layout_height="60dp"
         android:layout_marginTop="@dimen/_6dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/TopView_LeaderboardSolution">
@@ -47,8 +47,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_dateSelector"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:background="@color/white"
+            android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:itemCount="5"
@@ -60,6 +59,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:fillViewport="true"
+        android:layout_marginTop="@dimen/_12sp"
         android:layout_marginBottom="@dimen/_20dp"
         app:layout_constraintBottom_toTopOf="@+id/constraintLayout2"
         app:layout_constraintTop_toBottomOf="@+id/cl_dateConstraint">
@@ -310,7 +310,6 @@
                         android:id="@+id/iv_textSolution"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/_16sp"
                         android:layout_marginTop="@dimen/_16sp"
                         android:src="@drawable/text_solution_button"
                         app:layout_constraintStart_toStartOf="parent"
@@ -322,7 +321,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/_16sp"
-                        android:layout_marginEnd="@dimen/_16sp"
                         android:src="@drawable/video_solution"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/et_correctAnswer" />
@@ -488,9 +486,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout2"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_marginHorizontal="@dimen/_16sp"
-        android:layout_marginBottom="@dimen/_12sp"
+        android:layout_height="80dp"
         android:background="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -498,24 +494,27 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_backBoard"
-            android:layout_width="158dp"
+            android:layout_width="138dp"
             android:layout_height="wrap_content"
-            app:backgroundTint="@color/white"
-            app:strokeWidth="@dimen/_1dp"
-            app:strokeColor="@color/gray"
+            android:layout_marginStart="28dp"
             android:text="Back"
             android:textColor="#9F9C9C"
+            app:backgroundTint="@color/white"
             app:cornerRadius="8dp"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.519"
+            app:strokeColor="@color/gray"
+            app:strokeWidth="@dimen/_1dp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_nextBoard"
-            android:layout_width="158dp"
+            android:layout_width="138dp"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/blue_3E3EF7"
             android:text="Next"
+            android:layout_marginEnd="@dimen/_28dp"
             android:textColor="@color/white"
             app:cornerRadius="8dp"
             app:layout_constraintTop_toTopOf="parent"
