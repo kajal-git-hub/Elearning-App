@@ -13,10 +13,13 @@ import xyz.penpencil.competishun.databinding.FragmentScoreboardLeaderboardBindin
 import xyz.penpencil.competishun.databinding.FragmentScoreboardViewSolutionAnswerBinding
 import xyz.penpencil.competishun.ui.adapter.scoreboard.DateSelectAdapter
 import xyz.penpencil.competishun.ui.adapter.scoreboard.LeaderBoardAdapter
+import xyz.penpencil.competishun.utils.HelperFunctions
 
 class ScoreboardViewSolutionAnswer : Fragment() {
 
     private lateinit var binding : FragmentScoreboardViewSolutionAnswerBinding
+
+    private var helperFunctions  = HelperFunctions()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,6 +52,10 @@ class ScoreboardViewSolutionAnswer : Fragment() {
 
         val adapter = DateSelectAdapter(dateList)
         binding.rvDateSelector.adapter = adapter
+
+        binding.questionHeading.setOnClickListener {
+            helperFunctions.showCustomSnackBar(binding.root)
+        }
 
 
 
