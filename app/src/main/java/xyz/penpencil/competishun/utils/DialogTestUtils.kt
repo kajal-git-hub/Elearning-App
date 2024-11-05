@@ -13,6 +13,7 @@ import android.widget.ImageView
 import android.widget.RadioGroup
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.bumptech.glide.Glide
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
@@ -50,7 +51,7 @@ object DialogTestUtils {
     }
 
 
-    fun showReportDialog(context: Context, submitCall:(message: String, type: String)->Unit): Dialog {
+    fun showReportDialog(context: Context, submitCall:(message: String, type: String)->Unit , reason:Boolean): Dialog {
         val dialog = Dialog(context)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         val view = LayoutInflater.from(context).inflate(R.layout.dialog_report_test, null)
@@ -68,6 +69,15 @@ object DialogTestUtils {
         val etOther = view.findViewById<TextInputEditText>(R.id.etOther)
 
         val submit = view.findViewById<MaterialButton>(R.id.submit)
+
+        val toVisible = view.findViewById<ConstraintLayout>(R.id.cl_otherReasonConstraint)
+
+        if(reason){
+            toVisible.visibility = View.VISIBLE
+        }else{
+            toVisible.visibility = View.GONE
+        }
+
         val colorStateList = ColorStateList.valueOf(context.resources.getColor(R.color._808080, null))
         submit.backgroundTintList = colorStateList
 
