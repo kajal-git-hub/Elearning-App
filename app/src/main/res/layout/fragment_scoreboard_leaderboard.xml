@@ -269,7 +269,6 @@
             android:id="@+id/rl_firstlayout"
             android:layout_width="80dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_18sp"
             app:layout_constraintEnd_toStartOf="@+id/rl_thirdPrice"
             app:layout_constraintStart_toEndOf="@+id/rl_secondPrice"
             app:layout_constraintTop_toTopOf="parent">
@@ -361,7 +360,7 @@
             android:id="@+id/rl_thirdPrice"
             android:layout_width="80dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="26dp"
+            android:layout_marginEnd="26dp"
             android:layout_marginTop="39dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -454,7 +453,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_4dp"
+        android:layout_marginTop="@dimen/_6dp"
         android:background="@drawable/rounded_corner_leaderboard"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cl_Barlayout">
@@ -492,7 +491,7 @@
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_12sp"
+                android:layout_marginStart="24dp"
                 android:fontFamily="@font/nunito"
                 android:text="Student"
                 android:textColor="#898384"
@@ -527,6 +526,7 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
                 tools:itemCount="5"
                 tools:listitem="@layout/item_name_score"/>
 

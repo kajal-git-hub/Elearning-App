@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL
 import com.student.competishun.data.model.TestItem
@@ -48,6 +49,10 @@ class ScoreDashboardFragment : Fragment() {
         initUI()
 
         initAdapter()
+
+        binding.btViewPort.setOnClickListener {
+            findNavController().navigate(R.id.SBoardLeaderboardFragment)
+        }
     }
 
 
