@@ -532,6 +532,10 @@
 
 
 
-
+    <fragment
+        android:id="@+id/scoreDashboardFragment"
+        android:name="xyz.penpencil.competishun.ui.fragment.scoreboard.ScoreDashboardFragment"
+        android:label="fragment_score_dashboard"
+        tools:layout="@layout/fragment_score_dashboard" />
 
 </navigation>
