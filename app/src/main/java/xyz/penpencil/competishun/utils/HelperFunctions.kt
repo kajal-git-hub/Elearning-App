@@ -1,5 +1,6 @@
 package xyz.penpencil.competishun.utils
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.DownloadManager
 import android.content.BroadcastReceiver
@@ -9,11 +10,15 @@ import android.content.IntentFilter
 import android.net.Uri
 import android.os.Environment
 import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import xyz.penpencil.competishun.R
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -232,5 +237,26 @@ class HelperFunctions {
             }
             .setNegativeButton("No", null)
             .show()
+    }
+
+    @SuppressLint("RestrictedApi")
+    fun showCustomSnackBar(view: View) {
+        val snackBar = Snackbar.make(view, "", Snackbar.LENGTH_LONG)
+
+        val customView = LayoutInflater.from(view.context).inflate(R.layout.custom_snackbar_layout, null)
+
+        val snackBarText = customView.findViewById<TextView>(R.id.snackbar_text)
+        snackBarText.text = "Question reported successfully!"
+
+        val closeButton = customView.findViewById<ImageView>(R.id.snackbar_close)
+        closeButton.setOnClickListener {
+            snackBar.dismiss()
+        }
+
+        val snackBarLayout = snackBar.view as Snackbar.SnackbarLayout
+        snackBarLayout.setPadding(0, 0, 0, 0)
+        snackBarLayout.addView(customView, 0)
+
+        snackBar.show()
     }
 }
