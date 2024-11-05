@@ -3,88 +3,208 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_marginTop="@dimen/_18sp"
+    android:layout_height="match_parent"
     android:layout_marginStart="@dimen/_18sp"
-    android:layout_height="match_parent">
+    android:layout_marginTop="@dimen/_18sp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/clBatchImage"
-        android:layout_width="138dp"
-        android:layout_height="102dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginBottom="24dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvExam">
+        app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
-            android:id="@+id/leafImageLeft"
-            android:layout_width="57dp"
-            android:layout_height="85dp"
-            android:layout_marginTop="10dp"
-            android:src="@drawable/group_1171276773"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_correctAnswer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_16sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent">
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/tvtext500"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="40dp"
-            android:fontFamily="@font/nunito"
-            android:text="1977+"
-            android:textColor="#2B2829"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@+id/leafImageLeft"
-            app:layout_constraintStart_toStartOf="@id/leafImageLeft"
-            app:layout_constraintTop_toTopOf="parent" />
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/et_correctAnswer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/nunito"
+                android:text="Correct ans : C"
+                android:textColor="@color/_2b2829"
+                android:textSize="@dimen/_16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/tvJEEMains"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:fontFamily="@font/nunito"
-            android:text="JEE\nMains"
-            android:textAlignment="center"
-            android:textColor="#898384"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@+id/tvtext500"
-            app:layout_constraintTop_toBottomOf="@id/tvtext500" />
+            <ImageView
+                android:id="@+id/iv_textSolution"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_16sp"
+                android:layout_marginTop="@dimen/_16sp"
+                android:src="@drawable/text_solution_button"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/et_correctAnswer" />
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/tvBatchYear"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/year_bg"
-            android:fontFamily="@font/nunito"
-            android:paddingHorizontal="8dp"
-            android:text="2024"
-            android:textAlignment="center"
-            android:textColor="#5757F7"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="@+id/tvJEEMains"
-            app:layout_constraintStart_toEndOf="@+id/leafImageLeft"
-            app:layout_constraintStart_toStartOf="@+id/tvJEEMains"
-            app:layout_constraintTop_toBottomOf="@id/tvJEEMains" />
+
+            <ImageView
+                android:id="@+id/iv_videoSolution"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_16sp"
+                android:layout_marginEnd="@dimen/_16sp"
+                android:src="@drawable/video_solution"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/et_correctAnswer" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
 
         <ImageView
-            android:id="@+id/leafImageRight"
-            android:layout_width="57dp"
-            android:layout_height="85dp"
-            android:layout_marginStart="44dp"
-            android:layout_marginTop="10dp"
-            android:src="@drawable/group_1171276772"
-            app:layout_constraintStart_toStartOf="@id/tvtext500"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:id="@+id/iv_correctDivider"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_32dp"
+            android:src="@drawable/correct_divider"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cl_correctAnswer" />
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_16sp"
+            android:layout_marginTop="@dimen/_32dp"
+            android:padding="16dp"
+            app:layout_constraintTop_toBottomOf="@+id/iv_correctDivider">
+
+            <View
+                android:id="@+id/vt_tempView"
+                android:layout_width="62dp"
+                android:layout_height="18dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/nunito"
+                android:text="You"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toStartOf="@+id/et_topperText"
+                app:layout_constraintStart_toEndOf="@+id/vt_tempView"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/et_topperText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/nunito"
+                android:text="Topper"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_statusConstraint"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_27dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/vt_tempView">
+
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/et_StatusTExt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/nunito"
+                    android:text="Status"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_16sp"
+                    android:fontFamily="@font/nunito"
+                    android:text="Incorrect"
+                    android:textColor="#E25B53"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toStartOf="@+id/et_IncorrectText"
+                    app:layout_constraintStart_toEndOf="@+id/et_StatusTExt"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/et_IncorrectText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/nunito"
+                    android:text="Correct"
+                    android:textColor="#4BB543"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_TimeConstraint"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_20sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/cl_statusConstraint">
+
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/et_TimeTExt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/nunito"
+                    android:text="Time Taken"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/nunito"
+                    android:text="1m"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toStartOf="@+id/et_IncorrectTime"
+                    app:layout_constraintStart_toEndOf="@+id/et_TimeTExt"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/et_IncorrectTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/nunito"
+                    android:text="1m 24s"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -14,7 +14,7 @@ class LeaderBoardAdapter(private val userList: List<LeaderBoardUser>) :
 
     inner class LeaderBoardViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val etCircleNumber: MaterialTextView = itemView.findViewById(R.id.et_circleNumber)
-        val tvUserName: MaterialTextView = itemView.findViewById(R.id.tvUserName)
+        val tvUserName: MaterialTextView = itemView.findViewById(R.id.et_studentName)
         val tvScore: MaterialTextView = itemView.findViewById(R.id.et_finalScore)
     }
 
