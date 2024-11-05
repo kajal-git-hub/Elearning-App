@@ -5,12 +5,14 @@ import android.content.Context
 import android.content.res.ColorStateList
 import android.os.Handler
 import android.os.Looper
+import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.Window
 import android.widget.ImageView
 import android.widget.RadioGroup
 import android.widget.RelativeLayout
+import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
@@ -256,6 +258,30 @@ object DialogTestUtils {
         val root = view.findViewById<RelativeLayout>(R.id.root)
         val mHeader = view.findViewById<RelativeLayout>(R.id.mHeader)
         dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+        root.setOnClickListener { dialog.dismiss() }
+        mHeader.setOnClickListener { }
+        val layoutParams = dialog.window?.attributes
+        layoutParams?.width = (context.resources.displayMetrics.widthPixels).toInt()
+        dialog.window?.attributes = layoutParams
+        Handler(Looper.getMainLooper()).postDelayed({dialog.dismiss()}, 3000)
+        return dialog
+    }
+
+
+    //TODO:DOWNLOAD CONFIRMATION FOR SCOREBoard
+    fun showDownloadConfirmationDialog(context: Context, course: String): Dialog {
+        val dialog = Dialog(context)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        val view = LayoutInflater.from(context).inflate(R.layout.dialog_download_confirmation_option, null)
+        dialog.setContentView(view)
+        val root = view.findViewById<RelativeLayout>(R.id.root)
+        val mHeader = view.findViewById<RelativeLayout>(R.id.mHeader)
+        val mIcon = view.findViewById<ImageView>(R.id.icon)
+        val header = view.findViewById<TextView>(R.id.header)
+        Glide.with(dialog.context).load(R.drawable.ic_download_confirmation_animation).into(mIcon)
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        header.text = Html.fromHtml("<b>\"$course\" </b>question paper is downloaded successfully", Html.FROM_HTML_MODE_COMPACT);
 
         root.setOnClickListener { dialog.dismiss() }
         mHeader.setOnClickListener { }

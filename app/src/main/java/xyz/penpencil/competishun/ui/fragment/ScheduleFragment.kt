@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import xyz.penpencil.competishun.utils.HorizontalCalendarSetUp
 import android.os.Bundle
+import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -37,6 +38,7 @@ import xyz.penpencil.competishun.utils.toIstZonedDateTime
 import xyz.penpencil.competishun.utils.utcToIst
 import xyz.penpencil.competishun.utils.utcToIstYYYYMMDD
 import java.text.SimpleDateFormat
+import java.time.LocalDate
 import java.time.LocalTime
 import java.time.ZoneId
 import java.util.Locale
@@ -189,17 +191,6 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
     private fun findAllCourseFolderContentByScheduleTimeQuery(){
         myCourseViewModel.courseFolderContent.observe(viewLifecycleOwner) { result ->
             result.onSuccess { data ->
-                if (data.findAllCourseFolderContentByScheduleTime.isEmpty()){
-                    binding.clEmptySchedule.visibility = View.VISIBLE
-                    binding.rvCalenderSchedule.visibility = View.GONE
-//                    setupCalendar(courseStart)
-                    listData = mutableListOf()
-                }else{
-                    binding.clEmptySchedule.visibility = View.GONE
-                    binding.rvCalenderSchedule.visibility = View.VISIBLE
-                    listData = data.findAllCourseFolderContentByScheduleTime
-                    setupRecyclerView()
-                }
                 foundMatchingDate = false
                 hasScheduleList.clear()
 
@@ -212,6 +203,16 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
                         if (extractedDate != "Invalid date") {
                             val dateParts = extractedDate.split("-")
                             val extractedDay = dateParts[2]
+
+                            try {
+                                val targetDate = LocalDate.of(dateParts[0].toInt(), dateParts[1].toInt(), dateParts[2].toInt())
+                                val lDate = LocalDate.now()
+                                if (lDate == targetDate) {
+                                    selectedDate = ZonedDateTime.now()
+                                }
+                            } catch (e: Exception) {
+                                println(e.message)
+                            }
 
                             if (!hasScheduleList.contains(extractedDay)) {
                                 hasScheduleList.add(extractedDay)
@@ -236,6 +237,20 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
                     binding.tvCalenderCurrentMonth.text = String.format(getString(R.string.current_month_year), month, year)
                 }
 
+                Log.e("dnmsbadbnsabd",
+                    "findAllCourseFolderContentByScheduleTimeQuery: $hasScheduleList"
+                )
+                if (data.findAllCourseFolderContentByScheduleTime.isEmpty()){
+                    binding.clEmptySchedule.visibility = View.VISIBLE
+                    binding.rvCalenderSchedule.visibility = View.GONE
+//                    setupCalendar(courseStart)
+                    listData = mutableListOf()
+                }else{
+                    binding.clEmptySchedule.visibility = View.GONE
+                    binding.rvCalenderSchedule.visibility = View.VISIBLE
+                    listData = data.findAllCourseFolderContentByScheduleTime
+                    setupRecyclerView()
+                }
                 setUpScheduleAvailable(hasScheduleList)
             }.onFailure { exception ->
                 Toast.makeText(context, "Error: ${exception.message}", Toast.LENGTH_SHORT).show()
