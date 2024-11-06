@@ -9,7 +9,7 @@ object Constants {
     const val IIT_JEE = "IIT-JEE"
     const val NEET = "NEET"
     const val BOARD = "Board"
-    const val UCET = "UCET"
+    const val UCET = "CUET"
     const val OTHERS = "Others"
 
     const val YEAR_2025 = "2025"
