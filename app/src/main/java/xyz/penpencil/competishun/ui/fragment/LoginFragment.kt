@@ -20,6 +20,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.IntentSenderRequest
@@ -93,6 +94,11 @@ class LoginFragment : Fragment() {
                 Log.d("formateed",formattedPhoneNumber)
                 binding.etEnterMob.setText(formattedPhoneNumber)
                 Log.d(TAG, "Retrieved phone number: $phoneNumber")
+
+                binding.etEnterMob.isFocusableInTouchMode = true
+                binding.etEnterMob.isEnabled = true
+                binding.etEnterMob.requestFocus()
+                binding.etEnterMob.setSelection(binding.etEnterMob.text.length)
             }
         } catch (e: Exception) {
             Log.e(TAG, "Failed to retrieve phone number")
@@ -151,7 +157,13 @@ class LoginFragment : Fragment() {
         setupObservers()
 
         binding.etEnterMob.setOnClickListener {
-            retrievePhoneNumberHint()
+            if (binding.etEnterMob.text.isNullOrEmpty()) {
+                retrievePhoneNumberHint()
+            } else {
+                binding.etEnterMob.isFocusableInTouchMode = true
+                binding.etEnterMob.requestFocus()
+                binding.etEnterMob.showKeyboard()
+            }
         }
 
         binding.etHelpText.setOnClickListener {
@@ -177,6 +189,14 @@ class LoginFragment : Fragment() {
          }
     }
 
+    private fun View.showKeyboard() {
+        this.post {
+            this.requestFocus()
+            val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.showSoftInput(this, InputMethodManager.SHOW_IMPLICIT)
+        }
+    }
+
 
     private fun retrievePhoneNumberHint() {
         Identity.getSignInClient(requireActivity())
@@ -188,10 +208,14 @@ class LoginFragment : Fragment() {
                     )
                 } catch (e: Exception) {
                     Log.e(TAG, "Launching the PendingIntent failed")
+                    binding.etEnterMob.requestFocus()
+                    binding.etEnterMob.showKeyboard()
                 }
             }
             .addOnFailureListener {
                 Log.e(TAG, "Phone Number Hint failed")
+                binding.etEnterMob.requestFocus()
+                binding.etEnterMob.showKeyboard()
             }
     }
     private fun setupPhoneInput() {
@@ -202,6 +226,10 @@ class LoginFragment : Fragment() {
                 binding.phoneInputLayout.setBackgroundResource(
                     if (hasFocus) R.drawable.rounded_homeeditext_clicked else R.drawable.rounded_homeditext_unclicked
                 )
+
+                if (hasFocus) {
+                    showKeyboard()
+                }
             }
 
             addTextChangedListener(object : TextWatcher {
