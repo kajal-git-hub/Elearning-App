@@ -1,4 +1,4 @@
-package xyz.penpencil.competishun.ui.adapter.score
+package xyz.penpencil.competishun.ui.adapter.scoreboard
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.student.competishun.data.model.TestItem
 import android.os.Bundle
-import androidx.navigation.findNavController
 import xyz.penpencil.competishun.R
 
 
