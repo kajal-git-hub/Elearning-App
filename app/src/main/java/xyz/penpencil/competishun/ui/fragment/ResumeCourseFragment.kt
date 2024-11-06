@@ -106,7 +106,7 @@ class ResumeCourseFragment : DrawerVisibility() {
         }
        // dataBind(folderIds,courseName!!,folderCounts!!)
 
-        binding.clScore.setOnClickListener { findNavController().navigate(R.id.scoreDashboardFragment) }
+//        binding.clScore.setOnClickListener { findNavController().navigate(R.id.scoreDashboardFragment) }
 
     }
 

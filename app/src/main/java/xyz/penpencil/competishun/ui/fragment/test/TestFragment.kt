@@ -139,7 +139,7 @@ class TestFragment : Fragment() {
             optionsDialog = DialogTestUtils.showOptionsDialog(requireContext(), {
                 showInstructionSection()
             },{
-                showReportSection()
+                showReportSection(false)
             })
             optionsDialog?.show()
         }
@@ -154,12 +154,15 @@ class TestFragment : Fragment() {
         showInstructionDialog?.show()
     }
 
-    private fun showReportSection(){
-     /*   showReportDialog = DialogTestUtils.showReportDialog(requireContext()) { message: String, type: String ->
+    private fun showReportSection(reason: Boolean) {
+        val showReportDialog = DialogTestUtils.showReportDialog(requireContext(), { message: String, type: String ->
+            // Handle submit action here
             showReportSubmitSection()
-        }*/
-        showReportDialog?.show()
+        }, reason)
+
+        showReportDialog.show()
     }
+
 
     private fun showReportSubmitSection(){
         val showReportSubmitDialog = DialogTestUtils.showReportSubmitDialog(requireContext())

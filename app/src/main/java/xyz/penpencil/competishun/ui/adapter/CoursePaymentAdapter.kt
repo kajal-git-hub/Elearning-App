@@ -1,5 +1,6 @@
 package xyz.penpencil.competishun.ui.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.textview.MaterialTextView
 import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.data.model.CoursePaymentDetails
+import javax.security.auth.login.LoginException
 
 class CoursePaymentAdapter(
     private var coursePaymentList: List<CoursePaymentDetails>,
@@ -72,6 +74,7 @@ class CoursePaymentAdapter(
 
         holder.tvAmountPaid.text = currentItem.totalAmountPaid
         holder.tvAmountPaidOn.text = currentItem.amountPaidOn
+        Log.d("AdapterpaymentType",currentItem.paymentType)
         holder.tvPaymentType.text = currentItem.paymentType
         holder.tvStudentRollNo.text = currentItem.studentRollNo
 
