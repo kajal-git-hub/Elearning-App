@@ -133,5 +133,8 @@ dependencies {
 
     implementation(libs.ketch)
 
+    implementation ("com.github.PhilJay:MPAndroidChart:v3.1.0")
+
+
 
 }
