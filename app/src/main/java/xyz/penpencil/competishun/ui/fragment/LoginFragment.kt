@@ -1,5 +1,6 @@
 package xyz.penpencil.competishun.ui.fragment
 
+import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
@@ -18,6 +19,7 @@ import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
@@ -150,20 +152,21 @@ class LoginFragment : Fragment() {
         return binding.root
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         setupUI()
         setupObservers()
 
-        binding.etEnterMob.setOnClickListener {
-            if (binding.etEnterMob.text.isNullOrEmpty()) {
-                retrievePhoneNumberHint()
-            } else {
-                binding.etEnterMob.isFocusableInTouchMode = true
-                binding.etEnterMob.requestFocus()
-                binding.etEnterMob.showKeyboard()
+        binding.etEnterMob.setOnTouchListener { v, event ->
+            if (event.action == MotionEvent.ACTION_DOWN) {
+                if (binding.etEnterMob.text.isNullOrEmpty()) {
+                    retrievePhoneNumberHint()
+                    return@setOnTouchListener true
+                }
             }
+            return@setOnTouchListener false
         }
 
         binding.etHelpText.setOnClickListener {
@@ -227,19 +230,13 @@ class LoginFragment : Fragment() {
                     if (hasFocus) R.drawable.rounded_homeeditext_clicked else R.drawable.rounded_homeditext_unclicked
                 )
 
-                if (hasFocus) {
-                    showKeyboard()
+                if (hasFocus && !text.isNullOrEmpty()) {
+                    showKeyboard()  // Ensure the keyboard is shown when focused only if the text is not empty
                 }
             }
 
             addTextChangedListener(object : TextWatcher {
-                override fun beforeTextChanged(
-                    s: CharSequence?,
-                    start: Int,
-                    count: Int,
-                    after: Int
-                ) {
-                }
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                     updateVerifyButtonState(s?.length == 10)
