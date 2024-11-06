@@ -475,10 +475,10 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
 
 
         val teacherItems = listOf(
-            TeacherItem(R.drawable.alok, "ALOK KUMAR", "CHEMISTRY (P/I)"),
-            TeacherItem(R.drawable.neeraj, "NEERAJ SAINI", "CHEMISTRY (ORG)"),
-            TeacherItem(R.drawable.mohit, "MOHIT TYAGI", "MATHEMATICS"),
-            TeacherItem(R.drawable.amit, "AMIT BIJARNIA", "PHYSICS"),
+            TeacherItem(R.drawable.alok, "ALOK KUMAR", "CHEMISTRY (P/I)","He has held senior faculty positions at many reputed IIT-JEE coaching institutions.\", \"Known for his organized teaching style, making Chemistry simple and interesting for students.\",\"Relates various Chemistry topics to practical applications, fostering deep interest in the subject.\",\"Believes Science and technology will play a pivotal role in India's development.\",\"Strives to motivate students to pursue careers in Science and technology."),
+            TeacherItem(R.drawable.neeraj, "NEERAJ SAINI", "CHEMISTRY (ORG)","He has 14 years of experience teaching Organic Chemistry as a Senior Faculty at a reputed national institute.\", \"Known for his concise and simplified teaching style, helping students score well in Organic Chemistry.\",\"Has mentored many students who secured Top-100 AIRs in IIT-JEE (Main) and (Main+Advanced)."),
+            TeacherItem(R.drawable.mohit, "MOHIT TYAGI", "MATHEMATICS","\"Mohit Tyagi Sir has over 22 years of experience in teaching Mathematics.\\\", \\\"He is renowned for creating a love for Mathematics among students.\\\",\\\"Previously served as the Head of the Maths Team (HOD) at a leading coaching institute in Kota.\\\",\\\"His YouTube channel is a source of inspiration for both students and faculty members.\""),
+            TeacherItem(R.drawable.amit, "AMIT BIJARNIA", "PHYSICS","He is an enthusiastic Physics teacher, highly popular among JEE (Advanced)/IIT-JEE students.\", \"Known for helping students visualize problems and reach solutions quickly.\",\"Adored by students for his clear, engaging teaching style that fosters a love for Physics.\",\"Many of his students from Kota have achieved prestigious ranks in IIT-JEE (Advanced)."),
         )
         val teacherAdapter = TeacherAdapter(teacherItems)
         binding.rvMeetTeachers.apply {

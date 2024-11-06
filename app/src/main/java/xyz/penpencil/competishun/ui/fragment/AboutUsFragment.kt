@@ -47,6 +47,8 @@ class AboutUsFragment : DrawerVisibility() {
                 courseAndCollege = "B.Tech. , IIT Delhi",
                 mentorDescriptions = listOf("Mohit Tyagi Sir has over 22 years of experience in teaching Mathematics.", "He is renowned for creating a love for Mathematics among students.","Previously served as the Head of the Maths Team (HOD) at a leading coaching institute in Kota.","His YouTube channel is a source of inspiration for both students and faculty members.")
             ),
+
+
             AboutUsItem(
                 image = R.drawable.alok,
                 teacherName = "Alok Kumar Sir",
