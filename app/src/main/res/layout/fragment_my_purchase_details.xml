@@ -647,7 +647,7 @@
                         android:id="@+id/tv2ndInstallmentDateTxt"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Paid on:"
+                        android:text="Paid within 45 days"
                         android:textSize="@dimen/_12sp"
                         android:fontFamily="@font/nunito"
                         android:textColor="#898384"

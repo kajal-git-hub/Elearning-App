@@ -162,7 +162,8 @@ class MyPurchaseDetailsFragment : DrawerVisibility() {
 
                     getCourseByIDViewModel.courseByID.observe(viewLifecycleOwner) { course ->
                         course?.let {
-                            val totalPrice = it.price ?: 0
+                            val totalPrice = it.with_installment_price ?: 0
+                            Log.d("totalPrice",totalPrice.toString())
                             courseName = it.name ?: ""
                             binding.etPurtotalPrice.text = "₹ ${totalPrice}"
                             binding.etPurFinalPay.text = "₹ ${totalPrice}"
