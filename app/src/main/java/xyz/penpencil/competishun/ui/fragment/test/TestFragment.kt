@@ -155,9 +155,9 @@ class TestFragment : Fragment() {
     }
 
     private fun showReportSection(){
-        showReportDialog = DialogTestUtils.showReportDialog(requireContext()) { message: String, type: String ->
+     /*   showReportDialog = DialogTestUtils.showReportDialog(requireContext()) { message: String, type: String ->
             showReportSubmitSection()
-        }
+        }*/
         showReportDialog?.show()
     }
 

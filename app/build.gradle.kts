@@ -14,11 +14,11 @@ android {
     namespace = "xyz.penpencil.competishun"
     compileSdk = 34
     defaultConfig {
-        applicationId = "com.reactnativevideoplayer"
+        applicationId = "xyz.penpencil.competishun"
         minSdk = 26
         targetSdk = 34
-        versionCode = 80
-        versionName = "8.0"
+        versionCode = 204
+        versionName = "1.0.6"
         val razorpayKeyId = findProperty("RAZORPAY_KEY_ID") as String? ?: ""
         buildConfigField("String", "RAZORPAY_KEY_ID", "\"$razorpayKeyId\"")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"

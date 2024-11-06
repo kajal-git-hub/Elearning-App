@@ -61,7 +61,7 @@
         <ul>Relations and Functions: Types of relations and functions, &amp; Inverse trigonometric functions.Relations and Functions: Types of relations and functions, &amp; Inverse trigonometric functions.</ul>
         <ul>This chapter covers important topics such as Cartesian products of sets, various types of relations, domain and range of relations, and different types of functions. These foundational concepts are essential for understanding advanced mathematical ideas</ul></string>
 
-    <string name="lorem_ipsum">
+<!--    <string name="lorem_ipsum">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris
         volutpat, dolor id interdum ullamcorper, risus dolor egestas lectus, sit amet mattis purus
         dui nec risus. Maecenas non sodales nisi, vel dictum dolor. Class aptent taciti sociosqu ad
@@ -96,7 +96,7 @@
         sodales. Praesent bibendum rhoncus tellus nec feugiat. In a ornare nulla. Donec rhoncus
         libero vel nunc consequat, quis tincidunt nisl eleifend. Cras bibendum enim a justo luctus
         vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
-    </string>
+    </string>-->
     <string name="note_txt">Download up to total <font color="#FF7A28">8 videos &amp; PDFs</font> at once! \nTo add more, just delete some of your previous \ndownloads. Happy learning!</string>
 
     <string name="download_success"><font color="#2B2829"><b>“Introduction to Basic Maths”</b></font> <font color="#726C6C"><b>is downloaded successfully</b></font></string>
