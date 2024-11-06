@@ -65,7 +65,7 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
             android:id="@+id/clResumeCourseIcons"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -73,6 +73,7 @@
             android:layout_marginTop="@dimen/_16dp"
             android:layout_marginEnd="@dimen/_16dp"
             android:layout_marginBottom="22dp"
+            android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -80,10 +81,11 @@
             app:layout_constraintHorizontal_chainStyle="spread">
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/clResumeCourseIcon1"
+                android:id="@+id/clScore"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
+                android:layout_weight="1"
+                android:visibility="visible"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -115,6 +117,7 @@
                 android:id="@+id/clResumeCourseIcon2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/clResumeCourseIcon3"
                 app:layout_constraintStart_toStartOf="parent"
@@ -147,6 +150,7 @@
                 android:id="@+id/clResumeCourseIcon3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/clResumeCourseIcon4"
                 app:layout_constraintStart_toEndOf="@id/clResumeCourseIcon2"
@@ -179,6 +183,7 @@
                 android:id="@+id/clResumeCourseIcon4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/clResumeCourseIcon3"
@@ -207,7 +212,7 @@
                     app:layout_constraintTop_toBottomOf="@id/ivIcon4" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -509,7 +509,33 @@
         tools:layout="@layout/fragment_my_details">
     </fragment>
 
+<!--    scoreboard fragments-->
 
 
+    <fragment
+        android:id="@+id/ScoreboardSolutionAnswer"
+        android:name="xyz.penpencil.competishun.ui.fragment.scoreboard.ScoreboardViewSolutionAnswer"
+        tools:layout="@layout/fragment_scoreboard_view_solution_answer">
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/SBoardLeaderboardFragment"
+        android:name="xyz.penpencil.competishun.ui.fragment.scoreboard.ScoreboardLeaderboardFragment"
+        tools:layout="@layout/fragment_scoreboard_leaderboard">
+    </fragment>
+
+
+    <!--    scoreboard fragments-->
+
+
+
+
+
+    <fragment
+        android:id="@+id/scoreDashboardFragment"
+        android:name="xyz.penpencil.competishun.ui.fragment.scoreboard.ScoreDashboardFragment"
+        android:label="fragment_score_dashboard"
+        tools:layout="@layout/fragment_score_dashboard" />
 
 </navigation>

@@ -275,10 +275,10 @@ class StudyMaterialDetailsFragment : Fragment() {
                                 folderId,
                                 requireActivity(),
                                 requireContext()
-                            ) { topicContent, folderContentId, folderContentIds,folderContentNames->
+                            ) { topicContent, folderContentId, folderContentIds,folderContentNames, folderContentDescs->
                                 when (topicContent.fileType) {
                                     "VIDEO" -> {
-                                        videoUrlApi(videourlViewModel, topicContent.id,topicContent.topicName,folderContentIds,folderContentNames)
+                                        videoUrlApi(videourlViewModel, topicContent.id,topicContent.topicName,folderContentIds,folderContentNames,folderContentDescs)
                                     }
                                     "PDF" -> {
                                         val intent = Intent(context, PdfViewActivity::class.java).apply {
@@ -432,11 +432,11 @@ class StudyMaterialDetailsFragment : Fragment() {
                                 folderId,
                                 requireActivity(),
                                 requireContext()
-                            ) { topicContent, folderContentId, folderContentIds,folderContentNames ->
+                            ) { topicContent, folderContentId, folderContentIds,folderContentNames, folderContentDescs ->
                                 when (topicContent.fileType) {
 
                                     "VIDEO" -> {
-                                        videoUrlApi(videourlViewModel, topicContent.id,topicContent.topicName,folderContentIds,folderContentNames)
+                                        videoUrlApi(videourlViewModel, topicContent.id,topicContent.topicName,folderContentIds,folderContentNames,folderContentDescs)
                                     }
                                     "PDF" -> {
                                         val intent = Intent(context, PdfViewActivity::class.java).apply {
@@ -588,7 +588,7 @@ class StudyMaterialDetailsFragment : Fragment() {
 
 
     }
-    private fun videoUrlApi(viewModel: VideourlViewModel, folderContentId: String, name:String, folderContentIds: ArrayList<String>?, folderContentNames: ArrayList<String>?) {
+    private fun videoUrlApi(viewModel: VideourlViewModel, folderContentId: String, name:String, folderContentIds: ArrayList<String>?, folderContentNames: ArrayList<String>?,folderContentDescs: ArrayList<String>?) {
         Log.e("getfoldersubject",folderContentNames.toString())
         viewModel.fetchVideoStreamUrl(folderContentId, "480p")
 
@@ -600,6 +600,7 @@ class StudyMaterialDetailsFragment : Fragment() {
                     putString("url_name", name)
                     putString("ContentId", folderContentId)
                     putStringArrayList("folderContentIds", folderContentIds)
+                    putStringArrayList("folderContentDescs", folderContentDescs)
                     putStringArrayList("folderContentNames", folderContentNames)
                 }
                 findNavController().navigate(R.id.mediaFragment, bundle)
