@@ -124,15 +124,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/SubjectDescriptionView">
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvsubjectTopicContent"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"
-            tools:itemCount="1"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:listitem="@layout/item_topic_type_content" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tv_topic_type"
@@ -147,7 +138,7 @@
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/rvsubjectTopicContent" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tv_Content_Count"
@@ -181,10 +172,27 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="16dp"
-                tools:itemCount="2"
+                tools:itemCount="1"
                 tools:listitem="@layout/item_course_content" />
 
             <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvsubjectTopicContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            tools:itemCount="1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:listitem="@layout/item_topic_type_content" />
+
+<!--        <View-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="2dp"-->
+<!--            android:layout_margin="@dimen/_2dp"-->
+<!--            android:background="#c0c0c0"/>-->
+
+
+        <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvTopicContent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
