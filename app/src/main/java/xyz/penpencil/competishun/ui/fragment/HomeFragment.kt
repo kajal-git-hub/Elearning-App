@@ -7,10 +7,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -315,6 +317,16 @@ class HomeFragment : Fragment() {
         val headerView = navigationView.getHeaderView(0)
         val igClose: ImageView = headerView.findViewById(R.id.ig_close)
 
+        val footerView = navigationView.findViewById<View>(R.id.navigation_footer)
+        val footerButton: Button = footerView.findViewById(R.id.btnDeleteApp)
+
+        footerButton.setOnClickListener {
+            openDialog()
+            drawerLayout.closeDrawer(GravityCompat.START)
+
+        }
+
+
         igClose.setOnClickListener {
             drawerLayout.closeDrawer(GravityCompat.START)
         }
@@ -354,6 +366,26 @@ class HomeFragment : Fragment() {
         }
         clickListener()
     }
+    // Function to open a dialog
+    private fun openDialog() {
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle("Delete Your Account")
+        builder.setMessage("Deleting your account will place a permanent hold on your studies, and all your data, including progress, saved materials, and personal settings, will be permanently erased. This action cannot be undone. Please ensure that you’ve considered this decision carefully before proceeding.")
+
+
+        builder.setPositiveButton("OK") { dialog, which ->
+            dialog.dismiss()
+        }
+
+        builder.setNegativeButton("Cancel") { dialog, which ->
+            dialog.dismiss()
+        }
+
+        val dialog = builder.create()
+        dialog.show()
+    }
+
+
 
     private fun updatedListCourses(listOurCoursesItem: List<GetAllCourseCategoriesQuery.GetAllCourseCategory>?): List<GetAllCourseCategoriesQuery.GetAllCourseCategory> {
 

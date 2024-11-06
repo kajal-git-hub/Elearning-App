@@ -2,7 +2,6 @@ package xyz.penpencil.competishun.ui.fragment.scoreboard
 
 import android.app.Dialog
 import android.os.Bundle
-import android.view.ContextMenu
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.Menu
@@ -21,7 +20,7 @@ import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.databinding.FragmentScoreDashboardBinding
 import xyz.penpencil.competishun.ui.adapter.ItemClickListener
 import xyz.penpencil.competishun.ui.adapter.TestTypeAdapter
-import xyz.penpencil.competishun.ui.adapter.score.ScoreboardAdapter
+import xyz.penpencil.competishun.ui.adapter.scoreboard.ScoreboardAdapter
 import xyz.penpencil.competishun.ui.main.HomeActivity
 import xyz.penpencil.competishun.utils.DialogTestUtils
 
