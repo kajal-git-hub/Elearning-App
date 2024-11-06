@@ -370,8 +370,7 @@ class HomeFragment : Fragment() {
     private fun openDialog() {
         val builder = AlertDialog.Builder(requireContext())
         builder.setTitle("Delete Your Account")
-        builder.setMessage("Deleting your account will place a permanent hold on your studies, and all your data, including progress, saved materials, and personal settings, will be permanently erased. This action cannot be undone. Please ensure that you’ve considered this decision carefully before proceeding.")
-
+        builder.setMessage("Deleting your account will place a \npermanent hold on your studies, and\nall your data, including progress,\nsaved materials, and personal\nsettings, will be permanently\nerased. This action cannot be\nundone. Please ensure that you’ve\nconsidered this decision carefully\nbefore proceeding.")
 
         builder.setPositiveButton("OK") { dialog, which ->
             dialog.dismiss()
