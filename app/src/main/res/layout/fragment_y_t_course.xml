@@ -168,7 +168,7 @@
         android:id="@+id/tvShowingResults"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Showing results (4):"
+        android:text="Showing results (0):"
         android:fontFamily="@font/nunito"
         android:textStyle="bold"
         android:textSize="@dimen/_12sp"
