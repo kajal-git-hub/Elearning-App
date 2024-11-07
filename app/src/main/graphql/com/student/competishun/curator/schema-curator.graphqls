@@ -253,6 +253,8 @@ type CourseFolder {
 
   id: ID!
 
+  is_free_download: Boolean
+
   name: String!
 
   order: Int
@@ -270,6 +272,10 @@ type CourseFolder {
 
 type CourseFolderContent {
   bookmarks: [Bookmark!]
+
+  content_includes: [String!]
+
+  copied_content_id: String
 
   course_track: [StudentCourseTrack!]
 
@@ -301,9 +307,23 @@ type CourseFolderContent {
 
   id: ID!
 
+  is_blocked: Boolean
+
+  is_del: Boolean
+
+  is_del_date: DateTime
+
   order: Int
 
+  original_file_reference_path: String!
+
   orignal_file_name: String!
+
+  reference_file_path_480p: String
+
+  reference_file_path_720p: String
+
+  reference_file_path_1080p: String
 
   scheduled_time: DateTime
 
@@ -360,6 +380,8 @@ type CourseFolderWithCount {
   folder_count: String
 
   id: ID!
+
+  is_free_download: Boolean
 
   name: String!
 
@@ -456,6 +478,8 @@ input CreateCourseFolderInput {
   course_id: ID!
 
   description: String
+
+  is_free_download: Boolean
 
   name: String!
 
@@ -591,6 +615,14 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type DeleteResponse {
+  foldersList: [String!]
+
+  message: String
+
+  success: Boolean!
+}
+
 enum EntityType {
   COURSE
 
@@ -612,9 +644,9 @@ enum FileType {
 
   PDF
 
-  VIDEO
-
   URL
+
+  VIDEO
 }
 
 enum FileUpload {
@@ -713,13 +745,9 @@ type Homework {
   updatedAt: DateTime!
 }
 
-input MergeVideo {
-  contentId: ID!
-
-  order: Int!
-}
-
 type Mutation {
+  copyFolderContents(contentIds: [String!], destinationFolderId: String!, folderIds: [String!]): Boolean!
+
   createBanner(createBannerInput: CreateBannerInput!, mobile_banner: [Upload], web_banner: [Upload]): Banner!
 
   createBookmark(contentId: String!): Bookmark!
@@ -744,13 +772,11 @@ type Mutation {
 
   deleteCourseFolder(id: String!): Boolean!
 
-  deleteCourseFolderContent(id: String!): Boolean!
+  deleteCourseFolderContent(canDelete: Boolean, id: String!): DeleteResponse!
 
   deleteHomework(id: String!): Boolean!
 
   deleteThumbnail(id: String!): Boolean!
-
-  mergeVideos(mergeVideos: [MergeVideo!]!): Boolean!
 
   removeBanner(id: ID!, mobileBanner: Boolean, webBanner: Boolean): Boolean!
 
@@ -798,8 +824,6 @@ type Query {
 
   courseListFromIds(courseIds: [String!]!): [Course!]!
 
-  downloadVideo(contentId: String!): Boolean!
-
   findAllBookmarks(courseId: String, fileType: String): [Bookmark!]!
 
   findAllCartItems: [CartResponseDto!]!
@@ -812,7 +836,7 @@ type Query {
 
   findCourseFolderAndDataCountByParentId(parentFolderId: String!): CourseFolderResponse!
 
-  findCourseFolderByParentId(parentFolderId: String!): [CourseFolder!]!
+  findCourseFolderByParentId(parentFolderId: String!, sortFilters: SortFilters): [CourseFolder!]!
 
   findCourseFolderProgress(id: String!): CourseFolderLectureCount!
 
@@ -840,7 +864,7 @@ type Query {
 
   getCourseFolderContent(id: String!): CourseFolderContent!
 
-  getFolderById(id: String!): CourseFolder!
+  getFolderById(id: String!, sortFilters: SortFilters): CourseFolder!
 
   getFolderLecturesCount(id: String!): CourseFolderLectureCount!
 
@@ -865,6 +889,12 @@ type ScheduleContentResponseDto {
   parentFolderName: String
 
   studentTrack: StudentCourseTrack
+}
+
+input SortFilters {
+  sortByName: String
+
+  sortCreatedAt: String
 }
 
 type StudentCourseTrack {
@@ -976,6 +1006,8 @@ input UpdateCourseFolderInput {
 
   description: String
 
+  is_free_download: Boolean
+
   name: String
 
   order: Int
@@ -1051,6 +1083,8 @@ input UpdateFolderContent {
   description: String
 
   file_name: String
+
+  file_url: String
 
   order: Int
 
