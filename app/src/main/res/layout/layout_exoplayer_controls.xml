@@ -1,44 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-<RelativeLayout
-    android:padding="@dimen/exo_styled_controls_padding"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:clipToPadding="false"
-    android:id="@id/exo_center_controls"
-    android:layoutDirection="ltr"
-    android:layout_gravity="center"
-    android:background="#41000000"
-    android:layout_height="match_parent"
-    android:layout_width="match_parent">
+    <View android:id="@id/exo_controls_background"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/exo_black_opacity_60"/>
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true">
-        <ImageButton
-            style="@style/ExoStyledControls.Button.Center.Previous"
-            android:id="@id/exo_prev" />
-
-        <include layout="@layout/exo_player_control_rewind_button" />
-
-        <ImageButton
-            style="@style/ExoStyledControls.Button.Center.PlayPause"
-            android:id="@id/exo_play_pause" />
-
-        <include layout="@layout/exo_player_control_ffwd_button" />
-
-        <ImageButton
-            style="@style/ExoStyledControls.Button.Center.Next"
-            android:id="@id/exo_next" />
-    </LinearLayout>
-
+    <!-- Customized Seekbar with time line-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/_60dp"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="-10dp"
+        android:layout_gravity="bottom"
+        android:layout_marginEnd="@dimen/_55dp"
         android:orientation="horizontal">
 
         <TextView
@@ -61,4 +35,30 @@
             style="@style/ExoStyledControls.TimeText.Duration"/>
     </LinearLayout>
 
-</RelativeLayout>
+    <LinearLayout
+        android:id="@id/exo_center_controls"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@android:color/transparent"
+        android:gravity="center"
+        android:padding="@dimen/exo_styled_controls_padding"
+        android:clipToPadding="false"
+        android:layoutDirection="ltr">
+
+        <ImageButton android:id="@id/exo_prev"
+            style="@style/ExoStyledControls.Button.Center.Previous"/>
+
+        <include layout="@layout/exo_player_control_rewind_button" />
+
+        <ImageButton android:id="@id/exo_play_pause"
+            style="@style/ExoStyledControls.Button.Center.PlayPause"/>
+
+        <include layout="@layout/exo_player_control_ffwd_button" />
+
+        <ImageButton android:id="@id/exo_next"
+            style="@style/ExoStyledControls.Button.Center.Next"/>
+
+    </LinearLayout>
+
+</merge>
