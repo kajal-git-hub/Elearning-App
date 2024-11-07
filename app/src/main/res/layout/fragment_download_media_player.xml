@@ -28,6 +28,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     android:layout_gravity="center"
                     android:keepScreenOn="true"
+                    app:controller_layout_id="@layout/layout_exoplayer_controls"
                     app:show_buffering="always" />
                 <ImageButton
                     android:id="@+id/back_btn"
