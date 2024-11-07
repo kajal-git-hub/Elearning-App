@@ -3,88 +3,340 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_marginTop="@dimen/_18sp"
-    android:layout_marginStart="@dimen/_18sp"
     android:layout_height="match_parent">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/clBatchImage"
-        android:layout_width="138dp"
-        android:layout_height="102dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginBottom="24dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvExam">
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/_16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <!-- User Section -->
         <ImageView
-            android:id="@+id/leafImageLeft"
-            android:layout_width="57dp"
-            android:layout_height="85dp"
-            android:layout_marginTop="10dp"
-            android:src="@drawable/group_1171276773"
+            android:id="@+id/imageUser"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/loaderscreen"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/tvtext500"
+        <TextView
+            android:id="@+id/tvYouLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="40dp"
-            android:fontFamily="@font/nunito"
-            android:text="1977+"
-            android:textColor="#2B2829"
-            android:textSize="20sp"
+            android:layout_marginTop="8dp"
+            android:text="You"
+            android:textSize="16sp"
             android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@+id/leafImageLeft"
-            app:layout_constraintStart_toStartOf="@id/leafImageLeft"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintStart_toStartOf="@id/imageUser"
+            app:layout_constraintTop_toBottomOf="@id/imageUser" />
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/tvJEEMains"
+        <TextView
+            android:id="@+id/tvYouSubLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:fontFamily="@font/nunito"
-            android:text="JEE\nMains"
-            android:textAlignment="center"
-            android:textColor="#898384"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@+id/tvtext500"
-            app:layout_constraintTop_toBottomOf="@id/tvtext500" />
+            android:layout_marginTop="4dp"
+            android:text="(Live Test)"
+            android:textSize="12sp"
+            app:layout_constraintStart_toStartOf="@id/tvYouLabel"
+            app:layout_constraintTop_toBottomOf="@id/tvYouLabel" />
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/tvBatchYear"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/year_bg"
-            android:fontFamily="@font/nunito"
-            android:paddingHorizontal="8dp"
-            android:text="2024"
-            android:textAlignment="center"
-            android:textColor="#5757F7"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="@+id/tvJEEMains"
-            app:layout_constraintStart_toEndOf="@+id/leafImageLeft"
-            app:layout_constraintStart_toStartOf="@+id/tvJEEMains"
-            app:layout_constraintTop_toBottomOf="@id/tvJEEMains" />
-
+        <!-- Topper Section -->
         <ImageView
-            android:id="@+id/leafImageRight"
-            android:layout_width="57dp"
-            android:layout_height="85dp"
-            android:layout_marginStart="44dp"
-            android:layout_marginTop="10dp"
-            android:src="@drawable/group_1171276772"
-            app:layout_constraintStart_toStartOf="@id/tvtext500"
+            android:id="@+id/imageTopper"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="32dp"
+            android:src="@drawable/ic_trophy"
+            app:layout_constraintStart_toEndOf="@id/imageUser"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvTopperLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Topper"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@id/imageTopper"
+            app:layout_constraintTop_toBottomOf="@id/imageTopper" />
+
+        <TextView
+            android:id="@+id/tvTopperSubLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="(Live Test)"
+            android:textSize="12sp"
+            app:layout_constraintStart_toStartOf="@id/tvTopperLabel"
+            app:layout_constraintTop_toBottomOf="@id/tvTopperLabel" />
+
+        <!-- Third Person Section -->
+        <ImageView
+            android:id="@+id/imageThirdPerson"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="32dp"
+            android:src="@drawable/ic_top10"
+            app:layout_constraintStart_toEndOf="@id/imageTopper"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvThirdPersonLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="3rd Person"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@id/imageThirdPerson"
+            app:layout_constraintTop_toBottomOf="@id/imageThirdPerson" />
+
+        <TextView
+            android:id="@+id/tvThirdPersonSubLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="(Live Test)"
+            android:textSize="12sp"
+            app:layout_constraintStart_toStartOf="@id/tvThirdPersonLabel"
+            app:layout_constraintTop_toBottomOf="@id/tvThirdPersonLabel" />
+
+        <!-- Score Section -->
+        <TextView
+            android:id="@+id/tvScoreLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Score"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@id/imageUser"
+            app:layout_constraintTop_toBottomOf="@id/tvYouSubLabel" />
+
+        <TextView
+            android:id="@+id/tvScoreYou"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/score_background"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="161"
+            app:layout_constraintStart_toStartOf="@id/imageUser"
+            app:layout_constraintTop_toBottomOf="@id/tvScoreLabel" />
+
+        <TextView
+            android:id="@+id/tvScoreTopper"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/score_background"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="161"
+            app:layout_constraintStart_toStartOf="@id/imageTopper"
+            app:layout_constraintTop_toTopOf="@id/tvScoreYou" />
+
+        <TextView
+            android:id="@+id/tvScoreThirdPerson"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/score_background"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="161"
+            app:layout_constraintStart_toStartOf="@id/imageThirdPerson"
+            app:layout_constraintTop_toTopOf="@id/tvScoreYou" />
+
+        <!-- Correct Answers Section -->
+        <TextView
+            android:id="@+id/tvCorrectAnsLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Correct Ans."
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@id/imageUser"
+            app:layout_constraintTop_toBottomOf="@id/tvScoreYou" />
+
+        <TextView
+            android:id="@+id/tvCorrectAnsYou"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/score_background"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="121"
+            app:layout_constraintStart_toStartOf="@id/imageUser"
+            app:layout_constraintTop_toBottomOf="@id/tvCorrectAnsLabel" />
+
+        <TextView
+            android:id="@+id/tvCorrectAnsTopper"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/score_background"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="121"
+            app:layout_constraintStart_toStartOf="@id/imageTopper"
+            app:layout_constraintTop_toTopOf="@id/tvCorrectAnsYou" />
+
+        <TextView
+            android:id="@+id/tvCorrectAnsThirdPerson"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/score_background"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="121"
+            app:layout_constraintStart_toStartOf="@id/imageThirdPerson"
+            app:layout_constraintTop_toTopOf="@id/tvCorrectAnsYou" />
+
+        <!-- Incorrect Answers Section -->
+        <TextView
+            android:id="@+id/tvIncorrectAnsLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Incorrect Ans."
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@id/imageUser"
+            app:layout_constraintTop_toBottomOf="@id/tvCorrectAnsYou" />
+
+        <TextView
+            android:id="@+id/tvIncorrectAnsYou"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/score_background"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="29"
+            app:layout_constraintStart_toStartOf="@id/imageUser"
+            app:layout_constraintTop_toBottomOf="@id/tvIncorrectAnsLabel" />
+
+        <TextView
+            android:id="@+id/tvIncorrectAnsTopper"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/score_background"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="29"
+            app:layout_constraintStart_toStartOf="@id/imageTopper"
+            app:layout_constraintTop_toTopOf="@id/tvIncorrectAnsYou" />
+
+        <TextView
+            android:id="@+id/tvIncorrectAnsThirdPerson"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/score_background"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="29"
+            app:layout_constraintStart_toStartOf="@id/imageThirdPerson"
+            app:layout_constraintTop_toTopOf="@id/tvIncorrectAnsYou" />
+
+        <!-- Skipped Questions Section -->
+        <TextView
+            android:id="@+id/tvSkippedQuesLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Skipped Ques."
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@id/imageUser"
+            app:layout_constraintTop_toBottomOf="@id/tvIncorrectAnsYou" />
+
+        <TextView
+            android:id="@+id/tvSkippedQuesYou"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/score_background"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="10"
+            app:layout_constraintStart_toStartOf="@id/imageUser"
+            app:layout_constraintTop_toBottomOf="@id/tvSkippedQuesLabel" />
+
+        <TextView
+            android:id="@+id/tvSkippedQuesTopper"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/score_background"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="10"
+            app:layout_constraintStart_toStartOf="@id/imageTopper"
+            app:layout_constraintTop_toTopOf="@id/tvSkippedQuesYou" />
+
+        <TextView
+            android:id="@+id/tvSkippedQuesThirdPerson"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/score_background"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="10"
+            app:layout_constraintStart_toStartOf="@id/imageThirdPerson"
+            app:layout_constraintTop_toTopOf="@id/tvSkippedQuesYou" />
+
+        <!-- Time Taken Section -->
+        <TextView
+            android:id="@+id/tvTimeTakenLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Time Taken"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@id/imageUser"
+            app:layout_constraintTop_toBottomOf="@id/tvSkippedQuesYou" />
+
+        <TextView
+            android:id="@+id/tvTimeTakenYou"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/score_background"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="01:20"
+            app:layout_constraintStart_toStartOf="@id/imageUser"
+            app:layout_constraintTop_toBottomOf="@id/tvTimeTakenLabel" />
+
+        <TextView
+            android:id="@+id/tvTimeTakenTopper"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/score_background"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="01:20"
+            app:layout_constraintStart_toStartOf="@id/imageTopper"
+            app:layout_constraintTop_toTopOf="@id/tvTimeTakenYou" />
+
+        <TextView
+            android:id="@+id/tvTimeTakenThirdPerson"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/score_background"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="01:20"
+            app:layout_constraintStart_toStartOf="@id/imageThirdPerson"
+            app:layout_constraintTop_toTopOf="@id/tvTimeTakenYou" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

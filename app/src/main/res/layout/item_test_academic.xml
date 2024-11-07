@@ -8,6 +8,16 @@
     android:layout_margin="@dimen/_10dp"
     android:background="@drawable/card_bg">
 
+    <ImageView
+        android:layout_width="@dimen/_40dp"
+        android:layout_height="@dimen/_40dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:id="@+id/download"
+        android:src="@drawable/download"
+        app:tint="@color/PrimaryColor"
+        android:visibility="invisible"
+        android:padding="@dimen/_8dp"
+        app:layout_constraintTop_toTopOf="parent" />
     <RelativeLayout
         android:id="@+id/relativeLayout2"
         android:layout_width="wrap_content"
@@ -54,12 +64,14 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/title"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/_10dp"
         android:fontFamily="@font/nunito"
-        android:textColor="@color/black"
+        android:layout_marginStart="@dimen/_10dp"
+        android:layout_marginEnd="@dimen/_20dp"
         android:text="JEE Mains Paper With \nSolutions - 24 Jun, 23"
+        android:textColor="@color/black"
+        app:layout_constraintEnd_toStartOf="@+id/download"
         app:layout_constraintStart_toEndOf="@+id/relativeLayout2"
         app:layout_constraintTop_toTopOf="parent" />
 

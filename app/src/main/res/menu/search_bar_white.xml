@@ -4,7 +4,7 @@
     <item
         android:id="@+id/action_search_download"
         android:icon="@drawable/seach_white"
+        android:title="Search"
         app:actionViewClass="androidx.appcompat.widget.SearchView"
-        app:showAsAction="always"
-        android:title="Search" />
+        app:showAsAction="always" />
 </menu>

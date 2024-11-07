@@ -272,71 +272,87 @@
                         android:layout_width="0dp"
                         android:layout_height="1dp"
                         android:layout_marginTop="16dp"
+                        android:visibility="gone"
                         android:background="#ADADAF"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/tvReadMore" />
 
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/tvStartDate"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="17dp"
-                        android:drawableStart="@drawable/clock"
-                        android:drawablePadding="6dp"
-                        android:fontFamily="@font/nunito"
-                        android:text=""
-                        android:textColor="@color/black"
-                        android:textSize="12sp"
-                        android:textStyle="bold"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/view3" />
 
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/tvEndDate"
-                        android:layout_width="0dp"
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/cl_startEndConstraint"
+                        android:layout_width="match_parent"
+                        android:padding="@dimen/_10sp"
+                        android:background="@drawable/background_bg_date"
+                        android:layout_marginTop="@dimen/_12sp"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:drawableStart="@drawable/clock"
-                        android:drawablePadding="6dp"
-                        android:fontFamily="@font/nunito"
-                        android:text=""
-                        android:textColor="@color/black"
-                        android:textSize="12sp"
-                        android:textStyle="bold"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/view3" />
+                        app:layout_constraintTop_toBottomOf="@+id/view3"
+                        >
 
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/tvLectureNo"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:drawableStart="@drawable/video_play__1_"
-                        android:drawablePadding="6dp"
-                        android:text=""
-                        android:fontFamily="@font/nunito"
-                        android:textColor="@color/black"
-                        android:textSize="12sp"
-                        android:textStyle="bold"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/tvStartDate" />
 
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/ExpireValidity"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:drawableStart="@drawable/document_normal"
-                        android:drawablePadding="6dp"
-                        android:fontFamily="@font/nunito"
-                        android:visibility="visible"
-                        android:text=""
-                        android:textColor="@color/black"
-                        android:textSize="12sp"
-                        android:textStyle="bold"
-                        app:layout_constraintStart_toStartOf="@id/tvEndDate"
-                        app:layout_constraintTop_toBottomOf="@id/tvEndDate" />
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/tvStartDate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:drawableStart="@drawable/clock"
+                            android:drawablePadding="6dp"
+                            android:fontFamily="@font/nunito"
+                            android:text=""
+                            android:textColor="@color/_white_F6F6FF"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/tvEndDate"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:drawableStart="@drawable/clock"
+                            android:drawablePadding="6dp"
+                            android:fontFamily="@font/nunito"
+                            android:text=""
+                            android:textColor="@color/_white_F6F6FF"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/tvLectureNo"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:drawableStart="@drawable/video_play__1_"
+                            android:drawablePadding="6dp"
+                            android:text=""
+                            android:fontFamily="@font/nunito"
+                            android:textColor="@color/_white_F6F6FF"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/tvStartDate" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/ExpireValidity"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:drawableStart="@drawable/document_normal"
+                            android:drawablePadding="6dp"
+                            android:fontFamily="@font/nunito"
+                            android:visibility="visible"
+                            android:text=""
+                            android:textColor="@color/_white_F6F6FF"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            app:layout_constraintStart_toStartOf="@id/tvEndDate"
+                            app:layout_constraintTop_toBottomOf="@id/tvEndDate" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
                     <View
                         android:id="@+id/view4"
@@ -347,7 +363,7 @@
                         android:visibility="gone"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/tvQuizTests" />
+                        app:layout_constraintTop_toBottomOf="@id/cl_startEndConstraint" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -72,9 +71,9 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@id/clBuyCourseSection"
-        app:layout_constraintTop_toBottomOf="@id/MyPurchaseTopView"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/MyPurchaseTopView">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -84,52 +83,71 @@
                 android:id="@+id/clUserAddress"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="@dimen/_6dp"
+                android:paddingBottom="@dimen/_8dp"
                 android:background="@color/white"
-                app:layout_constraintTop_toTopOf="parent"
-                android:layout_marginTop="@dimen/_6dp">
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/tvDeliveryAddress"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_16dp"
+                    android:layout_marginTop="@dimen/_20dp"
+                    android:fontFamily="@font/nunito"
                     android:text="Delivery Address"
                     android:textColor="#2B2829"
-                    android:fontFamily="@font/nunito"
                     android:textSize="@dimen/_16sp"
                     android:textStyle="bold"
-                    android:layout_marginTop="@dimen/_20dp"
-                    android:layout_marginStart="@dimen/_16dp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"/>
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/tvUserName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text=""
-                    android:textColor="#726C6C"
-                    android:fontFamily="@font/nunito"
-                    android:textSize="@dimen/_14sp"
                     android:layout_marginStart="@dimen/_16dp"
                     android:layout_marginTop="@dimen/_12dp"
-                    app:layout_constraintTop_toBottomOf="@id/tvDeliveryAddress"
-                    app:layout_constraintStart_toStartOf="parent"/>
+                    android:fontFamily="@font/nunito"
+                    android:text=""
+                    android:textColor="#726C6C"
+                    android:textSize="@dimen/_14sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tvDeliveryAddress" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/tvUserAddress"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8dp"
+                    android:layout_marginHorizontal="@dimen/_16sp"
+                    android:fontFamily="@font/nunito"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:text="Near Nation Takies Nadrai Gate Kasganj"
+                    android:textColor="#726C6C"
+                    android:textSize="@dimen/_14sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tvUserName" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tvReadMore"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text=""
-                    android:textSize="@dimen/_14sp"
-                    android:textColor="#726C6C"
-                    android:fontFamily="@font/nunito"
-                    android:layout_marginBottom="@dimen/_20dp"
-                    android:layout_marginStart="@dimen/_16dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tvUserName"/>
+                    android:layout_marginTop="@dimen/_5dp"
+                    android:drawableEnd="@drawable/arrow_down"
+                    android:drawablePadding="5dp"
+                    android:text="Read More"
+                    android:textColor="#3E3EF7"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    app:fontFamily="@font/nunito"
+                    app:layout_constraintStart_toStartOf="@+id/tvUserAddress"
+                    app:layout_constraintTop_toBottomOf="@+id/tvUserAddress"
+                    />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -137,26 +155,26 @@
                 android:id="@+id/clOrderReceipt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/receipt_card"
-                android:layout_marginTop="@dimen/_24dp"
                 android:layout_marginHorizontal="@dimen/_16dp"
-                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginTop="@dimen/_24dp"
+                android:background="@drawable/receipt_card"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/clUserAddress">
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/tvOrderDetails"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_24dp"
+                    android:fontFamily="@font/nunito"
                     android:text="Order Details"
                     android:textColor="#2B2829"
                     android:textSize="@dimen/_18sp"
                     android:textStyle="bold"
-                    android:fontFamily="@font/nunito"
-                    android:layout_marginTop="@dimen/_24dp"
-                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"/>
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <View
                     android:id="@+id/dotted_line"
@@ -165,41 +183,41 @@
                     android:layout_marginHorizontal="@dimen/_16dp"
                     android:layout_marginTop="@dimen/_20dp"
                     android:background="@drawable/dottedline"
-                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tvOrderDetails"/>
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tvOrderDetails" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/clCoursePrice"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_20dp"
                     android:layout_marginHorizontal="@dimen/_16dp"
+                    android:layout_marginTop="@dimen/_20dp"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/dotted_line"
-                    app:layout_constraintEnd_toEndOf="parent">
+                    app:layout_constraintTop_toBottomOf="@id/dotted_line">
 
                     <com.google.android.material.textview.MaterialTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:fontFamily="@font/nunito"
                         android:text="Course Price"
                         android:textColor="#726C6C"
                         android:textSize="@dimen/_14sp"
-                        android:fontFamily="@font/nunito"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"/>
+                        app:layout_constraintTop_toTopOf="parent" />
 
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/et_PurtotalPrice"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=""
-                android:textColor="#2B2829"
-                android:textSize="@dimen/_14sp"
-                android:fontFamily="@font/nunito"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/et_PurtotalPrice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/nunito"
+                        android:text=""
+                        android:textColor="#2B2829"
+                        android:textSize="@dimen/_14sp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -207,33 +225,33 @@
                     android:id="@+id/clInstallmentCharge"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_12dp"
                     android:layout_marginHorizontal="@dimen/_16dp"
+                    android:layout_marginTop="@dimen/_12dp"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/clCoursePrice"
-                    app:layout_constraintEnd_toEndOf="parent">
+                    app:layout_constraintTop_toBottomOf="@id/clCoursePrice">
 
                     <com.google.android.material.textview.MaterialTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:fontFamily="@font/nunito"
                         android:text="Installment Charge"
                         android:textColor="#726C6C"
                         android:textSize="@dimen/_14sp"
-                        android:fontFamily="@font/nunito"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"/>
+                        app:layout_constraintTop_toTopOf="parent" />
 
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/et_PurInstallmentCharge"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=""
-                android:textColor="#2B2829"
-                android:textSize="@dimen/_14sp"
-                android:fontFamily="@font/nunito"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/et_PurInstallmentCharge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/nunito"
+                        android:text=""
+                        android:textColor="#2B2829"
+                        android:textSize="@dimen/_14sp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -241,67 +259,67 @@
                     android:id="@+id/clDiscount"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_12dp"
                     android:layout_marginHorizontal="@dimen/_16dp"
+                    android:layout_marginTop="@dimen/_12dp"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/clInstallmentCharge"
-                    app:layout_constraintEnd_toEndOf="parent">
+                    app:layout_constraintTop_toBottomOf="@id/clInstallmentCharge">
 
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/et_PurDiscountPer"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Discount "
-                android:textColor="#726C6C"
-                android:textSize="@dimen/_14sp"
-                android:fontFamily="@font/nunito"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/et_PurDiscountPer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/nunito"
+                        android:text="Discount "
+                        android:textColor="#726C6C"
+                        android:textSize="@dimen/_14sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/et_PurDiscountPay"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=""
-                android:textColor="#4BB543"
-                android:textSize="@dimen/_14sp"
-                android:fontFamily="@font/nunito"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/et_PurDiscountPay"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/nunito"
+                        android:text=""
+                        android:textColor="#4BB543"
+                        android:textSize="@dimen/_14sp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/clFirstInstallment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_12dp"
                     android:layout_marginHorizontal="@dimen/_16dp"
+                    android:layout_marginTop="@dimen/_12dp"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/clDiscount"
-                    app:layout_constraintEnd_toEndOf="parent">
+                    app:layout_constraintTop_toBottomOf="@id/clDiscount">
 
                     <com.google.android.material.textview.MaterialTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:fontFamily="@font/nunito"
                         android:text="1st Installment (Paid)"
                         android:textColor="#726C6C"
                         android:textSize="@dimen/_14sp"
-                        android:fontFamily="@font/nunito"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"/>
+                        app:layout_constraintTop_toTopOf="parent" />
 
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/et_PurFirstInstallment"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=""
-                android:textColor="#2B2829"
-                android:textSize="@dimen/_14sp"
-                android:fontFamily="@font/nunito"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/et_PurFirstInstallment"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/nunito"
+                        android:text=""
+                        android:textColor="#2B2829"
+                        android:textSize="@dimen/_14sp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -310,69 +328,69 @@
                     android:id="@+id/clSecondInstallment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_12dp"
                     android:layout_marginHorizontal="@dimen/_16dp"
+                    android:layout_marginTop="@dimen/_12dp"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/clFirstInstallment"
-                    app:layout_constraintEnd_toEndOf="parent">
+                    app:layout_constraintTop_toBottomOf="@id/clFirstInstallment">
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/secondInst_slip"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:fontFamily="@font/nunito"
                         android:text="2nd Installment (Pending)"
                         android:textColor="#726C6C"
                         android:textSize="@dimen/_14sp"
-                        android:fontFamily="@font/nunito"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"/>
+                        app:layout_constraintTop_toTopOf="parent" />
 
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/et_PurSecondInstallment"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=""
-                android:textColor="#2B2829"
-                android:textSize="@dimen/_14sp"
-                android:fontFamily="@font/nunito"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/et_PurSecondInstallment"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/nunito"
+                        android:text=""
+                        android:textColor="#2B2829"
+                        android:textSize="@dimen/_14sp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/clDeliveryCharge"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_12dp"
-            android:visibility="gone"
-            android:layout_marginHorizontal="@dimen/_16dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/clSecondInstallment"
-            app:layout_constraintEnd_toEndOf="parent">
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/clDeliveryCharge"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_16dp"
+                    android:layout_marginTop="@dimen/_12dp"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/clSecondInstallment">
 
                     <com.google.android.material.textview.MaterialTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:fontFamily="@font/nunito"
                         android:text="Delivery Charge"
                         android:textColor="#726C6C"
                         android:textSize="@dimen/_14sp"
-                        android:fontFamily="@font/nunito"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"/>
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <com.google.android.material.textview.MaterialTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:fontFamily="@font/nunito"
                         android:text="₹0"
                         android:textColor="#2B2829"
                         android:textSize="@dimen/_14sp"
-                        android:fontFamily="@font/nunito"
                         android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"/>
+                        app:layout_constraintTop_toTopOf="parent" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -383,41 +401,41 @@
                     android:layout_marginHorizontal="@dimen/_16dp"
                     android:layout_marginTop="@dimen/_16dp"
                     android:background="@drawable/line_3"
-                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/clDeliveryCharge"/>
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/clDeliveryCharge" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/clTotalPayment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_16dp"
                     android:layout_marginHorizontal="@dimen/_16dp"
+                    android:layout_marginTop="@dimen/_16dp"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/line"
-                    app:layout_constraintEnd_toEndOf="parent">
+                    app:layout_constraintTop_toBottomOf="@id/line">
 
                     <com.google.android.material.textview.MaterialTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:fontFamily="@font/nunito"
                         android:text="Total Payment"
                         android:textColor="#726C6C"
                         android:textSize="@dimen/_14sp"
-                        android:fontFamily="@font/nunito"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"/>
+                        app:layout_constraintTop_toTopOf="parent" />
 
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/et_PurFinalPay"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=" "
-                android:textColor="#2B2829"
-                android:textSize="@dimen/_14sp"
-                android:fontFamily="@font/nunito"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/et_PurFinalPay"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/nunito"
+                        android:text=" "
+                        android:textColor="#2B2829"
+                        android:textSize="@dimen/_14sp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -425,31 +443,31 @@
                     android:id="@+id/clGetReceipt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_16dp"
                     android:layout_marginTop="@dimen/_12dp"
                     android:layout_marginBottom="@dimen/_12dp"
                     android:background="@color/white"
-                    android:layout_marginHorizontal="@dimen/_16dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/clTotalPayment"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent">
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/clTotalPayment">
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/bt_GenerateReceipt"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginVertical="@dimen/_10dp"
+                        android:drawableStart="@drawable/resource_import"
+                        android:drawablePadding="@dimen/_8dp"
+                        android:fontFamily="@font/nunito"
                         android:text="Get Receipt"
                         android:textColor="#3E3EF7"
-                        android:textStyle="bold"
-                        android:layout_marginVertical="@dimen/_10dp"
-                        android:drawablePadding="@dimen/_8dp"
-                        android:drawableStart="@drawable/resource_import"
                         android:textSize="@dimen/_14sp"
-                        android:fontFamily="@font/nunito"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
+                        android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"/>
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -463,27 +481,27 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_16dp"
                 android:layout_marginTop="@dimen/_24dp"
-                android:visibility="visible"
-                android:background="@drawable/card_bg"
                 android:layout_marginBottom="34dp"
+                android:background="@drawable/card_bg"
+                android:visibility="visible"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/clOrderReceipt"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent">
+                app:layout_constraintTop_toBottomOf="@id/clOrderReceipt">
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/tvInstallmentDetailsText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_16dp"
+                    android:layout_marginTop="@dimen/_16dp"
+                    android:fontFamily="@font/nunito"
                     android:text="Installment Details"
                     android:textColor="#151314"
                     android:textSize="@dimen/_18sp"
                     android:textStyle="bold"
-                    android:fontFamily="@font/nunito"
-                    app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    android:layout_marginTop="@dimen/_16dp"
-                    android:layout_marginStart="@dimen/_16dp"/>
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/tick_Installment"
@@ -491,8 +509,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_16dp"
                     android:layout_marginTop="@dimen/_20dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     android:layout_marginBottom="@dimen/_40dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tvInstallmentDetailsText">
 
@@ -502,7 +520,7 @@
                         android:layout_height="24dp"
                         android:src="@drawable/green_tick_installment"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"/>
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <ImageView
                         android:id="@+id/iv_line"
@@ -511,9 +529,9 @@
                         android:scaleType="fitXY"
                         android:src="@drawable/vector_verticle_line"
                         app:layout_constraintBottom_toTopOf="@id/iv_grey_tick"
-                        app:layout_constraintTop_toBottomOf="@id/iv_green_tick"
+                        app:layout_constraintEnd_toEndOf="@id/iv_green_tick"
                         app:layout_constraintStart_toStartOf="@id/iv_green_tick"
-                        app:layout_constraintEnd_toEndOf="@id/iv_green_tick"/>
+                        app:layout_constraintTop_toBottomOf="@id/iv_green_tick" />
 
                     <ImageView
                         android:id="@+id/iv_grey_tick"
@@ -521,7 +539,7 @@
                         android:layout_height="24dp"
                         android:src="@drawable/grey_tick_installment"
                         app:layout_constraintStart_toStartOf="@id/iv_green_tick"
-                        app:layout_constraintTop_toBottomOf="@id/iv_line"/>
+                        app:layout_constraintTop_toBottomOf="@id/iv_line" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -531,69 +549,69 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_8dp"
                     android:layout_marginEnd="@dimen/_16dp"
-                    app:layout_constraintStart_toEndOf="@id/tick_Installment"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/tick_Installment"
                     app:layout_constraintTop_toTopOf="@id/tick_Installment">
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/tv1stInstallment"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="1st installment -"
-                        android:textSize="@dimen/_14sp"
                         android:fontFamily="@font/nunito"
+                        android:text="1st installment -"
                         android:textColor="#151314"
+                        android:textSize="@dimen/_14sp"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"/>
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/tvInstallmentStatus"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Successful"
-                        android:textSize="@dimen/_14sp"
+                        android:layout_marginStart="4dp"
                         android:fontFamily="@font/nunito"
+                        android:text="Successful"
                         android:textColor="@color/_4BB543"
+                        android:textSize="@dimen/_14sp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toEndOf="@id/tv1stInstallment"
-                        android:layout_marginStart="4dp"
-                        app:layout_constraintTop_toTopOf="parent"/>
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/tvInstallmentAmount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text=""
-                        android:textSize="@dimen/_14sp"
                         android:fontFamily="@font/nunito"
+                        android:text=""
                         android:textColor="#2B2829"
+                        android:textSize="@dimen/_14sp"
                         android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"/>
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/tvInstallmentDateTxt"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Paid on:"
-                        android:textSize="@dimen/_12sp"
-                        android:fontFamily="@font/nunito"
-                        android:textColor="#898384"
                         android:layout_marginTop="@dimen/_4dp"
-                        app:layout_constraintTop_toBottomOf="@id/tv1stInstallment"
-                        app:layout_constraintStart_toStartOf="@id/tv1stInstallment"/>
+                        android:fontFamily="@font/nunito"
+                        android:text="Paid on:"
+                        android:textColor="#898384"
+                        android:textSize="@dimen/_12sp"
+                        app:layout_constraintStart_toStartOf="@id/tv1stInstallment"
+                        app:layout_constraintTop_toBottomOf="@id/tv1stInstallment" />
 
                     <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tvInstallmentDate"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/tvInstallmentDate"
+                        android:layout_marginStart="@dimen/_4dp"
+                        android:fontFamily="@font/nunito"
                         android:text="24 Apr ‘24"
                         android:textColor="#151314"
-                        android:fontFamily="@font/nunito"
                         android:textSize="@dimen/_12sp"
-                        android:layout_marginStart="@dimen/_4dp"
-                        app:layout_constraintTop_toTopOf="@id/tvInstallmentDateTxt"
-                        app:layout_constraintStart_toEndOf="@id/tvInstallmentDateTxt"/>
+                        app:layout_constraintStart_toEndOf="@id/tvInstallmentDateTxt"
+                        app:layout_constraintTop_toTopOf="@id/tvInstallmentDateTxt" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -601,71 +619,71 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_8dp"
-                    android:layout_marginEnd="@dimen/_16dp"
                     android:layout_marginTop="-25dp"
-                    app:layout_constraintStart_toEndOf="@id/tick_Installment"
+                    android:layout_marginEnd="@dimen/_16dp"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/tick_Installment"
                     app:layout_constraintTop_toBottomOf="@id/tick_Installment">
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/tv2ndInstallment"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="2nd installment -"
-                        android:textSize="@dimen/_14sp"
                         android:fontFamily="@font/nunito"
+                        android:text="2nd installment -"
                         android:textColor="#151314"
+                        android:textSize="@dimen/_14sp"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"/>
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/tv2ndInstallmentStatus"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Pending"
-                        android:textSize="@dimen/_14sp"
+                        android:layout_marginStart="4dp"
                         android:fontFamily="@font/nunito"
+                        android:text="Pending"
                         android:textColor="@color/_B3261E"
+                        android:textSize="@dimen/_14sp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toEndOf="@id/tv2ndInstallment"
-                        android:layout_marginStart="4dp"
-                        app:layout_constraintTop_toTopOf="parent"/>
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/tv2ndInstallmentAmount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text=""
-                        android:textSize="@dimen/_14sp"
                         android:fontFamily="@font/nunito"
+                        android:text=""
                         android:textColor="#2B2829"
+                        android:textSize="@dimen/_14sp"
                         android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"/>
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/tv2ndInstallmentDateTxt"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Paid on:"
-                        android:textSize="@dimen/_12sp"
-                        android:fontFamily="@font/nunito"
-                        android:textColor="#898384"
                         android:layout_marginTop="@dimen/_4dp"
-                        app:layout_constraintTop_toBottomOf="@id/tv2ndInstallment"
-                        app:layout_constraintStart_toStartOf="@id/tv2ndInstallment"/>
+                        android:fontFamily="@font/nunito"
+                        android:text="Paid within 45 days"
+                        android:textColor="#898384"
+                        android:textSize="@dimen/_12sp"
+                        app:layout_constraintStart_toStartOf="@id/tv2ndInstallment"
+                        app:layout_constraintTop_toBottomOf="@id/tv2ndInstallment" />
 
                     <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tv2ndInstallmentDate"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/tv2ndInstallmentDate"
+                        android:layout_marginStart="@dimen/_4dp"
+                        android:fontFamily="@font/nunito"
                         android:text="24 Oct ‘24"
                         android:textColor="#151314"
-                        android:fontFamily="@font/nunito"
                         android:textSize="@dimen/_12sp"
-                        android:layout_marginStart="@dimen/_4dp"
-                        app:layout_constraintTop_toTopOf="@id/tv2ndInstallmentDateTxt"
-                        app:layout_constraintStart_toEndOf="@id/tv2ndInstallmentDateTxt"/>
+                        app:layout_constraintStart_toEndOf="@id/tv2ndInstallmentDateTxt"
+                        app:layout_constraintTop_toTopOf="@id/tv2ndInstallmentDateTxt" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -673,11 +691,11 @@
                     android:id="@+id/clNote"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"
                     android:background="@drawable/help_center_card"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent">
+                    app:layout_constraintStart_toStartOf="parent">
 
                     <com.google.android.material.textview.MaterialTextView
                         android:layout_width="wrap_content"
@@ -717,8 +735,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginTop="18dp"
-            android:textColor="#0A0A0B"
             android:text="₹18,500"
+            android:textColor="#0A0A0B"
             android:textSize="@dimen/_18sp"
             android:textStyle="bold"
             app:fontFamily="@font/nunito"
@@ -731,8 +749,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginTop="@dimen/_4dp"
-            android:textColor="#898384"
             android:text="Pending amount"
+            android:textColor="#898384"
             android:textSize="@dimen/_12sp"
             android:textStyle="bold"
             app:fontFamily="@font/nunito"
@@ -748,9 +766,9 @@
             android:layout_marginBottom="20dp"
             android:background="@drawable/button_bg"
             android:backgroundTint="#3E3EF7"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="wrap_content"

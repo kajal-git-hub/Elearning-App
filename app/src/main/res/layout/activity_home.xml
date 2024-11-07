@@ -168,10 +168,10 @@
             app:layout_constraintTop_toTopOf="parent"
             app:menu="@menu/navigation_drawer">
 
-<!--            <include-->
-<!--                android:id="@+id/navigation_footer"-->
-<!--                layout="@layout/navigation_footer"-->
-<!--                android:layout_gravity="bottom" />-->
+            <include
+                android:id="@+id/navigation_footer"
+                layout="@layout/navigation_footer"
+                android:layout_gravity="bottom" />
 
         </com.google.android.material.navigation.NavigationView>
 

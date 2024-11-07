@@ -11,7 +11,7 @@ import android.view.ViewGroup
 import android.widget.RadioButton
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
-import com.student.competishun.utils.DialogTestUtils
+import xyz.penpencil.competishun.utils.DialogTestUtils
 import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.databinding.FragmentTestBinding
 
@@ -139,7 +139,7 @@ class TestFragment : Fragment() {
             optionsDialog = DialogTestUtils.showOptionsDialog(requireContext(), {
                 showInstructionSection()
             },{
-                showReportSection()
+                showReportSection(false)
             })
             optionsDialog?.show()
         }
@@ -154,12 +154,15 @@ class TestFragment : Fragment() {
         showInstructionDialog?.show()
     }
 
-    private fun showReportSection(){
-        showReportDialog = DialogTestUtils.showReportDialog(requireContext()) { message: String, type: String ->
+    private fun showReportSection(reason: Boolean) {
+        val showReportDialog = DialogTestUtils.showReportDialog(requireContext(), { message: String, type: String ->
+            // Handle submit action here
             showReportSubmitSection()
-        }
-        showReportDialog?.show()
+        }, reason)
+
+        showReportDialog.show()
     }
+
 
     private fun showReportSubmitSection(){
         val showReportSubmitDialog = DialogTestUtils.showReportSubmitDialog(requireContext())

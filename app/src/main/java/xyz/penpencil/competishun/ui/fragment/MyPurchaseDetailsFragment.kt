@@ -162,7 +162,8 @@ class MyPurchaseDetailsFragment : DrawerVisibility() {
 
                     getCourseByIDViewModel.courseByID.observe(viewLifecycleOwner) { course ->
                         course?.let {
-                            val totalPrice = it.price ?: 0
+                            val totalPrice = it.with_installment_price ?: 0
+                            Log.d("totalPrice",totalPrice.toString())
                             courseName = it.name ?: ""
                             binding.etPurtotalPrice.text = "₹ ${totalPrice}"
                             binding.etPurFinalPay.text = "₹ ${totalPrice}"
@@ -355,7 +356,23 @@ class MyPurchaseDetailsFragment : DrawerVisibility() {
                 userName = data.getMyDetails.fullName?:""
                 Log.e("courseIddu ${data.getMyDetails.id}",sharedPreferencesManager.accessToken.toString() )
                 binding.tvUserName.text = data.getMyDetails.fullName
-                binding.tvUserAddress.text = data.getMyDetails.userInformation.address?.addressLine1
+                val addressLine = data.getMyDetails.userInformation.address?.addressLine1 ?: "No Address Available"
+                binding.tvUserAddress.text = addressLine
+
+                var isExpanded = false
+                binding.tvReadMore.setOnClickListener {
+                    if (isExpanded) {
+                        binding.tvUserAddress.maxLines = 1
+                        binding.tvReadMore.text = "Read More"
+                        binding.tvReadMore.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.arrow_down, 0)
+                    } else {
+                        binding.tvUserAddress.maxLines = Int.MAX_VALUE
+                        binding.tvReadMore.text = "Read Less"
+                        binding.tvReadMore.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.arrow_up, 0)
+                    }
+                    isExpanded = !isExpanded
+                }
+
 
                 data.getMyDetails.courses.mapNotNull { course ->
                     if (course?.paymentStatus == "captured") {

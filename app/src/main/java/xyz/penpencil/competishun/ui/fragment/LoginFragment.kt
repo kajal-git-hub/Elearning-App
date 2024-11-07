@@ -1,10 +1,14 @@
 package xyz.penpencil.competishun.ui.fragment
 
+import android.annotation.SuppressLint
 import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
+import android.telephony.PhoneNumberUtils
+import android.telephony.TelephonyManager
 import android.text.Editable
 import android.text.InputFilter
 import android.text.SpannableString
@@ -15,8 +19,10 @@ import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.IntentSenderRequest
@@ -57,6 +63,7 @@ import xyz.penpencil.competishun.ui.viewmodel.VerifyOtpViewModel
 import xyz.penpencil.competishun.utils.SharedPreferencesManager
 import java.io.File
 import java.security.MessageDigest
+import java.util.Locale
 import java.util.UUID
 
 
@@ -85,18 +92,52 @@ class LoginFragment : Fragment() {
             val phoneNumber = Identity.getSignInClient(requireActivity())
                 .getPhoneNumberFromIntent(result.data)
             if (phoneNumber != null) {
-                val formattedPhoneNumber  = removeNineOne(phoneNumber)
+                val formattedPhoneNumber  = removeCountryCode(requireContext(),phoneNumber)
+                Log.d("formateed",formattedPhoneNumber)
                 binding.etEnterMob.setText(formattedPhoneNumber)
                 Log.d(TAG, "Retrieved phone number: $phoneNumber")
+
+                binding.etEnterMob.isFocusableInTouchMode = true
+                binding.etEnterMob.isEnabled = true
+                binding.etEnterMob.requestFocus()
+                binding.etEnterMob.setSelection(binding.etEnterMob.text.length)
             }
         } catch (e: Exception) {
             Log.e(TAG, "Failed to retrieve phone number")
         }
     }
+    private fun removeCountryCode(context: Context, phoneNumber: String): String {
+        Log.d("mobile", phoneNumber)
+
+        // Get the country ISO code (e.g., "IN", "US", etc.)
+        val telephonyManager = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+        val countryCodeIso = telephonyManager.networkCountryIso.uppercase(Locale.getDefault())
+
+        // Get the country dialing code (e.g., +91, +1)
+        val countryCodePrefix = getCountryDialCode(countryCodeIso)
+
+        return if (phoneNumber.startsWith(countryCodePrefix)) {
+            phoneNumber.removePrefix(countryCodePrefix)
+        } else {
+            phoneNumber
+        }
+    }
+    private fun getCountryDialCode(isoCode: String): String {
+        val countryDialCodes = mapOf(
+            "US" to "+1",
+            "IN" to "+91",
+            "GB" to "+44",
+            "CA" to "+1",
+            // Add more country codes as needed
+        )
+
+        return countryDialCodes[isoCode] ?: ""
+    }
 
     private fun removeNineOne(phoneNumber: String): String {
-        return phoneNumber.removePrefix("+91")
+        return phoneNumber.replace("^\\+91\\s*".toRegex(), "")
     }
+
 
     val request: GetPhoneNumberHintIntentRequest = GetPhoneNumberHintIntentRequest.builder().build()
 
@@ -111,14 +152,21 @@ class LoginFragment : Fragment() {
         return binding.root
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         setupUI()
         setupObservers()
 
-        binding.etEnterMob.setOnClickListener {
-            retrievePhoneNumberHint()
+        binding.etEnterMob.setOnTouchListener { v, event ->
+            if (event.action == MotionEvent.ACTION_DOWN) {
+                if (binding.etEnterMob.text.isNullOrEmpty()) {
+                    retrievePhoneNumberHint()
+                    return@setOnTouchListener true
+                }
+            }
+            return@setOnTouchListener false
         }
 
         binding.etHelpText.setOnClickListener {
@@ -144,6 +192,14 @@ class LoginFragment : Fragment() {
          }
     }
 
+    private fun View.showKeyboard() {
+        this.post {
+            this.requestFocus()
+            val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.showSoftInput(this, InputMethodManager.SHOW_IMPLICIT)
+        }
+    }
+
 
     private fun retrievePhoneNumberHint() {
         Identity.getSignInClient(requireActivity())
@@ -155,10 +211,14 @@ class LoginFragment : Fragment() {
                     )
                 } catch (e: Exception) {
                     Log.e(TAG, "Launching the PendingIntent failed")
+                    binding.etEnterMob.requestFocus()
+                    binding.etEnterMob.showKeyboard()
                 }
             }
             .addOnFailureListener {
                 Log.e(TAG, "Phone Number Hint failed")
+                binding.etEnterMob.requestFocus()
+                binding.etEnterMob.showKeyboard()
             }
     }
     private fun setupPhoneInput() {
@@ -169,16 +229,14 @@ class LoginFragment : Fragment() {
                 binding.phoneInputLayout.setBackgroundResource(
                     if (hasFocus) R.drawable.rounded_homeeditext_clicked else R.drawable.rounded_homeditext_unclicked
                 )
+
+                if (hasFocus && !text.isNullOrEmpty()) {
+                    showKeyboard()  // Ensure the keyboard is shown when focused only if the text is not empty
+                }
             }
 
             addTextChangedListener(object : TextWatcher {
-                override fun beforeTextChanged(
-                    s: CharSequence?,
-                    start: Int,
-                    count: Int,
-                    after: Int
-                ) {
-                }
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                     updateVerifyButtonState(s?.length == 10)
