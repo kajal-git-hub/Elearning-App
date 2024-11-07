@@ -14,7 +14,7 @@ android {
     namespace = "xyz.penpencil.competishun"
     compileSdk = 34
     defaultConfig {
-        applicationId = "com.reactnativevideoplayer"
+        applicationId = "xyz.penpencil.competishun"
         minSdk = 26
         targetSdk = 34
         versionCode = 204

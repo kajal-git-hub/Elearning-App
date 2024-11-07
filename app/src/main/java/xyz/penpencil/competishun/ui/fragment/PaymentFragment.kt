@@ -96,7 +96,7 @@ class PaymentFragment : Fragment() {
         binding.clStartBottomBar.setOnClickListener{ findNavController().navigate(R.id.homeFragment) }
         getUserDetails()
         binding.btReceipt.setOnClickListener {
-            binding.btReceipt.isEnabled = false
+//            binding.btReceipt.isEnabled = false
          var transactionId = sharedPreferencesManager.rzpOrderId
             if (transactionId != null) {
                 downloadReceipt(transactionId)
