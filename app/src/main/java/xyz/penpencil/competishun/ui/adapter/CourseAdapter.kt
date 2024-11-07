@@ -51,7 +51,9 @@ class CourseAdapter(
             }
 //            tvTag1.text = helperFunctions.toDisplayString(item.course_class?.name) + " Class"
             Log.e("courseclassval",helperFunctions.toDisplayString(item.course_class?.name))// Placeholder, change as needed
-            orgPrice.text = "₹${item.price}"
+            if(item.status.name != "COMING_SOON" ) {
+                orgPrice.text = "₹${item.price}"
+            }
             Log.e("cousediscount ${item.with_installment_price}",item.discount.toString()+ " " + item.price)
             tvStartDate.text = "Starts On: ${helperFunctions.formatCourseDate(item.course_start_date.toString())}"
             tvEndDate.text = "Expiry Date: ${helperFunctions.formatCourseDate(item.course_end_date.toString())}"
@@ -64,16 +66,25 @@ class CourseAdapter(
                 .error(R.drawable.default_image)
                 .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
                 .into(ivImage)
-            if (item.price != null && item.discount != null) {
-                val discountDetails = helperFunctions.calculateDiscountPercentage(item.price.toInt(), item.discount.toInt())
-                clPercentOffInner.visibility = View.VISIBLE
-                dicountPrice.text = "₹${item.discount}"
-                discPer.text = "${discountDetails.toInt()}% OFF"
-            } else {
-                clPercentOffInner.visibility = View.GONE
-                dicountPrice.text = "₹${item.price}"
-                orgPrice.visibility = View.GONE
-                discPer.text = "0% OFF"
+            if(item.status.name == "COMING_SOON" ){
+                dicountPrice.text =  "Coming Soon"
+                orgPrice.visibility =  View.GONE
+                discPer.visibility = View.GONE
+            }else {
+                if (item.price != null && item.discount != null) {
+                    val discountDetails = helperFunctions.calculateDiscountPercentage(
+                        item.price.toInt(),
+                        item.discount.toInt()
+                    )
+                    clPercentOffInner.visibility = View.VISIBLE
+                    dicountPrice.text = "₹${item.discount}"
+                    discPer.text = "${discountDetails.toInt()}% OFF"
+                } else {
+                    clPercentOffInner.visibility = View.GONE
+                    dicountPrice.text = "₹${item.price}"
+                    orgPrice.visibility = View.GONE
+                    discPer.text = "0% OFF"
+                }
             }
             tvTag2.apply {
                 text = courseTags?.getOrNull(1) ?: ""
@@ -86,6 +97,7 @@ class CourseAdapter(
                 text = courseTags?.getOrNull(2) ?: ""
                 visibility = if (text.isEmpty()) View.GONE else View.VISIBLE
             }
+            if(item.status.name != "COMING_SOON" ) {
             itemCourse.setOnClickListener {
                 val bundle = Bundle().apply {
                     putString("course_id", item.id)
@@ -93,6 +105,7 @@ class CourseAdapter(
                 }
                 listener.onCourseItemClicked(item, bundle)
             }
+                }
 
         }
     }
