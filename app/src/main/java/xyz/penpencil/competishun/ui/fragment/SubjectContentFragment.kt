@@ -30,7 +30,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.databinding.FragmentSubjectContentBinding
 import xyz.penpencil.competishun.di.Result
-import xyz.penpencil.competishun.ui.adapter.RecommendedCoursesAdapter
 import xyz.penpencil.competishun.ui.main.PdfViewActivity
 
 @AndroidEntryPoint
@@ -51,7 +50,7 @@ class SubjectContentFragment : DrawerVisibility() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentSubjectContentBinding.inflate(inflater, container, false)
-
+        Log.e("hfjdhfsdhfhjsdfsd", "onCreateView: ", )
 
         return binding.root
     }
@@ -63,12 +62,12 @@ class SubjectContentFragment : DrawerVisibility() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.backIconSubjectContent.setOnClickListener {
-            requireActivity().onBackPressedDispatcher.onBackPressed()
+            findNavController().navigateUp()
         }
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                findNavController().popBackStack()
+                findNavController().navigateUp()
             }
         })
 

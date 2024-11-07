@@ -17,8 +17,8 @@ android {
         applicationId = "xyz.penpencil.competishun"
         minSdk = 26
         targetSdk = 34
-        versionCode = 204
-        versionName = "1.0.6"
+        versionCode = 205
+        versionName = "1.0.7"
         val razorpayKeyId = findProperty("RAZORPAY_KEY_ID") as String? ?: ""
         buildConfigField("String", "RAZORPAY_KEY_ID", "\"$razorpayKeyId\"")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
