@@ -170,7 +170,7 @@ class PaymentFragment : Fragment() {
 
                 for (order in orders) {
                     Log.e("orderDataEntity",order.entityId)
-                    binding.tvAmount.text = "₹ ${order.amountPaid}"
+                    binding.tvAmount.text = "₹ ${order.amountPaid.toInt()}"
                     binding.paymentSuccessText.text = "Payment Sucessfully"
                     if (sharedPreferencesManager.paymentType == "partial"){
                         binding.tvPaymentType.text = "Installment"
@@ -214,7 +214,7 @@ class PaymentFragment : Fragment() {
             binding.clMypurchase.visibility = View.VISIBLE
             order?.forEach {
                 binding.tvCourseName.text = it.courseName
-                binding.tvAmount.text = it.amount.toString()
+                binding.tvAmount.text = it.amount.toInt().toString()
                 if (it.paymentType == "partial"){
                     binding.tvPaymentType.text = "Installment"
                 }else if (it.paymentType == "full"){
