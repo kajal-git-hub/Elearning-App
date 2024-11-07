@@ -40,34 +40,37 @@ class DisclaimerFragment : DrawerVisibility() {
         super.onViewCreated(view, savedInstanceState)
         val disclaimerList = listOf(
             DisclaimerItem(
-                "Refund & Cancelation Policies on Hire for Sure Plan",
-                "India’s first career development platform that connects students to the right employers to democratize the job search process, in college and Colleges.\n" +
-                        "This Terms &Conditions applies to your use of the Competishun  Service (or ‘the Service’) including the app.getwork.org website application, getwork.org website; as well as your relationship with Veerwal Competishun  Services Private Limited (“Competishun ”).\n" +
-                        "\n" +
-                        "If you do not agree with these Terms, including the Binding Arbitration Clause and a Class Action waiver included below, please discontinue using the Service.\n" +
-                        "\n" +
-                        "Our Terms &Conditions may change over time. Minor changes that do not change your rights will be reflected and modified in the Terms on our website. You will be notified via email or through the Competishun  service if we make alterations to these Terms that materially changes your rights. When you use the Competishun  Service after a modification is posted, you are telling us that you accept the modified terms.\n" +
-                        "\n" +
-                        "If you have a written agreement with Competishun  that states that it supersedes this Terms &Conditions (for example if you are a College or Employer Partner), then to the extent there is any conflict between the documents, the provisions in your separate agreement applies.\n" +
-                        "\n" +
-                        "Competishun  takes user privacy seriously and does not allow third parties from collecting student data, employer data, job descriptions, or other marketplace information from our Services through the use of automated scripts (“scraping”) or similar technologies or methodologies. For more information on our privacy practices, please read our Privacy Policy."
+                "What is the primary purpose of the content provided by this app ?",
+                "The content provided by this app is intended solely for educational purposes to help students prepare for the IIT JEE and other competitive exams. While efforts are made to ensure accuracy and reliability, the information may not be completely error-free or up-to-date"
             ),
             DisclaimerItem(
-                "Will Classes be any Live Classes ?",
-                "NO, There will be only Recorded Scheduled Lectures will be provided. In week there will be LIVE INTERACTION Session for your guidance for 30 Minutes."
+                "Does the app guarantee specific academic or test results ?",
+                "No, the app does not guarantee any specific academic or test results. Success in exams like the IIT JEE depends on various factors, including the student’s individual efforts, understanding, and dedication. The app provides resources, guidance, and support, but it cannot guarantee admission to any institution or a specific score."
             ),
             DisclaimerItem(
-                "Will Test be conducted in this course ?",
-                "YES, Test will be conducted on weekly basis as per test grid that will be provided to you along with the course. Test will be conducted on COMPETISHUN DIGITAL APP / WEBSITE and we will share the complete details in your Official Support Prior to your 1st test"
+                "What is the app's stance on third-party links and content ?",
+                "The app may include links or references to third-party content, websites, or resources. These are provided for convenience and informational purposes only. The app does not endorse, approve, or guarantee the accuracy of third-party content and is not responsible for any content or services provided by these third parties."
             ),
             DisclaimerItem(
-                "Will Doubt clearing session will be conducted ?",
-                "YES, you can ask your doubts in your doubt groups tagging faculties and you will get a reply at the earliest."
+                "Are study plans and recommendations provided in the app personalized ?",
+                "No, all advice, tips, or study plans provided in the app are generalized recommendations and may not suit each student’s unique circumstances. Students are encouraged to seek additional guidance or support tailored to their personal learning needs and goals."
             ),
             DisclaimerItem(
-                "How Do you contact Support Staff of Competishun ?",
-                "You can contact Support Staff at 8888-0000-21, 7410-900-901 "
-            )
+                "What health and safety recommendations does the app provide ?",
+                "The app recommends a balanced study routine, regular breaks, and healthy habits while using the app. Excessive screen time, continuous study sessions without rest, or lack of sleep may negatively impact health. Users are advised to consult appropriate professionals if they experience mental or physical health issues."
+            ),
+            DisclaimerItem(
+                "What is the limitation of liability for the app ?",
+                "Under no circumstances shall the app, its developers, or contributors be liable for any indirect, incidental, or consequential damages arising from using the app or relying on its content. Use of the app is entirely at the user’s own risk."
+            ),
+            DisclaimerItem(
+                "What restrictions are in place regarding piracy ?",
+                "Engaging in any form of piracy is strictly prohibited. Users found involved in piracy will have their access to the program revoked without refund and will be barred from future enrollments. Additionally, the app reserves the right to pursue lawsuits and criminal charges to the fullest extent of the law."
+            ),
+            DisclaimerItem(
+                " What does a user agree to by using this app ?",
+                "By using the app, the user acknowledges that they have read, understood, and agreed to the terms outlined in this disclaimer."
+            ),
         )
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
