@@ -50,6 +50,7 @@ class MyPurchaseDetailsFragment : DrawerVisibility() {
     private var paymentStatus = ""
     private var firstPurchase = ""
     private var transactionId = ""
+    private var fullTransactionId = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -99,6 +100,14 @@ class MyPurchaseDetailsFragment : DrawerVisibility() {
 
             // Fetch course details after fetching payment information
         }
+
+        binding.btGenerateReceipt.setOnClickListener {
+            if(fullTransactionId.isNotEmpty()){
+                downloadReceipt(fullTransactionId)
+            }else{
+                downloadReceipt(transactionId)
+            }
+        }
     }
 
     private fun observeCoursePayments() {
@@ -110,6 +119,9 @@ class MyPurchaseDetailsFragment : DrawerVisibility() {
                 Log.d("PaymentTypen", "Payment Type: ${payments}")
                 val firstPayment = payments.firstOrNull()
                 val secondPayment = if (payments.isNotEmpty()) payments else null
+                if((secondPayment?.size ?: 0) > 1){
+                    fullTransactionId = secondPayment?.get(1)?.rzpOrderId.toString()
+                }
                 binding.clOrderReceipt.visibility = View.VISIBLE
                 rzpOrderId = firstPayment?.rzpOrderId ?: ""
                 paymentType = firstPayment?.paymentType ?: ""
@@ -129,9 +141,6 @@ class MyPurchaseDetailsFragment : DrawerVisibility() {
                 // Handling "full" payment
                 if (paymentType == "full" && paymentStatus == "captured") {
                     // Full payment logic
-                    binding.btGenerateReceipt.setOnClickListener {
-                        downloadReceipt(transactionId)
-                    }
                     binding.clInstallmentCharge.visibility = View.GONE
                     binding.clFirstInstallment.visibility = View.GONE
                     binding.clSecondInstallment.visibility = View.GONE
@@ -177,9 +186,9 @@ class MyPurchaseDetailsFragment : DrawerVisibility() {
                             if (secondPayment != null ) {
                                 val secondPaymentAmount = secondPayment[0].amount ?: 0
                                 binding.clSecondInstallment.visibility = View.VISIBLE
-                                binding.btGenerateReceipt.setOnClickListener {
-                                    downloadReceipt(secondPayment[0].rzpOrderId.toString())
-                                }
+//                                binding.btGenerateReceipt.setOnClickListener {
+//                                    downloadReceipt(secondPayment[0].rzpOrderId.toString())
+//                                }
                                 binding.tvInstallmentAmount.text ="₹ ${secondPaymentAmount.toInt()}"
                                 Log.e("courseIddn", courseUserId)
                                 binding.etPurFirstInstallment.text = "₹ ${secondPaymentAmount.toInt()}"
@@ -332,7 +341,7 @@ class MyPurchaseDetailsFragment : DrawerVisibility() {
                    // binding.clBuyCourseSection.visibility = View.VISIBLE
                     binding.clDiscount.visibility = View.GONE
 
-                    val totalPrice = it.price ?: 0
+                    val totalPrice = it.with_installment_price ?: 0
                     binding.etPurtotalPrice.text = totalPrice.toString()
                     binding.etPurFinalPay.text = totalPrice.toString()
 
