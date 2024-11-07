@@ -60,6 +60,7 @@ import xyz.penpencil.competishun.ui.main.MainActivity
 import xyz.penpencil.competishun.ui.viewmodel.GetOtpViewModel
 import xyz.penpencil.competishun.ui.viewmodel.UserViewModel
 import xyz.penpencil.competishun.ui.viewmodel.VerifyOtpViewModel
+import xyz.penpencil.competishun.utils.DoubleClickListener
 import xyz.penpencil.competishun.utils.SharedPreferencesManager
 import java.io.File
 import java.security.MessageDigest
@@ -159,15 +160,12 @@ class LoginFragment : Fragment() {
         setupUI()
         setupObservers()
 
-        binding.etEnterMob.setOnTouchListener { v, event ->
-            if (event.action == MotionEvent.ACTION_DOWN) {
-                if (binding.etEnterMob.text.isNullOrEmpty()) {
-                    retrievePhoneNumberHint()
-                    return@setOnTouchListener true
-                }
+
+        binding.etEnterMob.setOnClickListener(DoubleClickListener {
+            if (binding.etEnterMob.text.isNullOrEmpty()) {
+                retrievePhoneNumberHint()
             }
-            return@setOnTouchListener false
-        }
+        })
 
         binding.etHelpText.setOnClickListener {
             val phoneNumber = "8888000021"
