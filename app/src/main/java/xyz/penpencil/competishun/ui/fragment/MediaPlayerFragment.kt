@@ -1,11 +1,7 @@
-
 package xyz.penpencil.competishun.ui.fragment
 
-import android.Manifest
-import android.content.Context
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -19,10 +15,6 @@ import android.view.WindowManager
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.core.app.NotificationManagerCompat
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.media3.common.C
@@ -34,11 +26,7 @@ import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.trackselection.DefaultTrackSelector
 import androidx.navigation.fragment.findNavController
-import androidx.work.Data
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkManager
 import com.google.android.exoplayer2.ui.AspectRatioFrameLayout
-import com.google.android.exoplayer2.ui.PlayerControlView
 import com.otaliastudios.zoom.ZoomLayout
 import xyz.penpencil.competishun.di.SharedVM
 import xyz.penpencil.competishun.ui.main.HomeActivity
@@ -47,7 +35,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.data.model.TopicContentModel
 import xyz.penpencil.competishun.databinding.FragmentMediaPlayerBinding
-import xyz.penpencil.competishun.download.DownloadWorker
 import xyz.penpencil.competishun.utils.SharedPreferencesManager
 import java.io.File
 
@@ -124,12 +111,14 @@ class MediaPlayerFragment : DrawerVisibility() {
         val videoUrl = arguments?.getString("url") ?: return
         Log.e("howdfdf",videoUrl)
         val title = arguments?.getString("url_name") ?: return
-        courseFolderContentDescs = arguments?.getStringArrayList("folderContentDescs")?: return
+        courseFolderContentDescs = arguments?.getStringArrayList("folderContentDescs")?: arrayListOf()
         if (title != null) {
             binding.tittleBtn.visibility = View.VISIBLE
             binding.tittleBtn.text = title
             binding.tittleTv.text = title
-            binding.descTv.text = courseFolderContentDescs[0]
+            if (courseFolderContentDescs.isNotEmpty()){
+                binding.descTv.text = courseFolderContentDescs[0]
+            }
         }
 
         courseFolderContentId = arguments?.getString("ContentId")?: return
@@ -152,17 +141,17 @@ class MediaPlayerFragment : DrawerVisibility() {
                     height = (300 * resources.displayMetrics.density).toInt()
                 }// Convert 300dp to pixels
                     requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-                binding.playerView.resizeMode = AspectRatioFrameLayout.RESIZE_MODE_FIT // Reset or use any mode you want in portrait
+                binding.playerView.resizeMode = androidx.media3.ui.AspectRatioFrameLayout.RESIZE_MODE_FIT // Reset or use any mode you want in portrait
             } else {
                 binding.fullscreenButton.visibility = View.VISIBLE
                 Log.e("landscapeport",isLandscape.toString())
                 // If in portrait, switch to landscape
                 requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-                binding.playerView.resizeMode = AspectRatioFrameLayout.RESIZE_MODE_ZOOM // Zoom for full-screen landscape
+                binding.playerView.resizeMode = androidx.media3.ui.AspectRatioFrameLayout.RESIZE_MODE_ZOOM // Zoom for full-screen landscape
             }
         }
         // Setup video progress update task
-        handler.post(object : Runnable {
+/*        handler.post(object : Runnable {
             override fun run() {
                 if (isAdded && ::player.isInitialized) {
                     val watchedDurationInSeconds = (player.currentPosition / 1000).toInt()
@@ -170,7 +159,7 @@ class MediaPlayerFragment : DrawerVisibility() {
                     handler.postDelayed(this, updateInterval)
                 }
             }
-        })
+        })*/
         try {
             changeQuality(videoFormat)
             val mediaItem = MediaItem.fromUri(videoUrl)
@@ -231,7 +220,6 @@ class MediaPlayerFragment : DrawerVisibility() {
                     }
                 }
             })
-           // playVideo(videoUrl)
 
 
         } catch (e: Exception) {
@@ -409,8 +397,6 @@ class MediaPlayerFragment : DrawerVisibility() {
             Log.d("Videourl", "Signed URL: $signedUrl")
             if (signedUrl != null) {
                 urlVideo = signedUrl
-
-               // playVideo(signedUrl,currentPlaybackPosition)
             }else
             {
                 Log.e("url issues", signedUrl.toString())
@@ -440,19 +426,16 @@ class MediaPlayerFragment : DrawerVisibility() {
                     0 -> {
                         videoFormat = "480p"
                         changeQuality(videoFormat)
-                        //playVideo(urlVideo,currentPlaybackPosition)
                         Toast.makeText(requireContext(), "Selected: 480p", Toast.LENGTH_SHORT).show()
                     }
                     1 -> {
                         videoFormat = "720p"
                         changeQuality(videoFormat)
-                      //  playVideo(urlVideo,currentPlaybackPosition)
                         Toast.makeText(requireContext(), "Selected: 720p", Toast.LENGTH_SHORT).show()
                     }
                     2 -> {
                         videoFormat = "1080p"
                         changeQuality(videoFormat)
-                      //  playVideo(urlVideo,currentPlaybackPosition)
                         Toast.makeText(requireContext(), "Selected: 1080p", Toast.LENGTH_SHORT).show()
                     }
                 }
