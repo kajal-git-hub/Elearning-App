@@ -14,6 +14,7 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.ProgressBar
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
@@ -25,6 +26,7 @@ import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.trackselection.DefaultTrackSelector
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.google.android.exoplayer2.ui.AspectRatioFrameLayout
 import com.otaliastudios.zoom.ZoomLayout
@@ -230,6 +232,13 @@ class MediaPlayerFragment : DrawerVisibility() {
         binding.qualityButton.setOnClickListener {
             showSpeedOrQualityDialog()
         }
+
+        requireActivity().onBackPressedDispatcher
+            .addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    view.findNavController().popBackStack()
+                }
+            })
 
     }
 
