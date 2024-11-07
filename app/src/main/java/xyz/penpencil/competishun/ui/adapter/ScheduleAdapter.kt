@@ -85,6 +85,10 @@ class ScheduleAdapter(private val scheduleItems: List<ScheduleData>, private val
                 binding.tvSubjectName.text = innerItem.subject_name
                 binding.tvTopicName.text = innerItem.topic_name
                 startCountdownTimer(innerItem.scheduleTimer,innerItem.file_url , innerItem.fileType,innerItem.contentId)
+                binding.root.setOnClickListener {
+                    toolbarListener.onCustomizeToolbar(innerItem.file_url, innerItem.fileType, innerItem.contentId)
+                }
+
                 Log.e("sbAHGSHahsghaGHS", "bind: " +innerItem.scheduleTimer)
                 if (innerItem.fileType=="VIDEO") {
 
