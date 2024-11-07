@@ -116,24 +116,14 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-
-            }
-        })
-
-        /*view.isFocusableInTouchMode = true
-        view.requestFocus()
-        view.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
-            if (keyCode == KeyEvent.KEYCODE_BACK && event.action == KeyEvent.ACTION_UP) {
                 if (mExoPlayerFullscreen){
                     requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
                     closeFullscreenDialog()
                 }else {
-                    v?.findNavController()?.popBackStack()
+                    view?.findNavController()?.popBackStack()
                 }
-                return@OnKeyListener true
             }
-            false
-        })*/
+        })
     }
 
 
