@@ -96,6 +96,7 @@ class PaymentFragment : Fragment() {
         binding.clStartBottomBar.setOnClickListener{ findNavController().navigate(R.id.homeFragment) }
         getUserDetails()
         binding.btReceipt.setOnClickListener {
+            Log.d("click","Click hua")
 //            binding.btReceipt.isEnabled = false
          var transactionId = sharedPreferencesManager.rzpOrderId
             if (transactionId != null) {
@@ -131,7 +132,7 @@ class PaymentFragment : Fragment() {
                helperFunctions.downloadPdf(requireContext(),receiptLink,"Payment Invoice")
 
             }.onFailure {
-                binding.btReceipt.isEnabled = true
+//                binding.btReceipt.isEnabled = true
                 // Handle failure, e.g., show an error message
                 Log.e("Failed to download ReceiptLink: ",it.message.toString())
             }

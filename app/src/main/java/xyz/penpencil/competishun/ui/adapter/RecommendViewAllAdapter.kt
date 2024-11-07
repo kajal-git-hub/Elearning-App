@@ -51,38 +51,45 @@ class RecommendViewAllAdapter(
         }
 
         holder.courseName.text = "${course.name}"
+        Log.e("coursestuss",course.status.name)
+        if(course.status.name == "COMING_SOON" ){
+            holder.discountPrice.text =  "Coming Soon"
+            holder.originalPrice.visibility =  View.GONE
+            holder.discount.visibility = View.GONE
+        }else {
+            if (course.price != null && course.discount != null) {
+                val discountPercent =
+                    helperFunctions.calculateDiscountPercentage(course.price, course.discount)
+                holder.discount.text = "${discountPercent.toInt()}% off"
+                holder.discountPrice.text = "₹${course.discount}"
+                holder.originalPrice.text = "₹${course.price}"
+                holder.percentConstraint.visibility = View.VISIBLE
+                Glide.with(holder.itemView.context)
 
-        if (course.price != null && course.discount != null) {
-            val discountPercent = helperFunctions.calculateDiscountPercentage(course.price, course.discount)
-            holder.discount.text = "${discountPercent.toInt()}% off"
-            holder.discountPrice.text = "₹${course.discount}"
-            holder.originalPrice.text = "₹${course.price}"
-            holder.percentConstraint.visibility = View.VISIBLE
-            Glide.with(holder.itemView.context)
-
-                .load(course.banner_image)
-                .placeholder(R.drawable.rectangle_1072)
-                .error(R.drawable.default_image)
-                .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
-                .into(holder.bannerImage)
+                    .load(course.banner_image)
+                    .placeholder(R.drawable.rectangle_1072)
+                    .error(R.drawable.default_image)
+                    .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
+                    .into(holder.bannerImage)
 
 
-        }else if (course.price!=null && course.discount==null){
-            holder.discountPrice.text = "₹${course.price}"
-            holder.originalPrice.visibility = View.GONE
+            } else if (course.price != null && course.discount == null) {
+                holder.discountPrice.text = "₹${course.price}"
+                holder.originalPrice.visibility = View.GONE
 
-        }else if(course.price==course.discount){
-            holder.percentConstraint.visibility = View.GONE
+            } else if (course.price == course.discount) {
+                holder.percentConstraint.visibility = View.GONE
+            }
         }
-
         holder.targetYear.text = "Target ${course.target_year}"
         holder.startDate.text = "Starts On: " + helperFunctions.formatCourseDate(course.live_date.toString())
         holder.endDate.text = "Ends On: " + helperFunctions.formatCourseDate(course.course_end_date.toString())
         holder.lectureCount.text = "Lectures: 0" // Update this if you have actual data
         holder.quizCount.text = "Validity: " + helperFunctions.formatCourseDate(course.course_validity_end_date.toString())
-
-        holder.itemView.setOnClickListener {
-            onItemClick(course,recommendCourseTags)
+        if(course.status.name != "COMING_SOON" ){
+            holder.itemView.setOnClickListener {
+                onItemClick(course,recommendCourseTags)
+            }
         }
     }
 

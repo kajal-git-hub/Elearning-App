@@ -21,4 +21,19 @@ class UserViewModel @Inject constructor(private val userRepository: UserReposito
             _userDetails.value = result
         }
     }
+
+    private val _deleteAccountResult = MutableLiveData<Result<Boolean>>()
+    val deleteAccountResult: LiveData<Result<Boolean>> get() = _deleteAccountResult
+
+
+    fun deleteAccount() {
+        viewModelScope.launch {
+            val result = userRepository.deleteAccount()
+            if (result.isSuccess) {
+                _deleteAccountResult.postValue(Result.success(true))
+            } else {
+                _deleteAccountResult.postValue(Result.failure(result.exceptionOrNull() ?: Exception("Unknown error")))
+            }
+        }
+    }
 }
