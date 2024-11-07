@@ -368,6 +368,14 @@
             app:destination="@+id/homeFragment"/>
     </fragment>
     <fragment
+        android:id="@+id/RefundCancellation"
+        android:name="xyz.penpencil.competishun.ui.fragment.RefundCancellation"
+        tools:layout="@layout/fragment_refund_cancellation">
+        <action
+            android:id="@+id/action_disclaimer_to_homePage"
+            app:destination="@+id/homeFragment"/>
+    </fragment>
+    <fragment
         android:id="@+id/BookMarkFragment"
         android:name="xyz.penpencil.competishun.ui.fragment.BookMarkFragment"
         tools:layout="@layout/fragment_book_mark">

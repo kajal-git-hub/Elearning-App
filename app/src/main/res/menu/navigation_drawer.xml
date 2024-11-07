@@ -48,6 +48,10 @@
             android:id="@+id/tvdisclaimer"
             android:icon="@drawable/disclaimer"
             android:title="@string/title_disclaimer"/>
+        <item
+            android:id="@+id/refundPolicy"
+            android:icon="@drawable/refund_cancellation"
+            android:title="Cacellation &amp; Refund Policy"/>
 <!--        <item-->
 <!--            android:id="@+id/tvRate"-->
 <!--            android:icon="@drawable/rateapp"-->
