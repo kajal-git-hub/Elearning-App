@@ -206,6 +206,7 @@ class MyPurchaseDetailsFragment : DrawerVisibility() {
                                            binding.tv2ndInstallmentStatus.text = "Successful"
                                            binding.tv2ndInstallmentStatus.setTextColor(ContextCompat.getColor(requireContext(), R.color._4BB543))
                                            binding.secondInstSlip.text = "2nd Installment (Paid)"
+                                           binding.tv2ndInstallmentDateTxt.text = "Paid on:"
                                            binding.tv2ndInstallmentDate.text =  helperFunctions.formatCourseDate(secondPayment[1].createdAt.toString())
                                            binding.ivGreyTick.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.green_tick_installment))
                                            binding.ivLine.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.vector_verticle_line_green))
