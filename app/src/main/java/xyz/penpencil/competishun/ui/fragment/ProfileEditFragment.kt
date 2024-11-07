@@ -65,7 +65,8 @@ class ProfileEditFragment(val updateCourse:(year:String,course:String )->Unit) :
 
         val classList = listOf("11th", "12th", "12th+")
         val examList = listOf("NEET", "IIT-JEE", "Board", "UCET", "Others")
-        val yearList = listOf("2025", "2026")
+        //TODO: make this dynamic
+        val yearList = listOf("2025", "2026", "2027")
 
         binding.rvSelectClass.apply {
             layoutManager = GridLayoutManager(context, 2)
