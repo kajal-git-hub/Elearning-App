@@ -17,7 +17,6 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.startActivity
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import xyz.penpencil.competishun.R
@@ -54,15 +53,15 @@ class TopicContentAdapter(
 
         val topicContent = topicContents[position]
         holder.bind(topicContents[position], fragmentActivity)
-        Log.e("valuesss ${isDateTodayOrPast(topicContent.lockTime)} ", topicContent.lockTime.toString())
+        Log.e("valuesss ${isDateTodayOrPast(topicContent.lockTime, topicContent.isExternal)} ", topicContent.lockTime.toString())
         val unlockedTopicContentIds = topicContents
-            .filter { isDateTodayOrPast(it.lockTime) && it.fileType == "VIDEO" }
+            .filter { isDateTodayOrPast(it.lockTime, topicContent.isExternal) && it.fileType == "VIDEO" }
             .map { it.id }.toCollection(ArrayList())
         val unlockedTopicContentNames = topicContents
-            .filter { isDateTodayOrPast(it.lockTime) && it.fileType == "VIDEO" }
+            .filter { isDateTodayOrPast(it.lockTime, topicContent.isExternal) && it.fileType == "VIDEO" }
             .map { it.topicName }.toCollection(ArrayList())
         val unlockedTopicContentDescs = topicContents
-            .filter { isDateTodayOrPast(it.lockTime) && it.fileType == "VIDEO" }
+            .filter { isDateTodayOrPast(it.lockTime, topicContent.isExternal) && it.fileType == "VIDEO" }
             .map { it.topicDescription }.toCollection(ArrayList())
         Log.e("unlockedTopics",unlockedTopicContentIds.toString())
         Log.e("unlockedTopic",unlockedTopicContentNames.toString())
@@ -71,7 +70,7 @@ class TopicContentAdapter(
             if ((topicContent.fileType == "URL")){
                 val url = if (topicContent.topicName.contains("http")) topicContent.url else "https://${topicContent.url}"
                 it.context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
-            } else if (isDateTodayOrPast(topicContent.lockTime)){
+            } else if (isDateTodayOrPast(topicContent.lockTime, topicContent.isExternal)){
                 onItemClick(topicContent, folderContentId,unlockedTopicContentIds,unlockedTopicContentNames,unlockedTopicContentDescs)
             } else if (topicContent.fileType == "UNKNOWN__" ) {
                 Log.e("TAG", "onBindViewHolder: ")
@@ -79,7 +78,7 @@ class TopicContentAdapter(
                 Toast.makeText(it.context, "Content is locked!", Toast.LENGTH_SHORT).show()
             }
         }
-        if (!isDateTodayOrPast(topicContent.lockTime)) {
+        if (!isDateTodayOrPast(topicContent.lockTime, topicContent.isExternal)) {
             // Enable the click listener for unlocked items
             holder.itemView.findViewById<ImageView>(R.id.iv_MoreInfoLec).visibility = View.GONE
         }
@@ -108,8 +107,8 @@ class TopicContentAdapter(
 //            if (showDateIfFutureOrToday(topicContent.lockTime)) binding.videoicon.setImageResource(R.drawable.frame_1707481707) else binding.videoicon.setImageResource(
 //                R.drawable.frame_1707481080
 //            )
-            Log.e("getlocketime ${isDateTodayOrPast(topicContent.lockTime)} ",topicContent.lockTime)
-            if ( isDateTodayOrPast(topicContent.lockTime)) {
+            Log.e("getlocketime ${isDateTodayOrPast(topicContent.lockTime, topicContent.isExternal)} ",topicContent.lockTime)
+            if ( isDateTodayOrPast(topicContent.lockTime, topicContent.isExternal)) {
                 if (topicContent.fileType == "VIDEO")
                 {
                     binding.etHomeWorkText.visibility = View.VISIBLE
@@ -234,8 +233,10 @@ class TopicContentAdapter(
                 }
             }
         }
-        fun isDateTodayOrPast(dateString: String): Boolean {
+        fun isDateTodayOrPast(dateString: String, external: Boolean): Boolean {
                 // Clean up the date string
+            if (external) return true
+
                 val cleanedDateString = dateString.replace("Sept", "Sep").trim()
                     .replace("pm".toRegex(), "PM")
                     .replace("am".toRegex(), "AM")
@@ -262,8 +263,10 @@ class TopicContentAdapter(
         }
 
     }
-    fun isDateTodayOrPast(dateString: String): Boolean {
+    private fun isDateTodayOrPast(dateString: String, external: Boolean): Boolean {
             // Clean up the date string
+            if (external) return true
+
             val cleanedDateString = dateString.replace("Sept", "Sep").trim()
                 .replace("pm".toRegex(), "PM")
                 .replace("am".toRegex(), "AM")

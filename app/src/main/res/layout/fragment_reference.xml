@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/onboarding"
@@ -11,7 +11,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/outerConstraint"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="match_parent"
         android:layout_marginHorizontal="16dp"
         android:layout_marginTop="40dp"
         android:layout_marginBottom="60dp"
@@ -22,7 +22,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <RelativeLayout
             android:id="@+id/etInnerConstraint"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -34,51 +34,51 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-
-            <ImageView
-                android:id="@+id/etCircleLogo"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:backgroundTint="@color/blue"
-                android:src="@drawable/circleimage"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-
-            <TextView
-                android:id="@+id/et_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="1"
-                android:textColor="#2B2829"
-                android:textSize="16dp"
-                app:layout_constraintBottom_toBottomOf="@+id/etCircleLogo"
-                app:layout_constraintEnd_toStartOf="@+id/et_text2" />
-
-            <TextView
-                android:id="@id/et_text2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="19dp"
-                android:text="/4"
-                android:textColor="#9F9C9C"
-                android:textSize="12dp"
-                app:layout_constraintBottom_toBottomOf="@+id/etCircleLogo"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/etCircleLogo" />
-
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/clAnimConstraint"
+                android:id="@+id/constraintLayout3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/etCircleLogo">
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/etCircleLogo"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:backgroundTint="@color/blue"
+                    android:src="@drawable/circleimage"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/et_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1"
+                    android:textColor="#2B2829"
+                    android:textSize="16dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/etCircleLogo"
+                    app:layout_constraintEnd_toStartOf="@+id/et_text2" />
+
+                <TextView
+                    android:id="@id/et_text2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="19dp"
+                    android:text="/4"
+                    android:textColor="#9F9C9C"
+                    android:textSize="12dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/etCircleLogo"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/etCircleLogo" />
+
 
                 <TextView
                     android:id="@+id/etStartedText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_30dp"
                     android:fontFamily="@font/nunito"
                     android:lineHeight="@dimen/_28dp"
                     android:text="@string/let_s_get_started"
@@ -86,103 +86,50 @@
                     android:textSize="20sp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toBottomOf="@+id/et_text" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/etNameConstraint"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="22dp"
-                    android:visibility="gone"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/etStartedText">
+            <RelativeLayout
+                android:id="@+id/clAnimConstraint"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/constraintLayout3"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout3">
 
-                    <TextView
-                        android:id="@+id/etFullNameText"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/nunito"
-                        android:text="@string/full_name"
-                        android:textColor="#0A0A0B"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <EditText
-                        android:id="@+id/etEnterHereText"
-                        android:layout_width="288dp"
-                        android:layout_height="48dp"
-                        android:layout_marginTop="10dp"
-                        android:background="@drawable/full_name_background"
-                        android:hint="@string/enter_here"
-                        android:inputType="text"
-                        android:paddingLeft="16dp"
-                        android:paddingTop="12dp"
-                        android:paddingRight="16dp"
-                        android:paddingBottom="12dp"
-                        android:textColorHint="#898384"
-                        android:textSize="16sp"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/etFullNameText" />
-
-                    <TextView
-                        android:id="@+id/etCityText"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:fontFamily="@font/nunito"
-                        android:text="City"
-                        android:textSize="14sp"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/etEnterHereText" />
-
-                    <EditText
-                        android:id="@+id/etEnterCityText"
-                        android:layout_width="288dp"
-                        android:layout_height="48dp"
-                        android:layout_marginTop="10dp"
-                        android:background="@drawable/full_name_background"
-                        android:hint="Ex. Gurugram"
-                        android:inputType="text"
-                        android:paddingLeft="16dp"
-                        android:paddingTop="12dp"
-                        android:paddingRight="16dp"
-                        android:paddingBottom="12dp"
-                        android:textColorHint="#898384"
-                        android:textSize="16sp"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/etCityText" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <androidx.constraintlayout.widget.ConstraintLayout
+                <RelativeLayout
                     android:id="@+id/clExamConstraint"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="22dp"
-                    android:visibility="visible"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/etStartedText">
+                    android:layout_alignParentTop="true"
+                    android:visibility="visible">
+
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/refRecyclerview"
                         android:layout_width="match_parent"
-                        android:layout_height="260dp"
+                        android:layout_height="wrap_content"
+                        android:scrollbars="vertical"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginBottom="16dp"
+                        android:layout_above="@+id/etContentBox"
                         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         app:spanCount="1"
-                        android:scrollbars="vertical"
                         tools:itemCount="10"
                         tools:listitem="@layout/getstarted_itemlayout" />
+
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/etContentBox"
                         android:layout_width="match_parent"
                         android:layout_height="74dp"
                         android:layout_marginHorizontal="6dp"
                         android:layout_marginTop="8dp"
-                        android:background="@drawable/getstarted_itembg_unselected"
                         android:visibility="gone"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/refRecyclerview">
+                        android:layout_above="@+id/buttonContainer"
+                        android:layout_marginBottom="16dp"
+                        android:background="@drawable/getstarted_itembg_unselected"
+                        app:layout_constraintStart_toStartOf="parent">
 
                         <EditText
                             android:id="@+id/etContent"
@@ -213,52 +160,55 @@
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/buttonContainer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="20dp"
+                        android:padding="8dp"
+                        android:layout_alignParentBottom="true"
+                        app:layout_constraintEnd_toEndOf="parent">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/RefBack"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="16dp"
+                            android:background="@drawable/firstbutton_getstarted"
+                            android:gravity="center"
+                            android:text="Back"
+                            android:textColor="#3E3EF7"
+                            app:backgroundTint="@null"
+                            app:cornerRadius="8dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="@id/RefNext" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/RefNext"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/second_getstarted"
+                            android:gravity="center"
+                            android:text="Next"
+                            android:textColor="@color/white"
+                            app:backgroundTint="@null"
+                            app:cornerRadius="8dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                </RelativeLayout>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/buttonContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="20dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/RefBack"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:background="@drawable/firstbutton_getstarted"
-                android:gravity="center"
-                android:text="Back"
-                android:textColor="#3E3EF7"
-                app:backgroundTint="@null"
-                app:cornerRadius="8dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/RefNext" />
+            </RelativeLayout>
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/RefNext"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/second_getstarted"
-                android:gravity="center"
-                android:text="Next"
-                android:textColor="@color/white"
-                app:backgroundTint="@null"
-                app:cornerRadius="8dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        </RelativeLayout>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>
 
 

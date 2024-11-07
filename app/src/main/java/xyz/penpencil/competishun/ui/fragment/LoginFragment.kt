@@ -7,7 +7,6 @@ import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
-import android.telephony.PhoneNumberUtils
 import android.telephony.TelephonyManager
 import android.text.Editable
 import android.text.InputFilter
@@ -19,7 +18,6 @@ import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
@@ -50,7 +48,6 @@ import com.google.android.gms.tasks.Task
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
-import com.student.competishun.gatekeeper.type.Auth
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import xyz.penpencil.competishun.R
@@ -60,6 +57,7 @@ import xyz.penpencil.competishun.ui.main.MainActivity
 import xyz.penpencil.competishun.ui.viewmodel.GetOtpViewModel
 import xyz.penpencil.competishun.ui.viewmodel.UserViewModel
 import xyz.penpencil.competishun.ui.viewmodel.VerifyOtpViewModel
+import xyz.penpencil.competishun.utils.DoubleClickListener
 import xyz.penpencil.competishun.utils.SharedPreferencesManager
 import java.io.File
 import java.security.MessageDigest
@@ -159,15 +157,12 @@ class LoginFragment : Fragment() {
         setupUI()
         setupObservers()
 
-        binding.etEnterMob.setOnTouchListener { v, event ->
-            if (event.action == MotionEvent.ACTION_DOWN) {
-                if (binding.etEnterMob.text.isNullOrEmpty()) {
-                    retrievePhoneNumberHint()
-                    return@setOnTouchListener true
-                }
+
+        binding.etEnterMob.setOnClickListener(DoubleClickListener {
+            if (binding.etEnterMob.text.isNullOrEmpty()) {
+                retrievePhoneNumberHint()
             }
-            return@setOnTouchListener false
-        }
+        })
 
         binding.etHelpText.setOnClickListener {
             val phoneNumber = "8888000021"

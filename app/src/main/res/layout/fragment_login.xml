@@ -119,6 +119,7 @@
             android:textColor="#2B2829"
             android:textColorHint="#898384"
             android:textSize="16sp"
+            android:digits="0123456789"
             app:layout_constraintStart_toEndOf="@+id/etCountryCode"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"

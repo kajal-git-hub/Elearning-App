@@ -151,8 +151,6 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
                     topicContentViewModel.insertTopicContent(item)
                 }
             }
-        } else {
-            showPermissionDeniedDialog()
         }
     }
 
@@ -193,8 +191,6 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
             val allPermissionsGranted = permissionList().all { permissions[it] == true }
             if (notificationPermissionGranted && allPermissionsGranted) {
                 (requireActivity() as HomeActivity).downloadFile(videoUrl, fileName, isExternal)
-            } else {
-                showPermissionDeniedDialog()
             }
         }
 

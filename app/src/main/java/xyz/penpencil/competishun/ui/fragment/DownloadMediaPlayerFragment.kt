@@ -1,5 +1,6 @@
 package xyz.penpencil.competishun.ui.fragment
 
+import android.app.Dialog
 import android.content.pm.ActivityInfo
 import android.net.Uri
 import android.os.Bundle
@@ -7,11 +8,13 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.GestureDetector
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import androidx.activity.OnBackPressedCallback
 import androidx.annotation.OptIn
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
@@ -20,11 +23,14 @@ import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
+import androidx.navigation.findNavController
 import dagger.hilt.android.AndroidEntryPoint
+import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.databinding.FragmentDownloadMediaPlayerBinding
 import xyz.penpencil.competishun.di.SharedVM
 import xyz.penpencil.competishun.ui.main.HomeActivity
 import java.io.File
+
 
 @AndroidEntryPoint
 class DownloadMediaPlayerFragment : DrawerVisibility() {
@@ -38,11 +44,14 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
         private const val SEEK_OFFSET_MS = 10000L
     }
 
+    private lateinit var mFullScreenDialog: Dialog
+    private var mExoPlayerFullscreen: Boolean = false
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+//        requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
         binding = FragmentDownloadMediaPlayerBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -56,9 +65,14 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
 
         sharedViewModel = ViewModelProvider(requireActivity()).get(SharedVM::class.java)
         binding.backBtn.setOnClickListener {
-            requireActivity().onBackPressedDispatcher.onBackPressed()
+            if (mExoPlayerFullscreen){
+                requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
+                closeFullscreenDialog()
+            }else {
+                view?.findNavController()?.popBackStack()
+            }
         }
-
+        initFullscreenDialog()
         val videoUrl = arguments?.getString("url") ?: return
         val title = arguments?.getString("url_name") ?: return
 
@@ -98,10 +112,41 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
             showSpeedOrQualityDialog()
         }
 
+        binding.fullScreen.setOnClickListener { toggleFullscreen() }
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+
+            }
+        })
+
+        /*view.isFocusableInTouchMode = true
+        view.requestFocus()
+        view.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
+            if (keyCode == KeyEvent.KEYCODE_BACK && event.action == KeyEvent.ACTION_UP) {
+                if (mExoPlayerFullscreen){
+                    requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
+                    closeFullscreenDialog()
+                }else {
+                    v?.findNavController()?.popBackStack()
+                }
+                return@OnKeyListener true
+            }
+            false
+        })*/
     }
 
+
+    private fun initFullscreenDialog() {
+        mFullScreenDialog = Dialog(requireContext(), android.R.style.Theme_Black_NoTitleBar_Fullscreen)
+        mFullScreenDialog.setOnDismissListener {
+            requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
+            closeFullscreenDialog()
+        }
+    }
+
+
     private fun playVideo(videoUrl: String) {
-        binding.progressBar.visibility = View.VISIBLE
         binding.playerView.visibility = View.GONE
 
         val uri = if (File(videoUrl).exists()) {
@@ -121,7 +166,6 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
             }
             override fun onPlaybackStateChanged(state: Int) {
                 if (state == Player.STATE_READY) {
-                    binding.progressBar.visibility = View.GONE
                     binding.playerView.visibility = View.VISIBLE
                 }
             }
@@ -205,4 +249,35 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
         player.seekTo(minOf(position + SEEK_OFFSET_MS, player.duration))
     }
 
+    private fun openFullscreenDialog() {
+        (binding.playerContainer.parent as? ViewGroup)?.removeView(binding.playerContainer)
+        mFullScreenDialog.addContentView(
+            binding.playerContainer,
+            ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+            )
+        )
+        mExoPlayerFullscreen = true
+        mFullScreenDialog.show()
+        binding.fullScreen.setImageResource(R.drawable.zoom_in_map_24)
+    }
+
+    private fun closeFullscreenDialog() {
+        (binding.playerContainer.parent as? ViewGroup)?.removeView(binding.playerContainer)
+        binding.playerRoot.addView(binding.playerContainer)
+        mExoPlayerFullscreen = false
+        mFullScreenDialog.dismiss()
+        binding.fullScreen.setImageResource(R.drawable.zoom_out_map_24)
+    }
+
+    private fun toggleFullscreen() {
+        if (!mExoPlayerFullscreen) {
+            requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
+            openFullscreenDialog()
+        } else {
+            requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
+            closeFullscreenDialog()
+        }
+    }
 }
