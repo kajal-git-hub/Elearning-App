@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
@@ -211,6 +212,8 @@ class ResumeCourseFragment : DrawerVisibility() {
                                 putBoolean("isExternal",name.contains("DPP", ignoreCase = true))
                             }
                             findNavController().navigate(R.id.TopicTYPEContentFragment, bundle)
+                        }else{
+                            Toast.makeText(requireContext(), "No Content Available", Toast.LENGTH_SHORT).show()
                         }
                     }
                 }

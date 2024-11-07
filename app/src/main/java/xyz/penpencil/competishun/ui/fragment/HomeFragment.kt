@@ -323,7 +323,23 @@ class HomeFragment : Fragment() {
         footerButton.setOnClickListener {
             openDialog()
             drawerLayout.closeDrawer(GravityCompat.START)
+        }
+        userViewModel.deleteAccountResult.observe(viewLifecycleOwner) { result ->
+            if (result.isSuccess) {
 
+                sharedPreferencesManager.clearUserData()
+
+                deleteLocalFiles()
+
+                val intent = Intent(requireContext(), MainActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
+                requireActivity().finish()
+
+                Toast.makeText(context, "Account deleted successfully", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(context, "Failed to delete account: ${result.exceptionOrNull()?.message}", Toast.LENGTH_SHORT).show()
+            }
         }
 
 
@@ -373,7 +389,9 @@ class HomeFragment : Fragment() {
         builder.setMessage("Deleting your account will place a \npermanent hold on your studies, and\nall your data, including progress,\nsaved materials, and personal\nsettings, will be permanently\nerased. This action cannot be\nundone. Please ensure that you’ve\nconsidered this decision carefully\nbefore proceeding.")
 
         builder.setPositiveButton("OK") { dialog, which ->
+            userViewModel.deleteAccount()
             dialog.dismiss()
+
         }
 
         builder.setNegativeButton("Cancel") { dialog, which ->
@@ -839,6 +857,18 @@ class HomeFragment : Fragment() {
         (activity as? HomeActivity)?.showBottomNavigationView(true)
         (activity as? HomeActivity)?.showFloatingButton(true)
 
+    }
+    private fun deleteLocalFiles() {
+        val filesDir = requireActivity().filesDir
+
+        val files = filesDir.listFiles()
+
+        files?.forEach { file ->
+            if (file.name.endsWith(".mp4", ignoreCase = true) || file.name.endsWith("PDF",ignoreCase = true)) {
+                Log.d("LogoutDelete", "Deleting file: ${file.name}")
+                file.delete()
+            }
+        }
     }
 
 
