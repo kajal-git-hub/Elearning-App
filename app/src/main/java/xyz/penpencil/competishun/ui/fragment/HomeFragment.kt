@@ -375,6 +375,9 @@ class HomeFragment : Fragment() {
                 R.id.tvdisclaimer -> {
                     preventToMultiCall((R.id.DisclaimerFragment))
                 }
+                R.id.refundPolicy -> {
+                    preventToMultiCall((R.id.RefundCancellation))
+                }
             }
             drawerLayout.closeDrawer(GravityCompat.START)
             true
