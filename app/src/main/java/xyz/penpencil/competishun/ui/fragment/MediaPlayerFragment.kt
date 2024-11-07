@@ -177,6 +177,7 @@ class MediaPlayerFragment : DrawerVisibility() {
                 override fun onPlaybackStateChanged(state: Int) {
                     when (state) {
                         Player.STATE_READY -> {
+                            binding.progressBar.visibility = View.GONE
                             binding.playerView.visibility = View.VISIBLE
                             binding.upNextOverlay.visibility = View.GONE
                             player.play()
@@ -219,6 +220,9 @@ class MediaPlayerFragment : DrawerVisibility() {
 ////                            binding.progressBar.visibility = View.VISIBLE
 ////                            binding.playerView.visibility = View.VISIBLE
 //                        }
+                        Player.STATE_BUFFERING->{
+                            binding.progressBar.visibility = View.VISIBLE
+                        }
                     }
                 }
             })
