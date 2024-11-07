@@ -75,6 +75,8 @@ input CreateStudentByAdminInput {
 
   fatherMobileNumber: String
 
+  fatherName: String
+
   fullName: String!
 
   gender: String
@@ -341,6 +343,8 @@ input UpdateStudentByAdminInput {
   fatherMobileCountryCode: String
 
   fatherMobileNumber: String
+
+  fatherName: String
 
   fullName: String
 
