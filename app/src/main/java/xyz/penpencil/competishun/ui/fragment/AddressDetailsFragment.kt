@@ -1,5 +1,6 @@
 package xyz.penpencil.competishun.ui.fragment
 
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -7,20 +8,25 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.apollographql.apollo3.api.Optional
+import com.google.gson.Gson
 import com.student.competishun.gatekeeper.MyDetailsQuery
 import dagger.hilt.android.AndroidEntryPoint
 import xyz.penpencil.competishun.R
+import xyz.penpencil.competishun.data.model.State
+import xyz.penpencil.competishun.data.model.StateCity
 import xyz.penpencil.competishun.databinding.FragmentAddressDetailsBinding
 import xyz.penpencil.competishun.ui.main.HomeActivity
 import xyz.penpencil.competishun.ui.viewmodel.UpdateUserViewModel
 import xyz.penpencil.competishun.ui.viewmodel.UserViewModel
 import xyz.penpencil.competishun.utils.SharedPreferencesManager
+import java.io.IOException
 
 @AndroidEntryPoint
 class AddressDetailsFragment : DrawerVisibility() {
@@ -32,9 +38,13 @@ class AddressDetailsFragment : DrawerVisibility() {
 
     private val userViewModel: UserViewModel by viewModels()
 
+    private val selectedCity = mutableListOf<String>()
+
+
     private var fieldsToVisible = emptyArray<String>()
     private var courseId: String = ""
     var userDetails: MyDetailsQuery.GetMyDetails?=null
+    val stateCity: List<State> by lazy { loadStatesAndCities()?: emptyList() }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -80,6 +90,26 @@ class AddressDetailsFragment : DrawerVisibility() {
 
         observeViewModel()
         userViewModel.fetchUserDetails()
+
+        val stateAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, stateCity.map { it.name })
+        binding.etState.setAdapter(stateAdapter)
+
+        binding.etState.setOnItemClickListener { parent, view, position, id ->
+            val selectedItem = parent.getItemAtPosition(position) as String
+            val selectedIndex = stateCity.indexOfFirst { it.name == selectedItem }
+
+            if (selectedIndex != -1) {
+                val data = stateCity[selectedIndex].cities
+                val cityAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, data)
+                binding.etCity.setAdapter(cityAdapter)
+                binding.etCity.text = null
+            }
+        }
+
+        binding.etCity.setOnItemClickListener { parent, view, position, id ->
+            val selectedItem = parent.getItemAtPosition(position) as String
+            Log.e("Selected City", "Selected City: $selectedItem")
+        }
     }
 
     private fun isAddressFormValid(): Boolean {
@@ -211,5 +241,18 @@ class AddressDetailsFragment : DrawerVisibility() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+
+    private fun loadStatesAndCities(): List<State>? {
+        return try {
+            val jsonString = requireActivity().assets.open("states_cities.json").use { inputStream ->
+                inputStream.readBytes().toString(Charsets.UTF_8)
+            }
+            Gson().fromJson(jsonString, StateCity::class.java).states
+        } catch (ex: IOException) {
+            Log.e("OnBoardingFragment", "Error loading JSON", ex)
+            null
+        }
     }
 }

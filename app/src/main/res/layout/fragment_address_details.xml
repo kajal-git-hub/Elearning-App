@@ -181,35 +181,6 @@
             app:layout_constraintTop_toBottomOf="@id/tv_Pincode_lable" />
 
         <TextView
-            android:id="@+id/tv_City"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:fontFamily="@font/nunito"
-            android:text="City"
-            android:textColor="#0A0A0B"
-            android:textSize="14sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/et_Pincode" />
-
-        <EditText
-            android:id="@+id/et_City"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/rounded_edittext_background"
-            android:fontFamily="@font/nunito"
-            android:hint="Ex. Gurugram"
-            android:inputType="textPersonName"
-            android:padding="12dp"
-            android:textColor="#0A0A0B"
-            android:textColorHint="#898384"
-            android:textSize="@dimen/_14sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_City" />
-
-        <TextView
             android:id="@+id/tv_state"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -219,9 +190,9 @@
             android:textColor="#0A0A0B"
             android:textSize="14sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/et_City" />
+            app:layout_constraintTop_toBottomOf="@id/et_Pincode" />
 
-        <EditText
+        <AutoCompleteTextView
             android:id="@+id/et_state"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -237,6 +208,36 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_state" />
+
+        <TextView
+            android:id="@+id/tv_City"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:fontFamily="@font/nunito"
+            android:text="City"
+            android:textColor="#0A0A0B"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/et_state" />
+
+        <AutoCompleteTextView
+            android:id="@+id/et_City"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/rounded_edittext_background"
+            android:fontFamily="@font/nunito"
+            android:hint="Ex. Gurugram"
+            android:inputType="textPersonName"
+            android:padding="12dp"
+            android:textColor="#0A0A0B"
+            android:textColorHint="#898384"
+            android:textSize="@dimen/_14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_City"
+            android:completionThreshold="1"/>
 
 
         <com.google.android.material.button.MaterialButton
