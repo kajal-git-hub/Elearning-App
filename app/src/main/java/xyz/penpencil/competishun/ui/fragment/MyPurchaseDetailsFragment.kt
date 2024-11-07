@@ -332,7 +332,7 @@ class MyPurchaseDetailsFragment : DrawerVisibility() {
                    // binding.clBuyCourseSection.visibility = View.VISIBLE
                     binding.clDiscount.visibility = View.GONE
 
-                    val totalPrice = it.price ?: 0
+                    val totalPrice = it.with_installment_price ?: 0
                     binding.etPurtotalPrice.text = totalPrice.toString()
                     binding.etPurFinalPay.text = totalPrice.toString()
 
