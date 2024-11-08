@@ -288,6 +288,8 @@ class SubjectContentFragment : DrawerVisibility() {
 
                             binding.rvSubjectContent.adapter =
                                 SubjectContentAdapter(subjectContentList) { selectedItem ->
+                                    Log.e("enewfSlectt",selectedItem.topicName)
+                                    //binding.tvTopicType.text = selectedItem.topicName
                                     videoProgress(
                                         selectedItem.id,
                                         currentDuration = VwatchedDuration
@@ -333,6 +335,7 @@ class SubjectContentFragment : DrawerVisibility() {
 
                             binding.rvSubjectContent.adapter =
                                 SubjectContentAdapter(subjectContentList) { selectedItem ->
+                                    Log.e("enewfSlect",selectedItem.topicName)
                                     videoProgress(
                                         selectedItem.id,
                                         currentDuration = VwatchedDuration
