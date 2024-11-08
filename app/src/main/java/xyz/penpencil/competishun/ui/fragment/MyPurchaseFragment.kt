@@ -52,7 +52,7 @@ class MyPurchaseFragment : DrawerVisibility() {
 
         view.setFocusableInTouchMode(true)
         view.requestFocus()
-        view.setOnKeyListener(object : View.OnKeyListener{
+        view.setOnKeyListener(object : View.OnKeyListener {
             override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
                 if (keyCode == KeyEvent.KEYCODE_BACK) {
                     v?.findNavController()?.popBackStack()
@@ -89,11 +89,11 @@ class MyPurchaseFragment : DrawerVisibility() {
             }
         }
 
-        coursePaymentAdapter = CoursePaymentAdapter(emptyList()){ selectedCourse ->
+        coursePaymentAdapter = CoursePaymentAdapter(emptyList()) { selectedCourse ->
             val bundle = Bundle().apply {
-                putString("PurchaseCourseId",selectedCourse.enrolledCourseId)
-                putString("PurchaseUserId",selectedCourse.userId)
-                putString("FirstPurchase",selectedCourse.amountPaidOn)
+                putString("PurchaseCourseId", selectedCourse.enrolledCourseId)
+                putString("PurchaseUserId", selectedCourse.userId)
+                putString("FirstPurchase", selectedCourse.amountPaidOn)
             }
             findNavController().navigate(R.id.MyPurchaseDetail, bundle)
 
@@ -109,19 +109,19 @@ class MyPurchaseFragment : DrawerVisibility() {
         userViewModel.userDetails.observe(viewLifecycleOwner) { result ->
             result.onSuccess { data ->
                 val paymentDetails = data.getMyDetails.courses.mapNotNull { course ->
+                    Log.d("paymentType", course?.paymentType.toString())
                     course?.let {
-                        Log.d("paymentType",course.paymentType.toString())
                         CoursePaymentDetails(
-                            it.paymentStatus ?: "",
-                            it.enrolledCourseName ?: "",
-                            getIconResForStatus(it.paymentStatus),
-                            "₹ ${it.pricePaid}",
-                            helperFunctions.formatCourseDate(it.createdAt.toString()),
-                            it.paymentType.toString(),
-                            data.getMyDetails.userInformation.rollNumber.toString(),
-                            it.paymentStatus == "refund complete",
-                            it.enrolledCourseId,
-                            data.getMyDetails.id
+                            purchaseStatus = it.paymentStatus ?: "",
+                            courseName = it.enrolledCourseName ?: "",
+                            statusIconRes = getIconResForStatus(it.paymentStatus),
+                            totalAmountPaid = "₹ ${it.pricePaid}",
+                            amountPaidOn = helperFunctions.formatCourseDate(it.createdAt.toString()),
+                            paymentType = it.paymentType.toString(),
+                            studentRollNo = data.getMyDetails.userInformation.rollNumber.toString(),
+                            isRefundVisible = it.paymentStatus == "refund complete",
+                            enrolledCourseId = it.enrolledCourseId,
+                            userId = data.getMyDetails.id
                         )
                     }
                 }
