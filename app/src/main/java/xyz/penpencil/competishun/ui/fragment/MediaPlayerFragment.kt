@@ -117,7 +117,16 @@ class MediaPlayerFragment : DrawerVisibility() {
 
         sharedViewModel = ViewModelProvider(requireActivity()).get(SharedVM::class.java)
         binding.backBtn.setOnClickListener {
-           findNavController().popBackStack()
+            val isLandscape = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+            if (isLandscape){
+                val layoutParams =  binding.playerView.layoutParams
+                requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
+                binding.playerView.resizeMode = androidx.media3.ui.AspectRatioFrameLayout.RESIZE_MODE_FIT
+                layoutParams.height = resources.getDimensionPixelSize(R.dimen.original_height)
+            }else {
+                findNavController().popBackStack()
+            }
         }
 
         val videoUrl = arguments?.getString("url") ?: return
@@ -250,7 +259,16 @@ class MediaPlayerFragment : DrawerVisibility() {
         requireActivity().onBackPressedDispatcher
             .addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
-                    view.findNavController().popBackStack()
+                    val isLandscape = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+                    if (isLandscape){
+                        val layoutParams =  binding.playerView.layoutParams
+                        requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                        layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
+                        binding.playerView.resizeMode = androidx.media3.ui.AspectRatioFrameLayout.RESIZE_MODE_FIT
+                        layoutParams.height = resources.getDimensionPixelSize(R.dimen.original_height)
+                    }else {
+                        view.findNavController().popBackStack()
+                    }
                 }
             })
 
