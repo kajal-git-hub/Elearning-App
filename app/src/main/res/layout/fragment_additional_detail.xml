@@ -371,6 +371,7 @@
             android:layout_marginHorizontal="@dimen/_16dp"
             android:layout_marginTop="24dp"
             app:cornerRadius="@dimen/_8dp"
+            android:enabled="false"
             android:layout_marginBottom="10dp"
             android:backgroundTint="#B5B3B3"
             android:fontFamily="@font/nunito"

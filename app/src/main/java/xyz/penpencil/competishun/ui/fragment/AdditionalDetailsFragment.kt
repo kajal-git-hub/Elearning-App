@@ -176,6 +176,7 @@ class AdditionalDetailsFragment : DrawerVisibility() {
             setBackgroundColor(
                 ContextCompat.getColor(requireContext(), if (isEnabled) R.color.blue_3E3EF7 else R.color.gray_border)
             )
+            this.isEnabled = isEnabled
         }
     }
 
