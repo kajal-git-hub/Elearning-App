@@ -277,7 +277,7 @@ class MediaPlayerFragment : DrawerVisibility() {
                 val parentHeight = parent.height
 
                 if (parentWidth == 0 || parentHeight == 0) {
-                    handler.postDelayed(this, 1000)
+                    handler.postDelayed(this, 500)
                     return@let
                 }
 

@@ -8,15 +8,20 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.GestureDetector
+import android.view.Gravity
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.widget.FrameLayout
+import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.OptIn
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
+import androidx.core.view.setPadding
 import androidx.lifecycle.ViewModelProvider
 import androidx.media3.common.MediaItem
 import androidx.media3.common.PlaybackException
@@ -29,7 +34,9 @@ import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.databinding.FragmentDownloadMediaPlayerBinding
 import xyz.penpencil.competishun.di.SharedVM
 import xyz.penpencil.competishun.ui.main.HomeActivity
+import xyz.penpencil.competishun.utils.SharedPreferencesManager
 import java.io.File
+import kotlin.random.Random
 
 
 @AndroidEntryPoint
@@ -47,6 +54,9 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
     private lateinit var mFullScreenDialog: Dialog
     private var mExoPlayerFullscreen: Boolean = false
 
+    private lateinit var sharedPreferencesManager: SharedPreferencesManager
+    private var flickeringText: TextView?=null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -62,6 +72,7 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
 
         (activity as? HomeActivity)?.showBottomNavigationView(false)
         (activity as? HomeActivity)?.showFloatingButton(false)
+        sharedPreferencesManager = SharedPreferencesManager(requireContext())
 
         sharedViewModel = ViewModelProvider(requireActivity()).get(SharedVM::class.java)
         binding.backBtn.setOnClickListener {
@@ -124,7 +135,70 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
                 }
             }
         })
+
+        sharedPreferencesManager.getString("ROLL_NUMBER", "")?.let {
+            if (it.isNotEmpty()) {
+                waterMark(it)
+            }
+        }
     }
+
+    private val flickerRunnable = object : Runnable {
+        override fun run() {
+            flickeringText?.let { textView ->
+                textView.visibility = if (Random.nextBoolean()) {
+                    View.VISIBLE
+                } else {
+                    View.INVISIBLE
+                }
+
+                val parent = textView.parent as? FrameLayout ?: return@let
+                val parentWidth = parent.width
+                val parentHeight = parent.height
+
+                if (parentWidth == 0 || parentHeight == 0) {
+                    handler.postDelayed(this, 500)
+                    return@let
+                }
+
+                val layoutParams = textView.layoutParams as FrameLayout.LayoutParams
+
+                val maxLeft = (parentWidth - textView.width).coerceAtLeast(0)
+                val maxTop = (parentHeight - textView.height).coerceAtLeast(0)
+
+                layoutParams.leftMargin = Random.nextInt(0, maxLeft)
+                layoutParams.topMargin = Random.nextInt(0, maxTop)
+                textView.layoutParams = layoutParams
+                val delay = Random.nextLong(300, 600)
+                handler.postDelayed(this, delay)
+            }
+        }
+    }
+
+    private fun waterMark(s: String) {
+        if (flickeringText == null) {
+            flickeringText = TextView(requireContext()).apply {
+                text = s
+                textSize = 12f
+                setPadding(20)
+                gravity = Gravity.CENTER
+                setTextColor(ContextCompat.getColor(requireContext(), R.color.alfa))
+                layoutParams = FrameLayout.LayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+                ).apply {
+                    setMargins(30, 30, 30, 30)
+                }
+            }
+            if (binding.playerView is FrameLayout) {
+                binding.playerView.addView(flickeringText)
+                handler.post(flickerRunnable)
+            } else {
+                Log.e("WaterMark", "playerView is not a FrameLayout")
+            }
+        }
+    }
+
 
 
     private fun initFullscreenDialog() {
