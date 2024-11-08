@@ -74,7 +74,7 @@ class CoursePaymentAdapter(
 
         holder.tvAmountPaid.text = currentItem.totalAmountPaid
         holder.tvAmountPaidOn.text = currentItem.amountPaidOn
-        Log.d("AdapterpaymentType",currentItem.paymentType)
+        Log.d("AdapterpaymentType",currentItem.paymentType) // one - time payment
         holder.tvPaymentType.text = currentItem.paymentType
         holder.tvStudentRollNo.text = currentItem.studentRollNo
 

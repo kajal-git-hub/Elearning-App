@@ -110,13 +110,14 @@ class MyPurchaseFragment : DrawerVisibility() {
             result.onSuccess { data ->
                 val paymentDetails = data.getMyDetails.courses.mapNotNull { course ->
                     course?.let {
+                        Log.d("paymentType",course.paymentType.toString())
                         CoursePaymentDetails(
                             it.paymentStatus ?: "",
                             it.enrolledCourseName ?: "",
                             getIconResForStatus(it.paymentStatus),
                             "₹ ${it.pricePaid}",
                             helperFunctions.formatCourseDate(it.createdAt.toString()),
-                            "One-Time Payment",
+                            it.paymentType.toString(),
                             data.getMyDetails.userInformation.rollNumber.toString(),
                             it.paymentStatus == "refund complete",
                             it.enrolledCourseId,
