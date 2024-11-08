@@ -2,7 +2,9 @@ package xyz.penpencil.competishun.ui.main
 
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.view.WindowManager
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -27,10 +29,12 @@ class PdfViewActivity : AppCompatActivity() {
         )
 
         val pdfView = findViewById<com.rajat.pdfviewer.PdfRendererView>(R.id.pdfView)
+        val progressBar = findViewById<ProgressBar>(R.id.progressBar)
         val pdfUrl = intent.getStringExtra("PDF_URL")
         val pdfTitle = intent.getStringExtra("PDF_TITLE") ?: "sample"
 
         if (pdfUrl != null) {
+            progressBar.visibility = View.VISIBLE  // Show the loader
             if (pdfUrl.startsWith("http://") || pdfUrl.startsWith("https://")) {
                 // Download PDF from URL and load from local storage
                 lifecycleScope.launchWhenStarted {
@@ -39,6 +43,8 @@ class PdfViewActivity : AppCompatActivity() {
                         loadPdfFromFile(pdfView, pdfFile)
                     } catch (e: Exception) {
                         Toast.makeText(this@PdfViewActivity, "Error loading PDF", Toast.LENGTH_SHORT).show()
+                    }finally {
+                        progressBar.visibility = View.GONE  // Hide the loader once loading is complete
                     }
                 }
             } else {
