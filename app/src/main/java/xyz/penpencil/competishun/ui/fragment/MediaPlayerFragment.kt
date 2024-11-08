@@ -7,15 +7,20 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.GestureDetector
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.widget.FrameLayout
 import android.widget.ProgressBar
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
+import androidx.core.view.setPadding
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.media3.common.C
@@ -28,7 +33,6 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.trackselection.DefaultTrackSelector
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
-import com.google.android.exoplayer2.ui.AspectRatioFrameLayout
 import com.otaliastudios.zoom.ZoomLayout
 import xyz.penpencil.competishun.di.SharedVM
 import xyz.penpencil.competishun.ui.main.HomeActivity
@@ -39,6 +43,8 @@ import xyz.penpencil.competishun.data.model.TopicContentModel
 import xyz.penpencil.competishun.databinding.FragmentMediaPlayerBinding
 import xyz.penpencil.competishun.utils.SharedPreferencesManager
 import java.io.File
+import java.util.Locale
+import kotlin.random.Random
 
 @AndroidEntryPoint
 class MediaPlayerFragment : DrawerVisibility() {
@@ -66,6 +72,9 @@ class MediaPlayerFragment : DrawerVisibility() {
     var fileName: String = ""
     var videoUrl: String = ""
     var videoFile : File?=null
+    private lateinit var sharedPreferencesManager: SharedPreferencesManager
+    private var flickeringText: TextView ?=null
+
     companion object {
         private const val SEEK_OFFSET_MS = 10000L
     }
@@ -93,7 +102,7 @@ class MediaPlayerFragment : DrawerVisibility() {
         val minutes = (currentPosition / 60000).toInt()
         val seconds = ((currentPosition % 60000) / 1000).toInt()
         Log.e("watchesdd",String.format("%02d:%02d", minutes, seconds))
-        return String.format("%02d:%02d", minutes, seconds)
+        return String.format(Locale.getDefault(),"%02d:%02d", minutes, seconds)
     }
 
     @androidx.annotation.OptIn(UnstableApi::class)
@@ -101,6 +110,7 @@ class MediaPlayerFragment : DrawerVisibility() {
         super.onViewCreated(view, savedInstanceState)
         val progressBar: ProgressBar = binding.progressBar
         var qualityButton = binding.qualityButton
+        sharedPreferencesManager = SharedPreferencesManager(requireContext())
 
         (activity as? HomeActivity)?.showBottomNavigationView(false)
         (activity as? HomeActivity)?.showFloatingButton(false)
@@ -244,7 +254,71 @@ class MediaPlayerFragment : DrawerVisibility() {
                 }
             })
 
+        sharedPreferencesManager.getString("ROLL_NUMBER", "")?.let {
+            if (it.isNotEmpty()) {
+                waterMark(it)
+            }
+        }
+
     }
+
+
+    private val flickerRunnable = object : Runnable {
+        override fun run() {
+            flickeringText?.let { textView ->
+                textView.visibility = if (Random.nextBoolean()) {
+                    View.VISIBLE
+                } else {
+                    View.INVISIBLE
+                }
+
+                val parent = textView.parent as? FrameLayout ?: return@let
+                val parentWidth = parent.width
+                val parentHeight = parent.height
+
+                if (parentWidth == 0 || parentHeight == 0) {
+                    handler.postDelayed(this, 1000)
+                    return@let
+                }
+
+                val layoutParams = textView.layoutParams as FrameLayout.LayoutParams
+
+                val maxLeft = (parentWidth - textView.width).coerceAtLeast(0)
+                val maxTop = (parentHeight - textView.height).coerceAtLeast(0)
+
+                layoutParams.leftMargin = Random.nextInt(0, maxLeft)
+                layoutParams.topMargin = Random.nextInt(0, maxTop)
+                textView.layoutParams = layoutParams
+                val delay = Random.nextLong(300, 600)
+                handler.postDelayed(this, delay)
+            }
+        }
+    }
+
+    private fun waterMark(s: String) {
+        if (flickeringText == null) {
+            flickeringText = TextView(requireContext()).apply {
+                text = s
+                textSize = 12f
+                setPadding(20)
+                gravity = Gravity.CENTER
+                setTextColor(ContextCompat.getColor(requireContext(), R.color.alfa))
+                layoutParams = FrameLayout.LayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+                ).apply {
+                    setMargins(30, 30, 30, 30)
+                }
+            }
+            if (binding.playerView is FrameLayout) {
+                binding.playerView.addView(flickeringText)
+                handler.post(flickerRunnable)
+            } else {
+                Log.e("WaterMark", "playerView is not a FrameLayout")
+            }
+        }
+    }
+
 
     private fun storeItemInPreferences(item: TopicContentModel) {
         val sharedPreferencesManager = SharedPreferencesManager(requireActivity())
@@ -287,7 +361,7 @@ class MediaPlayerFragment : DrawerVisibility() {
         binding.playerView.layoutParams = layoutParams
     }
 
-    fun playVideo(videoUrl: String,  startPosition: Long = 0L,videoTittle: String,videoDesc: String) {
+    private fun playVideo(videoUrl: String, startPosition: Long = 0L, videoTittle: String, videoDesc: String) {
         binding.progressBar.visibility = View.VISIBLE
         binding.playerView.visibility = View.GONE
         val mediaItem = MediaItem.fromUri(videoUrl)
@@ -403,20 +477,18 @@ class MediaPlayerFragment : DrawerVisibility() {
             .show()
     }
 
-    fun changeQuality(formate:String):String{
+    private fun changeQuality(formate:String):String{
         videourlViewModel.fetchVideoStreamUrl(courseFolderContentId, formate)
         Log.e("APIcontentId",courseFolderContentId)
-        videourlViewModel.videoStreamUrl.observe(viewLifecycleOwner, { signedUrl ->
+        videourlViewModel.videoStreamUrl.observe(viewLifecycleOwner) { signedUrl ->
             Log.d("Videourl", "Signed URL: $signedUrl")
             if (signedUrl != null) {
                 urlVideo = signedUrl
-            }else
-            {
+            } else {
                 Log.e("url issues", signedUrl.toString())
-
             }
-        })
-      return urlVideo
+        }
+        return urlVideo
     }
 
     @androidx.annotation.OptIn(UnstableApi::class)
