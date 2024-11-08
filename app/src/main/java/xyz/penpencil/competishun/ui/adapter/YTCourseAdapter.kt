@@ -16,7 +16,7 @@ import xyz.penpencil.competishun.ui.viewmodel.GetCourseByIDViewModel
 import xyz.penpencil.competishun.utils.StudentCourseItemClickListener
 import java.util.ArrayList
 
-class YTCourseAdapter(private val itemStudyMaterial:  List<AllCourseForStudentQuery.Course>,  private val listener: StudentCourseItemClickListener) :
+class YTCourseAdapter(private val itemYTMaterial:  List<AllCourseForStudentQuery.Course>,private val getCourseByIDViewModel: GetCourseByIDViewModel,  private val listener: StudentCourseItemClickListener) :
     RecyclerView.Adapter<YTCourseAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -27,7 +27,7 @@ class YTCourseAdapter(private val itemStudyMaterial:  List<AllCourseForStudentQu
 
 
     override fun onBindViewHolder(holder: YTCourseAdapter.ViewHolder, position: Int) {
-        val courseItem = itemStudyMaterial[position]
+        val courseItem = itemYTMaterial[position]
         holder.bind(courseItem)
         // subfolderDurationFolders?.let { holder.bind(courseItem, it) }
         getcouseById(courseItem.id, holder)
@@ -41,13 +41,13 @@ class YTCourseAdapter(private val itemStudyMaterial:  List<AllCourseForStudentQu
     }
 
     override fun getItemCount(): Int {
-        return itemStudyMaterial.size
+        return itemYTMaterial.size
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private var iconImageView: ImageView = itemView.findViewById(R.id.cl_course_book)
-        private var titleTextView: TextView = itemView.findViewById(R.id.tv_topic_name)
-        var noItemTextView: TextView = itemView.findViewById(R.id.mt_no_item)
+        private var iconImageView: ImageView = itemView.findViewById(R.id.cl_thirdLayer)
+        private var titleTextView: TextView = itemView.findViewById(R.id.tittle_tv)
+      //  var noItemTextView: TextView = itemView.findViewById(R.id.mt_no_item)
 
         fun bind(item: AllCourseForStudentQuery.Course) {
             Log.d("StudyMaterialAdapter", "Binding item: ${item.name}")

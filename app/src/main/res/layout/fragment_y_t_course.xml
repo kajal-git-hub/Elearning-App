@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#F6F6FF"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.fragment.YTCourseFragment">
 
@@ -69,6 +70,7 @@
             android:background="@drawable/bg_count_material"
             android:layout_marginStart="@dimen/_16dp"
             android:layout_marginTop="@dimen/_12dp"
+            android:visibility="gone"
             android:layout_marginBottom="18dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvStudyMaterial"
@@ -182,7 +184,7 @@
         android:id="@+id/cl_NoEmptyView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
