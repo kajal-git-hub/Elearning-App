@@ -37,6 +37,7 @@ import org.json.JSONException
 import org.json.JSONObject
 import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.databinding.FragmentMyCartBinding
+import xyz.penpencil.competishun.utils.Constants
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -410,7 +411,7 @@ class MyCartFragment : DrawerVisibility(), OnCartItemRemovedListener, MyCartAdap
         Log.e("chcekcnou",amount.toString())
         val currency = "INR"
         val checkout = Checkout()
-        checkout.setKeyID("rzp_live_7Hx1eP9SZPlJYE")
+        checkout.setKeyID(Constants.RazorpayKeyId_Prod)
         Log.e("user/id=",userId.toString())
         Log.e("user/tokem=",sharedPreferencesManager.accessToken.toString())
         val obj = JSONObject()

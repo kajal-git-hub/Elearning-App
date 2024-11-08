@@ -57,6 +57,7 @@ import xyz.penpencil.competishun.ui.main.MainActivity
 import xyz.penpencil.competishun.ui.viewmodel.GetOtpViewModel
 import xyz.penpencil.competishun.ui.viewmodel.UserViewModel
 import xyz.penpencil.competishun.ui.viewmodel.VerifyOtpViewModel
+import xyz.penpencil.competishun.utils.Constants
 import xyz.penpencil.competishun.utils.DoubleClickListener
 import xyz.penpencil.competishun.utils.SharedPreferencesManager
 import java.io.File
@@ -253,7 +254,7 @@ class LoginFragment : Fragment() {
 
        val googleIdOption: GetGoogleIdOption = GetGoogleIdOption.Builder()
             .setFilterByAuthorizedAccounts(false)
-            .setServerClientId("887693153546-mv6cfeppj49al2c2bdpainrh6begq6bi.apps.googleusercontent.com")
+            .setServerClientId(Constants.GoogleClientId_Prod)
          //   .setNonce(hashCode)
             .build()
         Log.e("gettingHashCode",hashCode)
