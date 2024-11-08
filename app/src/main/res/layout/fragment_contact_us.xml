@@ -320,6 +320,18 @@
                app:layout_constraintTop_toBottomOf="@id/tv_socials"
                app:layout_constraintStart_toEndOf="@id/iv_linkedin"/>
 
+           <ImageView
+               android:id="@+id/iv_whatsUpp"
+               android:layout_width="32dp"
+               android:layout_height="32dp"
+               android:src="@drawable/whatsup"
+               android:layout_marginTop="@dimen/_24dp"
+               android:layout_marginStart="@dimen/_24dp"
+               android:layout_marginBottom="@dimen/_20dp"
+               app:layout_constraintBottom_toBottomOf="parent"
+               app:layout_constraintTop_toBottomOf="@id/tv_socials"
+               app:layout_constraintStart_toEndOf="@id/iv_ig"/>
+
        </androidx.constraintlayout.widget.ConstraintLayout>
 
        </androidx.constraintlayout.widget.ConstraintLayout>
