@@ -85,7 +85,9 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
         }
         initFullscreenDialog()
         val videoUrl = arguments?.getString("url") ?: return
-        val title = arguments?.getString("url_name") ?: return
+        val title = arguments?.getString("url_name") ?: ""
+        val description = arguments?.getString("description") ?: ""
+        binding.description.text = description
 
         Log.e("url", "video_url:$videoUrl")
         Log.e("Title", "video_title:$title")
