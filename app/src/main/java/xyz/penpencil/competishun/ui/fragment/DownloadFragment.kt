@@ -161,6 +161,7 @@ class DownloadFragment : DrawerVisibility(), DownloadedItemAdapter.OnVideoClickL
             val bundle = Bundle().apply {
                 putString("url", topicContentModel.localPath)
                 putString("url_name", topicContentModel.topicName)
+                putString("description", topicContentModel.topicDescription)
             }
             Log.e("dfdsfhsdfdsjfs", "onVideoClick: " +topicContentModel.localPath )
             findNavController().navigate(R.id.downloadMediaPlayerFragment, bundle)

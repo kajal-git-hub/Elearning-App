@@ -73,9 +73,23 @@
             android:id="@+id/tittle_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/_16dp"
+            android:paddingStart="@dimen/_16dp"
+            android:paddingEnd="@dimen/_16dp"
+            android:paddingTop="@dimen/_16dp"
             android:layout_below="@+id/playerRoot"
             android:text="Video"
+            android:textColor="@android:color/black"
+            android:gravity="left" />
+        <TextView
+            android:id="@+id/description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/_16dp"
+            android:paddingEnd="@dimen/_16dp"
+            android:paddingTop="@dimen/_8dp"
+            android:paddingBottom="@dimen/_16dp"
+            android:layout_below="@+id/tittle_btn"
+            android:text=""
             android:textColor="@android:color/black"
             android:gravity="left" />
 

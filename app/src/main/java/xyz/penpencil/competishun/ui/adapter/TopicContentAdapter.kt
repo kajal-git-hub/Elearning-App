@@ -235,7 +235,9 @@ class TopicContentAdapter(
         }
         fun isDateTodayOrPast(dateString: String, external: Boolean): Boolean {
                 // Clean up the date string
-            if (external) return true
+            if (external) {
+                return true
+            }
 
                 val cleanedDateString = dateString.replace("Sept", "Sep").trim()
                     .replace("pm".toRegex(), "PM")
@@ -265,7 +267,9 @@ class TopicContentAdapter(
     }
     private fun isDateTodayOrPast(dateString: String, external: Boolean): Boolean {
             // Clean up the date string
-            if (external) return true
+            if (external) {
+                return true
+            }
 
             val cleanedDateString = dateString.replace("Sept", "Sep").trim()
                 .replace("pm".toRegex(), "PM")
