@@ -281,12 +281,15 @@ class SubjectContentFragment : DrawerVisibility() {
                                     topicName = folders.name,
                                     topicDescription = folders.folder_count?:"0",
                                     locktime = time,
-                                    progressPer = subfolderDurationFolders[index].completionPercentage.toInt()
+                                    progressPer = subfolderDurationFolders[index].completionPercentage.toInt(),
+                                    isExternal = isExternal
                                 )
                             }
 
                             binding.rvSubjectContent.adapter =
                                 SubjectContentAdapter(subjectContentList) { selectedItem ->
+                                    Log.e("enewfSlectt",selectedItem.topicName)
+                                    //binding.tvTopicType.text = selectedItem.topicName
                                     videoProgress(
                                         selectedItem.id,
                                         currentDuration = VwatchedDuration
@@ -332,6 +335,7 @@ class SubjectContentFragment : DrawerVisibility() {
 
                             binding.rvSubjectContent.adapter =
                                 SubjectContentAdapter(subjectContentList) { selectedItem ->
+                                    Log.e("enewfSlect",selectedItem.topicName)
                                     videoProgress(
                                         selectedItem.id,
                                         currentDuration = VwatchedDuration

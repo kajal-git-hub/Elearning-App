@@ -213,7 +213,9 @@ class CourseEmptyFragment : Fragment() {
         userViewModel.userDetails.observe(viewLifecycleOwner) { result ->
             result.onSuccess { data ->
                 val rollNo = data.getMyDetails.userInformation.rollNumber
-
+                rollNo?.let {
+                    sharedPreferencesManager.putString("ROLL_NUMBER", it)
+                }
                 if(rollNo!=null){
                     binding.etRollNo.text = "( ${rollNo} )"
                 }else{

@@ -51,8 +51,13 @@ class RecommendedCoursesAdapter(
             text = recommendCourseTags?.getOrNull(2) ?: ""
             visibility = if (text.isEmpty()) View.GONE else View.VISIBLE
         }
+        Glide.with(holder.itemView.context)
 
-
+            .load(course.banner_image)
+            .placeholder(R.drawable.rectangle_1072)
+            .error(R.drawable.default_image)
+            .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
+            .into(holder.bannerImage)
 
         holder.courseName.text = "${course.name}"
         if(course.status.name == "COMING_SOON" ){
@@ -67,13 +72,6 @@ class RecommendedCoursesAdapter(
                 holder.discountPrice.text = "₹${course.discount}"
                 holder.originalPrice.text = "₹${course.price}"
                 holder.percentConstraint.visibility = View.VISIBLE
-                Glide.with(holder.itemView.context)
-
-                    .load(course.banner_image)
-                    .placeholder(R.drawable.rectangle_1072)
-                    .error(R.drawable.default_image)
-                    .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
-                    .into(holder.bannerImage)
 
 
             } else if (course.price != null && course.discount == null) {

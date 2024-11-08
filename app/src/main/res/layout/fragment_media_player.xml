@@ -6,7 +6,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="@color/white">
 
         <ProgressBar
@@ -15,11 +15,12 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="150dp"
             android:layout_gravity="center"
-            android:visibility="gone"/>
+            android:elevation="@dimen/_4dp"
+            android:visibility="visible"/>
 
         <!-- ExoPlayer's PlayerView -->
         <androidx.media3.ui.PlayerView
@@ -30,12 +31,22 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_gravity="center"
+            app:show_buffering="always"
+            app:controller_layout_id="@layout/layout_exoplayer_controls"
             android:keepScreenOn="true"
             app:show_next_button="false"
             app:show_subtitle_button="false"
             app:show_vr_button="false"
             app:show_previous_button="false"
             app:resize_mode="zoom" >
+
+            <TextView
+                android:id="@+id/rollNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/PrimaryColor"
+                android:textColor="@color/white"
+                android:layout_margin="@dimen/_16dp"/>
             <ImageButton
                 android:id="@+id/fullscreen_button"
                 android:layout_width="wrap_content"
@@ -44,7 +55,7 @@
                 android:layout_gravity="bottom|end"
                 android:padding="@dimen/_10dp"
                 android:visibility="visible"
-                android:layout_marginEnd="36dp"
+                android:layout_marginEnd="16dp"
                 android:layout_marginBottom="12dp"
                 android:src="@drawable/fullscreen" />
         </androidx.media3.ui.PlayerView>
@@ -199,6 +210,7 @@
                 android:layout_marginBottom="100dp"
                 android:scaleType="fitXY"
                 android:layout_marginTop="@dimen/_20dp"
+                android:visibility="gone"
                 android:layout_marginHorizontal="@dimen/_16dp"
                 android:src="@drawable/have_any"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -212,6 +224,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/dot_3_ic"
+            android:layout_marginTop="@dimen/_16dp"
             android:background="@android:color/transparent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
