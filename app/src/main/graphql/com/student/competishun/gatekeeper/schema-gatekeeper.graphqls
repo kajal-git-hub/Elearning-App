@@ -142,6 +142,8 @@ type ExtendedUserCourseMapping {
 
   paymentStatus: String!
 
+  paymentType: String
+
   pricePaid: String!
 
   updatedAt: DateTime!
@@ -189,6 +191,8 @@ type GetMyDetailsDto {
   fullName: String
 
   id: ID!
+
+  isBlocked: Boolean!
 
   isGoogleSignup: Boolean!
 
@@ -275,6 +279,8 @@ type Mutation {
 
 type Query {
   adminSignIn(adminSignInInput: AdminSignInInput!): AdminAuth!
+
+  deleteUserWithMobile(mobileNumber: String!): String
 
   getMyDetails: GetMyDetailsDto!
 
@@ -427,6 +433,8 @@ type User {
 
   id: ID!
 
+  isBlocked: Boolean!
+
   isGoogleSignup: Boolean!
 
   metadata: UserMetadata!
@@ -454,6 +462,8 @@ type UserCourseMapping {
   id: ID!
 
   paymentStatus: String!
+
+  paymentType: String
 
   pricePaid: String!
 

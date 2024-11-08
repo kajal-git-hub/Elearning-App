@@ -36,6 +36,19 @@ class ContactUsFragment : DrawerVisibility() {
             openMapWithLocation(getString(R.string.competishun_location))
         }
 
+        binding.ivFb.setOnClickListener {
+            openFacebook()
+        }
+        binding.ivLinkedin.setOnClickListener {
+            openLinkedIn()
+        }
+        binding.ivIg.setOnClickListener {
+            openInstagram()
+        }
+        binding.ivWhatsUpp.setOnClickListener {
+            openWhatsUp()
+        }
+
 
         binding.etBTHomeAddress.setOnClickListener {
             findNavController().navigate(R.id.action_ContactUs_to_homePage)
@@ -60,6 +73,30 @@ class ContactUsFragment : DrawerVisibility() {
             }
         }
 
+    }
+
+    private fun openWhatsUp() {
+        val instagramUrl = "https://www.whatsapp.com/channel/0029VarDkF2545uuken58c2Q?fbclid=PAY2xjawGapcZleHRuA2FlbQIxMQABpkXSl5K56tj5W4iWVte0AJOHWzmP7fBQK3ldSURpnrCTNIs3c-1JA8Zj-g_aem_I96S4QvYAAHkriUYL7Es_w"
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(instagramUrl))
+        startActivity(intent)
+    }
+
+    private fun openInstagram() {
+        val instagramUrl = "https://www.instagram.com/competishun?igsh=MW9hYXRxMzRyb3Ztaw=="
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(instagramUrl))
+        startActivity(intent)
+    }
+
+    private fun openFacebook() {
+        val facebookUrl = "https://www.facebook.com/share/1QgPWvYaKv/"
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(facebookUrl))
+        startActivity(intent)
+    }
+
+    private fun openLinkedIn() {
+        val linkedInUrl = "https://in.linkedin.com/company/competishun"
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(linkedInUrl))
+        startActivity(intent)
     }
 
 
