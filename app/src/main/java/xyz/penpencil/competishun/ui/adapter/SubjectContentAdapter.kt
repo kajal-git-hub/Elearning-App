@@ -1,10 +1,8 @@
 package xyz.penpencil.competishun.ui.adapter
 
-import android.os.Build
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.data.model.SubjectContentItem
@@ -68,8 +66,11 @@ class SubjectContentAdapter(
             }
         }
     }
-    fun isDateTodayOrPast(dateString: String): Boolean {
+    fun isDateTodayOrPast(dateString: String, external: Boolean): Boolean {
         // Clean up the date string
+        if (external) {
+            return true
+        }
         val cleanedDateString = dateString.replace("Sept", "Sep").trim()
             .replace("pm".toRegex(), "PM")
             .replace("am".toRegex(), "AM")
@@ -104,7 +105,7 @@ class SubjectContentAdapter(
             binding.tvTopicDescription.text = item.topicDescription + " Learning Material"
             binding.CustomTopicPercentCompleted.text = item.progressPer.toString() + "% Completed"
            Log.e("datead",item.locktime)
-            if (isDateTodayOrPast(item.locktime)) {
+            if (isDateTodayOrPast(item.locktime, item.isExternal)) {
                 Log.e("datead True",item.locktime)
                 binding.IvlockImage.setImageResource(R.drawable.arrow_right__1_)
             }else{

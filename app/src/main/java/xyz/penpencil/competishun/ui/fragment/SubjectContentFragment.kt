@@ -281,7 +281,8 @@ class SubjectContentFragment : DrawerVisibility() {
                                     topicName = folders.name,
                                     topicDescription = folders.folder_count?:"0",
                                     locktime = time,
-                                    progressPer = subfolderDurationFolders[index].completionPercentage.toInt()
+                                    progressPer = subfolderDurationFolders[index].completionPercentage.toInt(),
+                                    isExternal = isExternal
                                 )
                             }
 
