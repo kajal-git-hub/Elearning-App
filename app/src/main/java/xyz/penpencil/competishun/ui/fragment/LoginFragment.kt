@@ -57,6 +57,7 @@ import xyz.penpencil.competishun.ui.main.MainActivity
 import xyz.penpencil.competishun.ui.viewmodel.GetOtpViewModel
 import xyz.penpencil.competishun.ui.viewmodel.UserViewModel
 import xyz.penpencil.competishun.ui.viewmodel.VerifyOtpViewModel
+import xyz.penpencil.competishun.utils.Constants
 import xyz.penpencil.competishun.utils.DoubleClickListener
 import xyz.penpencil.competishun.utils.SharedPreferencesManager
 import java.io.File
@@ -253,7 +254,7 @@ class LoginFragment : Fragment() {
 
        val googleIdOption: GetGoogleIdOption = GetGoogleIdOption.Builder()
             .setFilterByAuthorizedAccounts(false)
-            .setServerClientId("887693153546-mv6cfeppj49al2c2bdpainrh6begq6bi.apps.googleusercontent.com")
+            .setServerClientId(Constants.GoogleClientId_Prod)
          //   .setNonce(hashCode)
             .build()
         Log.e("gettingHashCode",hashCode)
@@ -273,7 +274,7 @@ class LoginFragment : Fragment() {
                 // Handle the case when user cancels the sign-in process or another error occurs
                 Log.e("GoogleCredentialError", (e.localizedMessage?.toString() ?: "") + e.message)
                 if (e.message?.contains("cancelled by the user") == true) {
-                    Log.e("GoogleUserError", "Sign-in cancelled by the user")
+                    Log.e("GoogleUserError", "Sign-in cancelled by the user" + e.message)
                     Toast.makeText(requireContext(), "Sign-in cancelled. Please try again.", Toast.LENGTH_SHORT).show()
                 } else {
                     Log.e("GoogleException", "Sign-in failed: ${e.message}")
