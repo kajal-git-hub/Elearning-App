@@ -186,6 +186,12 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
                     navController.navigate(R.id.BookMarkFragment)
                     true
                 }
+                R.id.Store ->{
+                    val storeUrl = "http://store.competishun.com/"
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(storeUrl))
+                    startActivity(intent)
+                    true
+                }
 
                 else -> {
                     false
@@ -195,6 +201,9 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
 
 
     }
+
+
+
     private fun navigateToHomeFragment(navController: NavController, arguments: Bundle?) {
 //        navController.navigateTo(R.id.navigation_home, arguments)
     }
@@ -278,6 +287,7 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
     override fun onResume() {
         super.onResume()
         userId = sharedPreferencesManager.userId.toString()
+        binding.bottomNav.selectedItemId = R.id.home
 
     }
 
