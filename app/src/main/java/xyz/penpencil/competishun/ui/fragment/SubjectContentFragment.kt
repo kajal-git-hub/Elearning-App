@@ -40,7 +40,7 @@ class SubjectContentFragment : DrawerVisibility() {
     private lateinit var helperFunctions: HelperFunctions
     private lateinit var subjectContentAdapter: SubjectContentAdapter
     private val videourlViewModel: VideourlViewModel by viewModels()
-    var VwatchedDuration: Int = 0
+    private var VwatchedDuration: Int = 0
     val gson = Gson()
     private var isFirstTimeLoading = true
     private lateinit var sharedViewModel: SharedVM
@@ -50,13 +50,8 @@ class SubjectContentFragment : DrawerVisibility() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentSubjectContentBinding.inflate(inflater, container, false)
-        Log.e("hfjdhfsdhfhjsdfsd", "onCreateView: ", )
-
         return binding.root
     }
-
-
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
