@@ -186,6 +186,7 @@
             android:layout_width="@dimen/_40dp"
             android:layout_height="@dimen/_40dp"
             android:layout_marginEnd="@dimen/_12dp"
+            android:layout_marginBottom="@dimen/_10sp"
             app:layout_constraintBottom_toBottomOf="parent"
             android:visibility="visible"
             android:src="@drawable/frame_1707481707"
