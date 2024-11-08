@@ -102,6 +102,8 @@ class HomeFragment : Fragment() {
     private val userViewModel: UserViewModel by viewModels()
     private val myCoursesViewModel: MyCoursesViewModel by viewModels()
 
+   private var filteredCourseRequirements: Set<String>  = emptySet()
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -498,8 +500,13 @@ class HomeFragment : Fragment() {
                 if (courseRequirements.contains("ALL")) return@onSuccess
 
                 val allMissingFields = missingPersonalFields + missingDocumentFields + missingAddressFields
-                val filteredCourseRequirements = courseRequirements.filterNot { it in allMissingFields }.toSet()
+                filteredCourseRequirements = courseRequirements.filterNot { it in allMissingFields }.toSet()
                 Log.e("fsdfasdfsdfsd", "fetchCoursesAndUpdateUI: $filteredCourseRequirements")
+
+                if(filteredCourseRequirements.isEmpty()){
+                    findNavController().navigate(R.id.courseEmptyFragment)
+                }
+
                 if (filteredCourseRequirements.isNotEmpty()) {
                     findNavController().navigate(R.id.PersonalDetailsFragment, Bundle().apply {
                         putStringArray("FIELD_REQUIRED", filteredCourseRequirements.toTypedArray())
