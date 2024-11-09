@@ -288,6 +288,7 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
         super.onResume()
         userId = sharedPreferencesManager.userId.toString()
 //        binding.bottomNav.selectedItemId = R.id.home
+//        binding.bottomNav.selectedItemId = R.id.home
 
     }
 
