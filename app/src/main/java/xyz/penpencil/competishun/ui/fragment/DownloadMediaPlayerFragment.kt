@@ -216,7 +216,7 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
 
 
     private fun initFullscreenDialog() {
-        mFullScreenDialog = Dialog(requireContext(), android.R.style.Theme_Black_NoTitleBar_Fullscreen)
+        mFullScreenDialog = Dialog(requireContext(), R.style.full_screen_dialog)
         mFullScreenDialog.setOnDismissListener {
             requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
             closeFullscreenDialog()

@@ -70,13 +70,12 @@ class MediaPlayerFragment : DrawerVisibility() {
     private var videoFormat:String = "480p"
     private lateinit var sharedViewModel: SharedVM
     private val videourlViewModel: VideourlViewModel by viewModels()
-    private var videoUrls: List<String> = listOf()
+
     private var videoTitles: ArrayList<String> = ArrayList()
     private var videoDescs: ArrayList<String> = ArrayList()
     private var currentVideoIndex: Int = 0
     var fileName: String = ""
-    var videoUrl: String = ""
-    var videoFile : File?=null
+
     private lateinit var sharedPreferencesManager: SharedPreferencesManager
     private var flickeringText: TextView ?=null
 
@@ -91,7 +90,6 @@ class MediaPlayerFragment : DrawerVisibility() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-      //  requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         binding = FragmentMediaPlayerBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -126,15 +124,11 @@ class MediaPlayerFragment : DrawerVisibility() {
 
         sharedViewModel = ViewModelProvider(requireActivity()).get(SharedVM::class.java)
         binding.backBtn.setOnClickListener {
-            val isLandscape = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
-            if (isLandscape){
-                val layoutParams =  binding.playerView.layoutParams
-                requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-                layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
-                binding.playerView.resizeMode = androidx.media3.ui.AspectRatioFrameLayout.RESIZE_MODE_FIT
-                layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
+            if (mExoPlayerFullscreen){
+                requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
+                closeFullscreenDialog()
             }else {
-                findNavController().popBackStack()
+                view?.findNavController()?.popBackStack()
             }
         }
 
@@ -284,15 +278,11 @@ class MediaPlayerFragment : DrawerVisibility() {
         requireActivity().onBackPressedDispatcher
             .addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
-                    val isLandscape = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
-                    if (isLandscape){
-                        val layoutParams =  binding.playerView.layoutParams
-                        requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-                        layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
-                        binding.playerView.resizeMode = androidx.media3.ui.AspectRatioFrameLayout.RESIZE_MODE_FIT
-                        layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
+                    if (mExoPlayerFullscreen){
+                        requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
+                        closeFullscreenDialog()
                     }else {
-                        view.findNavController().popBackStack()
+                        view?.findNavController()?.popBackStack()
                     }
                 }
             })
@@ -736,7 +726,7 @@ class MediaPlayerFragment : DrawerVisibility() {
     }
 
     private fun initFullscreenDialog() {
-        mFullScreenDialog = Dialog(requireContext(), android.R.style.Theme_Black_NoTitleBar_Fullscreen)
+        mFullScreenDialog = Dialog(requireContext(), R.style.full_screen_dialog)
         mFullScreenDialog.setOnDismissListener {
             requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
             closeFullscreenDialog()
