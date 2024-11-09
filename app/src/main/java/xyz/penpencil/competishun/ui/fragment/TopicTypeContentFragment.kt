@@ -120,7 +120,7 @@ class TopicTypeContentFragment : Fragment() {
                 lockTime = time,
                 homeworkUrl = homeworkUrl.toString(),
                 homeworkName = homeworkFileName.toString(),
-                isExternal = content.content?.file_name?.contains("DPPs") == true
+                isExternal = isExternal
             )
         } ?: emptyList()
         val folderContentis = folderContents.filter { it.content?.file_type?.name  == "VIDEO" }.mapNotNull { it.content?.id }?.toCollection(ArrayList())
@@ -191,7 +191,7 @@ class TopicTypeContentFragment : Fragment() {
                             lockTime = time,
                             homeworkUrl = homeworkUrl.toString(),
                             homeworkName = homeworkFileName.toString(),
-                            isExternal = content.content?.file_name?.contains("DPPs") == true
+                            isExternal = isExternal
                         )
                     } ?: emptyList()
                     val folderContentIs = folderContents?.filter { it.content?.file_type?.name  == "VIDEO" }?.mapNotNull { it.content?.id }?.toCollection(ArrayList())
