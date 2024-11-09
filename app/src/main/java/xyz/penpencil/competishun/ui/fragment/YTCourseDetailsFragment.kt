@@ -91,7 +91,7 @@ class YTCourseDetailsFragment : Fragment() {
                     val totalPdfCount = courses.folder?.sumOf { folder ->
                         folder.video_count?.toIntOrNull() ?: 0
                     } ?: 0
-                    binding.tvNoOfVideos.text = "${totalPdfCount.toString()} Vidoess"
+                    binding.tvNoOfVideos.text = "${courses.folder?.size.toString()} Vidoess"
                 }
                 if (folderlist[0].id != null) {
                     var id = folderlist[0].id ?: ""
@@ -249,6 +249,7 @@ class YTCourseDetailsFragment : Fragment() {
                                         url = contents.content?.file_url.toString(),
                                         fileType = contents.content?.file_type?.name ?: "",
                                         lockTime = time,
+                                        homeworkDesc = (contents.content?.homework?.map { it.description?:"" } ?:"").toString(),
                                         // Assign homework name and URL here
                                         homeworkName = homeworkFileName.toString(),
                                         homeworkUrl = homeworkUrl.toString(), // Add this field in your TopicContentModel if it doesn't exist
@@ -263,7 +264,7 @@ class YTCourseDetailsFragment : Fragment() {
                                 folderId,
                                 requireActivity(),
                                 requireContext()
-                            ) { topicContent, folderContentId, folderContentIds,folderContentNames, folderContentDescs->
+                            ) { topicContent, folderContentId, folderContentIds,folderContentNames, folderContentDescs,homework,links,des->
                                 when (topicContent.fileType) {
                                     "VIDEO" -> {
                                      //   videoUrlApi(videourlViewModel, topicContent.id,topicContent.topicName,folderContentIds,folderContentNames,folderContentDescs)
@@ -399,6 +400,7 @@ class YTCourseDetailsFragment : Fragment() {
                                         fileType = contents.content?.file_type?.name ?: "",
                                         lockTime =  time,
                                         homeworkUrl = homeworkUrl.toString(),
+                                        homeworkDesc = (contents.content?.homework?.map { it.description?:"" } ?:"").toString(),
                                         homeworkName = homeworkFileName.toString(),
                                         isExternal = contents.content?.file_name?.contains("DPPs") == true
                                     )
@@ -412,11 +414,11 @@ class YTCourseDetailsFragment : Fragment() {
                                 folderId,
                                 requireActivity(),
                                 requireContext()
-                            ) { topicContent, folderContentId, folderContentIds,folderContentNames, folderContentDescs ->
+                            ) { topicContent, folderContentId, folderContentIds,folderContentNames, folderContentDescs,homework,homeworklinks, homeworkdes ->
                                 when (topicContent.fileType) {
 
                                     "VIDEO" -> {
-                                        videoUrlApi(videourlViewModel, topicContent.id,topicContent.topicName,folderContentIds,folderContentNames,folderContentDescs)
+                                        //videoUrlApi(videourlViewModel, topicContent.id,topicContent.topicName,folderContentIds,folderContentNames,folderContentDescs)
                                     }
                                     "PDF" -> {
                                         val intent = Intent(context, PdfViewActivity::class.java).apply {
