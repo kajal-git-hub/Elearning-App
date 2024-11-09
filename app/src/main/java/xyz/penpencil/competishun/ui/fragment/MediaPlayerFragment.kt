@@ -1,5 +1,6 @@
 package xyz.penpencil.competishun.ui.fragment
 
+import android.app.Dialog
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.os.Bundle
@@ -12,7 +13,6 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import android.widget.FrameLayout
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -79,6 +79,9 @@ class MediaPlayerFragment : DrawerVisibility() {
     var videoFile : File?=null
     private lateinit var sharedPreferencesManager: SharedPreferencesManager
     private var flickeringText: TextView ?=null
+
+    private lateinit var mFullScreenDialog: Dialog
+    private var mExoPlayerFullscreen: Boolean = false
 
     companion object {
         private const val SEEK_OFFSET_MS = 10000L
@@ -298,6 +301,12 @@ class MediaPlayerFragment : DrawerVisibility() {
             if (it.isNotEmpty()) {
                 waterMark(it)
             }
+        }
+
+        initFullscreenDialog()
+
+        binding.fullscreenButton.setOnClickListener {
+            toggleFullscreen()
         }
 
     }
@@ -693,4 +702,45 @@ class MediaPlayerFragment : DrawerVisibility() {
         val position = player.currentPosition
         player.seekTo(minOf(position + SEEK_OFFSET_MS, player.duration))
     }
+
+    private fun openFullscreenDialog() {
+        (binding.playerView.parent as? ViewGroup)?.removeView(binding.playerView)
+        mFullScreenDialog.addContentView(
+            binding.playerView,
+            ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+            )
+        )
+        mExoPlayerFullscreen = true
+        mFullScreenDialog.show()
+//        binding.fullScreen.setImageResource(R.drawable.zoom_in_map_24)
+    }
+
+    private fun closeFullscreenDialog() {
+        (binding.playerView.parent as? ViewGroup)?.removeView(binding.playerView)
+        binding.playerApp.addView(binding.playerView)
+        mExoPlayerFullscreen = false
+        mFullScreenDialog.dismiss()
+//        binding.f.setImageResource(R.drawable.zoom_out_map_24)
+    }
+
+    private fun toggleFullscreen() {
+        if (!mExoPlayerFullscreen) {
+            requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
+            openFullscreenDialog()
+        } else {
+            requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
+            closeFullscreenDialog()
+        }
+    }
+
+    private fun initFullscreenDialog() {
+        mFullScreenDialog = Dialog(requireContext(), android.R.style.Theme_Black_NoTitleBar_Fullscreen)
+        mFullScreenDialog.setOnDismissListener {
+            requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
+            closeFullscreenDialog()
+        }
+    }
+
 }

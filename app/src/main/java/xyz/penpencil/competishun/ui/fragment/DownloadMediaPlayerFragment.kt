@@ -363,11 +363,12 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
     }
 
     private fun hideNavigationBar() {
-        hideSystemBars()
+
+        showSystemBars()
     }
 
     private fun showNavigationBar() {
-        showSystemBars()
+        hideSystemBars()
     }
 
     fun hideSystemBars() {
