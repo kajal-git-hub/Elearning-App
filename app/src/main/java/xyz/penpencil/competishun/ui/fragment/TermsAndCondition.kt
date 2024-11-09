@@ -72,7 +72,7 @@ class TermsAndCondition : DrawerVisibility() {
             handleBackPressed()
         }
 
-        binding.igTermsBackButton.setOnClickListener {
+        binding.tvTitle.setOnClickListener {
             findNavController().navigateUp()
         }
 

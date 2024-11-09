@@ -27,8 +27,8 @@
                 android:id="@+id/ig_faq_back_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:src="@drawable/arrow_left" />
+                android:visibility="gone"
+                android:layout_gravity="start" />
 
             <TextView
                 android:id="@+id/tvTitle"
@@ -37,8 +37,10 @@
                 android:text="FAQs"
                 android:textSize="18sp"
                 android:fontFamily="@font/nunito"
-                android:layout_marginStart="32dp"
-                android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title" />
+                android:layout_marginStart="16dp"
+                android:drawablePadding="@dimen/_8dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+                app:drawableStartCompat="@drawable/arrow_left" />
         </androidx.appcompat.widget.Toolbar>
 
         <!-- RecyclerView -->

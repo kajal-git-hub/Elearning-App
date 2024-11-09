@@ -148,7 +148,9 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
                         data.isExternal = isExternal
                         data.localPath = File(downloadPath, fileName).absolutePath
                     }
-                    topicContentViewModel.insertTopicContent(item)
+                    if (!isExternal){
+                        topicContentViewModel.insertTopicContent(item)
+                    }
                 }
             }
         }

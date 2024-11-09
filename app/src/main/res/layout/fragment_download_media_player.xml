@@ -12,74 +12,103 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="280dp"
+            android:layout_height="240dp"
             android:id="@+id/playerRoot">
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@color/black"
                 android:id="@+id/playerContainer">
-                <androidx.media3.ui.PlayerView
-                    android:id="@+id/player_view"
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    android:layout_gravity="center"
-                    android:keepScreenOn="true"
-                    app:controller_layout_id="@layout/layout_exoplayer_controls"
-                    app:show_buffering="always" />
-                <ImageButton
-                    android:id="@+id/back_btn"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:background="@android:color/transparent"
-                    android:src="@drawable/back_arrow_ic"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp" />
-                <ImageButton
-                    android:id="@+id/qualityButton"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:src="@drawable/dot_3_ic"
-                    android:layout_marginTop="@dimen/_16dp"
-                    android:layout_alignParentEnd="true"
-                    android:padding="@dimen/_10dp"
-                    android:background="@android:color/transparent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:layout_marginEnd="16dp" />
-                <ImageButton
-                    android:id="@+id/fullScreen"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginBottom="@dimen/_16dp"
-                    android:src="@drawable/zoom_out_map_24"
-                    android:layout_marginTop="@dimen/_16dp"
-                    android:layout_alignParentEnd="true"
-                    android:padding="@dimen/_10dp"
-                    android:background="@android:color/transparent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:layout_marginEnd="16dp" />
+                    android:id="@+id/playerRootApp">
+                    <androidx.media3.ui.PlayerView
+                        android:id="@+id/playerView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@color/black"
+                        app:unplayed_color="@color/gray"
+                        app:buffered_color="@color/white"
+                        app:show_timeout="0"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:layout_gravity="center"
+                        app:played_color="@android:color/holo_red_dark"
+                        android:keepScreenOn="true"
+                        app:controller_layout_id="@layout/layout_exoplayer_controls"
+                        app:show_buffering="always" />
+                </RelativeLayout>
             </RelativeLayout>
+            <ImageButton
+                android:id="@+id/back_btn"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@android:color/transparent"
+                android:src="@drawable/back_arrow_ic"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp" />
+            <ImageButton
+                android:id="@+id/qualityButton"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/dot_3_ic"
+                android:layout_marginTop="@dimen/_16dp"
+                android:layout_alignParentEnd="true"
+                android:padding="@dimen/_10dp"
+                android:background="@android:color/transparent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginEnd="16dp" />
+            <ImageButton
+                android:id="@+id/fullScreen"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignParentBottom="true"
+                android:src="@drawable/zoom_out_map_24"
+                android:layout_marginTop="@dimen/_16dp"
+                android:layout_alignParentEnd="true"
+                android:padding="@dimen/_10dp"
+                android:background="@android:color/transparent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
         </RelativeLayout>
 
         <TextView
             android:id="@+id/tittle_btn"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/_45dp"
             android:paddingStart="@dimen/_16dp"
             android:paddingEnd="@dimen/_16dp"
+            android:layout_toStartOf="@+id/bookMark"
             android:paddingTop="@dimen/_16dp"
             android:layout_below="@+id/playerRoot"
             android:text="Video"
+            android:layout_marginEnd="@dimen/_16dp"
+            android:layout_marginTop="@dimen/_10dp"
             android:textColor="@android:color/black"
             android:gravity="left" />
+
+        <com.google.android.material.button.MaterialButton
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/_45dp"
+            android:layout_below="@+id/playerRoot"
+            android:layout_alignParentEnd="true"
+            android:textColor="@color/recycler_txt"
+            android:id="@+id/bookMark"
+            app:cornerRadius="@dimen/_8dp"
+            app:strokeColor="@color/recycler_txt"
+            app:strokeWidth="@dimen/_1dp"
+            android:layout_marginEnd="@dimen/_10dp"
+            android:layout_marginTop="@dimen/_10dp"
+            app:icon="@drawable/bookmark"
+            app:iconTint="@color/recycler_txt"
+            android:backgroundTint="@color/white"
+            android:text="@string/Bookmark"/>
         <TextView
             android:id="@+id/description"
             android:layout_width="match_parent"

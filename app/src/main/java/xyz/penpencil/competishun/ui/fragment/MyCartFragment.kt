@@ -105,7 +105,7 @@ class MyCartFragment : DrawerVisibility(), OnCartItemRemovedListener, MyCartAdap
         tabLayout = view.findViewById(R.id.CartTabLayout)
 
 
-        binding.igToolbarBackButton.setOnClickListener {
+        binding.tvToolbarTitle.setOnClickListener {
             findNavController().popBackStack()
         }
 

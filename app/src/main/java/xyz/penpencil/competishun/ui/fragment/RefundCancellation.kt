@@ -56,7 +56,7 @@ class RefundCancellation : Fragment() {
             handleBackPressed()
         }
 
-        binding.igTermsBackButton.setOnClickListener {
+        binding.tvTitle.setOnClickListener {
             findNavController().navigateUp()
         }
 

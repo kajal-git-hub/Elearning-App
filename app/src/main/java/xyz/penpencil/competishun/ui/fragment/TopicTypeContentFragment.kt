@@ -50,7 +50,7 @@ class TopicTypeContentFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         helperFunctions = HelperFunctions()
-        binding.backIcon.setOnClickListener {
+        binding.tvTopicTypeName.setOnClickListener {
             it.findNavController().popBackStack()
         }
         val gson = Gson()
@@ -89,10 +89,8 @@ class TopicTypeContentFragment : Fragment() {
 
     }
 
-    fun newContent(folderContents: List<FindCourseFolderProgressQuery.FolderContent>,folderId:String)
-    {
+    fun newContent(folderContents: List<FindCourseFolderProgressQuery.FolderContent>,folderId:String) {
 
-        Log.e("asdasjhdjasdkAS", "newContent: "+folderContents )
         val topicContents = folderContents?.map { content ->
             val date = content.content?.scheduled_time.toString()
             var time = ""
@@ -121,7 +119,7 @@ class TopicTypeContentFragment : Fragment() {
                 homeworkDesc = content.content?.homework?.map { it.description }.toString() ?: "",
                 homeworkUrl = homeworkUrl.toString(),
                 homeworkName = homeworkFileName.toString(),
-                isExternal = content.content?.file_name?.contains("DPPs") == true
+                isExternal = isExternal
             )
         } ?: emptyList()
         val folderContentis = folderContents.filter { it.content?.file_type?.name  == "VIDEO" }.mapNotNull { it.content?.id }?.toCollection(ArrayList())
@@ -193,7 +191,7 @@ class TopicTypeContentFragment : Fragment() {
                             homeworkDesc = content.content?.homework?.map { it.description }.toString() ?: "",
                             homeworkUrl = homeworkUrl.toString(),
                             homeworkName = homeworkFileName.toString(),
-                            isExternal = content.content?.file_name?.contains("DPPs") == true
+                            isExternal = isExternal
                         )
                     } ?: emptyList()
                     val folderContentIs = folderContents?.filter { it.content?.file_type?.name  == "VIDEO" }?.mapNotNull { it.content?.id }?.toCollection(ArrayList())
