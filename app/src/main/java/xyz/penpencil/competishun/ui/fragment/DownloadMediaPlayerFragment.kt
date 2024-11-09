@@ -34,6 +34,7 @@ import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
 import androidx.navigation.findNavController
+import com.google.android.exoplayer2.ui.StyledPlayerView
 import dagger.hilt.android.AndroidEntryPoint
 import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.data.model.TopicContentModel
@@ -64,16 +65,15 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
 
     private lateinit var sharedPreferencesManager: SharedPreferencesManager
     private var flickeringText: TextView?=null
-    var isWaterMarkFirstTime =  true
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-//        requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
         binding = FragmentDownloadMediaPlayerBinding.inflate(inflater, container, false)
         return binding.root
     }
+
 
     @OptIn(UnstableApi::class)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -111,9 +111,9 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
             binding.tittleBtn.text = title
         }
         player = ExoPlayer.Builder(requireContext()).build()
-        binding.playerView.setShowBuffering(PlayerView.SHOW_BUFFERING_ALWAYS)
+        binding.playerView.useArtwork = true
+        binding.playerView.setShowBuffering(StyledPlayerView.SHOW_BUFFERING_ALWAYS)
         binding.playerView.player = player
-//        binding.playerView.videoSurfaceView?.rotation = 90F;
 
 
         playVideo(videoUrl)

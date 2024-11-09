@@ -17,6 +17,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@color/black"
                 android:id="@+id/playerContainer">
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -28,12 +29,14 @@
                         android:layout_height="match_parent"
                         android:background="@color/black"
                         app:unplayed_color="@color/gray"
-                        app:buffered_color="@color/gray"
+                        app:buffered_color="@color/white"
+                        app:show_timeout="0"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         android:layout_gravity="center"
+                        app:played_color="@android:color/holo_red_dark"
                         android:keepScreenOn="true"
                         app:controller_layout_id="@layout/layout_exoplayer_controls"
                         app:show_buffering="always" />

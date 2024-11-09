@@ -76,6 +76,14 @@ class DownloadFragment : DrawerVisibility(), DownloadedItemAdapter.OnVideoClickL
         loadDownloadedItems()
     }
 
+
+    private fun selectTab(pos: Int = 0){
+        val tabToSelect = binding.studentTabLayout.getTabAt(pos)
+        tabToSelect?.let {
+            binding.studentTabLayout.selectTab(it)
+        }
+    }
+
     private fun setupTabLayout() {
         binding.studentTabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
@@ -126,10 +134,12 @@ class DownloadFragment : DrawerVisibility(), DownloadedItemAdapter.OnVideoClickL
                     when (fileType) {
                         "PDF" -> {
                             updateRecyclerView(content)
+                            selectTab(0)
                         }
 
                         "VIDEO" -> {
                             updateRecyclerView(content)
+                            selectTab(1)
                         }
 
                         else -> {

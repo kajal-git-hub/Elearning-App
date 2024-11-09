@@ -89,10 +89,8 @@ class TopicTypeContentFragment : Fragment() {
 
     }
 
-    fun newContent(folderContents: List<FindCourseFolderProgressQuery.FolderContent>,folderId:String)
-    {
+    fun newContent(folderContents: List<FindCourseFolderProgressQuery.FolderContent>,folderId:String) {
 
-        Log.e("asdasjhdjasdkAS", "newContent: "+folderContents )
         val topicContents = folderContents?.map { content ->
             val date = content.content?.scheduled_time.toString()
             var time = ""
