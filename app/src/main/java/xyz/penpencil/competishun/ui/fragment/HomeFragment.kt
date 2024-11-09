@@ -40,6 +40,7 @@ import com.student.competishun.gatekeeper.MyDetailsQuery
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import xyz.penpencil.competishun.R
+import xyz.penpencil.competishun.data.model.JeeAdvancedItem
 import xyz.penpencil.competishun.data.model.JeeItem
 import xyz.penpencil.competishun.data.model.PromoBannerModel
 import xyz.penpencil.competishun.data.model.RecommendedCourseDataModel
@@ -47,6 +48,7 @@ import xyz.penpencil.competishun.data.model.Testimonial
 import xyz.penpencil.competishun.data.model.WhyCompetishun
 import xyz.penpencil.competishun.databinding.FragmentHomeBinding
 import xyz.penpencil.competishun.ui.adapter.JEEAdapter
+import xyz.penpencil.competishun.ui.adapter.JEEAdvancedAdapter
 import xyz.penpencil.competishun.ui.adapter.OurCoursesAdapter
 import xyz.penpencil.competishun.ui.adapter.PromoBannerAdapter
 import xyz.penpencil.competishun.ui.adapter.RecommendedCoursesAdapter
@@ -101,8 +103,13 @@ class HomeFragment : Fragment() {
     private lateinit var helperFunctions: HelperFunctions
     private lateinit var jeeRecycler: RecyclerView
 
+    private lateinit var jeeRecyclerAdvanced: RecyclerView
+
+
     private lateinit var contactImage: ImageView
     private lateinit var jeeAdapter: JEEAdapter
+    private lateinit var jeeAdvancedAdapter: JEEAdvancedAdapter
+
 
 
 
@@ -142,6 +149,24 @@ class HomeFragment : Fragment() {
 
         jeeAdapter = JEEAdapter(jeeList)
         jeeRecycler.adapter = jeeAdapter
+
+
+        // JEE ADVANCED
+
+
+        jeeRecyclerAdvanced = view.findViewById(R.id.rv_jeeAdvanced)
+        jeeRecyclerAdvanced.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+
+        // Sample data
+        val jeeAdvancedList = listOf(
+            JeeAdvancedItem("742", "Selections", "2024"),
+            JeeAdvancedItem("775", "Selections", "2023"),
+            JeeAdvancedItem("752", "Selections", "2022"),
+            JeeAdvancedItem("339", "Selections", "2021"),
+        )
+
+        jeeAdvancedAdapter = JEEAdvancedAdapter(jeeAdvancedList)
+        jeeRecyclerAdvanced.adapter = jeeAdvancedAdapter
 
 
         val appSignatureHashHelper = AppSignatureHashHelper(requireContext())
