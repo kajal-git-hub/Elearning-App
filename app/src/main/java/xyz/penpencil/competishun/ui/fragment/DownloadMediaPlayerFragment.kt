@@ -21,10 +21,6 @@ import androidx.activity.OnBackPressedCallback
 import androidx.annotation.OptIn
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
-import androidx.core.view.WindowCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.WindowInsetsControllerCompat
-
 import androidx.core.view.setPadding
 import androidx.lifecycle.ViewModelProvider
 import androidx.media3.common.MediaItem
@@ -32,18 +28,13 @@ import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
-import androidx.media3.ui.PlayerView
 import androidx.navigation.findNavController
-import com.google.android.exoplayer2.ui.StyledPlayerView
 import dagger.hilt.android.AndroidEntryPoint
 import xyz.penpencil.competishun.R
-import xyz.penpencil.competishun.data.model.TopicContentModel
 import xyz.penpencil.competishun.databinding.FragmentDownloadMediaPlayerBinding
 import xyz.penpencil.competishun.di.SharedVM
 import xyz.penpencil.competishun.ui.main.HomeActivity
 import xyz.penpencil.competishun.utils.SharedPreferencesManager
-import xyz.penpencil.competishun.utils.serializable
-import xyz.penpencil.competishun.utils.toggleImmersiveMode
 import java.io.File
 import kotlin.random.Random
 
@@ -70,10 +61,10 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+//        requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
         binding = FragmentDownloadMediaPlayerBinding.inflate(inflater, container, false)
         return binding.root
     }
-
 
     @OptIn(UnstableApi::class)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -82,8 +73,8 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
         (activity as? HomeActivity)?.showBottomNavigationView(false)
         (activity as? HomeActivity)?.showFloatingButton(false)
         sharedPreferencesManager = SharedPreferencesManager(requireContext())
-        sharedViewModel = ViewModelProvider(requireActivity())[SharedVM::class.java]
 
+        sharedViewModel = ViewModelProvider(requireActivity()).get(SharedVM::class.java)
         binding.backBtn.setOnClickListener {
             if (mExoPlayerFullscreen){
                 requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
@@ -92,23 +83,22 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
                 view?.findNavController()?.popBackStack()
             }
         }
-
         initFullscreenDialog()
-        val videoData = arguments?.serializable<TopicContentModel>("VIDEO_DATA")
-        val videoUrl = videoData?.url?:""
-        val title = videoData?.topicName?:""
+        val videoUrl = arguments?.getString("url") ?: return
+        val title = arguments?.getString("url_name") ?: ""
         val description = arguments?.getString("description") ?: ""
         binding.description.text = description
 
+        Log.e("url", "video_url:$videoUrl")
+        Log.e("Title", "video_title:$title")
 
         if (title.isNotEmpty()) {
             binding.tittleBtn.visibility = View.VISIBLE
             binding.tittleBtn.text = title
         }
         player = ExoPlayer.Builder(requireContext()).build()
-        binding.playerView.useArtwork = true
-        binding.playerView.setShowBuffering(PlayerView.SHOW_BUFFERING_ALWAYS)
         binding.playerView.player = player
+//        binding.playerView.videoSurfaceView?.rotation = 90F;
 
 
         playVideo(videoUrl)
@@ -135,9 +125,7 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
             showSpeedOrQualityDialog()
         }
 
-        binding.fullScreen.setOnClickListener {
-            toggleFullscreen()
-        }
+        binding.fullScreen.setOnClickListener { toggleFullscreen() }
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
@@ -171,7 +159,7 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
                 val parentHeight = parent.height
 
                 if (parentWidth == 0 || parentHeight == 0) {
-                    handler.postDelayed(this, 300000)
+                    handler.postDelayed(this, 500)
                     return@let
                 }
 
@@ -250,7 +238,7 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
         })
     }
     private fun showSpeedOrQualityDialog() {
-        val options = arrayOf("Speed")
+        val options = arrayOf("Speed", "Quality")
 
         AlertDialog.Builder(requireContext())
             .setTitle("Choose Option")
@@ -328,9 +316,9 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
     }
 
     private fun openFullscreenDialog() {
-        (binding.playerView.parent as? ViewGroup)?.removeView(binding.playerView)
+        (binding.playerContainer.parent as? ViewGroup)?.removeView(binding.playerContainer)
         mFullScreenDialog.addContentView(
-            binding.playerView,
+            binding.playerContainer,
             ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT
@@ -339,17 +327,14 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
         mExoPlayerFullscreen = true
         mFullScreenDialog.show()
         binding.fullScreen.setImageResource(R.drawable.zoom_in_map_24)
-
-        showNavigationBar()
     }
 
     private fun closeFullscreenDialog() {
-        (binding.playerView.parent as? ViewGroup)?.removeView(binding.playerView)
-        binding.playerRootApp.addView(binding.playerView)
+        (binding.playerContainer.parent as? ViewGroup)?.removeView(binding.playerContainer)
+        binding.playerRoot.addView(binding.playerContainer)
         mExoPlayerFullscreen = false
         mFullScreenDialog.dismiss()
         binding.fullScreen.setImageResource(R.drawable.zoom_out_map_24)
-        hideNavigationBar()
     }
 
     private fun toggleFullscreen() {
@@ -359,33 +344,6 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
         } else {
             requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
             closeFullscreenDialog()
-        }
-    }
-
-    private fun hideNavigationBar() {
-
-        showSystemBars()
-    }
-
-    private fun showNavigationBar() {
-        hideSystemBars()
-    }
-
-    fun hideSystemBars() {
-        requireActivity().window?.let {
-            WindowCompat.setDecorFitsSystemWindows(it, false)
-            val controller = WindowInsetsControllerCompat(it, it.decorView)
-            controller.hide(WindowInsetsCompat.Type.systemBars())
-            controller.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-        }
-    }
-
-    fun showSystemBars() {
-        requireActivity().window?.let {
-            WindowCompat.setDecorFitsSystemWindows(it, false)
-            val controller = WindowInsetsControllerCompat(it, it.decorView)
-            controller.show(WindowInsetsCompat.Type.systemBars())
-            controller.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         }
     }
 }
