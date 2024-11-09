@@ -1,32 +1,27 @@
 package xyz.penpencil.competishun.ui.fragment
 
 import android.app.Dialog
+import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import android.view.GestureDetector
 import android.view.Gravity
-import android.view.KeyEvent
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.FrameLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.OptIn
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
-import androidx.core.view.WindowCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.WindowInsetsControllerCompat
 
 import androidx.core.view.setPadding
-import androidx.lifecycle.ViewModelProvider
 import androidx.media3.common.MediaItem
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
@@ -35,16 +30,14 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
-import com.google.android.exoplayer2.ui.StyledPlayerView
 import dagger.hilt.android.AndroidEntryPoint
 import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.data.model.TopicContentModel
 import xyz.penpencil.competishun.databinding.FragmentDownloadMediaPlayerBinding
-import xyz.penpencil.competishun.di.SharedVM
 import xyz.penpencil.competishun.ui.main.HomeActivity
+import xyz.penpencil.competishun.ui.main.PdfViewActivity
 import xyz.penpencil.competishun.utils.SharedPreferencesManager
 import xyz.penpencil.competishun.utils.serializable
-import xyz.penpencil.competishun.utils.toggleImmersiveMode
 import java.io.File
 import kotlin.random.Random
 
@@ -95,13 +88,32 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
         initFullscreenDialog()
         val videoData = arguments?.serializable<TopicContentModel>("VIDEO_DATA")
         val videoUrl = videoData?.url?:""
-        val title = videoData?.topicName?:""
-        val description = arguments?.getString("description") ?: ""
-        binding.description.text = description
+        videoData?.let {
+            binding.tittleTv.text = it.topicName
+            binding.descTv.text = it.topicDescription
+            val hDesc = it.homeworkDesc.trim('[', ']').trim()
+            if (hDesc.isNotEmpty()){
+                binding.homeworkDescTv.text = hDesc
+                binding.homeworkDescTv.visibility = View.VISIBLE
+            }else {
+                binding.homeworkDescTv.visibility = View.GONE
+            }
 
-        if (title.isNotEmpty()) {
-            binding.tittleBtn.visibility = View.VISIBLE
-            binding.tittleBtn.text = title
+            val hTitle = it.homeworkName.trim('[', ']').trim()
+            if (hTitle.isNotEmpty()){
+                binding.homeworktittleTv.text = hTitle
+                binding.homeworktittleTv.visibility = View.VISIBLE
+            }else {
+                binding.homeworktittleTv.visibility = View.GONE
+            }
+
+            binding.homeworktittleTv.setOnClickListener { view->
+                val intent = Intent(requireContext(), PdfViewActivity::class.java).apply {
+                    putExtra("PDF_URL", it.homeworkUrl.trim('[', ']').trim())
+                    putExtra("PDF_TITLE",it.homeworkName.trim('[', ']').trim())
+                }
+                context?.startActivity(intent)
+            }
         }
         player = ExoPlayer.Builder(requireContext()).build()
         binding.playerView.useArtwork = true
@@ -152,6 +164,10 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
             if (it.isNotEmpty()) {
                 waterMark(it)
             }
+        }
+
+        binding.clBookmark.setOnClickListener {
+            bookmarkItem(videoData)
         }
     }
 
@@ -247,6 +263,14 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
         })
     }
 
+    private fun bookmarkItem(videoData: TopicContentModel?) {
+        videoData?.let {
+            Log.d("Bookmark", "Clicked")
+            SharedPreferencesManager(requireActivity()).saveDownloadedItemBm(it)
+            Toast.makeText(requireContext(), "Added to Bookmarks", Toast.LENGTH_SHORT).show()
+        }
+    }
+
     private fun showSpeedOrQualityDialog() {
         val options = arrayOf("Speed")
 
@@ -292,6 +316,13 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
 
     override fun onPause() {
         super.onPause()
+        try {
+            if (this::player.isInitialized  && player.isPlaying){
+                player.pause()
+            }
+        } catch (e: Exception) {
+            Log.e("TAG", "onViewCreated: ", )
+        }
         requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
     }
 
