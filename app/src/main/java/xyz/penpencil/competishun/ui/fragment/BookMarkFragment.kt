@@ -171,18 +171,16 @@ class BookMarkFragment : DrawerVisibility(), BookMarkAdapter.OnVideoClickListene
         emptyStateLayout.visibility = if (isEmpty) View.VISIBLE else View.GONE
     }
 
-    override fun onVideoClick(folderContentId: String, name: String) {
-        playVideo(folderContentId, name)
+    override fun onVideoClick(topicContentModel: TopicContentModel) {
+        playVideo(topicContentModel)
     }
 
-    private fun playVideo(folderContentId: String, name: String) {
-        val videoFileURL = File(requireContext().filesDir, "$name.mp4").absolutePath
+    private fun playVideo(topicContentModel: TopicContentModel) {
+        val videoFileURL = File(requireContext().filesDir, "${topicContentModel.topicName}.mp4").absolutePath
 
         if (videoFileURL.isNotEmpty()) {
             val bundle = Bundle().apply {
-                putString("url", videoFileURL)
-                putString("url_name", name)
-                putString("ContentId", folderContentId)
+                putSerializable("VIDEO_DATA", topicContentModel.apply { localPath = videoFileURL })
             }
             findNavController().navigate(R.id.downloadMediaPlayerFragment, bundle)
         } else {

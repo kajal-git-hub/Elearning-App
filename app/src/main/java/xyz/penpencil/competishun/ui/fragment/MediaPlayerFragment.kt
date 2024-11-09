@@ -132,9 +132,9 @@ class MediaPlayerFragment : DrawerVisibility() {
             }
         }
 
-        val videoUrl = arguments?.getString("url") ?: return
+        val videoUrl = arguments?.getString("url") ?: ""
         Log.e("howdfdf",videoUrl)
-        val title = arguments?.getString("url_name") ?: return
+        val title = arguments?.getString("url_name") ?: ""
         courseFolderContentDescs = arguments?.getStringArrayList("folderContentDescs")?: arrayListOf()
         homeworkLinks = arguments?.getStringArrayList("homeworkLinks")?: arrayListOf()
         homeworkNames = arguments?.getStringArrayList("homeworkNames")?: arrayListOf()
@@ -151,13 +151,16 @@ class MediaPlayerFragment : DrawerVisibility() {
                 }
                 binding.homeworkDescTv.text = homeworkNames[0]
                 binding.homeworktittleTv.text = if (homeworkDescs[0].isNotEmpty()) " "+helperFunctions.removeBrackets(homeworkDescs[0]) else "NA"
+            }else {
+                binding.homeworkDescTv.visibility = View.GONE
+                binding.homeworktittleTv.visibility = View.GONE
             }
         }
-        courseFolderContentId = arguments?.getString("ContentId")?: return
-        courseFolderContentIds = arguments?.getStringArrayList("folderContentIds")?: return
-        courseFolderContentNames = arguments?.getStringArrayList("folderContentNames")?: return
-        homeworkLinks = arguments?.getStringArrayList("homeworkLinks")?: return
-        homeworkNames = arguments?.getStringArrayList("homeworkNames")?: return
+        courseFolderContentId = arguments?.getString("ContentId")?: ""
+        courseFolderContentIds = arguments?.getStringArrayList("folderContentIds")?: arrayListOf()
+        courseFolderContentNames = arguments?.getStringArrayList("folderContentNames")?: arrayListOf()
+        homeworkLinks = arguments?.getStringArrayList("homeworkLinks")?: arrayListOf()
+        homeworkNames = arguments?.getStringArrayList("homeworkNames")?: arrayListOf()
 
         Log.e("getfolderNamess",courseFolderContentNames.toString())
         Log.e("getfolderDess",courseFolderContentDescs.toString())
@@ -274,6 +277,9 @@ class MediaPlayerFragment : DrawerVisibility() {
         binding.qualityButton.setOnClickListener {
             showSpeedOrQualityDialog()
         }
+
+        binding.download.setOnClickListener {  }
+        binding.bookmark.setOnClickListener {  }
 
         requireActivity().onBackPressedDispatcher
             .addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
