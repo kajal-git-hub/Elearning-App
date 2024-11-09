@@ -426,6 +426,7 @@ class MyCartFragment : DrawerVisibility(), OnCartItemRemovedListener, MyCartAdap
             obj.put("prefill", prefill)
             Log.e("orderData",obj.toString())
             checkout.open(requireActivity(), obj)
+            checkout.setFullScreenDisable(true)
         } catch (e: JSONException) {
             e.printStackTrace()
         }

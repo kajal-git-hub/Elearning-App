@@ -419,7 +419,7 @@ class MyPurchaseDetailsFragment : DrawerVisibility() {
                 Log.e("ReceiptLink",receiptLink)
                 Toast.makeText(requireContext(), "Download started", Toast.LENGTH_SHORT).show()
 
-                helperFunctions.downloadPdf(requireContext(),receiptLink,"Payment Invoice")
+                helperFunctions.downloadPdfOld(requireContext(),receiptLink,"Payment Invoice")
                 Toast.makeText(requireContext(), "Download completed successfully", Toast.LENGTH_SHORT).show()
             }.onFailure {
                 // Handle failure, e.g., show an error message
