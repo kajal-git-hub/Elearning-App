@@ -53,9 +53,8 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
 
     private lateinit var binding: FragmentDownloadMediaPlayerBinding
     private lateinit var player: ExoPlayer
-    private lateinit var gestureDetector: GestureDetector
     private val handler = Handler(Looper.getMainLooper())
-    private lateinit var sharedViewModel: SharedVM
+
     companion object {
         private const val SEEK_OFFSET_MS = 10000L
     }
@@ -82,7 +81,6 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
         (activity as? HomeActivity)?.showBottomNavigationView(false)
         (activity as? HomeActivity)?.showFloatingButton(false)
         sharedPreferencesManager = SharedPreferencesManager(requireContext())
-        sharedViewModel = ViewModelProvider(requireActivity())[SharedVM::class.java]
 
         binding.backBtn.setOnClickListener {
             if (mExoPlayerFullscreen){
@@ -99,7 +97,6 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
         val title = videoData?.topicName?:""
         val description = arguments?.getString("description") ?: ""
         binding.description.text = description
-
 
         if (title.isNotEmpty()) {
             binding.tittleBtn.visibility = View.VISIBLE
@@ -214,15 +211,14 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
     }
 
 
-
     private fun initFullscreenDialog() {
         mFullScreenDialog = Dialog(requireContext(), R.style.full_screen_dialog)
         mFullScreenDialog.setOnDismissListener {
+            mExoPlayerFullscreen = false
             requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
             closeFullscreenDialog()
         }
     }
-
 
     private fun playVideo(videoUrl: String) {
         binding.playerView.visibility = View.GONE
@@ -249,6 +245,7 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
             }
         })
     }
+
     private fun showSpeedOrQualityDialog() {
         val options = arrayOf("Speed")
 
@@ -283,32 +280,7 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
         requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
     }
 
-    private inner class DoubleTapGestureListener : GestureDetector.SimpleOnGestureListener() {
-        override fun onDoubleTap(e: MotionEvent): Boolean {
-            val x = e.x
-            val width = binding.playerView.width
-            val centerThirdStart = width / 3
-            val centerThirdEnd = 2 * width / 3
 
-            when {
-                x.toInt() in centerThirdStart..centerThirdEnd -> {
-                    if (player.isPlaying) {
-                        player.pause()
-                    } else {
-                        player.play()
-                    }
-                }
-                x < centerThirdStart -> seekBack()
-                else -> seekForward()
-            }
-            return true
-        }
-    }
-
-    private fun seekBack() {
-        val position = player.currentPosition
-        player.seekTo(maxOf(position - SEEK_OFFSET_MS, 0))
-    }
     override fun onResume() {
         super.onResume()
         requireActivity().window.setFlags(
@@ -339,8 +311,6 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
         mExoPlayerFullscreen = true
         mFullScreenDialog.show()
         binding.fullScreen.setImageResource(R.drawable.zoom_in_map_24)
-
-        showNavigationBar()
     }
 
     private fun closeFullscreenDialog() {
@@ -349,7 +319,6 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
         mExoPlayerFullscreen = false
         mFullScreenDialog.dismiss()
         binding.fullScreen.setImageResource(R.drawable.zoom_out_map_24)
-        hideNavigationBar()
     }
 
     private fun toggleFullscreen() {
@@ -359,33 +328,6 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
         } else {
             requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
             closeFullscreenDialog()
-        }
-    }
-
-    private fun hideNavigationBar() {
-
-        showSystemBars()
-    }
-
-    private fun showNavigationBar() {
-        hideSystemBars()
-    }
-
-    fun hideSystemBars() {
-        requireActivity().window?.let {
-            WindowCompat.setDecorFitsSystemWindows(it, false)
-            val controller = WindowInsetsControllerCompat(it, it.decorView)
-            controller.hide(WindowInsetsCompat.Type.systemBars())
-            controller.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-        }
-    }
-
-    fun showSystemBars() {
-        requireActivity().window?.let {
-            WindowCompat.setDecorFitsSystemWindows(it, false)
-            val controller = WindowInsetsControllerCompat(it, it.decorView)
-            controller.show(WindowInsetsCompat.Type.systemBars())
-            controller.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         }
     }
 }

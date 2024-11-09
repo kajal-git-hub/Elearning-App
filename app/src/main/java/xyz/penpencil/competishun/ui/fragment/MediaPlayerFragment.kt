@@ -728,6 +728,7 @@ class MediaPlayerFragment : DrawerVisibility() {
     private fun initFullscreenDialog() {
         mFullScreenDialog = Dialog(requireContext(), R.style.full_screen_dialog)
         mFullScreenDialog.setOnDismissListener {
+            mExoPlayerFullscreen = false
             requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
             closeFullscreenDialog()
         }
