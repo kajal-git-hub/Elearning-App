@@ -85,17 +85,17 @@ class BookMarkFragment : DrawerVisibility(), BookMarkAdapter.OnVideoClickListene
 
     private fun showPdfItems() {
         val pdfItems = allDownloadedItems.filter { it.fileType == "PDF" }
-//        updateRecyclerView(pdfItems)
+        updateRecyclerView(pdfItems)
         bookmarkAdapter.updateItems(pdfItems)
-//        checkEmptyState() // Check for empty state
+        checkEmptyState() // Check for empty state
 
     }
 
     private fun showVideoItems() {
         val videoItems = allDownloadedItems.filter { it.fileType == "VIDEO" }
-//        updateRecyclerView(videoItems)
+        updateRecyclerView(videoItems)
         bookmarkAdapter.updateItems(videoItems)
-//        checkEmptyState() // Check for empty state
+        checkEmptyState() // Check for empty state
 
 
     }
@@ -134,7 +134,7 @@ class BookMarkFragment : DrawerVisibility(), BookMarkAdapter.OnVideoClickListene
         if (binding.BookmarkTabLayout.getTabAt(selectedTabPosition)?.text == "Videos ($videoItemsSize)") {
             updateRecyclerView(videoItems)
         }
-//        checkEmptyState()
+        checkEmptyState()
     }
 
     private fun updateRecyclerView(items: List<TopicContentModel>) {
@@ -143,7 +143,7 @@ class BookMarkFragment : DrawerVisibility(), BookMarkAdapter.OnVideoClickListene
             items.toMutableList(), parentFragmentManager, this, this
         )
         binding.rvBookmark.adapter = bookmarkAdapter
-//        checkEmptyState() // Check for empty state after updating the adapter
+        checkEmptyState()
 
     }
 

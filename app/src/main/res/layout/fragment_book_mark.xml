@@ -99,6 +99,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cl_tabLayout_Bookmark"
         android:layout_margin="@dimen/_10dp"
         >
@@ -135,7 +138,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:maxLines="2"
             app:layout_constraintTop_toBottomOf="@+id/et_no_result_found"
-            android:text="“Kinetics Theory” does not exist in the bookmarks. Search another keyword."/>
+            android:text="“You’ve not Bookmark any content yet."/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

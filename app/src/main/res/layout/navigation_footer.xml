@@ -12,7 +12,7 @@
         android:layout_marginBottom="20dp"
         android:background="@drawable/frame_370003830"
         android:padding="@dimen/_16dp"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -65,7 +65,7 @@
         android:layout_marginBottom="20dp"
         android:background="@drawable/frame_370003830"
         android:padding="@dimen/_16dp"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
