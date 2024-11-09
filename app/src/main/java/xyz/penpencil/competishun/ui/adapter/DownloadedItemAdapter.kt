@@ -70,7 +70,9 @@ class DownloadedItemAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = filteredItems[position]
         holder.studyMaterial.text = item.lecture
-
+        holder.itemView.setOnClickListener {
+            videoClickListener.onVideoClick(item)
+        }
         if (item.fileType == "PDF") {
             holder.lecTime.text = item.lecturerName
             holder.lecTime.setCompoundDrawablesWithIntrinsicBounds(R.drawable.download_person, 0, 0, 0)
@@ -115,9 +117,9 @@ class DownloadedItemAdapter(
             context.startActivity(intent)
         }
 
-        holder.forVideo.setOnClickListener {
-            videoClickListener.onVideoClick(item)
-        }
+//        holder.forVideo.setOnClickListener {
+//            videoClickListener.onVideoClick(item)
+//        }
     }
 
     override fun getItemCount(): Int {

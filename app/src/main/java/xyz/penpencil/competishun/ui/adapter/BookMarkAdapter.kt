@@ -141,10 +141,12 @@ class BookMarkAdapter(
             context.startActivity(intent)
         }
 
-        holder.forVideo.setOnClickListener {
+//        holder.forVideo.setOnClickListener {
+//            videoClickListener.onVideoClick(item.id,item.topicName)
+//        }
+        holder.itemView.setOnClickListener {
             videoClickListener.onVideoClick(item.id,item.topicName)
         }
-
     }
     override fun onDeleteItem(position: Int,item: TopicContentModel) {
 
