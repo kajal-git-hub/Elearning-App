@@ -31,11 +31,13 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.navigation.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import xyz.penpencil.competishun.R
+import xyz.penpencil.competishun.data.model.TopicContentModel
 import xyz.penpencil.competishun.databinding.FragmentDownloadMediaPlayerBinding
 import xyz.penpencil.competishun.di.SharedVM
 import xyz.penpencil.competishun.ui.main.HomeActivity
 import xyz.penpencil.competishun.utils.SharedPreferencesManager
 import xyz.penpencil.competishun.utils.immerseMode
+import xyz.penpencil.competishun.utils.serializable
 import java.io.File
 import kotlin.random.Random
 
@@ -57,6 +59,7 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
 
     private lateinit var sharedPreferencesManager: SharedPreferencesManager
     private var flickeringText: TextView?=null
+    var isWaterMarkFirstTime =  true
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -85,13 +88,13 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
             }
         }
         initFullscreenDialog()
-        val videoUrl = arguments?.getString("url") ?: return
-        val title = arguments?.getString("url_name") ?: ""
+        //value-parameter topicContentModel: TopicContentModel
+        val videoData = arguments?.serializable<TopicContentModel>("VIDEO_DATA")
+        val videoUrl = videoData?.url?:""
+        val title = videoData?.topicName?:""
         val description = arguments?.getString("description") ?: ""
         binding.description.text = description
 
-        Log.e("url", "video_url:$videoUrl")
-        Log.e("Title", "video_title:$title")
 
         if (title.isNotEmpty()) {
             binding.tittleBtn.visibility = View.VISIBLE
@@ -160,7 +163,7 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
                 val parentHeight = parent.height
 
                 if (parentWidth == 0 || parentHeight == 0) {
-                    handler.postDelayed(this, 500)
+                    handler.postDelayed(this, 300000)
                     return@let
                 }
 
@@ -239,7 +242,7 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
         })
     }
     private fun showSpeedOrQualityDialog() {
-        val options = arrayOf("Speed", "Quality")
+        val options = arrayOf("Speed")
 
         AlertDialog.Builder(requireContext())
             .setTitle("Choose Option")

@@ -72,14 +72,34 @@
         <TextView
             android:id="@+id/tittle_btn"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/_45dp"
             android:paddingStart="@dimen/_16dp"
             android:paddingEnd="@dimen/_16dp"
+            android:layout_toStartOf="@+id/bookMark"
             android:paddingTop="@dimen/_16dp"
             android:layout_below="@+id/playerRoot"
             android:text="Video"
+            android:layout_marginEnd="@dimen/_16dp"
+            android:layout_marginTop="@dimen/_10dp"
             android:textColor="@android:color/black"
             android:gravity="left" />
+
+        <com.google.android.material.button.MaterialButton
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/_45dp"
+            android:layout_below="@+id/playerRoot"
+            android:layout_alignParentEnd="true"
+            android:textColor="@color/recycler_txt"
+            android:id="@+id/bookMark"
+            app:cornerRadius="@dimen/_8dp"
+            app:strokeColor="@color/recycler_txt"
+            app:strokeWidth="@dimen/_1dp"
+            android:layout_marginEnd="@dimen/_10dp"
+            android:layout_marginTop="@dimen/_10dp"
+            app:icon="@drawable/bookmark"
+            app:iconTint="@color/recycler_txt"
+            android:backgroundTint="@color/white"
+            android:text="@string/Bookmark"/>
         <TextView
             android:id="@+id/description"
             android:layout_width="match_parent"

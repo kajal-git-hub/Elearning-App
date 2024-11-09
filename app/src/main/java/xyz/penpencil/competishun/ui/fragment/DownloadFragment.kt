@@ -158,13 +158,9 @@ class DownloadFragment : DrawerVisibility(), DownloadedItemAdapter.OnVideoClickL
 
     override fun onVideoClick(topicContentModel: TopicContentModel) {
         if (topicContentModel.localPath.isNotEmpty()) {
-            val bundle = Bundle().apply {
-                putString("url", topicContentModel.localPath)
-                putString("url_name", topicContentModel.topicName)
-                putString("description", topicContentModel.topicDescription)
-            }
-            Log.e("dfdsfhsdfdsjfs", "onVideoClick: " +topicContentModel.localPath )
-            findNavController().navigate(R.id.downloadMediaPlayerFragment, bundle)
+            findNavController().navigate(R.id.downloadMediaPlayerFragment, Bundle().apply {
+                putSerializable("VIDEO_DATA", topicContentModel)
+            })
         } else {
             Toast.makeText(requireContext(), "Video file not found", Toast.LENGTH_SHORT).show()
         }
