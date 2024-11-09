@@ -12,61 +12,66 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="280dp"
+            android:layout_height="240dp"
             android:id="@+id/playerRoot">
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/playerContainer">
-                <androidx.media3.ui.PlayerView
-                    android:id="@+id/player_view"
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    android:layout_gravity="center"
-                    android:keepScreenOn="true"
-                    app:controller_layout_id="@layout/layout_exoplayer_controls"
-                    app:show_buffering="always" />
-                <ImageButton
-                    android:id="@+id/back_btn"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:background="@android:color/transparent"
-                    android:src="@drawable/back_arrow_ic"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp" />
-                <ImageButton
-                    android:id="@+id/qualityButton"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:src="@drawable/dot_3_ic"
-                    android:layout_marginTop="@dimen/_16dp"
-                    android:layout_alignParentEnd="true"
-                    android:padding="@dimen/_10dp"
-                    android:background="@android:color/transparent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:layout_marginEnd="16dp" />
-                <ImageButton
-                    android:id="@+id/fullScreen"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginBottom="@dimen/_16dp"
-                    android:src="@drawable/zoom_out_map_24"
-                    android:layout_marginTop="@dimen/_16dp"
-                    android:layout_alignParentEnd="true"
-                    android:padding="@dimen/_10dp"
-                    android:background="@android:color/transparent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:layout_marginEnd="16dp" />
+                    android:id="@+id/playerRootApp">
+                    <androidx.media3.ui.PlayerView
+                        android:id="@+id/playerView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:layout_gravity="center"
+                        android:keepScreenOn="true"
+                        app:controller_layout_id="@layout/layout_exoplayer_controls"
+                        app:show_buffering="always" />
+                </RelativeLayout>
             </RelativeLayout>
+            <ImageButton
+                android:id="@+id/back_btn"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@android:color/transparent"
+                android:src="@drawable/back_arrow_ic"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp" />
+            <ImageButton
+                android:id="@+id/qualityButton"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/dot_3_ic"
+                android:layout_marginTop="@dimen/_16dp"
+                android:layout_alignParentEnd="true"
+                android:padding="@dimen/_10dp"
+                android:background="@android:color/transparent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginEnd="16dp" />
+            <ImageButton
+                android:id="@+id/fullScreen"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="@dimen/_16dp"
+                android:src="@drawable/zoom_out_map_24"
+                android:layout_marginTop="@dimen/_16dp"
+                android:layout_alignParentEnd="true"
+                android:padding="@dimen/_10dp"
+                android:background="@android:color/transparent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginEnd="16dp" />
         </RelativeLayout>
 
         <TextView

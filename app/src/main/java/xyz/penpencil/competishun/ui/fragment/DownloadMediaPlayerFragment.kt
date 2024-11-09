@@ -320,10 +320,10 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
     }
 
     private fun openFullscreenDialog() {
-        requireActivity().immerseMode(true)
-        (binding.playerContainer.parent as? ViewGroup)?.removeView(binding.playerContainer)
+//        requireActivity().immerseMode(true)
+        (binding.playerView.parent as? ViewGroup)?.removeView(binding.playerView)
         mFullScreenDialog.addContentView(
-            binding.playerContainer,
+            binding.playerView,
             ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT
@@ -335,9 +335,9 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
     }
 
     private fun closeFullscreenDialog() {
-        requireActivity().immerseMode(false)
-        (binding.playerContainer.parent as? ViewGroup)?.removeView(binding.playerContainer)
-        binding.playerRoot.addView(binding.playerContainer)
+//        requireActivity().immerseMode(false)
+        (binding.playerView.parent as? ViewGroup)?.removeView(binding.playerView)
+        binding.playerRootApp.addView(binding.playerView)
         mExoPlayerFullscreen = false
         mFullScreenDialog.dismiss()
         binding.fullScreen.setImageResource(R.drawable.zoom_out_map_24)
