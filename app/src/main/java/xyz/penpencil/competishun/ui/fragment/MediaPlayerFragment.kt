@@ -317,7 +317,7 @@ class MediaPlayerFragment : DrawerVisibility() {
                 val parentHeight = parent.height
 
                 if (parentWidth == 0 || parentHeight == 0) {
-                    handler.postDelayed(this, 500)
+                    handler.postDelayed(this, 300000)
                     return@let
                 }
 
@@ -334,6 +334,7 @@ class MediaPlayerFragment : DrawerVisibility() {
             }
         }
     }
+
 
     private fun waterMark(s: String) {
         if (flickeringText == null) {

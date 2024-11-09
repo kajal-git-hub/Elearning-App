@@ -22,6 +22,8 @@ import androidx.annotation.OptIn
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 
 import androidx.core.view.setPadding
 import androidx.lifecycle.ViewModelProvider
@@ -326,7 +328,6 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
     }
 
     private fun openFullscreenDialog() {
-//        requireActivity().immerseMode(true)
         (binding.playerView.parent as? ViewGroup)?.removeView(binding.playerView)
         mFullScreenDialog.addContentView(
             binding.playerView,
@@ -362,31 +363,28 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
     }
 
     private fun hideNavigationBar() {
-        val flags = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                or View.SYSTEM_UI_FLAG_FULLSCREEN
-                or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
-        requireActivity().window?.decorView?.systemUiVisibility = flags
-  /*      requireActivity().window?.run{
-            WindowCompat.setDecorFitsSystemWindows(this, false)
-        }*/
+        hideSystemBars()
     }
 
     private fun showNavigationBar() {
-//        val flags = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-//                or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-//                or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-//                or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-//                or View.SYSTEM_UI_FLAG_FULLSCREEN
-//                or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
-//        requireActivity().window?.clearFlags(flags)
+        showSystemBars()
+    }
 
+    fun hideSystemBars() {
+        requireActivity().window?.let {
+            WindowCompat.setDecorFitsSystemWindows(it, false)
+            val controller = WindowInsetsControllerCompat(it, it.decorView)
+            controller.hide(WindowInsetsCompat.Type.systemBars())
+            controller.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        }
+    }
 
-   /*     requireActivity().window?.run{
-            WindowCompat.setDecorFitsSystemWindows(this, true)
-        }*/
-//        requireActivity().window?.decorView?.systemUiVisibility= View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR or View.SYSTEM_UI_FLAG_FULLSCREEN
+    fun showSystemBars() {
+        requireActivity().window?.let {
+            WindowCompat.setDecorFitsSystemWindows(it, false)
+            val controller = WindowInsetsControllerCompat(it, it.decorView)
+            controller.show(WindowInsetsCompat.Type.systemBars())
+            controller.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        }
     }
 }
