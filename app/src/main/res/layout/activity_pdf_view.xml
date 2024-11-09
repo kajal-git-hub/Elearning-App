@@ -1,58 +1,68 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
 
     <!-- PDF Renderer View to display the PDF -->
+
     <com.rajat.pdfviewer.PdfRendererView
         android:id="@+id/pdfView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:pdfView_divider="@drawable/pdf_viewer_divider"
         app:pdfView_showDivider="false" />
 
     <!-- ImageView for the PDF rendering in case needed -->
     <ImageView
         android:id="@+id/pdfPageImage"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:scaleType="fitCenter"
-        android:visibility="gone"/>
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-<!--    &lt;!&ndash; Previous Page Button &ndash;&gt;-->
-<!--    <com.google.android.material.button.MaterialButton-->
-<!--        android:id="@+id/previousPageButton"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_marginEnd="2dp"-->
-<!--        android:layout_marginTop="3dp"-->
-<!--        android:backgroundTint="#B5B2B6"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_alignParentStart="true"-->
-<!--        android:text="Previous Page"/>-->
+    <!-- ProgressBar in center -->
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminateTint="@color/PrimaryColor"
+        android:indeterminateTintMode="src_atop"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-<!--    &lt;!&ndash; Next Page Button &ndash;&gt;-->
-<!--    <com.google.android.material.button.MaterialButton-->
-<!--        android:id="@+id/nextPageButton"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:backgroundTint="#B5B2B6"-->
-<!--        android:layout_marginStart="2dp"-->
-<!--        android:layout_marginTop="3dp"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_alignParentEnd="true"-->
-<!--        android:text="Next Page"/>-->
+    <!-- Button aligned at bottom center -->
 
-<!--    &lt;!&ndash; Download Button &ndash;&gt;-->
-<!--    <com.google.android.material.button.MaterialButton-->
-<!--        android:id="@+id/downloadButton"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_toEndOf="@id/previousPageButton"-->
-<!--        android:layout_toStartOf="@id/nextPageButton"-->
-<!--        android:layout_marginStart="20dp"-->
-<!--        android:visibility="gone"-->
-<!--        android:layout_marginTop="3dp"-->
-<!--        android:layout_marginEnd="20dp"-->
-<!--        android:backgroundTint="#B5B2B6"-->
-<!--        android:text="Download"/>-->
 
-</RelativeLayout>
+    <ImageView
+        android:id="@+id/downloadButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_16sp"
+        android:layout_marginEnd="@dimen/_16sp"
+        android:padding="@dimen/_16sp"
+        android:src="@drawable/download"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+    <!--    <Button-->
+    <!--        android:id="@+id/downloadButton"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:text="Download PDF"-->
+    <!--        android:backgroundTint="@color/colorPrimary"-->
+    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        android:visibility="visible" />-->
+
+</androidx.constraintlayout.widget.ConstraintLayout>
