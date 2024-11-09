@@ -86,7 +86,9 @@ class ScheduleAdapter(private val scheduleItems: List<ScheduleData>, private val
                 binding.tvTopicName.text = innerItem.topic_name
                 startCountdownTimer(innerItem.scheduleTimer,innerItem.file_url , innerItem.fileType,innerItem.contentId)
                 binding.root.setOnClickListener {
-                    toolbarListener.onCustomizeToolbar(innerItem.file_url, innerItem.fileType, innerItem.contentId)
+                    if (binding.clLectureTimer.visibility == View.GONE){
+                        toolbarListener.onCustomizeToolbar(innerItem.file_url, innerItem.fileType, innerItem.contentId)
+                    }
                 }
 
                 Log.e("sbAHGSHahsghaGHS", "bind: " +innerItem.scheduleTimer)
