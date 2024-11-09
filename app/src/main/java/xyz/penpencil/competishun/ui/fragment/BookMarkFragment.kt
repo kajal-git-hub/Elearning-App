@@ -146,7 +146,7 @@ class BookMarkFragment : DrawerVisibility(), BookMarkAdapter.OnVideoClickListene
             items.toMutableList(), parentFragmentManager, this, this
         )
         binding.rvBookmark.adapter = bookmarkAdapter
-        checkEmptyState() // Check for empty state after updating the adapter
+        checkEmptyState()
 
     }
 
