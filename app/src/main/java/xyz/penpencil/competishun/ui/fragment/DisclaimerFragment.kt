@@ -77,8 +77,8 @@ class DisclaimerFragment : DrawerVisibility() {
             handleBackPressed()
         }
 
-        binding.igTermsBackButton.setOnClickListener {
-            findNavController().navigateUp()
+        binding.tvTitle.setOnClickListener {
+            findNavController().popBackStack()
         }
 
 //        faqItems = arguments?.getParcelableArrayList("faq_items") ?: emptyList()

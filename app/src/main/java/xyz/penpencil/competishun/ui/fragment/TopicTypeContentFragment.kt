@@ -50,7 +50,7 @@ class TopicTypeContentFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         helperFunctions = HelperFunctions()
-        binding.backIcon.setOnClickListener {
+        binding.tvTopicTypeName.setOnClickListener {
             it.findNavController().popBackStack()
         }
         val gson = Gson()
@@ -89,10 +89,8 @@ class TopicTypeContentFragment : Fragment() {
 
     }
 
-    fun newContent(folderContents: List<FindCourseFolderProgressQuery.FolderContent>,folderId:String)
-    {
+    fun newContent(folderContents: List<FindCourseFolderProgressQuery.FolderContent>,folderId:String) {
 
-        Log.e("asdasjhdjasdkAS", "newContent: "+folderContents )
         val topicContents = folderContents?.map { content ->
             val date = content.content?.scheduled_time.toString()
             var time = ""
@@ -118,16 +116,17 @@ class TopicTypeContentFragment : Fragment() {
                 url = content.content?.file_url.toString(),
                 fileType = content.content?.file_type?.name ?: "",
                 lockTime = time,
+                homeworkDesc = content.content?.homework?.map { it.description }.toString() ?: "",
                 homeworkUrl = homeworkUrl.toString(),
                 homeworkName = homeworkFileName.toString(),
-                isExternal = content.content?.file_name?.contains("DPPs") == true
+                isExternal = isExternal
             )
         } ?: emptyList()
         val folderContentis = folderContents.filter { it.content?.file_type?.name  == "VIDEO" }.mapNotNull { it.content?.id }?.toCollection(ArrayList())
         val folderContentNs = folderContents.filter { it.content?.file_type?.name  == "VIDEO" }.mapNotNull { it.content?.file_name }?.toCollection(ArrayList())
-        val adapter = TopicContentAdapter(topicContents, folderId,requireActivity(),requireContext()) { topicContent, folderContentId, folderContentIds,folderContentNames, folderContentDesc->
+        val adapter = TopicContentAdapter(topicContents, folderId,requireActivity(),requireContext()) { topicContent, folderContentId, folderContentIds,folderContentNames, folderContentDesc, folderContenthomework, folderContenthomeworkLink,folderContenthomeworkDesc->
             when (topicContent.fileType) {
-                "VIDEO" -> videoUrlApi(videourlViewModel, topicContent.id,topicContent.topicName,folderContentIds,folderContentNames,folderContentDesc)
+                "VIDEO" -> videoUrlApi(videourlViewModel, topicContent.id,topicContent.topicName,folderContentIds,folderContentNames,folderContentDesc,folderContenthomework, folderContenthomeworkLink,folderContenthomeworkDesc)
                 "PDF" -> {
                     val intent = Intent(context, PdfViewActivity::class.java).apply {
                         putExtra("PDF_URL", topicContent.url)
@@ -189,16 +188,17 @@ class TopicTypeContentFragment : Fragment() {
                             videoDuration = content.content?.video_duration ?: 0,
                             fileType = content.content?.file_type?.name.orEmpty(),
                             lockTime = time,
+                            homeworkDesc = content.content?.homework?.map { it.description }.toString() ?: "",
                             homeworkUrl = homeworkUrl.toString(),
                             homeworkName = homeworkFileName.toString(),
-                            isExternal = content.content?.file_name?.contains("DPPs") == true
+                            isExternal = isExternal
                         )
                     } ?: emptyList()
                     val folderContentIs = folderContents?.filter { it.content?.file_type?.name  == "VIDEO" }?.mapNotNull { it.content?.id }?.toCollection(ArrayList())
                     val folderContentNs = folderContents?.filter { it.content?.file_type?.name  == "VIDEO" }?.mapNotNull { it.content?.file_name }?.toCollection(ArrayList())
-                    val adapter = TopicContentAdapter(topicContents, folderId,requireActivity(),requireContext()) { topicContent, folderContentId, folderContentIds,folderContentNames, folderContentDescs ->
+                    val adapter = TopicContentAdapter(topicContents, folderId,requireActivity(),requireContext()) { topicContent, folderContentId, folderContentIds,folderContentNames, folderContentDescs,folderContenthomework, folderContenthomeworkLink,folderContenthomeworkDesc ->
                         when (topicContent.fileType) {
-                            "VIDEO" -> videoUrlApi(videourlViewModel, topicContent.id,topicContent.topicName,folderContentIds,folderContentNames, folderContentDescs)
+                            "VIDEO" -> videoUrlApi(videourlViewModel, topicContent.id,topicContent.topicName,folderContentIds,folderContentNames, folderContentDescs,folderContenthomework, folderContenthomeworkLink,folderContenthomeworkDesc)
                             "PDF" -> {
                                 val intent = Intent(context, PdfViewActivity::class.java).apply {
                                     putExtra("PDF_URL", topicContent.url)
@@ -226,7 +226,7 @@ class TopicTypeContentFragment : Fragment() {
         }
 
     }
-    private fun videoUrlApi(viewModel: VideourlViewModel, folderContentId: String, name:String, folderContentIds: ArrayList<String>?, folderContentNames: ArrayList<String>?,folderContentDescs: ArrayList<String>?) {
+    private fun videoUrlApi(viewModel: VideourlViewModel, folderContentId: String, name:String, folderContentIds: ArrayList<String>?, folderContentNames: ArrayList<String>?,folderContentDescs: ArrayList<String>?,homeworkNames:ArrayList<String>?,homeworkLinks:ArrayList<String>?,homeworkDescs:ArrayList<String>?) {
         Log.e("getfoldersubject",folderContentNames.toString())
         viewModel.fetchVideoStreamUrl(folderContentId, "480p")
 
@@ -239,6 +239,10 @@ class TopicTypeContentFragment : Fragment() {
                     putString("ContentId", folderContentId)
                     putStringArrayList("folderContentIds", folderContentIds)
                     putStringArrayList("folderContentNames", folderContentNames)
+                    putStringArrayList("folderContentDescs", folderContentDescs)
+                    putStringArrayList("homeworkNames", homeworkNames)
+                    putStringArrayList("homeworkLinks", homeworkLinks)
+                    putStringArrayList("homeworkDescs", homeworkDescs)
                 }
                 findNavController().navigate(R.id.mediaFragment, bundle)
 

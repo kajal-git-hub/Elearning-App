@@ -76,6 +76,14 @@ class DownloadFragment : DrawerVisibility(), DownloadedItemAdapter.OnVideoClickL
         loadDownloadedItems()
     }
 
+
+    private fun selectTab(pos: Int = 0){
+        val tabToSelect = binding.studentTabLayout.getTabAt(pos)
+        tabToSelect?.let {
+            binding.studentTabLayout.selectTab(it)
+        }
+    }
+
     private fun setupTabLayout() {
         binding.studentTabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
@@ -130,10 +138,12 @@ class DownloadFragment : DrawerVisibility(), DownloadedItemAdapter.OnVideoClickL
                     when (fileType) {
                         "PDF" -> {
                             updateRecyclerView(content)
+                            selectTab(0)
                         }
 
                         "VIDEO" -> {
                             updateRecyclerView(content)
+                            selectTab(1)
                         }
 
                         else -> {
@@ -162,13 +172,9 @@ class DownloadFragment : DrawerVisibility(), DownloadedItemAdapter.OnVideoClickL
 
     override fun onVideoClick(topicContentModel: TopicContentModel) {
         if (topicContentModel.localPath.isNotEmpty()) {
-            val bundle = Bundle().apply {
-                putString("url", topicContentModel.localPath)
-                putString("url_name", topicContentModel.topicName)
-                putString("description", topicContentModel.topicDescription)
-            }
-            Log.e("dfdsfhsdfdsjfs", "onVideoClick: " +topicContentModel.localPath )
-            findNavController().navigate(R.id.downloadMediaPlayerFragment, bundle)
+            findNavController().navigate(R.id.downloadMediaPlayerFragment, Bundle().apply {
+                putSerializable("VIDEO_DATA", topicContentModel)
+            })
         } else {
             Toast.makeText(requireContext(), "Video file not found", Toast.LENGTH_SHORT).show()
         }
