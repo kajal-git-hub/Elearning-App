@@ -21,6 +21,10 @@ import androidx.activity.OnBackPressedCallback
 import androidx.annotation.OptIn
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.setPadding
 import androidx.lifecycle.ViewModelProvider
 import androidx.media3.common.MediaItem
@@ -28,6 +32,7 @@ import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.ui.PlayerView
 import androidx.navigation.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import xyz.penpencil.competishun.R
@@ -36,8 +41,8 @@ import xyz.penpencil.competishun.databinding.FragmentDownloadMediaPlayerBinding
 import xyz.penpencil.competishun.di.SharedVM
 import xyz.penpencil.competishun.ui.main.HomeActivity
 import xyz.penpencil.competishun.utils.SharedPreferencesManager
-import xyz.penpencil.competishun.utils.immerseMode
 import xyz.penpencil.competishun.utils.serializable
+import xyz.penpencil.competishun.utils.toggleImmersiveMode
 import java.io.File
 import kotlin.random.Random
 
@@ -77,8 +82,12 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
         (activity as? HomeActivity)?.showBottomNavigationView(false)
         (activity as? HomeActivity)?.showFloatingButton(false)
         sharedPreferencesManager = SharedPreferencesManager(requireContext())
+        sharedViewModel = ViewModelProvider(requireActivity())[SharedVM::class.java]
 
-        sharedViewModel = ViewModelProvider(requireActivity()).get(SharedVM::class.java)
+        val windowInsetsController = WindowCompat.getInsetsController(requireActivity().window, view)
+        val initialWindowInsets = ViewCompat.getRootWindowInsets(view)
+        windowInsetsController.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+
         binding.backBtn.setOnClickListener {
             if (mExoPlayerFullscreen){
                 requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
@@ -87,6 +96,7 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
                 view?.findNavController()?.popBackStack()
             }
         }
+
         initFullscreenDialog()
         //value-parameter topicContentModel: TopicContentModel
         val videoData = arguments?.serializable<TopicContentModel>("VIDEO_DATA")
@@ -101,6 +111,7 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
             binding.tittleBtn.text = title
         }
         player = ExoPlayer.Builder(requireContext()).build()
+        binding.playerView.setShowBuffering(PlayerView.SHOW_BUFFERING_ALWAYS)
         binding.playerView.player = player
 //        binding.playerView.videoSurfaceView?.rotation = 90F;
 
@@ -129,7 +140,21 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
             showSpeedOrQualityDialog()
         }
 
-        binding.fullScreen.setOnClickListener { toggleFullscreen() }
+        binding.fullScreen.setOnClickListener {
+            toggleFullscreen()
+            initialWindowInsets?.let {
+                windowInsetsController.toggleImmersiveMode(it)
+            }
+        }
+
+        ViewCompat.setOnApplyWindowInsetsListener(view) { view, windowInsets ->
+            // Update button behavior based on system bar visibility
+            binding.fullScreen.setOnClickListener {
+                toggleFullscreen()
+                windowInsetsController.toggleImmersiveMode(windowInsets)
+            }
+            ViewCompat.onApplyWindowInsets(view, windowInsets)
+        }
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {

@@ -26,6 +26,9 @@
                         android:id="@+id/playerView"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:background="@color/black"
+                        app:unplayed_color="@color/gray"
+                        app:buffered_color="@color/gray"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -63,15 +66,13 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_alignParentBottom="true"
-                android:layout_marginBottom="@dimen/_16dp"
                 android:src="@drawable/zoom_out_map_24"
                 android:layout_marginTop="@dimen/_16dp"
                 android:layout_alignParentEnd="true"
                 android:padding="@dimen/_10dp"
                 android:background="@android:color/transparent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:layout_marginEnd="16dp" />
+                app:layout_constraintTop_toTopOf="parent" />
         </RelativeLayout>
 
         <TextView

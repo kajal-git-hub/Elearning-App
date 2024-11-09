@@ -19,9 +19,6 @@ fun Window.setLightStatusBars(isLight: Boolean) {
     }
 }
 
-
-
-
 inline fun <reified T : Serializable> Bundle.serializable(key: String): T? = when {
     Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> getSerializable(key, T::class.java)
     else -> @Suppress("DEPRECATION") getSerializable(key) as? T
@@ -32,28 +29,10 @@ inline fun <reified T : Serializable> Intent.serializable(key: String): T? = whe
     else -> @Suppress("DEPRECATION") getSerializableExtra(key) as? T
 }
 
-fun Activity.immerseMode(isEnabled: Boolean) {
-    if (isEnabled) {
-        hideSystemUI()
+fun WindowInsetsControllerCompat.toggleImmersiveMode(windowInsets: WindowInsetsCompat) {
+    if (windowInsets.isVisible(WindowInsetsCompat.Type.systemBars())) {
+        hide(WindowInsetsCompat.Type.systemBars())  // Hide system bars
     } else {
-        showSystemUI()
+        show(WindowInsetsCompat.Type.systemBars())  // Show system bars
     }
-}
-
-fun Activity.hideSystemUI() {
- /*   val decorView = window.decorView
-    decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-            or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-            or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-            or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-            or View.SYSTEM_UI_FLAG_FULLSCREEN
-            or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
-    window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)*/
-}
-
-fun Activity.showSystemUI() {
- /*   val decorView = window.decorView
-    decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-            or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-            or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)*/
 }
