@@ -19,14 +19,14 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="150dp"
             android:layout_gravity="center"
-            android:elevation="@dimen/_4dp"
-            android:visibility="visible"/>
+            android:visibility="gone"
+            android:elevation="@dimen/_4dp" />
 
         <!-- ExoPlayer's PlayerView -->
         <androidx.media3.ui.PlayerView
             android:id="@+id/player_view"
             android:layout_width="match_parent"
-            android:layout_height="350dp"
+            android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -140,17 +140,59 @@
             android:fontFamily="@font/nunito"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tittle_tv" />
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/homework_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_20dp"
+            android:text="Homework "
+            android:textColor="@color/black"
+            android:visibility="visible"
+            android:textSize="@dimen/_16sp"
+            android:paddingTop="@dimen/_5dp"
+            android:paddingBottom="@dimen/_5dp"
+            android:textStyle="bold"
+            android:fontFamily="@font/nunito"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/desc_tv" />
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/homeworkDesc_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_20dp"
+            android:text=""
+            android:padding="@dimen/_5dp"
+            android:textColor="@color/_726C6C"
+            android:visibility="visible"
+            android:textSize="@dimen/_14sp"
+            android:fontFamily="@font/nunito"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/homework_tv" />
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/homeworktittle_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_20dp"
+            android:text=""
+            android:padding="@dimen/_5dp"
+            android:textColor="@color/_726C6C"
+            android:visibility="visible"
+            android:textSize="@dimen/_14sp"
+            android:fontFamily="@font/nunito"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/homeworkDesc_tv" />
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_bookmark"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/_40dp"
             android:padding="@dimen/_5dp"
-            android:visibility="gone"
-            android:layout_marginTop="@dimen/_20dp"
+            android:visibility="visible"
+            android:layout_marginTop="@dimen/_40dp"
             android:layout_marginStart="@dimen/_20dp"
             app:layout_constraintStart_toStartOf="parent"
             android:background="@drawable/bg_filter_purchase"
-            app:layout_constraintTop_toBottomOf="@id/desc_tv">
+            app:layout_constraintTop_toBottomOf="@id/homeworktittle_tv">
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/bookmark"
                 android:layout_width="wrap_content"
@@ -171,12 +213,12 @@
             android:layout_width="wrap_content"
             android:layout_height="@dimen/_40dp"
             android:padding="@dimen/_5dp"
-            android:visibility="gone"
-            android:layout_marginTop="@dimen/_20dp"
+            android:visibility="visible"
+            android:layout_marginTop="@dimen/_40dp"
             android:layout_marginStart="@dimen/_20dp"
             app:layout_constraintStart_toEndOf="@id/cl_bookmark"
             android:background="@drawable/bg_filter_purchase"
-            app:layout_constraintTop_toBottomOf="@id/desc_tv">
+            app:layout_constraintTop_toBottomOf="@id/homeworktittle_tv">
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/download"
                 android:layout_width="wrap_content"

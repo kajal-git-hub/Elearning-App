@@ -27,6 +27,7 @@ import xyz.penpencil.competishun.ui.viewmodel.GetCourseByIDViewModel
 import xyz.penpencil.competishun.ui.viewmodel.OrderViewModel
 import xyz.penpencil.competishun.ui.viewmodel.OrdersViewModel
 import xyz.penpencil.competishun.ui.viewmodel.UserViewModel
+import xyz.penpencil.competishun.utils.Constants
 import xyz.penpencil.competishun.utils.HelperFunctions
 import xyz.penpencil.competishun.utils.SharedPreferencesManager
 
@@ -286,7 +287,7 @@ class MyPurchaseDetailsFragment : DrawerVisibility() {
         Log.e("chcekcnou",amount.toString())
         val currency = "INR"
         val checkout = Checkout()
-        checkout.setKeyID("rzp_test_DcVrk6NysFj71r")
+        checkout.setKeyID(Constants.RazorpayKeyId_Prod)
         Log.e("user/id=",courseUserId)
         Log.e("user/tokem=",sharedPreferencesManager.accessToken.toString())
         val obj = JSONObject()

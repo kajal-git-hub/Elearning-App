@@ -257,6 +257,7 @@ class StudyMaterialDetailsFragment : Fragment() {
                                         topicName = contents.content?.file_name ?: "",
                                         topicDescription = contents.content?.description?:"",
                                         progress = 1,
+                                        homeworkDesc = contents.content?.homework?.map { it.description }.toString() ?: "",
                                         videoDuration = contents.content?.video_duration ?: 0,
                                         url = contents.content?.file_url.toString(),
                                         fileType = contents.content?.file_type?.name ?: "",
@@ -275,10 +276,10 @@ class StudyMaterialDetailsFragment : Fragment() {
                                 folderId,
                                 requireActivity(),
                                 requireContext()
-                            ) { topicContent, folderContentId, folderContentIds,folderContentNames, folderContentDescs->
+                            ) { topicContent, folderContentId, folderContentIds,folderContentNames, folderContentDescs,folderContenthomework, folderContenthomeworkLink,folderContenthomeworkDesc->
                                 when (topicContent.fileType) {
                                     "VIDEO" -> {
-                                        videoUrlApi(videourlViewModel, topicContent.id,topicContent.topicName,folderContentIds,folderContentNames,folderContentDescs)
+                                        videoUrlApi(videourlViewModel, topicContent.id,topicContent.topicName,folderContentIds,folderContentNames,folderContentDescs,folderContenthomework, folderContenthomeworkLink,folderContenthomeworkDesc)
                                     }
                                     "PDF" -> {
                                         val intent = Intent(context, PdfViewActivity::class.java).apply {
@@ -418,6 +419,7 @@ class StudyMaterialDetailsFragment : Fragment() {
                                         url = contents.content?.file_url.toString(),
                                         fileType = contents.content?.file_type?.name ?: "",
                                         lockTime =  time,
+                                        homeworkDesc = contents.content?.homework?.map { it.description }.toString() ?: "",
                                         homeworkUrl = homeworkUrl.toString(),
                                         homeworkName = homeworkFileName.toString(),
                                         isExternal = contents.content?.file_name?.contains("DPPs") == true
@@ -432,11 +434,11 @@ class StudyMaterialDetailsFragment : Fragment() {
                                 folderId,
                                 requireActivity(),
                                 requireContext()
-                            ) { topicContent, folderContentId, folderContentIds,folderContentNames, folderContentDescs ->
+                            ) { topicContent, folderContentId, folderContentIds,folderContentNames, folderContentDescs,folderContenthomework, folderContenthomeworkLink, folderContenthomeworkDesc ->
                                 when (topicContent.fileType) {
 
                                     "VIDEO" -> {
-                                        videoUrlApi(videourlViewModel, topicContent.id,topicContent.topicName,folderContentIds,folderContentNames,folderContentDescs)
+                                        videoUrlApi(videourlViewModel, topicContent.id,topicContent.topicName,folderContentIds,folderContentNames,folderContentDescs,folderContenthomework, folderContenthomeworkLink,folderContenthomeworkDesc)
                                     }
                                     "PDF" -> {
                                         val intent = Intent(context, PdfViewActivity::class.java).apply {
@@ -588,7 +590,7 @@ class StudyMaterialDetailsFragment : Fragment() {
 
 
     }
-    private fun videoUrlApi(viewModel: VideourlViewModel, folderContentId: String, name:String, folderContentIds: ArrayList<String>?, folderContentNames: ArrayList<String>?,folderContentDescs: ArrayList<String>?) {
+    private fun videoUrlApi(viewModel: VideourlViewModel, folderContentId: String, name:String, folderContentIds: ArrayList<String>?, folderContentNames: ArrayList<String>?,folderContentDescs: ArrayList<String>?,homeworkNames:ArrayList<String>?,homeworkLinks:ArrayList<String>?,homeworkDescs:ArrayList<String>?) {
         Log.e("getfoldersubject",folderContentNames.toString())
         viewModel.fetchVideoStreamUrl(folderContentId, "480p")
 
@@ -602,6 +604,9 @@ class StudyMaterialDetailsFragment : Fragment() {
                     putStringArrayList("folderContentIds", folderContentIds)
                     putStringArrayList("folderContentDescs", folderContentDescs)
                     putStringArrayList("folderContentNames", folderContentNames)
+                    putStringArrayList("homeworkLinks", homeworkLinks)
+                    putStringArrayList("homeworkDescs", homeworkDescs)
+                    putStringArrayList("homeworkNames", homeworkNames)
                 }
                 findNavController().navigate(R.id.mediaFragment, bundle)
 
