@@ -53,10 +53,12 @@
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tv_subject_name"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_16dp"
             android:layout_marginTop="@dimen/_20dp"
+            android:maxLines="2"
+            app:layout_constraintEnd_toStartOf="@+id/iv_sideImage"
             android:fontFamily="@font/nunito"
             android:text="Subject Name"
             android:textColor="#2B2829"
@@ -96,6 +98,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <ImageView
+            android:id="@+id/iv_sideImage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/group_1707478983"
