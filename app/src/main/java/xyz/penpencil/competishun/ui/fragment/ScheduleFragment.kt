@@ -193,6 +193,7 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
             result.onSuccess { data ->
                 foundMatchingDate = false
                 hasScheduleList.clear()
+                binding.loader.visibility = View.GONE
 
                 data.findAllCourseFolderContentByScheduleTime.forEachIndexed { index, scheduleContent ->
                     scheduleContent.content.scheduled_time?.let {
@@ -253,6 +254,7 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
                 }
                 setUpScheduleAvailable(hasScheduleList)
             }.onFailure { exception ->
+                binding.loader.visibility = View.GONE
                 Toast.makeText(context, "Error: ${exception.message}", Toast.LENGTH_SHORT).show()
             }
         }
@@ -314,6 +316,8 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
     }
 
     private fun fetchData(){
+        binding.loader.visibility = View.VISIBLE
+        binding.clEmptySchedule.visibility = View.GONE
         val starts = courseStart.toFormattedDate()?:return
         val ends = courseEnd.toFormattedDate()?:return
         myCourseViewModel.getCourseFolderContent(starts,ends, courseId)

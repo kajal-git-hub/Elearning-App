@@ -21,10 +21,8 @@ import androidx.activity.OnBackPressedCallback
 import androidx.annotation.OptIn
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
-import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.WindowInsetsControllerCompat
+
 import androidx.core.view.setPadding
 import androidx.lifecycle.ViewModelProvider
 import androidx.media3.common.MediaItem
@@ -84,10 +82,6 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
         sharedPreferencesManager = SharedPreferencesManager(requireContext())
         sharedViewModel = ViewModelProvider(requireActivity())[SharedVM::class.java]
 
-        val windowInsetsController = WindowCompat.getInsetsController(requireActivity().window, view)
-        val initialWindowInsets = ViewCompat.getRootWindowInsets(view)
-        windowInsetsController.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-
         binding.backBtn.setOnClickListener {
             if (mExoPlayerFullscreen){
                 requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
@@ -98,7 +92,6 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
         }
 
         initFullscreenDialog()
-        //value-parameter topicContentModel: TopicContentModel
         val videoData = arguments?.serializable<TopicContentModel>("VIDEO_DATA")
         val videoUrl = videoData?.url?:""
         val title = videoData?.topicName?:""
@@ -112,7 +105,7 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
         }
         player = ExoPlayer.Builder(requireContext()).build()
         binding.playerView.useArtwork = true
-        binding.playerView.setShowBuffering(StyledPlayerView.SHOW_BUFFERING_ALWAYS)
+        binding.playerView.setShowBuffering(PlayerView.SHOW_BUFFERING_ALWAYS)
         binding.playerView.player = player
 
 
@@ -142,18 +135,6 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
 
         binding.fullScreen.setOnClickListener {
             toggleFullscreen()
-            initialWindowInsets?.let {
-                windowInsetsController.toggleImmersiveMode(it)
-            }
-        }
-
-        ViewCompat.setOnApplyWindowInsetsListener(view) { view, windowInsets ->
-            // Update button behavior based on system bar visibility
-            binding.fullScreen.setOnClickListener {
-                toggleFullscreen()
-                windowInsetsController.toggleImmersiveMode(windowInsets)
-            }
-            ViewCompat.onApplyWindowInsets(view, windowInsets)
         }
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
@@ -357,15 +338,17 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
         mExoPlayerFullscreen = true
         mFullScreenDialog.show()
         binding.fullScreen.setImageResource(R.drawable.zoom_in_map_24)
+
+        showNavigationBar()
     }
 
     private fun closeFullscreenDialog() {
-//        requireActivity().immerseMode(false)
         (binding.playerView.parent as? ViewGroup)?.removeView(binding.playerView)
         binding.playerRootApp.addView(binding.playerView)
         mExoPlayerFullscreen = false
         mFullScreenDialog.dismiss()
         binding.fullScreen.setImageResource(R.drawable.zoom_out_map_24)
+        hideNavigationBar()
     }
 
     private fun toggleFullscreen() {
@@ -376,5 +359,34 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
             requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
             closeFullscreenDialog()
         }
+    }
+
+    private fun hideNavigationBar() {
+        val flags = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                or View.SYSTEM_UI_FLAG_FULLSCREEN
+                or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
+        requireActivity().window?.decorView?.systemUiVisibility = flags
+  /*      requireActivity().window?.run{
+            WindowCompat.setDecorFitsSystemWindows(this, false)
+        }*/
+    }
+
+    private fun showNavigationBar() {
+//        val flags = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+//                or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+//                or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+//                or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+//                or View.SYSTEM_UI_FLAG_FULLSCREEN
+//                or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
+//        requireActivity().window?.clearFlags(flags)
+
+
+   /*     requireActivity().window?.run{
+            WindowCompat.setDecorFitsSystemWindows(this, true)
+        }*/
+//        requireActivity().window?.decorView?.systemUiVisibility= View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR or View.SYSTEM_UI_FLAG_FULLSCREEN
     }
 }
