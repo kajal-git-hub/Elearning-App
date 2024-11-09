@@ -40,11 +40,13 @@ import com.student.competishun.gatekeeper.MyDetailsQuery
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import xyz.penpencil.competishun.R
+import xyz.penpencil.competishun.data.model.JeeItem
 import xyz.penpencil.competishun.data.model.PromoBannerModel
 import xyz.penpencil.competishun.data.model.RecommendedCourseDataModel
 import xyz.penpencil.competishun.data.model.Testimonial
 import xyz.penpencil.competishun.data.model.WhyCompetishun
 import xyz.penpencil.competishun.databinding.FragmentHomeBinding
+import xyz.penpencil.competishun.ui.adapter.JEEAdapter
 import xyz.penpencil.competishun.ui.adapter.OurCoursesAdapter
 import xyz.penpencil.competishun.ui.adapter.PromoBannerAdapter
 import xyz.penpencil.competishun.ui.adapter.RecommendedCoursesAdapter
@@ -97,8 +99,11 @@ class HomeFragment : Fragment() {
 
 
     private lateinit var helperFunctions: HelperFunctions
+    private lateinit var jeeRecycler: RecyclerView
 
     private lateinit var contactImage: ImageView
+    private lateinit var jeeAdapter: JEEAdapter
+
 
 
     private val userViewModel: UserViewModel by viewModels()
@@ -122,6 +127,21 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
+        jeeRecycler = view.findViewById(R.id.rv_jeeMain)
+        jeeRecycler.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+
+        // Sample data
+        val jeeList = listOf(
+            JeeItem("1935", "Selections", "2024"),
+            JeeItem("1924", "Selections", "2023"),
+            JeeItem("1730", "Selections", "2022"),
+            JeeItem("1542", "Selections", "2021"),
+        )
+
+        jeeAdapter = JEEAdapter(jeeList)
+        jeeRecycler.adapter = jeeAdapter
 
 
         val appSignatureHashHelper = AppSignatureHashHelper(requireContext())

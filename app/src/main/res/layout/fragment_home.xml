@@ -540,15 +540,27 @@
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@id/tvSucceed" />
 
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rv_jeeMain"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:visibility="visible"
+                            tools:itemCount="4"
+                            tools:listitem="@layout/item_jee_main"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/tvExam"
+                            android:layout_marginTop="16dp"
+                            android:layout_marginBottom="24dp"/>
+
 
                         <androidx.constraintlayout.widget.ConstraintLayout
                             android:id="@+id/clBatchImage"
                             android:layout_width="138dp"
                             android:layout_height="102dp"
-                            android:layout_marginTop="16dp"
-                            android:layout_marginBottom="24dp"
+                            android:visibility="gone"
+                            app:layout_constraintTop_toBottomOf="@+id/rv_jeeMain"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/tvExam">
+                            >
 
                             <ImageView
                                 android:id="@+id/leafImageLeft"
