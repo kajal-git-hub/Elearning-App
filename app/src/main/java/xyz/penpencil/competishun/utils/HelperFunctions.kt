@@ -191,6 +191,37 @@ class HelperFunctions {
             }
         }
     }
+    fun downloadPdfOld(context: Context, fileUrl: String, title: String) {
+        val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+        val request = DownloadManager.Request(Uri.parse(removeBrackets(fileUrl)))
+            .setTitle(title)
+            .setDescription("Downloading $title...")
+            .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+            .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "$title.pdf")
+
+        val downloadId = downloadManager.enqueue(request)
+
+        Toast.makeText(context, "Download started", Toast.LENGTH_SHORT).show()
+
+        val onCompleteReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context, intent: Intent) {
+                val id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
+
+                if (id == downloadId) {
+                    Toast.makeText(context, "Download successful", Toast.LENGTH_SHORT).show()
+
+                    context.unregisterReceiver(this)
+                }
+            }
+        }
+
+        context.registerReceiver(onCompleteReceiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE),
+            Context.RECEIVER_NOT_EXPORTED)
+
+
+        Log.e("YUYUYUIYUIY", "downloadPdf: $fileUrl  == $title")
+    }
+
 
     fun downloadPdf(context: Context, fileUrl: String, title: String) {
         /*val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager

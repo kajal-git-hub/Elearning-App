@@ -37,7 +37,7 @@ class TopicContentAdapter(
     private val folderContentId: String,
     private val fragmentActivity: FragmentActivity,
     private val context: Context, // Pass context
-    private val onItemClick: (TopicContentModel, String,ArrayList<String>,ArrayList<String>, ArrayList<String>) -> Unit
+    private val onItemClick: (TopicContentModel, String,ArrayList<String>,ArrayList<String>, ArrayList<String>,ArrayList<String>,ArrayList<String>,ArrayList<String>) -> Unit
 ) :
     RecyclerView.Adapter<TopicContentAdapter.TopicContentViewHolder>() {
 
@@ -63,6 +63,15 @@ class TopicContentAdapter(
         val unlockedTopicContentDescs = topicContents
             .filter { isDateTodayOrPast(it.lockTime, topicContent.isExternal) && it.fileType == "VIDEO" }
             .map { it.topicDescription }.toCollection(ArrayList())
+        val unlockedTopicContenthomeworks = topicContents
+            .filter { isDateTodayOrPast(it.lockTime, topicContent.isExternal) && it.fileType == "VIDEO" }
+            .map { it.homeworkName }.toCollection(ArrayList())
+        val unlockedTopicContenthomeworkLinks = topicContents
+            .filter { isDateTodayOrPast(it.lockTime, topicContent.isExternal) && it.fileType == "VIDEO" }
+            .map { it.homeworkUrl }.toCollection(ArrayList())
+        val unlockedTopicContenthomeworkDescs = topicContents
+            .filter { isDateTodayOrPast(it.lockTime, topicContent.isExternal) && it.fileType == "VIDEO" }
+            .map { it.homeworkDesc }.toCollection(ArrayList())
         Log.e("unlockedTopics",unlockedTopicContentIds.toString())
         Log.e("unlockedTopic",unlockedTopicContentNames.toString())
         // Disable click if locked, enable if not
@@ -71,7 +80,7 @@ class TopicContentAdapter(
                 val url = if (topicContent.topicName.contains("http")) topicContent.url else "https://${topicContent.url}"
                 it.context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
             } else if (isDateTodayOrPast(topicContent.lockTime, topicContent.isExternal)){
-                onItemClick(topicContent, folderContentId,unlockedTopicContentIds,unlockedTopicContentNames,unlockedTopicContentDescs)
+                onItemClick(topicContent, folderContentId,unlockedTopicContentIds,unlockedTopicContentNames,unlockedTopicContentDescs,unlockedTopicContenthomeworks,unlockedTopicContenthomeworkLinks,unlockedTopicContenthomeworkDescs)
             } else if (topicContent.fileType == "UNKNOWN__" ) {
                 Log.e("TAG", "onBindViewHolder: ")
             }else {
