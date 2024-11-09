@@ -35,6 +35,9 @@ import xyz.penpencil.competishun.databinding.FragmentDownloadMediaPlayerBinding
 import xyz.penpencil.competishun.di.SharedVM
 import xyz.penpencil.competishun.ui.main.HomeActivity
 import xyz.penpencil.competishun.utils.SharedPreferencesManager
+import xyz.penpencil.competishun.utils.hideSystemUI
+import xyz.penpencil.competishun.utils.immerseMode
+import xyz.penpencil.competishun.utils.showSystemUI
 import java.io.File
 import kotlin.random.Random
 
@@ -316,6 +319,7 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
     }
 
     private fun openFullscreenDialog() {
+        requireActivity().immerseMode(true)
         (binding.playerContainer.parent as? ViewGroup)?.removeView(binding.playerContainer)
         mFullScreenDialog.addContentView(
             binding.playerContainer,
@@ -330,6 +334,7 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
     }
 
     private fun closeFullscreenDialog() {
+        requireActivity().immerseMode(false)
         (binding.playerContainer.parent as? ViewGroup)?.removeView(binding.playerContainer)
         binding.playerRoot.addView(binding.playerContainer)
         mExoPlayerFullscreen = false

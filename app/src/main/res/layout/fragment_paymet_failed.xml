@@ -10,10 +10,11 @@
 
     <ImageView
         android:id="@+id/iv_cross"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_marginStart="@dimen/_16dp"
         android:layout_marginTop="@dimen/_16dp"
+        android:padding="@dimen/_8dp"
         android:src="@drawable/payment_failed"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

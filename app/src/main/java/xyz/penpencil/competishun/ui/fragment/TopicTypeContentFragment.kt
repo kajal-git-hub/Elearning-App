@@ -50,7 +50,7 @@ class TopicTypeContentFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         helperFunctions = HelperFunctions()
-        binding.backIcon.setOnClickListener {
+        binding.tvTopicTypeName.setOnClickListener {
             it.findNavController().popBackStack()
         }
         val gson = Gson()

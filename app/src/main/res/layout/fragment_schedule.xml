@@ -24,7 +24,7 @@
             android:layout_height="40dp"
             android:padding="@dimen/_6dp"
             android:layout_marginStart="@dimen/_16dp"
-            android:layout_marginTop="25dp"
+            android:layout_marginTop="@dimen/_16dp"
             android:src="@drawable/arrow_left_white"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

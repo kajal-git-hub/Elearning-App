@@ -29,13 +29,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
+                android:visibility="gone"
                 android:src="@drawable/arrow_left" />
 
             <TextView
                 android:id="@+id/tvTitle"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
+                android:layout_height="40dp"
+                android:gravity="center_vertical"
+                android:drawablePadding="@dimen/_8dp"
+                android:drawableStart="@drawable/arrow_left"
+                android:layout_marginStart="16dp"
                 android:fontFamily="@font/nunito"
                 android:text="Terms and Conditions"
                 android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
