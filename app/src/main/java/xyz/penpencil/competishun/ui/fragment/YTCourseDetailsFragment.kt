@@ -16,6 +16,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.Target
 import com.google.gson.Gson
 import com.student.competishun.curator.GetCourseByIdQuery
+import dagger.hilt.android.AndroidEntryPoint
 import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.data.model.SubjectContentItem
 import xyz.penpencil.competishun.data.model.TopicContentModel
@@ -34,6 +35,7 @@ import xyz.penpencil.competishun.utils.HelperFunctions
 import xyz.penpencil.competishun.utils.OnTopicTypeSelectedListener
 import xyz.penpencil.competishun.utils.SharedPreferencesManager
 
+@AndroidEntryPoint
 class YTCourseDetailsFragment : Fragment() {
 
     private lateinit var binding: FragmentYTCourseDetailsBinding
@@ -87,9 +89,9 @@ class YTCourseDetailsFragment : Fragment() {
                    // binding.progressBar.visibility = View.GONE
                     binding.clYTCourseBannerView.visibility = View.VISIBLE
                     val totalPdfCount = courses.folder?.sumOf { folder ->
-                        folder.pdf_count?.toIntOrNull() ?: 0
+                        folder.video_count?.toIntOrNull() ?: 0
                     } ?: 0
-                    binding.tvNoOfVideos.text = "${totalPdfCount.toString()} PDFs"
+                    binding.tvNoOfVideos.text = "${totalPdfCount.toString()} Vidoess"
                 }
                 if (folderlist[0].id != null) {
                     var id = folderlist[0].id ?: ""

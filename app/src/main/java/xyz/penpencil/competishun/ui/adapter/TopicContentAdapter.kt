@@ -23,6 +23,7 @@ import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.data.model.TopicContentModel
 import xyz.penpencil.competishun.databinding.ItemTopicTypeContentBinding
 import xyz.penpencil.competishun.ui.fragment.BottomSheetDownloadBookmark
+import xyz.penpencil.competishun.ui.main.YoutubeActivity
 import xyz.penpencil.competishun.utils.HelperFunctions
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -68,8 +69,10 @@ class TopicContentAdapter(
         // Disable click if locked, enable if not
         holder.itemView.setOnClickListener {
             if ((topicContent.fileType == "URL")){
-                val url = if (topicContent.topicName.contains("http")) topicContent.url else "https://${topicContent.url}"
-                it.context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+                Log.e("playeurl1",topicContent.url)
+               goToPlayerPage(holder.itemView.context, topicContent.url,"About this Course")
+//                val url = if (topicContent.topicName.contains("http")) topicContent.url else "https://${topicContent.url}"
+//                it.context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
             } else if (isDateTodayOrPast(topicContent.lockTime, topicContent.isExternal)){
                 onItemClick(topicContent, folderContentId,unlockedTopicContentIds,unlockedTopicContentNames,unlockedTopicContentDescs)
             } else if (topicContent.fileType == "UNKNOWN__" ) {
@@ -82,6 +85,12 @@ class TopicContentAdapter(
             // Enable the click listener for unlocked items
             holder.itemView.findViewById<ImageView>(R.id.iv_MoreInfoLec).visibility = View.GONE
         }
+    }
+    private fun goToPlayerPage(context: Context, videoUrl: String, name: String) {
+        val intent = Intent(context, YoutubeActivity::class.java).apply {
+            putExtra("url", videoUrl)
+        }
+        context.startActivity(intent)
     }
 
     override fun getItemCount(): Int = topicContents.size
@@ -193,12 +202,24 @@ class TopicContentAdapter(
             }
 
             binding.tvTopicName.setOnClickListener {
-                if (topicContent.fileType == "UNKNOWN__"  || topicContent.fileType == "URL"){
+                Log.e("playeurl",topicContent.url)
+                if (topicContent.fileType == "URL") {
+                    goToPlayerPage(itemView.context, topicContent.url, "About this Course")
+                }
+                if (topicContent.fileType == "UNKNOWN__"){
                     it.context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(topicContent.url)))
                 }
             }
 
         }
+
+        private fun goToPlayerPage(context: Context, videoUrl: String, name: String) {
+            val intent = Intent(context, YoutubeActivity::class.java).apply {
+                putExtra("url", videoUrl)
+            }
+            context.startActivity(intent)
+        }
+
         @RequiresApi(Build.VERSION_CODES.O)
         fun showDateIfFutureOrToday(dateString: String): Boolean {
             // Correct the date string if necessary
