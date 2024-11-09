@@ -610,6 +610,7 @@
                             android:layout_width="20dp"
                             android:layout_height="20dp"
                             android:layout_marginTop="10dp"
+                            android:visibility="gone"
                             android:layout_marginEnd="12dp"
                             android:layout_marginBottom="10dp"
                             android:src="@drawable/tray_arrow_down"

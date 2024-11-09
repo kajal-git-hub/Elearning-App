@@ -183,8 +183,8 @@
 
         <ImageView
             android:id="@+id/videoicon"
-            android:layout_width="@dimen/_40dp"
-            android:layout_height="@dimen/_40dp"
+            android:layout_width="@dimen/_45dp"
+            android:layout_height="@dimen/_45dp"
             android:padding="@dimen/_10dp"
             android:layout_marginEnd="@dimen/_12dp"
             android:layout_marginBottom="10dp"

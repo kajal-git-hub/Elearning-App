@@ -287,7 +287,8 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
     override fun onResume() {
         super.onResume()
         userId = sharedPreferencesManager.userId.toString()
-        binding.bottomNav.selectedItemId = R.id.home
+//        binding.bottomNav.selectedItemId = R.id.home
+//        binding.bottomNav.selectedItemId = R.id.home
 
     }
 
