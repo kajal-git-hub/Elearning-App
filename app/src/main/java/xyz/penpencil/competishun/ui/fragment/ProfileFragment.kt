@@ -58,7 +58,7 @@ class ProfileFragment : DrawerVisibility() {
             startActivity(intent)
         }
         binding.etProfileHelp.setOnClickListener {
-            findNavController().navigate(R.id.ContactUs)
+            findNavController().popBackStack()
         }
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {

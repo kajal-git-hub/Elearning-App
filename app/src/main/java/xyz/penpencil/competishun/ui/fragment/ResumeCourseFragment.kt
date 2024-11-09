@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -60,8 +61,8 @@ class ResumeCourseFragment : DrawerVisibility() {
         })
 
 
-        binding.backIcon.setOnClickListener {
-            requireActivity().onBackPressedDispatcher.onBackPressed()
+        binding.courseNameResumeCourse.setOnClickListener {
+            it.findNavController().popBackStack()
         }
 
         binding.clResumeCourseIcon4.setOnClickListener {

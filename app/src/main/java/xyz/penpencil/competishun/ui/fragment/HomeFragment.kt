@@ -262,6 +262,10 @@ class HomeFragment : Fragment() {
                 contactImage.visibility = View.GONE
             }
 
+            /*
+             TODO : Need to worked on navigation of app to stop crash
+             $TASK : Fragment HomeFragment{b10dedc}  (8aea8358-29b8-416c- b478- e96ec86c7129)  not associated with a fragment manager
+             */
 
             override fun onDrawerClosed(drawerView: View) {
                 if (findNavController().currentDestination?.id  == R.id.homeFragment){
