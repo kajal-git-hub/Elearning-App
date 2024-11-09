@@ -235,7 +235,7 @@ class MediaPlayerFragment : DrawerVisibility() {
                                 binding.homeworktittleTv.text = if (homeworkDescs[currentVideoIndex].isNotEmpty()) " "+helperFunctions.removeBrackets(homeworkDescs[currentVideoIndex]) else "NA"
                                 binding.homeworkDescTv.text = if (homeworkNames[currentVideoIndex].isNotEmpty()) " "+helperFunctions.removeBrackets(homeworkNames[currentVideoIndex]) else "NA"
                                 binding.homeworkDescTv.setOnClickListener {
-                                    helperFunctions.downloadPdf(requireContext(),homeworkLinks[currentVideoIndex],homeworkNames[currentVideoIndex])
+                                    helperFunctions.downloadPdfOld(requireContext(),homeworkLinks[currentVideoIndex],homeworkNames[currentVideoIndex])
                                 }
                              } else {
                         // No more videos in the playlist
@@ -481,7 +481,7 @@ class MediaPlayerFragment : DrawerVisibility() {
                 binding.homeworkDescTv.text =  homeworkDescs[currentVideoIndex]
                 binding.homeworktittleTv.text =  if (homeworkDescs[currentVideoIndex].isNotEmpty()) " "+helperFunctions.removeBrackets(homeworkDescs[currentVideoIndex]) else "NA"
                 binding.homeworkDescTv.setOnClickListener {
-                    helperFunctions.downloadPdf(requireContext(),homeworkLinks[currentVideoIndex],homeworkNames[currentVideoIndex])
+                    helperFunctions.downloadPdfOld(requireContext(),homeworkLinks[currentVideoIndex],homeworkNames[currentVideoIndex])
                 }
                 binding.descTv.text = nextVideoDesc?:""
                 playVideo(signedUrl,0,nextVideoTittle,nextVideoDesc)
