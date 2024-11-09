@@ -34,6 +34,7 @@ import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.google.android.exoplayer2.ui.StyledPlayerView
 import dagger.hilt.android.AndroidEntryPoint
 import xyz.penpencil.competishun.R
@@ -138,11 +139,11 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                if (mExoPlayerFullscreen){
+                if (mExoPlayerFullscreen) {
                     requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
                     closeFullscreenDialog()
-                }else {
-                    view?.findNavController()?.popBackStack()
+                } else {
+                    findNavController().popBackStack()
                 }
             }
         })
