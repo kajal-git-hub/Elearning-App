@@ -91,7 +91,7 @@ class YTCourseDetailsFragment : Fragment() {
                     val totalPdfCount = courses.folder?.sumOf { folder ->
                         folder.video_count?.toIntOrNull() ?: 0
                     } ?: 0
-                    binding.tvNoOfVideos.text = "${courses.folder?.size.toString()} Vidoess"
+                    binding.tvNoOfVideos.text = "${courses.folder?.size.toString()} Vidoes"
                 }
                 if (folderlist[0].id != null) {
                     var id = folderlist[0].id ?: ""
