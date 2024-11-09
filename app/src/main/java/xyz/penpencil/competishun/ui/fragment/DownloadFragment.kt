@@ -84,10 +84,14 @@ class DownloadFragment : DrawerVisibility(), DownloadedItemAdapter.OnVideoClickL
                         0 ->{
                             topicContentViewModel.updateSelectedCount(0)
                             loadData("PDF")
+                            binding.tvNoPdfs.text = "No PDFs Found!"
+                            binding.tvNotDownloadedAnything.text = "You’ve not downloaded any pdfs yet."
                         }
                         1 -> {
                             topicContentViewModel.updateSelectedCount(1)
                             loadData("VIDEO")
+                            binding.tvNoPdfs.text = "No Videos Found!"
+                            binding.tvNotDownloadedAnything.text = "You’ve not downloaded any videos yet."
                         }
                     }
                 }
