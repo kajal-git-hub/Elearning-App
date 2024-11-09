@@ -158,6 +158,10 @@ class TopicTypeContentFragment : Fragment() {
                 is Result.Success -> {
                     val data = result.data
                     Log.e("GetFolderdatazz", data.findCourseFolderProgress.folder.toString())
+                    if(data.findCourseFolderProgress.folderContents?.isNotEmpty() == true){
+                        binding.rvTopicContent.visibility = View.VISIBLE
+                        binding.clEmptyContent.visibility = View.GONE
+                    }
                     val folderContents = data.findCourseFolderProgress.folderContents
                     Log.d("folderContentsProgress", folderContents.toString())
 
