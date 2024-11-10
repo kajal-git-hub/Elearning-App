@@ -272,7 +272,7 @@ class StudyMaterialDetailsFragment : Fragment() {
                             val folderContentNmes = folderProgressContent.filter { it.content?.file_type?.name  == "VIDEO" }.mapNotNull { it.content?.file_name }.toCollection(ArrayList())
                             Log.e("getfoldersubject2",folderContentNmes.toString())
                             binding.rvStudyMaterial.adapter = TopicContentAdapter(
-                                topicContentList,
+                                topicContentList.toMutableList(),
                                 folderId,
                                 requireActivity(),
                                 requireContext()
@@ -430,7 +430,7 @@ class StudyMaterialDetailsFragment : Fragment() {
                             val folderContentNes = folderProgressContent.filter { it.content?.file_type?.name  == "VIDEO" }.mapNotNull { it.content?.file_name }.toCollection(ArrayList())
                             Log.e("getfoldersubject1",folderContentNes.toString())
                             binding.rvStudyMaterial.adapter = TopicContentAdapter(
-                                subjectContentList,
+                                subjectContentList.toMutableList(),
                                 folderId,
                                 requireActivity(),
                                 requireContext()

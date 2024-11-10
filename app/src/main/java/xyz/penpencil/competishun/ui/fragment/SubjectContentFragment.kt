@@ -248,7 +248,7 @@ class SubjectContentFragment : DrawerVisibility() {
                                 val folderContentNs = folderProgressContent.filter { it.content?.file_type?.name  == "VIDEO" }.mapNotNull { it.content?.file_name }.toCollection(ArrayList())
                                 Log.e("getfoldersubject2",folderContentNs.toString())
                             binding.rvTopicContent.adapter = TopicContentAdapter(
-                                topicContentList,
+                                topicContentList.toMutableList(),
                                 folderId,
                                 requireActivity(),
                                 requireContext()
@@ -405,7 +405,7 @@ class SubjectContentFragment : DrawerVisibility() {
                                 }
                             val folderContentIds = folderProgressContent.filter { it.content?.file_type?.name  == "VIDEO" }.mapNotNull { it.content?.id }.toCollection(ArrayList())
                             binding.rvTopicContent.adapter = TopicContentAdapter(
-                                subjectContentList,
+                                subjectContentList.toMutableList(),
                                 folderId,
                                 requireActivity(),
                                 requireContext()
@@ -527,7 +527,7 @@ class SubjectContentFragment : DrawerVisibility() {
                             val folderContentNs = folderProgressContent.filter { it.content?.file_type?.name  == "VIDEO" }.mapNotNull { it.content?.file_name }.toCollection(ArrayList())
                             Log.e("getfoldersubject1",folderContentNs.toString())
                             binding.rvsubjectTopicContent.adapter = TopicContentAdapter(
-                                subjectContentList,
+                                subjectContentList.toMutableList(),
                                 folderId,
                                 requireActivity(),
                                 requireContext()
@@ -611,7 +611,7 @@ class SubjectContentFragment : DrawerVisibility() {
         val ContentIds = folderContents.filter { it.content?.file_type?.name  == "VIDEO" }.mapNotNull { it.content?.id }?.toCollection(ArrayList())
         val folderContentNas = folderContents.filter { it.content?.file_type?.name  == "VIDEO" }.mapNotNull { it.content?.file_name }?.toCollection(ArrayList())
 
-        val adapter = TopicContentAdapter(topicContents, folderId,requireActivity(),requireContext()) { topicContent, folderContentId , folderContentIds,folderContentNames, folderContentDesc, folderContenthomework, folderContenthomeworkLink,folderContenthomeworkDesc->
+        val adapter = TopicContentAdapter(topicContents.toMutableList(), folderId,requireActivity(),requireContext()) { topicContent, folderContentId , folderContentIds,folderContentNames, folderContentDesc, folderContenthomework, folderContenthomeworkLink,folderContenthomeworkDesc->
             when (topicContent.fileType) {
                 "VIDEO" -> videoUrlApi(videourlViewModel, topicContent.id,topicContent.topicName,folderContentIds,folderContentNames, folderContentDesc, folderContenthomework, folderContenthomeworkLink,folderContenthomeworkDesc)
                 "PDF" -> {
