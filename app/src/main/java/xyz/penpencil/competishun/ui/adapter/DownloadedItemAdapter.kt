@@ -71,7 +71,16 @@ class DownloadedItemAdapter(
         val item = filteredItems[position]
         holder.studyMaterial.text = item.lecture
         holder.itemView.setOnClickListener {
-            videoClickListener.onVideoClick(item)
+            if (item.fileType == "VIDEO"){
+                videoClickListener.onVideoClick(item)
+            }
+
+            if (item.fileType == "PDF"){
+                context.startActivity(Intent(context, PdfViewActivity::class.java).apply {
+                    putExtra("PDF_URL", item.localPath)
+                    putExtra("PDF_TITLE", item.topicName)
+                })
+            }
         }
         if (item.fileType == "PDF") {
             holder.lecTime.text = item.lecturerName
@@ -109,17 +118,21 @@ class DownloadedItemAdapter(
         holder.topicDescription.text = item.topicDescription
 
         holder.forRead.setOnClickListener {
-            val localPath = File(context.filesDir, item.topicName + ".pdf")
-            val intent = Intent(context, PdfViewActivity::class.java).apply {
-                putExtra("PDF_URL", localPath.absolutePath)
-                putExtra("PDF_TITLE", item.topicName)
+            if (item.fileType == "VIDEO"){
+                videoClickListener.onVideoClick(item)
             }
-            context.startActivity(intent)
+
+            if (item.fileType == "PDF"){
+                context.startActivity(Intent(context, PdfViewActivity::class.java).apply {
+                    putExtra("PDF_URL", item.localPath)
+                    putExtra("PDF_TITLE", item.topicName)
+                })
+            }
         }
 
-//        holder.forVideo.setOnClickListener {
-//            videoClickListener.onVideoClick(item)
-//        }
+        holder.forVideo.setOnClickListener {
+            videoClickListener.onVideoClick(item)
+        }
     }
 
     override fun getItemCount(): Int {

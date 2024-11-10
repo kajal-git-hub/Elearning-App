@@ -76,14 +76,6 @@ class DownloadFragment : DrawerVisibility(), DownloadedItemAdapter.OnVideoClickL
         loadDownloadedItems()
     }
 
-
-    private fun selectTab(pos: Int = 0){
-     /*   val tabToSelect = binding.studentTabLayout.getTabAt(pos)
-        tabToSelect?.let {
-            binding.studentTabLayout.selectTab(it)
-        }*/
-    }
-
     private fun setupTabLayout() {
         binding.studentTabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
@@ -182,6 +174,12 @@ class DownloadFragment : DrawerVisibility(), DownloadedItemAdapter.OnVideoClickL
             try {
                 if (File(topicContentModel.localPath).exists()){
                     File(topicContentModel.localPath).delete()
+                }
+                if (topicContentModel.fileType == "VIDEO"){
+
+                }
+                if (topicContentModel.fileType == "PDF"){
+
                 }
                 topicContentViewModel.deleteTopicContent(topicContentModel)
             } catch (e: Exception) {
