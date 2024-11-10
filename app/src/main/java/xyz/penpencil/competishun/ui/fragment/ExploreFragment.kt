@@ -1,16 +1,19 @@
 package xyz.penpencil.competishun.ui.fragment
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CheckBox
 
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.databinding.ObservableField
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -163,6 +166,16 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
                 else -> {
                     Log.e("courseTags", "No valid course tags received.")
                 }
+            }
+        }
+        val checkBox: CheckBox = view.findViewById(R.id.cbAgreeTerms)
+        checkBox.setOnCheckedChangeListener { _, isChecked ->
+            binding.clBuynow.isEnabled = isChecked
+
+            if (isChecked) {
+                binding.clBuynow.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.blue_3E3EF7))
+            } else {
+                binding.clBuynow.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.grey_button))
             }
         }
 
@@ -716,7 +729,11 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
                 it.getMyDetails.courses?.map { data->
                     if (courseId == data?.enrolledCourseId){
                         courselreadyBuy = true
-                        binding.submit.text = "Start Now"
+                        binding.clBuynow.isEnabled = true
+                        binding.tvAgreeTerms.visibility = View.GONE
+                        binding.cbAgreeTerms.visibility = View.GONE
+                        binding.clBuynow.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.blue_3E3EF7))
+                        binding.clBuynow.text = "Start Now"
                         Log.e("purchasweDat",courselreadyBuy.toString())
                         ourContentAdapter?.updateContent(true)
                         ourContentAdapter?.notifyDataSetChanged()

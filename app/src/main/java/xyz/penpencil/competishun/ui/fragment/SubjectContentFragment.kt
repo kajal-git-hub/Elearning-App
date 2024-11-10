@@ -45,6 +45,14 @@ class SubjectContentFragment : DrawerVisibility() {
     private var isFirstTimeLoading = true
     private lateinit var sharedViewModel: SharedVM
     private var isExternal: Boolean = false
+
+
+    private var subfolder = -1
+
+    private var folderProgress = -1
+
+    private var folderProgressCont = -1
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -175,6 +183,22 @@ class SubjectContentFragment : DrawerVisibility() {
                     var folderProgressContent = data.findCourseFolderProgress.folderContents
                     val subfolderDurationFolders = data.findCourseFolderProgress.subfolderDurations
                     Log.e("subFolderdata", subfolderDurationFolders.toString())
+
+                    if (subfolderDurationFolders?.isEmpty() == true){
+                        subfolder = 0
+                    }
+                    if (folderProgressContent?.isEmpty()==true){
+                        folderProgressCont = 0
+                    }
+
+                    if(subfolder==0 && folderProgressCont==0){
+                        binding.clEmptySubject.visibility = View.VISIBLE
+                        binding.rvSubjectContent.visibility = View.GONE
+                        binding.rvsubjectTopicContent.visibility = View.GONE
+                        binding.rvTopicContent.visibility = View.GONE
+                    }else{
+                        binding.clEmptySubject.visibility = View.GONE
+                    }
 
                     // Clear previous adapter to prevent issues
                     binding.rvSubjectContent.adapter = null
@@ -457,6 +481,11 @@ class SubjectContentFragment : DrawerVisibility() {
                     Log.e("findCoursgress", data.findCourseFolderProgress.folder.toString())
                     val folderProgressFolder = data.findCourseFolderProgress.folder
                     var folderProgressContent = data.findCourseFolderProgress.folderContents
+
+//                    if (folderProgressContent?.isEmpty() == true){
+//                        folderProgress = 0
+//                    }
+
                     if (!folderProgressContent.isNullOrEmpty() ){
                             Log.e("folderContentsub" +
                                     "", folderProgressContent.toString())
