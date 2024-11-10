@@ -20,21 +20,14 @@ class TopicTypeAdapter(
     inner class TopicTypeViewHolder(private val binding: ItemCourseTypeBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(topicTypeModel: TopicTypeModel, isSelected: Boolean) {
-            // Set the text for the item
+            Log.e("jdhfjhfsdjkfs", "bind: $preselectedTopic")
             binding.radioButtonCourseType.text = topicTypeModel.title
-
-            // Update the background based on the selection status
-            Log.e("isseleceted",isSelected.toString())
             binding.root.setBackgroundResource(
                 if (isSelected) R.drawable.getstarted_itembg_selected else R.drawable.getstarted_itembg_unselected
             )
-
-            // Update the drawable based on the selection status
             val drawableResId = if (isSelected) R.drawable.property_selected else R.drawable.property_default
             val drawable = ContextCompat.getDrawable(binding.root.context, drawableResId)
             binding.radioButtonCourseType.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
-
-            // Handle click events
             binding.root.setOnClickListener {
                 binding.root.setBackgroundResource(
                     R.drawable.getstarted_itembg_selected
