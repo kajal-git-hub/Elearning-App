@@ -176,10 +176,10 @@ class DownloadFragment : DrawerVisibility(), DownloadedItemAdapter.OnVideoClickL
                     File(topicContentModel.localPath).delete()
                 }
                 if (topicContentModel.fileType == "VIDEO"){
-
+                    loadData("VIDEO")
                 }
                 if (topicContentModel.fileType == "PDF"){
-
+                    loadData("PDF")
                 }
                 topicContentViewModel.deleteTopicContent(topicContentModel)
             } catch (e: Exception) {
