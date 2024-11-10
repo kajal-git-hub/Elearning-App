@@ -29,6 +29,7 @@ import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.data.model.TopicContentModel
 import xyz.penpencil.competishun.databinding.ItemTopicTypeContentBinding
 import xyz.penpencil.competishun.ui.fragment.BottomSheetDownloadBookmark
+import xyz.penpencil.competishun.ui.main.PdfViewActivity
 import xyz.penpencil.competishun.utils.HelperFunctions
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -134,18 +135,26 @@ class TopicContentAdapter(
             if ( isDateTodayOrPast(topicContent.lockTime, topicContent.isExternal)) {
                 if (topicContent.fileType == "VIDEO")
                 {
+//                    binding.shapeableImage.setImageResource(R.drawable.bgvideoimage)
                     binding.etHomeWorkText.visibility = View.VISIBLE
                     binding.etHomeWorkPdf.visibility = View.VISIBLE
                     binding.etHomeWorkPdf.text = if (topicContent.homeworkName.isNotEmpty()) " "+helperFunctions.removeBrackets(topicContent.homeworkName) else "NA"
                     binding.etHomeWorkPdf.setOnClickListener {
-                        helperFunctions.downloadPdf(context,topicContent.homeworkUrl,topicContent.homeworkName)
+                        Log.d("urlhomegetting",topicContent.homeworkUrl)
+                        val urlToSent = removeBrackets(topicContent.homeworkUrl)
+                        val intent = Intent(context, PdfViewActivity::class.java).apply {
+                            putExtra("PDF_URL", urlToSent)
+                            putExtra("PDF_TITLE", topicContent.homeworkName)
+                        }
+                        context?.startActivity(intent)
+//                        helperFunctions.downloadPdf(context,topicContent.homeworkUrl,topicContent.homeworkName)
                     }
                     binding.videoicon.setImageResource(R.drawable.frame_1707481707)
                     binding.ivPersonIdentifier.setBackgroundResource(R.drawable.clock_black)
                 } else if (topicContent.fileType == "PDF"){
                     binding.etHomeWorkPdf.visibility = View.GONE
                     binding.etHomeWorkText.visibility = View.GONE
-
+                    binding.clEmtpyVeiw.visibility = View.VISIBLE
                     binding.videoicon.setImageResource(R.drawable.pdf_bg)}
                 binding.videoicon.visibility = View.VISIBLE
                 binding.ivPersonIdentifier.setBackgroundResource(R.drawable.download_person)
@@ -256,6 +265,18 @@ class TopicContentAdapter(
                 }
             }
         }
+
+        fun removeBrackets(input: String): String {
+            var url = input
+            if (input.startsWith("[")){
+                url = input.removePrefix("[")
+            }
+
+            if (input.endsWith("]")){
+                url = url.removeSuffix("]")
+            }
+            return url
+        }
         fun isDateTodayOrPast(dateString: String, external: Boolean): Boolean {
                 // Clean up the date string
             if (external) {
@@ -318,6 +339,7 @@ class TopicContentAdapter(
                 false
             }
     }
+
 
 
 

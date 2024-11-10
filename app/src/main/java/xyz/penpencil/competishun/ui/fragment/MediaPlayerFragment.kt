@@ -149,12 +149,12 @@ class MediaPlayerFragment : DrawerVisibility() {
                 binding.descTv.text = courseFolderContentDescs[0]
                 binding.homeworkDescTv.text = if (homeworkNames[0].isNotEmpty()) " "+helperFunctions.removeBrackets(homeworkNames[0]) else "NA"
                 binding.homeworkDescTv.setOnClickListener {
-                    Log.e("homelinksss2",homeworkLinks[currentVideoIndex])
-                   // helperFunctions.downloadPdfOld(requireContext(),homeworkLinks[0],homeworkNames[0])
                     val intent = Intent(context, PdfViewActivity::class.java).apply {
-                        putExtra("PDF_URL", homeworkLinks[currentVideoIndex])
+                        putExtra("PDF_URL", removeBrackets(homeworkLinks[0]))
+                        putExtra("PDF_TITLE",homeworkNames[0])
                     }
                     context?.startActivity(intent)
+//                    helperFunctions.downloadPdfOld(requireContext(),homeworkLinks[0],homeworkNames[0])
                 }
                 binding.homeworkDescTv.text = if (homeworkNames[0].isNotEmpty()) " "+helperFunctions.removeBrackets(homeworkNames[0]) else "NA"
                 binding.homeworktittleTv.text = if (homeworkDescs[0].isNotEmpty()) " "+helperFunctions.removeBrackets(homeworkDescs[0]) else "NA"
@@ -242,12 +242,12 @@ class MediaPlayerFragment : DrawerVisibility() {
                                 binding.homeworktittleTv.text = if (homeworkDescs[currentVideoIndex].isNotEmpty()) " "+helperFunctions.removeBrackets(homeworkDescs[currentVideoIndex]) else "NA"
                                 binding.homeworkDescTv.text = if (homeworkNames[currentVideoIndex].isNotEmpty()) " "+helperFunctions.removeBrackets(homeworkNames[currentVideoIndex]) else "NA"
                                 binding.homeworkDescTv.setOnClickListener {
-                                    Log.e("homelinksss1",homeworkLinks[currentVideoIndex])
-                                 //   helperFunctions.downloadPdfOld(requireContext(),homeworkLinks[currentVideoIndex],homeworkNames[currentVideoIndex])
                                     val intent = Intent(context, PdfViewActivity::class.java).apply {
-                                        putExtra("PDF_URL", homeworkLinks[currentVideoIndex])
+                                        putExtra("PDF_URL", removeBrackets(homeworkLinks[currentVideoIndex]))
+                                        putExtra("PDF_TITLE",homeworkNames[currentVideoIndex])
                                     }
                                     context?.startActivity(intent)
+//                                    helperFunctions.downloadPdfOld(requireContext(),homeworkLinks[currentVideoIndex],homeworkNames[currentVideoIndex])
                                 }
                              } else {
                         // No more videos in the playlist
@@ -499,12 +499,13 @@ class MediaPlayerFragment : DrawerVisibility() {
                 binding.homeworkDescTv.text =  if (homeworkNames[currentVideoIndex].isNotEmpty()) " "+helperFunctions.removeBrackets(homeworkNames[currentVideoIndex]) else "NA"
                 binding.homeworktittleTv.text =  if (homeworkDescs[currentVideoIndex].isNotEmpty()) " "+helperFunctions.removeBrackets(homeworkDescs[currentVideoIndex]) else "NA"
                 binding.homeworkDescTv.setOnClickListener {
-                    Log.e("homelinksss",homeworkLinks[currentVideoIndex])
-                  //  helperFunctions.downloadPdfOld(requireContext(),homeworkLinks[currentVideoIndex],homeworkNames[currentVideoIndex])
+
                     val intent = Intent(context, PdfViewActivity::class.java).apply {
-                        putExtra("PDF_URL",helperFunctions.removeBrackets( homeworkLinks[currentVideoIndex]))
+                        putExtra("PDF_URL", removeBrackets(homeworkLinks[currentVideoIndex]))
+                        putExtra("PDF_TITLE",homeworkNames[currentVideoIndex])
                     }
                     context?.startActivity(intent)
+//                    helperFunctions.downloadPdfOld(requireContext(),homeworkLinks[currentVideoIndex],homeworkNames[currentVideoIndex])
                 }
                 binding.descTv.text = nextVideoDesc?:""
                 playVideo(signedUrl,0,nextVideoTittle,nextVideoDesc)
@@ -678,6 +679,17 @@ class MediaPlayerFragment : DrawerVisibility() {
     private fun seekBack() {
         val position = player.currentPosition
         player.seekTo(maxOf(position - SEEK_OFFSET_MS, 0))
+    }
+    fun removeBrackets(input: String): String {
+        var url = input
+        if (input.startsWith("[")){
+            url = input.removePrefix("[")
+        }
+
+        if (input.endsWith("]")){
+            url = url.removeSuffix("]")
+        }
+        return url
     }
 
     fun videoProgress(courseFolderContentId:String,currentDuration:Int) {
