@@ -259,6 +259,12 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
                 if (state == Player.STATE_READY) {
                     binding.playerView.visibility = View.VISIBLE
                 }
+
+                if (state == Player.STATE_ENDED){
+                    if (mExoPlayerFullscreen){
+                        closeFullscreenDialog()
+                    }
+                }
             }
         })
     }

@@ -156,7 +156,7 @@ class MediaPlayerFragment : DrawerVisibility() {
                     context?.startActivity(intent)
 //                    helperFunctions.downloadPdfOld(requireContext(),homeworkLinks[0],homeworkNames[0])
                 }
-                binding.homeworkDescTv.text = homeworkNames[0]
+                binding.homeworkDescTv.text = if (homeworkNames[0].isNotEmpty()) " "+helperFunctions.removeBrackets(homeworkNames[0]) else "NA"
                 binding.homeworktittleTv.text = if (homeworkDescs[0].isNotEmpty()) " "+helperFunctions.removeBrackets(homeworkDescs[0]) else "NA"
             }else {
                 binding.homeworkDescTv.visibility = View.GONE
@@ -496,7 +496,7 @@ class MediaPlayerFragment : DrawerVisibility() {
                 val nextVideoDesc = videoDescs[currentVideoIndex]
                 binding.tittleBtn.text = nextVideoTittle
                 binding.tittleTv.text = nextVideoTittle
-                binding.homeworkDescTv.text =  homeworkDescs[currentVideoIndex]
+                binding.homeworkDescTv.text =  if (homeworkNames[currentVideoIndex].isNotEmpty()) " "+helperFunctions.removeBrackets(homeworkNames[currentVideoIndex]) else "NA"
                 binding.homeworktittleTv.text =  if (homeworkDescs[currentVideoIndex].isNotEmpty()) " "+helperFunctions.removeBrackets(homeworkDescs[currentVideoIndex]) else "NA"
                 binding.homeworkDescTv.setOnClickListener {
 

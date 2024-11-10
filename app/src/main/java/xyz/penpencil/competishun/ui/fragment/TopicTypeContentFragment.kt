@@ -16,6 +16,11 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.student.competishun.curator.FindCourseFolderProgressQuery
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.data.model.TopicContentModel
 import xyz.penpencil.competishun.databinding.FragmentTopicTypeContentBinding
@@ -29,7 +34,7 @@ import xyz.penpencil.competishun.utils.HelperFunctions
 
 
 @AndroidEntryPoint
-class TopicTypeContentFragment : Fragment() {
+class TopicTypeContentFragment : DrawerVisibility() {
 
     private lateinit var binding: FragmentTopicTypeContentBinding
     private val coursesViewModel: CoursesViewModel by viewModels()
@@ -37,6 +42,14 @@ class TopicTypeContentFragment : Fragment() {
 
     private lateinit var helperFunctions: HelperFunctions
     private var isExternal = false
+
+    private var pageNumber = 0
+    private var pageSize = 10
+
+    private var subContentsList:  MutableList<FindCourseFolderProgressQuery. FolderContent> = mutableListOf()
+
+    var adapter : TopicContentAdapter?=null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -61,12 +74,18 @@ class TopicTypeContentFragment : Fragment() {
         val folderContents = arguments?.getString("folderContents")?:"0"
          isExternal = arguments?.getBoolean("isExternal", false) == true
         val subContentList = object : TypeToken< List<FindCourseFolderProgressQuery. FolderContent>>() {}.type
-        val subContentsList:  List<FindCourseFolderProgressQuery. FolderContent> = gson.fromJson(folderContents, subContentList)
+        subContentsList = gson.fromJson(folderContents, subContentList)
         binding.tvTopicTypeName.text = folder_Name?:""
-        if (subContentsList != null) {
-            val contents = subContentsList.forEach { it.content }
-            newContent(subContentsList,folderId)
-          //  folderProgress(subContentsList.forEach { it.content })
+
+        if (subContentsList.isNotEmpty()) {
+            binding.progress.visibility = View.VISIBLE
+            binding.clEmptyContent.visibility = View.GONE
+            val listSize = if (subContentsList.size<=10) subContentsList.size else 10
+            val list  = subContentsList.subList(pageNumber, listSize)
+            newContent(list, folderId, true)
+        }else {
+            binding.progress.visibility = View.GONE
+            binding.clEmptyContent.visibility = View.VISIBLE
         }
 
 
@@ -88,42 +107,126 @@ class TopicTypeContentFragment : Fragment() {
         })
 
     }
+    private fun newContent(folderContents: List<FindCourseFolderProgressQuery.FolderContent>, folderId: String, isFirstTime: Boolean = false) {
+        CoroutineScope(Dispatchers.Main).launch {
+            try {
+                val topicContents = async(Dispatchers.Default) {
+                    folderContents.map { content ->
+                        val date = content.content?.scheduled_time.toString()
+                        val studyMaterial = arguments?.getString("studyMaterial")
+                        val time = if (studyMaterial.isNullOrEmpty()) {
+                            helperFunctions.formatCoursesDateTime(date)
+                        } else {
+                            helperFunctions.formatCoursesDateTime("2024-10-11T17:27:00.000Z")
+                        }
 
-    fun newContent(folderContents: List<FindCourseFolderProgressQuery.FolderContent>,folderId:String) {
+                        val homeworkUrl = content.content?.homework?.map { it.file_url ?: "" } ?: ""
+                        val homeworkFileName = content.content?.homework?.map { it.file_name ?: "" } ?: ""
 
-        val topicContents = folderContents?.map { content ->
-            val date = content.content?.scheduled_time.toString()
-            var time = ""
-            var studyMaterial = arguments?.getString("studyMaterial")
+                        TopicContentModel(
+                            subjectIcon = if (content.content?.file_type?.name == "PDF") R.drawable.content_bg else R.drawable.group_1707478994,
+                            id = content.content?.id ?: "",
+                            playIcon = if (content.content?.file_type?.name == "VIDEO") R.drawable.video_bg else 0,
+                            lecture = if (content.content?.file_type?.name == "VIDEO") "Lecture" else "Study Material",
+                            lecturerName = "",
+                            topicName = content.content?.file_name ?: "",
+                            topicDescription = content.content?.description ?: "",
+                            progress = 1,
+                            videoDuration = content.content?.video_duration ?: 0,
+                            url = content.content?.file_url.toString(),
+                            fileType = content.content?.file_type?.name ?: "",
+                            lockTime = time,
+                            homeworkDesc = content.content?.homework?.map { it.description }.toString() ?: "",
+                            homeworkUrl = homeworkUrl.toString(),
+                            homeworkName = homeworkFileName.toString(),
+                            isExternal = isExternal
+                        )
+                    }
+                }.await()
 
-            if (studyMaterial.isNullOrEmpty())
-             time = helperFunctions.formatCoursesDateTime(date) else  time = helperFunctions.formatCoursesDateTime("2024-10-11T17:27:00.000Z")
+                if (isFirstTime){
+                    if (topicContents.isNotEmpty()) {
+                        binding.rvTopicContent.visibility = View.VISIBLE
+                        binding.clEmptyContent.visibility = View.GONE
+                    } else {
+                        binding.rvTopicContent.visibility = View.GONE
+                        binding.clEmptyContent.visibility = View.VISIBLE
+                    }
+                    binding.progress.visibility = View.GONE
 
-            val homeworkUrl = content.content?.homework?.map { it.file_url?:"" } ?:""
-            val homeworkFileName = content.content?.homework?.map { it.file_name?:"" } ?: ""
-            Log.d("homeworkUrl",homeworkUrl.toString())
-            Log.d("homeworkFileName",homeworkFileName.toString())
-            TopicContentModel(
-                subjectIcon = if (content.content?.file_type?.name == "PDF") R.drawable.content_bg else R.drawable.group_1707478994,
-                id = content.content?.id ?: "",
-                playIcon = if (content.content?.file_type?.name == "VIDEO") R.drawable.video_bg else 0,
-                lecture = if (content.content?.file_type?.name == "VIDEO") "Lecture" else "Study Material",
-                lecturerName = "",
-                topicName = content.content?.file_name ?: "",
-                topicDescription = content.content?.description ?:"",
-                progress = 1,
-                videoDuration = content.content?.video_duration ?: 0,
-                url = content.content?.file_url.toString(),
-                fileType = content.content?.file_type?.name ?: "",
-                lockTime = time,
-                homeworkDesc = content.content?.homework?.map { it.description }.toString() ?: "",
-                homeworkUrl = homeworkUrl.toString(),
-                homeworkName = homeworkFileName.toString(),
-                isExternal = isExternal
-            )
-        } ?: emptyList()
-        val folderContentis = folderContents.filter { it.content?.file_type?.name  == "VIDEO" }.mapNotNull { it.content?.id }?.toCollection(ArrayList())
-        val folderContentNs = folderContents.filter { it.content?.file_type?.name  == "VIDEO" }.mapNotNull { it.content?.file_name }?.toCollection(ArrayList())
+                    // Set up the adapter on the main thread
+                    Log.e("UUIUIIUIU", "newContent: "+topicContents.size)
+                    adapter = TopicContentAdapter(topicContents.toMutableList(), folderId, requireActivity(), requireContext()) { topicContent, folderContentId, folderContentIds, folderContentNames, folderContentDesc, folderContenthomework, folderContenthomeworkLink, folderContenthomeworkDesc ->
+                        when (topicContent.fileType) {
+                            "VIDEO" -> videoUrlApi(videourlViewModel, topicContent.id, topicContent.topicName, folderContentIds, folderContentNames, folderContentDesc, folderContenthomework, folderContenthomeworkLink, folderContenthomeworkDesc)
+                            "PDF" -> {
+                                val intent = Intent(context, PdfViewActivity::class.java).apply {
+                                    putExtra("PDF_URL", topicContent.url)
+                                    putExtra("PDF_TITLE", topicContent.topicName)
+                                }
+                                context?.startActivity(intent)
+                            }
+                            "FOLDER" -> "Folders"
+                            else -> Log.d("TopicContentAdapter", "File type is not VIDEO: ${topicContent.fileType}")
+                        }
+                    }
+
+                    binding.rvTopicContent.adapter = adapter
+                    binding.rvTopicContent.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+                }else {
+                    adapter?.updateData(topicContents.toMutableList())
+                }
+            } catch (e: Exception) {
+                Log.e("newContent", "Error loading content", e)
+            }
+
+            if (isFirstTime){
+                newContent(subContentsList, folderId, false)
+            }
+        }
+    }
+
+
+    /*
+        private fun newContent(folderContents: List<FindCourseFolderProgressQuery.FolderContent>, folderId:String) {
+
+            val topicContents = folderContents?.map { content ->
+                val date = content.content?.scheduled_time.toString()
+                var time = ""
+                var studyMaterial = arguments?.getString("studyMaterial")
+
+                time = if (studyMaterial.isNullOrEmpty())
+                    helperFunctions.formatCoursesDateTime(date) else helperFunctions.formatCoursesDateTime("2024-10-11T17:27:00.000Z")
+
+                val homeworkUrl = content.content?.homework?.map { it.file_url?:"" } ?:""
+                val homeworkFileName = content.content?.homework?.map { it.file_name?:"" } ?: ""
+
+
+                TopicContentModel(
+                    subjectIcon = if (content.content?.file_type?.name == "PDF") R.drawable.content_bg else R.drawable.group_1707478994,
+                    id = content.content?.id ?: "",
+                    playIcon = if (content.content?.file_type?.name == "VIDEO") R.drawable.video_bg else 0,
+                    lecture = if (content.content?.file_type?.name == "VIDEO") "Lecture" else "Study Material",
+                    lecturerName = "",
+                    topicName = content.content?.file_name ?: "",
+                    topicDescription = content.content?.description ?:"",
+                    progress = 1,
+                    videoDuration = content.content?.video_duration ?: 0,
+                    url = content.content?.file_url.toString(),
+                    fileType = content.content?.file_type?.name ?: "",
+                    lockTime = time,
+                    homeworkDesc = content.content?.homework?.map { it.description }.toString() ?: "",
+                    homeworkUrl = homeworkUrl.toString(),
+                    homeworkName = homeworkFileName.toString(),
+                    isExternal = isExternal
+                )
+            } ?: emptyList()
+
+    */
+/*        val folderContentis = folderContents.filter { it.content?.file_type?.name  == "VIDEO" }.mapNotNull { it.content?.id }?.toCollection(ArrayList())
+        val folderContentNs = folderContents.filter { it.content?.file_type?.name  == "VIDEO" }.mapNotNull { it.content?.file_name }?.toCollection(ArrayList())*//*
+
+
         val adapter = TopicContentAdapter(topicContents, folderId,requireActivity(),requireContext()) { topicContent, folderContentId, folderContentIds,folderContentNames, folderContentDesc, folderContenthomework, folderContenthomeworkLink,folderContenthomeworkDesc->
             when (topicContent.fileType) {
                 "VIDEO" -> videoUrlApi(videourlViewModel, topicContent.id,topicContent.topicName,folderContentIds,folderContentNames,folderContentDesc,folderContenthomework, folderContenthomeworkLink,folderContenthomeworkDesc)
@@ -143,6 +246,7 @@ class TopicTypeContentFragment : Fragment() {
         binding.rvTopicContent.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
     }
+*/
 
     fun folderProgress(folderId:String){
         if (folderId != null) {
@@ -200,7 +304,7 @@ class TopicTypeContentFragment : Fragment() {
                     } ?: emptyList()
                     val folderContentIs = folderContents?.filter { it.content?.file_type?.name  == "VIDEO" }?.mapNotNull { it.content?.id }?.toCollection(ArrayList())
                     val folderContentNs = folderContents?.filter { it.content?.file_type?.name  == "VIDEO" }?.mapNotNull { it.content?.file_name }?.toCollection(ArrayList())
-                    val adapter = TopicContentAdapter(topicContents, folderId,requireActivity(),requireContext()) { topicContent, folderContentId, folderContentIds,folderContentNames, folderContentDescs,folderContenthomework, folderContenthomeworkLink,folderContenthomeworkDesc ->
+                    val adapter = TopicContentAdapter(topicContents.toMutableList(), folderId,requireActivity(),requireContext()) { topicContent, folderContentId, folderContentIds,folderContentNames, folderContentDescs,folderContenthomework, folderContenthomeworkLink,folderContenthomeworkDesc ->
                         when (topicContent.fileType) {
                             "VIDEO" -> videoUrlApi(videourlViewModel, topicContent.id,topicContent.topicName,folderContentIds,folderContentNames, folderContentDescs,folderContenthomework, folderContenthomeworkLink,folderContenthomeworkDesc)
                             "PDF" -> {

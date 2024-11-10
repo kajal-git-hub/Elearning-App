@@ -18,7 +18,13 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
+import androidx.recyclerview.widget.AsyncListDiffer
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.data.model.TopicContentModel
 import xyz.penpencil.competishun.databinding.ItemTopicTypeContentBinding
@@ -34,7 +40,7 @@ import java.util.Locale
 
 
 class TopicContentAdapter(
-    private val topicContents: List<TopicContentModel>,
+    private var topicContents: MutableList<TopicContentModel>,
     private val folderContentId: String,
     private val fragmentActivity: FragmentActivity,
     private val context: Context, // Pass context
@@ -50,37 +56,47 @@ class TopicContentAdapter(
         return TopicContentViewHolder(binding,context)
     }
 
+    fun updateData(newTopicContents: MutableList<TopicContentModel>) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val diffCallback = MyDiffUtilCallback(topicContents, newTopicContents)
+            val diffResult = DiffUtil.calculateDiff(diffCallback)
+
+            withContext(Dispatchers.Main) {
+                topicContents = newTopicContents
+                diffResult.dispatchUpdatesTo(this@TopicContentAdapter)
+                Log.e("GHJGHJGJGHJ", "updateData: ")
+            }
+        }
+    }
+
     override fun onBindViewHolder(holder: TopicContentViewHolder, position: Int) {
 
         val topicContent = topicContents[position]
         holder.bind(topicContents[position], fragmentActivity)
-        Log.e("valuesss ${isDateTodayOrPast(topicContent.lockTime, topicContent.isExternal)} ", topicContent.lockTime.toString())
-        val unlockedTopicContentIds = topicContents
-            .filter { isDateTodayOrPast(it.lockTime, topicContent.isExternal) && it.fileType == "VIDEO" }
-            .map { it.id }.toCollection(ArrayList())
-        val unlockedTopicContentNames = topicContents
-            .filter { isDateTodayOrPast(it.lockTime, topicContent.isExternal) && it.fileType == "VIDEO" }
-            .map { it.topicName }.toCollection(ArrayList())
-        val unlockedTopicContentDescs = topicContents
-            .filter { isDateTodayOrPast(it.lockTime, topicContent.isExternal) && it.fileType == "VIDEO" }
-            .map { it.topicDescription }.toCollection(ArrayList())
-        val unlockedTopicContenthomeworks = topicContents
-            .filter { isDateTodayOrPast(it.lockTime, topicContent.isExternal) && it.fileType == "VIDEO" }
-            .map { it.homeworkName }.toCollection(ArrayList())
-        val unlockedTopicContenthomeworkLinks = topicContents
-            .filter { isDateTodayOrPast(it.lockTime, topicContent.isExternal) && it.fileType == "VIDEO" }
-            .map { it.homeworkUrl }.toCollection(ArrayList())
-        val unlockedTopicContenthomeworkDescs = topicContents
-            .filter { isDateTodayOrPast(it.lockTime, topicContent.isExternal) && it.fileType == "VIDEO" }
-            .map { it.homeworkDesc }.toCollection(ArrayList())
-        Log.e("unlockedTopics",unlockedTopicContentIds.toString())
-        Log.e("unlockedTopic",unlockedTopicContentNames.toString())
-        // Disable click if locked, enable if not
         holder.itemView.setOnClickListener {
             if ((topicContent.fileType == "URL")){
                 val url = if (topicContent.topicName.contains("http")) topicContent.url else "https://${topicContent.url}"
                 it.context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
             } else if (isDateTodayOrPast(topicContent.lockTime, topicContent.isExternal)){
+                val unlockedTopicContentIds = topicContents
+                    .filter { isDateTodayOrPast(it.lockTime, topicContent.isExternal) && it.fileType == "VIDEO" }
+                    .map { it.id }.toCollection(ArrayList())
+                val unlockedTopicContentNames = topicContents
+                    .filter { isDateTodayOrPast(it.lockTime, topicContent.isExternal) && it.fileType == "VIDEO" }
+                    .map { it.topicName }.toCollection(ArrayList())
+                val unlockedTopicContentDescs = topicContents
+                    .filter { isDateTodayOrPast(it.lockTime, topicContent.isExternal) && it.fileType == "VIDEO" }
+                    .map { it.topicDescription }.toCollection(ArrayList())
+                val unlockedTopicContenthomeworks = topicContents
+                    .filter { isDateTodayOrPast(it.lockTime, topicContent.isExternal) && it.fileType == "VIDEO" }
+                    .map { it.homeworkName }.toCollection(ArrayList())
+                val unlockedTopicContenthomeworkLinks = topicContents
+                    .filter { isDateTodayOrPast(it.lockTime, topicContent.isExternal) && it.fileType == "VIDEO" }
+                    .map { it.homeworkUrl }.toCollection(ArrayList())
+                val unlockedTopicContenthomeworkDescs = topicContents
+                    .filter { isDateTodayOrPast(it.lockTime, topicContent.isExternal) && it.fileType == "VIDEO" }
+                    .map { it.homeworkDesc }.toCollection(ArrayList())
+
                 onItemClick(topicContent, folderContentId,unlockedTopicContentIds,unlockedTopicContentNames,unlockedTopicContentDescs,unlockedTopicContenthomeworks,unlockedTopicContenthomeworkLinks,unlockedTopicContenthomeworkDescs)
             } else if (topicContent.fileType == "UNKNOWN__" ) {
                 Log.e("TAG", "onBindViewHolder: ")
@@ -89,7 +105,6 @@ class TopicContentAdapter(
             }
         }
         if (!isDateTodayOrPast(topicContent.lockTime, topicContent.isExternal)) {
-            // Enable the click listener for unlocked items
             holder.itemView.findViewById<ImageView>(R.id.iv_MoreInfoLec).visibility = View.GONE
         }
     }
@@ -103,7 +118,6 @@ class TopicContentAdapter(
 
         fun bind(topicContent: TopicContentModel, fragmentActivity: FragmentActivity) {
 
-            Log.e("nzxbNZBxbZNXbnZ", "bind: "+topicContent.fileType)
             binding.ivSubjectBookIcon.setImageResource(topicContent.subjectIcon)
 
             var helperFunctions = HelperFunctions()
@@ -330,3 +344,23 @@ class TopicContentAdapter(
 
 
 }
+
+class MyDiffUtilCallback(
+    private val oldList: List<TopicContentModel>,
+    private val newList: List<TopicContentModel>
+) : DiffUtil.Callback() {
+
+    override fun getOldListSize(): Int = oldList.size
+
+    override fun getNewListSize(): Int = newList.size
+
+    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+        return oldList[oldItemPosition].id == newList[newItemPosition].id
+    }
+
+    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+        return oldList[oldItemPosition] == newList[newItemPosition]
+    }
+}
+
+
