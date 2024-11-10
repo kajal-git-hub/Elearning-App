@@ -1,32 +1,27 @@
 package xyz.penpencil.competishun.ui.fragment
 
 import android.app.Dialog
+import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import android.view.GestureDetector
 import android.view.Gravity
-import android.view.KeyEvent
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.FrameLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.OptIn
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
-import androidx.core.view.WindowCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.WindowInsetsControllerCompat
 
 import androidx.core.view.setPadding
-import androidx.lifecycle.ViewModelProvider
 import androidx.media3.common.MediaItem
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
@@ -34,16 +29,15 @@ import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
 import androidx.navigation.findNavController
-import com.google.android.exoplayer2.ui.StyledPlayerView
+import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.data.model.TopicContentModel
 import xyz.penpencil.competishun.databinding.FragmentDownloadMediaPlayerBinding
-import xyz.penpencil.competishun.di.SharedVM
 import xyz.penpencil.competishun.ui.main.HomeActivity
+import xyz.penpencil.competishun.ui.main.PdfViewActivity
 import xyz.penpencil.competishun.utils.SharedPreferencesManager
 import xyz.penpencil.competishun.utils.serializable
-import xyz.penpencil.competishun.utils.toggleImmersiveMode
 import java.io.File
 import kotlin.random.Random
 
@@ -53,9 +47,8 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
 
     private lateinit var binding: FragmentDownloadMediaPlayerBinding
     private lateinit var player: ExoPlayer
-    private lateinit var gestureDetector: GestureDetector
     private val handler = Handler(Looper.getMainLooper())
-    private lateinit var sharedViewModel: SharedVM
+
     companion object {
         private const val SEEK_OFFSET_MS = 10000L
     }
@@ -82,7 +75,6 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
         (activity as? HomeActivity)?.showBottomNavigationView(false)
         (activity as? HomeActivity)?.showFloatingButton(false)
         sharedPreferencesManager = SharedPreferencesManager(requireContext())
-        sharedViewModel = ViewModelProvider(requireActivity())[SharedVM::class.java]
 
         binding.backBtn.setOnClickListener {
             if (mExoPlayerFullscreen){
@@ -96,14 +88,32 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
         initFullscreenDialog()
         val videoData = arguments?.serializable<TopicContentModel>("VIDEO_DATA")
         val videoUrl = videoData?.url?:""
-        val title = videoData?.topicName?:""
-        val description = arguments?.getString("description") ?: ""
-        binding.description.text = description
+        videoData?.let {
+            binding.tittleTv.text = it.topicName
+            binding.descTv.text = it.topicDescription
+            val hDesc = it.homeworkDesc.trim('[', ']').trim()
+            if (hDesc.isNotEmpty()){
+                binding.homeworkDescTv.text = hDesc
+                binding.homeworkDescTv.visibility = View.VISIBLE
+            }else {
+                binding.homeworkDescTv.visibility = View.GONE
+            }
 
+            val hTitle = it.homeworkName.trim('[', ']').trim()
+            if (hTitle.isNotEmpty()){
+                binding.homeworktittleTv.text = hTitle
+                binding.homeworktittleTv.visibility = View.VISIBLE
+            }else {
+                binding.homeworktittleTv.visibility = View.GONE
+            }
 
-        if (title.isNotEmpty()) {
-            binding.tittleBtn.visibility = View.VISIBLE
-            binding.tittleBtn.text = title
+            binding.homeworktittleTv.setOnClickListener { view->
+                val intent = Intent(requireContext(), PdfViewActivity::class.java).apply {
+                    putExtra("PDF_URL", it.homeworkUrl.trim('[', ']').trim())
+                    putExtra("PDF_TITLE",it.homeworkName.trim('[', ']').trim())
+                }
+                context?.startActivity(intent)
+            }
         }
         player = ExoPlayer.Builder(requireContext()).build()
         binding.playerView.useArtwork = true
@@ -141,11 +151,11 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                if (mExoPlayerFullscreen){
+                if (mExoPlayerFullscreen) {
                     requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
                     closeFullscreenDialog()
-                }else {
-                    view?.findNavController()?.popBackStack()
+                } else {
+                    findNavController().popBackStack()
                 }
             }
         })
@@ -154,6 +164,10 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
             if (it.isNotEmpty()) {
                 waterMark(it)
             }
+        }
+
+        binding.clBookmark.setOnClickListener {
+            bookmarkItem(videoData)
         }
     }
 
@@ -214,15 +228,14 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
     }
 
 
-
     private fun initFullscreenDialog() {
-        mFullScreenDialog = Dialog(requireContext(), android.R.style.Theme_Black_NoTitleBar_Fullscreen)
+        mFullScreenDialog = Dialog(requireContext(), R.style.full_screen_dialog)
         mFullScreenDialog.setOnDismissListener {
+            mExoPlayerFullscreen = false
             requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
             closeFullscreenDialog()
         }
     }
-
 
     private fun playVideo(videoUrl: String) {
         binding.playerView.visibility = View.GONE
@@ -249,6 +262,15 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
             }
         })
     }
+
+    private fun bookmarkItem(videoData: TopicContentModel?) {
+        videoData?.let {
+            Log.d("Bookmark", "Clicked")
+            SharedPreferencesManager(requireActivity()).saveDownloadedItemBm(it)
+            Toast.makeText(requireContext(), "Added to Bookmarks", Toast.LENGTH_SHORT).show()
+        }
+    }
+
     private fun showSpeedOrQualityDialog() {
         val options = arrayOf("Speed")
 
@@ -283,32 +305,7 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
         requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
     }
 
-    private inner class DoubleTapGestureListener : GestureDetector.SimpleOnGestureListener() {
-        override fun onDoubleTap(e: MotionEvent): Boolean {
-            val x = e.x
-            val width = binding.playerView.width
-            val centerThirdStart = width / 3
-            val centerThirdEnd = 2 * width / 3
 
-            when {
-                x.toInt() in centerThirdStart..centerThirdEnd -> {
-                    if (player.isPlaying) {
-                        player.pause()
-                    } else {
-                        player.play()
-                    }
-                }
-                x < centerThirdStart -> seekBack()
-                else -> seekForward()
-            }
-            return true
-        }
-    }
-
-    private fun seekBack() {
-        val position = player.currentPosition
-        player.seekTo(maxOf(position - SEEK_OFFSET_MS, 0))
-    }
     override fun onResume() {
         super.onResume()
         requireActivity().window.setFlags(
@@ -319,6 +316,13 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
 
     override fun onPause() {
         super.onPause()
+        try {
+            if (this::player.isInitialized  && player.isPlaying){
+                player.pause()
+            }
+        } catch (e: Exception) {
+            Log.e("TAG", "onViewCreated: ", )
+        }
         requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
     }
 
@@ -339,8 +343,6 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
         mExoPlayerFullscreen = true
         mFullScreenDialog.show()
         binding.fullScreen.setImageResource(R.drawable.zoom_in_map_24)
-
-        showNavigationBar()
     }
 
     private fun closeFullscreenDialog() {
@@ -349,7 +351,6 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
         mExoPlayerFullscreen = false
         mFullScreenDialog.dismiss()
         binding.fullScreen.setImageResource(R.drawable.zoom_out_map_24)
-        hideNavigationBar()
     }
 
     private fun toggleFullscreen() {
@@ -359,33 +360,6 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
         } else {
             requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
             closeFullscreenDialog()
-        }
-    }
-
-    private fun hideNavigationBar() {
-
-        showSystemBars()
-    }
-
-    private fun showNavigationBar() {
-        hideSystemBars()
-    }
-
-    fun hideSystemBars() {
-        requireActivity().window?.let {
-            WindowCompat.setDecorFitsSystemWindows(it, false)
-            val controller = WindowInsetsControllerCompat(it, it.decorView)
-            controller.hide(WindowInsetsCompat.Type.systemBars())
-            controller.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-        }
-    }
-
-    fun showSystemBars() {
-        requireActivity().window?.let {
-            WindowCompat.setDecorFitsSystemWindows(it, false)
-            val controller = WindowInsetsControllerCompat(it, it.decorView)
-            controller.show(WindowInsetsCompat.Type.systemBars())
-            controller.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         }
     }
 }
