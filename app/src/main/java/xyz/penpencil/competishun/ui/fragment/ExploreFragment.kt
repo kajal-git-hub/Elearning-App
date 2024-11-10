@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.Spanned
+import android.text.TextPaint
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.util.Log
@@ -176,7 +177,6 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
             }
         }
 
-
         val tvAgreeTerms: TextView = view.findViewById(R.id.tvAgreeTerms)
         val tvCourseDescription: TextView = view.findViewById(R.id.tvCourseDescription)
         val nestedScrollViewMove: NestedScrollView = view.findViewById(R.id.nested_scroll_view)
@@ -187,13 +187,23 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
 
         val termsClickable = object : ClickableSpan() {
             override fun onClick(widget: View) {
-                nestedScrollViewMove.smoothScrollTo(0, tvCourseDescription.top)
+                scrollToHeading(tvCourseDescription, nestedScrollViewMove, "Terms and Conditions")
+            }
+            override fun updateDrawState(ds: TextPaint) {
+                super.updateDrawState(ds)
+                ds.isUnderlineText = true // Remove underline if you want
+                ds.color = Color.BLUE       // Set color to blue
             }
         }
 
         val refundClickable = object : ClickableSpan() {
             override fun onClick(widget: View) {
-                nestedScrollViewMove.smoothScrollTo(0, tvCourseDescription.top)
+                scrollToHeading(tvCourseDescription, nestedScrollViewMove, "Refund Policy")
+            }
+            override fun updateDrawState(ds: TextPaint) {
+                super.updateDrawState(ds)
+                ds.isUnderlineText = true // Remove underline if you want
+                ds.color = Color.BLUE       // Set color to blue
             }
         }
 
@@ -217,7 +227,6 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
 
         tvAgreeTerms.text = spannableString
         tvAgreeTerms.movementMethod = LinkMovementMethod.getInstance()
-
 
         val checkBox: CheckBox = view.findViewById(R.id.cbAgreeTerms)
         checkBox.setOnCheckedChangeListener { _, isChecked ->
@@ -853,6 +862,15 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
 
         viewModel.fetchMyCourses()
 
+    }
+    private fun scrollToHeading(textView: TextView, scrollView: NestedScrollView, heading: String) {
+        val layout = textView.layout ?: return
+        val headingIndex = textView.text.indexOf(heading)
+        if (headingIndex != -1) {
+            val lineNumber = layout.getLineForOffset(headingIndex)
+            val yPosition = layout.getLineTop(lineNumber)
+            scrollView.smoothScrollTo(0, textView.top + yPosition)
+        }
     }
 
 
