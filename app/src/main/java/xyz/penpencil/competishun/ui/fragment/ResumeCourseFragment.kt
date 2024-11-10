@@ -125,26 +125,17 @@ class ResumeCourseFragment : DrawerVisibility() {
                     val subfolderProgress = result.data.findCourseParentFolderProgress.subfolderProgress
                     Log.e("subfolderProgrss",subfolderProgress.toString())
                     if (subfolderProgress.isNullOrEmpty()){
-                        Log.e("subfolderProgress",subfolderProgress.toString())
+                        Log.e("subfolderProgress", "")
                     }else{
-                        val folders = subfolderProgress.map { parentFolderItem ->
-                            parentFolderItem.folder
-                        }
-                        val percentages = subfolderProgress.map { parentFolderItem ->
-                            parentFolderItem.completionPercentage
-                        }
-                        listOuSubjectItem = folders
-                        val adapter = OurSubjectsAdapter(listOuSubjectItem, percentages) {folderId,foldername,folderCount ->
-                            Log.e("foldersz",folderId+foldername.toString())
-                            // Handle the course click and navigate
-                            folderProgress(folderId,foldername,folderCount)
+                        val listOuSubjectItem = subfolderProgress.map { it.folder }
+                        val percentages = subfolderProgress.map { it.completionPercentage }
 
+                        binding.rvOurSubject.apply {
+                            layoutManager = GridLayoutManager(context, 2)
+                            adapter = OurSubjectsAdapter(listOuSubjectItem, percentages) { folderId, folderName, folderCount ->
+                                folderProgress(folderId, folderName, folderCount)
+                            }
                         }
-
-                        binding.rvOurSubject.adapter = adapter
-                        binding.rvOurSubject.layoutManager =
-                            GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false)
-
                     }
                 }
                 is Result.Failure -> {}
