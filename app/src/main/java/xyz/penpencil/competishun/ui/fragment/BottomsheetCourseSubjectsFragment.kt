@@ -27,6 +27,7 @@ class BottomsheetCourseSubjectsFragment : BottomSheetDialogFragment() {
     private lateinit var binding: FragmentBottomsheetCourseTopicTypeBinding
     private lateinit var topicTypeAdapter: TopicTypeAdapter
     private val coursesViewModel: CoursesViewModel by viewModels()
+    var selectedTopicString: String = ""
     private var listener: OnTopicTypeSelectedListener? = null
     val gson = Gson()
     override fun onCreateView(
@@ -60,8 +61,10 @@ class BottomsheetCourseSubjectsFragment : BottomSheetDialogFragment() {
 
 
         // Initialize the adapter and set it to the RecyclerView
-        topicTypeAdapter = TopicTypeAdapter(topicTypeList,null) { selectedTopic ->
+        Log.e("selectedTopicss",selectedTopicString)
+        topicTypeAdapter = TopicTypeAdapter(topicTypeList,selectedTopicString) { selectedTopic ->
             listener?.onTopicTypeSelected(selectedTopic)
+            selectedTopicString = selectedTopic.title.toString()
             dismiss()
 
         }

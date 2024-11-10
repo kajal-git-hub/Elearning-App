@@ -197,7 +197,7 @@
                 android:fontFamily="@font/nunito"
                 android:padding="@dimen/_5dp"
                 android:text=""
-                android:textColor="@color/_726C6C"
+                android:textColor="@color/PrimaryColor"
                 android:textSize="@dimen/_14sp"
                 android:visibility="visible"
                 app:layout_constraintStart_toStartOf="parent"

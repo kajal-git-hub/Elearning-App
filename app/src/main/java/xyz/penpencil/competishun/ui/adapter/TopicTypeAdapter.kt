@@ -36,8 +36,11 @@ class TopicTypeAdapter(
 
             // Handle click events
             binding.root.setOnClickListener {
+                binding.root.setBackgroundResource(
+                    R.drawable.getstarted_itembg_selected
+                )
                 val previousPosition = selectedPosition
-                selectedPosition = adapterPosition
+                selectedPosition = bindingAdapterPosition
 
                 // Refresh the previous and current selected items
                 notifyItemChanged(previousPosition)
@@ -56,7 +59,7 @@ class TopicTypeAdapter(
 
     override fun onBindViewHolder(holder: TopicTypeViewHolder, position: Int) {
         // Bind data to the ViewHolder, passing whether the item is selected
-        Log.e("issseleceted $position",selectedPosition.toString())
+        Log.e("kajaldfdf $position",selectedPosition.toString())
         holder.bind(topicTypeList[position], position == selectedPosition)
     }
 
