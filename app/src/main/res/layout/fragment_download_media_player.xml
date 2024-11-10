@@ -42,40 +42,7 @@
                         app:show_buffering="always" />
                 </RelativeLayout>
             </RelativeLayout>
-            <ImageButton
-                android:id="@+id/back_btn"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:background="@android:color/transparent"
-                android:src="@drawable/back_arrow_ic"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp" />
-            <ImageButton
-                android:id="@+id/qualityButton"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:src="@drawable/dot_3_ic"
-                android:layout_marginTop="@dimen/_16dp"
-                android:layout_alignParentEnd="true"
-                android:padding="@dimen/_10dp"
-                android:background="@android:color/transparent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:layout_marginEnd="16dp" />
-            <ImageButton
-                android:id="@+id/fullScreen"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_alignParentBottom="true"
-                android:src="@drawable/zoom_out_map_24"
-                android:layout_marginTop="@dimen/_16dp"
-                android:layout_alignParentEnd="true"
-                android:padding="@dimen/_10dp"
-                android:background="@android:color/transparent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+
         </RelativeLayout>
 
 

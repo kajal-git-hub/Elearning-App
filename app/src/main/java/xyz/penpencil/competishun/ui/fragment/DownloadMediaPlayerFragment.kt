@@ -14,6 +14,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.FrameLayout
+import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
@@ -59,6 +61,10 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
     private lateinit var sharedPreferencesManager: SharedPreferencesManager
     private var flickeringText: TextView?=null
 
+    var fullScreenButton: ImageView?=null
+    var backBtn: ImageView?=null
+    var qualityButton: ImageView?=null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -75,15 +81,6 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
         (activity as? HomeActivity)?.showBottomNavigationView(false)
         (activity as? HomeActivity)?.showFloatingButton(false)
         sharedPreferencesManager = SharedPreferencesManager(requireContext())
-
-        binding.backBtn.setOnClickListener {
-            if (mExoPlayerFullscreen){
-                requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
-                closeFullscreenDialog()
-            }else {
-                view?.findNavController()?.popBackStack()
-            }
-        }
 
         initFullscreenDialog()
         val videoData = arguments?.serializable<TopicContentModel>("VIDEO_DATA")
@@ -105,6 +102,7 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
                 binding.homeworktittleTv.visibility = View.VISIBLE
             }else {
                 binding.homeworktittleTv.visibility = View.GONE
+                binding.homeworkTv.visibility = View.GONE
             }
 
             binding.homeworktittleTv.setOnClickListener { view->
@@ -119,6 +117,10 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
         binding.playerView.useArtwork = true
         binding.playerView.setShowBuffering(PlayerView.SHOW_BUFFERING_ALWAYS)
         binding.playerView.player = player
+
+        fullScreenButton = binding.playerView.findViewById<ImageButton>(R.id.fullScreen)
+        backBtn = binding.playerView.findViewById<ImageButton>(R.id.back_btn)
+        qualityButton = binding.playerView.findViewById<ImageButton>(R.id.qualityButton)
 
 
         playVideo(videoUrl)
@@ -140,12 +142,18 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
             Log.e("PlayerSetup", "Failed to play video", e)
         }
 
-
-        binding.qualityButton.setOnClickListener {
+        backBtn?.setOnClickListener {
+            if (mExoPlayerFullscreen){
+                requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
+                closeFullscreenDialog()
+            }else {
+                view?.findNavController()?.popBackStack()
+            }
+        }
+        qualityButton?.setOnClickListener {
             showSpeedOrQualityDialog()
         }
-
-        binding.fullScreen.setOnClickListener {
+        fullScreenButton?.setOnClickListener {
             toggleFullscreen()
         }
 
@@ -359,7 +367,7 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
         )
         mExoPlayerFullscreen = true
         mFullScreenDialog?.show()
-        binding.fullScreen.setImageResource(R.drawable.zoom_in_map_24)
+        fullScreenButton?.setImageResource(R.drawable.zoom_in_map_24)
     }
 
     private fun closeFullscreenDialog() {
@@ -367,7 +375,7 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
         binding.playerRootApp.addView(binding.playerView)
         mExoPlayerFullscreen = false
         mFullScreenDialog?.dismiss()
-        binding.fullScreen.setImageResource(R.drawable.zoom_out_map_24)
+        fullScreenButton?.setImageResource(R.drawable.zoom_out_map_24)
     }
 
     private fun toggleFullscreen() {
