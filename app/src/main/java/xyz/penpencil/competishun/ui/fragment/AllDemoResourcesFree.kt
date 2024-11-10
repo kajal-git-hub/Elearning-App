@@ -130,6 +130,10 @@ class AllDemoResourcesFree : DrawerVisibility() {
             when (result) {
                 is Result.Success -> {
                     val data = result.data
+                    if (data.findCourseFolderProgress.subfolderDurations?.isNotEmpty() == true){
+                        binding.rvAllDemoFree.visibility  = View.VISIBLE
+                        binding.clEmptySearchParent.visibility = View.GONE
+                    }
                     Log.e("GetFolderdata", data.toString())
                     val folderProgressFolder = data.findCourseFolderProgress.folder
                     val folderProgressContent = data.findCourseFolderProgress.folderContents
