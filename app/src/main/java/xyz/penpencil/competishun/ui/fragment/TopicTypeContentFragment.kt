@@ -195,7 +195,7 @@ class TopicTypeContentFragment : DrawerVisibility() {
                     binding.rvTopicContent.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
                 }else {
                     adapter?.updateData(topicContents.toMutableList())
-                    binding.rvTopicContent.scrollToPosition(pageSize)
+                    binding.rvTopicContent.scrollToPosition(0)
 //                    binding.recyclerProgress.visibility = View.GONE
                 }
             } catch (e: Exception) {
