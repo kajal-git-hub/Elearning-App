@@ -25,9 +25,17 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import com.ketch.DownloadModel
+import com.ketch.Ketch
+import com.ketch.Status
 import com.rajat.pdfviewer.PdfViewerActivity
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -36,7 +44,10 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
 import java.io.OutputStream
+import javax.inject.Inject
 
+
+@AndroidEntryPoint
 class PdfViewActivity : AppCompatActivity() {
 
     companion object {
@@ -45,6 +56,12 @@ class PdfViewActivity : AppCompatActivity() {
     }
 
     private var downloadedPdfFile: File? = null  // Hold reference to the downloaded file
+
+    @Inject
+    lateinit var ketch: Ketch
+
+    var pdfUrl = ""
+    var pdfTitle = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,8 +74,8 @@ class PdfViewActivity : AppCompatActivity() {
         val pdfView = findViewById<com.rajat.pdfviewer.PdfRendererView>(R.id.pdfView)
         val progressBar = findViewById<ProgressBar>(R.id.progressBar)
         val downloadButton = findViewById<ImageView>(R.id.downloadButton)
-        val pdfUrl = intent.getStringExtra("PDF_URL")
-        val pdfTitle = intent.getStringExtra("PDF_TITLE") ?: "sample"
+        pdfUrl = intent.getStringExtra("PDF_URL")?:""
+        pdfTitle = intent.getStringExtra("PDF_TITLE") ?: "sample"
 
         if (pdfUrl != null) {
             progressBar.visibility = View.VISIBLE  // Show the loader initially
@@ -128,7 +145,7 @@ class PdfViewActivity : AppCompatActivity() {
     // Save the PDF externally to the Downloads folder
     private fun savePdfExternally(pdfTitle: String) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            // For Android 10+ (Scoped Storage), use MediaStore API to save the file to the Downloads folder
+           /* // For Android 10+ (Scoped Storage), use MediaStore API to save the file to the Downloads folder
             val resolver = contentResolver
             val contentValues = ContentValues().apply {
                 put(MediaStore.MediaColumns.DISPLAY_NAME, "$pdfTitle.pdf")
@@ -153,7 +170,9 @@ class PdfViewActivity : AppCompatActivity() {
                     Toast.makeText(this, "Failed to save PDF", Toast.LENGTH_SHORT).show()
                     Log.e("xyz.penpencil.competishun.ui.main.PdfViewActivity", "Error saving PDF: ", e)
                 }
-            }
+            }*/
+
+            downloadFile()
         } else {
             // For Android 9 and below, request permission to write to external storage
             checkStoragePermissionAndDownload(pdfTitle)
@@ -246,5 +265,40 @@ class PdfViewActivity : AppCompatActivity() {
             val uri = FileProvider.getUriForFile(this, "${packageName}.fileprovider", destFile)
             showDownloadNotification("$pdfTitle.pdf", uri)
         }
+    }
+
+
+    private fun handleDownloadStatus(downloadModel: DownloadModel) {
+        when (downloadModel.status) {
+            Status.STARTED -> showStatus("Download has started.")
+            Status.SUCCESS -> showStatus("Download completed successfully.")
+            Status.CANCELLED -> showStatus("Download was cancelled.")
+            Status.FAILED -> {
+                Log.e("DownloadError", "Failed reason: ${downloadModel.failureReason}")
+                showStatus("Download failed.")
+            }
+            Status.QUEUED, Status.PROGRESS, Status.PAUSED, Status.DEFAULT -> {}
+        }
+    }
+
+    private fun downloadFile() {
+        val path = filesDir.absolutePath
+
+
+        val id = ketch.download(
+            url = pdfUrl,
+            fileName = pdfTitle,
+            path = path)
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                ketch.observeDownloadById(id)
+                    .flowOn(Dispatchers.IO)
+                    .collect { handleDownloadStatus(it) }
+            }
+        }
+    }
+
+    private fun showStatus(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 }
