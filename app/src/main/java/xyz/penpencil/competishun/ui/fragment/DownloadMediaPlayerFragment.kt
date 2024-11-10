@@ -53,7 +53,7 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
         private const val SEEK_OFFSET_MS = 10000L
     }
 
-    private lateinit var mFullScreenDialog: Dialog
+    private var mFullScreenDialog: Dialog ?=null
     private var mExoPlayerFullscreen: Boolean = false
 
     private lateinit var sharedPreferencesManager: SharedPreferencesManager
@@ -229,8 +229,19 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
 
 
     private fun initFullscreenDialog() {
-        mFullScreenDialog = Dialog(requireContext(), R.style.full_screen_dialog)
-        mFullScreenDialog.setOnDismissListener {
+        mFullScreenDialog = Dialog(requireContext(), R.style.full_screen_dialog).apply {
+            window?.setFlags(
+                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+            )
+            window?.decorView?.systemUiVisibility = (View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                    or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                    or View.SYSTEM_UI_FLAG_FULLSCREEN
+                    or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                    or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                    or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
+        }
+        mFullScreenDialog?.setOnDismissListener {
             mExoPlayerFullscreen = false
             requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
             closeFullscreenDialog()
@@ -339,7 +350,7 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
 
     private fun openFullscreenDialog() {
         (binding.playerView.parent as? ViewGroup)?.removeView(binding.playerView)
-        mFullScreenDialog.addContentView(
+        mFullScreenDialog?.addContentView(
             binding.playerView,
             ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
@@ -347,7 +358,7 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
             )
         )
         mExoPlayerFullscreen = true
-        mFullScreenDialog.show()
+        mFullScreenDialog?.show()
         binding.fullScreen.setImageResource(R.drawable.zoom_in_map_24)
     }
 
@@ -355,7 +366,7 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
         (binding.playerView.parent as? ViewGroup)?.removeView(binding.playerView)
         binding.playerRootApp.addView(binding.playerView)
         mExoPlayerFullscreen = false
-        mFullScreenDialog.dismiss()
+        mFullScreenDialog?.dismiss()
         binding.fullScreen.setImageResource(R.drawable.zoom_out_map_24)
     }
 
