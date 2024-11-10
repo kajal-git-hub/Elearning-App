@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.student.competishun.curator.FindCourseFolderProgressQuery
 import com.student.competishun.curator.GetCourseByIdQuery
 import xyz.penpencil.competishun.data.model.TopicTypeModel
 import xyz.penpencil.competishun.ui.adapter.TopicTypeAdapter
@@ -47,9 +46,12 @@ class BottomsheetCourseSubjectsFragment : BottomSheetDialogFragment() {
         val subFolders = arguments?.getString("subFolders")?:""
         Log.e("subsdfd",subFolders)
         val folderCount = arguments?.getString("folder_Count")?:"0"
+        selectedTopicString = arguments?.getString("FOLDER_NAME")?:""
         val converter = object : TypeToken<List<GetCourseByIdQuery.GetCourseById>>() {}.type
         val subFoldersList: List<GetCourseByIdQuery.GetCourseById> = gson.fromJson(subFolders, converter)
 
+
+        Log.e("JJGHJGJGHJG", "FOLDER_NAME: $selectedTopicString")
         Log.e("subFoldersListzz",subFoldersList.toString())
         // Create a list of TopicTypeModel using folderNames
         val topicTypeList = subFoldersList.mapIndexed { index, folder ->
@@ -59,9 +61,6 @@ class BottomsheetCourseSubjectsFragment : BottomSheetDialogFragment() {
         binding.tvTitleNumber.text = "(${subFoldersList.size})"
 
 
-
-        // Initialize the adapter and set it to the RecyclerView
-        Log.e("selectedTopicss",selectedTopicString)
         topicTypeAdapter = TopicTypeAdapter(topicTypeList,selectedTopicString) { selectedTopic ->
             listener?.onTopicTypeSelected(selectedTopic)
             selectedTopicString = selectedTopic.title.toString()
