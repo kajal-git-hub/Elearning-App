@@ -187,6 +187,7 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
 
         val termsClickable = object : ClickableSpan() {
             override fun onClick(widget: View) {
+                binding.tvCourseDescription.maxLines = Integer.MAX_VALUE
                 scrollToHeading(tvCourseDescription, nestedScrollViewMove, "Terms and Conditions")
             }
             override fun updateDrawState(ds: TextPaint) {
@@ -198,6 +199,7 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
 
         val refundClickable = object : ClickableSpan() {
             override fun onClick(widget: View) {
+                binding.tvCourseDescription.maxLines = Integer.MAX_VALUE
                 scrollToHeading(tvCourseDescription, nestedScrollViewMove, "Refund Policy")
             }
             override fun updateDrawState(ds: TextPaint) {
