@@ -87,7 +87,7 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
 
         initFullscreenDialog()
         val videoData = arguments?.serializable<TopicContentModel>("VIDEO_DATA")
-        val videoUrl = videoData?.url?:""
+        val videoUrl = videoData?.localPath?:""
         videoData?.let {
             binding.tittleTv.text = it.topicName
             binding.descTv.text = it.topicDescription

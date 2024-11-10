@@ -35,14 +35,11 @@ import xyz.penpencil.competishun.utils.setLightStatusBars
 class ResumeCourseFragment : DrawerVisibility() {
 
     private lateinit var binding: FragmentResumeCourseBinding
-    private val myCourseViewModel: MyCoursesViewModel by viewModels()
     private val coursesViewModel: CoursesViewModel by viewModels()
-    var folderNames:ArrayList<String>? = null
-    var folderIds: String? = null
     val gson = Gson()
-    private lateinit var adapterOurSubjectsAdapter: OurSubjectsAdapter
-    private lateinit var rvOurSubjects: RecyclerView
-    private lateinit var listOuSubjectItem: List<FindCourseParentFolderProgressQuery.Folder?>
+    private var rvOurSubjects: RecyclerView ?= null
+    private var listOuSubjectItem: List<FindCourseParentFolderProgressQuery.Folder?> = mutableListOf()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -54,12 +51,16 @@ class ResumeCourseFragment : DrawerVisibility() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        (activity as? HomeActivity)?.let {
+            it.showBottomNavigationView(false)
+            it.showFloatingButton(false)
+        }
+
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 findNavController().popBackStack()
             }
         })
-
 
         binding.courseNameResumeCourse.setOnClickListener {
             it.findNavController().popBackStack()
@@ -72,22 +73,16 @@ class ResumeCourseFragment : DrawerVisibility() {
             findNavController().navigate(R.id.DownloadFragment)
         }
 
-        (activity as? HomeActivity)?.showBottomNavigationView(false)
-        (activity as? HomeActivity)?.showFloatingButton(false)
-
         val completionPercentagesArray = arguments?.getDoubleArray("completionPercentages")
-        val completionPercentages = completionPercentagesArray?.toList() ?: emptyList()
-        Log.e("completionper $completionPercentages",completionPercentagesArray.toString())
-
-        var folderCounts = arguments?.getString("completionPercentages")
+        val folderCounts = arguments?.getString("completionPercentages")
         val courses =  arguments?.getString("courseJson")
         val coursesName =  arguments?.getString("courseName")
         val folders = arguments?.getString("folderJson")
         val CourseId = arguments?.getString("courseId")
         val courseStart =  arguments?.getString("courseStart")
         val CourseEnd =  arguments?.getString("courseEnd")
-
         binding.courseNameResumeCourse.text = coursesName
+
         binding.backIcon.setOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed() }
         val bundle = Bundle().apply {
             putString("courseId", CourseId)
