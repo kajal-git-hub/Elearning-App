@@ -129,7 +129,7 @@ class PaymentFragment : Fragment() {
             result.onSuccess {
                 val receiptLink = it.generateReceipt
                 Log.e("ReceiptLink",receiptLink)
-               helperFunctions.downloadPdf(requireContext(),receiptLink,"Payment Invoice")
+               helperFunctions.downloadPdfOld(requireContext(),receiptLink,"Payment Invoice")
 
             }.onFailure {
 //                binding.btReceipt.isEnabled = true
