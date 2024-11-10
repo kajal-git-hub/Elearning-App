@@ -117,8 +117,8 @@ class StudyMaterialDetailsFragment : Fragment() {
                 binding.clTopicType.setOnClickListener {
                     val bundle = Bundle().apply {
                         putString("subFolders", folderlistJson)
-                        Log.e("foldernames", folderlistJson)
                         putString("folder_Count", folderlist.size.toString())
+                        putString("FOLDER_NAME", binding.tvTopicType.text.toString())
                     }
                     Log.e("clickevent", folderlistJson.toString())
 
