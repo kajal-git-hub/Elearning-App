@@ -379,7 +379,7 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
             Status.QUEUED, Status.PROGRESS, Status.PAUSED, Status.DEFAULT -> {}
         }
     }
-    fun downloadFile(url: String, fileName: String, isExternal: Boolean = false) {
+    fun downloadFile(url: String, fileName: String, isExternal: Boolean = false) {// ture -> external  // false -->
         val path = if (isExternal) {
             "/storage/emulated/0/Download/"
         } else {

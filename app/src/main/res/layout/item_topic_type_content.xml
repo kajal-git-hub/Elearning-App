@@ -8,29 +8,55 @@
     android:id="@+id/rootTopic"
     android:background="@drawable/card_bg">
 
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_course_book"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginVertical="@dimen/_16dp"
         android:layout_marginStart="12dp"
-        android:background="@drawable/frame_17074809189"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
-            android:id="@+id/iv_subject_book_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginVertical="@dimen/_20dp"
-            android:src="@drawable/group_1707478994"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/shapeableImage"
+            android:layout_width="72dp"
+            android:layout_height="85dp"
+            android:background="#01009A"
+            android:visibility="gone"
+            android:src="@drawable/bgvideoimage"
+            app:shapeAppearance="@style/CustomImageShapeRounded111"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/clEmtpyVeiw"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/frame_17074809189"
+            android:visibility="visible"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/iv_subject_book_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginVertical="@dimen/_20dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/group_1707478994"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/tv_lecture"
@@ -60,9 +86,9 @@
         android:id="@+id/iv_personIdentifier"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:src="@drawable/download_person"
         android:layout_marginStart="@dimen/_6dp"
         android:layout_marginTop="16dp"
+        android:src="@drawable/download_person"
         app:layout_constraintStart_toEndOf="@id/iv_vertical_line"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -100,9 +126,9 @@
         android:id="@+id/iv_MoreInfoLec"
         android:layout_width="@dimen/_40dp"
         android:layout_height="@dimen/_40dp"
-        android:padding="@dimen/_10dp"
         android:layout_marginTop="18dp"
         android:layout_marginEnd="12dp"
+        android:padding="@dimen/_10dp"
         android:src="@drawable/three_dot"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -126,31 +152,31 @@
             android:id="@+id/et_homeWorkText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_12sp"
             android:layout_marginStart="16sp"
-            android:textStyle="bold"
-            android:textSize="12sp"
-            android:textColor="@color/black_2B2829"
+            android:layout_marginTop="@dimen/_12sp"
             android:fontFamily="@font/nunito"
             android:text="HomeWork :"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"/>
+            android:textColor="@color/black_2B2829"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/et_homeWorkPdf"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="12sp"
-            android:textColor="@color/blue"
-            android:textStyle="bold"
-            android:maxLines="1"
-            android:textSize="@dimen/_12sp"
             android:ellipsize="end"
-            app:layout_constraintEnd_toStartOf="@+id/videoicon"
             android:fontFamily="@font/nunito"
+            android:maxLines="1"
             android:text=""
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/et_homeWorkText"/>
+            android:textColor="@color/blue"
+            android:textSize="@dimen/_12sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/videoicon"
+            app:layout_constraintStart_toEndOf="@+id/et_homeWorkText"
+            app:layout_constraintTop_toTopOf="parent" />
 
 
         <com.google.android.material.textview.MaterialTextView
@@ -158,26 +184,25 @@
             android:layout_width="252dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_16dp"
-            android:paddingBottom="@dimen/_16sp"
             android:layout_marginTop="@dimen/_8dp"
             android:layout_marginEnd="@dimen/_16dp"
             android:ellipsize="end"
             android:fontFamily="@font/nunito"
             android:maxLines="2"
+            android:paddingBottom="@dimen/_16sp"
             android:text="Relations and Functions: Types of relations and types and relation"
             android:textColor="#726C6C"
             android:textSize="12sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/et_homeWorkPdf"
-            />
+            app:layout_constraintTop_toBottomOf="@+id/et_homeWorkPdf" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Read More"
-            android:visibility="gone"
             android:textColor="@color/blue_3E3EF7"
             android:textSize="@dimen/_12sp"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@+id/tv_course_description"
             app:layout_constraintStart_toEndOf="@+id/tv_course_description" />
 
@@ -186,15 +211,14 @@
             android:id="@+id/videoicon"
             android:layout_width="@dimen/_45dp"
             android:layout_height="@dimen/_45dp"
-            android:padding="@dimen/_10dp"
             android:layout_marginEnd="@dimen/_12dp"
             android:layout_marginBottom="10dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:visibility="visible"
+            android:padding="@dimen/_10dp"
             android:src="@drawable/frame_1707481707"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            />
+            app:layout_constraintTop_toTopOf="parent" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
