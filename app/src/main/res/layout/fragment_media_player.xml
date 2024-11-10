@@ -237,6 +237,7 @@
                     android:drawablePadding="@dimen/_10dp"
                     android:gravity="center"
                     android:padding="@dimen/_5dp"
+
                     android:text="@string/Bookmark"
                     android:textColor="#2B2829"
                     android:textSize="@dimen/_12sp"

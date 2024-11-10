@@ -78,50 +78,152 @@
                 app:layout_constraintTop_toTopOf="parent" />
         </RelativeLayout>
 
-        <TextView
-            android:id="@+id/tittle_btn"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/_45dp"
-            android:paddingStart="@dimen/_16dp"
-            android:paddingEnd="@dimen/_16dp"
-            android:layout_toStartOf="@+id/bookMark"
-            android:paddingTop="@dimen/_16dp"
-            android:layout_below="@+id/playerRoot"
-            android:text="Video"
-            android:layout_marginEnd="@dimen/_16dp"
-            android:layout_marginTop="@dimen/_10dp"
-            android:textColor="@android:color/black"
-            android:gravity="left" />
 
-        <com.google.android.material.button.MaterialButton
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/_45dp"
-            android:layout_below="@+id/playerRoot"
-            android:layout_alignParentEnd="true"
-            android:textColor="@color/recycler_txt"
-            android:id="@+id/bookMark"
-            app:cornerRadius="@dimen/_8dp"
-            app:strokeColor="@color/recycler_txt"
-            app:strokeWidth="@dimen/_1dp"
-            android:layout_marginEnd="@dimen/_10dp"
-            android:layout_marginTop="@dimen/_10dp"
-            app:icon="@drawable/bookmark"
-            app:iconTint="@color/recycler_txt"
-            android:backgroundTint="@color/white"
-            android:text="@string/Bookmark"/>
-        <TextView
-            android:id="@+id/description"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingStart="@dimen/_16dp"
-            android:paddingEnd="@dimen/_16dp"
-            android:paddingTop="@dimen/_8dp"
-            android:paddingBottom="@dimen/_16dp"
-            android:layout_below="@+id/tittle_btn"
-            android:text=""
-            android:textColor="@android:color/black"
-            android:gravity="left" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_below="@+id/playerRoot"
+            android:padding="@dimen/_16dp"
+            app:layout_constraintTop_toBottomOf="@+id/playerRoot">
 
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/lecture_tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/nunito"
+                android:gravity="left"
+                android:text="Lecture |"
+                android:textColor="@color/_726c6c"
+                android:textSize="@dimen/_10sp"
+                android:visibility="visible"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tittle_tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/nunito"
+                android:gravity="left"
+                android:text="kk"
+                android:layout_marginTop="@dimen/_4dp"
+                android:textColor="@color/_151314"
+                android:textSize="@dimen/_16sp"
+                android:textStyle="bold"
+                android:visibility="visible"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/lecture_tv" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/desc_tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_4dp"
+                android:fontFamily="@font/nunito"
+                android:text="D"
+                android:textColor="@color/_726C6C"
+                android:textSize="@dimen/_14sp"
+                android:visibility="visible"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tittle_tv" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/homework_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/nunito"
+                android:paddingTop="@dimen/_5dp"
+                android:paddingBottom="@dimen/_5dp"
+                android:text="Homework"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_16sp"
+                android:textStyle="bold"
+                android:visibility="visible"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/desc_tv" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/homeworkDesc_tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/nunito"
+                android:padding="@dimen/_5dp"
+                android:text=""
+                android:textColor="@color/_726C6C"
+                android:textSize="@dimen/_14sp"
+                android:visibility="visible"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/homework_tv" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/homeworktittle_tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/nunito"
+                android:padding="@dimen/_5dp"
+                android:text=""
+                android:textColor="@color/PrimaryColor"
+                android:textSize="@dimen/_14sp"
+                android:visibility="visible"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/homeworkDesc_tv" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_bookmark"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/_40dp"
+                android:layout_marginTop="@dimen/_8dp"
+                android:background="@drawable/bg_filter_purchase"
+                android:padding="@dimen/_5dp"
+                android:visibility="visible"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/homeworktittle_tv">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/bookmark"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableStart="@drawable/baseline_bookmark"
+                    android:drawablePadding="@dimen/_10dp"
+                    android:gravity="center"
+                    android:padding="@dimen/_5dp"
+                    android:text="@string/Bookmark"
+                    android:textColor="#2B2829"
+                    android:textSize="@dimen/_12sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/clHaveDoubtsBanner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_40dp"
+                android:background="@color/_white_F6F6FF"
+                android:scaleType="centerCrop"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/cl_bookmark">
+
+                <ImageView
+                    android:id="@+id/iv_ques"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_16dp"
+                    android:layout_marginTop="@dimen/_20dp"
+                    android:layout_marginBottom="100dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/have_any"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </RelativeLayout>
 
 </layout>
