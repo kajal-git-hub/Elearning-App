@@ -80,7 +80,8 @@ class TopicTypeContentFragment : DrawerVisibility() {
         if (subContentsList.isNotEmpty()) {
             binding.progress.visibility = View.VISIBLE
             binding.clEmptyContent.visibility = View.GONE
-            val list  = subContentsList.subList(pageNumber, pageSize)
+            val listSize = if (subContentsList.size<=10) subContentsList.size else 10
+            val list  = subContentsList.subList(pageNumber, listSize)
             newContent(list, folderId, true)
         }else {
             binding.progress.visibility = View.GONE

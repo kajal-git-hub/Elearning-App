@@ -56,7 +56,7 @@ class TopicContentAdapter(
     }
 
     fun updateData(newTopicContents: MutableList<TopicContentModel>) {
-        CoroutineScope(Dispatchers.Default).launch {
+        CoroutineScope(Dispatchers.IO).launch {
             val diffCallback = MyDiffUtilCallback(topicContents, newTopicContents)
             val diffResult = DiffUtil.calculateDiff(diffCallback)
 
