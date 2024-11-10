@@ -8,4 +8,9 @@
     <!-- Rounded Corners -->
     <corners android:radius="16dp"/> <!-- Adjust radius as needed -->
 
+    <!-- Border Color and Width -->
+    <stroke
+        android:width="0.5dp"
+    android:color="#ACACFA"/>
+
 </shape>
