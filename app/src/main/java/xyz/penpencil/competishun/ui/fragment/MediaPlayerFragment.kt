@@ -195,7 +195,7 @@ class MediaPlayerFragment : DrawerVisibility() {
             }
         }
         // Setup video progress update task
-/*        handler.post(object : Runnable {
+        handler.post(object : Runnable {
             override fun run() {
                 if (isAdded && ::player.isInitialized) {
                     val watchedDurationInSeconds = (player.currentPosition / 1000).toInt()
@@ -203,7 +203,7 @@ class MediaPlayerFragment : DrawerVisibility() {
                     handler.postDelayed(this, updateInterval)
                 }
             }
-        })*/
+        })
         try {
             changeQuality(videoFormat)
             val mediaItem = MediaItem.fromUri(videoUrl)
