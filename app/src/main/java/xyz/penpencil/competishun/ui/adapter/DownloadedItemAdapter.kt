@@ -55,7 +55,7 @@ class DownloadedItemAdapter(
     override fun onDeleteClick(position: Int, item: TopicContentModel) {
         if (position >= 0 && position < items.size) {
             items.removeAt(position)
-            filteredItems.removeAt(position) // Also remove from filtered list
+            filteredItems.removeAt(position)
             notifyItemRemoved(position)
             notifyItemRangeChanged(position, items.size)
             videoClickListener.onDeleteClick(item)

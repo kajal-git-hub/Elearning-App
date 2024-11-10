@@ -23,8 +23,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_16dp"
             android:layout_marginTop="@dimen/_20dp"
-            android:visibility="gone"
             android:src="@drawable/arrow_left"
+            android:visibility="gone"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -80,11 +80,11 @@
         android:id="@+id/cl_empty_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="visible"
-        app:layout_constraintTop_toBottomOf="@id/clTopViewTopic"
-        app:layout_constraintStart_toStartOf="parent"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/clTopViewTopic">
 
         <pl.droidsonroids.gif.GifImageView
             android:id="@+id/GifEmptyDownloads"
@@ -92,62 +92,69 @@
             android:layout_height="130dp"
             android:layout_marginLeft="4dp"
             android:background="@drawable/empty_download"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tv_content_pdfs"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="No Records Found!"
+            android:layout_marginTop="32dp"
             android:fontFamily="@font/nunito"
-            android:textStyle="bold"
-            android:textSize="20sp"
+            android:text="No Records Found!"
             android:textColor="#2B2829"
-            app:layout_constraintTop_toBottomOf="@id/GifEmptyDownloads"
-            app:layout_constraintStart_toStartOf="parent"
+            android:textSize="20sp"
+            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="32dp"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/GifEmptyDownloads" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tv_not_content_anything"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Content will be available soon"
+            android:layout_marginTop="9dp"
             android:fontFamily="@font/nunito"
-            android:textStyle="bold"
-            android:textSize="@dimen/_14sp"
+            android:text="Content will be available soon"
             android:textColor="#5A5555"
-            app:layout_constraintTop_toBottomOf="@id/tv_content_pdfs"
-            app:layout_constraintStart_toStartOf="parent"
+            android:textSize="@dimen/_14sp"
+            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="9dp"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_content_pdfs" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/progress"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/clTopViewTopic" />
 
 
     <androidx.core.widget.NestedScrollView
-    android:layout_width="match_parent"
-    android:layout_height="0dp"
-    app:layout_constraintTop_toBottomOf="@id/clTopViewTopic"
-    app:layout_constraintBottom_toBottomOf="parent"
-    android:paddingBottom="@dimen/_16sp"
-    android:orientation="vertical">
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_topic_content"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/clTopViewTopic"
-        tools:itemCount="8"
-        tools:listitem="@layout/item_topic_type_content" />
-</androidx.core.widget.NestedScrollView>
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/_16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/clTopViewTopic">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_topic_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/clTopViewTopic"
+            tools:itemCount="8"
+            tools:listitem="@layout/item_topic_type_content" />
+    </androidx.core.widget.NestedScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -21,14 +21,6 @@ open class DrawerVisibility : Fragment() {
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentDrawerVisibilityBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         drawerLayout = requireActivity().findViewById(R.id.drwaer_layout)
@@ -37,7 +29,6 @@ open class DrawerVisibility : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        // Lock the drawer
         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
     }
 

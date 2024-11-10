@@ -15,6 +15,7 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -29,6 +30,10 @@ import xyz.penpencil.competishun.ui.viewmodel.VideourlViewModel
 import xyz.penpencil.competishun.utils.HelperFunctions
 import xyz.penpencil.competishun.utils.ToolbarCustomizationListener
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.databinding.FragmentScheduleBinding
 import xyz.penpencil.competishun.ui.main.PdfViewActivity
@@ -75,6 +80,8 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
 
     private val calendarSetUp : HorizontalCalendarSetUp by lazy { HorizontalCalendarSetUp() }
 
+    private var isFirstTime: Boolean = false
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -89,6 +96,9 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
             binding.rvCalenderDates,
             requireContext(),
             onDateSelected = { calendarDate ->
+                binding.clEmptySchedule.visibility = View.GONE
+                binding.loader.visibility = View.VISIBLE
+                binding.rvCalenderSchedule.visibility = View.GONE
                 calendarDate.zonedDateTime?.let {
                     selectedDate = it
                 }
@@ -142,50 +152,65 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
     }
 
     private fun setupRecyclerView() {
-        val contentList = listData
-        val filteredContentList = contentList.filter {
-            val scheduledTime = it.content.scheduled_time.toString().utcToIst().toIstZonedDateTime()
-            scheduledTime.toLocalDate() == selectedDate.toLocalDate()
-        }
+        lifecycleScope.launch {
 
-        val scheduleDataList = filteredContentList.groupBy {
-            val scheduledTime = it.content.scheduled_time.toString().utcToIst().toIstZonedDateTime()
-            scheduledTime.dayOfWeek.toString().take(3) to scheduledTime.dayOfMonth.toString()
-        }.map { (dateInfo, groupedContentList) ->
-            val (dayOfWeek, dayOfMonth) = dateInfo
-            ScheduleData(
-                dayOfWeek,
-                dayOfMonth,
-                duration = 0,
-                groupedContentList.map { content ->
-                    ScheduleData.InnerScheduleItem(
-                        content.folderPath ?: "",
-                        content.content.file_name,
-                        lecture_start_time = formatTime(convertIST(content.content.scheduled_time.toString())),
-                        lecture_end_time = convertLastDuration(formatTime(convertIST(content.content.scheduled_time.toString())), content.content.video_duration?.toLong() ?: 0),
-                        content.content.file_url.toString(),
-                        content.content.file_type.name,
-                        content.content.id,
-                        content.content.scheduled_time.toString(),
-                        completedDuration = content.studentTrack?.completed_duration ?: 0,
-                        statusTime = content.content.scheduled_time.toString().timeStatus(content.content.video_duration ?: 0)
+            val scheduleDataList = withContext(Dispatchers.Default) {
+                val filteredContentList = async {
+                    listData.filter {
+                        val scheduledTime = it.content.scheduled_time.toString().utcToIst().toIstZonedDateTime()
+                        scheduledTime.toLocalDate() == selectedDate.toLocalDate()
+                    }
+                }.await()
+
+                filteredContentList.groupBy {
+                    val scheduledTime = it.content.scheduled_time.toString().utcToIst().toIstZonedDateTime()
+                    scheduledTime.dayOfWeek.toString().take(3) to scheduledTime.dayOfMonth.toString()
+                }.map { (dateInfo, groupedContentList) ->
+                    val (dayOfWeek, dayOfMonth) = dateInfo
+
+                    ScheduleData(
+                        dayOfWeek,
+                        dayOfMonth,
+                        duration = 0,
+                        groupedContentList.map { content ->
+                            ScheduleData.InnerScheduleItem(
+                                content.folderPath ?: "",
+                                content.content.file_name,
+                                lecture_start_time = formatTime(convertIST(content.content.scheduled_time.toString())),
+                                lecture_end_time = convertLastDuration(
+                                    formatTime(convertIST(content.content.scheduled_time.toString())),
+                                    content.content.video_duration?.toLong() ?: 0
+                                ),
+                                content.content.file_url.toString(),
+                                content.content.file_type.name,
+                                content.content.id,
+                                content.content.scheduled_time.toString(),
+                                completedDuration = content.studentTrack?.completed_duration ?: 0,
+                                statusTime = content.content.scheduled_time.toString()
+                                    .timeStatus(content.content.video_duration ?: 0)
+                            )
+                        }
                     )
                 }
-            )
-        }
+            }
 
-        scheduleAdapter = ScheduleAdapter(scheduleDataList, requireContext(), this)
-        binding.rvCalenderSchedule.adapter = scheduleAdapter
-        binding.rvCalenderSchedule.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+            withContext(Dispatchers.Main) {
+                scheduleAdapter = ScheduleAdapter(scheduleDataList, requireContext(), this@ScheduleFragment)
+                binding.rvCalenderSchedule.adapter = scheduleAdapter
+                binding.rvCalenderSchedule.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 
-        if (scheduleDataList.isEmpty()){
-            binding.clEmptySchedule.visibility = View.VISIBLE
-            binding.rvCalenderSchedule.visibility = View.GONE
-        }else {
-            binding.clEmptySchedule.visibility = View.GONE
-            binding.rvCalenderSchedule.visibility = View.VISIBLE
+                if (scheduleDataList.isEmpty()) {
+                    binding.clEmptySchedule.visibility = View.VISIBLE
+                    binding.rvCalenderSchedule.visibility = View.GONE
+                } else {
+                    binding.clEmptySchedule.visibility = View.GONE
+                    binding.rvCalenderSchedule.visibility = View.VISIBLE
+                }
+                binding.loader.visibility = View.GONE
+            }
         }
     }
+
 
 
     private fun findAllCourseFolderContentByScheduleTimeQuery(){
@@ -245,6 +270,7 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
                     binding.clEmptySchedule.visibility = View.VISIBLE
                     binding.rvCalenderSchedule.visibility = View.GONE
 //                    setupCalendar(courseStart)
+                    isFirstTime  = false
                     listData = mutableListOf()
                 }else{
                     binding.clEmptySchedule.visibility = View.GONE

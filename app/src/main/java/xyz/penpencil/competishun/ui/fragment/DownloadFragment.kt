@@ -179,15 +179,13 @@ class DownloadFragment : DrawerVisibility(), DownloadedItemAdapter.OnVideoClickL
 
     override fun onDeleteClick(topicContentModel: TopicContentModel) {
         lifecycleScope.launch {
-            lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
-                try {
-                    if (File(topicContentModel.localPath).exists()){
-                        File(topicContentModel.localPath).delete()
-                    }
-                } catch (e: Exception) {
-                    Log.e(TAG, "onDeleteClick: ${e.message}" )
+            try {
+                if (File(topicContentModel.localPath).exists()){
+                    File(topicContentModel.localPath).delete()
                 }
                 topicContentViewModel.deleteTopicContent(topicContentModel)
+            } catch (e: Exception) {
+                Log.e(TAG, "onDeleteClick: ${e.message}" )
             }
         }
     }
