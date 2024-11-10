@@ -1,5 +1,6 @@
 package xyz.penpencil.competishun.ui.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
@@ -23,6 +24,7 @@ class TopicTypeAdapter(
             binding.radioButtonCourseType.text = topicTypeModel.title
 
             // Update the background based on the selection status
+            Log.e("isseleceted",isSelected.toString())
             binding.root.setBackgroundResource(
                 if (isSelected) R.drawable.getstarted_itembg_selected else R.drawable.getstarted_itembg_unselected
             )
@@ -54,6 +56,7 @@ class TopicTypeAdapter(
 
     override fun onBindViewHolder(holder: TopicTypeViewHolder, position: Int) {
         // Bind data to the ViewHolder, passing whether the item is selected
+        Log.e("issseleceted $position",selectedPosition.toString())
         holder.bind(topicTypeList[position], position == selectedPosition)
     }
 
