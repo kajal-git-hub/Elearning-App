@@ -28,6 +28,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import xyz.penpencil.competishun.R
+import xyz.penpencil.competishun.databinding.DialogDownloadOptionBinding
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.TimeZone
@@ -224,7 +225,7 @@ class HelperFunctions {
 
 
     fun downloadPdf(context: Context, fileUrl: String, title: String) {
-        /*val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+        val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
         val request = DownloadManager.Request(Uri.parse(removeBrackets(fileUrl)))
             .setTitle(title)
             .setDescription("Downloading $title...")
@@ -248,33 +249,23 @@ class HelperFunctions {
         }
 
         context.registerReceiver(onCompleteReceiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE),
-            Context.RECEIVER_NOT_EXPORTED)*/
+            Context.RECEIVER_NOT_EXPORTED)
 
 
         Log.e("YUYUYUIYUIY", "downloadPdf: $fileUrl  == $title")
-        val ketch = Ketch.builder().setNotificationConfig(
-            config = NotificationConfig(
-                enabled = true,
-                smallIcon = R.drawable.ic_launcher_foreground
-            )
-        ).build(context)
-        var url = fileUrl
-        if (fileUrl.startsWith("[")){
-            url = fileUrl.removePrefix("[")
-        }
 
-        if (fileUrl.endsWith("]")){
-            url = url.removeSuffix("]")
-        }
-
-        ketch.download(
-            url = url,
-            fileName = "$title.pdf",
-            path =  "/storage/emulated/0/Download/")
     }
 
     fun removeBrackets(input: String): String {
-        return input.replace("[", "").replace("]", "")
+        var url = input
+        if (input.startsWith("[")){
+            url = input.removePrefix("[")
+        }
+
+        if (input.endsWith("]")){
+            url = url.removeSuffix("]")
+        }
+        return url
     }
 
 
