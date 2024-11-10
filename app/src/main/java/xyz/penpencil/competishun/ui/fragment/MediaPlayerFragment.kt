@@ -3,7 +3,6 @@ package xyz.penpencil.competishun.ui.fragment
 import android.app.Dialog
 import android.content.Intent
 import android.content.pm.ActivityInfo
-import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -16,7 +15,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.FrameLayout
-import android.widget.ProgressBar
+import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
@@ -46,7 +46,6 @@ import xyz.penpencil.competishun.databinding.FragmentMediaPlayerBinding
 import xyz.penpencil.competishun.ui.main.PdfViewActivity
 import xyz.penpencil.competishun.utils.HelperFunctions
 import xyz.penpencil.competishun.utils.SharedPreferencesManager
-import java.io.File
 import java.util.Locale
 import kotlin.random.Random
 
@@ -85,6 +84,10 @@ class MediaPlayerFragment : DrawerVisibility() {
     private lateinit var mFullScreenDialog: Dialog
     private var mExoPlayerFullscreen: Boolean = false
 
+    private var fullScreenButton: ImageView?=null
+    private var backBtn: ImageView?=null
+    private var qualityButton: ImageView?=null
+
     companion object {
         private const val SEEK_OFFSET_MS = 10000L
     }
@@ -117,23 +120,13 @@ class MediaPlayerFragment : DrawerVisibility() {
     @androidx.annotation.OptIn(UnstableApi::class)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val progressBar: ProgressBar = binding.progressBar
-        var qualityButton = binding.qualityButton
         helperFunctions = HelperFunctions()
         sharedPreferencesManager = SharedPreferencesManager(requireContext())
 
         (activity as? HomeActivity)?.showBottomNavigationView(false)
         (activity as? HomeActivity)?.showFloatingButton(false)
 
-        sharedViewModel = ViewModelProvider(requireActivity()).get(SharedVM::class.java)
-        binding.backBtn.setOnClickListener {
-            if (mExoPlayerFullscreen){
-                requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
-                closeFullscreenDialog()
-            }else {
-                view?.findNavController()?.popBackStack()
-            }
-        }
+        sharedViewModel = ViewModelProvider(requireActivity())[SharedVM::class.java]
 
         val videoUrl = arguments?.getString("url") ?: ""
         Log.e("howdfdf",videoUrl)
@@ -176,27 +169,8 @@ class MediaPlayerFragment : DrawerVisibility() {
         requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         binding.playerView.resizeMode = androidx.media3.ui.AspectRatioFrameLayout.RESIZE_MODE_FIT
         binding.playerView.player = player
-        binding.fullscreenButton.setOnClickListener {
-            val isLandscape = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
-            Log.e("landscapemode",isLandscape.toString())
-            if (isLandscape) {
-               Log.e("landscape mode",isLandscape.toString())
-                binding.fullscreenButton.visibility = View.VISIBLE
-                binding.playerView.layoutParams = binding.playerView.layoutParams.apply {
-                    height = resources.getDimensionPixelSize(R.dimen.original_height)
-                }// Convert 300dp to pixels
-                    requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-                binding.playerView.resizeMode = androidx.media3.ui.AspectRatioFrameLayout.RESIZE_MODE_FIT // Reset or use any mode you want in portrait
-            } else {
-                binding.fullscreenButton.visibility = View.VISIBLE
-                Log.e("landscapeport",isLandscape.toString())
-                // If in portrait, switch to landscape
-                requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-                binding.playerView.resizeMode = androidx.media3.ui.AspectRatioFrameLayout.RESIZE_MODE_ZOOM // Zoom for full-screen landscape
-            }
-        }
         // Setup video progress update task
-/*        handler.post(object : Runnable {
+        handler.post(object : Runnable {
             override fun run() {
                 if (isAdded && ::player.isInitialized) {
                     val watchedDurationInSeconds = (player.currentPosition / 1000).toInt()
@@ -204,7 +178,7 @@ class MediaPlayerFragment : DrawerVisibility() {
                     handler.postDelayed(this, updateInterval)
                 }
             }
-        })*/
+        })
         try {
             changeQuality(videoFormat)
             val mediaItem = MediaItem.fromUri(videoUrl)
@@ -212,7 +186,6 @@ class MediaPlayerFragment : DrawerVisibility() {
             player.setMediaItem(mediaItem)
             player.prepare()
             player.play()
-            setupZoomFeature()
             player.addListener(object : Player.Listener {
                 override fun onPlayerError(error: PlaybackException) {
                     Log.e("PlayerError", "Playback Error: ${error.message}", error)
@@ -280,14 +253,15 @@ class MediaPlayerFragment : DrawerVisibility() {
                     }
                 }
             })
-
-
         } catch (e: Exception) {
             Log.e("PlayerSetup", "Failed to initialize player", e)
         }
-        Log.e("getcontentid",courseFolderContentId)
 
-        binding.qualityButton.setOnClickListener {
+        fullScreenButton = binding.playerView.findViewById<ImageButton>(R.id.fullScreen)
+        backBtn = binding.playerView.findViewById<ImageButton>(R.id.back_btn)
+        qualityButton = binding.playerView.findViewById<ImageButton>(R.id.qualityButton)
+
+        qualityButton?.setOnClickListener {
             showSpeedOrQualityDialog()
         }
 
@@ -314,10 +288,17 @@ class MediaPlayerFragment : DrawerVisibility() {
 
         initFullscreenDialog()
 
-        binding.fullscreenButton.setOnClickListener {
+        fullScreenButton?.setOnClickListener {
             toggleFullscreen()
         }
-
+        backBtn?.setOnClickListener {
+           if (mExoPlayerFullscreen){
+               requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
+               closeFullscreenDialog()
+           }else {
+               view?.findNavController()?.popBackStack()
+           }
+       }
     }
 
 
@@ -387,37 +368,6 @@ class MediaPlayerFragment : DrawerVisibility() {
     private fun storeItemInPreferencesBm(item: TopicContentModel) {
         val sharedPreferencesManager = SharedPreferencesManager(requireActivity())
         sharedPreferencesManager.saveDownloadedItemBm(item)
-    }
-
-    private fun setupZoomFeature() {
-        binding.fullscreenButton.setOnClickListener {
-            toggleZoom()
-        }
-    }
-
-
-    @androidx.annotation.OptIn(UnstableApi::class)
-    private fun toggleZoom() {
-        isZoomed = !isZoomed
-        val layoutParams =  binding.playerView.layoutParams
-
-        // Toggle between original size and full-screen
-        if (isZoomed) {
-            Log.e("uszibivd",isZoomed.toString())
-            requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-            binding.playerView.resizeMode = androidx.media3.ui.AspectRatioFrameLayout.RESIZE_MODE_ZOOM
-            layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
-            layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT
-          //  isZoomed = false
-        } else {
-            Log.e("uszibelse",isZoomed.toString())
-            requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-            layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
-            binding.playerView.resizeMode = androidx.media3.ui.AspectRatioFrameLayout.RESIZE_MODE_FIT
-            layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT // original height
-        }
-
-        binding.playerView.layoutParams = layoutParams
     }
 
     private fun playVideo(videoUrl: String, startPosition: Long = 0L, videoTittle: String, videoDesc: String) {
@@ -696,7 +646,6 @@ class MediaPlayerFragment : DrawerVisibility() {
     fun videoProgress(courseFolderContentId:String,currentDuration:Int) {
 
         if (isAdded) {
-            // Observe the result of the updateVideoProgress mutation
             videourlViewModel.updateVideoProgressResult.observe(viewLifecycleOwner) { success ->
                 if (success) {
 
@@ -705,22 +654,20 @@ class MediaPlayerFragment : DrawerVisibility() {
                     Log.e("failed Video updated ","video not updated")
                 }
             }
-
-            // Call the mutation
             videourlViewModel.updateVideoProgress(courseFolderContentId, currentDuration)
         }
     }
     override fun onResume() {
         super.onResume()
-//        requireActivity().window.setFlags(
-//            WindowManager.LayoutParams.FLAG_SECURE,
-//            WindowManager.LayoutParams.FLAG_SECURE
-//        )
+        requireActivity().window.setFlags(
+            WindowManager.LayoutParams.FLAG_SECURE,
+            WindowManager.LayoutParams.FLAG_SECURE
+        )
     }
 
     override fun onPause() {
         super.onPause()
-      //  requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
+        requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
     }
 
 
@@ -740,7 +687,7 @@ class MediaPlayerFragment : DrawerVisibility() {
         )
         mExoPlayerFullscreen = true
         mFullScreenDialog.show()
-//        binding.fullScreen.setImageResource(R.drawable.zoom_in_map_24)
+        fullScreenButton?.setImageResource(R.drawable.zoom_in_map_24)
     }
 
     private fun closeFullscreenDialog() {
@@ -748,7 +695,7 @@ class MediaPlayerFragment : DrawerVisibility() {
         binding.playerApp.addView(binding.playerView)
         mExoPlayerFullscreen = false
         mFullScreenDialog.dismiss()
-//        binding.f.setImageResource(R.drawable.zoom_out_map_24)
+        fullScreenButton?.setImageResource(R.drawable.zoom_out_map_24)
     }
 
     private fun toggleFullscreen() {
