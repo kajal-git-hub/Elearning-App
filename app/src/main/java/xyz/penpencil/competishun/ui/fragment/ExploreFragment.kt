@@ -129,7 +129,7 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
 
 
         (activity as? HomeActivity)?.showBottomNavigationView(false)
-        (activity as? HomeActivity)?.showFloatingButton(true)
+        (activity as? HomeActivity)?.showFloatingButton(false)
 
         helperFunctions = HelperFunctions()
         combinedTabItems = listOf()
