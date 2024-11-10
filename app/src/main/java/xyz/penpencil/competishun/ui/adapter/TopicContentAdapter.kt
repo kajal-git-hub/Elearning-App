@@ -18,7 +18,6 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
-import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.CoroutineScope
@@ -42,6 +41,7 @@ import java.util.Locale
 class TopicContentAdapter(
     private var topicContents: MutableList<TopicContentModel>,
     private val folderContentId: String,
+    private val folderName: String,
     private val fragmentActivity: FragmentActivity,
     private val context: Context, // Pass context
     private val onItemClick: (TopicContentModel, String,ArrayList<String>,ArrayList<String>, ArrayList<String>,ArrayList<String>,ArrayList<String>,ArrayList<String>) -> Unit
@@ -72,7 +72,7 @@ class TopicContentAdapter(
     override fun onBindViewHolder(holder: TopicContentViewHolder, position: Int) {
 
         val topicContent = topicContents[position]
-        holder.bind(topicContents[position], fragmentActivity)
+        holder.bind(topicContents[position], fragmentActivity,folderName)
         holder.itemView.setOnClickListener {
             if ((topicContent.fileType == "URL")){
                 val url = if (topicContent.topicName.contains("http")) topicContent.url else "https://${topicContent.url}"
@@ -112,11 +112,11 @@ class TopicContentAdapter(
     override fun getItemCount(): Int = topicContents.size
 
     class TopicContentViewHolder(private val binding: ItemTopicTypeContentBinding,
-                                 private val context: Context // Use context for download function
+                                 private val context: Context// Use context for download function
     ) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(topicContent: TopicContentModel, fragmentActivity: FragmentActivity) {
+        fun bind(topicContent: TopicContentModel, fragmentActivity: FragmentActivity,folderName: String) {
 
             binding.ivSubjectBookIcon.setImageResource(topicContent.subjectIcon)
 
@@ -131,11 +131,28 @@ class TopicContentAdapter(
 //            if (showDateIfFutureOrToday(topicContent.lockTime)) binding.videoicon.setImageResource(R.drawable.frame_1707481707) else binding.videoicon.setImageResource(
 //                R.drawable.frame_1707481080
 //            )
+            Log.e("foldernamess",folderName)
+            val icon = when (folderName) {
+                "Chemistry" -> R.drawable.chemistory
+                "Physics" -> R.drawable.phys_icon
+                "Maths", "Mathematics" -> R.drawable.math_icon
+                "Biology" -> R.drawable.biology_ic
+                else -> R.drawable.other_icon // Set a default icon if folder name doesn't match
+            }
+            val background = when (folderName) {
+                "Chemistry" -> R.color.biology_color
+                "Physics" -> R.color.physics_color
+                "Maths", "Mathematics" -> R.color.mathematics_color
+                "Biology" -> R.color.biology_color
+                else -> R.color.other_color // Set a default icon if folder name doesn't match
+            }
             Log.e("getlocketime ${isDateTodayOrPast(topicContent.lockTime, topicContent.isExternal)} ",topicContent.lockTime)
             if ( isDateTodayOrPast(topicContent.lockTime, topicContent.isExternal)) {
                 if (topicContent.fileType == "VIDEO")
                 {
-//                    binding.shapeableImage.setImageResource(R.drawable.bgvideoimage)
+                    binding.shapeableImage.setImageResource(icon)
+                    binding.shapeableImage.setBackgroundResource(background)
+                    binding.clEmtpyVeiw.visibility = View.INVISIBLE
                     binding.etHomeWorkText.visibility = View.VISIBLE
                     binding.etHomeWorkPdf.visibility = View.VISIBLE
                     binding.etHomeWorkPdf.text = if (topicContent.homeworkName.isNotEmpty()) " "+helperFunctions.removeBrackets(topicContent.homeworkName) else "NA"
@@ -154,6 +171,7 @@ class TopicContentAdapter(
                 } else if (topicContent.fileType == "PDF"){
                     binding.etHomeWorkPdf.visibility = View.GONE
                     binding.etHomeWorkText.visibility = View.GONE
+                    binding.shapeableImage.visibility = View.INVISIBLE
                     binding.clEmtpyVeiw.visibility = View.VISIBLE
                     binding.videoicon.setImageResource(R.drawable.pdf_bg)}
                 binding.videoicon.visibility = View.VISIBLE
@@ -164,10 +182,18 @@ class TopicContentAdapter(
                 binding.clReadAndPlay.visibility = View.GONE
                 binding.ivMoreInfoLec.visibility = View.GONE
             }else {
+                if (topicContent.fileType == "VIDEO") {
+                    binding.shapeableImage.setImageResource(icon)
+                    binding.shapeableImage.setBackgroundResource(background)
+                    binding.clEmtpyVeiw.visibility = View.INVISIBLE
+                }else{
+                    binding.shapeableImage.visibility = View.GONE
+                    binding.clEmtpyVeiw.visibility = View.VISIBLE
+                }
                 binding.videoicon.visibility = View.VISIBLE
                 binding.videoicon.setImageResource(R.drawable.frame_1707481080)
             }
-
+            Log.e("lectueres",topicContent.lecture)
             binding.tvLecture.text = topicContent.lecture
             binding.tvLecturerName.text = topicContent.lecturerName
             if (topicContent.fileType == "UNKNOWN__"  || topicContent.fileType == "URL" && topicContent.url.contains("http") ){
