@@ -44,7 +44,7 @@
                    app:layout_constraintEnd_toEndOf="parent"
                    android:layout_gravity="center"
                    app:show_buffering="always"
-                   android:background="@color/black"
+                   app:played_color="@android:color/holo_red_dark"
                    app:controller_layout_id="@layout/layout_exoplayer_controls"
                    android:keepScreenOn="true"
                    app:show_next_button="false"

@@ -49,6 +49,9 @@ class TopicTypeContentFragment : DrawerVisibility() {
 
     var adapter : TopicContentAdapter?=null
 
+    var isLoading = false
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -105,7 +108,7 @@ class TopicTypeContentFragment : DrawerVisibility() {
             }
         })
 
-        binding.rvTopicContent.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+       /* binding.rvTopicContent.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
 
@@ -114,14 +117,14 @@ class TopicTypeContentFragment : DrawerVisibility() {
                 val totalItemCount = layoutManager?.itemCount ?: 0
                 val firstVisibleItemPosition = layoutManager?.findFirstVisibleItemPosition() ?: 0
 
-                if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount &&
-                    firstVisibleItemPosition >= 0
-                ) {
+                if (!isLoading && (visibleItemCount + firstVisibleItemPosition) >= totalItemCount && firstVisibleItemPosition >= 0) {
+                    isLoading = true
                     pageSize = firstVisibleItemPosition
                     newContent(subContentsList, folderId, true)
+                    isLoading = false
                 }
             }
-        })
+        })*/
 
     }
     private fun newContent(folderContents: List<FindCourseFolderProgressQuery.FolderContent>, folderId: String, isFirstTime: Boolean = false) {
