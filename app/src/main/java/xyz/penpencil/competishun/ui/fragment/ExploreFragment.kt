@@ -3,11 +3,13 @@ package xyz.penpencil.competishun.ui.fragment
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.text.Spannable
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.TextPaint
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
+import android.text.style.ForegroundColorSpan
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -39,6 +41,7 @@ import androidx.navigation.findNavController
 import com.bumptech.glide.request.target.Target
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.tabs.TabLayout
+import com.google.android.material.textview.MaterialTextView
 import com.google.gson.Gson
 import com.student.competishun.curator.AllCourseForStudentQuery
 import com.student.competishun.curator.GetCourseByIdQuery
@@ -190,6 +193,7 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
                 binding.tvCourseDescription.maxLines = Integer.MAX_VALUE
                 scrollToHeading(tvCourseDescription, nestedScrollViewMove, "Terms and Conditions")
             }
+
             override fun updateDrawState(ds: TextPaint) {
                 super.updateDrawState(ds)
                 ds.isUnderlineText = true // Remove underline if you want
@@ -202,6 +206,7 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
                 binding.tvCourseDescription.maxLines = Integer.MAX_VALUE
                 scrollToHeading(tvCourseDescription, nestedScrollViewMove, "Refund Policy")
             }
+
             override fun updateDrawState(ds: TextPaint) {
                 super.updateDrawState(ds)
                 ds.isUnderlineText = true // Remove underline if you want
@@ -229,6 +234,7 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
 
         tvAgreeTerms.text = spannableString
         tvAgreeTerms.movementMethod = LinkMovementMethod.getInstance()
+
 
         val checkBox: CheckBox = view.findViewById(R.id.cbAgreeTerms)
         checkBox.setOnCheckedChangeListener { _, isChecked ->
@@ -867,6 +873,7 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
         viewModel.fetchMyCourses()
 
     }
+
     private fun scrollToHeading(textView: TextView, scrollView: NestedScrollView, heading: String) {
         val layout = textView.layout ?: return
         val headingIndex = textView.text.indexOf(heading)

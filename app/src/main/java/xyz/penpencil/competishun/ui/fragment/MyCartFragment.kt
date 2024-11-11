@@ -41,7 +41,8 @@ import xyz.penpencil.competishun.utils.Constants
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
-
+//tvInstallmentPrice
+//tvInstallmentPrice2
 @AndroidEntryPoint
 class MyCartFragment : DrawerVisibility(), OnCartItemRemovedListener, MyCartAdapter.OnCartItemClickListener {
     private lateinit var binding : FragmentMyCartBinding
@@ -396,8 +397,11 @@ class MyCartFragment : DrawerVisibility(), OnCartItemRemovedListener, MyCartAdap
                 selectedCartItem.withInstallmentPrice.minus(selectedCartItem.price)
             binding.tvInstTotalAmount.text = "₹${selectedCartItem.withInstallmentPrice}"
             binding.tvInstCoursePrice.text = "₹${selectedCartItem.price}"
-            binding.tvInstallmentPrice.text = "₹${firstInstallment}"
-            binding.tvInstallmentPrice2.text = "₹${secondInstallment}"
+//            binding.tvInstallmentPrice.text = "₹${firstInstallment}"
+            binding.tvInstallmentPrice.text = "₹${String.format("%.2f", firstInstallment)}"
+//            binding.tvInstallmentPrice2.text = "₹${secondInstallment}"
+            binding.tvInstallmentPrice2.text = "₹${String.format("%.2f", secondInstallment)}"
+
             binding.tvInstallmentChargePrice.text =
                 "₹${selectedCartItem.withInstallmentPrice}"
         }
