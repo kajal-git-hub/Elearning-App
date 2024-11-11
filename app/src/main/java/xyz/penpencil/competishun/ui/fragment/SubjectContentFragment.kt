@@ -52,6 +52,7 @@ class SubjectContentFragment : DrawerVisibility() {
     private var folderProgress = -1
 
     private var folderProgressCont = -1
+    private var selectedId = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -59,6 +60,11 @@ class SubjectContentFragment : DrawerVisibility() {
     ): View {
         binding = FragmentSubjectContentBinding.inflate(inflater, container, false)
         return binding.root
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString("selectedId", "selectedId")
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -83,7 +89,7 @@ class SubjectContentFragment : DrawerVisibility() {
          folderName = arguments?.getString("folder_Name") ?: ""
         val parentContent = arguments?.getString("parent_content") ?: ""
         val folderId =  arguments?.getString("folder_Id") ?: ""
-        var folder_Count = arguments?.getString("folder_Count") ?: "0"
+        val folder_Count = arguments?.getString("folder_Count") ?: "0"
         isExternal = arguments?.getBoolean("isExternal", false) == true
         val subFolderList =
             object : TypeToken<List<FindCourseFolderProgressQuery.SubfolderDuration>>() {}.type
@@ -117,10 +123,16 @@ class SubjectContentFragment : DrawerVisibility() {
         binding.rvTopicContent.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
-        if (subFoldersList[0].folder?.id != null) {
-            var id = subFoldersList[0].folder?.id ?: ""
-            binding.tvTopicType.text = subFoldersList[0].folder?.name
-            folderProgress(id)
+        if (savedInstanceState?.getString("selectedId")!=null && savedInstanceState?.getString("selectedId")?.isNotEmpty() == true){
+            savedInstanceState?.getString("selectedId")?.let {
+                folderProgress(it)
+            }
+        }else {
+            if (subFoldersList[0].folder?.id != null) {
+                var id = subFoldersList[0].folder?.id ?: ""
+                binding.tvTopicType.text = subFoldersList[0].folder?.name
+                folderProgress(id)
+            }
         }
         binding.clTopicType.setOnClickListener {
             val bundle = Bundle().apply {
@@ -138,6 +150,7 @@ class SubjectContentFragment : DrawerVisibility() {
                     binding.tvTopicType.text = selectedTopic.title
                     subfolder= -1
                     folderProgressCont= -1
+                    selectedId = selectedTopic.id
                     folderProgress(selectedTopic.id)
                 }
             })
