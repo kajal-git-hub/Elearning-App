@@ -437,12 +437,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cl_MoreOptionsConstraint">
 
-        <ImageView
+        <TextView
             android:id="@+id/ig_tagline"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scaleType="centerCrop"
-            android:src="@drawable/tagline"
+            android:background="@drawable/tagline"
+            android:text="@string/tagline"
+            android:gravity="center"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
