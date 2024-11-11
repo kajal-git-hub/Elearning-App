@@ -9,6 +9,7 @@ import xyz.penpencil.competishun.databinding.SelectExamItemBinding
 
 class SelectExamAdapter(
     private val examList: List<String> ,
+    private val preExamClass: String?,
     private val onExamSelected: (String) -> Unit
 
 ) : RecyclerView.Adapter<SelectExamAdapter.SelectExamViewHolder>() {
@@ -16,7 +17,7 @@ class SelectExamAdapter(
     // ViewHolder class using View Binding
     class SelectExamViewHolder(val binding: SelectExamItemBinding) : RecyclerView.ViewHolder(binding.root)
 
-    private var selectedPosition: Int = -1 // To track the selected item
+    private var selectedPosition: Int = examList.indexOf(preExamClass)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SelectExamViewHolder {
         val binding = SelectExamItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
