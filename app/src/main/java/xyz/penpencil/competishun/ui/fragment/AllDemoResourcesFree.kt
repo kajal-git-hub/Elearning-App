@@ -139,15 +139,35 @@ class AllDemoResourcesFree : DrawerVisibility() {
                     val folderProgressContent = data.findCourseFolderProgress.folderContents
                     val subfolderDurationFolders = data.findCourseFolderProgress.subfolderDurations
                     Log.e("subFolderdata", subfolderDurationFolders.toString())
-
-                    if (folderProgressFolder != null) {
-                        if (!subfolderDurationFolders.isNullOrEmpty()) {
-                            Log.e("subfolderDurationszs", subfolderDurationFolders.toString())
+                    binding.rvAllDemoFree.adapter = null
+                    binding.rvAllFilesFree.adapter = null
+//                    if (folderProgressFolder != null) {
+//                        if (!subfolderDurationFolders.isNullOrEmpty()) {
+//                            Log.e("subfolderDurationszs", subfolderDurationFolders.toString())
+//                            getFolderList(subfolderDurationFolders)
+//                        } else {
+//                            // Only folderProgressContent is not empty or neither are available
+//                            Log.e("folderContentsss", isPurchased.toString())
+//                            getFileList(data, folderProgressContent, isPurchased)
+//                        }
+//                    }
+                    when {
+                        !subfolderDurationFolders.isNullOrEmpty() && !folderProgressContent.isNullOrEmpty() ->
+                        {
+                            Log.e("kajalsubnFolderss",subfolderDurationFolders.toString())
                             getFolderList(subfolderDurationFolders)
-                        } else {
+                            getFileList(data, folderProgressContent, isPurchased)
+                        }
+                        !subfolderDurationFolders.isNullOrEmpty() -> {
+                            Log.e("kajalsubfolderDurati",subfolderDurationFolders.toString())
+                            getFolderList(subfolderDurationFolders)
+                        }
+                        !folderProgressContent.isNullOrEmpty() -> {
+                            Log.e("kajalfolderProgressContent",folderProgressContent.toString())
                             Log.e("folderContentsss", isPurchased.toString())
                             getFileList(data, folderProgressContent, isPurchased)
                         }
+
                     }
                 }
 
@@ -208,11 +228,8 @@ class AllDemoResourcesFree : DrawerVisibility() {
             }
             findNavController().navigate(R.id.demoFreeFragment, bundle)
         }
-        binding.rvAllDemoFree.apply {
-            layoutManager = LinearLayoutManager(context)
-            adapter = folderDemoAdapter
-
-        }
+        binding.rvAllFilesFree.layoutManager = LinearLayoutManager(context)
+        binding.rvAllFilesFree.adapter = folderDemoAdapter
     }
 
     private fun getFileList(
@@ -229,11 +246,13 @@ class AllDemoResourcesFree : DrawerVisibility() {
 
 
 
-        Log.d("totalDuration", totalDuration.toString())
+        Log.d("totalDurationsss", totalDuration.toString())
 
         val durationString = formatTimeDuration(totalDuration)
 
         val freeItems = folderProgressContent?.map { folderContent ->
+            binding.rvAllDemoFree.visibility = View.VISIBLE
+            binding.clEmptySearchParent.visibility = View.GONE
             val fileName = folderContent.content?.course_track ?: "Unknown"
             val videoDuration = folderContent.content?.video_duration?.toInt()
 //            val duration = formatTimeDuration(durationPerContent)
@@ -258,6 +277,7 @@ class AllDemoResourcesFree : DrawerVisibility() {
         } ?: emptyList()
         val freeDemoAdapter = FreeDemoAdapter(freeItems) { freeDemoItem ->
             // Handle the item click
+            Log.e("filestype",freeDemoItem.fileType)
             val fileType = freeDemoItem.fileType
             if (fileType.equals("PDF")) {
                 if (free == true)
@@ -267,14 +287,13 @@ class AllDemoResourcesFree : DrawerVisibility() {
                         freeDemoItem.titleDemo
                     )
             } else {
-                (fileType.equals("PDF"))
-                if (free == true) videoUrlApi(videourlViewModel, freeDemoItem.id)
+               // (fileType.equals("PDF"))
+               if (free == true)
+                    videoUrlApi(videourlViewModel, freeDemoItem.id)
             }
         }
-        binding.rvAllDemoFree.apply {
-            layoutManager = LinearLayoutManager(context)
-            adapter = freeDemoAdapter
-        }
+        binding.rvAllDemoFree.layoutManager = LinearLayoutManager(context)
+        binding.rvAllDemoFree.adapter = freeDemoAdapter
     }
 
     private fun formatTimeDuration(totalDuration: Int): String {
