@@ -47,6 +47,7 @@ class OurSubjectsAdapter(private val listOurSubjectItem:List<FindCourseParentFol
             holder.ivMathematics.setImageResource(images[6])
         }
         else if (holder.tvSubjectName.text.contains("Class", ignoreCase = true )){
+            holder.freeBadgeImageView.visibility = View.VISIBLE
             holder.ivMathematics.setImageResource(images[6])
         }else if (holder.tvSubjectName.text.contains("Maths", ignoreCase = true )){
             holder.ivMathematics.setImageResource(images[4])
@@ -76,6 +77,7 @@ class OurSubjectsAdapter(private val listOurSubjectItem:List<FindCourseParentFol
         val tvSubjectName: TextView =itemView.findViewById(R.id.tvMathematics)
         val tvNoOfChaptersMathematics: TextView = itemView.findViewById(R.id.tvNoOfChaptersMathematics)
          val ivMathematics: ImageView = itemView.findViewById(R.id.ivMathematics)
+        val freeBadgeImageView: ImageView = itemView.findViewById(R.id.freeBadgeImageView)
         val customProgressIndicatorMathematics: ProgressBar = itemView.findViewById(R.id.customProgressIndicatorMathematics)
         val tvPercentCompletedMathematics: MaterialTextView = itemView.findViewById(R.id.tvPercentCompletedMathematics)
     }
