@@ -42,7 +42,7 @@ class TopicTypeContentFragment : DrawerVisibility() {
 
     private lateinit var helperFunctions: HelperFunctions
     private var isExternal = false
-    var folder_Name  = ""
+    var folderName  = ""
     private var pageNumber = 0
     private var pageSize = 10
 
@@ -70,7 +70,8 @@ class TopicTypeContentFragment : DrawerVisibility() {
         (activity as? HomeActivity)?.showBottomNavigationView(false)
         (activity as? HomeActivity)?.showFloatingButton(false)
         val folderId = arguments?.getString("folder_Id")?:""
-         folder_Name = arguments?.getString("folderName")?:""
+        val folder_Name = arguments?.getString("folderNames")?:""
+         folderName = arguments?.getString("folderName")?:""
         val folderContents = arguments?.getString("folderContents")?:"0"
          isExternal = arguments?.getBoolean("isExternal", false) == true
         val subContentList = object : TypeToken< List<FindCourseFolderProgressQuery. FolderContent>>() {}.type
@@ -156,7 +157,7 @@ class TopicTypeContentFragment : DrawerVisibility() {
 
                     // Set up the adapter on the main thread
                     Log.e("UUIUIIUIU", "newContent: "+topicContents.size)
-                    adapter = TopicContentAdapter(topicContents.toMutableList(), folderId,folder_Name, requireActivity(), requireContext()) { topicContent, folderContentId, folderContentIds, folderContentNames, folderContentDesc, folderContenthomework, folderContenthomeworkLink, folderContenthomeworkDesc ->
+                    adapter = TopicContentAdapter(topicContents.toMutableList(), folderId,folderName, requireActivity(), requireContext()) { topicContent, folderContentId, folderContentIds, folderContentNames, folderContentDesc, folderContenthomework, folderContenthomeworkLink, folderContenthomeworkDesc ->
                         when (topicContent.fileType) {
                             "VIDEO" -> videoUrlApi(videourlViewModel, topicContent.id, topicContent.topicName, folderContentIds, folderContentNames, folderContentDesc, folderContenthomework, folderContenthomeworkLink, folderContenthomeworkDesc)
                             "PDF" -> {
@@ -304,7 +305,7 @@ class TopicTypeContentFragment : DrawerVisibility() {
                     } ?: emptyList()
                     val folderContentIs = folderContents?.filter { it.content?.file_type?.name  == "VIDEO" }?.mapNotNull { it.content?.id }?.toCollection(ArrayList())
                     val folderContentNs = folderContents?.filter { it.content?.file_type?.name  == "VIDEO" }?.mapNotNull { it.content?.file_name }?.toCollection(ArrayList())
-                    val adapter = TopicContentAdapter(topicContents.toMutableList(), folderId,folder_Name,requireActivity(),requireContext()) { topicContent, folderContentId, folderContentIds,folderContentNames, folderContentDescs,folderContenthomework, folderContenthomeworkLink,folderContenthomeworkDesc ->
+                    val adapter = TopicContentAdapter(topicContents.toMutableList(), folderId,folderName,requireActivity(),requireContext()) { topicContent, folderContentId, folderContentIds,folderContentNames, folderContentDescs,folderContenthomework, folderContenthomeworkLink,folderContenthomeworkDesc ->
                         when (topicContent.fileType) {
                             "VIDEO" -> videoUrlApi(videourlViewModel, topicContent.id,topicContent.topicName,folderContentIds,folderContentNames, folderContentDescs,folderContenthomework, folderContenthomeworkLink,folderContenthomeworkDesc)
                             "PDF" -> {
