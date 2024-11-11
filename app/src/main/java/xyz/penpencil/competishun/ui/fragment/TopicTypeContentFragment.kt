@@ -143,7 +143,7 @@ class TopicTypeContentFragment : DrawerVisibility() {
 
                         val homeworkUrl = content.content?.homework?.map { it.file_url ?: "" } ?: ""
                         val homeworkFileName = content.content?.homework?.map { it.file_name ?: "" } ?: ""
-
+                        Log.d("internalFolder",isExternal.toString()+folderName)
                         TopicContentModel(
                             subjectIcon = if (content.content?.file_type?.name == "PDF") R.drawable.content_bg else R.drawable.group_1707478994,
                             id = content.content?.id ?: "",
@@ -160,7 +160,8 @@ class TopicTypeContentFragment : DrawerVisibility() {
                             homeworkDesc = content.content?.homework?.map { it.description }.toString() ?: "",
                             homeworkUrl = homeworkUrl.toString(),
                             homeworkName = homeworkFileName.toString(),
-                            isExternal = isExternal
+                            isExternal = folderName.contains("DPPs")
+
                         )
                     }
                 }.await()
