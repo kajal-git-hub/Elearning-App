@@ -9,12 +9,13 @@ import xyz.penpencil.competishun.databinding.SelectYearItemBinding
 
 class SelectYearAdapter(
     private val yearList: List<String>,
+    private val preExamClass: String?,
     private val onExamSelected: (Int) -> Unit
 ) : RecyclerView.Adapter<SelectYearAdapter.SelectYearViewHolder>() {
 
     class SelectYearViewHolder(val binding: SelectYearItemBinding) : RecyclerView.ViewHolder(binding.root)
 
-    private var selectedPosition: Int = -1
+    private var selectedPosition: Int = yearList.indexOf(preExamClass)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SelectYearViewHolder {
         val binding = SelectYearItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
