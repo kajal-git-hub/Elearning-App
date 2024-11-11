@@ -3,7 +3,6 @@ package xyz.penpencil.competishun.ui.fragment
 import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,7 +21,6 @@ import org.json.JSONException
 import org.json.JSONObject
 import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.databinding.FragmentMyPurchaseDetailsBinding
-import xyz.penpencil.competishun.ui.viewmodel.CoursePaymentsViewModel
 import xyz.penpencil.competishun.ui.viewmodel.GetCourseByIDViewModel
 import xyz.penpencil.competishun.ui.viewmodel.OrderViewModel
 import xyz.penpencil.competishun.ui.viewmodel.OrdersViewModel
