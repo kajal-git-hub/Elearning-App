@@ -33,7 +33,7 @@
             <RelativeLayout
                 android:id="@+id/playerApp"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="240dp">
 
                 <androidx.media3.ui.PlayerView
                     android:id="@+id/player_view"
@@ -53,6 +53,117 @@
                     app:show_subtitle_button="false"
                     app:show_vr_button="false" />
 
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/upNextOverlay"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/up_next_background"
+                    android:padding="16dp"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <FrameLayout
+                        android:id="@+id/flnextvideo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <!-- Image inside the Circular Progress -->
+                        <ImageView
+                            android:id="@+id/center_image"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/ic_nect_btn" />
+
+                        <!-- Circular Progress Indicator -->
+                        <com.google.android.material.progressindicator.CircularProgressIndicator
+                            android:id="@+id/next_progress"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:progress="40"
+                            app:indicatorColor="@color/white"
+                            app:indicatorSize="85dp"
+                            app:trackColor="@color/_333333"
+                            app:trackThickness="@dimen/_5dp" />
+
+                    </FrameLayout>
+
+                    <LinearLayout
+                        android:id="@+id/clupNext"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/flnextvideo"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <TextView
+                            android:id="@+id/upNextLabel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Up Next"
+                            android:textColor="#CCCBCB"
+                            android:textSize="@dimen/_12sp"
+                            app:layout_constraintStart_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/nextVideoTitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text=""
+                            android:textColor="@android:color/white"
+                            android:textSize="@dimen/_16sp"
+                            android:textStyle="bold"
+                            app:layout_constraintStart_toStartOf="parent" />
+
+                        <TextView
+                            android:id="@+id/nextVideoTime"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:textColor="@android:color/white"
+                            android:textSize="@dimen/_12sp"
+                            app:layout_constraintStart_toStartOf="parent" />
+
+                        <LinearLayout
+                            android:id="@+id/buttonContainer"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_8dp"
+                            android:orientation="horizontal"
+                            app:layout_constraintStart_toEndOf="@+id/flnextvideo"
+                            app:layout_constraintTop_toBottomOf="@+id/clupNext">
+
+                            <TextView
+                                android:id="@+id/startNextButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="8dp"
+                                android:text="Start"
+                                android:textColor="@android:color/white" />
+
+                            <TextView
+                                android:id="@+id/cancelNextButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Cancel"
+                                android:textColor="@android:color/white" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
             </RelativeLayout>
         </RelativeLayout>
 
@@ -257,118 +368,6 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/upNextOverlay"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/up_next_background"
-                android:padding="16dp"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <FrameLayout
-                    android:id="@+id/flnextvideo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <!-- Image inside the Circular Progress -->
-                    <ImageView
-                        android:id="@+id/center_image"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/ic_nect_btn" />
-
-                    <!-- Circular Progress Indicator -->
-                    <com.google.android.material.progressindicator.CircularProgressIndicator
-                        android:id="@+id/next_progress"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:progress="40"
-                        app:indicatorColor="@color/white"
-                        app:indicatorSize="85dp"
-                        app:trackColor="@color/_333333"
-                        app:trackThickness="@dimen/_5dp" />
-
-                </FrameLayout>
-
-                <LinearLayout
-                    android:id="@+id/clupNext"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/flnextvideo"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <TextView
-                        android:id="@+id/upNextLabel"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Up Next"
-                        android:textColor="#CCCBCB"
-                        android:textSize="@dimen/_12sp"
-                        app:layout_constraintStart_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
-                        android:id="@+id/nextVideoTitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text=""
-                        android:textColor="@android:color/white"
-                        android:textSize="@dimen/_16sp"
-                        android:textStyle="bold"
-                        app:layout_constraintStart_toStartOf="parent" />
-
-                    <TextView
-                        android:id="@+id/nextVideoTime"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text=""
-                        android:textColor="@android:color/white"
-                        android:textSize="@dimen/_12sp"
-                        app:layout_constraintStart_toStartOf="parent" />
-
-                    <LinearLayout
-                        android:id="@+id/buttonContainer"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_8dp"
-                        android:orientation="horizontal"
-                        app:layout_constraintStart_toEndOf="@+id/flnextvideo"
-                        app:layout_constraintTop_toBottomOf="@+id/clupNext">
-
-                        <TextView
-                            android:id="@+id/startNextButton"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="8dp"
-                            android:text="Start"
-                            android:textColor="@android:color/white" />
-
-                        <TextView
-                            android:id="@+id/cancelNextButton"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Cancel"
-                            android:textColor="@android:color/white" />
-                    </LinearLayout>
-                </LinearLayout>
-
-
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
 

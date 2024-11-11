@@ -234,6 +234,9 @@ class MediaPlayerFragment : DrawerVisibility() {
                             }
                             binding.cancelNextButton.setOnClickListener {
                                 binding.upNextOverlay.visibility = View.GONE
+                                if (mExoPlayerFullscreen){
+                                    closeFullscreenDialog()
+                                }
                                 findNavController().popBackStack()
                             }
                             // When the video ends, play the next one if available
@@ -399,8 +402,10 @@ class MediaPlayerFragment : DrawerVisibility() {
                     }
 
                     Player.STATE_ENDED -> {
+                        if (mExoPlayerFullscreen)
+                            closeFullscreenDialog()
                         Log.e("videoEnded",player.toString())
-                        binding.playerView.visibility = View.GONE
+//                        binding.playerView.visibility = View.GONE
                         binding.upNextOverlay.visibility = View.VISIBLE
                         binding.nextVideoTitle.text = videoTittle
                         binding.descTv.text = videoDesc?:""
@@ -409,9 +414,9 @@ class MediaPlayerFragment : DrawerVisibility() {
                             playNextVideo()
                             binding.upNextOverlay.visibility = View.GONE
                         }
-                        binding.cancelNextButton.setOnClickListener {
+                      /*  binding.cancelNextButton.setOnClickListener {
                             binding.upNextOverlay.visibility = View.GONE
-                        }
+                        }*/
                     }
 
                 }
@@ -677,9 +682,9 @@ class MediaPlayerFragment : DrawerVisibility() {
     }
 
     private fun openFullscreenDialog() {
-        (binding.playerView.parent as? ViewGroup)?.removeView(binding.playerView)
+        (binding.playerApp.parent as? ViewGroup)?.removeView(binding.playerApp)
         mFullScreenDialog.addContentView(
-            binding.playerView,
+            binding.playerApp,
             ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT
@@ -691,8 +696,8 @@ class MediaPlayerFragment : DrawerVisibility() {
     }
 
     private fun closeFullscreenDialog() {
-        (binding.playerView.parent as? ViewGroup)?.removeView(binding.playerView)
-        binding.playerApp.addView(binding.playerView)
+        (binding.playerApp.parent as? ViewGroup)?.removeView(binding.playerApp)
+        binding.playerRoot.addView(binding.playerApp)
         mExoPlayerFullscreen = false
         mFullScreenDialog.dismiss()
         fullScreenButton?.setImageResource(R.drawable.zoom_out_map_24)
