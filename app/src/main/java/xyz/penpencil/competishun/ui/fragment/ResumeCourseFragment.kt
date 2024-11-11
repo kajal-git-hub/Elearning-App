@@ -128,7 +128,7 @@ class ResumeCourseFragment : DrawerVisibility() {
                     }else{
                         val listOuSubjectItem = subfolderProgress.map { it.folder }
                         val percentages = subfolderProgress.map { it.completionPercentage }
-
+                    //    freeBadgeImageView
                         binding.rvOurSubject.apply {
                             layoutManager = GridLayoutManager(context, 2)
                             adapter = OurSubjectsAdapter(listOuSubjectItem, percentages) { folderId, folderName, folderCount ->

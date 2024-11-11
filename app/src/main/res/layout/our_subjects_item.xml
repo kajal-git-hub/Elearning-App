@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/card_bg"
-    android:padding="@dimen/_12dp"
+    android:paddingStart="@dimen/_12dp"
     android:layout_marginTop="@dimen/_10dp"
     android:layout_marginStart="@dimen/_5dp"
     >
@@ -15,7 +15,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/layer_1"
+            android:padding="@dimen/_12dp"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+        <ImageView
+            android:id="@+id/freeBadgeImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:padding="@dimen/_2dp"
+            android:visibility="gone"
+            android:src="@drawable/group_1272628769"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.textview.MaterialTextView
@@ -69,6 +79,7 @@
             android:textColor="#F2A779"
             android:textSize="@dimen/_12sp"
             android:textStyle="bold"
+            android:paddingEnd="@dimen/_12dp"
             app:fontFamily="@font/nunito"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/customProgressIndicatorMathematics"

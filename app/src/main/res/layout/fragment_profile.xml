@@ -433,16 +433,20 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="@dimen/_16dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cl_MoreOptionsConstraint">
 
-        <ImageView
+        <TextView
             android:id="@+id/ig_tagline"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scaleType="centerCrop"
-            android:src="@drawable/tagline"
+            android:background="@drawable/tagline"
+            android:text="@string/tagline"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:padding="@dimen/_5dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

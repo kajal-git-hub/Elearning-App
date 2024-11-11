@@ -44,7 +44,7 @@ class TopicContentAdapter(
     private val folderName: String,
     private val fragmentActivity: FragmentActivity,
     private val context: Context, // Pass context
-    private val onItemClick: (TopicContentModel, String,ArrayList<String>,ArrayList<String>, ArrayList<String>,ArrayList<String>,ArrayList<String>,ArrayList<String>) -> Unit
+    private val onItemClick: (TopicContentModel, String, ArrayList<String>, ArrayList<String>, ArrayList<String>, ArrayList<String>, ArrayList<String>, ArrayList<String>) -> Unit
 ) :
     RecyclerView.Adapter<TopicContentAdapter.TopicContentViewHolder>() {
 
@@ -53,7 +53,7 @@ class TopicContentAdapter(
         val binding = ItemTopicTypeContentBinding.inflate(
             LayoutInflater.from(parent.context), parent, false
         )
-        return TopicContentViewHolder(binding,context)
+        return TopicContentViewHolder(binding, context)
     }
 
     fun updateData(newTopicContents: MutableList<TopicContentModel>) {
@@ -72,35 +72,75 @@ class TopicContentAdapter(
     override fun onBindViewHolder(holder: TopicContentViewHolder, position: Int) {
 
         val topicContent = topicContents[position]
-        holder.bind(topicContents[position], fragmentActivity,folderName)
+        holder.bind(topicContents[position], fragmentActivity, folderName)
         holder.itemView.setOnClickListener {
-            if ((topicContent.fileType == "URL")){
-                val url = if (topicContent.topicName.contains("http")) topicContent.url else "https://${topicContent.url}"
+            if ((topicContent.fileType == "URL")) {
+                val url =
+                    if (topicContent.topicName.contains("http")) topicContent.url else "https://${topicContent.url}"
                 it.context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
-            } else if (isDateTodayOrPast(topicContent.lockTime, topicContent.isExternal)){
+            } else if (isDateTodayOrPast(topicContent.lockTime, topicContent.isExternal)) {
                 val unlockedTopicContentIds = topicContents
-                    .filter { isDateTodayOrPast(it.lockTime, topicContent.isExternal) && it.fileType == "VIDEO" }
+                    .filter {
+                        isDateTodayOrPast(
+                            it.lockTime,
+                            topicContent.isExternal
+                        ) && it.fileType == "VIDEO"
+                    }
                     .map { it.id }.toCollection(ArrayList())
                 val unlockedTopicContentNames = topicContents
-                    .filter { isDateTodayOrPast(it.lockTime, topicContent.isExternal) && it.fileType == "VIDEO" }
+                    .filter {
+                        isDateTodayOrPast(
+                            it.lockTime,
+                            topicContent.isExternal
+                        ) && it.fileType == "VIDEO"
+                    }
                     .map { it.topicName }.toCollection(ArrayList())
                 val unlockedTopicContentDescs = topicContents
-                    .filter { isDateTodayOrPast(it.lockTime, topicContent.isExternal) && it.fileType == "VIDEO" }
+                    .filter {
+                        isDateTodayOrPast(
+                            it.lockTime,
+                            topicContent.isExternal
+                        ) && it.fileType == "VIDEO"
+                    }
                     .map { it.topicDescription }.toCollection(ArrayList())
                 val unlockedTopicContenthomeworks = topicContents
-                    .filter { isDateTodayOrPast(it.lockTime, topicContent.isExternal) && it.fileType == "VIDEO" }
+                    .filter {
+                        isDateTodayOrPast(
+                            it.lockTime,
+                            topicContent.isExternal
+                        ) && it.fileType == "VIDEO"
+                    }
                     .map { it.homeworkName }.toCollection(ArrayList())
                 val unlockedTopicContenthomeworkLinks = topicContents
-                    .filter { isDateTodayOrPast(it.lockTime, topicContent.isExternal) && it.fileType == "VIDEO" }
+                    .filter {
+                        isDateTodayOrPast(
+                            it.lockTime,
+                            topicContent.isExternal
+                        ) && it.fileType == "VIDEO"
+                    }
                     .map { it.homeworkUrl }.toCollection(ArrayList())
                 val unlockedTopicContenthomeworkDescs = topicContents
-                    .filter { isDateTodayOrPast(it.lockTime, topicContent.isExternal) && it.fileType == "VIDEO" }
+                    .filter {
+                        isDateTodayOrPast(
+                            it.lockTime,
+                            topicContent.isExternal
+                        ) && it.fileType == "VIDEO"
+                    }
                     .map { it.homeworkDesc }.toCollection(ArrayList())
 
-                onItemClick(topicContent, folderContentId,unlockedTopicContentIds,unlockedTopicContentNames,unlockedTopicContentDescs,unlockedTopicContenthomeworks,unlockedTopicContenthomeworkLinks,unlockedTopicContenthomeworkDescs)
-            } else if (topicContent.fileType == "UNKNOWN__" ) {
+                onItemClick(
+                    topicContent,
+                    folderContentId,
+                    unlockedTopicContentIds,
+                    unlockedTopicContentNames,
+                    unlockedTopicContentDescs,
+                    unlockedTopicContenthomeworks,
+                    unlockedTopicContenthomeworkLinks,
+                    unlockedTopicContenthomeworkDescs
+                )
+            } else if (topicContent.fileType == "UNKNOWN__") {
                 Log.e("TAG", "onBindViewHolder: ")
-            }else {
+            } else {
                 Toast.makeText(it.context, "Content is locked!", Toast.LENGTH_SHORT).show()
             }
         }
@@ -111,12 +151,17 @@ class TopicContentAdapter(
 
     override fun getItemCount(): Int = topicContents.size
 
-    class TopicContentViewHolder(private val binding: ItemTopicTypeContentBinding,
-                                 private val context: Context// Use context for download function
+    class TopicContentViewHolder(
+        private val binding: ItemTopicTypeContentBinding,
+        private val context: Context// Use context for download function
     ) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(topicContent: TopicContentModel, fragmentActivity: FragmentActivity,folderName: String) {
+        fun bind(
+            topicContent: TopicContentModel,
+            fragmentActivity: FragmentActivity,
+            folderName: String
+        ) {
 
             binding.ivSubjectBookIcon.setImageResource(topicContent.subjectIcon)
 
@@ -127,11 +172,11 @@ class TopicContentAdapter(
                 bottomSheet.setItemDetails(topicContent)
                 bottomSheet.show(fragmentActivity.supportFragmentManager, bottomSheet.tag)
             }
-          Log.e("getlocketime ${topicContent.topicName}",topicContent.lockTime)
+            Log.e("getlocketime ${topicContent.topicName}", topicContent.lockTime)
 //            if (showDateIfFutureOrToday(topicContent.lockTime)) binding.videoicon.setImageResource(R.drawable.frame_1707481707) else binding.videoicon.setImageResource(
 //                R.drawable.frame_1707481080
 //            )
-            Log.e("foldernamess",folderName)
+            Log.e("foldernamess", folderName)
             val icon = when (folderName) {
                 "Chemistry" -> R.drawable.chemistory
                 "Physics" -> R.drawable.phys_icon
@@ -146,18 +191,28 @@ class TopicContentAdapter(
                 "Biology" -> R.color.biology_color
                 else -> R.color.other_color // Set a default icon if folder name doesn't match
             }
-            Log.e("getlocketime ${isDateTodayOrPast(topicContent.lockTime, topicContent.isExternal)} ",topicContent.lockTime)
-            if ( isDateTodayOrPast(topicContent.lockTime, topicContent.isExternal)) {
-                if (topicContent.fileType == "VIDEO")
-                {
+            Log.e(
+                "getlocketime ${
+                    isDateTodayOrPast(
+                        topicContent.lockTime,
+                        topicContent.isExternal
+                    )
+                } ", topicContent.lockTime
+            )
+            if (isDateTodayOrPast(topicContent.lockTime, topicContent.isExternal)) {
+                if (topicContent.fileType == "VIDEO") {
                     binding.shapeableImage.setImageResource(icon)
                     binding.shapeableImage.setBackgroundResource(background)
+                    binding.shapeableImage.visibility = View.VISIBLE
                     binding.clEmtpyVeiw.visibility = View.INVISIBLE
                     binding.etHomeWorkText.visibility = View.VISIBLE
                     binding.etHomeWorkPdf.visibility = View.VISIBLE
-                    binding.etHomeWorkPdf.text = if (topicContent.homeworkName.isNotEmpty()) " "+helperFunctions.removeBrackets(topicContent.homeworkName) else "NA"
+                    binding.etHomeWorkPdf.text =
+                        if (topicContent.homeworkName.isNotEmpty()) " " + helperFunctions.removeBrackets(
+                            topicContent.homeworkName
+                        ) else "NA"
                     binding.etHomeWorkPdf.setOnClickListener {
-                        Log.d("urlhomegetting",topicContent.homeworkUrl)
+                        Log.d("urlhomegetting", topicContent.homeworkUrl)
                         val urlToSent = removeBrackets(topicContent.homeworkUrl)
                         val intent = Intent(context, PdfViewActivity::class.java).apply {
                             putExtra("PDF_URL", urlToSent)
@@ -168,35 +223,42 @@ class TopicContentAdapter(
                     }
                     binding.videoicon.setImageResource(R.drawable.frame_1707481707)
                     binding.ivPersonIdentifier.setBackgroundResource(R.drawable.clock_black)
-                } else if (topicContent.fileType == "PDF"){
+                } else if (topicContent.fileType == "PDF") {
                     binding.etHomeWorkPdf.visibility = View.GONE
                     binding.etHomeWorkText.visibility = View.GONE
                     binding.shapeableImage.visibility = View.INVISIBLE
                     binding.clEmtpyVeiw.visibility = View.VISIBLE
-                    binding.videoicon.setImageResource(R.drawable.pdf_bg)}
+                    binding.videoicon.setImageResource(R.drawable.pdf_bg)
+                }
                 binding.videoicon.visibility = View.VISIBLE
                 binding.ivPersonIdentifier.setBackgroundResource(R.drawable.download_person)
 
 
-            } else if (topicContent.fileType == "UNKNOWN__"  || topicContent.fileType == "URL"){
+            } else if (topicContent.fileType == "UNKNOWN__" || topicContent.fileType == "URL") {
                 binding.clReadAndPlay.visibility = View.GONE
                 binding.ivMoreInfoLec.visibility = View.GONE
-            }else {
+            } else {
                 if (topicContent.fileType == "VIDEO") {
                     binding.shapeableImage.setImageResource(icon)
                     binding.shapeableImage.setBackgroundResource(background)
+                    binding.shapeableImage.visibility = View.VISIBLE
                     binding.clEmtpyVeiw.visibility = View.INVISIBLE
-                }else{
+                } else {
                     binding.shapeableImage.visibility = View.GONE
                     binding.clEmtpyVeiw.visibility = View.VISIBLE
                 }
                 binding.videoicon.visibility = View.VISIBLE
+                binding.etHomeWorkText.visibility = View.GONE
+                binding.etHomeWorkPdf.visibility = View.GONE
                 binding.videoicon.setImageResource(R.drawable.frame_1707481080)
             }
-            Log.e("lectueres",topicContent.lecture)
+            Log.e("lectueres", topicContent.lecture)
             binding.tvLecture.text = topicContent.lecture
             binding.tvLecturerName.text = topicContent.lecturerName
-            if (topicContent.fileType == "UNKNOWN__"  || topicContent.fileType == "URL" && topicContent.url.contains("http") ){
+            if (topicContent.fileType == "UNKNOWN__" || topicContent.fileType == "URL" && topicContent.url.contains(
+                    "http"
+                )
+            ) {
                 binding.tvLecture.text = "Link"
             }
             binding.tvTopicName.text = topicContent.topicName
@@ -251,16 +313,22 @@ class TopicContentAdapter(
             }
 
             binding.tvTopicName.setOnClickListener {
-                if (topicContent.fileType == "UNKNOWN__"  || topicContent.fileType == "URL"){
-                    it.context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(topicContent.url)))
+                if (topicContent.fileType == "UNKNOWN__" || topicContent.fileType == "URL") {
+                    it.context.startActivity(
+                        Intent(
+                            Intent.ACTION_VIEW,
+                            Uri.parse(topicContent.url)
+                        )
+                    )
                 }
             }
 
         }
+
         @RequiresApi(Build.VERSION_CODES.O)
         fun showDateIfFutureOrToday(dateString: String): Boolean {
             // Correct the date string if necessary
-            Log.e("dateStrings",dateString)
+            Log.e("dateStrings", dateString)
             val cleanedDateString = dateString.replace("Sept", "Sep").trim()
 
             // Define the corrected primary date format pattern (assuming '24' refers to 2024)
@@ -278,7 +346,10 @@ class TopicContentAdapter(
                 // Compare the dates (check if date is today or in the future)
                 dateTime.isAfter(today) || dateTime.isEqual(today)
             } catch (e: DateTimeParseException) {
-                Log.e("DateParsingError", "Primary format parsing error: ${e.message}. Input date string: '$cleanedDateString'")
+                Log.e(
+                    "DateParsingError",
+                    "Primary format parsing error: ${e.message}. Input date string: '$cleanedDateString'"
+                )
                 try {
                     // Try parsing using the fallback formatter (without time)
                     val dateTime = LocalDate.parse(cleanedDateString, fallbackFormatter)
@@ -286,7 +357,10 @@ class TopicContentAdapter(
                     // Compare the dates (check if date is today or in the future)
                     dateTime.isAfter(today) || dateTime.isEqual(today)
                 } catch (fallbackException: DateTimeParseException) {
-                    Log.e("DateParsingError", "Fallback format parsing error: ${fallbackException.message}. Input date string: '$cleanedDateString'")
+                    Log.e(
+                        "DateParsingError",
+                        "Fallback format parsing error: ${fallbackException.message}. Input date string: '$cleanedDateString'"
+                    )
                     false
                 }
             }
@@ -294,48 +368,17 @@ class TopicContentAdapter(
 
         fun removeBrackets(input: String): String {
             var url = input
-            if (input.startsWith("[")){
+            if (input.startsWith("[")) {
                 url = input.removePrefix("[")
             }
 
-            if (input.endsWith("]")){
+            if (input.endsWith("]")) {
                 url = url.removeSuffix("]")
             }
             return url
         }
+
         fun isDateTodayOrPast(dateString: String, external: Boolean): Boolean {
-                // Clean up the date string
-            if (external) {
-                return true
-            }
-
-                val cleanedDateString = dateString.replace("Sept", "Sep").trim()
-                    .replace("pm".toRegex(), "PM")
-                    .replace("am".toRegex(), "AM")
-
-
-                // Define the primary date format pattern
-                val formatter = DateTimeFormatter.ofPattern("dd MMM, yy hh:mm a", Locale.ENGLISH)
-                    .withResolverStyle(ResolverStyle.SMART)
-
-                return try {
-                    // Parse the date and time
-                    val dateTime = LocalDateTime.parse(cleanedDateString, formatter)
-                    // Get today's date and time
-                    val now = LocalDateTime.now()
-                    // Check if the date is today or in the past
-                    dateTime.isBefore(now) || dateTime.isEqual(now)
-                } catch (e: DateTimeParseException) {
-                    Log.e(
-                        "DateParsingError",
-                        "Error parsing date: ${e.message}. Input date string: '$cleanedDateString'"
-                    )
-                    false
-                }
-        }
-
-    }
-    private fun isDateTodayOrPast(dateString: String, external: Boolean): Boolean {
             // Clean up the date string
             if (external) {
                 return true
@@ -364,9 +407,40 @@ class TopicContentAdapter(
                 )
                 false
             }
+        }
+
     }
 
+    private fun isDateTodayOrPast(dateString: String, external: Boolean): Boolean {
+        // Clean up the date string
+        if (external) {
+            return true
+        }
 
+        val cleanedDateString = dateString.replace("Sept", "Sep").trim()
+            .replace("pm".toRegex(), "PM")
+            .replace("am".toRegex(), "AM")
+
+
+        // Define the primary date format pattern
+        val formatter = DateTimeFormatter.ofPattern("dd MMM, yy hh:mm a", Locale.ENGLISH)
+            .withResolverStyle(ResolverStyle.SMART)
+
+        return try {
+            // Parse the date and time
+            val dateTime = LocalDateTime.parse(cleanedDateString, formatter)
+            // Get today's date and time
+            val now = LocalDateTime.now()
+            // Check if the date is today or in the past
+            dateTime.isBefore(now) || dateTime.isEqual(now)
+        } catch (e: DateTimeParseException) {
+            Log.e(
+                "DateParsingError",
+                "Error parsing date: ${e.message}. Input date string: '$cleanedDateString'"
+            )
+            false
+        }
+    }
 
 
 }

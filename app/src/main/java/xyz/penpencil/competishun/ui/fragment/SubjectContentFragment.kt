@@ -42,6 +42,7 @@ class SubjectContentFragment : DrawerVisibility() {
     private val videourlViewModel: VideourlViewModel by viewModels()
     private var VwatchedDuration: Int = 0
     val gson = Gson()
+    var newFolderNamer = ""
     private var isFirstTimeLoading = true
     private lateinit var sharedViewModel: SharedVM
     private var isExternal: Boolean = false
@@ -87,6 +88,8 @@ class SubjectContentFragment : DrawerVisibility() {
 
         val subFolders = arguments?.getString("subFolders") ?: ""
          folderName = arguments?.getString("folder_Name") ?: ""
+        newFolderNamer = arguments?.getString("folderName") ?: ""
+        Log.e("newfoldfed",newFolderNamer)
         val parentContent = arguments?.getString("parent_content") ?: ""
         val folderId =  arguments?.getString("folder_Id") ?: ""
         val folder_Count = arguments?.getString("folder_Count") ?: "0"
@@ -216,6 +219,13 @@ class SubjectContentFragment : DrawerVisibility() {
                     // Clear previous adapter to prevent issues
                     binding.rvSubjectContent.adapter = null
                     binding.rvTopicContent.adapter = null
+
+                    if (newFolderNamer.isNotEmpty()){
+                        Log.e("newfoldfed11",newFolderNamer)
+                          folderName =  newFolderNamer
+                    }else{
+                        folderName = folderName
+                    }
 
                     when {
                         !subfolderDurationFolders.isNullOrEmpty() && !folderProgressContent.isNullOrEmpty() ->
@@ -769,6 +779,7 @@ class SubjectContentFragment : DrawerVisibility() {
                             val bundle = Bundle().apply {
                                 putString("subFolders", subFoldersJson)
                                 putString("folder_Name", name)
+                                putString("folderName", folderName)
                             }
                             findNavController().navigate(R.id.SubjectContentFragment, bundle)
                         } else if (!folderProgressContent.isNullOrEmpty()) {
