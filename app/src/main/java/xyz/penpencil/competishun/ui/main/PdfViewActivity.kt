@@ -15,8 +15,6 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
-import android.view.WindowManager
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.Toast
@@ -46,7 +44,6 @@ import java.io.InputStream
 import java.io.OutputStream
 import javax.inject.Inject
 
-
 @AndroidEntryPoint
 class PdfViewActivity : AppCompatActivity() {
 
@@ -67,17 +64,14 @@ class PdfViewActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_pdf_view)
 
-        window.setFlags(
-            WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE
-        )
-
         val pdfView = findViewById<com.rajat.pdfviewer.PdfRendererView>(R.id.pdfView)
         val progressBar = findViewById<ProgressBar>(R.id.progressBar)
         val downloadButton = findViewById<ImageView>(R.id.downloadButton)
-        pdfUrl = intent.getStringExtra("PDF_URL")?:""
+        pdfUrl = intent.getStringExtra("PDF_URL") ?: ""
         pdfTitle = intent.getStringExtra("PDF_TITLE") ?: "sample"
+        Log.d("pdfUrl", pdfUrl)
 
-        if (pdfUrl != null) {
+        if (pdfUrl.isNotEmpty()) {
             progressBar.visibility = View.VISIBLE  // Show the loader initially
 
             if (pdfUrl.startsWith("http://") || pdfUrl.startsWith("https://")) {
@@ -86,7 +80,7 @@ class PdfViewActivity : AppCompatActivity() {
                     try {
                         downloadedPdfFile = downloadPdfFile(pdfUrl, pdfTitle)
                         loadPdfFromFile(pdfView, downloadedPdfFile!!)
-                        downloadButton.visibility = View.VISIBLE  // Show the download button after PDF loads
+                        downloadButton.visibility = View.VISIBLE  // Show download button after PDF loads
                     } catch (e: Exception) {
                         Toast.makeText(this@PdfViewActivity, "Error loading PDF", Toast.LENGTH_SHORT).show()
                     } finally {
@@ -95,27 +89,26 @@ class PdfViewActivity : AppCompatActivity() {
                 }
             } else {
                 // Handle local file paths directly
-                startActivity(PdfViewerActivity.launchPdfFromPath(
-                    context = this,
-                    path = pdfUrl,
-                    pdfTitle = pdfTitle,
-                    saveTo = com.rajat.pdfviewer.util.saveTo.DOWNLOADS,
-                )).also { finish() }
+                startActivity(
+                    PdfViewerActivity.launchPdfFromPath(
+                        context = this,
+                        path = pdfUrl,
+                        pdfTitle = pdfTitle,
+                        saveTo = com.rajat.pdfviewer.util.saveTo.DOWNLOADS,
+                    )
+                ).also { finish() }
             }
         }
 
-        // Handle download button click
         downloadButton.setOnClickListener {
             savePdfExternally(pdfTitle)
         }
 
-        // Create the notification channel for Android 8.0+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             createNotificationChannel()
         }
     }
 
-    // Download the PDF file from the provided URL
     private suspend fun downloadPdfFile(pdfUrl: String, pdfTitle: String): File {
         return withContext(Dispatchers.IO) {
             val client = OkHttpClient()
@@ -137,15 +130,12 @@ class PdfViewActivity : AppCompatActivity() {
         }
     }
 
-    // Load the downloaded PDF into the PdfRendererView
     private fun loadPdfFromFile(pdfView: com.rajat.pdfviewer.PdfRendererView, pdfFile: File) {
         pdfView.initWithFile(file = pdfFile)
     }
 
-    // Save the PDF externally to the Downloads folder
     private fun savePdfExternally(pdfTitle: String) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-           /* // For Android 10+ (Scoped Storage), use MediaStore API to save the file to the Downloads folder
             val resolver = contentResolver
             val contentValues = ContentValues().apply {
                 put(MediaStore.MediaColumns.DISPLAY_NAME, "$pdfTitle.pdf")
@@ -168,25 +158,20 @@ class PdfViewActivity : AppCompatActivity() {
                     showDownloadNotification("$pdfTitle.pdf", it)  // Pass URI for notification
                 } catch (e: Exception) {
                     Toast.makeText(this, "Failed to save PDF", Toast.LENGTH_SHORT).show()
-                    Log.e("xyz.penpencil.competishun.ui.main.PdfViewActivity", "Error saving PDF: ", e)
+                    Log.e("PdfViewActivity", "Error saving PDF: ", e)
                 }
-            }*/
-
-            downloadFile()
+            }
         } else {
-            // For Android 9 and below, request permission to write to external storage
             checkStoragePermissionAndDownload(pdfTitle)
         }
     }
 
-    // Show download notification with proper file URI
     private fun showDownloadNotification(fileName: String, fileUri: Uri) {
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-        // Intent to open the PDF file when the notification is clicked
         val intent = Intent(Intent.ACTION_VIEW)
         intent.setDataAndType(fileUri, "application/pdf")
-        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)  // Grant read permission for the URI
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
 
         val pendingIntent = PendingIntent.getActivity(
             this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
@@ -204,7 +189,6 @@ class PdfViewActivity : AppCompatActivity() {
         notificationManager.notify(1, notification)
     }
 
-    // Create notification channel for Android 8.0+
     private fun createNotificationChannel() {
         val channel = NotificationChannel(
             CHANNEL_ID,
@@ -218,7 +202,6 @@ class PdfViewActivity : AppCompatActivity() {
         notificationManager.createNotificationChannel(channel)
     }
 
-    // Check and request permission for Android 9 and below
     private fun checkStoragePermissionAndDownload(pdfTitle: String) {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
             != PackageManager.PERMISSION_GRANTED) {
@@ -229,24 +212,20 @@ class PdfViewActivity : AppCompatActivity() {
                 WRITE_PERMISSION_REQUEST_CODE
             )
         } else {
-            // Permission already granted, save the PDF to the Downloads folder
             savePdfToLegacyDownloads(pdfTitle)
         }
     }
 
-    // Handle permission result for Android 9 and below
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == WRITE_PERMISSION_REQUEST_CODE && grantResults.isNotEmpty() &&
             grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            // Permission granted, proceed to save the PDF
             savePdfToLegacyDownloads(intent.getStringExtra("PDF_TITLE") ?: "sample")
         } else {
             Toast.makeText(this, "Storage permission denied", Toast.LENGTH_SHORT).show()
         }
     }
 
-    // Save the PDF to Downloads folder for Android 9 and below
     private fun savePdfToLegacyDownloads(pdfTitle: String) {
         downloadedPdfFile?.let { file ->
             val downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
@@ -258,47 +237,10 @@ class PdfViewActivity : AppCompatActivity() {
                 }
             }
 
-            // Notify user that the file is downloaded
             Toast.makeText(this, "PDF saved to Downloads folder", Toast.LENGTH_SHORT).show()
 
-            // Create URI and notification
-            val uri = FileProvider.getUriForFile(this, "${packageName}.fileprovider", destFile)
+            val uri = FileProvider.getUriForFile(this, "$packageName.provider", destFile)
             showDownloadNotification("$pdfTitle.pdf", uri)
         }
-    }
-
-
-    private fun handleDownloadStatus(downloadModel: DownloadModel) {
-        when (downloadModel.status) {
-            Status.STARTED -> showStatus("Download has started.")
-            Status.SUCCESS -> showStatus("Download completed successfully.")
-            Status.CANCELLED -> showStatus("Download was cancelled.")
-            Status.FAILED -> {
-                Log.e("DownloadError", "Failed reason: ${downloadModel.failureReason}")
-                showStatus("Download failed.")
-            }
-            Status.QUEUED, Status.PROGRESS, Status.PAUSED, Status.DEFAULT -> {}
-        }
-    }
-
-    private fun downloadFile() {
-        val path = filesDir.absolutePath
-
-
-        val id = ketch.download(
-            url = pdfUrl,
-            fileName = pdfTitle,
-            path = path)
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                ketch.observeDownloadById(id)
-                    .flowOn(Dispatchers.IO)
-                    .collect { handleDownloadStatus(it) }
-            }
-        }
-    }
-
-    private fun showStatus(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 }

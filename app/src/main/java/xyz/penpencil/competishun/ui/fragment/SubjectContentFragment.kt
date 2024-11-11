@@ -248,6 +248,7 @@ class SubjectContentFragment : DrawerVisibility() {
                                         homeworkDesc = files.content?.homework?.map { it.description }.toString() ?: "",
                                         homeworkUrl = homeworkUrl.toString() , // Add this field in your TopicContentModel if it doesn't exist
                                         isExternal = isExternal
+//                                                files.content?.file_name?.contains("DPPs") == true
                                     )
                                 }
 
@@ -303,6 +304,7 @@ class SubjectContentFragment : DrawerVisibility() {
                                 val id = folders.id
                                 val date = folders.scheduled_time.toString()
                                 val time = helperFunctions.formatCoursesDateTime(date)
+                                Log.d("isExternalmili",isExternal.toString())
                                 SubjectContentItem(
                                     id = id,
                                     chapterNumber = index + 1,
