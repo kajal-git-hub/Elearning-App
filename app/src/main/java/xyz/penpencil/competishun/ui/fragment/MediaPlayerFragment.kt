@@ -199,6 +199,8 @@ class MediaPlayerFragment : DrawerVisibility() {
                             player.play()
                         }
                         Player.STATE_ENDED -> {
+                            if (mExoPlayerFullscreen)
+                                closeFullscreenDialog()
                             Log.e("videoEnded",player.toString())
                             binding.playerView.visibility = View.GONE
                             binding.upNextOverlay.visibility = View.VISIBLE
