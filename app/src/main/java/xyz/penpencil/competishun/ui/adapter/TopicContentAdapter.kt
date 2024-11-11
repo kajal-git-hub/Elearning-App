@@ -152,6 +152,7 @@ class TopicContentAdapter(
                 {
                     binding.shapeableImage.setImageResource(icon)
                     binding.shapeableImage.setBackgroundResource(background)
+                    binding.shapeableImage.visibility = View.VISIBLE
                     binding.clEmtpyVeiw.visibility = View.INVISIBLE
                     binding.etHomeWorkText.visibility = View.VISIBLE
                     binding.etHomeWorkPdf.visibility = View.VISIBLE
@@ -185,6 +186,7 @@ class TopicContentAdapter(
                 if (topicContent.fileType == "VIDEO") {
                     binding.shapeableImage.setImageResource(icon)
                     binding.shapeableImage.setBackgroundResource(background)
+                    binding.shapeableImage.visibility = View.VISIBLE
                     binding.clEmtpyVeiw.visibility = View.INVISIBLE
                 }else{
                     binding.shapeableImage.visibility = View.GONE
