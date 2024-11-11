@@ -74,7 +74,7 @@
         android:drawableStart="@drawable/book_topic"
         android:drawablePadding="@dimen/_6dp"
         android:fontFamily="@font/nunito"
-        android:text="08 Learning Material"
+        android:text=" Learning Material"
         android:textColor="#726C6C"
         android:textSize="@dimen/_12sp"
         app:layout_constraintStart_toEndOf="@id/cl_chapter_number"

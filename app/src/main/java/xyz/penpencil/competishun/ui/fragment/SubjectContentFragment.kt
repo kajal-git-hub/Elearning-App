@@ -300,8 +300,11 @@ class SubjectContentFragment : DrawerVisibility() {
                             val folders =
                                 subfolderDurationFolders.mapNotNull { it.folder }
 
+
                             val folderCounts =
-                                subfolderDurationFolders.mapNotNull { it.folder?.folder_count ?: 0 }
+                                subfolderDurationFolders.mapNotNull { it.folder?.video_count ?: 0 }
+                                val pdfCounts =  subfolderDurationFolders.mapNotNull { it.folder?.pdf_count ?: 0 }
+                                Log.e("folderscoutn $pdfCounts", folderCounts.toString())
                             val scheduledTimes = subfolderDurationFolders?.mapNotNull {
                                 it.completionPercentage
                             }
@@ -317,7 +320,9 @@ class SubjectContentFragment : DrawerVisibility() {
                                     id = id,
                                     chapterNumber = index + 1,
                                     topicName = folders.name,
-                                    topicDescription = folders.folder_count?:"0",
+                                    topicDescription = folders.description?:"",
+                                    pdfcount = folders.pdf_count?:"0",
+                                    videocount = folders.video_count?:"0",
                                     locktime = time,
                                     progressPer = subfolderDurationFolders[index].completionPercentage.toInt(),
                                     isExternal = isExternal
@@ -325,7 +330,7 @@ class SubjectContentFragment : DrawerVisibility() {
                             }
 
                             binding.rvSubjectContent.adapter =
-                                SubjectContentAdapter(subjectContentList) { selectedItem ->
+                                SubjectContentAdapter(subjectContentList,folderName) { selectedItem ->
                                     Log.e("enewfSlectt",selectedItem.topicName)
                                     //binding.tvTopicType.text = selectedItem.topicName
                                     videoProgress(
@@ -365,14 +370,16 @@ class SubjectContentFragment : DrawerVisibility() {
                                     id = id,
                                     chapterNumber = index + 1,
                                     topicName = folders.name,
-                                    topicDescription = folders.folder_count?:"0",
+                                    topicDescription = folders.description?:"",
+                                    pdfcount = folders.pdf_count?:"0",
+                                    videocount = folders.video_count?:"0",
                                     locktime = time,
                                     progressPer = subfolderDurationFolders[index].completionPercentage.toInt()
                                 )
                             }
 
                             binding.rvSubjectContent.adapter =
-                                SubjectContentAdapter(subjectContentList) { selectedItem ->
+                                SubjectContentAdapter(subjectContentList,folderName) { selectedItem ->
                                     Log.e("enewfSlect",selectedItem.topicName)
                                     videoProgress(
                                         selectedItem.id,
@@ -771,7 +778,7 @@ class SubjectContentFragment : DrawerVisibility() {
                             findNavController().navigate(R.id.SubjectContentFragment, bundle)
                         } else if (!folderProgressContent.isNullOrEmpty()) {
                             // Process folder contents
-                            Log.e("folderContentsss", folderProgressContent.toString())
+                            Log.e("folderCsize", folderProgressContent.size.toString())
 
                             val gson = Gson()
                             val folderContentsJson = gson.toJson(folderProgressContent)

@@ -324,14 +324,16 @@ class StudyMaterialDetailsFragment : Fragment() {
                                     id = id,
                                     chapterNumber = index + 1,
                                     topicName = folders.name?:"",
-                                    topicDescription = folders.folder_count?:"0",
+                                    topicDescription = folders.description?:"",
+                                    pdfcount = folders.pdf_count?:"0",
+                                    videocount = folders.video_count?:"0",
                                     locktime = time,
                                     progressPer = subfolderDurationFolders[index].completionPercentage.toInt()
                                 )
                             }
 
                             binding.rvSubjectContent.adapter =
-                                SubjectContentAdapter(subjectContentList) { selectedItem ->
+                                SubjectContentAdapter(subjectContentList, binding.tvTopicType.text.toString()) { selectedItem ->
                                     Log.e("gettingcontenList",subjectContentList.toString())
                                     binding.tvTopicType.text = selectedItem.topicName
                                     binding.tvContentCount.text = selectedItem.topicDescription
@@ -371,13 +373,15 @@ class StudyMaterialDetailsFragment : Fragment() {
                                     id = id,
                                     chapterNumber = index + 1,
                                     topicName = folders.name,
-                                    topicDescription = folders.folder_count?:"0",
+                                    topicDescription = folders.description?:"",
+                                    pdfcount = folders.pdf_count?:"0",
+                                    videocount = folders.video_count?:"0",
                                     locktime = time,
                                     progressPer = subfolderDurationFolders[index].completionPercentage.toInt()
                                 )
                             }
                             binding.rvSubjectContent.adapter =
-                                SubjectContentAdapter(subjectContentList) { selectedItem ->
+                                SubjectContentAdapter(subjectContentList, binding.tvTopicType.text.toString()) { selectedItem ->
                                     videoProgress(
                                         selectedItem.id,
                                         currentDuration = VwatchedDuration
