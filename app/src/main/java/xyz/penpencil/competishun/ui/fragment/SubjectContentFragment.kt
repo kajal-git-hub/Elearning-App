@@ -769,7 +769,8 @@ class SubjectContentFragment : DrawerVisibility() {
 
                                 putString("folderContents", folderContentsJson)
                                 putString("folder_Id", folderId)
-                                putString("folderName", folderNames)
+                                putString("folderNames", folderNames)
+                                putString("folderName", folderName)
 
                             }
                             findNavController().navigate(R.id.TopicTYPEContentFragment, bundle)
