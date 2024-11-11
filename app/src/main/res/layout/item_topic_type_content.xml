@@ -119,6 +119,21 @@
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="@+id/tv_lecture"
         app:layout_constraintTop_toBottomOf="@id/tv_lecture" />
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tv_course_description"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_8dp"
+        android:ellipsize="end"
+        android:fontFamily="@font/nunito"
+        android:maxLines="3"
+        android:paddingBottom="@dimen/_16sp"
+        android:text="Relations and Functions: Types of relations and types and relation"
+        android:textColor="#726C6C"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toStartOf="@+id/iv_MoreInfoLec"
+        app:layout_constraintStart_toStartOf="@+id/tv_lecture"
+        app:layout_constraintTop_toBottomOf="@id/tv_topic_name" />
 
 
     <ImageView
@@ -132,32 +147,25 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-
-    <View
-        android:id="@+id/view_lec"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="@dimen/_12sp"
-        app:layout_constraintStart_toStartOf="@+id/cl_course_book"
-        app:layout_constraintTop_toBottomOf="@+id/cl_course_book" />
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_readAndPlay"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/view_lec">
+        android:layout_marginTop="@dimen/_18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cl_course_book">
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/et_homeWorkText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16sp"
-            android:layout_marginTop="@dimen/_12sp"
             android:fontFamily="@font/nunito"
             android:text="HomeWork :"
             android:textColor="@color/black_2B2829"
             android:textSize="12sp"
             android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -165,7 +173,6 @@
             android:id="@+id/et_homeWorkPdf"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12sp"
             android:ellipsize="end"
             android:fontFamily="@font/nunito"
             android:maxLines="1"
@@ -173,38 +180,10 @@
             android:textColor="@color/blue"
             android:textSize="@dimen/_12sp"
             android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/videoicon"
             app:layout_constraintStart_toEndOf="@+id/et_homeWorkText"
             app:layout_constraintTop_toTopOf="parent" />
-
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/tv_course_description"
-            android:layout_width="252dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_16dp"
-            android:layout_marginTop="@dimen/_8dp"
-            android:layout_marginEnd="@dimen/_16dp"
-            android:ellipsize="end"
-            android:fontFamily="@font/nunito"
-            android:maxLines="2"
-            android:paddingBottom="@dimen/_16sp"
-            android:text="Relations and Functions: Types of relations and types and relation"
-            android:textColor="#726C6C"
-            android:textSize="12sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/et_homeWorkPdf" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Read More"
-            android:textColor="@color/blue_3E3EF7"
-            android:textSize="@dimen/_12sp"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="@+id/tv_course_description"
-            app:layout_constraintStart_toEndOf="@+id/tv_course_description" />
-
 
         <ImageView
             android:id="@+id/videoicon"
