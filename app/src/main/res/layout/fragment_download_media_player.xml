@@ -6,7 +6,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:id="@+id/rootContainer"
         android:background="@color/white">
 
@@ -61,12 +61,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/nunito"
-                android:gravity="left"
+                android:gravity="start"
                 android:text="Lecture |"
                 android:textColor="@color/_726c6c"
                 android:textSize="@dimen/_10sp"
                 android:visibility="visible"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tittle_tv"
@@ -144,7 +146,7 @@
                 android:layout_marginTop="@dimen/_8dp"
                 android:background="@drawable/bg_filter_purchase"
                 android:padding="@dimen/_5dp"
-                android:visibility="visible"
+                android:visibility="gone"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/homeworktittle_tv">
 

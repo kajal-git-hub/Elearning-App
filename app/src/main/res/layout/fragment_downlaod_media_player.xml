@@ -34,41 +34,6 @@
             android:keepScreenOn="true"
             app:resize_mode="zoom" />
 
-        <!-- Back Button -->
-        <ImageButton
-            android:id="@+id/back_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            android:src="@drawable/back_arrow_ic"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp" />
-
-        <TextView
-            android:id="@+id/tittle_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_20dp"
-            android:text="Video"
-            android:textColor="@android:color/white"
-            android:visibility="gone"
-            android:gravity="center"
-            app:layout_constraintStart_toEndOf="@id/back_btn"
-            app:layout_constraintTop_toTopOf="@id/back_btn"
-            app:layout_constraintBottom_toBottomOf="@id/back_btn"/>
-
-        <!-- Quality Button -->
-        <ImageButton
-            android:id="@+id/qualityButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/dot_3_ic"
-            android:background="@android:color/transparent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginEnd="16dp" />
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/upNextOverlay"
             android:layout_width="match_parent"

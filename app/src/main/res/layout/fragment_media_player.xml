@@ -184,7 +184,7 @@
                 android:layout_marginTop="@dimen/_40dp"
                 android:background="@drawable/bg_filter_purchase"
                 android:padding="@dimen/_5dp"
-                android:visibility="visible"
+                android:visibility="invisible"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/homeworktittle_tv">
 
@@ -212,7 +212,7 @@
                 android:layout_marginTop="@dimen/_40dp"
                 android:background="@drawable/bg_filter_purchase"
                 android:padding="@dimen/_5dp"
-                android:visibility="visible"
+                android:visibility="invisible"
                 app:layout_constraintStart_toEndOf="@id/cl_bookmark"
                 app:layout_constraintTop_toBottomOf="@id/homeworktittle_tv">
 
