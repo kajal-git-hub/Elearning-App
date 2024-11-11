@@ -74,6 +74,7 @@ class TopicTypeContentFragment : DrawerVisibility() {
         val folderId = arguments?.getString("folder_Id")?:""
         val folder_Name = arguments?.getString("folderNames")?:""
          folderName = arguments?.getString("folderName")?:""
+        Log.e("foldedmad $folderName",folder_Name)
         val folderContents = arguments?.getString("folderContents")?:"0"
          isExternal = arguments?.getBoolean("isExternal", false) == true
         val subContentList = object : TypeToken< List<FindCourseFolderProgressQuery. FolderContent>>() {}.type
