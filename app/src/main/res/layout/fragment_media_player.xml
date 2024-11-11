@@ -33,6 +33,7 @@
             <RelativeLayout
                 android:id="@+id/playerApp"
                 android:layout_width="match_parent"
+                android:background="@color/black"
                 android:layout_height="240dp">
 
                 <androidx.media3.ui.PlayerView
