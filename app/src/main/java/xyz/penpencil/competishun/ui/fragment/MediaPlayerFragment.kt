@@ -65,6 +65,7 @@ class MediaPlayerFragment : DrawerVisibility() {
     private lateinit var courseFolderContentNames: ArrayList<String>
     private lateinit var courseFolderContentDescs: ArrayList<String>
     private val handler = Handler(Looper.getMainLooper())
+    private val mHandler = Handler(Looper.getMainLooper())
     private val updateInterval: Long = 5000
     private var urlVideo:String = ""
     private lateinit var helperFunctions: HelperFunctions
@@ -321,7 +322,7 @@ class MediaPlayerFragment : DrawerVisibility() {
                 val parentHeight = parent.height
 
                 if (parentWidth == 0 || parentHeight == 0) {
-                    handler.postDelayed(this, 300000)
+                    mHandler.postDelayed(this, 300000)
                     return@let
                 }
 
@@ -334,7 +335,7 @@ class MediaPlayerFragment : DrawerVisibility() {
                 layoutParams.topMargin = Random.nextInt(0, maxTop)
                 textView.layoutParams = layoutParams
                 val delay = Random.nextLong(300, 600)
-                handler.postDelayed(this, delay)
+                mHandler.postDelayed(this, delay)
             }
         }
     }
@@ -357,7 +358,7 @@ class MediaPlayerFragment : DrawerVisibility() {
             }
             if (binding.playerView is FrameLayout) {
                 binding.playerView.addView(flickeringText)
-                handler.post(flickerRunnable)
+                mHandler.post(flickerRunnable)
             } else {
                 Log.e("WaterMark", "playerView is not a FrameLayout")
             }
@@ -606,6 +607,7 @@ class MediaPlayerFragment : DrawerVisibility() {
         urlVideo = ""
         handler.removeCallbacks(updateTask)
         handler.removeCallbacksAndMessages(null)
+        mHandler.removeCallbacksAndMessages(null)
         // updateSeekBarHandler.removeCallbacks(updateSeekBarRunnable)
         // Reset the screen orientation to the user's preference
         requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
