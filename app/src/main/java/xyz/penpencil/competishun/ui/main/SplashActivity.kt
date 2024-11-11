@@ -28,6 +28,7 @@ class SplashActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivitySplashBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        window.navigationBarColor = ContextCompat.getColor(this,android.R.color.black)
         sharedPreferencesManager = SharedPreferencesManager(this)
 
         userViewModel.fetchUserDetails()
@@ -61,12 +62,11 @@ class SplashActivity : AppCompatActivity() {
         if (newUserOrNot) {
             if (!token.isNullOrEmpty() && checkUserData()) {
                 startActivity(Intent(this, HomeActivity::class.java))
-            } else if (!token.isNullOrEmpty() && isMyCourseAvailable){
+            } else if (!token.isNullOrEmpty() && isMyCourseAvailable) {
                 val intent = Intent(this, MainActivity::class.java)
                 intent.putExtra("isMyCourseAvailable", true)
                 startActivity(intent)
-            }
-            else {
+            } else {
                 startActivity(Intent(this, MainActivity::class.java))
             }
             finish()
