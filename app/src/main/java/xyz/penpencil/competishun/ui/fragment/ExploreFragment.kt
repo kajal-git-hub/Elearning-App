@@ -435,7 +435,9 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
                         )
 
                     }
-                } else Toast.makeText(requireContext(), "", Toast.LENGTH_LONG).show()
+                } else {
+//                    Toast.makeText(requireContext(), "", Toast.LENGTH_LONG).show()
+                }
 
                 if (courses != null) {
                     var coursefeature = courses.course_features

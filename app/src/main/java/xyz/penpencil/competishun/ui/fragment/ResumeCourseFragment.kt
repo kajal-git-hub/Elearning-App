@@ -35,14 +35,11 @@ import xyz.penpencil.competishun.utils.setLightStatusBars
 class ResumeCourseFragment : DrawerVisibility() {
 
     private lateinit var binding: FragmentResumeCourseBinding
-    private val myCourseViewModel: MyCoursesViewModel by viewModels()
     private val coursesViewModel: CoursesViewModel by viewModels()
-    var folderNames:ArrayList<String>? = null
-    var folderIds: String? = null
     val gson = Gson()
-    private lateinit var adapterOurSubjectsAdapter: OurSubjectsAdapter
-    private lateinit var rvOurSubjects: RecyclerView
-    private lateinit var listOuSubjectItem: List<FindCourseParentFolderProgressQuery.Folder?>
+    private var rvOurSubjects: RecyclerView ?= null
+    private var listOuSubjectItem: List<FindCourseParentFolderProgressQuery.Folder?> = mutableListOf()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -54,12 +51,16 @@ class ResumeCourseFragment : DrawerVisibility() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        (activity as? HomeActivity)?.let {
+            it.showBottomNavigationView(false)
+            it.showFloatingButton(false)
+        }
+
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 findNavController().popBackStack()
             }
         })
-
 
         binding.courseNameResumeCourse.setOnClickListener {
             it.findNavController().popBackStack()
@@ -72,22 +73,16 @@ class ResumeCourseFragment : DrawerVisibility() {
             findNavController().navigate(R.id.DownloadFragment)
         }
 
-        (activity as? HomeActivity)?.showBottomNavigationView(false)
-        (activity as? HomeActivity)?.showFloatingButton(false)
-
         val completionPercentagesArray = arguments?.getDoubleArray("completionPercentages")
-        val completionPercentages = completionPercentagesArray?.toList() ?: emptyList()
-        Log.e("completionper $completionPercentages",completionPercentagesArray.toString())
-
-        var folderCounts = arguments?.getString("completionPercentages")
+        val folderCounts = arguments?.getString("completionPercentages")
         val courses =  arguments?.getString("courseJson")
         val coursesName =  arguments?.getString("courseName")
         val folders = arguments?.getString("folderJson")
         val CourseId = arguments?.getString("courseId")
         val courseStart =  arguments?.getString("courseStart")
         val CourseEnd =  arguments?.getString("courseEnd")
-
         binding.courseNameResumeCourse.text = coursesName
+
         binding.backIcon.setOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed() }
         val bundle = Bundle().apply {
             putString("courseId", CourseId)
@@ -130,26 +125,17 @@ class ResumeCourseFragment : DrawerVisibility() {
                     val subfolderProgress = result.data.findCourseParentFolderProgress.subfolderProgress
                     Log.e("subfolderProgrss",subfolderProgress.toString())
                     if (subfolderProgress.isNullOrEmpty()){
-                        Log.e("subfolderProgress",subfolderProgress.toString())
+                        Log.e("subfolderProgress", "")
                     }else{
-                        val folders = subfolderProgress.map { parentFolderItem ->
-                            parentFolderItem.folder
-                        }
-                        val percentages = subfolderProgress.map { parentFolderItem ->
-                            parentFolderItem.completionPercentage
-                        }
-                        listOuSubjectItem = folders
-                        val adapter = OurSubjectsAdapter(listOuSubjectItem, percentages) {folderId,foldername,folderCount ->
-                            Log.e("foldersz",folderId+foldername.toString())
-                            // Handle the course click and navigate
-                            folderProgress(folderId,foldername,folderCount)
+                        val listOuSubjectItem = subfolderProgress.map { it.folder }
+                        val percentages = subfolderProgress.map { it.completionPercentage }
 
+                        binding.rvOurSubject.apply {
+                            layoutManager = GridLayoutManager(context, 2)
+                            adapter = OurSubjectsAdapter(listOuSubjectItem, percentages) { folderId, folderName, folderCount ->
+                                folderProgress(folderId, folderName, folderCount)
+                            }
                         }
-
-                        binding.rvOurSubject.adapter = adapter
-                        binding.rvOurSubject.layoutManager =
-                            GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false)
-
                     }
                 }
                 is Result.Failure -> {}

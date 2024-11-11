@@ -7,11 +7,11 @@ import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.student.competishun.curator.FindCourseFolderProgressQuery
@@ -20,7 +20,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.data.model.TopicContentModel
 import xyz.penpencil.competishun.databinding.FragmentTopicTypeContentBinding
@@ -50,6 +49,9 @@ class TopicTypeContentFragment : DrawerVisibility() {
 
     var adapter : TopicContentAdapter?=null
 
+    var isLoading = false
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -78,13 +80,13 @@ class TopicTypeContentFragment : DrawerVisibility() {
         binding.tvTopicTypeName.text = folder_Name?:""
 
         if (subContentsList.isNotEmpty()) {
-            binding.progress.visibility = View.VISIBLE
+//            binding.progress.visibility = View.VISIBLE
             binding.clEmptyContent.visibility = View.GONE
-            val listSize = if (subContentsList.size<=10) subContentsList.size else 10
-            val list  = subContentsList.subList(pageNumber, listSize)
+            pageSize = if (subContentsList.size<=10) subContentsList.size else 10
+            val list  = subContentsList.subList(pageNumber, pageSize)
             newContent(list, folderId, true)
         }else {
-            binding.progress.visibility = View.GONE
+//            binding.progress.visibility = View.GONE
             binding.clEmptyContent.visibility = View.VISIBLE
         }
 
@@ -105,6 +107,24 @@ class TopicTypeContentFragment : DrawerVisibility() {
                 return false
             }
         })
+
+       /* binding.rvTopicContent.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+
+                val layoutManager = recyclerView.layoutManager as? LinearLayoutManager
+                val visibleItemCount = layoutManager?.childCount ?: 0
+                val totalItemCount = layoutManager?.itemCount ?: 0
+                val firstVisibleItemPosition = layoutManager?.findFirstVisibleItemPosition() ?: 0
+
+                if (!isLoading && (visibleItemCount + firstVisibleItemPosition) >= totalItemCount && firstVisibleItemPosition >= 0) {
+                    isLoading = true
+                    pageSize = firstVisibleItemPosition
+                    newContent(subContentsList, folderId, true)
+                    isLoading = false
+                }
+            }
+        })*/
 
     }
     private fun newContent(folderContents: List<FindCourseFolderProgressQuery.FolderContent>, folderId: String, isFirstTime: Boolean = false) {
@@ -152,7 +172,7 @@ class TopicTypeContentFragment : DrawerVisibility() {
                         binding.rvTopicContent.visibility = View.GONE
                         binding.clEmptyContent.visibility = View.VISIBLE
                     }
-                    binding.progress.visibility = View.GONE
+//                    binding.progress.visibility = View.GONE
 
                     // Set up the adapter on the main thread
                     Log.e("UUIUIIUIU", "newContent: "+topicContents.size)
@@ -175,6 +195,8 @@ class TopicTypeContentFragment : DrawerVisibility() {
                     binding.rvTopicContent.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
                 }else {
                     adapter?.updateData(topicContents.toMutableList())
+                    binding.rvTopicContent.scrollToPosition(0)
+//                    binding.recyclerProgress.visibility = View.GONE
                 }
             } catch (e: Exception) {
                 Log.e("newContent", "Error loading content", e)
