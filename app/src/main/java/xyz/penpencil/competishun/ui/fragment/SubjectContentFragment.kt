@@ -45,7 +45,7 @@ class SubjectContentFragment : DrawerVisibility() {
     private var isFirstTimeLoading = true
     private lateinit var sharedViewModel: SharedVM
     private var isExternal: Boolean = false
-
+    var folderName = ""
 
     private var subfolder = -1
 
@@ -80,7 +80,7 @@ class SubjectContentFragment : DrawerVisibility() {
         (activity as? HomeActivity)?.showFloatingButton(false)
 
         val subFolders = arguments?.getString("subFolders") ?: ""
-        val folderName = arguments?.getString("folder_Name") ?: ""
+         folderName = arguments?.getString("folder_Name") ?: ""
         val parentContent = arguments?.getString("parent_content") ?: ""
         val folderId =  arguments?.getString("folder_Id") ?: ""
         var folder_Count = arguments?.getString("folder_Count") ?: "0"
@@ -220,6 +220,13 @@ class SubjectContentFragment : DrawerVisibility() {
                                     // Extract homework URL and filename if they exist
                                     val homeworkUrl = files.content?.homework?.map { it.file_url } ?:""
                                     val homeworkFileName = files.content?.homework?.map { it.file_name } ?: ""
+                                    Log.e("foldersfd",folderName)
+                                    val icon = when (folderName) {
+                                        "Chemistry" -> R.drawable.chemistory
+                                        "Physics" -> R.drawable.pdf_bg
+                                        "Mathematics" -> R.drawable.message
+                                        else -> R.drawable.download_person // Set a default icon if folder name doesn't match
+                                    }
 
                                     TopicContentModel(
                                         subjectIcon = if (files.content?.file_type?.name == "PDF") R.drawable.content_bg else R.drawable.group_1707478994,
@@ -250,6 +257,7 @@ class SubjectContentFragment : DrawerVisibility() {
                             binding.rvTopicContent.adapter = TopicContentAdapter(
                                 topicContentList.toMutableList(),
                                 folderId,
+                                folderName,
                                 requireActivity(),
                                 requireContext()
                             ) { topicContent, folderContentId, folderContentIds ,folderContentNames, folderContentDesc, folderContenthomework, folderContenthomeworkLink,folderContenthomeworkDesc ->
@@ -378,9 +386,15 @@ class SubjectContentFragment : DrawerVisibility() {
                                     val homeworkUrl = contents.content?.homework?.map { it.file_url } ?:""
                                     val homeworkFileName = contents.content?.homework?.map { it.file_name } ?: ""
 
-
+                                    Log.e("foldersfd",folderName)
                                     val time = helperFunctions.formatCoursesDateTime(contents.content?.scheduled_time.toString())
                                     Log.e("foldertime", time)
+                                    val icon = when (folderName) {
+                                        "Chemistry" -> R.drawable.chemistory
+                                        "Physics" -> R.drawable.pdf_bg
+                                        "Mathematics" -> R.drawable.message
+                                        else -> R.drawable.download_person // Set a default icon if folder name doesn't match
+                                    }
                                     TopicContentModel(
                                         subjectIcon = if (contents.content?.file_type?.name == "PDF") R.drawable.content_bg else R.drawable.group_1707478994,
                                         id = contents.content?.id ?: "",
@@ -407,6 +421,7 @@ class SubjectContentFragment : DrawerVisibility() {
                             binding.rvTopicContent.adapter = TopicContentAdapter(
                                 subjectContentList.toMutableList(),
                                 folderId,
+                                folderName,
                                 requireActivity(),
                                 requireContext()
                             ) { topicContent, folderContentId, folderContentIds, folderContentNames, folderContentDesc,folderContenthomework,folderContenthomeworkurl,folderContenthomeworkDesc ->
@@ -498,9 +513,15 @@ class SubjectContentFragment : DrawerVisibility() {
                                     val homeworkUrl = contents.content?.homework?.map { it.file_url } ?:""
                                     val homeworkFileName = contents.content?.homework?.map { it.file_name } ?: ""
 
-
+                                    Log.e("foldersfd",folderName)
                                     val time = helperFunctions.formatCoursesDateTime(contents.content?.scheduled_time.toString())
                                     Log.e("foldertime", time)
+                                    val icon = when (folderName) {
+                                        "Chemistry" -> R.drawable.chemistory
+                                        "Physics" -> R.drawable.pdf_bg
+                                        "Mathematics" -> R.drawable.message
+                                        else -> R.drawable.download_person // Set a default icon if folder name doesn't match
+                                    }
                                     TopicContentModel(
                                         subjectIcon = if (contents.content?.file_type?.name == "PDF") R.drawable.content_bg else R.drawable.group_1707478994,
                                         id = contents.content?.id ?: "",
@@ -529,6 +550,7 @@ class SubjectContentFragment : DrawerVisibility() {
                             binding.rvsubjectTopicContent.adapter = TopicContentAdapter(
                                 subjectContentList.toMutableList(),
                                 folderId,
+                                folderName,
                                 requireActivity(),
                                 requireContext()
                             ) { topicContent, folderContentId, folderContentIds, folderContentNames, folderContentDesc, folderContenthomework,folderContenthomeworkLink,folderContenthomeworkDesc ->
@@ -587,6 +609,14 @@ class SubjectContentFragment : DrawerVisibility() {
             val homeworkFileName = content.content?.homework?.map { it.file_name?:"" } ?: ""
             Log.d("homeworkUrl",homeworkUrl.toString())
             Log.d("homeworkFileName",homeworkFileName.toString())
+            Log.e("foldersfd",folderName)
+            val icon = when (folderName) {
+                "Chemistry" -> R.drawable.chemistory
+                "Physics" -> R.drawable.pdf_bg
+                "Mathematics" -> R.drawable.message
+                else -> R.drawable.download_person // Set a default icon if folder name doesn't match
+            }
+
             TopicContentModel(
                 subjectIcon = if (content.content?.file_type?.name == "PDF") R.drawable.content_bg else R.drawable.group_1707478994,
                 id = content.content?.id ?: "",
@@ -610,7 +640,7 @@ class SubjectContentFragment : DrawerVisibility() {
         val ContentIds = folderContents.filter { it.content?.file_type?.name  == "VIDEO" }.mapNotNull { it.content?.id }?.toCollection(ArrayList())
         val folderContentNas = folderContents.filter { it.content?.file_type?.name  == "VIDEO" }.mapNotNull { it.content?.file_name }?.toCollection(ArrayList())
 
-        val adapter = TopicContentAdapter(topicContents.toMutableList(), folderId,requireActivity(),requireContext()) { topicContent, folderContentId , folderContentIds,folderContentNames, folderContentDesc, folderContenthomework, folderContenthomeworkLink,folderContenthomeworkDesc->
+        val adapter = TopicContentAdapter(topicContents.toMutableList(), folderId,folderName,requireActivity(),requireContext()) { topicContent, folderContentId , folderContentIds,folderContentNames, folderContentDesc, folderContenthomework, folderContenthomeworkLink,folderContenthomeworkDesc->
             when (topicContent.fileType) {
                 "VIDEO" -> videoUrlApi(videourlViewModel, topicContent.id,topicContent.topicName,folderContentIds,folderContentNames, folderContentDesc, folderContenthomework, folderContenthomeworkLink,folderContenthomeworkDesc)
                 "PDF" -> {
