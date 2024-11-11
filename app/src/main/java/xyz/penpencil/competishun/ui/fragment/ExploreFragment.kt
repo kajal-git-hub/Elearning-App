@@ -1147,9 +1147,11 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
             }.onFailure { exception ->
                 Log.e("createCart", exception.message.toString())
                 val errorMessage = exception.message.toString()
-                if (errorMessage.startsWith("Duplicate entry")) {
+                //TODO: check if course is already purchase or not
+                /*if (errorMessage.startsWith("Duplicate entry")) {
                     findNavController().navigate(R.id.myCartFragment)
-                }
+                }*/
+                findNavController().navigate(R.id.myCartFragment)
             }
         })
 

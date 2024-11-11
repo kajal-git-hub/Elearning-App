@@ -145,11 +145,12 @@
                             app:layout_constraintTop_toBottomOf="@id/etFullNameText" />
 
 
-                        <androidx.constraintlayout.widget.ConstraintLayout
+                        <LinearLayout
                             android:id="@+id/clEmailphone"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             app:layout_constraintStart_toStartOf="parent"
+                            android:orientation="vertical"
                             app:layout_constraintTop_toBottomOf="@+id/etEnterHereText">
 
 
@@ -160,7 +161,7 @@
                                 android:fontFamily="@font/nunito"
                                 android:text="@string/phone_no"
                                 android:textColor="#0A0A0B"
-                                android:visibility="gone"
+                                android:layout_marginTop="@dimen/_16dp"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -169,7 +170,7 @@
                                 android:id="@+id/clEnterNo"
                                 android:layout_width="match_parent"
                                 android:layout_height="48dp"
-                                android:layout_marginTop="16dp"
+                                android:layout_marginTop="8dp"
                                 android:background="@drawable/rounded_home_edittext"
                                 android:visibility="visible"
                                 app:layout_constraintStart_toStartOf="parent"
@@ -212,12 +213,13 @@
 
                             <TextView
                                 android:id="@+id/etEmailText"
-                                android:layout_width="wrap_content"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/nunito"
                                 android:text="@string/email"
-                                android:textColor="#0A0A0B"
                                 android:visibility="gone"
+                                android:layout_marginTop="20dp"
+                                android:textColor="#0A0A0B"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -225,6 +227,7 @@
                                 android:id="@+id/etEnterEmailText"
                                 android:layout_width="match_parent"
                                 android:layout_height="48dp"
+                                android:visibility="gone"
                                 android:layout_marginTop="10dp"
                                 android:background="@drawable/full_name_background"
                                 android:hint="Enter email"
@@ -235,11 +238,10 @@
                                 android:paddingBottom="12dp"
                                 android:textColorHint="#898384"
                                 android:textSize="16sp"
-                                android:visibility="gone"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toBottomOf="@id/etEmailText" />
 
-                        </androidx.constraintlayout.widget.ConstraintLayout>
+                        </LinearLayout>
 
                         <TextView
                             android:id="@+id/etStateText"
