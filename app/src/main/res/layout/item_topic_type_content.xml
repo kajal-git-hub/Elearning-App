@@ -24,8 +24,7 @@
             android:layout_width="72dp"
             android:layout_height="85dp"
             android:background="#01009A"
-            android:visibility="gone"
-            android:src="@drawable/bgvideoimage"
+            android:visibility="visible"
             app:shapeAppearance="@style/CustomImageShapeRounded111"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

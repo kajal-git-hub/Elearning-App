@@ -274,6 +274,7 @@ class StudyMaterialDetailsFragment : Fragment() {
                             binding.rvStudyMaterial.adapter = TopicContentAdapter(
                                 topicContentList.toMutableList(),
                                 folderId,
+                                "" ,
                                 requireActivity(),
                                 requireContext()
                             ) { topicContent, folderContentId, folderContentIds,folderContentNames, folderContentDescs,folderContenthomework, folderContenthomeworkLink,folderContenthomeworkDesc->
@@ -432,6 +433,7 @@ class StudyMaterialDetailsFragment : Fragment() {
                             binding.rvStudyMaterial.adapter = TopicContentAdapter(
                                 subjectContentList.toMutableList(),
                                 folderId,
+                                "",
                                 requireActivity(),
                                 requireContext()
                             ) { topicContent, folderContentId, folderContentIds,folderContentNames, folderContentDescs,folderContenthomework, folderContenthomeworkLink, folderContenthomeworkDesc ->
