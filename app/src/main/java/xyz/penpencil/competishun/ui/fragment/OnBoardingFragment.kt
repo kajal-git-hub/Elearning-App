@@ -159,6 +159,14 @@ class OnBoardingFragment : Fragment() {
             val selectedItem = parent.getItemAtPosition(position) as String
             Log.e("Selected City", "Selected City: $selectedItem")
         }
+
+        binding.etEnterCityText.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                binding.etEnterCityText.post {
+                    binding.etEnterCityText.showDropDown()
+                }
+            }
+        }
     }
 
 /*    fun hideSoftKeyBoard(context: Context, view: View?) {

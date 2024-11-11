@@ -38,6 +38,8 @@ import org.json.JSONObject
 import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.databinding.FragmentMyCartBinding
 import xyz.penpencil.competishun.utils.Constants
+import java.math.BigDecimal
+import java.math.RoundingMode
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -169,7 +171,7 @@ class MyCartFragment : DrawerVisibility(), OnCartItemRemovedListener, MyCartAdap
                 }
                 Log.e("getamountpaid ${selectedItem.price.toDouble()}", amountPaid.toString())
                 input = CreateOrderInput(
-                    amountPaid = amountPaid,
+                    amountPaid = amountPaid.roundToTwoDecimalPlaces(),
                     entityId = selectedItem.entityId,
                     entityType = "course",
                     isPaidOnce = paymentType == "full",
@@ -216,7 +218,7 @@ class MyCartFragment : DrawerVisibility(), OnCartItemRemovedListener, MyCartAdap
 //                    val amountPaid = if (paymentType == "full") { fullAmount } else { instAmountpaid }Log.e("fullpricec $amountPaid",totalAmount.toString())
                   Log.e("exceptionscc $totalAmount",amountPaid.toString())
                     input = CreateOrderInput(
-                        amountPaid = amountPaid,
+                        amountPaid = amountPaid.roundToTwoDecimalPlaces(),
                         entityId = cartItem.entityId,
                         entityType = "course",
                         isPaidOnce = paymentType == "full",
@@ -331,7 +333,7 @@ class MyCartFragment : DrawerVisibility(), OnCartItemRemovedListener, MyCartAdap
                 ).toInt()
             }%)"
             fullAmount = selectedCartItem.discount.toDouble()
-            binding.tvPrice.text = "₹${selectedCartItem.discount}"
+            binding.tvPrice.text = String.format(Locale.getDefault(), "₹%.2f", selectedCartItem.discount.toDouble())
             binding.tvInstTotalAmount.text = "₹${selectedCartItem.discount}"
             binding.tvInstDiscount.text = "-₹${
                 (helperFunctions.calculateDiscountDetails(
@@ -341,9 +343,9 @@ class MyCartFragment : DrawerVisibility(), OnCartItemRemovedListener, MyCartAdap
             }"
         }else if (selectedCartItem.discount ==0 ){
             fullAmount = selectedCartItem.price.toDouble()
-            binding.tvPrice.text = "₹${selectedCartItem.price}"
-            binding.tvInstTotalAmount.text = "₹${selectedCartItem.price}"
-            binding.tvInstDiscount.text = "-₹${selectedCartItem.discount}"
+            binding.tvPrice.text = String.format(Locale.getDefault(), "₹%.2f", selectedCartItem.price.toDouble())
+            binding.tvInstTotalAmount.text = String.format(Locale.getDefault(), "₹%.2f", selectedCartItem.price.toDouble())
+            binding.tvInstDiscount.text =String.format(Locale.getDefault(), "₹%.2f", selectedCartItem.discount.toDouble())
             binding.tvInstDiscountLabel.text = "Discount (0)"
         }
 
@@ -356,6 +358,10 @@ class MyCartFragment : DrawerVisibility(), OnCartItemRemovedListener, MyCartAdap
         val dateFormat = SimpleDateFormat("dd MMM, yyyy", Locale.getDefault())
         val newDate = dateFormat.format(calendar.time)
          return newDate
+    }
+
+    fun Double.roundToTwoDecimalPlaces(): Double {
+        return BigDecimal(this).setScale(2, RoundingMode.HALF_UP).toDouble()
     }
 
     private fun showPartialPayment(selectedCartItem: CartItem) {
@@ -391,15 +397,15 @@ class MyCartFragment : DrawerVisibility(), OnCartItemRemovedListener, MyCartAdap
             binding.tvInstallmentChargePrice.visibility = View.VISIBLE
             binding.tvInstDiscountLabel.visibility = View.GONE
             binding.tvInstDiscount.visibility = View.GONE
-            binding.tvPrice.text = "₹${firstInstallment}"
+            binding.tvPrice.text = String.format(Locale.getDefault(), "₹%.2f", firstInstallment.toDouble())
             var installmentChart =
                 selectedCartItem.withInstallmentPrice.minus(selectedCartItem.price)
-            binding.tvInstTotalAmount.text = "₹${selectedCartItem.withInstallmentPrice}"
-            binding.tvInstCoursePrice.text = "₹${selectedCartItem.price}"
-            binding.tvInstallmentPrice.text = "₹${firstInstallment}"
-            binding.tvInstallmentPrice2.text = "₹${secondInstallment}"
+            binding.tvInstTotalAmount.text = String.format(Locale.getDefault(), "₹%.2f", selectedCartItem.withInstallmentPrice.toDouble())
+            binding.tvInstCoursePrice.text = String.format(Locale.getDefault(), "₹%.2f", selectedCartItem.price.toDouble())
+            binding.tvInstallmentPrice.text = String.format(Locale.getDefault(), "₹%.2f", firstInstallment)
+            binding.tvInstallmentPrice2.text = String.format(Locale.getDefault(), "₹%.2f", secondInstallment)
             binding.tvInstallmentChargePrice.text =
-                "₹${selectedCartItem.withInstallmentPrice}"
+               String.format(Locale.getDefault(), "₹%.2f", selectedCartItem.withInstallmentPrice.toDouble())
         }
     }
 

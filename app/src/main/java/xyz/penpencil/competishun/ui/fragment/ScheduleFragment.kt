@@ -196,9 +196,9 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
 
             withContext(Dispatchers.Main) {
                 scheduleAdapter = ScheduleAdapter(scheduleDataList, requireContext(), this@ScheduleFragment)
-                binding.rvCalenderSchedule.adapter = scheduleAdapter
                 binding.rvCalenderSchedule.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-
+                binding.rvCalenderSchedule.adapter = scheduleAdapter
+                binding.rvCalenderSchedule.scrollToPosition(0)
                 if (scheduleDataList.isEmpty()) {
                     binding.clEmptySchedule.visibility = View.VISIBLE
                     binding.rvCalenderSchedule.visibility = View.GONE
