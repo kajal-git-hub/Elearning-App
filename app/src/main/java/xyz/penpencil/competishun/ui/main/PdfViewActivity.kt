@@ -59,6 +59,7 @@ class PdfViewActivity : AppCompatActivity() {
 
     var pdfUrl = ""
     var pdfTitle = ""
+    var folderName = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,6 +70,15 @@ class PdfViewActivity : AppCompatActivity() {
         val downloadButton = findViewById<ImageView>(R.id.downloadButton)
         pdfUrl = intent.getStringExtra("PDF_URL") ?: ""
         pdfTitle = intent.getStringExtra("PDF_TITLE") ?: "sample"
+        folderName = intent.getStringExtra("FOLDER_NAME")?:""
+
+        Log.d("folderNameGet", folderName)
+
+        if (folderName.contains("DPPs",ignoreCase = true)) {
+            downloadButton.visibility = View.VISIBLE
+        } else {
+            downloadButton.visibility = View.GONE
+        }
         Log.d("pdfUrl", pdfUrl)
 
         if (pdfUrl.isNotEmpty()) {
@@ -80,7 +90,7 @@ class PdfViewActivity : AppCompatActivity() {
                     try {
                         downloadedPdfFile = downloadPdfFile(pdfUrl, pdfTitle)
                         loadPdfFromFile(pdfView, downloadedPdfFile!!)
-                        downloadButton.visibility = View.VISIBLE  // Show download button after PDF loads
+//                        downloadButton.visibility = View.VISIBLE  // Show download button after PDF loads
                     } catch (e: Exception) {
                         Toast.makeText(this@PdfViewActivity, "Error loading PDF", Toast.LENGTH_SHORT).show()
                     } finally {
@@ -107,6 +117,14 @@ class PdfViewActivity : AppCompatActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             createNotificationChannel()
         }
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+
+        Log.d("onNewIntent", "onNewIntent:")
+
+
     }
 
     private suspend fun downloadPdfFile(pdfUrl: String, pdfTitle: String): File {

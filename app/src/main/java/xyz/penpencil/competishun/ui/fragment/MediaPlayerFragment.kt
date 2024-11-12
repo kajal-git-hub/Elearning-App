@@ -89,6 +89,8 @@ class MediaPlayerFragment : DrawerVisibility() {
     private var backBtn: ImageView?=null
     private var qualityButton: ImageView?=null
 
+    private var folderName = ""
+
     companion object {
         private const val SEEK_OFFSET_MS = 10000L
     }
@@ -132,6 +134,8 @@ class MediaPlayerFragment : DrawerVisibility() {
         val videoUrl = arguments?.getString("url") ?: ""
         Log.e("howdfdf",videoUrl)
         val title = arguments?.getString("url_name") ?: ""
+        folderName = arguments?.getString("folderName") ?: ""
+
         courseFolderContentDescs = arguments?.getStringArrayList("folderContentDescs")?: arrayListOf()
         homeworkLinks = arguments?.getStringArrayList("homeworkLinks")?: arrayListOf()
         homeworkNames = arguments?.getStringArrayList("homeworkNames")?: arrayListOf()
@@ -147,6 +151,7 @@ class MediaPlayerFragment : DrawerVisibility() {
                     val intent = Intent(context, PdfViewActivity::class.java).apply {
                         putExtra("PDF_URL", removeBrackets(homeworkLinks[0]))
                         putExtra("PDF_TITLE",homeworkNames[0])
+                        putExtra("FOLDER_NAME",folderName)
                     }
                     context?.startActivity(intent)
 //                    helperFunctions.downloadPdfOld(requireContext(),homeworkLinks[0],homeworkNames[0])
@@ -222,6 +227,7 @@ class MediaPlayerFragment : DrawerVisibility() {
                                     val intent = Intent(context, PdfViewActivity::class.java).apply {
                                         putExtra("PDF_URL", removeBrackets(homeworkLinks[currentVideoIndex]))
                                         putExtra("PDF_TITLE",homeworkNames[currentVideoIndex])
+                                        putExtra("FOLDER_NAME",folderName)
                                     }
                                     context?.startActivity(intent)
 //                                    helperFunctions.downloadPdfOld(requireContext(),homeworkLinks[currentVideoIndex],homeworkNames[currentVideoIndex])
@@ -459,6 +465,8 @@ class MediaPlayerFragment : DrawerVisibility() {
                     val intent = Intent(context, PdfViewActivity::class.java).apply {
                         putExtra("PDF_URL", removeBrackets(homeworkLinks[currentVideoIndex]))
                         putExtra("PDF_TITLE",homeworkNames[currentVideoIndex])
+                        putExtra("FOLDER_NAME",folderName)
+
                     }
                     context?.startActivity(intent)
 //                    helperFunctions.downloadPdfOld(requireContext(),homeworkLinks[currentVideoIndex],homeworkNames[currentVideoIndex])

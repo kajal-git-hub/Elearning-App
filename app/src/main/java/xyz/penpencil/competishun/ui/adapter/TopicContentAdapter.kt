@@ -217,6 +217,8 @@ class TopicContentAdapter(
                         val intent = Intent(context, PdfViewActivity::class.java).apply {
                             putExtra("PDF_URL", urlToSent)
                             putExtra("PDF_TITLE", topicContent.homeworkName)
+                            putExtra("FOLDER_NAME",folderName)
+
                         }
                         context?.startActivity(intent)
 //                        helperFunctions.downloadPdf(context,topicContent.homeworkUrl,topicContent.homeworkName)
@@ -268,7 +270,7 @@ class TopicContentAdapter(
                 val maxLines = 2
                 if (binding.tvCourseDescription.lineCount > maxLines) {
                     val originalText = topicContent.topicDescription
-                    val end = binding.tvCourseDescription.layout.getLineEnd(maxLines - 1)
+                    val end = minOf(binding.tvCourseDescription.layout.getLineEnd(maxLines - 1),originalText.length)
                     val truncatedText = originalText.substring(0, end).trim()
 
                     if (truncatedText.length < originalText.length) {
