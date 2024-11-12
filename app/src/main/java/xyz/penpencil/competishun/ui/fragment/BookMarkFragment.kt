@@ -114,7 +114,7 @@ class BookMarkFragment : DrawerVisibility(), BookMarkAdapter.OnVideoClickListene
         }
     }
 
-    fun loadDownloadedItems() {
+    private fun loadDownloadedItems() {
         val sharedPreferencesManager = SharedPreferencesManager(requireActivity())
         allDownloadedItems = sharedPreferencesManager.getDownloadedItemsBm()
         Log.d("allDownloadedItems", allDownloadedItems.toString())
@@ -176,11 +176,9 @@ class BookMarkFragment : DrawerVisibility(), BookMarkAdapter.OnVideoClickListene
     }
 
     private fun playVideo(topicContentModel: TopicContentModel) {
-        val videoFileURL = File(requireContext().filesDir, "${topicContentModel.topicName}.mp4").absolutePath
-
-        if (videoFileURL.isNotEmpty()) {
+        if (topicContentModel.url.isNotEmpty()) {
             val bundle = Bundle().apply {
-                putSerializable("VIDEO_DATA", topicContentModel.apply { localPath = videoFileURL })
+                putSerializable("VIDEO_DATA", topicContentModel.apply { localPath = topicContentModel.url })
             }
             findNavController().navigate(R.id.downloadMediaPlayerFragment, bundle)
         } else {

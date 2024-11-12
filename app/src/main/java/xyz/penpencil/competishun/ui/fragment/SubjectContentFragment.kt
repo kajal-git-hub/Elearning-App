@@ -53,6 +53,7 @@ class SubjectContentFragment : DrawerVisibility() {
     private var folderProgress = -1
 
     private var folderProgressCont = -1
+    private var selectedId = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -60,6 +61,11 @@ class SubjectContentFragment : DrawerVisibility() {
     ): View {
         binding = FragmentSubjectContentBinding.inflate(inflater, container, false)
         return binding.root
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString("selectedId", "selectedId")
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -86,7 +92,7 @@ class SubjectContentFragment : DrawerVisibility() {
         Log.e("newfoldfed",newFolderNamer)
         val parentContent = arguments?.getString("parent_content") ?: ""
         val folderId =  arguments?.getString("folder_Id") ?: ""
-        var folder_Count = arguments?.getString("folder_Count") ?: "0"
+        val folder_Count = arguments?.getString("folder_Count") ?: "0"
         isExternal = arguments?.getBoolean("isExternal", false) == true
         val subFolderList =
             object : TypeToken<List<FindCourseFolderProgressQuery.SubfolderDuration>>() {}.type
@@ -120,10 +126,16 @@ class SubjectContentFragment : DrawerVisibility() {
         binding.rvTopicContent.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
-        if (subFoldersList[0].folder?.id != null) {
-            var id = subFoldersList[0].folder?.id ?: ""
-            binding.tvTopicType.text = subFoldersList[0].folder?.name
-            folderProgress(id)
+        if (savedInstanceState?.getString("selectedId")!=null && savedInstanceState?.getString("selectedId")?.isNotEmpty() == true){
+            savedInstanceState?.getString("selectedId")?.let {
+                folderProgress(it)
+            }
+        }else {
+            if (subFoldersList[0].folder?.id != null) {
+                var id = subFoldersList[0].folder?.id ?: ""
+                binding.tvTopicType.text = subFoldersList[0].folder?.name
+                folderProgress(id)
+            }
         }
         binding.clTopicType.setOnClickListener {
             val bundle = Bundle().apply {
@@ -141,6 +153,7 @@ class SubjectContentFragment : DrawerVisibility() {
                     binding.tvTopicType.text = selectedTopic.title
                     subfolder= -1
                     folderProgressCont= -1
+                    selectedId = selectedTopic.id
                     folderProgress(selectedTopic.id)
                 }
             })
@@ -300,8 +313,11 @@ class SubjectContentFragment : DrawerVisibility() {
                             val folders =
                                 subfolderDurationFolders.mapNotNull { it.folder }
 
+
                             val folderCounts =
-                                subfolderDurationFolders.mapNotNull { it.folder?.folder_count ?: 0 }
+                                subfolderDurationFolders.mapNotNull { it.folder?.video_count ?: 0 }
+                                val pdfCounts =  subfolderDurationFolders.mapNotNull { it.folder?.pdf_count ?: 0 }
+                                Log.e("folderscoutn $pdfCounts", folderCounts.toString())
                             val scheduledTimes = subfolderDurationFolders?.mapNotNull {
                                 it.completionPercentage
                             }
@@ -317,7 +333,9 @@ class SubjectContentFragment : DrawerVisibility() {
                                     id = id,
                                     chapterNumber = index + 1,
                                     topicName = folders.name,
-                                    topicDescription = folders.folder_count?:"0",
+                                    topicDescription = folders.description?:"",
+                                    pdfcount = folders.pdf_count?:"0",
+                                    videocount = folders.video_count?:"0",
                                     locktime = time,
                                     progressPer = subfolderDurationFolders[index].completionPercentage.toInt(),
                                     isExternal = isExternal
@@ -325,7 +343,7 @@ class SubjectContentFragment : DrawerVisibility() {
                             }
 
                             binding.rvSubjectContent.adapter =
-                                SubjectContentAdapter(subjectContentList) { selectedItem ->
+                                SubjectContentAdapter(subjectContentList,folderName) { selectedItem ->
                                     Log.e("enewfSlectt",selectedItem.topicName)
                                     //binding.tvTopicType.text = selectedItem.topicName
                                     videoProgress(
@@ -365,14 +383,16 @@ class SubjectContentFragment : DrawerVisibility() {
                                     id = id,
                                     chapterNumber = index + 1,
                                     topicName = folders.name,
-                                    topicDescription = folders.folder_count?:"0",
+                                    topicDescription = folders.description?:"",
+                                    pdfcount = folders.pdf_count?:"0",
+                                    videocount = folders.video_count?:"0",
                                     locktime = time,
                                     progressPer = subfolderDurationFolders[index].completionPercentage.toInt()
                                 )
                             }
 
                             binding.rvSubjectContent.adapter =
-                                SubjectContentAdapter(subjectContentList) { selectedItem ->
+                                SubjectContentAdapter(subjectContentList,folderName) { selectedItem ->
                                     Log.e("enewfSlect",selectedItem.topicName)
                                     videoProgress(
                                         selectedItem.id,
@@ -775,7 +795,7 @@ class SubjectContentFragment : DrawerVisibility() {
                             findNavController().navigate(R.id.SubjectContentFragment, bundle)
                         } else if (!folderProgressContent.isNullOrEmpty()) {
                             // Process folder contents
-                            Log.e("folderContentsss", folderProgressContent.toString())
+                            Log.e("folderCsize", folderProgressContent.size.toString())
 
                             val gson = Gson()
                             val folderContentsJson = gson.toJson(folderProgressContent)

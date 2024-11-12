@@ -236,7 +236,7 @@ class MediaPlayerFragment : DrawerVisibility() {
                         // No more videos in the playlist
                         Toast.makeText(requireContext(), "No more videos to play", Toast.LENGTH_SHORT).show()
                              }
-                            binding.startNextButton.setOnClickListener {
+                            binding.nextProgress.setOnClickListener {
                                 Log.e("nextButtonclick",urlVideo)
                                 playNextVideo()
                                 binding.upNextOverlay.visibility = View.GONE
@@ -419,13 +419,10 @@ class MediaPlayerFragment : DrawerVisibility() {
                         binding.nextVideoTitle.text = videoTittle
                         binding.descTv.text = videoDesc?:""
                         binding.nextVideoTime.text = "1 min"
-                        binding.startNextButton.setOnClickListener {
+                        binding.nextProgress.setOnClickListener {
                             playNextVideo()
                             binding.upNextOverlay.visibility = View.GONE
                         }
-                      /*  binding.cancelNextButton.setOnClickListener {
-                            binding.upNextOverlay.visibility = View.GONE
-                        }*/
                     }
 
                 }

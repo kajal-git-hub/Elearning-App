@@ -23,6 +23,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.net.toFile
 import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.ObservableField
 import androidx.lifecycle.Lifecycle
@@ -80,11 +81,12 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
 
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
+//        changeStatusBarColor()
         setContentView(binding.root)
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         sharedPreferencesManager = SharedPreferencesManager(this)
         onBackPressedDispatcher.addCallback(this, backPressListener)
-        window.navigationBarColor = ContextCompat.getColor(this,android.R.color.white)
+        window.navigationBarColor = ContextCompat.getColor(this,android.R.color.black)
 
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.fragmentNavigation) as NavHostFragment
@@ -402,5 +404,16 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
 
     private fun showStatus(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun changeStatusBarColor(){
+        window.navigationBarColor = resources.getColor(R.color.black)
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O_MR1) {
+            window.decorView.systemUiVisibility = window.decorView.systemUiVisibility and
+                    View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR.inv()
+        } else {
+            WindowCompat.getInsetsController(window, window.decorView).isAppearanceLightNavigationBars = false
+        }
     }
 }

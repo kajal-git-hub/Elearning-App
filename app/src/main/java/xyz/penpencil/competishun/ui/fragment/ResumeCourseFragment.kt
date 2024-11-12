@@ -23,19 +23,18 @@ import com.student.competishun.curator.FindCourseParentFolderProgressQuery
 import com.student.competishun.curator.MyCoursesQuery
 import xyz.penpencil.competishun.ui.adapter.OurSubjectsAdapter
 import xyz.penpencil.competishun.ui.main.HomeActivity
-import xyz.penpencil.competishun.ui.viewmodel.CoursesViewModel
-import xyz.penpencil.competishun.ui.viewmodel.MyCoursesViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.databinding.FragmentResumeCourseBinding
 import xyz.penpencil.competishun.di.Result
+import xyz.penpencil.competishun.ui.viewmodel.ResumeCoursesViewModel
 import xyz.penpencil.competishun.utils.setLightStatusBars
 
 @AndroidEntryPoint
 class ResumeCourseFragment : DrawerVisibility() {
 
     private lateinit var binding: FragmentResumeCourseBinding
-    private val coursesViewModel: CoursesViewModel by viewModels()
+    private val coursesViewModel: ResumeCoursesViewModel by viewModels()
     val gson = Gson()
     private var rvOurSubjects: RecyclerView ?= null
     private var listOuSubjectItem: List<FindCourseParentFolderProgressQuery.Folder?> = mutableListOf()
@@ -129,7 +128,7 @@ class ResumeCourseFragment : DrawerVisibility() {
                     }else{
                         val listOuSubjectItem = subfolderProgress.map { it.folder }
                         val percentages = subfolderProgress.map { it.completionPercentage }
-
+                    //    freeBadgeImageView
                         binding.rvOurSubject.apply {
                             layoutManager = GridLayoutManager(context, 2)
                             adapter = OurSubjectsAdapter(listOuSubjectItem, percentages) { folderId, folderName, folderCount ->
