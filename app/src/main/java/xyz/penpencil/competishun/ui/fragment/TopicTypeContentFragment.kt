@@ -186,6 +186,8 @@ class TopicTypeContentFragment : DrawerVisibility() {
                                 val intent = Intent(context, PdfViewActivity::class.java).apply {
                                     putExtra("PDF_URL", topicContent.url)
                                     putExtra("PDF_TITLE", topicContent.topicName)
+                                    putExtra("FOLDER_NAME",folderName)
+
                                 }
                                 context?.startActivity(intent)
                             }
@@ -336,6 +338,8 @@ class TopicTypeContentFragment : DrawerVisibility() {
                                 val intent = Intent(context, PdfViewActivity::class.java).apply {
                                     putExtra("PDF_URL", topicContent.url)
                                     putExtra("PDF_TITLE",topicContent.topicName)
+                                    putExtra("FOLDER_NAME",folderName)
+
                                 }
                                 context?.startActivity(intent)
                             }
@@ -370,6 +374,7 @@ class TopicTypeContentFragment : DrawerVisibility() {
                     putString("url", signedUrl)
                     putString("url_name", name)
                     putString("ContentId", folderContentId)
+                    putString("folderName", folderName)
                     putStringArrayList("folderContentIds", folderContentIds)
                     putStringArrayList("folderContentNames", folderContentNames)
                     putStringArrayList("folderContentDescs", folderContentDescs)
