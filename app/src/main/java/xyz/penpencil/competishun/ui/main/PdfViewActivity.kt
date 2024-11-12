@@ -74,7 +74,7 @@ class PdfViewActivity : AppCompatActivity() {
 
         Log.d("folderNameGet", folderName)
 
-        if (folderName.contains("DPPs")) {
+        if (folderName.contains("DPPs",ignoreCase = true)) {
             downloadButton.visibility = View.VISIBLE
         } else {
             downloadButton.visibility = View.GONE
