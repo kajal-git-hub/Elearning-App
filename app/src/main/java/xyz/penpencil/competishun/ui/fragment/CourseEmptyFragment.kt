@@ -249,7 +249,7 @@ class CourseEmptyFragment : Fragment() {
             result.onSuccess { data ->
 
                 if (data.myCourses.isNotEmpty()) {
-//                    sharedPreferencesManager.isMyCourseAvailable = true
+                    sharedPreferencesManager.putBoolean("isMyCourseAvailable", true)
                     sharedPreferencesManager.isBottomSheetShown = false
                     binding.progressBar.visibility = View.GONE
                     binding.clEmptyMyCourse.visibility = View.GONE
