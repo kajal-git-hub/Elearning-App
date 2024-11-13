@@ -25,6 +25,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import com.google.gson.Gson
 import com.student.competishun.curator.MyCoursesQuery
+import com.student.competishun.gatekeeper.MyDetailsQuery
 import dagger.hilt.android.AndroidEntryPoint
 import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.data.model.ExploreCourse
@@ -54,6 +55,10 @@ class CourseEmptyFragment : Fragment() {
     private var folderId=""
     private var complementryId = ""
     private val getCourseByIDViewModel: GetCourseByIDViewModel by viewModels()
+
+    private var filteredCourseRequirements: Set<String> = emptySet()
+    private val myCoursesViewModel: MyCoursesViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -149,6 +154,8 @@ class CourseEmptyFragment : Fragment() {
 //
 //        binding.rvExploreCourses.adapter = adapter
 //        binding.rvExploreCourses.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+
+        getMyDetails()
     }
 
 //    private fun courseDetails(orders: List<OrdersByUserIdsQuery.OrdersByUserId>) {
@@ -242,7 +249,7 @@ class CourseEmptyFragment : Fragment() {
             result.onSuccess { data ->
 
                 if (data.myCourses.isNotEmpty()) {
-//                    sharedPreferencesManager.isMyCourseAvailable = true
+                    sharedPreferencesManager.putBoolean("isMyCourseAvailable", true)
                     sharedPreferencesManager.isBottomSheetShown = false
                     binding.progressBar.visibility = View.GONE
                     binding.clEmptyMyCourse.visibility = View.GONE
@@ -385,5 +392,67 @@ class CourseEmptyFragment : Fragment() {
             window.decorView
         ).isAppearanceLightStatusBars = false*/
         window.setBackgroundDrawable(background)
+    }
+
+
+
+    fun getMyDetails() {
+        userViewModel.userDetails.observe(viewLifecycleOwner) { result ->
+            result.onSuccess { data ->
+                fetchCoursesAndUpdateUI(data.getMyDetails)
+            }.onFailure { exception ->
+                Log.e(TAG, "getMyDetails: " +exception.message)
+            }
+        }
+        userViewModel.fetchUserDetails()
+    }
+
+    private fun fetchCoursesAndUpdateUI(
+        userDetails: MyDetailsQuery.GetMyDetails
+    ) {
+        val missingPersonalFields = mutableListOf<String>().apply {
+            if (!userDetails.fullName.isNullOrEmpty()) add("FULL_NAME")
+            if (!userDetails.mobileNumber.isNullOrEmpty()) add("WHATSAPP_NUMBER")
+            if (!userDetails.userInformation.fatherName.isNullOrEmpty()) add("FATHERS_NAME")
+            if (!userDetails.userInformation.tShirtSize.isNullOrEmpty()) add("T_SHIRTS")
+        }
+
+        val missingDocumentFields = mutableListOf<String>().apply {
+            if (!userDetails.userInformation.documentPhoto.isNullOrEmpty()) add("AADHAR_CARD")
+            if (!userDetails.userInformation.passportPhoto.isNullOrEmpty()) add("PASSPORT_SIZE_PHOTO")
+        }
+
+        val missingAddressFields = userDetails.userInformation.address?.let { data ->
+            if (data.pinCode != null || data.addressLine1 != null) {
+                listOf("FULL_ADDRESS")
+            } else {
+                emptyList()
+            }
+        } ?: emptyList()
+
+        myCoursesViewModel.myCourses.observe(viewLifecycleOwner) { result ->
+            result.onSuccess { data ->
+                val courseRequirements = data.myCourses
+                    .flatMap { it.course.other_requirements.orEmpty() }
+                    .map { it.rawValue }
+                    .toHashSet()
+
+                if (courseRequirements.contains("ALL")) return@onSuccess
+
+                val allMissingFields =
+                    missingPersonalFields + missingDocumentFields + missingAddressFields
+                filteredCourseRequirements =
+                    courseRequirements.filterNot { it in allMissingFields }.toSet()
+                Log.e("fsdfasdfsdfsd", "fetchCoursesAndUpdateUI: $filteredCourseRequirements")
+                if (filteredCourseRequirements.isNotEmpty()) {
+                    findNavController().navigate(R.id.PersonalDetailsFragment, Bundle().apply {
+                        putStringArray("FIELD_REQUIRED", filteredCourseRequirements.toTypedArray())
+                    })
+                }
+            }.onFailure {
+                Log.e("MyCoursesFail", it.message.toString())
+            }
+        }
+        myCoursesViewModel.fetchMyCourses()
     }
 }
