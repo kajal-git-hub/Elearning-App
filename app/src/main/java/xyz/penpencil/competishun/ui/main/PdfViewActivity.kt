@@ -15,6 +15,7 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
+import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.Toast
@@ -63,6 +64,9 @@ class PdfViewActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+
+
         setContentView(R.layout.activity_pdf_view)
 
         val pdfView = findViewById<com.rajat.pdfviewer.PdfRendererView>(R.id.pdfView)
@@ -75,8 +79,10 @@ class PdfViewActivity : AppCompatActivity() {
         Log.d("folderNameGet", folderName)
 
         if (folderName.contains("DPPs",ignoreCase = true)) {
+            window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
             downloadButton.visibility = View.VISIBLE
         } else {
+            window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE)
             downloadButton.visibility = View.GONE
         }
         Log.d("pdfUrl", pdfUrl)
@@ -260,5 +266,9 @@ class PdfViewActivity : AppCompatActivity() {
             val uri = FileProvider.getUriForFile(this, "$packageName.provider", destFile)
             showDownloadNotification("$pdfTitle.pdf", uri)
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
     }
 }

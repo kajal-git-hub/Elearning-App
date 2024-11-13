@@ -1,17 +1,21 @@
 package xyz.penpencil.competishun.ui.fragment
 
+import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
+import android.widget.ImageView
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.student.competishun.curator.FindCourseFolderProgressQuery
@@ -298,6 +302,10 @@ class SubjectContentFragment : DrawerVisibility() {
                                     "FOLDER" -> {
                                         Log.e("typeofget",topicContent.fileType)
                                     }
+                                    "IMAGE"->{
+                                        showImageDialog(topicContent, folderName)
+
+                                    }
                                     else -> {
                                         Log.d(
                                             "TopicContentAdapter",
@@ -471,6 +479,10 @@ class SubjectContentFragment : DrawerVisibility() {
                                     "FOLDER" -> {
                                         Log.e("typeofget",topicContent.fileType)
                                     }
+                                    "IMAGE"->{
+                                        showImageDialog(topicContent, folderName)
+
+                                    }
                                     else -> {
                                         Log.d(
                                             "TopicContentAdapter",
@@ -601,6 +613,9 @@ class SubjectContentFragment : DrawerVisibility() {
                                     "FOLDER" -> {
                                         Log.e("typeofget",topicContent.fileType)
                                     }
+                                    "IMAGE"->{
+                                        showImageDialog(topicContent, folderName)
+                                    }
                                     else -> {
                                         Log.d(
                                             "TopicContentAdapter",
@@ -683,6 +698,9 @@ class SubjectContentFragment : DrawerVisibility() {
                     }
                     context?.startActivity(intent)
                 }
+                "IMAGE"->{
+                    showImageDialog(topicContent, folderName)
+                }
                 "FOLDER" -> "Folders"
                 else -> Log.d("TopicContentAdapter", "File type is not VIDEO: ${topicContent.fileType}")
             }
@@ -692,6 +710,37 @@ class SubjectContentFragment : DrawerVisibility() {
         binding.rvsubjectTopicContent.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         binding.rvTopicContent.adapter = null
 
+    }
+    private fun showImageDialog(topicContent: TopicContentModel, folderName: String) {
+        val dialog = Dialog(requireContext(), com.bumptech.glide.R.style.AlertDialog_AppCompat)
+        dialog.setContentView(R.layout.dialog_image_view)
+
+        val popupImageView: ImageView = dialog.findViewById(R.id.iv_popup_image)
+        val stopImageView: ImageView = dialog.findViewById(R.id.iv_cancelDialog)
+        val downloadImageView: ImageView = dialog.findViewById(R.id.iv_downloadDialog)
+
+        // Check folderName and adjust FLAG_SECURE and download visibility
+        if (folderName.contains("DPPs", ignoreCase = true)) {
+            requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
+            downloadImageView.visibility = View.VISIBLE
+        } else {
+            requireActivity().window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE)
+            downloadImageView.visibility = View.GONE
+        }
+
+        // Load the image using Glide
+        Glide.with(requireContext())
+            .load(topicContent.url)
+            .placeholder(R.drawable.loaderscreen)
+            .into(popupImageView)
+
+        // Show the dialog
+        dialog.show()
+
+        // Close the dialog when stopImageView is clicked
+        stopImageView.setOnClickListener {
+            dialog.dismiss()
+        }
     }
 
 
