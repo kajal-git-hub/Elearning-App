@@ -128,16 +128,19 @@ class SubjectContentFragment : DrawerVisibility() {
         Log.e("folderParent", parentContent.toString())
 
         if (parentContent.isNotEmpty()) {
-            val subContentList =
-                object : TypeToken<List<FindCourseFolderProgressQuery.FolderContent>>() {}.type
-            val subContentsList: List<FindCourseFolderProgressQuery.FolderContent> =
-                gson.fromJson(parentContent, subContentList)
-            if (subContentsList != null) {
-                val contents = subContentsList.forEach { it.content }
-                newContent(subContentsList, folderId)
-                //  folderProgress(subContentsList.forEach { it.content })
+            val subContentType = object : TypeToken<List<FindCourseFolderProgressQuery.FolderContent>>() {}.type
+            val subContentList: List<FindCourseFolderProgressQuery.FolderContent>? =
+                gson.fromJson(parentContent, subContentType)
+
+            subContentList?.let {
+                newContent(it, folderId)
+                it.forEach { content ->
+                    // Process each content item here if needed
+                    // folderProgress(content)
+                }
             }
         }
+
         binding.rvSubjectContent.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         binding.rvTopicContent.layoutManager =

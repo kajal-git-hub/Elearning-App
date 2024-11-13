@@ -46,7 +46,7 @@ android {
 
     signingConfigs {
         create("release") {
-            storeFile = file("C:\\Users\\Documents\\Checking\\Competishun\\xyz.penpencil.competishun\\android_app_competishun-key.keystore")
+            storeFile = file("C:\\Users\\GCV\\Documents\\Checking\\Competishun\\xyz.penpencil.competishun\\android_app_competishun-key.keystore")
             storePassword = "competishun"
             keyAlias = "competishun"
             keyPassword = "competishun"
