@@ -72,7 +72,7 @@ class TopicContentAdapter(
     override fun onBindViewHolder(holder: TopicContentViewHolder, position: Int) {
 
         val topicContent = topicContents[position]
-        holder.bind(topicContents[position], fragmentActivity, folderName)
+        holder.bind(topicContents[position], fragmentActivity, folderName,onItemClick)
         holder.itemView.setOnClickListener {
             if ((topicContent.fileType == "URL")) {
                 val url =
@@ -160,7 +160,8 @@ class TopicContentAdapter(
         fun bind(
             topicContent: TopicContentModel,
             fragmentActivity: FragmentActivity,
-            folderName: String
+            folderName: String,
+            onItemClick: (TopicContentModel, String, ArrayList<String>, ArrayList<String>, ArrayList<String>, ArrayList<String>, ArrayList<String>, ArrayList<String>) -> Unit
         ) {
 
             binding.ivSubjectBookIcon.setImageResource(topicContent.subjectIcon)
@@ -217,7 +218,7 @@ class TopicContentAdapter(
                         val intent = Intent(context, PdfViewActivity::class.java).apply {
                             putExtra("PDF_URL", urlToSent)
                             putExtra("PDF_TITLE", topicContent.homeworkName)
-                            putExtra("FOLDER_NAME",folderName)
+                            putExtra("FOLDER_NAME", folderName)
 
                         }
                         context?.startActivity(intent)
@@ -232,11 +233,18 @@ class TopicContentAdapter(
                     binding.clEmtpyVeiw.visibility = View.VISIBLE
                     binding.videoicon.setImageResource(R.drawable.pdf_bg)
                 }
+                else if (topicContent.fileType == "IMAGE") {
+                    binding.tvLecture.text = "Image"
+                    binding.etHomeWorkPdf.visibility = View.GONE
+                    binding.etHomeWorkText.visibility = View.GONE
+                    binding.videoicon.setImageResource(R.drawable.arrow_right_white)
+                    binding.ivMoreInfoLec.visibility = View.GONE
+                }
                 binding.videoicon.visibility = View.VISIBLE
                 binding.ivPersonIdentifier.setBackgroundResource(R.drawable.download_person)
 
-
-            } else if (topicContent.fileType == "UNKNOWN__" || topicContent.fileType == "URL") {
+            }
+             else if (topicContent.fileType == "URL") {
                 binding.clReadAndPlay.visibility = View.GONE
                 binding.ivMoreInfoLec.visibility = View.GONE
             } else {
@@ -257,7 +265,7 @@ class TopicContentAdapter(
             Log.e("lectueres", topicContent.lecture)
             binding.tvLecture.text = topicContent.lecture
             binding.tvLecturerName.text = topicContent.lecturerName
-            if (topicContent.fileType == "UNKNOWN__" || topicContent.fileType == "URL" && topicContent.url.contains(
+            if (topicContent.fileType == "URL" && topicContent.url.contains(
                     "http"
                 )
             ) {
@@ -270,7 +278,10 @@ class TopicContentAdapter(
                 val maxLines = 2
                 if (binding.tvCourseDescription.lineCount > maxLines) {
                     val originalText = topicContent.topicDescription
-                    val end = minOf(binding.tvCourseDescription.layout.getLineEnd(maxLines - 1),originalText.length)
+                    val end = minOf(
+                        binding.tvCourseDescription.layout.getLineEnd(maxLines - 1),
+                        originalText.length
+                    )
                     val truncatedText = originalText.substring(0, end).trim()
 
                     if (truncatedText.length < originalText.length) {
@@ -314,14 +325,18 @@ class TopicContentAdapter(
                 }
             }
 
-            binding.tvTopicName.setOnClickListener {
-                if (topicContent.fileType == "UNKNOWN__" || topicContent.fileType == "URL") {
+            binding.rootTopic.setOnClickListener {
+                Log.d("typeChecking", topicContent.fileType)
+                if (topicContent.fileType == "URL") {
                     it.context.startActivity(
                         Intent(
                             Intent.ACTION_VIEW,
                             Uri.parse(topicContent.url)
                         )
                     )
+                }
+                if(topicContent.fileType =="IMAGE"){
+                    onItemClick(topicContent, "", arrayListOf(),arrayListOf(),arrayListOf(),arrayListOf(),arrayListOf(),arrayListOf())
                 }
             }
 
