@@ -14,7 +14,7 @@ android {
     namespace = "xyz.penpencil.competishun"
     compileSdk = 34
     defaultConfig {
-        applicationId = "xyz.penpencil.competishun"
+//        applicationId = "xyz.penpencil.competishun"
         minSdk = 26
         targetSdk = 34
         versionCode = 206
@@ -23,6 +23,31 @@ android {
         buildConfigField("String", "RAZORPAY_KEY_ID", "\"$razorpayKeyId\"")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
+
+    flavorDimensions += "environment"
+
+    productFlavors {
+        create("development") {
+            dimension = "environment"
+            applicationId = "xyz.penpencil.competishun.dev"
+            buildConfigField("String", "BASE_URL_GATEKEEPER", "\"https://dev-ant.antino.ca/cm-gatekeeper/graphql\"")
+            buildConfigField("String", "BASE_URL_CURATOR", "\"https://dev-ant.antino.ca/cm-curator/graphql\"")
+            buildConfigField("String", "BASE_URL_COINKEEPER", "\"https://dev-ant.antino.ca/cm-coinkeeper/graphql\"")
+            buildConfigField("String", "APP_VERSION", "\"1.0.8-dev\"")
+            buildConfigField("String", "FIREBASE_CONFIG_FILE", "\"google-services-dev.json\"")
+        }
+
+        create("production") {
+            dimension = "environment"
+            applicationId = "xyz.penpencil.competishun"
+            buildConfigField("String", "BASE_URL_GATEKEEPER", "\"https://api.competishun.com/cm-gatekeeper/graphql\"")
+            buildConfigField("String", "BASE_URL_CURATOR", "\"https://api.competishun.com/cm-curator/graphql\"")
+            buildConfigField("String", "BASE_URL_COINKEEPER", "\"https://api.competishun.com/cm-coinkeeper/graphql\"")
+            buildConfigField("String", "APP_VERSION", "\"1.0.8\"")
+            buildConfigField("String", "FIREBASE_CONFIG_FILE", "\"google-services.json\"")
+        }
+    }
+
     apollo {
         // useVersion2Compat()
 
