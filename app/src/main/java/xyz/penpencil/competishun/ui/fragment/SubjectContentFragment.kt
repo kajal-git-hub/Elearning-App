@@ -746,7 +746,7 @@ class SubjectContentFragment : DrawerVisibility() {
         // Load the image using Glide
         Glide.with(requireContext())
             .load(topicContent.url)
-            .placeholder(R.drawable.loaderscreen)
+            .placeholder(R.drawable.placeholder_image)
             .into(popupImageView)
 
         // Show the dialog

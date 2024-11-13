@@ -253,7 +253,7 @@ class TopicTypeContentFragment : DrawerVisibility() {
 
         Glide.with(requireContext())
             .load(topicContent.url)
-            .placeholder(R.drawable.loaderscreen)
+            .placeholder(R.drawable.placeholder_image)
             .into(popupImageView)
 
         // Show the dialog
