@@ -12,6 +12,9 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.ImageView
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,11 +22,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.ketch.Ketch
 import com.student.competishun.curator.FindCourseFolderProgressQuery
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.data.model.TopicContentModel
@@ -35,9 +40,11 @@ import xyz.penpencil.competishun.ui.main.PdfViewActivity
 import xyz.penpencil.competishun.ui.viewmodel.CoursesViewModel
 import xyz.penpencil.competishun.ui.viewmodel.VideourlViewModel
 import xyz.penpencil.competishun.utils.HelperFunctions
+import javax.inject.Inject
 
 
 @AndroidEntryPoint
+
 class TopicTypeContentFragment : DrawerVisibility() {
 
     private lateinit var binding: FragmentTopicTypeContentBinding
@@ -55,6 +62,10 @@ class TopicTypeContentFragment : DrawerVisibility() {
     var adapter : TopicContentAdapter?=null
 
     var isLoading = false
+
+
+    @Inject
+    lateinit var ketch: Ketch
 
 
     override fun onCreateView(
@@ -229,7 +240,9 @@ class TopicTypeContentFragment : DrawerVisibility() {
         val stopImageView: ImageView = dialog.findViewById(R.id.iv_cancelDialog)
         val downloadImageView: ImageView = dialog.findViewById(R.id.iv_downloadDialog)
 
-        // Check folderName and adjust FLAG_SECURE and download visibility
+        downloadImageView.setOnClickListener {
+            downloadFile(topicContent.url,topicContent.topicName,isExternal)
+        }
         if (folderName.contains("DPPs", ignoreCase = true)) {
             requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
             downloadImageView.visibility = View.VISIBLE
@@ -238,7 +251,6 @@ class TopicTypeContentFragment : DrawerVisibility() {
             downloadImageView.visibility = View.GONE
         }
 
-        // Load the image using Glide
         Glide.with(requireContext())
             .load(topicContent.url)
             .placeholder(R.drawable.loaderscreen)
@@ -253,6 +265,22 @@ class TopicTypeContentFragment : DrawerVisibility() {
         }
     }
 
+    fun downloadFile(url: String, fileName: String, isExternal: Boolean = false) {// ture -> external  // false -->
+        val path =
+            "/storage/emulated/0/Download/"
+
+        Log.e("DownloadError", "PATH: $path$fileName")
+        val id = ketch.download(
+            url = url,
+            fileName = fileName,
+            path = path)
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                ketch.observeDownloadById(id)
+                    .flowOn(Dispatchers.IO)
+            }
+        }
+    }
 
 
     /*
