@@ -19,6 +19,7 @@ import com.student.competishun.coinkeeper.type.CreateOrderInput
 import dagger.hilt.android.AndroidEntryPoint
 import org.json.JSONException
 import org.json.JSONObject
+import xyz.penpencil.competishun.BuildConfig
 import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.databinding.FragmentMyPurchaseDetailsBinding
 import xyz.penpencil.competishun.ui.viewmodel.GetCourseByIDViewModel
@@ -285,7 +286,7 @@ class MyPurchaseDetailsFragment : DrawerVisibility() {
         Log.e("chcekcnou",amount.toString())
         val currency = "INR"
         val checkout = Checkout()
-        checkout.setKeyID(Constants.RazorpayKeyId_Prod)
+        checkout.setKeyID(BuildConfig.RAZORPAY_KEY_ID)
         Log.e("user/id=",courseUserId)
         Log.e("user/tokem=",sharedPreferencesManager.accessToken.toString())
         val obj = JSONObject()

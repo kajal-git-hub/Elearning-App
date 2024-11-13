@@ -7,7 +7,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.Color
-import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.text.Editable
@@ -24,14 +23,13 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
-import androidx.activity.result.ActivityResultLauncher
-import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.auth.api.phone.SmsRetriever
 import com.google.android.gms.tasks.Task
@@ -63,8 +61,6 @@ class VerifyOTPFragment : Fragment() {
     private lateinit var countDownTimer: CountDownTimer
 
     private val REQ_USER_CONSENT=200
-//    var smsBroadcastReceiver: SmsBroadcastReceiver?=null
-    private lateinit var smsRetrieverLauncher: ActivityResultLauncher<Intent>
 
     private val mySMSBroadcastReceiver : MySMSBroadcastReceiver by lazy { MySMSBroadcastReceiver() }
 
@@ -165,14 +161,14 @@ class VerifyOTPFragment : Fragment() {
 
         startSMSRetrieverClient()
         binding.etArrowLeft.setOnClickListener {
-            findNavController().navigate(R.id.action_verifyOTPFragment_to_loginFragment)
+            it.findNavController().popBackStack()
         }
 
         requireActivity().onBackPressedDispatcher.addCallback(
             viewLifecycleOwner,
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
-                    findNavController().navigate(R.id.action_verifyOTPFragment_to_loginFragment)
+                    findNavController().popBackStack()
                 }
             })
 
@@ -193,10 +189,6 @@ class VerifyOTPFragment : Fragment() {
 
         verifyOtpViewModel.verifyOtpResult.observe(viewLifecycleOwner) { result ->
             if (result != null) {
-                Log.e(
-                    "Success in Verify",
-                    "${result.user} ${result.refreshToken} ${result.accessToken}"
-                )
                 sharedPreferencesManager.userId = result.user?.id
                 sharedPreferencesManager.accessToken = result.accessToken
                 sharedPreferencesManager.refreshToken = result.refreshToken
@@ -206,7 +198,6 @@ class VerifyOTPFragment : Fragment() {
 
                 userViewModel.fetchUserDetails()
 
-                // Observe user details
                 userViewModel.userDetails.observe(viewLifecycleOwner) { userDetailsResult ->
                     userDetailsResult.onSuccess { data ->
                         val userDetails = data.getMyDetails
@@ -224,16 +215,14 @@ class VerifyOTPFragment : Fragment() {
                             navigateToHome()
                         }
                     }.onFailure { exception ->
-                        Log.e("mainActivitydetails", exception.message.toString())
                         Toast.makeText(
                             requireContext(),
-                            "Error fetching details: ${exception.message}",
+                            "Otp is not verified try again later",
                             Toast.LENGTH_LONG
                         ).show()
                     }
                 }
             } else {
-                Log.e("FailureBefore", "${result} $mobileNumber")
                 Toast.makeText(requireContext(), "Invalid OTP", Toast.LENGTH_SHORT).show()
                 changeOtpBoxesBackground(R.drawable.opt_edit_text_bg_incorrect)
                 binding.etEnterOtpText.text = "Incorrect OTP"
