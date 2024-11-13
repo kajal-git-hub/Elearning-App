@@ -104,7 +104,12 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
         bottomNavigationView = findViewById(R.id.bottomNav)
         callIcon = findViewById(R.id.ig_ContactImage)
 
-        navigateToFragment = intent.getBooleanExtra("isMyCourseAvailable", false)
+        navigateToFragment =  if (intent.getBooleanExtra("isMyCourseAvailable", false)) {
+            true
+        }else {
+            sharedPreferencesManager.isMyCourseAvailable
+        }
+        Log.e("navigateToFragment", "onCreate: $navigateToFragment", )
         val navigateFromVerify = intent.getStringExtra("navigateTo")
         if (navigateToFragment) {
             navController.navigate(R.id.courseEmptyFragment)

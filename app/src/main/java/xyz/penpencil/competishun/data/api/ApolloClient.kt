@@ -8,4 +8,5 @@ const val BASE_URL_COINKEEPER = "https://api.competishun.com/cm-coinkeeper/graph
 
 //const val BASE_URL_GATEKEEPER = "https://dev-ant.antino.ca/cm-gatekeeper/graphql"
 //const val BASE_URL_CURATOR = "https://dev-ant.antino.ca/cm-curator/graphql"
+//const val BASE_URL_CURATOR = "https://eb0e-139-5-253-89.ngrok-free.app/cm-curator/graphql"
 //const val BASE_URL_COINKEEPER = "https://dev-ant.antino.ca/cm-coinkeeper/graphql"
