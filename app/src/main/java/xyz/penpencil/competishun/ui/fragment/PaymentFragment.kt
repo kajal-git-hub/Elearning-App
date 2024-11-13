@@ -93,12 +93,12 @@ class PaymentFragment : Fragment() {
             animateLayout()
         }, 3000)
 
-        binding.clStartBottomBar.setOnClickListener{ findNavController().navigate(R.id.homeFragment) }
+        binding.clStartBottomBar.setOnClickListener{ findNavController().navigate(R.id.courseEmptyFragment) }
         getUserDetails()
         binding.btReceipt.setOnClickListener {
             Log.d("click","Click hua")
 //            binding.btReceipt.isEnabled = false
-         var transactionId = sharedPreferencesManager.rzpOrderId
+         val transactionId = sharedPreferencesManager.rzpOrderId
             if (transactionId != null) {
                 downloadReceipt(transactionId)
             }
