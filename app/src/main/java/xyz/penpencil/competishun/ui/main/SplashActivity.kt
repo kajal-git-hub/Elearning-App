@@ -28,6 +28,7 @@ class SplashActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivitySplashBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        window?.statusBarColor = ContextCompat.getColor(this, R.color.white)
         window.navigationBarColor = ContextCompat.getColor(this,android.R.color.black)
         sharedPreferencesManager = SharedPreferencesManager(this)
 

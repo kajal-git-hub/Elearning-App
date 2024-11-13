@@ -410,15 +410,4 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
     private fun showStatus(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
-
-    private fun changeStatusBarColor(){
-        window.navigationBarColor = resources.getColor(R.color.black)
-
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O_MR1) {
-            window.decorView.systemUiVisibility = window.decorView.systemUiVisibility and
-                    View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR.inv()
-        } else {
-            WindowCompat.getInsetsController(window, window.decorView).isAppearanceLightNavigationBars = false
-        }
-    }
 }
