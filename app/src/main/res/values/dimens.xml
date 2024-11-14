@@ -52,4 +52,5 @@
     <dimen name="original_height">350dp</dimen>
     <dimen name="_10sp">10sp</dimen>
     <dimen name="_300dp">300dp</dimen>
+    <dimen name="_90dp">90dp</dimen>
 </resources>

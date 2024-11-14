@@ -1,16 +1,27 @@
 package xyz.penpencil.competishun.ui.fragment
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.TextPaint
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
+import android.text.style.ForegroundColorSpan
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CheckBox
 
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
+import androidx.core.widget.NestedScrollView
 import androidx.databinding.ObservableField
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -30,6 +41,7 @@ import androidx.navigation.findNavController
 import com.bumptech.glide.request.target.Target
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.tabs.TabLayout
+import com.google.android.material.textview.MaterialTextView
 import com.google.gson.Gson
 import com.student.competishun.curator.AllCourseForStudentQuery
 import com.student.competishun.curator.GetCourseByIdQuery
@@ -96,10 +108,10 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
 
     private var categoryName = ""
     private var courselreadyBuy = false
-    var faqAdapter : FAQAdapter?=null
+    var faqAdapter: FAQAdapter? = null
 
-    var courseData: MyCoursesQuery.MyCourse?=null
-    var ourContentAdapter : OurContentAdapter?=null
+    var courseData: MyCoursesQuery.MyCourse? = null
+    var ourContentAdapter: OurContentAdapter? = null
 
     private val userViewModel: UserViewModel by viewModels()
 
@@ -118,8 +130,10 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
+
         (activity as? HomeActivity)?.showBottomNavigationView(false)
-        (activity as? HomeActivity)?.showFloatingButton(true)
+        (activity as? HomeActivity)?.showFloatingButton(false)
 
         helperFunctions = HelperFunctions()
         combinedTabItems = listOf()
@@ -166,34 +180,111 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
             }
         }
 
+        val tvAgreeTerms: TextView = view.findViewById(R.id.tvAgreeTerms)
+        val tvCourseDescription: TextView = view.findViewById(R.id.tvCourseDescription)
+        val nestedScrollViewMove: NestedScrollView = view.findViewById(R.id.nested_scroll_view)
+
+        val termsText =
+            "By proceeding with this purchase, you confirm that you have read and agreed to the Terms and Conditions, as well as the Refund Policy."
+        val spannableString = SpannableString(termsText)
+
+        val termsClickable = object : ClickableSpan() {
+            override fun onClick(widget: View) {
+                binding.tvCourseDescription.maxLines = Integer.MAX_VALUE
+                scrollToHeading(tvCourseDescription, nestedScrollViewMove, "Terms and Conditions")
+            }
+
+            override fun updateDrawState(ds: TextPaint) {
+                super.updateDrawState(ds)
+                ds.isUnderlineText = true // Remove underline if you want
+                ds.color = Color.BLUE       // Set color to blue
+            }
+        }
+
+        val refundClickable = object : ClickableSpan() {
+            override fun onClick(widget: View) {
+                binding.tvCourseDescription.maxLines = Integer.MAX_VALUE
+                scrollToHeading(tvCourseDescription, nestedScrollViewMove, "Refund Policy")
+            }
+
+            override fun updateDrawState(ds: TextPaint) {
+                super.updateDrawState(ds)
+                ds.isUnderlineText = true // Remove underline if you want
+                ds.color = Color.BLUE       // Set color to blue
+            }
+        }
+
+        val termsStart = termsText.indexOf("Terms and Conditions")
+        val termsEnd = termsStart + "Terms and Conditions".length
+        spannableString.setSpan(
+            termsClickable,
+            termsStart,
+            termsEnd,
+            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+
+        val refundStart = termsText.indexOf("Refund Policy")
+        val refundEnd = refundStart + "Refund Policy".length
+        spannableString.setSpan(
+            refundClickable,
+            refundStart,
+            refundEnd,
+            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+
+        tvAgreeTerms.text = spannableString
+        tvAgreeTerms.movementMethod = LinkMovementMethod.getInstance()
+
+
+        val checkBox: CheckBox = view.findViewById(R.id.cbAgreeTerms)
+        checkBox.setOnCheckedChangeListener { _, isChecked ->
+            binding.clBuynow.isEnabled = isChecked
+
+            if (isChecked) {
+                binding.clBuynow.setBackgroundColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.blue_3E3EF7
+                    )
+                )
+            } else {
+                binding.clBuynow.setBackgroundColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.grey_button
+                    )
+                )
+            }
+        }
+
         getCourseTagsData()
 
         binding.clBuynow.setOnClickListener {
-            Log.d("courselreadyBuy",courselreadyBuy.toString())
-            Log.d("courseData",courseData.toString())
-            if (courselreadyBuy && courseData!=null){
+            Log.d("courselreadyBuy", courselreadyBuy.toString())
+            Log.d("courseData", courseData.toString())
+            if (courselreadyBuy && courseData != null) {
                 val bundle = Bundle().apply {
                     val gson = Gson()
                     val course = courseData?.course
-                    val folderJson  = courseData?.progress?.subfolderDurations?.map {
+                    val folderJson = courseData?.progress?.subfolderDurations?.map {
                         it.folder
                     }
-                    val progressPercentages  =  courseData?.progress?.subfolderDurations
+                    val progressPercentages = courseData?.progress?.subfolderDurations
                         ?.map { it.completionPercentage }
 
                     putString("folderJson", gson.toJson(folderJson))
                     putString("courseJson", gson.toJson(course))
                     putString("courseName", course?.name)
                     putString("courseId", course?.id)
-                    putString("courseStart",course?.course_start_date.toString())
-                    putString("courseEnd",course?.course_end_date.toString())
+                    putString("courseStart", course?.course_start_date.toString())
+                    putString("courseEnd", course?.course_end_date.toString())
                     putString("completionPercentages", gson.toJson(progressPercentages))
                 }
 
-                Log.e("sdjfkjsdhfjsad", "onViewCreated: ", )
+                Log.e("sdjfkjsdhfjsad", "onViewCreated: ")
 
                 findNavController().navigate(R.id.ResumeCourseFragment, bundle)
-            }else {
+            } else {
                 createCart(createCartViewModel, "FullPayment")
             }
         }
@@ -203,7 +294,7 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
         folderlist = emptyList()
         getAllLectureCount(courseId)
         initObserver()
-        Log.d("courselreadyBuyinit",courselreadyBuy.toString())
+        Log.d("courselreadyBuyinit", courselreadyBuy.toString())
         if (lectureCount.isNullOrEmpty()) {
             lectureCount = "0"
         }
@@ -227,10 +318,10 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
                 val imageUrl = courses?.video_thumbnail
                 val videoUrl = courses?.orientation_video
 
-                if(videoUrl.isNullOrEmpty()){
+                if (videoUrl.isNullOrEmpty()) {
                     binding.overviewButton.visibility = View.GONE
                     binding.ivBannerExplore.isClickable = false
-                }else{
+                } else {
                     binding.ivBannerExplore.isClickable = true
                 }
 
@@ -350,7 +441,9 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
                         )
 
                     }
-                } else Toast.makeText(requireContext(), "", Toast.LENGTH_LONG).show()
+                } else {
+//                    Toast.makeText(requireContext(), "", Toast.LENGTH_LONG).show()
+                }
 
                 if (courses != null) {
                     var coursefeature = courses.course_features
@@ -475,10 +568,30 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
 
 
         val teacherItems = listOf(
-            TeacherItem(R.drawable.alok, "ALOK KUMAR", "CHEMISTRY (P/I)"),
-            TeacherItem(R.drawable.neeraj, "NEERAJ SAINI", "CHEMISTRY (ORG)"),
-            TeacherItem(R.drawable.mohit, "MOHIT TYAGI", "MATHEMATICS"),
-            TeacherItem(R.drawable.amit, "AMIT BIJARNIA", "PHYSICS"),
+            TeacherItem(
+                R.drawable.alok,
+                "ALOK KUMAR",
+                "CHEMISTRY (P/I)",
+                "He has held senior faculty positions at many reputed IIT-JEE coaching institutions.\", \"Known for his organized teaching style, making Chemistry simple and interesting for students.\",\"Relates various Chemistry topics to practical applications, fostering deep interest in the subject.\",\"Believes Science and technology will play a pivotal role in India's development.\",\"Strives to motivate students to pursue careers in Science and technology."
+            ),
+            TeacherItem(
+                R.drawable.neeraj,
+                "NEERAJ SAINI",
+                "CHEMISTRY (ORG)",
+                "He has 14 years of experience teaching Organic Chemistry as a Senior Faculty at a reputed national institute.\", \"Known for his concise and simplified teaching style, helping students score well in Organic Chemistry.\",\"Has mentored many students who secured Top-100 AIRs in IIT-JEE (Main) and (Main+Advanced)."
+            ),
+            TeacherItem(
+                R.drawable.mohit,
+                "MOHIT TYAGI",
+                "MATHEMATICS",
+                "\"Mohit Tyagi Sir has over 22 years of experience in teaching Mathematics.\\\", \\\"He is renowned for creating a love for Mathematics among students.\\\",\\\"Previously served as the Head of the Maths Team (HOD) at a leading coaching institute in Kota.\\\",\\\"His YouTube channel is a source of inspiration for both students and faculty members.\""
+            ),
+            TeacherItem(
+                R.drawable.amit,
+                "AMIT BIJARNIA",
+                "PHYSICS",
+                "He is an enthusiastic Physics teacher, highly popular among JEE (Advanced)/IIT-JEE students.\", \"Known for helping students visualize problems and reach solutions quickly.\",\"Adored by students for his clear, engaging teaching style that fosters a love for Physics.\",\"Many of his students from Kota have achieved prestigious ranks in IIT-JEE (Advanced)."
+            ),
         )
         val teacherAdapter = TeacherAdapter(teacherItems)
         binding.rvMeetTeachers.apply {
@@ -486,7 +599,7 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
             adapter = teacherAdapter
         }
 
-        Log.d("categoryName",categoryName)
+        Log.d("categoryName", categoryName)
 
         when (categoryName) {
             "Full Year Course" -> {
@@ -514,6 +627,7 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
                 )
 
             }
+
             "Test Series" -> {
                 faqItems = listOf(
                     FAQItem(
@@ -534,6 +648,7 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
                     ),
                 )
             }
+
             else -> {
                 faqItems = listOf(
                     FAQItem(
@@ -709,15 +824,24 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
     }
 
 
-    private fun initObserver(){
+    private fun initObserver() {
         userViewModel.userDetails.observe(viewLifecycleOwner) { result ->
             if (result.isFailure) return@observe
             result.onSuccess {
-                it.getMyDetails.courses?.map { data->
-                    if (courseId == data?.enrolledCourseId){
+                it.getMyDetails.courses?.map { data ->
+                    if (courseId == data?.enrolledCourseId) {
                         courselreadyBuy = true
-                        binding.submit.text = "Start Now"
-                        Log.e("purchasweDat",courselreadyBuy.toString())
+                        binding.clBuynow.isEnabled = true
+                        binding.tvAgreeTerms.visibility = View.GONE
+                        binding.cbAgreeTerms.visibility = View.GONE
+                        binding.clBuynow.setBackgroundColor(
+                            ContextCompat.getColor(
+                                requireContext(),
+                                R.color.blue_3E3EF7
+                            )
+                        )
+                        binding.clBuynow.text = "Start Now"
+                        Log.e("purchasweDat", courselreadyBuy.toString())
                         ourContentAdapter?.updateContent(true)
                         ourContentAdapter?.notifyDataSetChanged()
                     }
@@ -732,18 +856,32 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
                     data.myCourses.forEach { myCourse ->
                         if (myCourse.course.id == courseId) {
                             courseData = myCourse
-                            Log.d("courseDataGet",courseData.toString())
+                            Log.d("courseDataGet", courseData.toString())
                         }
                     }
                 }
             }.onFailure {
                 Log.e("MyCoursesFail", it.message.toString())
-                Toast.makeText(requireContext(), "Failed to load courses: ${it.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(),
+                    "Failed to load courses: ${it.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
 
         viewModel.fetchMyCourses()
 
+    }
+
+    private fun scrollToHeading(textView: TextView, scrollView: NestedScrollView, heading: String) {
+        val layout = textView.layout ?: return
+        val headingIndex = textView.text.indexOf(heading)
+        if (headingIndex != -1) {
+            val lineNumber = layout.getLineForOffset(headingIndex)
+            val yPosition = layout.getLineTop(lineNumber)
+            scrollView.smoothScrollTo(0, textView.top + yPosition)
+        }
     }
 
 
@@ -807,7 +945,12 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
     }
 
 
-    override fun onFirstItemClick(folderId: String, folderName: String, free: Boolean, isPurchased: Boolean) {
+    override fun onFirstItemClick(
+        folderId: String,
+        folderName: String,
+        free: Boolean,
+        isPurchased: Boolean
+    ) {
         val bundle = Bundle().apply {
             putString("folderId", folderId)
             putString("folderName", folderName)
@@ -910,6 +1053,7 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
                     )
                 )
             }
+
             "Test Series" -> {
                 listOf(
                     FAQItem(
@@ -930,6 +1074,7 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
                     )
                 )
             }
+
             else -> {
                 listOf(
                     FAQItem(
@@ -1002,9 +1147,11 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
             }.onFailure { exception ->
                 Log.e("createCart", exception.message.toString())
                 val errorMessage = exception.message.toString()
-                if (errorMessage.startsWith("Duplicate entry")) {
+                //TODO: check if course is already purchase or not
+                /*if (errorMessage.startsWith("Duplicate entry")) {
                     findNavController().navigate(R.id.myCartFragment)
-                }
+                }*/
+                findNavController().navigate(R.id.myCartFragment)
             }
         })
 
@@ -1049,9 +1196,6 @@ class ExploreFragment : DrawerVisibility(), OurContentAdapter.OnItemClickListene
             }
         }
     }
-
-
-
 
 
 }

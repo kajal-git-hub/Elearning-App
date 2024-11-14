@@ -201,8 +201,7 @@
                             android:indeterminateTintMode="src_atop"
                             android:indeterminateTint="@color/PrimaryColor"
                             app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/tvOurCourse" />
+                            app:layout_constraintStart_toStartOf="parent" />
 
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/rvRecommendedCourses"
@@ -259,7 +258,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="16dp"
-                            android:visibility="visible"
+                            android:visibility="gone"
                             android:background="@drawable/card_bg"
                             app:layout_constraintEnd_toStartOf="@+id/clStudyMaterial"
                             app:layout_constraintStart_toStartOf="parent"
@@ -473,11 +472,23 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/nunito"
-                            android:text="Why Choose Competishun?"
+                            android:text="Why Choose"
                             android:textColor="#2B2829"
                             android:textSize="18sp"
                             android:textStyle="bold"
                             app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/tvCompetishunOnly"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/nunito"
+                            android:text="Competishun?"
+                            android:layout_marginStart="@dimen/_5dp"
+                            android:textColor="@color/blue_3E3EF7"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            app:layout_constraintStart_toEndOf="@+id/tvWhyCompetishun"
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <androidx.recyclerview.widget.RecyclerView
@@ -541,15 +552,27 @@
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@id/tvSucceed" />
 
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rv_jeeMain"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:visibility="visible"
+                            tools:itemCount="4"
+                            tools:listitem="@layout/item_jee_main"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/tvExam"
+                            android:layout_marginTop="16dp"
+                            android:layout_marginBottom="24dp"/>
+
 
                         <androidx.constraintlayout.widget.ConstraintLayout
                             android:id="@+id/clBatchImage"
                             android:layout_width="138dp"
                             android:layout_height="102dp"
-                            android:layout_marginTop="16dp"
-                            android:layout_marginBottom="24dp"
+                            android:visibility="gone"
+                            app:layout_constraintTop_toBottomOf="@+id/rv_jeeMain"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/tvExam">
+                            >
 
                             <ImageView
                                 android:id="@+id/leafImageLeft"
@@ -646,13 +669,28 @@
                             app:layout_constraintTop_toBottomOf="@+id/et_AdvancedResult"
                             app:layout_constraintStart_toStartOf="parent"/>
 
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rv_jeeAdvanced"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:visibility="visible"
+                            tools:itemCount="4"
+                            tools:listitem="@layout/item_jee_advanced"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/et_RankTest"
+                            android:layout_marginTop="16dp"
+                            android:layout_marginBottom="24dp"/>
+
                         <androidx.constraintlayout.widget.ConstraintLayout
                             android:id="@+id/clBatchImageRight"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:visibility="gone"
                             android:layout_marginTop="16sp"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/et_RankTest">
+                            app:layout_constraintTop_toBottomOf="@+id/rv_jeeAdvanced"
+                            >
 
                             <ImageView
                                 android:id="@+id/leafImageLeftRight"

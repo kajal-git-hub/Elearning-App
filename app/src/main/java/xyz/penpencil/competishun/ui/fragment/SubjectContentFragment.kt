@@ -1,19 +1,27 @@
 package xyz.penpencil.competishun.ui.fragment
 
+import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
+import android.widget.ImageView
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.ketch.Ketch
 import com.student.competishun.curator.FindCourseFolderProgressQuery
 import xyz.penpencil.competishun.data.model.SubjectContentItem
 import xyz.penpencil.competishun.data.model.TopicContentModel
@@ -27,11 +35,14 @@ import xyz.penpencil.competishun.ui.viewmodel.VideourlViewModel
 import xyz.penpencil.competishun.utils.HelperFunctions
 import xyz.penpencil.competishun.utils.OnTopicTypeSelectedListener
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.launch
 import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.databinding.FragmentSubjectContentBinding
 import xyz.penpencil.competishun.di.Result
-import xyz.penpencil.competishun.ui.adapter.RecommendedCoursesAdapter
 import xyz.penpencil.competishun.ui.main.PdfViewActivity
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class SubjectContentFragment : DrawerVisibility() {
@@ -41,34 +52,49 @@ class SubjectContentFragment : DrawerVisibility() {
     private lateinit var helperFunctions: HelperFunctions
     private lateinit var subjectContentAdapter: SubjectContentAdapter
     private val videourlViewModel: VideourlViewModel by viewModels()
-    var VwatchedDuration: Int = 0
+    private var VwatchedDuration: Int = 0
     val gson = Gson()
+    var newFolderNamer = ""
     private var isFirstTimeLoading = true
     private lateinit var sharedViewModel: SharedVM
     private var isExternal: Boolean = false
+    var folderName = ""
+
+    private var subfolder = -1
+
+    private var folderProgress = -1
+
+    private var folderProgressCont = -1
+    private var selectedId = ""
+
+
+    @Inject
+    lateinit var ketch: Ketch
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentSubjectContentBinding.inflate(inflater, container, false)
-
-
         return binding.root
     }
 
-
-
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString("selectedId", selectedId)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         binding.backIconSubjectContent.setOnClickListener {
-            requireActivity().onBackPressedDispatcher.onBackPressed()
+            findNavController().navigateUp()
         }
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                findNavController().popBackStack()
+                findNavController().navigateUp()
             }
         })
 
@@ -78,10 +104,12 @@ class SubjectContentFragment : DrawerVisibility() {
         (activity as? HomeActivity)?.showFloatingButton(false)
 
         val subFolders = arguments?.getString("subFolders") ?: ""
-        val folderName = arguments?.getString("folder_Name") ?: ""
+         folderName = arguments?.getString("folder_Name") ?: ""
+        newFolderNamer = arguments?.getString("folderName") ?: ""
+        Log.e("newfoldfed",newFolderNamer)
         val parentContent = arguments?.getString("parent_content") ?: ""
         val folderId =  arguments?.getString("folder_Id") ?: ""
-        var folder_Count = arguments?.getString("folder_Count") ?: "0"
+        val folder_Count = arguments?.getString("folder_Count") ?: "0"
         isExternal = arguments?.getBoolean("isExternal", false) == true
         val subFolderList =
             object : TypeToken<List<FindCourseFolderProgressQuery.SubfolderDuration>>() {}.type
@@ -115,21 +143,23 @@ class SubjectContentFragment : DrawerVisibility() {
         binding.rvTopicContent.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
-        if (subFoldersList[0].folder?.id != null) {
-            var id = subFoldersList[0].folder?.id ?: ""
-            binding.tvTopicType.text = subFoldersList[0].folder?.name
-            folderProgress(id)
-            // isFirstTimeLoading = false
+        if (savedInstanceState?.getString(selectedId)!=null && savedInstanceState?.getString(selectedId)?.isNotEmpty() == true){
+            savedInstanceState?.getString(selectedId)?.let {
+                folderProgress(it)
+            }
+        }else {
+            if (subFoldersList[0].folder?.id != null) {
+                var id = subFoldersList[0].folder?.id ?: ""
+                binding.tvTopicType.text = subFoldersList[0].folder?.name
+                folderProgress(id)
+            }
         }
         binding.clTopicType.setOnClickListener {
             val bundle = Bundle().apply {
                 putString("subFolders", subFolders)
-                Log.e("foldernames", folderName)
                 putString("folder_Count", folder_Count)
+                putString("FOLDER_NAME", binding.tvTopicType.text.toString())
             }
-            Log.e("clickevent", subFolders.toString())
-
-
 
             val bottomSheet = BottomsheetCourseTopicTypeFragment().apply {
                 arguments = bundle
@@ -137,9 +167,10 @@ class SubjectContentFragment : DrawerVisibility() {
 
             bottomSheet.setOnTopicTypeSelectedListener(object : OnTopicTypeSelectedListener {
                 override fun onTopicTypeSelected(selectedTopic: TopicTypeModel) {
-                    selectedTopic
                     binding.tvTopicType.text = selectedTopic.title
-
+                    subfolder= -1
+                    folderProgressCont= -1
+                    selectedId = selectedTopic.id
                     folderProgress(selectedTopic.id)
                 }
             })
@@ -149,10 +180,6 @@ class SubjectContentFragment : DrawerVisibility() {
         }
         binding.mtCount.text = "${subFoldersList.size} Chapters"
         binding.tvSubjectName.text = folderName ?: ""
-//            binding.rvSubjectContent.adapter = SubjectContentAdapter(subjectContentList) { selectedItem ->
-//
-//
-//        }
     }
 
 
@@ -161,7 +188,7 @@ class SubjectContentFragment : DrawerVisibility() {
         val free = arguments?.getBoolean("free")
 
         if (folderId.isNotEmpty()) {
-            // Trigger the API call
+            selectedId = folderId
             coursesViewModel.findCourseFolderProgress(folderId)
         }
 
@@ -182,9 +209,40 @@ class SubjectContentFragment : DrawerVisibility() {
                     val subfolderDurationFolders = data.findCourseFolderProgress.subfolderDurations
                     Log.e("subFolderdata", subfolderDurationFolders.toString())
 
+                    subfolder = if (subfolderDurationFolders?.isEmpty() == true){
+                        0
+                    }else {
+                        -1
+                    }
+
+                    folderProgressCont = if (folderProgressContent?.isEmpty() == true){
+                        0
+                    }else {
+                        -1
+                    }
+
+                    if(subfolder==0 && folderProgressCont==0){
+                        binding.clEmptySubject.visibility = View.VISIBLE
+                        binding.rvSubjectContent.visibility = View.GONE
+                        binding.rvsubjectTopicContent.visibility = View.GONE
+                        binding.rvTopicContent.visibility = View.GONE
+                    }else{
+                        binding.clEmptySubject.visibility = View.GONE
+                        binding.rvSubjectContent.visibility = View.VISIBLE
+                        binding.rvsubjectTopicContent.visibility = View.VISIBLE
+                        binding.rvTopicContent.visibility = View.VISIBLE
+                    }
+
                     // Clear previous adapter to prevent issues
                     binding.rvSubjectContent.adapter = null
                     binding.rvTopicContent.adapter = null
+
+                    if (newFolderNamer.isNotEmpty()){
+                        Log.e("newfoldfed11",newFolderNamer)
+                          folderName =  newFolderNamer
+                    }else{
+                        folderName = folderName
+                    }
 
                     when {
                         !subfolderDurationFolders.isNullOrEmpty() && !folderProgressContent.isNullOrEmpty() ->
@@ -202,6 +260,13 @@ class SubjectContentFragment : DrawerVisibility() {
                                     // Extract homework URL and filename if they exist
                                     val homeworkUrl = files.content?.homework?.map { it.file_url } ?:""
                                     val homeworkFileName = files.content?.homework?.map { it.file_name } ?: ""
+                                    Log.e("foldersfd",folderName)
+                                    val icon = when (folderName) {
+                                        "Chemistry" -> R.drawable.chemistory
+                                        "Physics" -> R.drawable.pdf_bg
+                                        "Mathematics" -> R.drawable.message
+                                        else -> R.drawable.download_person // Set a default icon if folder name doesn't match
+                                    }
 
                                     TopicContentModel(
                                         subjectIcon = if (files.content?.file_type?.name == "PDF") R.drawable.content_bg else R.drawable.group_1707478994,
@@ -220,6 +285,7 @@ class SubjectContentFragment : DrawerVisibility() {
                                         lockTime = time,
                                         // Assign homework name and URL here
                                         homeworkName = homeworkFileName.toString(),
+                                        homeworkDesc = files.content?.homework?.map { it.description }.toString() ?: "",
                                         homeworkUrl = homeworkUrl.toString() , // Add this field in your TopicContentModel if it doesn't exist
                                         isExternal = isExternal
                                     )
@@ -229,14 +295,15 @@ class SubjectContentFragment : DrawerVisibility() {
                                 val folderContentNs = folderProgressContent.filter { it.content?.file_type?.name  == "VIDEO" }.mapNotNull { it.content?.file_name }.toCollection(ArrayList())
                                 Log.e("getfoldersubject2",folderContentNs.toString())
                             binding.rvTopicContent.adapter = TopicContentAdapter(
-                                topicContentList,
+                                topicContentList.toMutableList(),
                                 folderId,
+                                folderName,
                                 requireActivity(),
                                 requireContext()
-                            ) { topicContent, folderContentId, folderContentIds ,folderContentNames, folderContentDesc ->
+                            ) { topicContent, folderContentId, folderContentIds ,folderContentNames, folderContentDesc, folderContenthomework, folderContenthomeworkLink,folderContenthomeworkDesc ->
                                 when (topicContent.fileType) {
                                     "VIDEO" -> {
-                                        videoUrlApi(videourlViewModel, topicContent.id,topicContent.topicName,folderContentIds,folderContentNames,folderContentDesc)
+                                        videoUrlApi(videourlViewModel, topicContent.id,topicContent.topicName,folderContentIds,folderContentNames,folderContentDesc,folderContenthomework,folderContenthomeworkLink,folderContenthomeworkDesc)
                                     }
                                     "PDF" -> {
                                         val intent = Intent(context, PdfViewActivity::class.java).apply {
@@ -247,6 +314,10 @@ class SubjectContentFragment : DrawerVisibility() {
                                     }
                                     "FOLDER" -> {
                                         Log.e("typeofget",topicContent.fileType)
+                                    }
+                                    "IMAGE"->{
+                                        showImageDialog(topicContent, folderName)
+
                                     }
                                     else -> {
                                         Log.d(
@@ -263,8 +334,11 @@ class SubjectContentFragment : DrawerVisibility() {
                             val folders =
                                 subfolderDurationFolders.mapNotNull { it.folder }
 
+
                             val folderCounts =
-                                subfolderDurationFolders.mapNotNull { it.folder?.folder_count ?: 0 }
+                                subfolderDurationFolders.mapNotNull { it.folder?.video_count ?: 0 }
+                                val pdfCounts =  subfolderDurationFolders.mapNotNull { it.folder?.pdf_count ?: 0 }
+                                Log.e("folderscoutn $pdfCounts", folderCounts.toString())
                             val scheduledTimes = subfolderDurationFolders?.mapNotNull {
                                 it.completionPercentage
                             }
@@ -280,14 +354,19 @@ class SubjectContentFragment : DrawerVisibility() {
                                     id = id,
                                     chapterNumber = index + 1,
                                     topicName = folders.name,
-                                    topicDescription = folders.folder_count?:"0",
+                                    topicDescription = folders.description?:"",
+                                    pdfcount = folders.pdf_count?:"0",
+                                    videocount = folders.video_count?:"0",
                                     locktime = time,
-                                    progressPer = subfolderDurationFolders[index].completionPercentage.toInt()
+                                    progressPer = subfolderDurationFolders[index].completionPercentage.toInt(),
+                                    isExternal = isExternal
                                 )
                             }
 
                             binding.rvSubjectContent.adapter =
-                                SubjectContentAdapter(subjectContentList) { selectedItem ->
+                                SubjectContentAdapter(subjectContentList,folderName) { selectedItem ->
+                                    Log.e("enewfSlectt",selectedItem.topicName)
+                                    //binding.tvTopicType.text = selectedItem.topicName
                                     videoProgress(
                                         selectedItem.id,
                                         currentDuration = VwatchedDuration
@@ -325,14 +404,17 @@ class SubjectContentFragment : DrawerVisibility() {
                                     id = id,
                                     chapterNumber = index + 1,
                                     topicName = folders.name,
-                                    topicDescription = folders.folder_count?:"0",
+                                    topicDescription = folders.description?:"",
+                                    pdfcount = folders.pdf_count?:"0",
+                                    videocount = folders.video_count?:"0",
                                     locktime = time,
                                     progressPer = subfolderDurationFolders[index].completionPercentage.toInt()
                                 )
                             }
 
                             binding.rvSubjectContent.adapter =
-                                SubjectContentAdapter(subjectContentList) { selectedItem ->
+                                SubjectContentAdapter(subjectContentList,folderName) { selectedItem ->
+                                    Log.e("enewfSlect",selectedItem.topicName)
                                     videoProgress(
                                         selectedItem.id,
                                         currentDuration = VwatchedDuration
@@ -355,9 +437,15 @@ class SubjectContentFragment : DrawerVisibility() {
                                     val homeworkUrl = contents.content?.homework?.map { it.file_url } ?:""
                                     val homeworkFileName = contents.content?.homework?.map { it.file_name } ?: ""
 
-
+                                    Log.e("foldersfd",folderName)
                                     val time = helperFunctions.formatCoursesDateTime(contents.content?.scheduled_time.toString())
                                     Log.e("foldertime", time)
+                                    val icon = when (folderName) {
+                                        "Chemistry" -> R.drawable.chemistory
+                                        "Physics" -> R.drawable.pdf_bg
+                                        "Mathematics" -> R.drawable.message
+                                        else -> R.drawable.download_person // Set a default icon if folder name doesn't match
+                                    }
                                     TopicContentModel(
                                         subjectIcon = if (contents.content?.file_type?.name == "PDF") R.drawable.content_bg else R.drawable.group_1707478994,
                                         id = contents.content?.id ?: "",
@@ -375,33 +463,38 @@ class SubjectContentFragment : DrawerVisibility() {
                                         fileType = contents.content?.file_type?.name ?: "",
                                         lockTime =  time,
                                         homeworkUrl = homeworkUrl.toString(),
+                                        homeworkDesc = contents.content?.homework?.map { it.description }.toString() ?: "",
                                         homeworkName = homeworkFileName.toString(),
                                         isExternal = isExternal
                                     )
                                 }
                             val folderContentIds = folderProgressContent.filter { it.content?.file_type?.name  == "VIDEO" }.mapNotNull { it.content?.id }.toCollection(ArrayList())
-                            val folderContentNams = folderProgressContent.filter { it.content?.file_type?.name  == "VIDEO" }.mapNotNull { it.content?.file_name }.toCollection(ArrayList())
-                            Log.e("getfoldersubject1",folderContentNams.toString())
                             binding.rvTopicContent.adapter = TopicContentAdapter(
-                                subjectContentList,
+                                subjectContentList.toMutableList(),
                                 folderId,
+                                folderName,
                                 requireActivity(),
                                 requireContext()
-                            ) { topicContent, folderContentId, folderContentIds, folderContentNames, folderContentDesc ->
+                            ) { topicContent, folderContentId, folderContentIds, folderContentNames, folderContentDesc,folderContenthomework,folderContenthomeworkurl,folderContenthomeworkDesc ->
                                 when (topicContent.fileType) {
 
                                     "VIDEO" -> {
-                                        videoUrlApi(videourlViewModel, topicContent.id,topicContent.topicName,folderContentIds,folderContentNames,folderContentDesc)
+                                        videoUrlApi(videourlViewModel, topicContent.id,topicContent.topicName,folderContentIds,folderContentNames,folderContentDesc,folderContenthomework,folderContenthomeworkurl,folderContenthomeworkDesc)
                                     }
                                     "PDF" -> {
                                         val intent = Intent(context, PdfViewActivity::class.java).apply {
                                             putExtra("PDF_URL", topicContent.url)
                                             putExtra("PDF_TITLE",topicContent.topicName)
+                                            putExtra("FOLDER_NAME",folderName)
                                         }
                                         context?.startActivity(intent)
                                     }
                                     "FOLDER" -> {
                                         Log.e("typeofget",topicContent.fileType)
+                                    }
+                                    "IMAGE"->{
+                                        showImageDialog(topicContent, folderName)
+
                                     }
                                     else -> {
                                         Log.d(
@@ -459,6 +552,11 @@ class SubjectContentFragment : DrawerVisibility() {
                     Log.e("findCoursgress", data.findCourseFolderProgress.folder.toString())
                     val folderProgressFolder = data.findCourseFolderProgress.folder
                     var folderProgressContent = data.findCourseFolderProgress.folderContents
+
+//                    if (folderProgressContent?.isEmpty() == true){
+//                        folderProgress = 0
+//                    }
+
                     if (!folderProgressContent.isNullOrEmpty() ){
                             Log.e("folderContentsub" +
                                     "", folderProgressContent.toString())
@@ -471,9 +569,15 @@ class SubjectContentFragment : DrawerVisibility() {
                                     val homeworkUrl = contents.content?.homework?.map { it.file_url } ?:""
                                     val homeworkFileName = contents.content?.homework?.map { it.file_name } ?: ""
 
-
+                                    Log.e("foldersfd",folderName)
                                     val time = helperFunctions.formatCoursesDateTime(contents.content?.scheduled_time.toString())
                                     Log.e("foldertime", time)
+                                    val icon = when (folderName) {
+                                        "Chemistry" -> R.drawable.chemistory
+                                        "Physics" -> R.drawable.pdf_bg
+                                        "Mathematics" -> R.drawable.message
+                                        else -> R.drawable.download_person // Set a default icon if folder name doesn't match
+                                    }
                                     TopicContentModel(
                                         subjectIcon = if (contents.content?.file_type?.name == "PDF") R.drawable.content_bg else R.drawable.group_1707478994,
                                         id = contents.content?.id ?: "",
@@ -491,6 +595,7 @@ class SubjectContentFragment : DrawerVisibility() {
                                         fileType = contents.content?.file_type?.name ?: "",
                                         lockTime =  time,
                                         homeworkUrl = homeworkUrl.toString(),
+                                        homeworkDesc = contents.content?.homework?.map { it.description }.toString() ?: "",
                                         homeworkName = homeworkFileName.toString(),
                                         isExternal = isExternal
                                     )
@@ -499,25 +604,30 @@ class SubjectContentFragment : DrawerVisibility() {
                             val folderContentNs = folderProgressContent.filter { it.content?.file_type?.name  == "VIDEO" }.mapNotNull { it.content?.file_name }.toCollection(ArrayList())
                             Log.e("getfoldersubject1",folderContentNs.toString())
                             binding.rvsubjectTopicContent.adapter = TopicContentAdapter(
-                                subjectContentList,
+                                subjectContentList.toMutableList(),
                                 folderId,
+                                folderName,
                                 requireActivity(),
                                 requireContext()
-                            ) { topicContent, folderContentId, folderContentIds, folderContentNames, folderContentDesc ->
+                            ) { topicContent, folderContentId, folderContentIds, folderContentNames, folderContentDesc, folderContenthomework,folderContenthomeworkLink,folderContenthomeworkDesc ->
                                 when (topicContent.fileType) {
 
                                     "VIDEO" -> {
-                                        videoUrlApi(videourlViewModel, topicContent.id,topicContent.topicName,folderContentIds,folderContentNames, folderContentDesc)
+                                        videoUrlApi(videourlViewModel, topicContent.id,topicContent.topicName,folderContentIds,folderContentNames, folderContentDesc,folderContenthomework,folderContenthomeworkLink,folderContenthomeworkDesc)
                                     }
                                     "PDF" -> {
                                         val intent = Intent(context, PdfViewActivity::class.java).apply {
                                             putExtra("PDF_URL", topicContent.url)
                                             putExtra("PDF_TITLE",topicContent.topicName)
+                                            putExtra("FOLDER_NAME",folderName)
                                         }
                                         context?.startActivity(intent)
                                     }
                                     "FOLDER" -> {
                                         Log.e("typeofget",topicContent.fileType)
+                                    }
+                                    "IMAGE"->{
+                                        showImageDialog(topicContent, folderName)
                                     }
                                     else -> {
                                         Log.d(
@@ -546,8 +656,7 @@ class SubjectContentFragment : DrawerVisibility() {
         }
     }
 
-    fun newContent(folderContents: List<FindCourseFolderProgressQuery.FolderContent>,folderId:String)
-    {
+    fun newContent(folderContents: List<FindCourseFolderProgressQuery.FolderContent>,folderId:String) {
         val topicContents = folderContents?.map { content ->
             val date = content.content?.scheduled_time.toString()
             var time = ""
@@ -560,6 +669,14 @@ class SubjectContentFragment : DrawerVisibility() {
             val homeworkFileName = content.content?.homework?.map { it.file_name?:"" } ?: ""
             Log.d("homeworkUrl",homeworkUrl.toString())
             Log.d("homeworkFileName",homeworkFileName.toString())
+            Log.e("foldersfd",folderName)
+            val icon = when (folderName) {
+                "Chemistry" -> R.drawable.chemistory
+                "Physics" -> R.drawable.pdf_bg
+                "Mathematics" -> R.drawable.message
+                else -> R.drawable.download_person // Set a default icon if folder name doesn't match
+            }
+
             TopicContentModel(
                 subjectIcon = if (content.content?.file_type?.name == "PDF") R.drawable.content_bg else R.drawable.group_1707478994,
                 id = content.content?.id ?: "",
@@ -574,6 +691,7 @@ class SubjectContentFragment : DrawerVisibility() {
                 fileType = content.content?.file_type?.name ?: "",
                 lockTime = time,
                 homeworkUrl = homeworkUrl.toString(),
+                homeworkDesc = content.content?.homework?.map { it.description }.toString() ?: "",
                 homeworkName = homeworkFileName.toString(),
                 isExternal = isExternal
             )
@@ -582,15 +700,19 @@ class SubjectContentFragment : DrawerVisibility() {
         val ContentIds = folderContents.filter { it.content?.file_type?.name  == "VIDEO" }.mapNotNull { it.content?.id }?.toCollection(ArrayList())
         val folderContentNas = folderContents.filter { it.content?.file_type?.name  == "VIDEO" }.mapNotNull { it.content?.file_name }?.toCollection(ArrayList())
 
-        val adapter = TopicContentAdapter(topicContents, folderId,requireActivity(),requireContext()) { topicContent, folderContentId , folderContentIds,folderContentNames, folderContentDesc->
+        val adapter = TopicContentAdapter(topicContents.toMutableList(), folderId,folderName,requireActivity(),requireContext()) { topicContent, folderContentId , folderContentIds,folderContentNames, folderContentDesc, folderContenthomework, folderContenthomeworkLink,folderContenthomeworkDesc->
             when (topicContent.fileType) {
-                "VIDEO" -> videoUrlApi(videourlViewModel, topicContent.id,topicContent.topicName,folderContentIds,folderContentNames, folderContentDesc)
+                "VIDEO" -> videoUrlApi(videourlViewModel, topicContent.id,topicContent.topicName,folderContentIds,folderContentNames, folderContentDesc, folderContenthomework, folderContenthomeworkLink,folderContenthomeworkDesc)
                 "PDF" -> {
                     val intent = Intent(context, PdfViewActivity::class.java).apply {
                         putExtra("PDF_URL", topicContent.url)
                         putExtra("PDF_TITLE",topicContent.topicName)
+                        putExtra("FOLDER_NAME",folderName)
                     }
                     context?.startActivity(intent)
+                }
+                "IMAGE"->{
+                    showImageDialog(topicContent, folderName)
                 }
                 "FOLDER" -> "Folders"
                 else -> Log.d("TopicContentAdapter", "File type is not VIDEO: ${topicContent.fileType}")
@@ -602,6 +724,56 @@ class SubjectContentFragment : DrawerVisibility() {
         binding.rvTopicContent.adapter = null
 
     }
+    private fun showImageDialog(topicContent: TopicContentModel, folderName: String) {
+        val dialog = Dialog(requireContext(), com.bumptech.glide.R.style.AlertDialog_AppCompat)
+        dialog.setContentView(R.layout.dialog_image_view)
+
+        val popupImageView: ImageView = dialog.findViewById(R.id.iv_popup_image)
+        val stopImageView: ImageView = dialog.findViewById(R.id.iv_cancelDialog)
+        val downloadImageView: ImageView = dialog.findViewById(R.id.iv_downloadDialog)
+        downloadImageView.setOnClickListener {
+            downloadFile(topicContent.url,topicContent.topicName,isExternal)
+        }
+        // Check folderName and adjust FLAG_SECURE and download visibility
+        if (folderName.contains("DPPs", ignoreCase = true)) {
+            requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
+            downloadImageView.visibility = View.VISIBLE
+        } else {
+            requireActivity().window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE)
+            downloadImageView.visibility = View.GONE
+        }
+
+        // Load the image using Glide
+        Glide.with(requireContext())
+            .load(topicContent.url)
+            .placeholder(R.drawable.placeholder_image)
+            .into(popupImageView)
+
+        // Show the dialog
+        dialog.show()
+
+        // Close the dialog when stopImageView is clicked
+        stopImageView.setOnClickListener {
+            dialog.dismiss()
+        }
+    }
+    fun downloadFile(url: String, fileName: String, isExternal: Boolean = false) {// ture -> external  // false -->
+        val path =
+            "/storage/emulated/0/Download/"
+
+        Log.e("DownloadError", "PATH: $path$fileName")
+        val id = ketch.download(
+            url = url,
+            fileName = fileName,
+            path = path)
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                ketch.observeDownloadById(id)
+                    .flowOn(Dispatchers.IO)
+            }
+        }
+    }
+
 
 
     fun videoProgress(courseFolderContentId: String, currentDuration: Int) {
@@ -622,7 +794,7 @@ class SubjectContentFragment : DrawerVisibility() {
 
     }
 
-    private fun videoUrlApi(viewModel: VideourlViewModel, folderContentId: String, name:String, folderContentIds: ArrayList<String>?, folderContentNames: ArrayList<String>?,folderContentDescs: ArrayList<String>?) {
+    private fun videoUrlApi(viewModel: VideourlViewModel, folderContentId: String, name:String, folderContentIds: ArrayList<String>?, folderContentNames: ArrayList<String>?,folderContentDescs: ArrayList<String>?,homeworkNames:ArrayList<String>?,homeworkLinks:ArrayList<String>?,homeworkDescs:ArrayList<String>?) {
         Log.e("getfoldersubject",folderContentNames.toString())
         viewModel.fetchVideoStreamUrl(folderContentId, "480p")
 
@@ -633,9 +805,13 @@ class SubjectContentFragment : DrawerVisibility() {
                     putString("url", signedUrl)
                     putString("url_name", name)
                     putString("ContentId", folderContentId)
+                    putString("folderName", folderName)
                     putStringArrayList("folderContentIds", folderContentIds)
                     putStringArrayList("folderContentNames", folderContentNames)
                     putStringArrayList("folderContentDescs", folderContentDescs)
+                    putStringArrayList("homeworkNames", homeworkNames)
+                    putStringArrayList("homeworkLinks", homeworkLinks)
+                    putStringArrayList("homeworkDescs", homeworkDescs)
                 }
                 findNavController().navigate(R.id.mediaFragment, bundle)
 
@@ -695,11 +871,12 @@ class SubjectContentFragment : DrawerVisibility() {
                             val bundle = Bundle().apply {
                                 putString("subFolders", subFoldersJson)
                                 putString("folder_Name", name)
+                                putString("folderName", folderName)
                             }
                             findNavController().navigate(R.id.SubjectContentFragment, bundle)
                         } else if (!folderProgressContent.isNullOrEmpty()) {
                             // Process folder contents
-                            Log.e("folderContentsss", folderProgressContent.toString())
+                            Log.e("folderCsize", folderProgressContent.size.toString())
 
                             val gson = Gson()
                             val folderContentsJson = gson.toJson(folderProgressContent)
@@ -708,7 +885,8 @@ class SubjectContentFragment : DrawerVisibility() {
 
                                 putString("folderContents", folderContentsJson)
                                 putString("folder_Id", folderId)
-                                putString("folderName", folderNames)
+                                putString("folderNames", folderNames)
+                                putString("folderName", folderName)
 
                             }
                             findNavController().navigate(R.id.TopicTYPEContentFragment, bundle)

@@ -3,7 +3,6 @@ package xyz.penpencil.competishun.ui.fragment
 import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,13 +19,14 @@ import com.student.competishun.coinkeeper.type.CreateOrderInput
 import dagger.hilt.android.AndroidEntryPoint
 import org.json.JSONException
 import org.json.JSONObject
+import xyz.penpencil.competishun.BuildConfig
 import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.databinding.FragmentMyPurchaseDetailsBinding
-import xyz.penpencil.competishun.ui.viewmodel.CoursePaymentsViewModel
 import xyz.penpencil.competishun.ui.viewmodel.GetCourseByIDViewModel
 import xyz.penpencil.competishun.ui.viewmodel.OrderViewModel
 import xyz.penpencil.competishun.ui.viewmodel.OrdersViewModel
 import xyz.penpencil.competishun.ui.viewmodel.UserViewModel
+import xyz.penpencil.competishun.utils.Constants
 import xyz.penpencil.competishun.utils.HelperFunctions
 import xyz.penpencil.competishun.utils.SharedPreferencesManager
 
@@ -50,6 +50,7 @@ class MyPurchaseDetailsFragment : DrawerVisibility() {
     private var paymentStatus = ""
     private var firstPurchase = ""
     private var transactionId = ""
+    private var fullTransactionId = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -99,6 +100,14 @@ class MyPurchaseDetailsFragment : DrawerVisibility() {
 
             // Fetch course details after fetching payment information
         }
+
+        binding.btGenerateReceipt.setOnClickListener {
+            if(fullTransactionId.isNotEmpty()){
+                downloadReceipt(fullTransactionId)
+            }else{
+                downloadReceipt(transactionId)
+            }
+        }
     }
 
     private fun observeCoursePayments() {
@@ -110,6 +119,9 @@ class MyPurchaseDetailsFragment : DrawerVisibility() {
                 Log.d("PaymentTypen", "Payment Type: ${payments}")
                 val firstPayment = payments.firstOrNull()
                 val secondPayment = if (payments.isNotEmpty()) payments else null
+                if((secondPayment?.size ?: 0) > 1){
+                    fullTransactionId = secondPayment?.get(1)?.rzpOrderId.toString()
+                }
                 binding.clOrderReceipt.visibility = View.VISIBLE
                 rzpOrderId = firstPayment?.rzpOrderId ?: ""
                 paymentType = firstPayment?.paymentType ?: ""
@@ -129,9 +141,6 @@ class MyPurchaseDetailsFragment : DrawerVisibility() {
                 // Handling "full" payment
                 if (paymentType == "full" && paymentStatus == "captured") {
                     // Full payment logic
-                    binding.btGenerateReceipt.setOnClickListener {
-                        downloadReceipt(transactionId)
-                    }
                     binding.clInstallmentCharge.visibility = View.GONE
                     binding.clFirstInstallment.visibility = View.GONE
                     binding.clSecondInstallment.visibility = View.GONE
@@ -162,7 +171,8 @@ class MyPurchaseDetailsFragment : DrawerVisibility() {
 
                     getCourseByIDViewModel.courseByID.observe(viewLifecycleOwner) { course ->
                         course?.let {
-                            val totalPrice = it.price ?: 0
+                            val totalPrice = it.with_installment_price ?: 0
+                            Log.d("totalPrice",totalPrice.toString())
                             courseName = it.name ?: ""
                             binding.etPurtotalPrice.text = "₹ ${totalPrice}"
                             binding.etPurFinalPay.text = "₹ ${totalPrice}"
@@ -176,9 +186,9 @@ class MyPurchaseDetailsFragment : DrawerVisibility() {
                             if (secondPayment != null ) {
                                 val secondPaymentAmount = secondPayment[0].amount ?: 0
                                 binding.clSecondInstallment.visibility = View.VISIBLE
-                                binding.btGenerateReceipt.setOnClickListener {
-                                    downloadReceipt(secondPayment[0].rzpOrderId.toString())
-                                }
+//                                binding.btGenerateReceipt.setOnClickListener {
+//                                    downloadReceipt(secondPayment[0].rzpOrderId.toString())
+//                                }
                                 binding.tvInstallmentAmount.text ="₹ ${secondPaymentAmount.toInt()}"
                                 Log.e("courseIddn", courseUserId)
                                 binding.etPurFirstInstallment.text = "₹ ${secondPaymentAmount.toInt()}"
@@ -205,6 +215,7 @@ class MyPurchaseDetailsFragment : DrawerVisibility() {
                                            binding.tv2ndInstallmentStatus.text = "Successful"
                                            binding.tv2ndInstallmentStatus.setTextColor(ContextCompat.getColor(requireContext(), R.color._4BB543))
                                            binding.secondInstSlip.text = "2nd Installment (Paid)"
+                                           binding.tv2ndInstallmentDateTxt.text = "Paid on:"
                                            binding.tv2ndInstallmentDate.text =  helperFunctions.formatCourseDate(secondPayment[1].createdAt.toString())
                                            binding.ivGreyTick.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.green_tick_installment))
                                            binding.ivLine.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.vector_verticle_line_green))
@@ -275,7 +286,7 @@ class MyPurchaseDetailsFragment : DrawerVisibility() {
         Log.e("chcekcnou",amount.toString())
         val currency = "INR"
         val checkout = Checkout()
-        checkout.setKeyID("rzp_test_DcVrk6NysFj71r")
+        checkout.setKeyID(BuildConfig.RAZORPAY_KEY_ID)
         Log.e("user/id=",courseUserId)
         Log.e("user/tokem=",sharedPreferencesManager.accessToken.toString())
         val obj = JSONObject()
@@ -330,7 +341,7 @@ class MyPurchaseDetailsFragment : DrawerVisibility() {
                    // binding.clBuyCourseSection.visibility = View.VISIBLE
                     binding.clDiscount.visibility = View.GONE
 
-                    val totalPrice = it.price ?: 0
+                    val totalPrice = it.with_installment_price ?: 0
                     binding.etPurtotalPrice.text = totalPrice.toString()
                     binding.etPurFinalPay.text = totalPrice.toString()
 
@@ -355,7 +366,23 @@ class MyPurchaseDetailsFragment : DrawerVisibility() {
                 userName = data.getMyDetails.fullName?:""
                 Log.e("courseIddu ${data.getMyDetails.id}",sharedPreferencesManager.accessToken.toString() )
                 binding.tvUserName.text = data.getMyDetails.fullName
-                binding.tvUserAddress.text = data.getMyDetails.userInformation.address?.addressLine1
+                val addressLine = data.getMyDetails.userInformation.address?.addressLine1 ?: "No Address Available"
+                binding.tvUserAddress.text = addressLine
+
+                var isExpanded = false
+                binding.tvReadMore.setOnClickListener {
+                    if (isExpanded) {
+                        binding.tvUserAddress.maxLines = 1
+                        binding.tvReadMore.text = "Read More"
+                        binding.tvReadMore.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.arrow_down, 0)
+                    } else {
+                        binding.tvUserAddress.maxLines = Int.MAX_VALUE
+                        binding.tvReadMore.text = "Read Less"
+                        binding.tvReadMore.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.arrow_up, 0)
+                    }
+                    isExpanded = !isExpanded
+                }
+
 
                 data.getMyDetails.courses.mapNotNull { course ->
                     if (course?.paymentStatus == "captured") {
@@ -391,7 +418,7 @@ class MyPurchaseDetailsFragment : DrawerVisibility() {
                 Log.e("ReceiptLink",receiptLink)
                 Toast.makeText(requireContext(), "Download started", Toast.LENGTH_SHORT).show()
 
-                helperFunctions.downloadPdf(requireContext(),receiptLink,"Payment Invoice")
+                helperFunctions.downloadPdfOld(requireContext(),receiptLink,"Payment Invoice")
                 Toast.makeText(requireContext(), "Download completed successfully", Toast.LENGTH_SHORT).show()
             }.onFailure {
                 // Handle failure, e.g., show an error message

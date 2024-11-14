@@ -28,6 +28,7 @@ class BottomsheetCourseTopicTypeFragment : BottomSheetDialogFragment() {
     private val coursesViewModel: CoursesViewModel by viewModels()
     private var listener: OnTopicTypeSelectedListener? = null
     val gson = Gson()
+    private var selectedFolderName: String= ""
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -45,6 +46,7 @@ class BottomsheetCourseTopicTypeFragment : BottomSheetDialogFragment() {
         val subFolders = arguments?.getString("subFolders")?:""
         Log.e("subsdfd",subFolders)
         val folderCount = arguments?.getString("folder_Count")?:"0"
+        selectedFolderName = arguments?.getString("FOLDER_NAME")?:""
         val converter = object : TypeToken<List<FindCourseFolderProgressQuery.SubfolderDuration>>() {}.type
         val subFoldersList: List<FindCourseFolderProgressQuery.SubfolderDuration> = gson.fromJson(subFolders, converter)
 
@@ -52,14 +54,13 @@ class BottomsheetCourseTopicTypeFragment : BottomSheetDialogFragment() {
         // Create a list of TopicTypeModel using folderNames
         val topicTypeList = subFoldersList.mapIndexed { index, folder ->
             TopicTypeModel(id = folder.folder?.id?:"", title = folder.folder?.name?:"", count = folder.folder?.folder_count?:"0")
-
         }
         binding.tvTitleNumber.text = "(${subFoldersList.size})"
 
 
-
+        Log.e("YUYUYUY", "onViewCreated: $selectedFolderName", )
         // Initialize the adapter and set it to the RecyclerView
-        topicTypeAdapter = TopicTypeAdapter(topicTypeList,null) { selectedTopic ->
+        topicTypeAdapter = TopicTypeAdapter(topicTypeList, selectedFolderName) { selectedTopic ->
             listener?.onTopicTypeSelected(selectedTopic)
             dismiss()
 

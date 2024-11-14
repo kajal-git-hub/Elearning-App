@@ -117,8 +117,8 @@ class StudyMaterialDetailsFragment : Fragment() {
                 binding.clTopicType.setOnClickListener {
                     val bundle = Bundle().apply {
                         putString("subFolders", folderlistJson)
-                        Log.e("foldernames", folderlistJson)
                         putString("folder_Count", folderlist.size.toString())
+                        putString("FOLDER_NAME", binding.tvTopicType.text.toString())
                     }
                     Log.e("clickevent", folderlistJson.toString())
 
@@ -257,6 +257,7 @@ class StudyMaterialDetailsFragment : Fragment() {
                                         topicName = contents.content?.file_name ?: "",
                                         topicDescription = contents.content?.description?:"",
                                         progress = 1,
+                                        homeworkDesc = contents.content?.homework?.map { it.description }.toString() ?: "",
                                         videoDuration = contents.content?.video_duration ?: 0,
                                         url = contents.content?.file_url.toString(),
                                         fileType = contents.content?.file_type?.name ?: "",
@@ -271,14 +272,15 @@ class StudyMaterialDetailsFragment : Fragment() {
                             val folderContentNmes = folderProgressContent.filter { it.content?.file_type?.name  == "VIDEO" }.mapNotNull { it.content?.file_name }.toCollection(ArrayList())
                             Log.e("getfoldersubject2",folderContentNmes.toString())
                             binding.rvStudyMaterial.adapter = TopicContentAdapter(
-                                topicContentList,
+                                topicContentList.toMutableList(),
                                 folderId,
+                                binding.tvTopicType.text.toString() ,
                                 requireActivity(),
                                 requireContext()
-                            ) { topicContent, folderContentId, folderContentIds,folderContentNames, folderContentDescs->
+                            ) { topicContent, folderContentId, folderContentIds,folderContentNames, folderContentDescs,folderContenthomework, folderContenthomeworkLink,folderContenthomeworkDesc->
                                 when (topicContent.fileType) {
                                     "VIDEO" -> {
-                                        videoUrlApi(videourlViewModel, topicContent.id,topicContent.topicName,folderContentIds,folderContentNames,folderContentDescs)
+                                        videoUrlApi(videourlViewModel, topicContent.id,topicContent.topicName,folderContentIds,folderContentNames,folderContentDescs,folderContenthomework, folderContenthomeworkLink,folderContenthomeworkDesc)
                                     }
                                     "PDF" -> {
                                         val intent = Intent(context, PdfViewActivity::class.java).apply {
@@ -322,14 +324,16 @@ class StudyMaterialDetailsFragment : Fragment() {
                                     id = id,
                                     chapterNumber = index + 1,
                                     topicName = folders.name?:"",
-                                    topicDescription = folders.folder_count?:"0",
+                                    topicDescription = folders.description?:"",
+                                    pdfcount = folders.pdf_count?:"0",
+                                    videocount = folders.video_count?:"0",
                                     locktime = time,
                                     progressPer = subfolderDurationFolders[index].completionPercentage.toInt()
                                 )
                             }
 
                             binding.rvSubjectContent.adapter =
-                                SubjectContentAdapter(subjectContentList) { selectedItem ->
+                                SubjectContentAdapter(subjectContentList, binding.tvTopicType.text.toString()) { selectedItem ->
                                     Log.e("gettingcontenList",subjectContentList.toString())
                                     binding.tvTopicType.text = selectedItem.topicName
                                     binding.tvContentCount.text = selectedItem.topicDescription
@@ -369,13 +373,15 @@ class StudyMaterialDetailsFragment : Fragment() {
                                     id = id,
                                     chapterNumber = index + 1,
                                     topicName = folders.name,
-                                    topicDescription = folders.folder_count?:"0",
+                                    topicDescription = folders.description?:"",
+                                    pdfcount = folders.pdf_count?:"0",
+                                    videocount = folders.video_count?:"0",
                                     locktime = time,
                                     progressPer = subfolderDurationFolders[index].completionPercentage.toInt()
                                 )
                             }
                             binding.rvSubjectContent.adapter =
-                                SubjectContentAdapter(subjectContentList) { selectedItem ->
+                                SubjectContentAdapter(subjectContentList, binding.tvTopicType.text.toString()) { selectedItem ->
                                     videoProgress(
                                         selectedItem.id,
                                         currentDuration = VwatchedDuration
@@ -418,6 +424,7 @@ class StudyMaterialDetailsFragment : Fragment() {
                                         url = contents.content?.file_url.toString(),
                                         fileType = contents.content?.file_type?.name ?: "",
                                         lockTime =  time,
+                                        homeworkDesc = contents.content?.homework?.map { it.description }.toString() ?: "",
                                         homeworkUrl = homeworkUrl.toString(),
                                         homeworkName = homeworkFileName.toString(),
                                         isExternal = contents.content?.file_name?.contains("DPPs") == true
@@ -428,15 +435,16 @@ class StudyMaterialDetailsFragment : Fragment() {
                             val folderContentNes = folderProgressContent.filter { it.content?.file_type?.name  == "VIDEO" }.mapNotNull { it.content?.file_name }.toCollection(ArrayList())
                             Log.e("getfoldersubject1",folderContentNes.toString())
                             binding.rvStudyMaterial.adapter = TopicContentAdapter(
-                                subjectContentList,
+                                subjectContentList.toMutableList(),
                                 folderId,
+                                binding.tvTopicType.text.toString(),
                                 requireActivity(),
                                 requireContext()
-                            ) { topicContent, folderContentId, folderContentIds,folderContentNames, folderContentDescs ->
+                            ) { topicContent, folderContentId, folderContentIds,folderContentNames, folderContentDescs,folderContenthomework, folderContenthomeworkLink, folderContenthomeworkDesc ->
                                 when (topicContent.fileType) {
 
                                     "VIDEO" -> {
-                                        videoUrlApi(videourlViewModel, topicContent.id,topicContent.topicName,folderContentIds,folderContentNames,folderContentDescs)
+                                        videoUrlApi(videourlViewModel, topicContent.id,topicContent.topicName,folderContentIds,folderContentNames,folderContentDescs,folderContenthomework, folderContenthomeworkLink,folderContenthomeworkDesc)
                                     }
                                     "PDF" -> {
                                         val intent = Intent(context, PdfViewActivity::class.java).apply {
@@ -588,7 +596,7 @@ class StudyMaterialDetailsFragment : Fragment() {
 
 
     }
-    private fun videoUrlApi(viewModel: VideourlViewModel, folderContentId: String, name:String, folderContentIds: ArrayList<String>?, folderContentNames: ArrayList<String>?,folderContentDescs: ArrayList<String>?) {
+    private fun videoUrlApi(viewModel: VideourlViewModel, folderContentId: String, name:String, folderContentIds: ArrayList<String>?, folderContentNames: ArrayList<String>?,folderContentDescs: ArrayList<String>?,homeworkNames:ArrayList<String>?,homeworkLinks:ArrayList<String>?,homeworkDescs:ArrayList<String>?) {
         Log.e("getfoldersubject",folderContentNames.toString())
         viewModel.fetchVideoStreamUrl(folderContentId, "480p")
 
@@ -602,6 +610,9 @@ class StudyMaterialDetailsFragment : Fragment() {
                     putStringArrayList("folderContentIds", folderContentIds)
                     putStringArrayList("folderContentDescs", folderContentDescs)
                     putStringArrayList("folderContentNames", folderContentNames)
+                    putStringArrayList("homeworkLinks", homeworkLinks)
+                    putStringArrayList("homeworkDescs", homeworkDescs)
+                    putStringArrayList("homeworkNames", homeworkNames)
                 }
                 findNavController().navigate(R.id.mediaFragment, bundle)
 

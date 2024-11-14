@@ -75,6 +75,8 @@ input CreateStudentByAdminInput {
 
   fatherMobileNumber: String
 
+  fatherName: String
+
   fullName: String!
 
   gender: String
@@ -140,6 +142,8 @@ type ExtendedUserCourseMapping {
 
   paymentStatus: String!
 
+  paymentType: String
+
   pricePaid: String!
 
   updatedAt: DateTime!
@@ -187,6 +191,8 @@ type GetMyDetailsDto {
   fullName: String
 
   id: ID!
+
+  isBlocked: Boolean!
 
   isGoogleSignup: Boolean!
 
@@ -274,6 +280,8 @@ type Mutation {
 type Query {
   adminSignIn(adminSignInInput: AdminSignInInput!): AdminAuth!
 
+  deleteUserWithMobile(mobileNumber: String!): String
+
   getMyDetails: GetMyDetailsDto!
 
   getStudents(courseIds: [ID!], endDate: DateTime, examType: ExamTypeEnum, isEnrolled: Boolean, limit: Float!, offset: Float!, paymentStatuses: [StudentPaymentStatuses!], search: String, sort: String = "DESC", startDate: DateTime, studentId: String, targetYear: [Float!]): GetStudentsDto!
@@ -341,6 +349,8 @@ input UpdateStudentByAdminInput {
   fatherMobileCountryCode: String
 
   fatherMobileNumber: String
+
+  fatherName: String
 
   fullName: String
 
@@ -423,6 +433,8 @@ type User {
 
   id: ID!
 
+  isBlocked: Boolean!
+
   isGoogleSignup: Boolean!
 
   metadata: UserMetadata!
@@ -450,6 +462,8 @@ type UserCourseMapping {
   id: ID!
 
   paymentStatus: String!
+
+  paymentType: String
 
   pricePaid: String!
 

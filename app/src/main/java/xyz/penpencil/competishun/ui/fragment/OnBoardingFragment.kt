@@ -45,6 +45,8 @@ class OnBoardingFragment : Fragment() {
     private lateinit var cityAdapter: ArrayAdapter<String>
 
     private var loginType : String? = null
+    val stateCity: List<State> by lazy { loadStatesAndCities()?: emptyList() }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -97,7 +99,7 @@ class OnBoardingFragment : Fragment() {
         binding.etEnterStateText.setAdapter(stateAdapter)
         binding.etEnterCityText.setAdapter(cityAdapter)
 
-        binding.etEnterStateText.addTextChangedListener { query ->
+/*        binding.etEnterStateText.addTextChangedListener { query ->
             if (!query.isNullOrEmpty()) {
                 val filteredStates = loadStatesAndCities(requireContext())?.filter {
                     it.name.contains(query, ignoreCase = true)
@@ -136,10 +138,38 @@ class OnBoardingFragment : Fragment() {
                 cityAdapter.addAll(filteredCities)
                 cityAdapter.notifyDataSetChanged()
             }
+        }*/
+
+        val stateAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, stateCity.map { it.name })
+        binding.etEnterStateText.setAdapter(stateAdapter)
+
+        binding.etEnterStateText.setOnItemClickListener { parent, view, position, id ->
+            val selectedItem = parent.getItemAtPosition(position) as String
+            val selectedIndex = stateCity.indexOfFirst { it.name == selectedItem }
+
+            if (selectedIndex != -1) {
+                val data = stateCity[selectedIndex].cities
+                val cityAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, data)
+                binding.etEnterCityText.setAdapter(cityAdapter)
+                binding.etEnterCityText.text = null
+            }
+        }
+
+        binding.etEnterCityText.setOnItemClickListener { parent, view, position, id ->
+            val selectedItem = parent.getItemAtPosition(position) as String
+            Log.e("Selected City", "Selected City: $selectedItem")
+        }
+
+        binding.etEnterCityText.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                binding.etEnterCityText.post {
+                    binding.etEnterCityText.showDropDown()
+                }
+            }
         }
     }
 
-    fun hideSoftKeyBoard(context: Context, view: View?) {
+/*    fun hideSoftKeyBoard(context: Context, view: View?) {
         try {
             val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm?.hideSoftInputFromWindow(view?.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
@@ -148,7 +178,7 @@ class OnBoardingFragment : Fragment() {
             e.printStackTrace()
         }
 
-    }
+    }*/
 
     private fun setupUIWithSavedData() {
         with(sharedPreferencesManager) {
@@ -175,9 +205,9 @@ class OnBoardingFragment : Fragment() {
         binding.etEnterStateText.addTextChangedListener(textWatcher)
     }
 
-    private fun loadStatesAndCities(context: Context): List<State>? {
+    private fun loadStatesAndCities(): List<State>? {
         return try {
-            val jsonString = context.assets.open("states_cities.json").use { inputStream ->
+            val jsonString = requireActivity().assets.open("states_cities.json").use { inputStream ->
                 inputStream.readBytes().toString(Charsets.UTF_8)
             }
             Gson().fromJson(jsonString, StateCity::class.java).states

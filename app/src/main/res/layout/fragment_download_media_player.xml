@@ -4,178 +4,196 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".ui.fragment.DownloadMediaPlayerFragment">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/black">
+        android:id="@+id/rootContainer"
+        android:background="@color/white">
 
-        <ProgressBar
-            android:id="@+id/progressBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_gravity="center"
-            android:visibility="gone"/>
-
-        <!-- ExoPlayer's PlayerView -->
-        <androidx.media3.ui.PlayerView
-            android:id="@+id/player_view"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_gravity="center"
-            android:keepScreenOn="true"/>
-
-        <!-- Back Button -->
-        <ImageButton
-            android:id="@+id/back_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            android:src="@drawable/back_arrow_ic"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp" />
-
-        <TextView
-            android:id="@+id/tittle_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_20dp"
-            android:text="Video"
-            android:textColor="@android:color/white"
-            android:visibility="gone"
-            android:gravity="center"
-            app:layout_constraintStart_toEndOf="@id/back_btn"
-            app:layout_constraintTop_toTopOf="@id/back_btn"
-            app:layout_constraintBottom_toBottomOf="@id/back_btn"/>
-
-        <!-- Quality Button -->
-        <ImageButton
-            android:id="@+id/qualityButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/dot_3_ic"
-            android:background="@android:color/transparent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginEnd="16dp" />
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/upNextOverlay"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/up_next_background"
-            android:padding="16dp"
-            android:visibility="gone"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_height="240dp"
+            android:id="@+id/playerRoot">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/black"
+                android:id="@+id/playerContainer">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/black"
+                    android:id="@+id/playerRootApp">
+                    <androidx.media3.ui.PlayerView
+                        android:id="@+id/playerView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@color/black"
+                        app:unplayed_color="@color/gray"
+                        app:buffered_color="@color/white"
+                        app:show_timeout="0"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:layout_gravity="center"
+                        app:played_color="@android:color/holo_red_dark"
+                        android:keepScreenOn="true"
+                        app:controller_layout_id="@layout/layout_exoplayer_controls"
+                        app:show_buffering="always" />
+                </RelativeLayout>
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
-            <FrameLayout
-                android:id="@+id/flnextvideo"
-                android:layout_width="wrap_content"
+            android:layout_below="@+id/playerRoot"
+            android:padding="@dimen/_16dp"
+            app:layout_constraintTop_toBottomOf="@+id/playerRoot">
+
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/lecture_tv"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/nunito"
+                android:gravity="start"
+                android:text="Lecture |"
+                android:textColor="@color/_726c6c"
+                android:textSize="@dimen/_10sp"
+                android:visibility="visible"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_gravity="center">
+                app:layout_constraintTop_toTopOf="parent" />
 
-                <!-- Image inside the Circular Progress -->
-                <ImageView
-                    android:id="@+id/center_image"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_nect_btn"
-                    android:scaleType="fitCenter" />
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tittle_tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/nunito"
+                android:gravity="left"
+                android:text="kk"
+                android:layout_marginTop="@dimen/_4dp"
+                android:textColor="@color/_151314"
+                android:textSize="@dimen/_16sp"
+                android:textStyle="bold"
+                android:visibility="visible"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/lecture_tv" />
 
-                <!-- Circular Progress Indicator -->
-                <com.google.android.material.progressindicator.CircularProgressIndicator
-                    android:id="@+id/next_progress"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:indicatorSize="85dp"
-                    android:progress="40"
-                    app:trackColor="@color/_333333"
-                    app:indicatorColor="@color/white"
-                    app:trackThickness="@dimen/_5dp"
-                    android:layout_gravity="center" />
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/desc_tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_4dp"
+                android:fontFamily="@font/nunito"
+                android:text="D"
+                android:textColor="@color/_726C6C"
+                android:textSize="@dimen/_14sp"
+                android:visibility="visible"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tittle_tv" />
 
-            </FrameLayout>
-
-            <LinearLayout
-                android:id="@+id/clupNext"
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/homework_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintStart_toEndOf="@+id/flnextvideo"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:orientation="vertical">
+                android:fontFamily="@font/nunito"
+                android:paddingTop="@dimen/_5dp"
+                android:paddingBottom="@dimen/_5dp"
+                android:text="Homework"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_16sp"
+                android:textStyle="bold"
+                android:visibility="visible"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/desc_tv" />
 
-                <TextView
-                    android:id="@+id/upNextLabel"
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/homeworkDesc_tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/nunito"
+                android:padding="@dimen/_5dp"
+                android:text=""
+                android:textColor="@color/_726C6C"
+                android:textSize="@dimen/_14sp"
+                android:visibility="visible"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/homework_tv" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/homeworktittle_tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/nunito"
+                android:padding="@dimen/_5dp"
+                android:text=""
+                android:textColor="@color/PrimaryColor"
+                android:textSize="@dimen/_14sp"
+                android:visibility="visible"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/homeworkDesc_tv" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_bookmark"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/_40dp"
+                android:layout_marginTop="@dimen/_8dp"
+                android:background="@drawable/bg_filter_purchase"
+                android:padding="@dimen/_5dp"
+                android:visibility="gone"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/homeworktittle_tv">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/bookmark"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Up Next"
-                    android:textColor="#CCCBCB"
+                    android:drawableStart="@drawable/baseline_bookmark"
+                    android:drawablePadding="@dimen/_10dp"
+                    android:gravity="center"
+                    android:padding="@dimen/_5dp"
+                    android:text="@string/Bookmark"
+                    android:textColor="#2B2829"
                     android:textSize="@dimen/_12sp"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintStart_toEndOf="parent"/>
-
-                <TextView
-                    android:id="@+id/nextVideoTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=""
-                    android:textColor="@android:color/white"
-                    android:textSize="@dimen/_16sp"
-                    android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
-                    android:layout_marginTop="8dp"/>
-                <TextView
-                    android:id="@+id/nextVideoTime"
-                    android:layout_width="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/clHaveDoubtsBanner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_40dp"
+                android:background="@color/_white_F6F6FF"
+                android:scaleType="centerCrop"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/cl_bookmark">
+
+                <ImageView
+                    android:id="@+id/iv_ques"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text=""
-                    android:textColor="@android:color/white"
-                    android:textSize="@dimen/_12sp"
-                    app:layout_constraintStart_toStartOf="parent" />
-                <LinearLayout
-                    android:id="@+id/buttonContainer"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    app:layout_constraintTop_toBottomOf="@+id/clupNext"
-                    app:layout_constraintStart_toEndOf="@+id/flnextvideo"
-                    android:layout_marginTop="@dimen/_8dp">
-
-                    <TextView
-                        android:id="@+id/startNextButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Start"
-                        android:textColor="@android:color/white"
-                        android:layout_marginEnd="8dp"/>
-
-                    <TextView
-                        android:id="@+id/cancelNextButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Cancel"
-                        android:textColor="@android:color/white"/>
-                </LinearLayout>
-            </LinearLayout>
-
+                    android:layout_marginHorizontal="@dimen/_16dp"
+                    android:layout_marginTop="@dimen/_20dp"
+                    android:layout_marginBottom="100dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/have_any"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </RelativeLayout>
 
 </layout>

@@ -45,17 +45,18 @@
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/clOverviewTop"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="?actionBarSize"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent">
 
                         <ImageView
                             android:id="@+id/back_iv"
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:layout_marginStart="20dp"
-                            android:layout_marginTop="24dp"
+                            android:layout_width="45dp"
+                            android:layout_height="45dp"
+                            android:layout_marginStart="16dp"
+                            android:padding="@dimen/_10dp"
+                            android:layout_marginTop="20dp"
                             android:layout_marginBottom="20dp"
                             android:src="@drawable/arrow_left_white"
                             app:layout_constraintBottom_toBottomOf="parent"
@@ -242,6 +243,8 @@
                         android:layout_marginTop="20dp"
                         android:ellipsize="end"
                         android:lineHeight="21sp"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"
                         android:maxLines="3"
                         setTextViewHtml="@{courseByIDViewModel.courseByID != null ? courseByIDViewModel.courseByID.description : ` `}"
                         android:textColor="#726C6C"
@@ -272,71 +275,91 @@
                         android:layout_width="0dp"
                         android:layout_height="1dp"
                         android:layout_marginTop="16dp"
+                        android:visibility="gone"
                         android:background="#ADADAF"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/tvReadMore" />
 
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/tvStartDate"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="17dp"
-                        android:drawableStart="@drawable/clock"
-                        android:drawablePadding="6dp"
-                        android:fontFamily="@font/nunito"
-                        android:text=""
-                        android:textColor="@color/black"
-                        android:textSize="12sp"
-                        android:textStyle="bold"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/view3" />
 
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/tvEndDate"
-                        android:layout_width="0dp"
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/cl_startEndConstraint"
+                        android:layout_width="match_parent"
+                        android:padding="@dimen/_10sp"
+                        android:background="@drawable/background_bg_date"
+                        android:layout_marginTop="@dimen/_12sp"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:drawableStart="@drawable/clock"
-                        android:drawablePadding="6dp"
-                        android:fontFamily="@font/nunito"
-                        android:text=""
-                        android:textColor="@color/black"
-                        android:textSize="12sp"
-                        android:textStyle="bold"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/view3" />
+                        app:layout_constraintTop_toBottomOf="@+id/view3"
+                        >
 
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/tvLectureNo"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:drawableStart="@drawable/video_play__1_"
-                        android:drawablePadding="6dp"
-                        android:text=""
-                        android:fontFamily="@font/nunito"
-                        android:textColor="@color/black"
-                        android:textSize="12sp"
-                        android:textStyle="bold"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/tvStartDate" />
 
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/ExpireValidity"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:drawableStart="@drawable/document_normal"
-                        android:drawablePadding="6dp"
-                        android:fontFamily="@font/nunito"
-                        android:visibility="visible"
-                        android:text=""
-                        android:textColor="@color/black"
-                        android:textSize="12sp"
-                        android:textStyle="bold"
-                        app:layout_constraintStart_toStartOf="@id/tvEndDate"
-                        app:layout_constraintTop_toBottomOf="@id/tvEndDate" />
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/tvStartDate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:drawableStart="@drawable/clock"
+                            android:drawablePadding="6dp"
+                            app:drawableTint="@color/white"
+                            android:fontFamily="@font/nunito"
+                            android:text=""
+                            android:textColor="@color/_white_F6F6FF"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/tvEndDate"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:drawableStart="@drawable/clock"
+                            android:drawablePadding="6dp"
+                            android:fontFamily="@font/nunito"
+                            android:text=""
+                            app:drawableTint="@color/white"
+                            android:textColor="@color/_white_F6F6FF"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/tvLectureNo"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:drawableStart="@drawable/video_play__1_"
+                            android:drawablePadding="6dp"
+                            android:text=""
+                            app:drawableTint="@color/white"
+                            android:fontFamily="@font/nunito"
+                            android:textColor="@color/_white_F6F6FF"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/tvStartDate" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/ExpireValidity"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:drawableStart="@drawable/document_normal"
+                            android:drawablePadding="6dp"
+                            android:fontFamily="@font/nunito"
+                            app:drawableTint="@color/white"
+                            android:visibility="visible"
+                            android:text=""
+                            android:textColor="@color/_white_F6F6FF"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            app:layout_constraintStart_toStartOf="@id/tvEndDate"
+                            app:layout_constraintTop_toBottomOf="@id/tvEndDate" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
                     <View
                         android:id="@+id/view4"
@@ -347,7 +370,7 @@
                         android:visibility="gone"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/tvQuizTests" />
+                        app:layout_constraintTop_toBottomOf="@id/cl_startEndConstraint" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -558,11 +581,12 @@
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/clGetPlanner"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:layout_marginStart="14dp"
                         android:layout_marginTop="20dp"
                         android:layout_marginEnd="16dp"
                         android:layout_marginBottom="16dp"
+                        android:drawableEnd="@drawable/download_banner"
                         android:background="@drawable/course_planner_bg"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -590,6 +614,7 @@
                             android:layout_width="20dp"
                             android:layout_height="20dp"
                             android:layout_marginTop="10dp"
+                            android:visibility="visible"
                             android:layout_marginEnd="12dp"
                             android:layout_marginBottom="10dp"
                             android:src="@drawable/tray_arrow_down"
@@ -898,7 +923,7 @@
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="150dp"
+                    android:layout_height="200dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/clRelatedCourses" />
@@ -930,8 +955,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
                     android:drawableStart="@drawable/frame_1707480073__2_"
                     android:drawablePadding="10dp"
                     android:text="Installment option available, view details..."
@@ -963,18 +988,44 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/clInstallmentOptionView">
 
+                <!-- New Checkbox and TextView for Terms and Conditions -->
+                <android.widget.CheckBox
+                    android:id="@+id/cbAgreeTerms"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="@dimen/_2dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tvAgreeTerms"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="@dimen/_2dp"
+                    android:fontFamily="@font/nunito"
+                    android:text="By proceeding with this purchase, you confirm that you have read and agreed to the Terms and Conditions, as well as the Refund Policy."
+                    android:textSize="12sp"
+                    android:textColor="#726C6C"
+                    app:layout_constraintStart_toEndOf="@id/cbAgreeTerms"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:lineSpacingExtra="4dp" />
+
+                <!-- Existing orgPricexp TextView and other elements below -->
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/orgPricexp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="3dp"
                     android:textColor="#726C6C"
                     android:textSize="12sp"
                     android:text=""
                     app:fontFamily="@font/nunito"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toBottomOf="@id/tvAgreeTerms" />
 
                 <View
                     android:id="@+id/viewxp"
@@ -991,7 +1042,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
-                    android:layout_marginTop="6dp"
+                    android:layout_marginTop="3dp"
                     android:layout_marginBottom="20dp"
                     android:textColor="#0A0A0B"
                     android:text=""
@@ -1002,37 +1053,27 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/orgPricexp" />
 
-                <androidx.constraintlayout.widget.ConstraintLayout
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/cl_buynow"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="7dp"
                     android:layout_marginEnd="16dp"
-                    android:layout_marginBottom="20dp"
-                    android:background="@drawable/button_bg"
-                    android:backgroundTint="#3E3EF7"
+                    android:layout_marginBottom="3dp"
+                    android:text="Buy Now"
+                    android:enabled="false"
+                    app:cornerRadius="@dimen/_8dp"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:backgroundTint="@color/grey_button"
+                    app:fontFamily="@font/nunito"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent">
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="32dp"
-                        android:layout_marginVertical="12dp"
-                        android:text="Buy Now"
-                        android:id="@+id/submit"
-                        android:textColor="@color/white"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        app:fontFamily="@font/nunito"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                    app:layout_constraintEnd_toEndOf="parent"
+                    />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

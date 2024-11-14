@@ -1,10 +1,9 @@
 package xyz.penpencil.competishun.ui.adapter
 
-import android.os.Build
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.data.model.SubjectContentItem
@@ -18,7 +17,8 @@ import java.util.Locale
 
 class SubjectContentAdapter(
     private val items: List<SubjectContentItem>,
-    private val onItemClicked: (SubjectContentItem) -> Unit
+    var folderName:String,
+    private val onItemClicked: (SubjectContentItem) -> Unit,
 ) : RecyclerView.Adapter<SubjectContentAdapter.SubjectContentViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SubjectContentViewHolder {
@@ -68,8 +68,11 @@ class SubjectContentAdapter(
             }
         }
     }
-    fun isDateTodayOrPast(dateString: String): Boolean {
+    fun isDateTodayOrPast(dateString: String, external: Boolean): Boolean {
         // Clean up the date string
+        if (external) {
+            return true
+        }
         val cleanedDateString = dateString.replace("Sept", "Sep").trim()
             .replace("pm".toRegex(), "PM")
             .replace("am".toRegex(), "AM")
@@ -100,11 +103,20 @@ class SubjectContentAdapter(
         fun bind(item: SubjectContentItem) {
             binding.tvChapterNumber.text = String.format("%02d", item.chapterNumber)
             binding.tvTopicName.text = item.topicName
-            binding.customTopicProgress.progress = item.progressPer
-            binding.tvTopicDescription.text = item.topicDescription + " Learning Material"
-            binding.CustomTopicPercentCompleted.text = item.progressPer.toString() + "% Completed"
+            if (folderName== "Physics" || folderName == "Chemistry" || folderName == "Maths" || folderName == "Mathematics" ||folderName == "Biology" ){
+                binding.customTopicProgress.progress = item.progressPer
+                binding.customTopicProgress.visibility = View.VISIBLE
+                binding.CustomTopicPercentCompleted.visibility = View.VISIBLE
+                binding.CustomTopicPercentCompleted.text = item.progressPer.toString() + "% Completed"
+            }else{
+                binding.customTopicProgress.visibility = View.GONE
+                binding.CustomTopicPercentCompleted.visibility = View.GONE
+            }
+            Log.e("pdfcound ${item.pdfcount}",item.videocount)
+            val totalcontent = item.pdfcount.toInt() + item.videocount.toInt()
+            binding.tvTopicDescription.text = "$totalcontent Learning Material"
            Log.e("datead",item.locktime)
-            if (isDateTodayOrPast(item.locktime)) {
+            if (isDateTodayOrPast(item.locktime, item.isExternal)) {
                 Log.e("datead True",item.locktime)
                 binding.IvlockImage.setImageResource(R.drawable.arrow_right__1_)
             }else{

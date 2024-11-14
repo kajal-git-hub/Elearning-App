@@ -47,8 +47,8 @@ class YTCourseFragment : Fragment(), FilterSelectionListener {
         }
        fetchCoursesForClass("","")
         setupToggleRecyclerView()
-        binding.tvCourseMaterialCount.text = "36 Courses"
-        binding.tvShowingResults.text = "Showing results (4):"
+        binding.tvCourseMaterialCount.text = "0 Courses"
+        binding.tvShowingResults.text = "Showing results (0):"
 
     }
 
@@ -119,6 +119,7 @@ class YTCourseFragment : Fragment(), FilterSelectionListener {
                                 // binding.rvYTCourse.adapter = YTCourseAdapter(courses, this@YTCourseFragment)
                             }?.onFailure { exception ->
                                 // Handle the failure case
+                                binding.progressBar.visibility = View.GONE
                                 Log.e(TAG, exception.toString())
                             }
                         }

@@ -50,6 +50,9 @@ data class TopicContentModel(
     @ColumnInfo(name = "homework_name")
     val homeworkName: String,
 
+    @ColumnInfo(name = "homework_desc")
+    val homeworkDesc: String,
+
     @ColumnInfo(name = "is_external")
     var isExternal: Boolean = false,
 

@@ -34,23 +34,44 @@ class OurSubjectsAdapter(private val listOurSubjectItem:List<FindCourseParentFol
         holder.tvSubjectName.text = itemOurSubject?.name?:""
         if (holder.tvSubjectName.text.contains("physics", ignoreCase = true)){
             holder.ivMathematics.setImageResource(images[1])
+            holder.customProgressIndicatorMathematics.visibility = View.VISIBLE
+            holder.tvPercentCompletedMathematics.visibility = View.VISIBLE
         }else if (holder.tvSubjectName.text.contains("Chemistry")){
             holder.ivMathematics.setImageResource(images[2])
+            holder.customProgressIndicatorMathematics.visibility = View.VISIBLE
+            holder.tvPercentCompletedMathematics.visibility = View.VISIBLE
         }
         else if (holder.tvSubjectName.text.contains("Biology", ignoreCase = true)){
             holder.ivMathematics.setImageResource(images[5])
+            holder.customProgressIndicatorMathematics.visibility = View.VISIBLE
+            holder.tvPercentCompletedMathematics.visibility = View.VISIBLE
         }
         else if (holder.tvSubjectName.text.contains("Text", ignoreCase = true)){
             holder.ivMathematics.setImageResource(images[6])
+            holder.customProgressIndicatorMathematics.visibility = View.GONE
+            holder.tvPercentCompletedMathematics.visibility = View.GONE
         }
         else if (holder.tvSubjectName.text.contains("Other", ignoreCase = true)){
             holder.ivMathematics.setImageResource(images[6])
+            holder.customProgressIndicatorMathematics.visibility = View.GONE
+            holder.tvPercentCompletedMathematics.visibility = View.GONE
         }
         else if (holder.tvSubjectName.text.contains("Class", ignoreCase = true )){
+            holder.freeBadgeImageView.visibility = View.VISIBLE
+            holder.customProgressIndicatorMathematics.visibility = View.GONE
+            holder.tvPercentCompletedMathematics.visibility = View.GONE
             holder.ivMathematics.setImageResource(images[6])
         }else if (holder.tvSubjectName.text.contains("Maths", ignoreCase = true )){
             holder.ivMathematics.setImageResource(images[4])
+            holder.customProgressIndicatorMathematics.visibility = View.VISIBLE
+            holder.tvPercentCompletedMathematics.visibility = View.VISIBLE
         }
+        else if (holder.tvSubjectName.text.contains("Mathematics", ignoreCase = true )){
+            holder.ivMathematics.setImageResource(images[4])
+            holder.customProgressIndicatorMathematics.visibility = View.VISIBLE
+            holder.tvPercentCompletedMathematics.visibility = View.VISIBLE
+        }
+
         else{
             holder.ivMathematics.setImageResource(images[6])
         }
@@ -76,6 +97,7 @@ class OurSubjectsAdapter(private val listOurSubjectItem:List<FindCourseParentFol
         val tvSubjectName: TextView =itemView.findViewById(R.id.tvMathematics)
         val tvNoOfChaptersMathematics: TextView = itemView.findViewById(R.id.tvNoOfChaptersMathematics)
          val ivMathematics: ImageView = itemView.findViewById(R.id.ivMathematics)
+        val freeBadgeImageView: ImageView = itemView.findViewById(R.id.freeBadgeImageView)
         val customProgressIndicatorMathematics: ProgressBar = itemView.findViewById(R.id.customProgressIndicatorMathematics)
         val tvPercentCompletedMathematics: MaterialTextView = itemView.findViewById(R.id.tvPercentCompletedMathematics)
     }

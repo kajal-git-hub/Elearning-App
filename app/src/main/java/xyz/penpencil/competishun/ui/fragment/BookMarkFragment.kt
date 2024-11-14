@@ -4,20 +4,17 @@ import android.app.Activity
 import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
 import android.widget.Toast
-import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.tabs.TabLayout
 import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.data.model.TopicContentModel
@@ -88,17 +85,17 @@ class BookMarkFragment : DrawerVisibility(), BookMarkAdapter.OnVideoClickListene
 
     private fun showPdfItems() {
         val pdfItems = allDownloadedItems.filter { it.fileType == "PDF" }
-//        updateRecyclerView(pdfItems)
+        updateRecyclerView(pdfItems)
         bookmarkAdapter.updateItems(pdfItems)
-//        checkEmptyState() // Check for empty state
+        checkEmptyState() // Check for empty state
 
     }
 
     private fun showVideoItems() {
         val videoItems = allDownloadedItems.filter { it.fileType == "VIDEO" }
-//        updateRecyclerView(videoItems)
+        updateRecyclerView(videoItems)
         bookmarkAdapter.updateItems(videoItems)
-//        checkEmptyState() // Check for empty state
+        checkEmptyState() // Check for empty state
 
 
     }
@@ -117,7 +114,7 @@ class BookMarkFragment : DrawerVisibility(), BookMarkAdapter.OnVideoClickListene
         }
     }
 
-    fun loadDownloadedItems() {
+    private fun loadDownloadedItems() {
         val sharedPreferencesManager = SharedPreferencesManager(requireActivity())
         allDownloadedItems = sharedPreferencesManager.getDownloadedItemsBm()
         Log.d("allDownloadedItems", allDownloadedItems.toString())
@@ -137,7 +134,7 @@ class BookMarkFragment : DrawerVisibility(), BookMarkAdapter.OnVideoClickListene
         if (binding.BookmarkTabLayout.getTabAt(selectedTabPosition)?.text == "Videos ($videoItemsSize)") {
             updateRecyclerView(videoItems)
         }
-//        checkEmptyState()
+        checkEmptyState()
     }
 
     private fun updateRecyclerView(items: List<TopicContentModel>) {
@@ -146,7 +143,7 @@ class BookMarkFragment : DrawerVisibility(), BookMarkAdapter.OnVideoClickListene
             items.toMutableList(), parentFragmentManager, this, this
         )
         binding.rvBookmark.adapter = bookmarkAdapter
-//        checkEmptyState() // Check for empty state after updating the adapter
+        checkEmptyState()
 
     }
 
@@ -174,18 +171,14 @@ class BookMarkFragment : DrawerVisibility(), BookMarkAdapter.OnVideoClickListene
         emptyStateLayout.visibility = if (isEmpty) View.VISIBLE else View.GONE
     }
 
-    override fun onVideoClick(folderContentId: String, name: String) {
-        playVideo(folderContentId, name)
+    override fun onVideoClick(topicContentModel: TopicContentModel) {
+        playVideo(topicContentModel)
     }
 
-    private fun playVideo(folderContentId: String, name: String) {
-        val videoFileURL = File(requireContext().filesDir, "$name.mp4").absolutePath
-
-        if (videoFileURL.isNotEmpty()) {
+    private fun playVideo(topicContentModel: TopicContentModel) {
+        if (topicContentModel.url.isNotEmpty()) {
             val bundle = Bundle().apply {
-                putString("url", videoFileURL)
-                putString("url_name", name)
-                putString("ContentId", folderContentId)
+                putSerializable("VIDEO_DATA", topicContentModel.apply { localPath = topicContentModel.url })
             }
             findNavController().navigate(R.id.downloadMediaPlayerFragment, bundle)
         } else {

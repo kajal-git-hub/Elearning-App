@@ -1,6 +1,7 @@
 package xyz.penpencil.competishun.ui.adapter
 
 import android.content.Context
+import android.os.CountDownTimer
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
@@ -9,18 +10,17 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import xyz.penpencil.competishun.data.model.ScheduleData
-import java.time.Duration
-import java.time.ZonedDateTime
-import java.time.ZoneId
-import android.os.CountDownTimer
 import xyz.penpencil.competishun.R
+import xyz.penpencil.competishun.data.model.ScheduleData
 import xyz.penpencil.competishun.databinding.ItemCurrentSchedulesBinding
 import xyz.penpencil.competishun.databinding.ItemCurrentSchedulesInnerChildBinding
 import xyz.penpencil.competishun.utils.ToolbarCustomizationListener
-import xyz.penpencil.competishun.utils.utcToIst
 import xyz.penpencil.competishun.utils.toIstZonedDateTime
+import xyz.penpencil.competishun.utils.utcToIst
+import java.time.Duration
 import java.time.LocalDate
+import java.time.ZoneId
+import java.time.ZonedDateTime
 
 class ScheduleAdapter(private val scheduleItems: List<ScheduleData>, private val context: Context, private val toolbarListener: ToolbarCustomizationListener) : RecyclerView.Adapter<ScheduleAdapter.ScheduleViewHolder>() {
 
@@ -85,6 +85,12 @@ class ScheduleAdapter(private val scheduleItems: List<ScheduleData>, private val
                 binding.tvSubjectName.text = innerItem.subject_name
                 binding.tvTopicName.text = innerItem.topic_name
                 startCountdownTimer(innerItem.scheduleTimer,innerItem.file_url , innerItem.fileType,innerItem.contentId)
+                binding.root.setOnClickListener {
+                    if (binding.clLectureTimer.visibility == View.GONE){
+                        toolbarListener.onCustomizeToolbar(innerItem.file_url, innerItem.fileType, innerItem.contentId)
+                    }
+                }
+
                 Log.e("sbAHGSHahsghaGHS", "bind: " +innerItem.scheduleTimer)
                 if (innerItem.fileType=="VIDEO") {
 
@@ -235,70 +241,67 @@ class ScheduleAdapter(private val scheduleItems: List<ScheduleData>, private val
             }
 */
             private fun startCountdownTimer(targetTimestamp: String, fileUrl: String, fileType: String, ContentId: String) {
-           /*   val utcZone = ZoneId.of("UTC")
-              val istZone = ZoneId.of("UTC")
+                Handler(Looper.getMainLooper()).post {
+                    val istZone = ZoneId.of("Asia/Kolkata")
+                    val targetTimeIst = targetTimestamp.utcToIst().toIstZonedDateTime()
 
-              val targetTimeUtc = ZonedDateTime.parse(targetTimestamp, DateTimeFormatter.ISO_DATE_TIME.withZone(utcZone))
+                    val nowInIst = ZonedDateTime.now(istZone)
+                    val initialDuration = Duration.between(nowInIst, targetTimeIst).toMillis()
 
-              val targetTimeIst = targetTimeUtc.withZoneSameInstant(istZone)
-                */
+                    val timer = object : CountDownTimer(initialDuration, 1000) {
+                        override fun onTick(millisUntilFinished: Long) {
+                            val secondsRemaining = millisUntilFinished / 1000
+                            val days = secondsRemaining / 86400 // 60 * 60 * 24
+                            val hours = (secondsRemaining % 86400) / 3600
+                            val minutes = (secondsRemaining % 3600) / 60
+                            val seconds = secondsRemaining % 60
+                            val totalHours = (days * 24) + hours
+                            if (binding.clLectureTimer.visibility != View.VISIBLE) {
+                                binding.clLectureTimer.visibility = View.VISIBLE
+                                binding.clJoinLecture.visibility = View.GONE
+                            }
+                            binding.tvHoursRemaining.text = "$totalHours"
+                            binding.tvMinRemaining.text = "$minutes"
+                            binding.tvSecRemaining.text = "$seconds"
 
-                val istZone = ZoneId.of("Asia/Kolkata")
-                val targetTimeIst = targetTimestamp.utcToIst().toIstZonedDateTime()
+                            Log.e(
+                                "shdjkashjdkashds",
+                                "$targetTimestamp || ${binding.tvTopicName.text} ||  onTick:  $totalHours  || $minutes   $seconds"
+                            )
 
-                val nowInIst = ZonedDateTime.now(istZone)
-                val initialDuration = Duration.between(nowInIst, targetTimeIst).toMillis()
 
-                val timer = object : CountDownTimer(initialDuration, 1000) {
-                    override fun onTick(millisUntilFinished: Long) {
-                        val secondsRemaining = millisUntilFinished / 1000
-                        val days = secondsRemaining / 86400 // 60 * 60 * 24
-                        val hours = (secondsRemaining % 86400) / 3600
-                        val minutes = (secondsRemaining % 3600) / 60
-                        val seconds = secondsRemaining % 60
-                        val totalHours = (days * 24) + hours
-                        if (binding.clLectureTimer.visibility != View.VISIBLE) {
-                            binding.clLectureTimer.visibility = View.VISIBLE
-                            binding.clJoinLecture.visibility = View.GONE
                         }
-                        binding.tvHoursRemaining.text = "$totalHours"
-                        binding.tvMinRemaining.text = "$minutes"
-                        binding.tvSecRemaining.text = "$seconds"
 
-                        Log.e("shdjkashjdkashds", "$targetTimestamp || ${binding.tvTopicName.text} ||  onTick:  $totalHours  || $minutes   $seconds", )
+                        override fun onFinish() {
+                            val nowInIst = ZonedDateTime.now(istZone)
+                            Log.e("CountdownTimer", "Target Time: $targetTimeIst | onFinish: $nowInIst")
 
+                            // Calculate time passed since the target time
+                            val durationSinceEnd = Duration.between(targetTimeIst, nowInIst)
+                            val daysPassed = durationSinceEnd.toDays()
+                            val hoursPassed = durationSinceEnd.toHours() % 24
+                            val minutesPassed = durationSinceEnd.toMinutes() % 60
 
-                    }
+                            val message = when {
+                                daysPassed > 0 -> "Started $daysPassed days ago"
+                                hoursPassed > 0 -> "Started $hoursPassed hours ago"
+                                else -> "Started $minutesPassed minutes ago"
+                            }
+                            binding.tvClassStartedStatus.text = message
+                            binding.clLectureTimer.visibility = View.GONE
+                            binding.clJoinLecture.visibility = View.VISIBLE
 
-                    override fun onFinish() {
-                        val nowInIst = ZonedDateTime.now(istZone)
-                        Log.e("CountdownTimer", "Target Time: $targetTimeIst | onFinish: $nowInIst")
-
-                        // Calculate time passed since the target time
-                        val durationSinceEnd = Duration.between(targetTimeIst, nowInIst)
-                        val daysPassed = durationSinceEnd.toDays()
-                        val hoursPassed = durationSinceEnd.toHours() % 24
-                        val minutesPassed = durationSinceEnd.toMinutes() % 60
-
-                        val message = when {
-                            daysPassed > 0 -> "Started $daysPassed days ago"
-                            hoursPassed > 0 -> "Started $hoursPassed hours ago"
-                            else -> "Started $minutesPassed minutes ago"
-                        }
-                        binding.tvClassStartedStatus.text = message
-                        binding.clLectureTimer.visibility = View.GONE
-                        binding.clJoinLecture.visibility = View.VISIBLE
-
-                        // Handle the join lecture button click
-                        binding.btnJoinLecture.setOnClickListener {
-                            Log.e("File Info", "$fileUrl | Type: $fileType | Content ID: $ContentId")
-                            toolbarListener.onCustomizeToolbar(fileUrl, fileType, ContentId)
+                            // Handle the join lecture button click
+                            binding.btnJoinLecture.setOnClickListener {
+                                Log.e("File Info", "$fileUrl | Type: $fileType | Content ID: $ContentId")
+                                toolbarListener.onCustomizeToolbar(fileUrl, fileType, ContentId)
+                            }
                         }
                     }
+
+                    // Start the timer
+                    timer.start()
                 }
-
-                // Start the timer
-                timer.start()
             }
         }
     }

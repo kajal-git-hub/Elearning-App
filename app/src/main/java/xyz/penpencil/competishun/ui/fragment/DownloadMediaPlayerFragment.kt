@@ -1,51 +1,78 @@
 package xyz.penpencil.competishun.ui.fragment
 
+import android.app.Dialog
+import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import android.view.GestureDetector
+import android.view.Gravity
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.widget.FrameLayout
+import android.widget.ImageButton
+import android.widget.ImageView
+import android.widget.TextView
+import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.annotation.OptIn
 import androidx.appcompat.app.AlertDialog
-import androidx.lifecycle.ViewModelProvider
+import androidx.core.content.ContextCompat
+
+import androidx.core.view.setPadding
 import androidx.media3.common.MediaItem
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.ui.PlayerView
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
+import xyz.penpencil.competishun.R
+import xyz.penpencil.competishun.data.model.TopicContentModel
 import xyz.penpencil.competishun.databinding.FragmentDownloadMediaPlayerBinding
-import xyz.penpencil.competishun.di.SharedVM
 import xyz.penpencil.competishun.ui.main.HomeActivity
+import xyz.penpencil.competishun.ui.main.PdfViewActivity
+import xyz.penpencil.competishun.utils.SharedPreferencesManager
+import xyz.penpencil.competishun.utils.serializable
 import java.io.File
+import kotlin.random.Random
+
 
 @AndroidEntryPoint
 class DownloadMediaPlayerFragment : DrawerVisibility() {
 
     private lateinit var binding: FragmentDownloadMediaPlayerBinding
     private lateinit var player: ExoPlayer
-    private lateinit var gestureDetector: GestureDetector
     private val handler = Handler(Looper.getMainLooper())
-    private lateinit var sharedViewModel: SharedVM
+
     companion object {
         private const val SEEK_OFFSET_MS = 10000L
     }
+
+    private var mFullScreenDialog: Dialog ?=null
+    private var mExoPlayerFullscreen: Boolean = false
+
+    private lateinit var sharedPreferencesManager: SharedPreferencesManager
+    private var flickeringText: TextView?=null
+
+    var fullScreenButton: ImageView?=null
+    var backBtn: ImageView?=null
+    var qualityButton: ImageView?=null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
         binding = FragmentDownloadMediaPlayerBinding.inflate(inflater, container, false)
         return binding.root
     }
+
 
     @OptIn(UnstableApi::class)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -53,25 +80,47 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
 
         (activity as? HomeActivity)?.showBottomNavigationView(false)
         (activity as? HomeActivity)?.showFloatingButton(false)
+        sharedPreferencesManager = SharedPreferencesManager(requireContext())
 
-        sharedViewModel = ViewModelProvider(requireActivity()).get(SharedVM::class.java)
-        binding.backBtn.setOnClickListener {
-            requireActivity().onBackPressedDispatcher.onBackPressed()
-        }
+        initFullscreenDialog()
+        val videoData = arguments?.serializable<TopicContentModel>("VIDEO_DATA")
+        val videoUrl = videoData?.localPath?:""
+        videoData?.let {
+            binding.tittleTv.text = it.topicName
+            binding.descTv.text = it.topicDescription
+            val hDesc = it.homeworkDesc.trim('[', ']').trim()
+            if (hDesc.isNotEmpty()){
+                binding.homeworkDescTv.text = hDesc
+                binding.homeworkDescTv.visibility = View.VISIBLE
+            }else {
+                binding.homeworkDescTv.visibility = View.GONE
+            }
 
-        val videoUrl = arguments?.getString("url") ?: return
-        val title = arguments?.getString("url_name") ?: return
+            val hTitle = it.homeworkName.trim('[', ']').trim()
+            if (hTitle.isNotEmpty()){
+                binding.homeworktittleTv.text = hTitle
+                binding.homeworktittleTv.visibility = View.VISIBLE
+            }else {
+                binding.homeworktittleTv.visibility = View.GONE
+                binding.homeworkTv.visibility = View.GONE
+            }
 
-        Log.e("url", "video_url:$videoUrl")
-        Log.e("Title", "video_title:$title")
-
-        if (title.isNotEmpty()) {
-            binding.tittleBtn.visibility = View.VISIBLE
-            binding.tittleBtn.text = title
+            binding.homeworktittleTv.setOnClickListener { view->
+                val intent = Intent(requireContext(), PdfViewActivity::class.java).apply {
+                    putExtra("PDF_URL", it.homeworkUrl.trim('[', ']').trim())
+                    putExtra("PDF_TITLE",it.homeworkName.trim('[', ']').trim())
+                }
+                context?.startActivity(intent)
+            }
         }
         player = ExoPlayer.Builder(requireContext()).build()
+        binding.playerView.useArtwork = true
+        binding.playerView.setShowBuffering(PlayerView.SHOW_BUFFERING_ALWAYS)
         binding.playerView.player = player
-//        binding.playerView.videoSurfaceView?.rotation = 90F;
+
+        fullScreenButton = binding.playerView.findViewById<ImageButton>(R.id.fullScreen)
+        backBtn = binding.playerView.findViewById<ImageButton>(R.id.back_btn)
+        qualityButton = binding.playerView.findViewById<ImageButton>(R.id.qualityButton)
 
 
         playVideo(videoUrl)
@@ -93,15 +142,121 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
             Log.e("PlayerSetup", "Failed to play video", e)
         }
 
-
-        binding.qualityButton.setOnClickListener {
+        backBtn?.setOnClickListener {
+            if (mExoPlayerFullscreen){
+                requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
+                closeFullscreenDialog()
+            }else {
+                view?.findNavController()?.popBackStack()
+            }
+        }
+        qualityButton?.setOnClickListener {
             showSpeedOrQualityDialog()
         }
+        fullScreenButton?.setOnClickListener {
+            toggleFullscreen()
+        }
 
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (mExoPlayerFullscreen) {
+                    requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
+                    closeFullscreenDialog()
+                } else {
+                    findNavController().popBackStack()
+                }
+            }
+        })
+
+        sharedPreferencesManager.getString("ROLL_NUMBER", "")?.let {
+            if (it.isNotEmpty()) {
+                waterMark(it)
+            }
+        }
+
+        binding.clBookmark.setOnClickListener {
+            bookmarkItem(videoData)
+        }
+    }
+
+    private val flickerRunnable = object : Runnable {
+        override fun run() {
+            flickeringText?.let { textView ->
+                textView.visibility = if (Random.nextBoolean()) {
+                    View.VISIBLE
+                } else {
+                    View.INVISIBLE
+                }
+
+                val parent = textView.parent as? FrameLayout ?: return@let
+                val parentWidth = parent.width
+                val parentHeight = parent.height
+
+                if (parentWidth == 0 || parentHeight == 0) {
+                    handler.postDelayed(this, 300000)
+                    return@let
+                }
+
+                val layoutParams = textView.layoutParams as FrameLayout.LayoutParams
+
+                val maxLeft = (parentWidth - textView.width).coerceAtLeast(0)
+                val maxTop = (parentHeight - textView.height).coerceAtLeast(0)
+
+                layoutParams.leftMargin = Random.nextInt(0, maxLeft)
+                layoutParams.topMargin = Random.nextInt(0, maxTop)
+                textView.layoutParams = layoutParams
+                val delay = Random.nextLong(300, 600)
+                handler.postDelayed(this, delay)
+            }
+        }
+    }
+
+    private fun waterMark(s: String) {
+        if (flickeringText == null) {
+            flickeringText = TextView(requireContext()).apply {
+                text = s
+                textSize = 12f
+                setPadding(20)
+                gravity = Gravity.CENTER
+                setTextColor(ContextCompat.getColor(requireContext(), R.color.alfa))
+                layoutParams = FrameLayout.LayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+                ).apply {
+                    setMargins(30, 30, 30, 30)
+                }
+            }
+            if (binding.playerView is FrameLayout) {
+                binding.playerView.addView(flickeringText)
+                handler.post(flickerRunnable)
+            } else {
+                Log.e("WaterMark", "playerView is not a FrameLayout")
+            }
+        }
+    }
+
+
+    private fun initFullscreenDialog() {
+        mFullScreenDialog = Dialog(requireContext(), R.style.full_screen_dialog).apply {
+            window?.setFlags(
+                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+            )
+            window?.decorView?.systemUiVisibility = (View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                    or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                    or View.SYSTEM_UI_FLAG_FULLSCREEN
+                    or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                    or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                    or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
+        }
+        mFullScreenDialog?.setOnDismissListener {
+            mExoPlayerFullscreen = false
+            requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
+            closeFullscreenDialog()
+        }
     }
 
     private fun playVideo(videoUrl: String) {
-        binding.progressBar.visibility = View.VISIBLE
         binding.playerView.visibility = View.GONE
 
         val uri = if (File(videoUrl).exists()) {
@@ -121,14 +276,28 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
             }
             override fun onPlaybackStateChanged(state: Int) {
                 if (state == Player.STATE_READY) {
-                    binding.progressBar.visibility = View.GONE
                     binding.playerView.visibility = View.VISIBLE
+                }
+
+                if (state == Player.STATE_ENDED){
+                    if (mExoPlayerFullscreen){
+                        closeFullscreenDialog()
+                    }
                 }
             }
         })
     }
+
+    private fun bookmarkItem(videoData: TopicContentModel?) {
+        videoData?.let {
+            Log.d("Bookmark", "Clicked")
+            SharedPreferencesManager(requireActivity()).saveDownloadedItemBm(it)
+            Toast.makeText(requireContext(), "Added to Bookmarks", Toast.LENGTH_SHORT).show()
+        }
+    }
+
     private fun showSpeedOrQualityDialog() {
-        val options = arrayOf("Speed", "Quality")
+        val options = arrayOf("Speed")
 
         AlertDialog.Builder(requireContext())
             .setTitle("Choose Option")
@@ -161,32 +330,7 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
         requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
     }
 
-    private inner class DoubleTapGestureListener : GestureDetector.SimpleOnGestureListener() {
-        override fun onDoubleTap(e: MotionEvent): Boolean {
-            val x = e.x
-            val width = binding.playerView.width
-            val centerThirdStart = width / 3
-            val centerThirdEnd = 2 * width / 3
 
-            when {
-                x.toInt() in centerThirdStart..centerThirdEnd -> {
-                    if (player.isPlaying) {
-                        player.pause()
-                    } else {
-                        player.play()
-                    }
-                }
-                x < centerThirdStart -> seekBack()
-                else -> seekForward()
-            }
-            return true
-        }
-    }
-
-    private fun seekBack() {
-        val position = player.currentPosition
-        player.seekTo(maxOf(position - SEEK_OFFSET_MS, 0))
-    }
     override fun onResume() {
         super.onResume()
         requireActivity().window.setFlags(
@@ -197,6 +341,13 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
 
     override fun onPause() {
         super.onPause()
+        try {
+            if (this::player.isInitialized  && player.isPlaying){
+                player.pause()
+            }
+        } catch (e: Exception) {
+            Log.e("TAG", "onViewCreated: ", )
+        }
         requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
     }
 
@@ -205,4 +356,35 @@ class DownloadMediaPlayerFragment : DrawerVisibility() {
         player.seekTo(minOf(position + SEEK_OFFSET_MS, player.duration))
     }
 
+    private fun openFullscreenDialog() {
+        (binding.playerView.parent as? ViewGroup)?.removeView(binding.playerView)
+        mFullScreenDialog?.addContentView(
+            binding.playerView,
+            ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+            )
+        )
+        mExoPlayerFullscreen = true
+        mFullScreenDialog?.show()
+        fullScreenButton?.setImageResource(R.drawable.zoom_in_map_24)
+    }
+
+    private fun closeFullscreenDialog() {
+        (binding.playerView.parent as? ViewGroup)?.removeView(binding.playerView)
+        binding.playerRootApp.addView(binding.playerView)
+        mExoPlayerFullscreen = false
+        mFullScreenDialog?.dismiss()
+        fullScreenButton?.setImageResource(R.drawable.zoom_out_map_24)
+    }
+
+    private fun toggleFullscreen() {
+        if (!mExoPlayerFullscreen) {
+            requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
+            openFullscreenDialog()
+        } else {
+            requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
+            closeFullscreenDialog()
+        }
+    }
 }

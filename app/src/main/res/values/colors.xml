@@ -32,7 +32,11 @@
     <color name="_e67f00">#E67F00</color>
 
 
-
+    <color name="chemistry_color">#F15E03</color>
+    <color name="other_color">#F0EDDA</color>
+    <color name="physics_color">#01009A</color>
+    <color name="mathematics_color">#01009A</color>
+    <color name="biology_color">#F15E03</color>
     <color name="PrimaryColor">#3E3EF7</color>
     <color name="gray_progress">#CCCBCB</color>
     <color name="gray_border">#CCCBCB</color>
@@ -48,6 +52,8 @@
     <color name="_151314">#151314</color>
     <color name="_726C6C">#726C6C</color>
     <color name="_yy">#F27B30</color>
+    <color name="alfa">#61020202</color>
+    <color name="grey_button">#A8A8B4</color>
 
 
 </resources>

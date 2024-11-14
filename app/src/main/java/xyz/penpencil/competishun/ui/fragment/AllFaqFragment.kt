@@ -34,10 +34,10 @@ class AllFaqFragment : DrawerVisibility() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-
-        (activity as? HomeActivity)?.showBottomNavigationView(false)
-        (activity as? HomeActivity)?.showFloatingButton(false)
+        (activity as? HomeActivity)?.let {
+            it.showBottomNavigationView(false)
+            it.showFloatingButton(false)
+        }
 
         // Register the back press callback here
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {

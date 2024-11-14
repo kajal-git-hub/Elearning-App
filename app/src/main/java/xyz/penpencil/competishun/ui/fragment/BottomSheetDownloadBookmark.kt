@@ -145,14 +145,15 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
             lifecycleScope.launch {
                 itemDetails?.let { item ->
                     item.also { data ->
+                        Log.d("isExternal",isExternal.toString())
                         data.isExternal = isExternal
                         data.localPath = File(downloadPath, fileName).absolutePath
                     }
-                    topicContentViewModel.insertTopicContent(item)
+                    if (!isExternal){
+                        topicContentViewModel.insertTopicContent(item)
+                    }
                 }
             }
-        } else {
-            showPermissionDeniedDialog()
         }
     }
 
@@ -193,8 +194,6 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
             val allPermissionsGranted = permissionList().all { permissions[it] == true }
             if (notificationPermissionGranted && allPermissionsGranted) {
                 (requireActivity() as HomeActivity).downloadFile(videoUrl, fileName, isExternal)
-            } else {
-                showPermissionDeniedDialog()
             }
         }
 
