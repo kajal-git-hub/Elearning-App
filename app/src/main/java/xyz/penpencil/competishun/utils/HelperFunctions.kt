@@ -16,6 +16,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -216,10 +217,8 @@ class HelperFunctions {
             }
         }
 
-        context.registerReceiver(onCompleteReceiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE),
-            Context.RECEIVER_NOT_EXPORTED)
-
-
+        ContextCompat.registerReceiver(context,onCompleteReceiver,IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE),
+            ContextCompat.RECEIVER_NOT_EXPORTED )
         Log.e("YUYUYUIYUIY", "downloadPdf: $fileUrl  == $title")
     }
 
@@ -248,8 +247,9 @@ class HelperFunctions {
             }
         }
 
-        context.registerReceiver(onCompleteReceiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE),
-            Context.RECEIVER_NOT_EXPORTED)
+
+        ContextCompat.registerReceiver(context,onCompleteReceiver,IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE),
+            ContextCompat.RECEIVER_NOT_EXPORTED )
 
 
         Log.e("YUYUYUIYUIY", "downloadPdf: $fileUrl  == $title")
