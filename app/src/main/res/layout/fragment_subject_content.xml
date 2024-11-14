@@ -252,6 +252,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="16dp"
                 tools:itemCount="2"
+                android:layout_marginBottom="@dimen/_5dp"
                 tools:listitem="@layout/item_topic_type_content" />
 
 

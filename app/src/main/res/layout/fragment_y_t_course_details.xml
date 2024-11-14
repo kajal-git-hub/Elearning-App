@@ -42,8 +42,8 @@
 
         <ImageView
             android:id="@+id/iv_ytCourseBanner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/_320dp"
+            android:layout_height="@dimen/_130dp"
             android:src="@drawable/iv_ytcoursebanner"
             android:layout_marginHorizontal="@dimen/_16dp"
             android:layout_marginTop="@dimen/_12dp"
@@ -74,6 +74,7 @@
             android:layout_height="wrap_content"
             android:src="@drawable/state_layer"
             android:layout_marginEnd="@dimen/_16dp"
+            android:visibility="gone"
             android:layout_marginVertical="@dimen/_16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -85,7 +86,7 @@
         android:id="@+id/clNoOfVideos"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_20dp"
+        android:layout_marginTop="@dimen/_10dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/clYTCourseBannerView"
         app:layout_constraintEnd_toEndOf="parent">
@@ -181,26 +182,41 @@
             app:layout_constraintTop_toTopOf="@id/tv_topic_type" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/cl_topic_type"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintBottom_toBottomOf="parent"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvYTCourseVideoListing"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/_16dp"
-        android:layout_marginTop="@dimen/_16dp"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        android:orientation="vertical"
-        tools:itemCount="5"
-        tools:listitem="@layout/yt_video_item"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/clNoOfVideos"/>
+
+        tools:itemCount="2"
+        tools:listitem="@layout/item_course_content"
+
+       />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvYTVideoListing"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_16dp"
+            tools:itemCount="2"
+
+            tools:listitem="@layout/item_topic_type_content"
+            />
+        </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

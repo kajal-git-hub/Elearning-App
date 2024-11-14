@@ -1,5 +1,6 @@
 package xyz.penpencil.competishun.ui.fragment
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -27,6 +28,7 @@ import xyz.penpencil.competishun.ui.adapter.SubjectContentAdapter
 import xyz.penpencil.competishun.ui.adapter.TopicContentAdapter
 import xyz.penpencil.competishun.ui.main.HomeActivity
 import xyz.penpencil.competishun.ui.main.PdfViewActivity
+import xyz.penpencil.competishun.ui.main.YoutubeActivity
 import xyz.penpencil.competishun.ui.viewmodel.CoursesViewModel
 import xyz.penpencil.competishun.ui.viewmodel.GetCourseByIDViewModel
 import xyz.penpencil.competishun.ui.viewmodel.VideourlViewModel
@@ -57,12 +59,15 @@ class YTCourseDetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (activity as? HomeActivity)?.showBottomNavigationView(true)
-        (activity as? HomeActivity)?.showFloatingButton(true)
+        (activity as? HomeActivity)?.showBottomNavigationView(false)
+        (activity as? HomeActivity)?.showFloatingButton(false
+        )
         helperFunctions = HelperFunctions()
         sharedPreferencesManager = SharedPreferencesManager(requireContext())
         binding.backIcon.setOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed() }
         binding.rvYTCourseVideoListing.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        binding.rvYTVideoListing.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         courseId = arguments?.getString("course_id").toString()
         arguments?.let { bundle ->
@@ -91,7 +96,6 @@ class YTCourseDetailsFragment : Fragment() {
                     val totalPdfCount = courses.folder?.sumOf { folder ->
                         folder.video_count?.toIntOrNull() ?: 0
                     } ?: 0
-                    binding.tvNoOfVideos.text = "${courses.folder?.size.toString()} Vidoes"
                 }
                 if (folderlist[0].id != null) {
                     var id = folderlist[0].id ?: ""
@@ -203,7 +207,9 @@ class YTCourseDetailsFragment : Fragment() {
                     val folderProgressContent = data.findCourseFolderProgress.folderContents
                     val subfolderDurationFolders = data.findCourseFolderProgress.subfolderDurations
                     Log.e("subFolderdata", subfolderDurationFolders.toString())
+                    val size = folderProgressContent?.filter { it.content?.file_type?.name  == "URL" }?.mapNotNull { it.content?.file_url }?.size?:"0"
 
+                    binding.tvNoOfVideos.text = "${size} Vidoes"
                     // Clear previous adapter to prevent issues
 //                    binding.rvSubjectContent.adapter = null
 //                    binding.rvTopicContent.adapter = null
@@ -217,7 +223,7 @@ class YTCourseDetailsFragment : Fragment() {
                     }
 
                     binding.rvYTCourseVideoListing.adapter = null
-                 //   binding.rvStudyMaterial.adapter = null
+                    binding.rvYTVideoListing.adapter = null
 
                     when {
                         !subfolderDurationFolders.isNullOrEmpty() && !folderProgressContent.isNullOrEmpty() ->
@@ -257,11 +263,12 @@ class YTCourseDetailsFragment : Fragment() {
                                     )
                                 }
                             val folderContentIs = folderProgressContent.filter { it.content?.file_type?.name  == "VIDEO" }.mapNotNull { it.content?.id }.toCollection(ArrayList())
-                            val folderContentNmes = folderProgressContent.filter { it.content?.file_type?.name  == "VIDEO" }.mapNotNull { it.content?.file_name }.toCollection(ArrayList())
+                            val folderContentNmes = folderProgressContent.filter { it.content?.file_type?.name  == "URL" }.mapNotNull { it.content?.file_name }.toCollection(ArrayList())
                             Log.e("getfoldersubject2",folderContentNmes.toString())
-                            binding.rvYTCourseVideoListing.adapter = TopicContentAdapter(
-                                topicContentList,
+                            binding.rvYTVideoListing.adapter = TopicContentAdapter(
+                                topicContentList.toMutableList(),
                                 folderId,
+                                binding.tvTopicType.text.toString(),
                                 requireActivity(),
                                 requireContext()
                             ) { topicContent, folderContentId, folderContentIds,folderContentNames, folderContentDescs,homework,links,des->
@@ -279,7 +286,11 @@ class YTCourseDetailsFragment : Fragment() {
                                     "FOLDER" -> {
                                         Log.e("typeofget",topicContent.fileType)
                                     }
-                                    else -> {
+                                    "URL" -> {
+                                        Log.e("typeofget", topicContent.fileType)
+                                        goToPlayerPage(requireContext(), topicContent.url, "About this Course")
+                                    }
+                                        else -> {
                                         Log.d(
                                             "TopicContentAdapter",
                                             "File type is not recognized: ${topicContent.fileType}"
@@ -311,14 +322,16 @@ class YTCourseDetailsFragment : Fragment() {
                                     id = id,
                                     chapterNumber = index + 1,
                                     topicName = folders.name?:"",
-                                    topicDescription = folders.folder_count?:"0",
+                                    topicDescription = folders.description?:"",
+                                    pdfcount = folders.pdf_count?:"0",
+                                    videocount = folders.video_count?:"0",
                                     locktime = time,
                                     progressPer = subfolderDurationFolders[index].completionPercentage.toInt()
                                 )
                             }
 
                             binding.rvYTCourseVideoListing.adapter =
-                                SubjectContentAdapter(subjectContentList) { selectedItem ->
+                                SubjectContentAdapter(subjectContentList, binding.tvTopicType.text.toString()) { selectedItem ->
                                     Log.e("gettingcontenList",subjectContentList.toString())
                                     binding.tvTopicType.text = selectedItem.topicName
                                     binding.tvContentCount.text = selectedItem.topicDescription
@@ -354,13 +367,15 @@ class YTCourseDetailsFragment : Fragment() {
                                     id = id,
                                     chapterNumber = index + 1,
                                     topicName = folders.name,
-                                    topicDescription = folders.folder_count?:"0",
+                                    topicDescription = folders.description?:"",
+                                    pdfcount = folders.pdf_count?:"0",
+                                    videocount = folders.video_count?:"0",
                                     locktime = time,
                                     progressPer = subfolderDurationFolders[index].completionPercentage.toInt()
                                 )
                             }
                             binding.rvYTCourseVideoListing.adapter =
-                                SubjectContentAdapter(subjectContentList) { selectedItem ->
+                                SubjectContentAdapter(subjectContentList, binding.tvTopicType.text.toString()) { selectedItem ->
                                     FileProgress(selectedItem.id,selectedItem.topicName,"")
 
 
@@ -407,11 +422,12 @@ class YTCourseDetailsFragment : Fragment() {
                                 }
                             binding.tvContentCount.text = "(${subjectContentList.size + (folderProgressContent?.size ?: 0)})"
                             val folderContentIs = folderProgressContent.filter { it.content?.file_type?.name  == "VIDEO" }.mapNotNull { it.content?.id }.toCollection(ArrayList())
-                            val folderContentNes = folderProgressContent.filter { it.content?.file_type?.name  == "VIDEO" }.mapNotNull { it.content?.file_name }.toCollection(ArrayList())
+                            val folderContentNes = folderProgressContent.filter { it.content?.file_type?.name  == "URL" }.mapNotNull { it.content?.file_name }.toCollection(ArrayList())
                             Log.e("getfoldersubject1",folderContentNes.toString())
-                            binding.rvYTCourseVideoListing.adapter = TopicContentAdapter(
-                                subjectContentList,
+                            binding.rvYTVideoListing.adapter = TopicContentAdapter(
+                                subjectContentList.toMutableList(),
                                 folderId,
+                                binding.tvTopicType.text.toString(),
                                 requireActivity(),
                                 requireContext()
                             ) { topicContent, folderContentId, folderContentIds,folderContentNames, folderContentDescs,homework,homeworklinks, homeworkdes ->
@@ -462,6 +478,13 @@ class YTCourseDetailsFragment : Fragment() {
             }
         }
     }
+    private fun goToPlayerPage(context: Context, videoUrl: String, name: String) {
+        val intent = Intent(context, YoutubeActivity::class.java).apply {
+            putExtra("url", videoUrl)
+        }
+        context.startActivity(intent)
+    }
+
     private fun videoUrlApi(viewModel: VideourlViewModel, folderContentId: String, name:String, folderContentIds: ArrayList<String>?, folderContentNames: ArrayList<String>?, folderContentDescs: ArrayList<String>?) {
         Log.e("getfoldersubject",folderContentNames.toString())
         viewModel.fetchVideoStreamUrl(folderContentId, "480p")
@@ -528,12 +551,14 @@ class YTCourseDetailsFragment : Fragment() {
 
                             val gson = Gson()
                             val subFoldersJson = gson.toJson(subfolderDurationFolders)
+                            val foldercontent =  gson.toJson(folderProgressContent)
                             Log.e("folderNamesss $name", subFoldersJson)
 
                             val bundle = Bundle().apply {
                                 putString("subFolders", subFoldersJson)
                                 putString("folder_Name", name)
                                 putString("folder_Id", folderId)
+                                putString("parent_content", foldercontent)
                             }
                             findNavController().navigate(R.id.SubjectContentFragment, bundle)
                         } else if (!folderProgressContent.isNullOrEmpty())
@@ -568,6 +593,8 @@ class YTCourseDetailsFragment : Fragment() {
                     // Optionally handle loading state
                     Log.e("LoadingState", "Data is loading...")
                 }
+
+
             }
         }
 

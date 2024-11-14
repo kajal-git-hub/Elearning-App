@@ -29,6 +29,7 @@ import xyz.penpencil.competishun.data.model.TopicContentModel
 import xyz.penpencil.competishun.databinding.ItemTopicTypeContentBinding
 import xyz.penpencil.competishun.ui.fragment.BottomSheetDownloadBookmark
 import xyz.penpencil.competishun.ui.main.PdfViewActivity
+import xyz.penpencil.competishun.ui.main.YoutubeActivity
 import xyz.penpencil.competishun.utils.HelperFunctions
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -73,11 +74,14 @@ class TopicContentAdapter(
 
         val topicContent = topicContents[position]
         holder.bind(topicContents[position], fragmentActivity, folderName,onItemClick)
+        Log.e("urlds",topicContent.fileType)
         holder.itemView.setOnClickListener {
             if ((topicContent.fileType == "URL")) {
-                val url =
-                    if (topicContent.topicName.contains("http")) topicContent.url else "https://${topicContent.url}"
-                it.context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+//                val url =
+//                    if (topicContent.topicName.contains("http")) topicContent.url else "https://${topicContent.url}"
+//                it.context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+                goToPlayerPage(holder.itemView.context, topicContent.url,topicContent.topicName, topicContent.topicDescription)
+
             } else if (isDateTodayOrPast(topicContent.lockTime, topicContent.isExternal)) {
                 val unlockedTopicContentIds = topicContents
                     .filter {
@@ -147,6 +151,14 @@ class TopicContentAdapter(
         if (!isDateTodayOrPast(topicContent.lockTime, topicContent.isExternal)) {
             holder.itemView.findViewById<ImageView>(R.id.iv_MoreInfoLec).visibility = View.GONE
         }
+    }
+
+    private fun goToPlayerPage(context: Context, videoUrl: String, name: String,desc:String) {
+        val intent = Intent(context, YoutubeActivity::class.java).apply {
+            putExtra("url", videoUrl)
+            putExtra("urlDescription", desc)
+        }
+        context.startActivity(intent)
     }
 
     override fun getItemCount(): Int = topicContents.size
@@ -247,7 +259,10 @@ class TopicContentAdapter(
              else if (topicContent.fileType == "URL") {
                 binding.clReadAndPlay.visibility = View.GONE
                 binding.ivMoreInfoLec.visibility = View.GONE
-            } else {
+                binding.etHomeWorkText.visibility = View.GONE
+            } else
+            {
+                binding.etHomeWorkText.visibility = View.VISIBLE
                 if (topicContent.fileType == "VIDEO") {
                     binding.shapeableImage.setImageResource(icon)
                     binding.shapeableImage.setBackgroundResource(background)
@@ -269,6 +284,8 @@ class TopicContentAdapter(
                     "http"
                 )
             ) {
+                binding.etHomeWorkText.visibility = View.GONE
+                binding.ivMoreInfoLec.visibility = View.GONE
                 binding.tvLecture.text = "Link"
             }
             binding.tvTopicName.text = topicContent.topicName

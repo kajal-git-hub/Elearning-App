@@ -34,7 +34,7 @@ object GraphQlModule {
     @Gatekeeper
     fun provideApolloClient(sharedPreferencesManager: SharedPreferencesManager): ApolloClient {
         return ApolloClient.Builder()
-            .serverUrl(BuildConfig.BASE_URL_GATEKEEPER)
+            .serverUrl(BASE_URL_GATEKEEPER)
             .addHttpInterceptor(createHttpInterceptor(sharedPreferencesManager))
             .build()
     }
@@ -44,7 +44,7 @@ object GraphQlModule {
     @Curator
     fun provideApolloClientCurator(sharedPreferencesManager: SharedPreferencesManager): ApolloClient {
         return ApolloClient.Builder()
-            .serverUrl(BuildConfig.BASE_URL_CURATOR)
+            .serverUrl(BASE_URL_CURATOR)
             .addHttpInterceptor(createHttpInterceptor(sharedPreferencesManager))
             .build()
     }
@@ -54,7 +54,7 @@ object GraphQlModule {
     @Coinkeeper
     fun provideClientCoinkeeper(sharedPreferencesManager: SharedPreferencesManager): ApolloClient {
         return ApolloClient.Builder()
-            .serverUrl(BuildConfig.BASE_URL_COINKEEPER)
+            .serverUrl(BASE_URL_COINKEEPER)
             .addHttpInterceptor(createHttpInterceptor(sharedPreferencesManager))
             .build()
     }

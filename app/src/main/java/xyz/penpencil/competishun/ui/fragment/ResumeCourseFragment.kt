@@ -163,7 +163,7 @@ class ResumeCourseFragment : DrawerVisibility() {
                     val folderProgressContent = data.findCourseFolderProgress.folderContents
                     val subfolderDurationFolders = data.findCourseFolderProgress.subfolderDurations
                     Log.e("subFolderdata", subfolderDurationFolders.toString())
-                    val name = folderNames // Ensure folderNames is correctly assigned before using
+                    val name = folderNames //  folderNames is correctly assigned before using
 
                     if (folderProgressFolder != null) {
                         if (!subfolderDurationFolders.isNullOrEmpty()) {
