@@ -1,7 +1,8 @@
 package xyz.penpencil.competishun.ui.fragment
 
+import android.app.Dialog
+import android.content.Intent
 import android.content.pm.ActivityInfo
-import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -14,7 +15,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.FrameLayout
-import android.widget.ProgressBar
+import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
@@ -41,9 +43,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.data.model.TopicContentModel
 import xyz.penpencil.competishun.databinding.FragmentMediaPlayerBinding
+import xyz.penpencil.competishun.ui.main.PdfViewActivity
 import xyz.penpencil.competishun.utils.HelperFunctions
 import xyz.penpencil.competishun.utils.SharedPreferencesManager
-import java.io.File
 import java.util.Locale
 import kotlin.random.Random
 
@@ -63,6 +65,7 @@ class MediaPlayerFragment : DrawerVisibility() {
     private lateinit var courseFolderContentNames: ArrayList<String>
     private lateinit var courseFolderContentDescs: ArrayList<String>
     private val handler = Handler(Looper.getMainLooper())
+    private val mHandler = Handler(Looper.getMainLooper())
     private val updateInterval: Long = 5000
     private var urlVideo:String = ""
     private lateinit var helperFunctions: HelperFunctions
@@ -70,15 +73,23 @@ class MediaPlayerFragment : DrawerVisibility() {
     private var videoFormat:String = "480p"
     private lateinit var sharedViewModel: SharedVM
     private val videourlViewModel: VideourlViewModel by viewModels()
-    private var videoUrls: List<String> = listOf()
+
     private var videoTitles: ArrayList<String> = ArrayList()
     private var videoDescs: ArrayList<String> = ArrayList()
     private var currentVideoIndex: Int = 0
     var fileName: String = ""
-    var videoUrl: String = ""
-    var videoFile : File?=null
+
     private lateinit var sharedPreferencesManager: SharedPreferencesManager
     private var flickeringText: TextView ?=null
+
+    private lateinit var mFullScreenDialog: Dialog
+    private var mExoPlayerFullscreen: Boolean = false
+
+    private var fullScreenButton: ImageView?=null
+    private var backBtn: ImageView?=null
+    private var qualityButton: ImageView?=null
+
+    private var folderName = ""
 
     companion object {
         private const val SEEK_OFFSET_MS = 10000L
@@ -88,7 +99,6 @@ class MediaPlayerFragment : DrawerVisibility() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-      //  requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         binding = FragmentMediaPlayerBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -113,31 +123,19 @@ class MediaPlayerFragment : DrawerVisibility() {
     @androidx.annotation.OptIn(UnstableApi::class)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val progressBar: ProgressBar = binding.progressBar
-        var qualityButton = binding.qualityButton
         helperFunctions = HelperFunctions()
         sharedPreferencesManager = SharedPreferencesManager(requireContext())
 
         (activity as? HomeActivity)?.showBottomNavigationView(false)
         (activity as? HomeActivity)?.showFloatingButton(false)
 
-        sharedViewModel = ViewModelProvider(requireActivity()).get(SharedVM::class.java)
-        binding.backBtn.setOnClickListener {
-            val isLandscape = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
-            if (isLandscape){
-                val layoutParams =  binding.playerView.layoutParams
-                requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-                layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
-                binding.playerView.resizeMode = androidx.media3.ui.AspectRatioFrameLayout.RESIZE_MODE_FIT
-                layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
-            }else {
-                findNavController().popBackStack()
-            }
-        }
+        sharedViewModel = ViewModelProvider(requireActivity())[SharedVM::class.java]
 
-        val videoUrl = arguments?.getString("url") ?: return
+        val videoUrl = arguments?.getString("url") ?: ""
         Log.e("howdfdf",videoUrl)
-        val title = arguments?.getString("url_name") ?: return
+        val title = arguments?.getString("url_name") ?: ""
+        folderName = arguments?.getString("folderName") ?: ""
+
         courseFolderContentDescs = arguments?.getStringArrayList("folderContentDescs")?: arrayListOf()
         homeworkLinks = arguments?.getStringArrayList("homeworkLinks")?: arrayListOf()
         homeworkNames = arguments?.getStringArrayList("homeworkNames")?: arrayListOf()
@@ -150,17 +148,26 @@ class MediaPlayerFragment : DrawerVisibility() {
                 binding.descTv.text = courseFolderContentDescs[0]
                 binding.homeworkDescTv.text = if (homeworkNames[0].isNotEmpty()) " "+helperFunctions.removeBrackets(homeworkNames[0]) else "NA"
                 binding.homeworkDescTv.setOnClickListener {
-                    helperFunctions.downloadPdfOld(requireContext(),homeworkLinks[0],homeworkNames[0])
+                    val intent = Intent(context, PdfViewActivity::class.java).apply {
+                        putExtra("PDF_URL", removeBrackets(homeworkLinks[0]))
+                        putExtra("PDF_TITLE",homeworkNames[0])
+                        putExtra("FOLDER_NAME",folderName)
+                    }
+                    context?.startActivity(intent)
+//                    helperFunctions.downloadPdfOld(requireContext(),homeworkLinks[0],homeworkNames[0])
                 }
-                binding.homeworkDescTv.text = homeworkNames[0]
+                binding.homeworkDescTv.text = if (homeworkNames[0].isNotEmpty()) " "+helperFunctions.removeBrackets(homeworkNames[0]) else "NA"
                 binding.homeworktittleTv.text = if (homeworkDescs[0].isNotEmpty()) " "+helperFunctions.removeBrackets(homeworkDescs[0]) else "NA"
+            }else {
+                binding.homeworkDescTv.visibility = View.GONE
+                binding.homeworktittleTv.visibility = View.GONE
             }
         }
-        courseFolderContentId = arguments?.getString("ContentId")?: return
-        courseFolderContentIds = arguments?.getStringArrayList("folderContentIds")?: return
-        courseFolderContentNames = arguments?.getStringArrayList("folderContentNames")?: return
-        homeworkLinks = arguments?.getStringArrayList("homeworkLinks")?: return
-        homeworkNames = arguments?.getStringArrayList("homeworkNames")?: return
+        courseFolderContentId = arguments?.getString("ContentId")?: ""
+        courseFolderContentIds = arguments?.getStringArrayList("folderContentIds")?: arrayListOf()
+        courseFolderContentNames = arguments?.getStringArrayList("folderContentNames")?: arrayListOf()
+        homeworkLinks = arguments?.getStringArrayList("homeworkLinks")?: arrayListOf()
+        homeworkNames = arguments?.getStringArrayList("homeworkNames")?: arrayListOf()
 
         Log.e("getfolderNamess",courseFolderContentNames.toString())
         Log.e("getfolderDess",courseFolderContentDescs.toString())
@@ -168,27 +175,8 @@ class MediaPlayerFragment : DrawerVisibility() {
         requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         binding.playerView.resizeMode = androidx.media3.ui.AspectRatioFrameLayout.RESIZE_MODE_FIT
         binding.playerView.player = player
-        binding.fullscreenButton.setOnClickListener {
-            val isLandscape = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
-            Log.e("landscapemode",isLandscape.toString())
-            if (isLandscape) {
-               Log.e("landscape mode",isLandscape.toString())
-                binding.fullscreenButton.visibility = View.VISIBLE
-                binding.playerView.layoutParams = binding.playerView.layoutParams.apply {
-                    height = resources.getDimensionPixelSize(R.dimen.original_height)
-                }// Convert 300dp to pixels
-                    requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-                binding.playerView.resizeMode = androidx.media3.ui.AspectRatioFrameLayout.RESIZE_MODE_FIT // Reset or use any mode you want in portrait
-            } else {
-                binding.fullscreenButton.visibility = View.VISIBLE
-                Log.e("landscapeport",isLandscape.toString())
-                // If in portrait, switch to landscape
-                requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-                binding.playerView.resizeMode = androidx.media3.ui.AspectRatioFrameLayout.RESIZE_MODE_ZOOM // Zoom for full-screen landscape
-            }
-        }
         // Setup video progress update task
-/*        handler.post(object : Runnable {
+        handler.post(object : Runnable {
             override fun run() {
                 if (isAdded && ::player.isInitialized) {
                     val watchedDurationInSeconds = (player.currentPosition / 1000).toInt()
@@ -196,7 +184,7 @@ class MediaPlayerFragment : DrawerVisibility() {
                     handler.postDelayed(this, updateInterval)
                 }
             }
-        })*/
+        })
         try {
             changeQuality(videoFormat)
             val mediaItem = MediaItem.fromUri(videoUrl)
@@ -204,7 +192,6 @@ class MediaPlayerFragment : DrawerVisibility() {
             player.setMediaItem(mediaItem)
             player.prepare()
             player.play()
-            setupZoomFeature()
             player.addListener(object : Player.Listener {
                 override fun onPlayerError(error: PlaybackException) {
                     Log.e("PlayerError", "Playback Error: ${error.message}", error)
@@ -218,6 +205,8 @@ class MediaPlayerFragment : DrawerVisibility() {
                             player.play()
                         }
                         Player.STATE_ENDED -> {
+                            if (mExoPlayerFullscreen)
+                                closeFullscreenDialog()
                             Log.e("videoEnded",player.toString())
                             binding.playerView.visibility = View.GONE
                             binding.upNextOverlay.visibility = View.VISIBLE
@@ -235,19 +224,28 @@ class MediaPlayerFragment : DrawerVisibility() {
                                 binding.homeworktittleTv.text = if (homeworkDescs[currentVideoIndex].isNotEmpty()) " "+helperFunctions.removeBrackets(homeworkDescs[currentVideoIndex]) else "NA"
                                 binding.homeworkDescTv.text = if (homeworkNames[currentVideoIndex].isNotEmpty()) " "+helperFunctions.removeBrackets(homeworkNames[currentVideoIndex]) else "NA"
                                 binding.homeworkDescTv.setOnClickListener {
-                                    helperFunctions.downloadPdfOld(requireContext(),homeworkLinks[currentVideoIndex],homeworkNames[currentVideoIndex])
+                                    val intent = Intent(context, PdfViewActivity::class.java).apply {
+                                        putExtra("PDF_URL", removeBrackets(homeworkLinks[currentVideoIndex]))
+                                        putExtra("PDF_TITLE",homeworkNames[currentVideoIndex])
+                                        putExtra("FOLDER_NAME",folderName)
+                                    }
+                                    context?.startActivity(intent)
+//                                    helperFunctions.downloadPdfOld(requireContext(),homeworkLinks[currentVideoIndex],homeworkNames[currentVideoIndex])
                                 }
                              } else {
                         // No more videos in the playlist
                         Toast.makeText(requireContext(), "No more videos to play", Toast.LENGTH_SHORT).show()
                              }
-                            binding.startNextButton.setOnClickListener {
+                            binding.nextProgress.setOnClickListener {
                                 Log.e("nextButtonclick",urlVideo)
                                 playNextVideo()
                                 binding.upNextOverlay.visibility = View.GONE
                             }
                             binding.cancelNextButton.setOnClickListener {
                                 binding.upNextOverlay.visibility = View.GONE
+                                if (mExoPlayerFullscreen){
+                                    closeFullscreenDialog()
+                                }
                                 findNavController().popBackStack()
                             }
                             // When the video ends, play the next one if available
@@ -267,29 +265,29 @@ class MediaPlayerFragment : DrawerVisibility() {
                     }
                 }
             })
-
-
         } catch (e: Exception) {
             Log.e("PlayerSetup", "Failed to initialize player", e)
         }
-        Log.e("getcontentid",courseFolderContentId)
 
-        binding.qualityButton.setOnClickListener {
+        fullScreenButton = binding.playerView.findViewById<ImageButton>(R.id.fullScreen)
+        backBtn = binding.playerView.findViewById<ImageButton>(R.id.back_btn)
+        qualityButton = binding.playerView.findViewById<ImageButton>(R.id.qualityButton)
+
+        qualityButton?.setOnClickListener {
             showSpeedOrQualityDialog()
         }
+
+        binding.download.setOnClickListener {  }
+        binding.bookmark.setOnClickListener {  }
 
         requireActivity().onBackPressedDispatcher
             .addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
-                    val isLandscape = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
-                    if (isLandscape){
-                        val layoutParams =  binding.playerView.layoutParams
-                        requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-                        layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
-                        binding.playerView.resizeMode = androidx.media3.ui.AspectRatioFrameLayout.RESIZE_MODE_FIT
-                        layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
+                    if (mExoPlayerFullscreen){
+                        requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
+                        closeFullscreenDialog()
                     }else {
-                        view.findNavController().popBackStack()
+                        view?.findNavController()?.popBackStack()
                     }
                 }
             })
@@ -300,6 +298,19 @@ class MediaPlayerFragment : DrawerVisibility() {
             }
         }
 
+        initFullscreenDialog()
+
+        fullScreenButton?.setOnClickListener {
+            toggleFullscreen()
+        }
+        backBtn?.setOnClickListener {
+           if (mExoPlayerFullscreen){
+               requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
+               closeFullscreenDialog()
+           }else {
+               view?.findNavController()?.popBackStack()
+           }
+       }
     }
 
 
@@ -317,7 +328,7 @@ class MediaPlayerFragment : DrawerVisibility() {
                 val parentHeight = parent.height
 
                 if (parentWidth == 0 || parentHeight == 0) {
-                    handler.postDelayed(this, 500)
+                    mHandler.postDelayed(this, 300000)
                     return@let
                 }
 
@@ -330,10 +341,11 @@ class MediaPlayerFragment : DrawerVisibility() {
                 layoutParams.topMargin = Random.nextInt(0, maxTop)
                 textView.layoutParams = layoutParams
                 val delay = Random.nextLong(300, 600)
-                handler.postDelayed(this, delay)
+                mHandler.postDelayed(this, delay)
             }
         }
     }
+
 
     private fun waterMark(s: String) {
         if (flickeringText == null) {
@@ -352,7 +364,7 @@ class MediaPlayerFragment : DrawerVisibility() {
             }
             if (binding.playerView is FrameLayout) {
                 binding.playerView.addView(flickeringText)
-                handler.post(flickerRunnable)
+                mHandler.post(flickerRunnable)
             } else {
                 Log.e("WaterMark", "playerView is not a FrameLayout")
             }
@@ -368,37 +380,6 @@ class MediaPlayerFragment : DrawerVisibility() {
     private fun storeItemInPreferencesBm(item: TopicContentModel) {
         val sharedPreferencesManager = SharedPreferencesManager(requireActivity())
         sharedPreferencesManager.saveDownloadedItemBm(item)
-    }
-
-    private fun setupZoomFeature() {
-        binding.fullscreenButton.setOnClickListener {
-            toggleZoom()
-        }
-    }
-
-
-    @androidx.annotation.OptIn(UnstableApi::class)
-    private fun toggleZoom() {
-        isZoomed = !isZoomed
-        val layoutParams =  binding.playerView.layoutParams
-
-        // Toggle between original size and full-screen
-        if (isZoomed) {
-            Log.e("uszibivd",isZoomed.toString())
-            requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-            binding.playerView.resizeMode = androidx.media3.ui.AspectRatioFrameLayout.RESIZE_MODE_ZOOM
-            layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
-            layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT
-          //  isZoomed = false
-        } else {
-            Log.e("uszibelse",isZoomed.toString())
-            requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-            layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
-            binding.playerView.resizeMode = androidx.media3.ui.AspectRatioFrameLayout.RESIZE_MODE_FIT
-            layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT // original height
-        }
-
-        binding.playerView.layoutParams = layoutParams
     }
 
     private fun playVideo(videoUrl: String, startPosition: Long = 0L, videoTittle: String, videoDesc: String) {
@@ -430,17 +411,16 @@ class MediaPlayerFragment : DrawerVisibility() {
                     }
 
                     Player.STATE_ENDED -> {
+                        if (mExoPlayerFullscreen)
+                            closeFullscreenDialog()
                         Log.e("videoEnded",player.toString())
-                        binding.playerView.visibility = View.GONE
+//                        binding.playerView.visibility = View.GONE
                         binding.upNextOverlay.visibility = View.VISIBLE
                         binding.nextVideoTitle.text = videoTittle
                         binding.descTv.text = videoDesc?:""
                         binding.nextVideoTime.text = "1 min"
-                        binding.startNextButton.setOnClickListener {
+                        binding.nextProgress.setOnClickListener {
                             playNextVideo()
-                            binding.upNextOverlay.visibility = View.GONE
-                        }
-                        binding.cancelNextButton.setOnClickListener {
                             binding.upNextOverlay.visibility = View.GONE
                         }
                     }
@@ -478,10 +458,18 @@ class MediaPlayerFragment : DrawerVisibility() {
                 val nextVideoDesc = videoDescs[currentVideoIndex]
                 binding.tittleBtn.text = nextVideoTittle
                 binding.tittleTv.text = nextVideoTittle
-                binding.homeworkDescTv.text =  homeworkDescs[currentVideoIndex]
+                binding.homeworkDescTv.text =  if (homeworkNames[currentVideoIndex].isNotEmpty()) " "+helperFunctions.removeBrackets(homeworkNames[currentVideoIndex]) else "NA"
                 binding.homeworktittleTv.text =  if (homeworkDescs[currentVideoIndex].isNotEmpty()) " "+helperFunctions.removeBrackets(homeworkDescs[currentVideoIndex]) else "NA"
                 binding.homeworkDescTv.setOnClickListener {
-                    helperFunctions.downloadPdfOld(requireContext(),homeworkLinks[currentVideoIndex],homeworkNames[currentVideoIndex])
+
+                    val intent = Intent(context, PdfViewActivity::class.java).apply {
+                        putExtra("PDF_URL", removeBrackets(homeworkLinks[currentVideoIndex]))
+                        putExtra("PDF_TITLE",homeworkNames[currentVideoIndex])
+                        putExtra("FOLDER_NAME",folderName)
+
+                    }
+                    context?.startActivity(intent)
+//                    helperFunctions.downloadPdfOld(requireContext(),homeworkLinks[currentVideoIndex],homeworkNames[currentVideoIndex])
                 }
                 binding.descTv.text = nextVideoDesc?:""
                 playVideo(signedUrl,0,nextVideoTittle,nextVideoDesc)
@@ -624,6 +612,7 @@ class MediaPlayerFragment : DrawerVisibility() {
         urlVideo = ""
         handler.removeCallbacks(updateTask)
         handler.removeCallbacksAndMessages(null)
+        mHandler.removeCallbacksAndMessages(null)
         // updateSeekBarHandler.removeCallbacks(updateSeekBarRunnable)
         // Reset the screen orientation to the user's preference
         requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
@@ -656,11 +645,21 @@ class MediaPlayerFragment : DrawerVisibility() {
         val position = player.currentPosition
         player.seekTo(maxOf(position - SEEK_OFFSET_MS, 0))
     }
+    fun removeBrackets(input: String): String {
+        var url = input
+        if (input.startsWith("[")){
+            url = input.removePrefix("[")
+        }
+
+        if (input.endsWith("]")){
+            url = url.removeSuffix("]")
+        }
+        return url
+    }
 
     fun videoProgress(courseFolderContentId:String,currentDuration:Int) {
 
         if (isAdded) {
-            // Observe the result of the updateVideoProgress mutation
             videourlViewModel.updateVideoProgressResult.observe(viewLifecycleOwner) { success ->
                 if (success) {
 
@@ -669,22 +668,20 @@ class MediaPlayerFragment : DrawerVisibility() {
                     Log.e("failed Video updated ","video not updated")
                 }
             }
-
-            // Call the mutation
             videourlViewModel.updateVideoProgress(courseFolderContentId, currentDuration)
         }
     }
     override fun onResume() {
         super.onResume()
-//        requireActivity().window.setFlags(
-//            WindowManager.LayoutParams.FLAG_SECURE,
-//            WindowManager.LayoutParams.FLAG_SECURE
-//        )
+        requireActivity().window.setFlags(
+            WindowManager.LayoutParams.FLAG_SECURE,
+            WindowManager.LayoutParams.FLAG_SECURE
+        )
     }
 
     override fun onPause() {
         super.onPause()
-      //  requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
+        requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
     }
 
 
@@ -692,4 +689,57 @@ class MediaPlayerFragment : DrawerVisibility() {
         val position = player.currentPosition
         player.seekTo(minOf(position + SEEK_OFFSET_MS, player.duration))
     }
+
+    private fun openFullscreenDialog() {
+        (binding.playerApp.parent as? ViewGroup)?.removeView(binding.playerApp)
+        mFullScreenDialog.addContentView(
+            binding.playerApp,
+            ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+            )
+        )
+        mExoPlayerFullscreen = true
+        mFullScreenDialog.show()
+        fullScreenButton?.setImageResource(R.drawable.zoom_in_map_24)
+    }
+
+    private fun closeFullscreenDialog() {
+        (binding.playerApp.parent as? ViewGroup)?.removeView(binding.playerApp)
+        binding.playerRoot.addView(binding.playerApp)
+        mExoPlayerFullscreen = false
+        mFullScreenDialog.dismiss()
+        fullScreenButton?.setImageResource(R.drawable.zoom_out_map_24)
+    }
+
+    private fun toggleFullscreen() {
+        if (!mExoPlayerFullscreen) {
+            requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
+            openFullscreenDialog()
+        } else {
+            requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
+            closeFullscreenDialog()
+        }
+    }
+
+    private fun initFullscreenDialog() {
+        mFullScreenDialog = Dialog(requireContext(), R.style.full_screen_dialog).apply {
+            window?.setFlags(
+                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+            )
+            window?.decorView?.systemUiVisibility = (View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                    or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                    or View.SYSTEM_UI_FLAG_FULLSCREEN
+                    or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                    or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                    or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
+        }
+        mFullScreenDialog.setOnDismissListener {
+            mExoPlayerFullscreen = false
+            requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
+            closeFullscreenDialog()
+        }
+    }
+
 }

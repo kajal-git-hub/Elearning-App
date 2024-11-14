@@ -51,6 +51,7 @@
         android:layout_marginTop="@dimen/_16sp"
         android:layout_marginEnd="@dimen/_16sp"
         android:padding="@dimen/_16sp"
+        android:visibility="visible"
         android:src="@drawable/download"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

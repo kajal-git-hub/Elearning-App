@@ -11,21 +11,17 @@ plugins {
 }
 
 android {
-    namespace = "xyz.penpencil.competishun"
+
     compileSdk = 34
     defaultConfig {
-        applicationId = "xyz.penpencil.competishun"
         minSdk = 26
         targetSdk = 34
-        versionCode = 205
-        versionName = "1.0.7"
-        val razorpayKeyId = findProperty("RAZORPAY_KEY_ID") as String? ?: ""
-        buildConfigField("String", "RAZORPAY_KEY_ID", "\"$razorpayKeyId\"")
+        versionCode = 206
+        versionName = "1.0.8"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
-    apollo {
-        // useVersion2Compat()
 
+    apollo {
         service("gatekeeper") {
             packageName.set("com.student.competishun.gatekeeper")
             schemaFile.set(file("src/main/graphql/com/student/competishun/gatekeeper/schema-gatekeeper.graphqls"))
@@ -47,15 +43,27 @@ android {
         }
 
     }
+
+    signingConfigs {
+        create("release") {
+            storeFile = file("C:\\Users\\Documents\\Checking\\Competishun\\xyz.penpencil.competishun\\android_app_competishun-key.keystore")
+            storePassword = "competishun"
+            keyAlias = "competishun"
+            keyPassword = "competishun"
+        }
+    }
+
     buildTypes {
-        release {
+        getByName("release") {
             isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("release")
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
@@ -68,7 +76,38 @@ android {
         viewBinding = true
         dataBinding = true
     }
+
+    flavorDimensions += "environment"
+
+    productFlavors {
+        create("development") {
+            namespace = "xyz.penpencil.competishun"
+            dimension = "environment"
+            applicationId = "xyz.penpencil.competishun.dev"
+            buildConfigField("String", "BASE_URL_GATEKEEPER", "\"https://dev-ant.antino.ca/cm-gatekeeper/graphql\"")
+            buildConfigField("String", "BASE_URL_CURATOR", "\"https://dev-ant.antino.ca/cm-curator/graphql\"")
+            buildConfigField("String", "BASE_URL_COINKEEPER", "\"https://dev-ant.antino.ca/cm-coinkeeper/graphql\"")
+            buildConfigField("String", "APP_VERSION", "\"1.0.8-dev\"")
+            buildConfigField("String", "FIREBASE_CONFIG_FILE", "\"google-services.json\"")
+            buildConfigField("String", "RAZORPAY_KEY_ID", "\"rzp_test_DcVrk6NysFj71r\"")
+            buildConfigField("String", "GOOGLE_CLIENT_ID", "\"887693153546-mv6cfeppj49al2c2bdpainrh6begq6bi.apps.googleusercontent.com\"")
+        }
+
+        create("production") {
+            namespace = "xyz.penpencil.competishun"
+            dimension = "environment"
+            applicationId = "xyz.penpencil.competishun"
+            buildConfigField("String", "BASE_URL_GATEKEEPER", "\"https://api.competishun.com/cm-gatekeeper/graphql\"")
+            buildConfigField("String", "BASE_URL_CURATOR", "\"https://api.competishun.com/cm-curator/graphql\"")
+            buildConfigField("String", "BASE_URL_COINKEEPER", "\"https://api.competishun.com/cm-coinkeeper/graphql\"")
+            buildConfigField("String", "APP_VERSION", "\"1.0.8\"")
+            buildConfigField("String", "FIREBASE_CONFIG_FILE", "\"google-services.json\"")
+            buildConfigField("String", "RAZORPAY_KEY_ID", "\"rzp_live_7Hx1eP9SZPlJYE\"")
+            buildConfigField("String", "GOOGLE_CLIENT_ID", "\"484629070442-4pcbl6i1289mhm9shaac4bf85b8ad0eg.apps.googleusercontent.com\"")
+        }
+    }
 }
+
 dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
@@ -132,6 +171,5 @@ dependencies {
     kapt(libs.androidx.hilt.compiler)
 
     implementation(libs.ketch)
-
 
 }

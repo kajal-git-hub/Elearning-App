@@ -23,6 +23,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.net.toFile
 import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.ObservableField
 import androidx.lifecycle.Lifecycle
@@ -80,11 +81,12 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
 
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
+//        changeStatusBarColor()
         setContentView(binding.root)
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         sharedPreferencesManager = SharedPreferencesManager(this)
         onBackPressedDispatcher.addCallback(this, backPressListener)
-        window.navigationBarColor = ContextCompat.getColor(this,android.R.color.white)
+        window.navigationBarColor = ContextCompat.getColor(this,android.R.color.black)
 
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.fragmentNavigation) as NavHostFragment
@@ -102,7 +104,12 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
         bottomNavigationView = findViewById(R.id.bottomNav)
         callIcon = findViewById(R.id.ig_ContactImage)
 
-        navigateToFragment = intent.getBooleanExtra("isMyCourseAvailable", false)
+        navigateToFragment =  if (intent.getBooleanExtra("isMyCourseAvailable", false)) {
+            true
+        }else {
+            sharedPreferencesManager.isMyCourseAvailable
+        }
+        Log.e("navigateToFragment", "onCreate: $navigateToFragment", )
         val navigateFromVerify = intent.getStringExtra("navigateTo")
         if (navigateToFragment) {
             navController.navigate(R.id.courseEmptyFragment)
@@ -379,7 +386,7 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
             Status.QUEUED, Status.PROGRESS, Status.PAUSED, Status.DEFAULT -> {}
         }
     }
-    fun downloadFile(url: String, fileName: String, isExternal: Boolean = false) {
+    fun downloadFile(url: String, fileName: String, isExternal: Boolean = false) {// ture -> external  // false -->
         val path = if (isExternal) {
             "/storage/emulated/0/Download/"
         } else {

@@ -61,7 +61,7 @@
         <ul>Relations and Functions: Types of relations and functions, &amp; Inverse trigonometric functions.Relations and Functions: Types of relations and functions, &amp; Inverse trigonometric functions.</ul>
         <ul>This chapter covers important topics such as Cartesian products of sets, various types of relations, domain and range of relations, and different types of functions. These foundational concepts are essential for understanding advanced mathematical ideas</ul></string>
 
-<!--    <string name="lorem_ipsum">
+    <!--    <string name="lorem_ipsum">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris
         volutpat, dolor id interdum ullamcorper, risus dolor egestas lectus, sit amet mattis purus
         dui nec risus. Maecenas non sodales nisi, vel dictum dolor. Class aptent taciti sociosqu ad
@@ -132,4 +132,10 @@
     <string name="current_month_year">%1$s %2$d</string>
     <string name="Bookmark">Bookmark</string>
     <string name="Download">Download</string>
+    <string name="tagline">
+    <font color="#2B2829">Competishun Means</font>
+    <font color="#FF7A28">केवल पढ़ाई</font>\n
+    <font color="#2B2829">  Competishun Means </font>
+    <font color="#FF7A28">Selection</font>
+</string>
 </resources>

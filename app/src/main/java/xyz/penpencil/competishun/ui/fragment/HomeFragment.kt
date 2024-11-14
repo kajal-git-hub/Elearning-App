@@ -97,7 +97,7 @@ class HomeFragment : Fragment() {
     private lateinit var recommendedCourseList: List<RecommendedCourseDataModel>
     private var filteredCourses: List<AllCourseForStudentQuery.Course> = listOf()
 
-    private lateinit var  UpdatedCourseItem: List<GetAllCourseCategoriesQuery. GetAllCourseCategory>
+    private lateinit var UpdatedCourseItem: List<GetAllCourseCategoriesQuery.GetAllCourseCategory>
 
 
     private lateinit var helperFunctions: HelperFunctions
@@ -111,12 +111,10 @@ class HomeFragment : Fragment() {
     private lateinit var jeeAdvancedAdapter: JEEAdvancedAdapter
 
 
-
-
     private val userViewModel: UserViewModel by viewModels()
     private val myCoursesViewModel: MyCoursesViewModel by viewModels()
 
-   private var filteredCourseRequirements: Set<String>  = emptySet()
+    private var filteredCourseRequirements: Set<String> = emptySet()
 
 
     override fun onCreateView(
@@ -137,7 +135,8 @@ class HomeFragment : Fragment() {
 
 
         jeeRecycler = view.findViewById(R.id.rv_jeeMain)
-        jeeRecycler.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        jeeRecycler.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
 
         // Sample data
         val jeeList = listOf(
@@ -155,7 +154,8 @@ class HomeFragment : Fragment() {
 
 
         jeeRecyclerAdvanced = view.findViewById(R.id.rv_jeeAdvanced)
-        jeeRecyclerAdvanced.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        jeeRecyclerAdvanced.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
 
         // Sample data
         val jeeAdvancedList = listOf(
@@ -262,17 +262,21 @@ class HomeFragment : Fragment() {
                 contactImage.visibility = View.GONE
             }
 
+            /*
+             TODO : Need to worked on navigation of app to stop crash
+             $TASK : Fragment HomeFragment{b10dedc}  (8aea8358-29b8-416c- b478- e96ec86c7129)  not associated with a fragment manager
+             */
 
             override fun onDrawerClosed(drawerView: View) {
-                if (findNavController().currentDestination?.id  == R.id.homeFragment){
+                if (findNavController().currentDestination?.id == R.id.homeFragment) {
                     bottomNav.visibility = View.VISIBLE
                     contactImage.visibility = View.VISIBLE
                 }
-                if(findNavController().currentDestination?.id == R.id.courseEmptyFragment){
+                if (findNavController().currentDestination?.id == R.id.courseEmptyFragment) {
                     bottomNav.visibility = View.VISIBLE
                     contactImage.visibility = View.GONE
                 }
-                if(findNavController().currentDestination?.id == R.id.coursesFragment){
+                if (findNavController().currentDestination?.id == R.id.coursesFragment) {
                     bottomNav.visibility = View.GONE
                     contactImage.visibility = View.VISIBLE
                 }
@@ -300,20 +304,21 @@ class HomeFragment : Fragment() {
                 _binding?.rvOurCourses?.visibility = View.VISIBLE
                 listOurCoursesItem = filteredCategory
                 UpdatedCourseItem = UpdateList(listOurCoursesItem)
-                Log.d("listOurCoursesItem",UpdatedCourseItem.toString())
-                adapterOurCourses = OurCoursesAdapter(updatedListCourses(listOurCoursesItem), object :
-                    OnCourseItemClickListener {
-                    override fun onCourseItemClick(course: GetAllCourseCategoriesQuery.GetAllCourseCategory) {
-                        val bundle = Bundle().apply {
-                            putString("course_name", course.name)
-                            putString("category_id", course.id)
+                Log.d("listOurCoursesItem", UpdatedCourseItem.toString())
+                adapterOurCourses =
+                    OurCoursesAdapter(updatedListCourses(listOurCoursesItem), object :
+                        OnCourseItemClickListener {
+                        override fun onCourseItemClick(course: GetAllCourseCategoriesQuery.GetAllCourseCategory) {
+                            val bundle = Bundle().apply {
+                                putString("course_name", course.name)
+                                putString("category_id", course.id)
+                            }
+                            findNavController().navigate(
+                                R.id.action_homeFragment_to_coursesFragment,
+                                bundle
+                            )
                         }
-                        findNavController().navigate(
-                            R.id.action_homeFragment_to_coursesFragment,
-                            bundle
-                        )
-                    }
-                })
+                    })
                 rvOurCourses.adapter = adapterOurCourses
                 rvOurCourses.layoutManager =
                     GridLayoutManager(context, 3, GridLayoutManager.HORIZONTAL, false)
@@ -387,7 +392,11 @@ class HomeFragment : Fragment() {
 
                 Toast.makeText(context, "Account deleted successfully", Toast.LENGTH_SHORT).show()
             } else {
-                Toast.makeText(context, "Failed to delete account: ${result.exceptionOrNull()?.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    context,
+                    "Failed to delete account: ${result.exceptionOrNull()?.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
 
@@ -424,6 +433,7 @@ class HomeFragment : Fragment() {
                 R.id.tvdisclaimer -> {
                     preventToMultiCall((R.id.DisclaimerFragment))
                 }
+
                 R.id.refundPolicy -> {
                     preventToMultiCall((R.id.RefundCancellation))
                 }
@@ -434,12 +444,14 @@ class HomeFragment : Fragment() {
         }
         clickListener()
     }
+
     // Function to open a dialog
     private fun openDialog() {
         val builder = AlertDialog.Builder(requireContext())
         builder.setTitle("Delete Your Account")
         val messageTextView = TextView(requireContext()).apply {
-            text = "Deleting your account will place a permanent hold on your studies, and all your data, including progress, saved materials, and personal settings, will be permanently erased. This action cannot be undone. Please ensure that you’ve considered this decision carefully before proceeding."
+            text =
+                "Deleting your account will place a permanent hold on your studies, and all your data, including progress, saved materials, and personal settings, will be permanently erased. This action cannot be undone. Please ensure that you’ve considered this decision carefully before proceeding."
             gravity = Gravity.CENTER
             textSize = 16f
             setPadding(32, 16, 32, 16)
@@ -458,7 +470,6 @@ class HomeFragment : Fragment() {
         val dialog = builder.create()
         dialog.show()
     }
-
 
 
     private fun updatedListCourses(listOurCoursesItem: List<GetAllCourseCategoriesQuery.GetAllCourseCategory>?): List<GetAllCourseCategoriesQuery.GetAllCourseCategory> {
@@ -486,12 +497,12 @@ class HomeFragment : Fragment() {
     }
 
 
-    private fun UpdateList(listOurCoursesItem: List<GetAllCourseCategoriesQuery.GetAllCourseCategory>?): List<GetAllCourseCategoriesQuery. GetAllCourseCategory> {
+    private fun UpdateList(listOurCoursesItem: List<GetAllCourseCategoriesQuery.GetAllCourseCategory>?): List<GetAllCourseCategoriesQuery.GetAllCourseCategory> {
 
 
-        val listToReturn  = mutableListOf<GetAllCourseCategoriesQuery.GetAllCourseCategory>()
+        val listToReturn = mutableListOf<GetAllCourseCategoriesQuery.GetAllCourseCategory>()
 
-        if (listOurCoursesItem == null) return  listToReturn
+        if (listOurCoursesItem == null) return listToReturn
 
         for (i in 0 until listOurCoursesItem.size) {
             if (i % 2 == 0) {
@@ -509,7 +520,7 @@ class HomeFragment : Fragment() {
     /**
      * for static content listener
      * */
-    private fun clickListener(){
+    private fun clickListener() {
         binding.clOTSeries.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_testDashboardFragment)
         }
@@ -551,8 +562,10 @@ class HomeFragment : Fragment() {
 
                 if (courseRequirements.contains("ALL")) return@onSuccess
 
-                val allMissingFields = missingPersonalFields + missingDocumentFields + missingAddressFields
-                filteredCourseRequirements = courseRequirements.filterNot { it in allMissingFields }.toSet()
+                val allMissingFields =
+                    missingPersonalFields + missingDocumentFields + missingAddressFields
+                filteredCourseRequirements =
+                    courseRequirements.filterNot { it in allMissingFields }.toSet()
                 Log.e("fsdfasdfsdfsd", "fetchCoursesAndUpdateUI: $filteredCourseRequirements")
                 if (filteredCourseRequirements.isNotEmpty()) {
                     findNavController().navigate(R.id.PersonalDetailsFragment, Bundle().apply {
@@ -569,9 +582,10 @@ class HomeFragment : Fragment() {
     }
 
 
-
     private fun preventToMultiCall(id: Int) {
-        if (findNavController().currentDestination?.id != id) { findNavController().navigate(id) }
+        if (findNavController().currentDestination?.id != id) {
+            findNavController().navigate(id)
+        }
     }
 
     fun getMyDetails() {
@@ -591,9 +605,10 @@ class HomeFragment : Fragment() {
                 sharedPreferencesManager.reference = userDetails.userInformation.reference
                 sharedPreferencesManager.preparingFor = userDetails.userInformation.preparingFor
                 sharedPreferencesManager.targetYear = userDetails.userInformation.targetYear
-                val bottomNavigationView: BottomNavigationView? = activity?.findViewById(R.id.bottomNav)
+                val bottomNavigationView: BottomNavigationView? =
+                    activity?.findViewById(R.id.bottomNav)
                 val menu = bottomNavigationView?.menu
-                if(userDetails.courses.isNotEmpty()){
+                if (userDetails.courses.isNotEmpty()) {
                     menu?.findItem(R.id.Bookmark)?.isVisible = true
                     menu?.findItem(R.id.Store)?.isVisible = false
                 } else {
@@ -823,6 +838,10 @@ class HomeFragment : Fragment() {
                 return true
             }
         })
+        val actionProfile = binding.topAppBar.menu.findItem(R.id.action_profile)
+        searchView?.setOnQueryTextFocusChangeListener { _, hasFocus ->
+            actionProfile.isVisible = !hasFocus
+        }
     }
 
     private fun openSearchResultsFragment(searchQuery: String?) {
@@ -915,13 +934,18 @@ class HomeFragment : Fragment() {
         (activity as? HomeActivity)?.showFloatingButton(true)
 
     }
+
     private fun deleteLocalFiles() {
         val filesDir = requireActivity().filesDir
 
         val files = filesDir.listFiles()
 
         files?.forEach { file ->
-            if (file.name.endsWith(".mp4", ignoreCase = true) || file.name.endsWith("PDF",ignoreCase = true)) {
+            if (file.name.endsWith(".mp4", ignoreCase = true) || file.name.endsWith(
+                    "PDF",
+                    ignoreCase = true
+                )
+            ) {
                 Log.d("LogoutDelete", "Deleting file: ${file.name}")
                 file.delete()
             }

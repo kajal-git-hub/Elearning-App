@@ -9,13 +9,14 @@ import xyz.penpencil.competishun.databinding.SelectClassItemBinding
 
 class SelectClassAdapter(
     private val classList: List<String>,
+    private val preSelectedClass: String?,
     private val onClassSelected: (String) -> Unit
 ) : RecyclerView.Adapter<SelectClassAdapter.SelectClassViewHolder>() {
 
     // ViewHolder with binding
     class SelectClassViewHolder(val binding: SelectClassItemBinding) : RecyclerView.ViewHolder(binding.root)
 
-    private var selectedPosition: Int = -1 // To track selected item
+    private var selectedPosition: Int  = classList.indexOf(preSelectedClass)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SelectClassViewHolder {
         val binding = SelectClassItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)

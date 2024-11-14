@@ -84,10 +84,14 @@ class DownloadFragment : DrawerVisibility(), DownloadedItemAdapter.OnVideoClickL
                         0 ->{
                             topicContentViewModel.updateSelectedCount(0)
                             loadData("PDF")
+                            binding.tvNoPdfs.text = "No PDFs Found!"
+                            binding.tvNotDownloadedAnything.text = "You’ve not downloaded any pdfs yet."
                         }
                         1 -> {
                             topicContentViewModel.updateSelectedCount(1)
                             loadData("VIDEO")
+                            binding.tvNoPdfs.text = "No Videos Found!"
+                            binding.tvNotDownloadedAnything.text = "You’ve not downloaded any videos yet."
                         }
                     }
                 }
@@ -131,7 +135,6 @@ class DownloadFragment : DrawerVisibility(), DownloadedItemAdapter.OnVideoClickL
                         "VIDEO" -> {
                             updateRecyclerView(content)
                         }
-
                         else -> {
 
                         }
@@ -158,13 +161,9 @@ class DownloadFragment : DrawerVisibility(), DownloadedItemAdapter.OnVideoClickL
 
     override fun onVideoClick(topicContentModel: TopicContentModel) {
         if (topicContentModel.localPath.isNotEmpty()) {
-            val bundle = Bundle().apply {
-                putString("url", topicContentModel.localPath)
-                putString("url_name", topicContentModel.topicName)
-                putString("description", topicContentModel.topicDescription)
-            }
-            Log.e("dfdsfhsdfdsjfs", "onVideoClick: " +topicContentModel.localPath )
-            findNavController().navigate(R.id.downloadMediaPlayerFragment, bundle)
+            findNavController().navigate(R.id.downloadMediaPlayerFragment, Bundle().apply {
+                putSerializable("VIDEO_DATA", topicContentModel)
+            })
         } else {
             Toast.makeText(requireContext(), "Video file not found", Toast.LENGTH_SHORT).show()
         }
@@ -172,15 +171,19 @@ class DownloadFragment : DrawerVisibility(), DownloadedItemAdapter.OnVideoClickL
 
     override fun onDeleteClick(topicContentModel: TopicContentModel) {
         lifecycleScope.launch {
-            lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
-                try {
-                    if (File(topicContentModel.localPath).exists()){
-                        File(topicContentModel.localPath).delete()
-                    }
-                } catch (e: Exception) {
-                    Log.e(TAG, "onDeleteClick: ${e.message}" )
+            try {
+                if (File(topicContentModel.localPath).exists()){
+                    File(topicContentModel.localPath).delete()
+                }
+                if (topicContentModel.fileType == "VIDEO"){
+                    loadData("VIDEO")
+                }
+                if (topicContentModel.fileType == "PDF"){
+                    loadData("PDF")
                 }
                 topicContentViewModel.deleteTopicContent(topicContentModel)
+            } catch (e: Exception) {
+                Log.e(TAG, "onDeleteClick: ${e.message}" )
             }
         }
     }

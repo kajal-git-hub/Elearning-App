@@ -1,6 +1,7 @@
 package xyz.penpencil.competishun.di
 
 import android.content.Context
+import android.os.Build
 import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.api.http.HttpRequest
 import com.apollographql.apollo3.api.http.HttpResponse
@@ -21,6 +22,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import xyz.penpencil.competishun.BuildConfig
 import javax.inject.Singleton
 
 @Module
@@ -32,7 +34,7 @@ object GraphQlModule {
     @Gatekeeper
     fun provideApolloClient(sharedPreferencesManager: SharedPreferencesManager): ApolloClient {
         return ApolloClient.Builder()
-            .serverUrl(BASE_URL_GATEKEEPER)
+            .serverUrl(BuildConfig.BASE_URL_GATEKEEPER)
             .addHttpInterceptor(createHttpInterceptor(sharedPreferencesManager))
             .build()
     }
@@ -42,7 +44,7 @@ object GraphQlModule {
     @Curator
     fun provideApolloClientCurator(sharedPreferencesManager: SharedPreferencesManager): ApolloClient {
         return ApolloClient.Builder()
-            .serverUrl(BASE_URL_CURATOR)
+            .serverUrl(BuildConfig.BASE_URL_CURATOR)
             .addHttpInterceptor(createHttpInterceptor(sharedPreferencesManager))
             .build()
     }
@@ -52,7 +54,7 @@ object GraphQlModule {
     @Coinkeeper
     fun provideClientCoinkeeper(sharedPreferencesManager: SharedPreferencesManager): ApolloClient {
         return ApolloClient.Builder()
-            .serverUrl(BASE_URL_COINKEEPER)
+            .serverUrl(BuildConfig.BASE_URL_COINKEEPER)
             .addHttpInterceptor(createHttpInterceptor(sharedPreferencesManager))
             .build()
     }

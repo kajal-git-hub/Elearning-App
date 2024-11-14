@@ -145,10 +145,13 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
             lifecycleScope.launch {
                 itemDetails?.let { item ->
                     item.also { data ->
+                        Log.d("isExternal",isExternal.toString())
                         data.isExternal = isExternal
                         data.localPath = File(downloadPath, fileName).absolutePath
                     }
-                    topicContentViewModel.insertTopicContent(item)
+                    if (!isExternal){
+                        topicContentViewModel.insertTopicContent(item)
+                    }
                 }
             }
         }

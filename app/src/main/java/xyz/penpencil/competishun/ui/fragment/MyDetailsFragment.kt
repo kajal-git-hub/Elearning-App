@@ -138,6 +138,9 @@ class MyDetailsFragment : Fragment() {
 
                 binding.etDob.setText(SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(selectedDate.time))
             }, year, month, day)
+
+        datePickerDialog.datePicker.maxDate = System.currentTimeMillis()
+
         datePickerDialog.show()
     }
 

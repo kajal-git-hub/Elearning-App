@@ -54,7 +54,7 @@ class ProfileEditFragment(val updateCourse:(year:String,course:String )->Unit) :
 
         val prevSelectedYear = sharedPreferencesManager.targetYear
         val prevSelectedCourse = sharedPreferencesManager.preparingFor
-
+        val prevSelectClass = sharedPreferencesManager.selectClass
 
         binding.closeBottomClass.setOnClickListener {
             dismiss()
@@ -64,25 +64,26 @@ class ProfileEditFragment(val updateCourse:(year:String,course:String )->Unit) :
         }
 
         val classList = listOf("11th", "12th", "12th+")
-        val examList = listOf("NEET", "IIT-JEE", "Board", "UCET", "Others")
+        val examList = listOf("NEET", "IIT-JEE", "Board", "CUET", "Others")
         //TODO: make this dynamic
-        val yearList = listOf("2025", "2026", "2027")
+        val yearList = listOf("2025", "2026", "2027","2028")
 
         binding.rvSelectClass.apply {
             layoutManager = GridLayoutManager(context, 2)
-            adapter = SelectClassAdapter(classList) { selectedClass ->
+            adapter = SelectClassAdapter(classList,prevSelectClass) { selectedClass ->
+                sharedPreferencesManager.selectClass = selectedClass
                 this@ProfileEditFragment.selectedClass = selectedClass
             }
         }
         binding.rvSelectExam.apply {
             layoutManager = GridLayoutManager(context, 2)
-            adapter = SelectExamAdapter(examList) { selectedExam ->
+            adapter = SelectExamAdapter(examList,prevSelectedCourse) { selectedExam ->
                 this@ProfileEditFragment.selectedExam = selectedExam
             }
         }
         binding.rvSelectYear.apply {
             layoutManager = GridLayoutManager(context, 2)
-            adapter = SelectYearAdapter(yearList) { selectedYear ->
+            adapter = SelectYearAdapter(yearList, prevSelectedYear.toString()) { selectedYear ->
                 this@ProfileEditFragment.selectedYear = selectedYear
             }
         }

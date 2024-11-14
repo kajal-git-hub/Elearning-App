@@ -3,7 +3,6 @@ package xyz.penpencil.competishun.ui.fragment
 import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,9 +19,9 @@ import com.student.competishun.coinkeeper.type.CreateOrderInput
 import dagger.hilt.android.AndroidEntryPoint
 import org.json.JSONException
 import org.json.JSONObject
+import xyz.penpencil.competishun.BuildConfig
 import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.databinding.FragmentMyPurchaseDetailsBinding
-import xyz.penpencil.competishun.ui.viewmodel.CoursePaymentsViewModel
 import xyz.penpencil.competishun.ui.viewmodel.GetCourseByIDViewModel
 import xyz.penpencil.competishun.ui.viewmodel.OrderViewModel
 import xyz.penpencil.competishun.ui.viewmodel.OrdersViewModel
@@ -287,7 +286,7 @@ class MyPurchaseDetailsFragment : DrawerVisibility() {
         Log.e("chcekcnou",amount.toString())
         val currency = "INR"
         val checkout = Checkout()
-        checkout.setKeyID(Constants.RazorpayKeyId_Prod)
+        checkout.setKeyID(BuildConfig.RAZORPAY_KEY_ID)
         Log.e("user/id=",courseUserId)
         Log.e("user/tokem=",sharedPreferencesManager.accessToken.toString())
         val obj = JSONObject()
@@ -419,7 +418,7 @@ class MyPurchaseDetailsFragment : DrawerVisibility() {
                 Log.e("ReceiptLink",receiptLink)
                 Toast.makeText(requireContext(), "Download started", Toast.LENGTH_SHORT).show()
 
-                helperFunctions.downloadPdf(requireContext(),receiptLink,"Payment Invoice")
+                helperFunctions.downloadPdfOld(requireContext(),receiptLink,"Payment Invoice")
                 Toast.makeText(requireContext(), "Download completed successfully", Toast.LENGTH_SHORT).show()
             }.onFailure {
                 // Handle failure, e.g., show an error message

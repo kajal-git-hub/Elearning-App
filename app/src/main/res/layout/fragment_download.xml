@@ -100,8 +100,8 @@
 
         <pl.droidsonroids.gif.GifImageView
             android:id="@+id/GifEmptyDownloads"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="130dp"
+            android:layout_height="130dp"
             android:layout_marginLeft="4dp"
             android:background="@drawable/empty_download"
             app:layout_constraintStart_toStartOf="parent"

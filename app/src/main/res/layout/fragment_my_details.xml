@@ -47,9 +47,10 @@
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/et_saveChanges"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="35dp"
                 android:layout_marginEnd="@dimen/_10dp"
                 android:fontFamily="@font/nunito"
+                android:gravity="center_vertical"
                 android:text="Save Changes"
                 android:textColor="@color/blue_3E3EF7"
                 android:textSize="12sp"
@@ -64,7 +65,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_nowEdit"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/_35dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -75,6 +76,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/_8dp"
                 android:src="@drawable/edit_2"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/et_EditDetail"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -82,10 +84,13 @@
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/et_EditDetail"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/_35dp"
                 android:layout_marginEnd="@dimen/_16dp"
                 android:fontFamily="@font/nunito"
                 android:text="Edit"
+                android:gravity="center_vertical"
+                android:drawablePadding="@dimen/_10dp"
+                android:drawableStart="@drawable/edit_2"
                 android:textColor="@color/blue_3E3EF7"
                 android:textSize="@dimen/_14sp"
                 android:textStyle="bold"

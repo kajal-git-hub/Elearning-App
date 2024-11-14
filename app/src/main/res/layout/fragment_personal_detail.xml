@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -13,6 +13,7 @@
         android:layout_height="60dp"
         android:background="#FFFFFF"
         android:elevation="8dp"
+        android:layout_alignParentTop="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -31,11 +32,12 @@
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="match_parent"
         android:background="#FFFFFF"
         android:paddingHorizontal="@dimen/_16dp"
+        android:layout_below="@+id/TopView"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -43,10 +45,11 @@
 
         <LinearLayout
             android:id="@+id/progress_indicator"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:gravity="center"
+            android:layout_alignParentTop="true"
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -77,199 +80,206 @@
             android:id="@+id/progress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="gone"
             android:progressTint="@color/PrimaryColor"
+            android:visibility="gone"
+            android:layout_centerInParent="true"
             app:layout_constraintBottom_toTopOf="@+id/btn_add_details"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/progress_indicator" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <ScrollView
+            android:id="@+id/formRoot"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:id="@+id/formRoot"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/progress_indicator">
-
-            <TextView
-                android:id="@+id/tv_title"
-                android:layout_width="wrap_content"
+            android:layout_above="@+id/btn_add_details"
+            android:layout_below="@+id/progress_indicator">
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/nunito"
-                android:text="Let us know more \nabout you!"
-                android:textColor="#2B2829"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/tv_full_name_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/nunito"
-                android:text="Full Name"
-                android:textColor="#2B2829"
-                android:textSize="14sp"
-                android:layout_marginTop="@dimen/_20dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_title" />
+                <TextView
+                    android:id="@+id/tv_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/nunito"
+                    android:text="Let us know more \nabout you!"
+                    android:textColor="#2B2829"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-            <EditText
-                android:id="@+id/et_full_name"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:background="@drawable/rounded_edittext_background"
-                android:fontFamily="@font/nunito"
-                android:hint="Enter here"
-                android:inputType="textPersonName"
-                android:padding="12dp"
-                android:textColor="#0A0A0B"
-                android:textColorHint="#898384"
-                android:textSize="@dimen/_14sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_full_name_label" />
+                <TextView
+                    android:id="@+id/tv_full_name_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_20dp"
+                    android:fontFamily="@font/nunito"
+                    android:text="Full Name"
+                    android:textColor="#2B2829"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_title" />
 
-            <TextView
-                android:id="@+id/tv_fathers_name_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:fontFamily="@font/nunito"
-                android:text="Father's Name"
-                android:textColor="#2B2829"
-                android:textSize="14sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/et_full_name" />
+                <EditText
+                    android:id="@+id/et_full_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/rounded_edittext_background"
+                    android:fontFamily="@font/nunito"
+                    android:hint="Enter here"
+                    android:inputType="textPersonName"
+                    android:padding="12dp"
+                    android:textColor="#0A0A0B"
+                    android:textColorHint="#898384"
+                    android:textSize="@dimen/_14sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_full_name_label" />
 
-            <EditText
-                android:id="@+id/et_fathers_name"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:background="@drawable/rounded_edittext_background"
-                android:fontFamily="@font/nunito"
-                android:hint="Enter here"
-                android:inputType="textPersonName"
-                android:padding="12dp"
-                android:textColor="#0A0A0B"
-                android:textColorHint="#898384"
-                android:textSize="@dimen/_14sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_fathers_name_label" />
+                <TextView
+                    android:id="@+id/tv_fathers_name_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:fontFamily="@font/nunito"
+                    android:text="Father's Name"
+                    android:textColor="#2B2829"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/et_full_name" />
 
-            <TextView
-                android:id="@+id/tv_fathers_number_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:fontFamily="@font/nunito"
-                android:text="Father's Number"
-                android:textColor="#2B2829"
-                android:textSize="14sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/et_fathers_name" />
+                <EditText
+                    android:id="@+id/et_fathers_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/rounded_edittext_background"
+                    android:fontFamily="@font/nunito"
+                    android:hint="Enter here"
+                    android:inputType="textPersonName"
+                    android:padding="12dp"
+                    android:textColor="#0A0A0B"
+                    android:textColorHint="#898384"
+                    android:textSize="@dimen/_14sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_fathers_name_label" />
 
-            <EditText
-                android:id="@+id/et_fathers_number"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:background="@drawable/rounded_edittext_background"
-                android:fontFamily="@font/nunito"
-                android:hint="Enter here"
-                android:inputType="number"
-                android:maxLength="10"
-                android:padding="12dp"
-                android:textColor="#0A0A0B"
-                android:textColorHint="#898384"
-                android:textSize="@dimen/_14sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_fathers_number_label" />
-            <TextView
-                android:id="@+id/tv_whatsapp_number_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:fontFamily="@font/nunito"
-                android:text="Whatsapp No."
-                android:textColor="#2B2829"
-                android:textSize="14sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/et_fathers_number" />
+                <TextView
+                    android:id="@+id/tv_fathers_number_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:fontFamily="@font/nunito"
+                    android:text="Father's Number"
+                    android:textColor="#2B2829"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/et_fathers_name" />
 
-            <EditText
-                android:id="@+id/et_whatsapp_number"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:background="@drawable/rounded_edittext_background"
-                android:fontFamily="@font/nunito"
-                android:hint="91 Enter here"
-                android:inputType="phone"
-                android:padding="12dp"
-                android:textColor="#0A0A0B"
-                android:textColorHint="#898384"
-                android:textSize="@dimen/_14sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_whatsapp_number_label" />
+                <EditText
+                    android:id="@+id/et_fathers_number"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/rounded_edittext_background"
+                    android:fontFamily="@font/nunito"
+                    android:hint="Enter here"
+                    android:inputType="number"
+                    android:maxLength="10"
+                    android:padding="12dp"
+                    android:textColor="#0A0A0B"
+                    android:textColorHint="#898384"
+                    android:textSize="@dimen/_14sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_fathers_number_label" />
 
-            <TextView
-                android:id="@+id/tv_tshirt_size_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:fontFamily="@font/nunito"
-                android:text="Select your T-Shirt Size"
-                android:textColor="#2B2829"
-                android:textSize="14sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/et_whatsapp_number" />
+                <TextView
+                    android:id="@+id/tv_whatsapp_number_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:fontFamily="@font/nunito"
+                    android:text="Whatsapp No."
+                    android:textColor="#2B2829"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/et_fathers_number" />
 
-            <TextView
-                android:id="@+id/spinner_tshirt_size"
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_marginTop="8dp"
-                android:background="@drawable/rounded_edittext_background"
-                android:drawableEnd="@drawable/arrow_down_black"
-                android:gravity="center_vertical"
-                android:padding="10dp"
-                android:text="Select size"
-                android:textColor="#898384"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_tshirt_size_label"
-                tools:ignore="MissingConstraints" />
+                <EditText
+                    android:id="@+id/et_whatsapp_number"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/rounded_edittext_background"
+                    android:fontFamily="@font/nunito"
+                    android:hint="91 Enter here"
+                    android:inputType="phone"
+                    android:padding="12dp"
+                    android:textColor="#0A0A0B"
+                    android:textColorHint="#898384"
+                    android:textSize="@dimen/_14sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_whatsapp_number_label" />
 
-            <TextView
-                android:id="@+id/tv_tshirt_note"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_10dp"
-                android:fontFamily="@font/nunito"
-                android:lineHeight="18dp"
-                android:text="We will send you Competishun T-shirt."
-                android:textColor="#433E3F"
-                android:textSize="12sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/spinner_tshirt_size" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                <TextView
+                    android:id="@+id/tv_tshirt_size_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:fontFamily="@font/nunito"
+                    android:text="Select your T-Shirt Size"
+                    android:textColor="#2B2829"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/et_whatsapp_number" />
 
+                <TextView
+                    android:id="@+id/spinner_tshirt_size"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/rounded_edittext_background"
+                    android:drawableEnd="@drawable/arrow_down_black"
+                    android:gravity="center_vertical"
+                    android:padding="10dp"
+                    android:text="Select size"
+                    android:textColor="#898384"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_tshirt_size_label"
+                    tools:ignore="MissingConstraints" />
+
+                <TextView
+                    android:id="@+id/tv_tshirt_note"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10dp"
+                    android:fontFamily="@font/nunito"
+                    android:lineHeight="18dp"
+                    android:text="We will send you Competishun T-shirt."
+                    android:textColor="#433E3F"
+                    android:textSize="12sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/spinner_tshirt_size" />
+
+
+            </LinearLayout>
+        </ScrollView>
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_add_details"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="55dp"
+            android:layout_alignParentBottom="true"
             android:layout_marginHorizontal="@dimen/_16dp"
             android:layout_marginTop="24dp"
-            app:cornerRadius="@dimen/_8dp"
             android:layout_marginBottom="10dp"
             android:backgroundTint="#B5B3B3"
             android:fontFamily="@font/nunito"
@@ -278,8 +288,6 @@
             android:textColor="#FFFFFF"
             android:textSize="@dimen/_14sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+            app:cornerRadius="@dimen/_8dp"/>
+    </RelativeLayout>
+</RelativeLayout>

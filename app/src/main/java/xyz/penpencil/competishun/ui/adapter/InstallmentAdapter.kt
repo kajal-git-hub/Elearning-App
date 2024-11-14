@@ -18,8 +18,8 @@ class InstallmentAdapter(
         fun bind(installment: InstallmentModel) {
             binding.tvInstallment.text = installment.title
             binding.tvAmount.text = installment.amount
-
-            val nestedAdapter = NestedInstallmentAdapter(installment.nestedInstallmentList)
+            val data =  installment.nestedInstallmentList.first()
+            val nestedAdapter = NestedInstallmentAdapter(listOf(data))
             binding.rvNestedInstallment.apply {
                 layoutManager = LinearLayoutManager(binding.root.context)
                 adapter = nestedAdapter

@@ -28,10 +28,11 @@
 
             <ImageView
                 android:id="@+id/menu_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_16dp"
-                android:layout_marginTop="@dimen/_20dp"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="@dimen/_8dp"
+                android:padding="@dimen/_8dp"
                 android:src="@drawable/empty_mycourse_menu"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -50,11 +51,11 @@
 
             <ImageView
                 android:id="@+id/profile_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_16dp"
-                android:layout_marginTop="18dp"
-                android:layout_marginEnd="@dimen/_16dp"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_marginTop="8dp"
+                android:padding="8dp"
+                android:layout_marginEnd="@dimen/_8dp"
                 android:src="@drawable/frame_370000521"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

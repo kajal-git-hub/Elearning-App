@@ -55,7 +55,7 @@ class DownloadedItemAdapter(
     override fun onDeleteClick(position: Int, item: TopicContentModel) {
         if (position >= 0 && position < items.size) {
             items.removeAt(position)
-            filteredItems.removeAt(position) // Also remove from filtered list
+            filteredItems.removeAt(position)
             notifyItemRemoved(position)
             notifyItemRangeChanged(position, items.size)
             videoClickListener.onDeleteClick(item)
@@ -70,7 +70,18 @@ class DownloadedItemAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = filteredItems[position]
         holder.studyMaterial.text = item.lecture
+        holder.itemView.setOnClickListener {
+            if (item.fileType == "VIDEO"){
+                videoClickListener.onVideoClick(item)
+            }
 
+            if (item.fileType == "PDF"){
+                context.startActivity(Intent(context, PdfViewActivity::class.java).apply {
+                    putExtra("PDF_URL", item.localPath)
+                    putExtra("PDF_TITLE", item.topicName)
+                })
+            }
+        }
         if (item.fileType == "PDF") {
             holder.lecTime.text = item.lecturerName
             holder.lecTime.setCompoundDrawablesWithIntrinsicBounds(R.drawable.download_person, 0, 0, 0)
@@ -107,12 +118,16 @@ class DownloadedItemAdapter(
         holder.topicDescription.text = item.topicDescription
 
         holder.forRead.setOnClickListener {
-            val localPath = File(context.filesDir, item.topicName + ".pdf")
-            val intent = Intent(context, PdfViewActivity::class.java).apply {
-                putExtra("PDF_URL", localPath.absolutePath)
-                putExtra("PDF_TITLE", item.topicName)
+            if (item.fileType == "VIDEO"){
+                videoClickListener.onVideoClick(item)
             }
-            context.startActivity(intent)
+
+            if (item.fileType == "PDF"){
+                context.startActivity(Intent(context, PdfViewActivity::class.java).apply {
+                    putExtra("PDF_URL", item.localPath)
+                    putExtra("PDF_TITLE", item.topicName)
+                })
+            }
         }
 
         holder.forVideo.setOnClickListener {
