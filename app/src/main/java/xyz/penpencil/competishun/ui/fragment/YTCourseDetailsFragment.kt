@@ -228,7 +228,7 @@ class YTCourseDetailsFragment : Fragment() {
                     when {
                         !subfolderDurationFolders.isNullOrEmpty() && !folderProgressContent.isNullOrEmpty() ->
                         {
-                            binding.tvContentCount.text = "(${folderProgressContent.size})"
+                           // binding.tvContentCount.text = "(${folderProgressContent.size})"
                             val topicContentList =
                                 folderProgressContent.mapIndexed { index, contents ->
                                     Log.e("folderContentLog", contents.content?.file_url.toString())
@@ -334,7 +334,7 @@ class YTCourseDetailsFragment : Fragment() {
                                 SubjectContentAdapter(subjectContentList, binding.tvTopicType.text.toString()) { selectedItem ->
                                     Log.e("gettingcontenList",subjectContentList.toString())
                                     binding.tvTopicType.text = selectedItem.topicName
-                                    binding.tvContentCount.text = selectedItem.topicDescription
+                             //       binding.tvContentCount.text = selectedItem.topicDescription
                                     FileProgress(selectedItem.id,selectedItem.topicName,"")
 
 //
@@ -386,7 +386,7 @@ class YTCourseDetailsFragment : Fragment() {
 
                         !folderProgressContent.isNullOrEmpty() -> {
                             Log.e("folderContentsss", folderProgressContent.toString())
-                            binding.tvContentCount.text = "(${folderProgressContent.size})"
+                    //        binding.tvContentCount.text = "(${folderProgressContent.size})"
 
                             val subjectContentList =
                                 folderProgressContent.mapIndexed { index, contents ->
@@ -420,7 +420,7 @@ class YTCourseDetailsFragment : Fragment() {
                                         isExternal = contents.content?.file_name?.contains("DPPs") == true
                                     )
                                 }
-                            binding.tvContentCount.text = "(${subjectContentList.size + (folderProgressContent?.size ?: 0)})"
+                         //   binding.tvContentCount.text = "(${subjectContentList.size + (folderProgressContent?.size ?: 0)})"
                             val folderContentIs = folderProgressContent.filter { it.content?.file_type?.name  == "VIDEO" }.mapNotNull { it.content?.id }.toCollection(ArrayList())
                             val folderContentNes = folderProgressContent.filter { it.content?.file_type?.name  == "URL" }.mapNotNull { it.content?.file_name }.toCollection(ArrayList())
                             Log.e("getfoldersubject1",folderContentNes.toString())
@@ -459,7 +459,7 @@ class YTCourseDetailsFragment : Fragment() {
 
                         else -> {
                             Log.e("folderContentsss", "No content available")
-                            binding.tvContentCount.text = "(0)"
+                       //     binding.tvContentCount.text = "(0)"
                             binding.rvYTCourseVideoListing.adapter = null
                          //   binding.rvStudyMaterial.adapter = null
                         }
@@ -581,7 +581,7 @@ class YTCourseDetailsFragment : Fragment() {
                         }
                     } else {
                         Log.e("studymatfile", "No content available")
-                        binding.tvContentCount.text = "(0)"
+                //        binding.tvContentCount.text = "(0)"
                       //  binding.rvSubjectContent.adapter = null
                     }
                 }
