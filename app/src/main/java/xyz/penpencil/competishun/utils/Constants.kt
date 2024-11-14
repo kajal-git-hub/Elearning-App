@@ -11,10 +11,7 @@ object Constants {
     const val BOARD = "Board"
     const val UCET = "CUET"
     const val OTHERS = "Others"
-    const val RazorpayKeyId_Prod = "rzp_live_7Hx1eP9SZPlJYE"
-    const val RazorpayKeyId = "rzp_test_DcVrk6NysFj71r"
-    const val GoogleClientId = "887693153546-mv6cfeppj49al2c2bdpainrh6begq6bi.apps.googleusercontent.com"
-    const val GoogleClientId_Prod = "484629070442-4pcbl6i1289mhm9shaac4bf85b8ad0eg.apps.googleusercontent.com"
+
     const val YEAR_2025 = "2025"
     const val YEAR_2026 = "2026"
     const val YEAR_2027 = "2027"

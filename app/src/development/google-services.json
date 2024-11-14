@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "291061699020",
+    "project_id": "competishun-7c649",
+    "storage_bucket": "competishun-7c649.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:291061699020:android:b90ba927615b39b20c4d69",
+        "android_client_info": {
+          "package_name": "xyz.penpencil.competishun.dev"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCz3qR3rucMQouu3ituqfygqcO3YI3FiSo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

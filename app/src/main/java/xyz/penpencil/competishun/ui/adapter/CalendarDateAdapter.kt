@@ -40,10 +40,10 @@ class CalendarDateAdapter(
 
             binding.viewIndicator.visibility = if (isSelected) View.VISIBLE else View.GONE
             binding.root.setOnClickListener {
-                if (binding.dotContentAvailable.visibility != View.VISIBLE) {
+               /* if (binding.dotContentAvailable.visibility != View.VISIBLE) {
                     Toast.makeText(it.context, "No classes have been scheduled on this date", Toast.LENGTH_SHORT).show()
                     return@setOnClickListener
-                }
+                }*/
                 val previousSelectedPosition = selectedPosition
                 selectedPosition = absoluteAdapterPosition
                 notifyItemChanged(previousSelectedPosition)

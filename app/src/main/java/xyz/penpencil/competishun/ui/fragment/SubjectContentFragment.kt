@@ -82,7 +82,7 @@ class SubjectContentFragment : DrawerVisibility() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putString("selectedId", "selectedId")
+        outState.putString("selectedId", selectedId)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -143,8 +143,8 @@ class SubjectContentFragment : DrawerVisibility() {
         binding.rvTopicContent.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
-        if (savedInstanceState?.getString("selectedId")!=null && savedInstanceState?.getString("selectedId")?.isNotEmpty() == true){
-            savedInstanceState?.getString("selectedId")?.let {
+        if (savedInstanceState?.getString(selectedId)!=null && savedInstanceState?.getString(selectedId)?.isNotEmpty() == true){
+            savedInstanceState?.getString(selectedId)?.let {
                 folderProgress(it)
             }
         }else {
@@ -188,7 +188,7 @@ class SubjectContentFragment : DrawerVisibility() {
         val free = arguments?.getBoolean("free")
 
         if (folderId.isNotEmpty()) {
-            // Trigger the API call
+            selectedId = folderId
             coursesViewModel.findCourseFolderProgress(folderId)
         }
 
@@ -746,7 +746,7 @@ class SubjectContentFragment : DrawerVisibility() {
         // Load the image using Glide
         Glide.with(requireContext())
             .load(topicContent.url)
-            .placeholder(R.drawable.loaderscreen)
+            .placeholder(R.drawable.placeholder_image)
             .into(popupImageView)
 
         // Show the dialog

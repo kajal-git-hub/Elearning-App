@@ -35,6 +35,7 @@ import xyz.penpencil.competishun.utils.SharedPreferencesManager
 import dagger.hilt.android.AndroidEntryPoint
 import org.json.JSONException
 import org.json.JSONObject
+import xyz.penpencil.competishun.BuildConfig
 import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.databinding.FragmentMyCartBinding
 import xyz.penpencil.competishun.utils.Constants
@@ -412,12 +413,12 @@ class MyCartFragment : DrawerVisibility(), OnCartItemRemovedListener, MyCartAdap
     private fun processPayment(order: CreateOrderMutation.CreateOrder) {
         val rzpOrderId = order.rzpOrderId
         sharedPreferencesManager.rzpOrderId = rzpOrderId
-        Log.e("razorpaydi",rzpOrderId.toString())
+
         var amount = order.amountPaid
         Log.e("chcekcnou",amount.toString())
         val currency = "INR"
         val checkout = Checkout()
-        checkout.setKeyID(Constants.RazorpayKeyId_Prod)
+        checkout.setKeyID(BuildConfig.RAZORPAY_KEY_ID)
         Log.e("user/id=",userId.toString())
         Log.e("user/tokem=",sharedPreferencesManager.accessToken.toString())
         val obj = JSONObject()
