@@ -31,6 +31,7 @@ class YoutubeActivity : AppCompatActivity() {
         val fullscreenButton: ImageView = findViewById(R.id.fullscreenButton)
 
         val videoUrl = intent.getStringExtra("url")
+        val videoName = intent.getStringExtra("urlDescription")
         val videoId = extractYouTubeId(videoUrl.toString())
         val youtubePlayerView: YouTubePlayerView = findViewById(R.id.youtubePlayerView)
 
