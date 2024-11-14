@@ -2,9 +2,11 @@ package xyz.penpencil.competishun.ui.main
 
 import android.content.pm.ActivityInfo
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.widget.ImageView
+import android.window.OnBackInvokedDispatcher
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -16,11 +18,23 @@ import xyz.penpencil.competishun.R
 
 class YoutubeActivity : AppCompatActivity() {
     private var isInFullscreen = false
-    private var youTubePlayerInstance: YouTubePlayer? = null // Store the player instance
+    private var youTubePlayerInstance: YouTubePlayer? = null
+
+    private lateinit var backButton : ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_youtube)
+
+        backButton  = findViewById(R.id.iv_videoBackPressed)
+
+        backButton.setOnClickListener {
+            if (isInFullscreen) {
+                exitFullScreenMode()
+            } else {
+                super.onBackPressed()
+            }
+        }
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -57,15 +71,22 @@ class YoutubeActivity : AppCompatActivity() {
             }
         })
 
-        // Custom Fullscreen button listener
         fullscreenButton.setOnClickListener {
             if (isInFullscreen) {
                 exitFullScreenMode()
             } else {
                 enterFullScreenMode()
-                // Automatically play the video when entering fullscreen
                 youTubePlayerInstance?.play()
             }
+        }
+    }
+
+
+    override fun onBackPressed() {
+        if (isInFullscreen) {
+            exitFullScreenMode()
+        } else {
+            super.onBackPressed()
         }
     }
 

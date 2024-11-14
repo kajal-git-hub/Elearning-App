@@ -102,12 +102,18 @@ class MyPurchaseDetailsFragment : DrawerVisibility() {
         }
 
         binding.btGenerateReceipt.setOnClickListener {
-            if(fullTransactionId.isNotEmpty()){
-                downloadReceipt(fullTransactionId)
-            }else{
+            Log.d("transactionId", transactionId)
+            if(transactionId.isNotEmpty()){
                 downloadReceipt(transactionId)
             }
         }
+        binding.btGenerateReceipt2.setOnClickListener {
+            Log.d("fullTransactionId", fullTransactionId)
+            if(fullTransactionId.isNotEmpty()){
+                downloadReceipt(fullTransactionId)
+            }
+        }
+
     }
 
     private fun observeCoursePayments() {
@@ -121,6 +127,9 @@ class MyPurchaseDetailsFragment : DrawerVisibility() {
                 val secondPayment = if (payments.isNotEmpty()) payments else null
                 if((secondPayment?.size ?: 0) > 1){
                     fullTransactionId = secondPayment?.get(1)?.rzpOrderId.toString()
+                    if (fullTransactionId.isNotEmpty()){
+                        binding.clGetReceipt2.visibility = View.VISIBLE
+                    }
                 }
                 binding.clOrderReceipt.visibility = View.VISIBLE
                 rzpOrderId = firstPayment?.rzpOrderId ?: ""
@@ -416,10 +425,7 @@ class MyPurchaseDetailsFragment : DrawerVisibility() {
             result.onSuccess {
                 var receiptLink = it.generateReceipt
                 Log.e("ReceiptLink",receiptLink)
-                Toast.makeText(requireContext(), "Download started", Toast.LENGTH_SHORT).show()
-
-                helperFunctions.downloadPdfOld(requireContext(),receiptLink,"Payment Invoice")
-                Toast.makeText(requireContext(), "Download completed successfully", Toast.LENGTH_SHORT).show()
+                helperFunctions.downloadPdf(requireContext(),receiptLink,"Payment Invoice")
             }.onFailure {
                 // Handle failure, e.g., show an error message
                 Log.e("Failed to download ReceiptLink: ",it.message.toString())
