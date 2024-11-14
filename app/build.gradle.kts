@@ -16,8 +16,8 @@ android {
     defaultConfig {
         minSdk = 26
         targetSdk = 34
-        versionCode = 206
-        versionName = "1.0.8"
+        versionCode = 207
+        versionName = "1.0.9"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -46,7 +46,7 @@ android {
 
     signingConfigs {
         create("release") {
-            storeFile = file("C:\\Users\\Documents\\Checking\\Competishun\\xyz.penpencil.competishun\\android_app_competishun-key.keystore")
+            storeFile = file("C:\\Users\\GCV\\Documents\\Checking\\Competishun\\xyz.penpencil.competishun\\android_app_competishun-key.keystore")
             storePassword = "competishun"
             keyAlias = "competishun"
             keyPassword = "competishun"
@@ -100,7 +100,7 @@ android {
             buildConfigField("String", "BASE_URL_GATEKEEPER", "\"https://api.competishun.com/cm-gatekeeper/graphql\"")
             buildConfigField("String", "BASE_URL_CURATOR", "\"https://api.competishun.com/cm-curator/graphql\"")
             buildConfigField("String", "BASE_URL_COINKEEPER", "\"https://api.competishun.com/cm-coinkeeper/graphql\"")
-            buildConfigField("String", "APP_VERSION", "\"1.0.8\"")
+            buildConfigField("String", "APP_VERSION", "\"1.0.9\"")
             buildConfigField("String", "FIREBASE_CONFIG_FILE", "\"google-services.json\"")
             buildConfigField("String", "RAZORPAY_KEY_ID", "\"rzp_live_7Hx1eP9SZPlJYE\"")
             buildConfigField("String", "GOOGLE_CLIENT_ID", "\"484629070442-4pcbl6i1289mhm9shaac4bf85b8ad0eg.apps.googleusercontent.com\"")
