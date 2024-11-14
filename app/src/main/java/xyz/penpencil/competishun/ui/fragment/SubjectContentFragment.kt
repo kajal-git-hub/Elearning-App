@@ -49,7 +49,7 @@ class SubjectContentFragment : DrawerVisibility() {
 
     private lateinit var binding: FragmentSubjectContentBinding
     private val coursesViewModel: CoursesViewModel by viewModels()
-    private lateinit var helperFunctions: HelperFunctions
+    private val helperFunctions: HelperFunctions by lazy { HelperFunctions() }
     private lateinit var subjectContentAdapter: SubjectContentAdapter
     private val videourlViewModel: VideourlViewModel by viewModels()
     private var VwatchedDuration: Int = 0
@@ -66,7 +66,7 @@ class SubjectContentFragment : DrawerVisibility() {
 
     private var folderProgressCont = -1
     private var selectedId = ""
-
+    var subFoldersList: List<FindCourseFolderProgressQuery.SubfolderDuration> = mutableListOf()
 
     @Inject
     lateinit var ketch: Ketch
@@ -88,102 +88,103 @@ class SubjectContentFragment : DrawerVisibility() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.backIconSubjectContent.setOnClickListener {
-            findNavController().navigateUp()
-        }
+        setupUI()
+        setupNavigationListeners()
+        setupViewModelObservers()
+        handleArguments()
+        handleSavedInstanceState(savedInstanceState)
+    }
 
+    private fun setupUI() {
+        binding.rvSubjectContent.layoutManager = LinearLayoutManager(context)
+        binding.rvTopicContent.layoutManager = LinearLayoutManager(context)
+        (activity as? HomeActivity)?.apply {
+            showBottomNavigationView(false)
+            showFloatingButton(false)
+        }
+    }
+
+    private fun setupNavigationListeners() {
+        binding.backIconSubjectContent.setOnClickListener { findNavController().navigateUp() }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 findNavController().navigateUp()
             }
         })
+    }
 
-        helperFunctions = HelperFunctions()
-
-        (activity as? HomeActivity)?.showBottomNavigationView(false)
-        (activity as? HomeActivity)?.showFloatingButton(false)
-
-        val subFolders = arguments?.getString("subFolders") ?: ""
-         folderName = arguments?.getString("folder_Name") ?: ""
-        newFolderNamer = arguments?.getString("folderName") ?: ""
-        Log.e("newfoldfed",newFolderNamer)
-        val parentContent = arguments?.getString("parent_content") ?: ""
-        val folderId =  arguments?.getString("folder_Id") ?: ""
-        val folder_Count = arguments?.getString("folder_Count") ?: "0"
-        isExternal = arguments?.getBoolean("isExternal", false) == true
-        val subFolderList =
-            object : TypeToken<List<FindCourseFolderProgressQuery.SubfolderDuration>>() {}.type
-        val subFoldersList: List<FindCourseFolderProgressQuery.SubfolderDuration> =
-            gson.fromJson(subFolders, subFolderList)
-        Log.e("subdaaf", subFoldersList.toString())
-
-
+    private fun setupViewModelObservers() {
         sharedViewModel = ViewModelProvider(requireActivity()).get(SharedVM::class.java)
         sharedViewModel.watchedDuration.observe(viewLifecycleOwner, Observer { duration ->
             VwatchedDuration = duration
             Log.d("SubjectContentFragment", "Received duration: $duration")
-            // Update UI or perform actions based on the received duration
+            // Perform actions based on the received duration if needed
         })
-
-        Log.e("folderParent", parentContent.toString())
-
-        if (parentContent.isNotEmpty()) {
-            val subContentType = object : TypeToken<List<FindCourseFolderProgressQuery.FolderContent>>() {}.type
-            val subContentList: List<FindCourseFolderProgressQuery.FolderContent>? =
-                gson.fromJson(parentContent, subContentType)
-
-            subContentList?.let {
-                newContent(it, folderId)
-                it.forEach { content ->
-                    // Process each content item here if needed
-                    // folderProgress(content)
-                }
-            }
-        }
-
-        binding.rvSubjectContent.layoutManager =
-            LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        binding.rvTopicContent.layoutManager =
-            LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-
-        if (savedInstanceState?.getString(selectedId)!=null && savedInstanceState?.getString(selectedId)?.isNotEmpty() == true){
-            savedInstanceState?.getString(selectedId)?.let {
-                folderProgress(it)
-            }
-        }else {
-            if (subFoldersList[0].folder?.id != null) {
-                var id = subFoldersList[0].folder?.id ?: ""
-                binding.tvTopicType.text = subFoldersList[0].folder?.name
-                folderProgress(id)
-            }
-        }
-        binding.clTopicType.setOnClickListener {
-            val bundle = Bundle().apply {
-                putString("subFolders", subFolders)
-                putString("folder_Count", folder_Count)
-                putString("FOLDER_NAME", binding.tvTopicType.text.toString())
-            }
-
-            val bottomSheet = BottomsheetCourseTopicTypeFragment().apply {
-                arguments = bundle
-            }
-
-            bottomSheet.setOnTopicTypeSelectedListener(object : OnTopicTypeSelectedListener {
-                override fun onTopicTypeSelected(selectedTopic: TopicTypeModel) {
-                    binding.tvTopicType.text = selectedTopic.title
-                    subfolder= -1
-                    folderProgressCont= -1
-                    selectedId = selectedTopic.id
-                    folderProgress(selectedTopic.id)
-                }
-            })
-            bottomSheet.show(childFragmentManager, "BottomsheetCourseTopicTypeFragment")
-
-
-        }
-        binding.mtCount.text = "${subFoldersList.size} Chapters"
-        binding.tvSubjectName.text = folderName ?: ""
     }
+
+    private fun handleArguments() {
+        val subFoldersJson = arguments?.getString("subFolders") ?: ""
+        folderName = arguments?.getString("folder_Name") ?: ""
+        newFolderNamer = arguments?.getString("folderName") ?: ""
+        val parentContentJson = arguments?.getString("parent_content") ?: ""
+        val folderId = arguments?.getString("folder_Id") ?: ""
+        val folderCount = arguments?.getString("folder_Count") ?: "0"
+        isExternal = arguments?.getBoolean("isExternal", false) == true
+
+        subFoldersList = gson.fromJson(subFoldersJson, object : TypeToken<List<FindCourseFolderProgressQuery.SubfolderDuration>>() {}.type)
+
+        Log.e("SubFoldersList", subFoldersList.toString())
+        binding.mtCount.text = "${subFoldersList.size} Chapters"
+        binding.tvSubjectName.text = folderName
+
+        if (parentContentJson.isNotEmpty()) {
+            val subContentList: List<FindCourseFolderProgressQuery.FolderContent>? =
+                gson.fromJson(parentContentJson, object : TypeToken<List<FindCourseFolderProgressQuery.FolderContent>>() {}.type)
+
+            subContentList?.let { newContent(it, folderId) }
+        }
+
+        binding.clTopicType.setOnClickListener {
+            showTopicTypeBottomSheet(subFoldersJson, folderCount)
+        }
+    }
+
+    private fun handleSavedInstanceState(savedInstanceState: Bundle?) {
+        val restoredId = savedInstanceState?.getString(selectedId)
+        if (!restoredId.isNullOrEmpty()) {
+            Log.e("Restored ID", "onViewCreated: $restoredId")
+            folderProgress(restoredId)
+        } else if (subFoldersList.isNotEmpty() && subFoldersList[0].folder?.id != null) {
+            val firstFolderId = subFoldersList[0].folder?.id ?: ""
+            binding.tvTopicType.text = subFoldersList[0].folder?.name
+            folderProgress(firstFolderId)
+        }
+    }
+
+    private fun showTopicTypeBottomSheet(subFoldersJson: String, folderCount: String) {
+        val bundle = Bundle().apply {
+            putString("subFolders", subFoldersJson)
+            putString("folder_Count", folderCount)
+            putString("FOLDER_NAME", binding.tvTopicType.text.toString())
+            putString("selectedId", selectedId)
+        }
+
+        val bottomSheet = BottomsheetCourseTopicTypeFragment().apply {
+            arguments = bundle
+        }
+
+        bottomSheet.setOnTopicTypeSelectedListener(object : OnTopicTypeSelectedListener {
+            override fun onTopicTypeSelected(selectedTopic: TopicTypeModel) {
+                binding.tvTopicType.text = selectedTopic.title
+                subfolder = -1
+                folderProgressCont = -1
+                selectedId = selectedTopic.id
+                folderProgress(selectedTopic.id)
+            }
+        })
+        bottomSheet.show(childFragmentManager, "BottomsheetCourseTopicTypeFragment")
+    }
+
 
 
     private fun folderProgress(folderId: String) {
@@ -210,41 +211,14 @@ class SubjectContentFragment : DrawerVisibility() {
                     val folderProgressFolder = data.findCourseFolderProgress.folder
                     var folderProgressContent = data.findCourseFolderProgress.folderContents
                     val subfolderDurationFolders = data.findCourseFolderProgress.subfolderDurations
-                    Log.e("subFolderdata", subfolderDurationFolders.toString())
 
-                    subfolder = if (subfolderDurationFolders?.isEmpty() == true){
-                        0
-                    }else {
-                        -1
-                    }
-
-                    folderProgressCont = if (folderProgressContent?.isEmpty() == true){
-                        0
-                    }else {
-                        -1
-                    }
-
-                    if(subfolder==0 && folderProgressCont==0){
-                        binding.clEmptySubject.visibility = View.VISIBLE
-                        binding.rvSubjectContent.visibility = View.GONE
-                        binding.rvsubjectTopicContent.visibility = View.GONE
-                        binding.rvTopicContent.visibility = View.GONE
-                    }else{
-                        binding.clEmptySubject.visibility = View.GONE
-                        binding.rvSubjectContent.visibility = View.VISIBLE
-                        binding.rvsubjectTopicContent.visibility = View.VISIBLE
-                        binding.rvTopicContent.visibility = View.VISIBLE
-                    }
 
                     // Clear previous adapter to prevent issues
                     binding.rvSubjectContent.adapter = null
                     binding.rvTopicContent.adapter = null
 
-                    if (newFolderNamer.isNotEmpty()){
-                        Log.e("newfoldfed11",newFolderNamer)
-                          folderName =  newFolderNamer
-                    }else{
-                        folderName = folderName
+                    folderName = newFolderNamer.ifEmpty {
+                        folderName
                     }
 
                     when {
