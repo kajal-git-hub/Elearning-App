@@ -51,7 +51,7 @@ class ProfileLogoutFragment : BottomSheetDialogFragment() {
             requireActivity().finish()
         }
         binding.mbCancel.setOnClickListener {
-            findNavController().navigate(R.id.ProfileFragment)
+            dismiss()
         }
     }
     private fun deleteLocalFiles() {
