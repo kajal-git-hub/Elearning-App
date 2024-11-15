@@ -90,8 +90,6 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
     }
 
     private fun setupCalendar(scheduleTime:String) {
-
-
         calendarSetUp.setUpCalendarAdapter(
             binding.rvCalenderDates,
             requireContext(),
@@ -151,8 +149,7 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
         }
     }
 
-    private fun setupRecyclerView() {
-        lifecycleScope.launch {
+    private fun setupRecyclerView() = lifecycleScope.launch {
 
             val scheduleDataList = withContext(Dispatchers.Default) {
                 val filteredContentList = async {
@@ -198,7 +195,6 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
                 scheduleAdapter = ScheduleAdapter(scheduleDataList, requireContext(), this@ScheduleFragment)
                 binding.rvCalenderSchedule.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
                 binding.rvCalenderSchedule.adapter = scheduleAdapter
-                binding.rvCalenderSchedule.scrollToPosition(0)
                 if (scheduleDataList.isEmpty()) {
                     binding.clEmptySchedule.visibility = View.VISIBLE
                     binding.rvCalenderSchedule.visibility = View.GONE
@@ -207,8 +203,8 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
                     binding.rvCalenderSchedule.visibility = View.VISIBLE
                 }
                 binding.loader.visibility = View.GONE
+                binding.rvCalenderSchedule.scrollToPosition(1)
             }
-        }
     }
 
 

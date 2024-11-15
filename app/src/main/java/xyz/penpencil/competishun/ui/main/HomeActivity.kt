@@ -1,5 +1,6 @@
 package xyz.penpencil.competishun.ui.main
 
+import android.app.Activity
 import android.content.ContentResolver
 import android.content.ContentValues
 import android.content.Context
@@ -17,6 +18,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -32,6 +34,15 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.snackbar.Snackbar
+import com.google.android.play.core.appupdate.AppUpdateInfo
+import com.google.android.play.core.appupdate.AppUpdateManager
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory
+import com.google.android.play.core.appupdate.AppUpdateOptions
+import com.google.android.play.core.appupdate.testing.FakeAppUpdateManager
+import com.google.android.play.core.install.model.AppUpdateType
+import com.google.android.play.core.install.model.InstallStatus
+import com.google.android.play.core.install.model.UpdateAvailability
 import com.google.common.eventbus.Subscribe
 import com.ketch.DownloadModel
 import com.ketch.Ketch
@@ -42,6 +53,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
+import xyz.penpencil.competishun.BuildConfig
 import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.databinding.ActivityHomeBinding
 import xyz.penpencil.competishun.ui.viewmodel.UserViewModel
@@ -77,6 +89,8 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
     private val PDF_MIME_TYPE = "application/pdf"
     private val RELATIVE_PATH = Environment.DIRECTORY_DOWNLOADS
 
+    private lateinit var appUpdateManager: AppUpdateManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
@@ -85,6 +99,15 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
         setContentView(binding.root)
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         sharedPreferencesManager = SharedPreferencesManager(this)
+        appUpdateManager = if (BuildConfig.DEBUG) {
+            //TODO: need to test fake update manager
+            FakeAppUpdateManager(this).apply {
+                setUpdateAvailable(208)
+            }
+        } else {
+            AppUpdateManagerFactory.create(this)
+        }
+
         onBackPressedDispatcher.addCallback(this, backPressListener)
         window.navigationBarColor = ContextCompat.getColor(this,android.R.color.black)
 
@@ -206,9 +229,47 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
             }
         }
 
+        // TODO: add condition if required to update app
+        checkForUpdate()
 
     }
 
+    private fun checkForUpdate() {
+        appUpdateManager.appUpdateInfo.addOnSuccessListener { appUpdateInfo ->
+            when {
+                appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE &&
+                        appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE) -> {
+                    startUpdate(appUpdateInfo, AppUpdateType.IMMEDIATE)
+                }
+                appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE &&
+                        appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE) -> {
+                    startUpdate(appUpdateInfo, AppUpdateType.FLEXIBLE)
+                }
+            }
+        }
+    }
+
+    private fun startUpdate(appUpdateInfo: AppUpdateInfo, updateType: Int) {
+        appUpdateManager.startUpdateFlowForResult(
+            appUpdateInfo,
+            activityResultLauncher,
+            AppUpdateOptions.newBuilder(updateType).build()
+        )
+    }
+
+    private val activityResultLauncher = registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
+        when (result.resultCode) {
+            Activity.RESULT_OK -> {
+                Log.v("MyActivity", "Update flow completed!")
+            }
+            Activity.RESULT_CANCELED -> {
+                Log.v("MyActivity", "User cancelled Update flow!")
+            }
+            else -> {
+                Log.v("MyActivity", "Update flow failed with resultCode:${result.resultCode}")
+            }
+        }
+    }
 
 
     private fun navigateToHomeFragment(navController: NavController, arguments: Bundle?) {
@@ -296,7 +357,21 @@ class HomeActivity : AppCompatActivity(), PaymentResultListener {
         userId = sharedPreferencesManager.userId.toString()
 //        binding.bottomNav.selectedItemId = R.id.home
 //        binding.bottomNav.selectedItemId = R.id.home
+        appUpdateManager.appUpdateInfo.addOnSuccessListener { appUpdateInfo ->
+            if (appUpdateInfo.installStatus() == InstallStatus.DOWNLOADED) {
+                popupSnackbarForCompleteUpdate()
+            }
+        }
+    }
 
+    private fun popupSnackbarForCompleteUpdate() {
+        Snackbar.make(
+            findViewById(android.R.id.content),
+            "An update has been downloaded. Restart to complete.",
+            Snackbar.LENGTH_INDEFINITE
+        ).setAction("Restart") {
+            appUpdateManager.completeUpdate()
+        }.show()
     }
 
     private fun observeUserDetails() {

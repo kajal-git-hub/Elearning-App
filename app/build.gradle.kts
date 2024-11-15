@@ -172,7 +172,11 @@ dependencies {
 
     implementation(libs.ketch)
 
-    implementation ("com.github.PhilJay:MPAndroidChart:v3.1.0")
+    implementation (libs.mpandroidchart)
+
+    implementation(libs.review.ktx)
+
+    implementation(libs.app.update.ktx)
 
 
 }

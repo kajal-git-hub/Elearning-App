@@ -36,6 +36,12 @@ class TopicContentViewModel @Inject constructor(
         }
     }
 
+    fun clearTable() {
+        viewModelScope.launch {
+            repository.clearTable()
+        }
+    }
+
     fun getTopicContentByFileType(fileType: String): Flow<List<TopicContentModel>> {
         return repository.getTopicContentByFileType(fileType)
             .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
