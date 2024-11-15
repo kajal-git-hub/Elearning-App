@@ -100,10 +100,6 @@ class ResumeCourseFragment : DrawerVisibility() {
         binding.clResumeCourseIcon2.setOnClickListener {
             findNavController().navigate(R.id.action_resumeCourseFragment_to_ScheduleFragment,bundle)
         }
-       // dataBind(folderIds,courseName!!,folderCounts!!)
-
-//        binding.clScore.setOnClickListener { findNavController().navigate(R.id.scoreDashboardFragment) }
-
     }
 
 
