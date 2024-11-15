@@ -583,7 +583,7 @@ class YTCourseDetailsFragment : Fragment() {
                                 putString("studyMaterial", "studyMaterial")
 
                             }
-                            findNavController().navigate(R.id.action_StudyMaterialDetailsFragment_to_TopicTYPEContentFragment, bundle)
+                            findNavController().navigate(R.id.TopicTYPEContentFragment, bundle)
                         }
                     } else {
                         Log.e("studymatfile", "No content available")

@@ -38,6 +38,7 @@ class YTCourseFragment : Fragment(), FilterSelectionListener, StudentCourseItemC
     private lateinit var courseId: String
     private lateinit var sharedPreferencesManager: SharedPreferencesManager
     private var autoSelectedExam = ""
+    private var autoSelectedSubject = ""
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -54,19 +55,26 @@ class YTCourseFragment : Fragment(), FilterSelectionListener, StudentCourseItemC
         sharedPreferencesManager = SharedPreferencesManager(requireContext())
         binding.backIcon.setOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed() }
         binding.tvCourseMaterialCount.text = "0 Courses"
+        fetchCoursesForClass("","")
+        setupToggleRecyclerView()
         binding.tvFilterTextYT.setOnClickListener {
-            val filterYTFragment = FilterStudyMaterialFragment()
+            val filterYTFragment = FilterStudyMaterialFragment().apply {
+                val bundle = Bundle()
+                bundle.putString("AUTO_SELECTED_SUBJECT", autoSelectedSubject)
+                bundle.putString("AUTO_SELECTED_EXAM", autoSelectedExam)
+                arguments = bundle
+            }
+
             filterYTFragment.show(childFragmentManager, "FilterStudyMaterialFragment")
         }
-       fetchCoursesForClass("","")
-        setupToggleRecyclerView()
-
     }
 
     private fun setupToggleRecyclerView() {
+        Log.d("SelectedOpt", "Selected: $autoSelectedExam")
+
         val adapter = StudyCoursesAdapter(filterOptions,autoSelectedExam) { selectedOption ->
             Log.d("SelectedOption", "Selected: $selectedOption")
-
+             autoSelectedExam = selectedOption
             val filters = FindAllCourseInputStudent(
                 category_name = Optional.present("Youtube Courses"),
                 exam_type = Optional.present(selectedOption)
@@ -148,10 +156,11 @@ class YTCourseFragment : Fragment(), FilterSelectionListener, StudentCourseItemC
 
     override fun onFiltersSelected(selectedExam: String?, selectedSubject: String?) {
         Log.e(TAG,selectedExam + selectedSubject)
-        Log.d("Filters", "Selected Exam: $selectedExam, Selected Subject: $selectedSubject")
+        Log.d("Filters", "Selected $autoSelectedExam: $selectedExam, Selected Subject: $selectedSubject")
         if (selectedExam != null) {
             autoSelectedExam = selectedExam
             val adapter = StudyCoursesAdapter(filterOptions,autoSelectedExam) { selectedOption ->
+                autoSelectedExam = selectedOption
                 val filters = FindAllCourseInputStudent(
                     category_name = Optional.present("Youtube Courses"),
                     exam_type = Optional.present(selectedOption)
@@ -159,18 +168,19 @@ class YTCourseFragment : Fragment(), FilterSelectionListener, StudentCourseItemC
                 courseViewModel.fetchCourses(filters)
                 observeCourses()
             }
+            if (selectedSubject != null){ autoSelectedSubject = selectedSubject}
             binding.rvToggleButtonsYT.adapter = adapter
         }
         val filters = when {
             // If both selectedExam and selectedSubject are present
-            selectedExam != null && selectedSubject != null -> FindAllCourseInputStudent(
+            ((selectedExam != null && selectedSubject != null) &&selectedExam != "" && selectedSubject != "" )-> FindAllCourseInputStudent(
                 category_name = Optional.present("Youtube Courses"),
                 exam_type = Optional.present(selectedExam),
                 course_class = Optional.present(selectedSubject)
             )
 
             // If only selectedExam is present
-            selectedExam != null -> {
+            (selectedExam != null && selectedExam != ""&& autoSelectedSubject == "") -> {
                 autoSelectedExam = selectedExam
                 Log.e("autoslecteds",selectedExam)
                 FindAllCourseInputStudent(
@@ -178,22 +188,53 @@ class YTCourseFragment : Fragment(), FilterSelectionListener, StudentCourseItemC
                     exam_type = Optional.present(selectedExam)
                 )
             }
+            (selectedExam == null && autoSelectedExam != ""  && selectedSubject==null) -> {
+                autoSelectedSubject = ""
+
+                Log.e("autoslecteds $selectedSubject",autoSelectedExam)
+                FindAllCourseInputStudent(
+                    category_name = Optional.present("Youtube Courses"),
+                    exam_type = Optional.present(autoSelectedExam)
+                )
+            }
 
             // If only selectedSubject is present
-            selectedSubject != null -> FindAllCourseInputStudent(
-                category_name = Optional.present("Youtube Courses"),
-                course_class = Optional.present(selectedSubject)
-            )
+            (selectedSubject != null && selectedSubject != "" && autoSelectedExam == "") -> {
+                autoSelectedSubject = selectedSubject
+                FindAllCourseInputStudent(
+                    category_name = Optional.present("Youtube Courses"),
+                    course_class = Optional.present(selectedSubject)
+                )
+            }
+            (selectedSubject != null && autoSelectedExam != "" && selectedSubject != "") ->{
+                Log.e("dfdddff","afdfjlk $autoSelectedExam")
+                autoSelectedSubject = selectedSubject
+                FindAllCourseInputStudent(
+                    category_name = Optional.present("Youtube Courses"),
+                    course_class = Optional.present(selectedSubject),
+                            exam_type = Optional.present(autoSelectedExam),
+                )
+            }
+            (selectedExam != null && autoSelectedSubject != "" && selectedExam != "") ->{
+                Log.e("dfdddff","afdfjlk $autoSelectedExam")
+                autoSelectedExam = selectedExam
+                FindAllCourseInputStudent(
+                    category_name = Optional.present("Youtube Courses"),
+                    course_class = Optional.present(autoSelectedSubject),
+                    exam_type = Optional.present(selectedExam),
+                )
+            }
 
             // Default case if neither is selected (optional, if needed)
             else -> {
+                Log.e("filtersd $selectedExam",selectedSubject?:"")
                 FindAllCourseInputStudent(
                     category_name = Optional.present("Youtube Courses"))
             }
         }
 
-        filters.let {
-            courseViewModel.fetchCourses(it)
+       filters.let {
+            courseViewModel.fetchCourses(filters)
             observeCourses()
         }
 

@@ -32,6 +32,7 @@
             android:id="@+id/search_icon_YTCourse"
             android:layout_width="@dimen/_45dp"
             android:layout_height="@dimen/_45dp"
+            android:visibility="gone"
             android:src="@drawable/search_normal"
             android:layout_marginEnd="@dimen/_20dp"
             android:padding="@dimen/_10dp"
@@ -269,7 +270,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         tools:listitem="@layout/item_yt_course"
         tools:itemCount="5"
-        android:visibility="visible"
+        android:visibility="gone"
         android:orientation="vertical"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
     </androidx.core.widget.NestedScrollView>

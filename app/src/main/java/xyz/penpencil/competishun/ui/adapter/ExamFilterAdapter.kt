@@ -15,10 +15,11 @@ import xyz.penpencil.competishun.databinding.SelectExamItemBinding
 
 class ExamFilterAdapter(
     private val options: List<String>,
+    private var autoselectedExam: String,
     private val onItemClick: (String) -> Unit
 ) : RecyclerView.Adapter<ExamFilterAdapter.ExamFilterHolder>() {
+    private var selectedPosition: Int = options.indexOf(autoselectedExam).takeIf { it >= 0 } ?: RecyclerView.NO_POSITION
 
-    private var selectedPosition: Int = RecyclerView.NO_POSITION
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExamFilterHolder {
         val binding = SelectExamItemBinding.inflate(
@@ -34,11 +35,18 @@ class ExamFilterAdapter(
         holder.itemView.setOnClickListener {
             val previousPosition = selectedPosition
             selectedPosition = position
-            notifyItemChanged(previousPosition)  // Unhighlight the previous selection
+
+            previousPosition?.let { notifyItemChanged(it) }
             notifyItemChanged(position)  // Highlight the new selection
 
             onItemClick(option)  // Pass selected item to the fragment
         }
+    }
+    // Method to clear the selection
+    fun clearSelection() {
+        val previousSelectedPosition = selectedPosition
+        selectedPosition = -1
+        previousSelectedPosition.let { notifyItemChanged(it) }
     }
 
     override fun getItemCount(): Int = options.size

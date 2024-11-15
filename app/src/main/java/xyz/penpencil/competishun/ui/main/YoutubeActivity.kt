@@ -51,8 +51,10 @@ class YoutubeActivity : AppCompatActivity() {
         val fullscreenButton: ImageView = findViewById(R.id.fullscreenButton)
 
         val videoUrl = intent.getStringExtra("url")
+
         val videoName = intent.getStringExtra("urlDescription")
         val videoId = extractYouTubeId(videoUrl.toString())
+        Log.e("vdideosfurl",videoUrl.toString() + videoId)
         val youtubePlayerView: YouTubePlayerView = findViewById(R.id.youtubePlayerView)
         description.text = videoName
             lifecycle.addObserver(youtubePlayerView)
@@ -139,7 +141,7 @@ class YoutubeActivity : AppCompatActivity() {
     }
 
     private fun extractYouTubeId(url: String): String? {
-        val pattern = "(?:youtu\\.be/|youtube\\.com/(?:watch\\?v=|embed/|v/|.+\\?v=))([\\w-]{11})"
+        val pattern = "(?:youtu\\.be/|youtube\\.com/(?:watch\\?v=|embed/|v/|shorts/|live/|.+\\?v=))([\\w-]{11})"
         val regex = Regex(pattern)
         val matchResult = regex.find(url)
         return matchResult?.groups?.get(1)?.value

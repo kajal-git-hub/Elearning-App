@@ -15,10 +15,11 @@ import xyz.penpencil.competishun.databinding.SelectSubjectItemBinding
 
 class SubjectFilterAdapter(
     private val options: List<String>,
+    private val selectedSubject: String,
     private val onItemClick: (String) -> Unit
 ) : RecyclerView.Adapter<SubjectFilterAdapter.SubjectFilterHolder>() {
 
-    private var selectedPosition: Int = RecyclerView.NO_POSITION
+    private var selectedPosition: Int = options.indexOf(selectedSubject).takeIf { it >= 0 } ?: RecyclerView.NO_POSITION
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SubjectFilterHolder {
         val binding = SelectSubjectItemBinding.inflate(
@@ -26,9 +27,16 @@ class SubjectFilterAdapter(
         )
         return SubjectFilterHolder(binding)
     }
+    // Method to clear the selection
+    fun clearSelection() {
+        val previousSelectedPosition = selectedPosition
+        selectedPosition = -1
+        previousSelectedPosition?.let { notifyItemChanged(it) }
+    }
 
     override fun onBindViewHolder(holder: SubjectFilterHolder, position: Int) {
         val option = options[position]
+        Log.e("selectedpostion",selectedPosition.toString())
         holder.bind(option, position == selectedPosition)
 
         holder.itemView.setOnClickListener {
@@ -36,7 +44,7 @@ class SubjectFilterAdapter(
             selectedPosition = position
 
             // Notify to refresh the previous and current selected positions
-            notifyItemChanged(previousPosition)  // Unhighlight the previous selection
+            previousPosition?.let { notifyItemChanged(it) }
             notifyItemChanged(position)  // Highlight the new selection
 
             onItemClick(option)  // Pass selected item to the fragment or activity
