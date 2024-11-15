@@ -174,8 +174,7 @@ dependencies {
 
     implementation (libs.mpandroidchart)
 
-    implementation(libs.review.ktx)
-
+    implementation(libs.app.update)
     implementation(libs.app.update.ktx)
 
 

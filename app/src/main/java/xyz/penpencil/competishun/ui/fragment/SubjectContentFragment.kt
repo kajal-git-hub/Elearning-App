@@ -119,11 +119,11 @@ class SubjectContentFragment : DrawerVisibility() {
 
     private fun setupViewModelObservers() {
         sharedViewModel = ViewModelProvider(requireActivity())[SharedVM::class.java]
-        sharedViewModel.watchedDuration.observe(viewLifecycleOwner, Observer { duration ->
+        sharedViewModel.watchedDuration.observe(viewLifecycleOwner) { duration ->
             VwatchedDuration = duration
             Log.d("SubjectContentFragment", "Received duration: $duration")
             // Perform actions based on the received duration if needed
-        })
+        }
     }
 
     private fun handleArguments() {
@@ -546,6 +546,17 @@ class SubjectContentFragment : DrawerVisibility() {
                             binding.tvContentCount.text = "(0)"
                             binding.rvSubjectContent.adapter = null
                         }
+                    }
+                    if (subFoldersList.isEmpty()
+                        && subfolderDurationFolders?.isEmpty() == true
+                        && folderProgressContent?.isEmpty() == true){
+                        binding.rvSubjectContent.visibility = View.GONE
+                        binding.rvsubjectTopicContent.visibility = View.GONE
+                        binding.rvTopicContent.visibility = View.GONE
+                    }else {
+                        binding.rvSubjectContent.visibility = View.VISIBLE
+                        binding.rvsubjectTopicContent.visibility = View.VISIBLE
+                        binding.rvTopicContent.visibility = View.VISIBLE
                     }
                     folderProgressContent = emptyList()
                 }

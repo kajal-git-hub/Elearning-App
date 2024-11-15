@@ -23,9 +23,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.net.toFile
 import androidx.core.view.ViewCompat
-import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.ObservableField
 import androidx.lifecycle.Lifecycle
@@ -43,12 +41,10 @@ import com.google.android.play.core.appupdate.testing.FakeAppUpdateManager
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.InstallStatus
 import com.google.android.play.core.install.model.UpdateAvailability
-import com.google.common.eventbus.Subscribe
 import com.ketch.DownloadModel
 import com.ketch.Ketch
 import com.ketch.Status
 import com.razorpay.PaymentResultListener
-import com.student.competishun.curator.type.FileType
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flowOn
@@ -57,8 +53,6 @@ import xyz.penpencil.competishun.BuildConfig
 import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.databinding.ActivityHomeBinding
 import xyz.penpencil.competishun.ui.viewmodel.UserViewModel
-import xyz.penpencil.competishun.utils.EventBusSingleton
-import xyz.penpencil.competishun.utils.MyEvent
 import xyz.penpencil.competishun.utils.SharedPreferencesManager
 import java.io.File
 import javax.inject.Inject

@@ -77,6 +77,7 @@ androidx-work-runtime = { module = "androidx.work:work-runtime", version.ref = "
 apollo-coroutines-support = { module = "com.apollographql.apollo:apollo-coroutines-support", version.ref = "apolloCoroutinesSupport" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
 apollo-logging = { module = "com.apollographql.apollo3:apollo-logging", version.ref = "apolloCoroutinesSupport" }
+app-update = { module = "com.google.android.play:app-update", version.ref = "appUpdateKtx" }
 app-update-ktx = { module = "com.google.android.play:app-update-ktx", version.ref = "appUpdateKtx" }
 core = { module = "com.pierfrancescosoffritti.androidyoutubeplayer:core", version.ref = "core" }
 dotsindicator = { module = "com.tbuonomo:dotsindicator", version.ref = "dotsindicator" }
