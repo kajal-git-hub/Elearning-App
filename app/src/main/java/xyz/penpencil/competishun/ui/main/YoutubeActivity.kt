@@ -1,15 +1,18 @@
 package xyz.penpencil.competishun.ui.main
 
+import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.widget.ImageView
+import android.widget.TextView
 import android.window.OnBackInvokedDispatcher
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.android.material.textview.MaterialTextView
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerFullScreenListener
@@ -21,12 +24,15 @@ class YoutubeActivity : AppCompatActivity() {
     private var youTubePlayerInstance: YouTubePlayer? = null
 
     private lateinit var backButton : ImageView
+    private lateinit var description : MaterialTextView
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_youtube)
 
         backButton  = findViewById(R.id.iv_videoBackPressed)
+        description  = findViewById(R.id.descid)
 
         backButton.setOnClickListener {
             if (isInFullscreen) {
@@ -48,8 +54,8 @@ class YoutubeActivity : AppCompatActivity() {
         val videoName = intent.getStringExtra("urlDescription")
         val videoId = extractYouTubeId(videoUrl.toString())
         val youtubePlayerView: YouTubePlayerView = findViewById(R.id.youtubePlayerView)
-
-        lifecycle.addObserver(youtubePlayerView)
+        description.text = videoName
+            lifecycle.addObserver(youtubePlayerView)
 
         youtubePlayerView.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
             override fun onReady(youTubePlayer: YouTubePlayer) {

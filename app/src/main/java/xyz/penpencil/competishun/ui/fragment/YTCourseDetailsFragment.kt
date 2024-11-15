@@ -101,12 +101,15 @@ class YTCourseDetailsFragment : Fragment() {
                     var id = folderlist[0].id ?: ""
                     var name = folderlist[0].id ?: ""
                     val data = folderlist[0].name
-                    Log.e("mndbnmbmasbmda", "onViewCreated: "+data)
+                    Log.e("mndbnmbmasbmda", "${sharedPreferencesManager.hasKey("TOPIC_ID_STUDY")}: "+data)
                     binding.tvTopicType.text = folderlist[0].name
                     if (sharedPreferencesManager.hasKey("TOPIC_ID_STUDY") && !sharedPreferencesManager.getString("TOPIC_ID_STUDY", "").isNullOrEmpty()){
                         binding.tvTopicType.text = sharedPreferencesManager.getString("TOPIC_ID_STUDY_TYPE", "Physics")
+
+                        Log.e("JJGHJGJGHJGy", "FOLDER_NAME: ${binding.tvTopicType.text}")
                         folderProgress(sharedPreferencesManager.getString("TOPIC_ID_STUDY", "")?:id)
                     }else{
+                        sharedPreferencesManager.putString("TOPIC_ID_YT_TYPE", data)
                         folderProgress(id)
                     }
                     // isFirstTimeLoading = false
@@ -118,6 +121,7 @@ class YTCourseDetailsFragment : Fragment() {
                         putString("subFolders", folderlistJson)
                         Log.e("foldernames", folderlistJson)
                         putString("folder_Count", folderlist.size.toString())
+
                     }
                     Log.e("clickevent", folderlistJson.toString())
 
@@ -131,7 +135,9 @@ class YTCourseDetailsFragment : Fragment() {
                         override fun onTopicTypeSelected(selectedTopic: TopicTypeModel) {
                             binding.tvTopicType.text = selectedTopic.title
                             sharedPreferencesManager.putString("TOPIC_ID_STUDY", selectedTopic.id)
-                            sharedPreferencesManager.putString("TOPIC_ID_STUDY_TYPE", selectedTopic.title.toString())
+                            sharedPreferencesManager.putString("TOPIC_ID_YT_TYPE", selectedTopic.title.toString())
+                            Log.e("getaindfd",selectedTopic.title.toString())
+
                             folderProgress(selectedTopic.id)
                         }
                     })
