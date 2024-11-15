@@ -31,7 +31,6 @@ import xyz.penpencil.competishun.utils.HelperFunctions
 import xyz.penpencil.competishun.utils.ToolbarCustomizationListener
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import xyz.penpencil.competishun.R
@@ -148,6 +147,7 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
               scrollToDate(calendarDate)
         }
     }
+/*
 
     private fun setupRecyclerView() = lifecycleScope.launch {
 
@@ -206,7 +206,67 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
                 binding.rvCalenderSchedule.scrollToPosition(1)
             }
     }
+*/
 
+    private fun setupRecyclerView() = lifecycleScope.launch {
+        binding.loader.visibility = View.VISIBLE
+
+        val scheduleDataList = withContext(Dispatchers.Default) {
+            val processedData = listData.map {
+                it to it.content.scheduled_time.toString().utcToIst().toIstZonedDateTime()
+            }
+
+            val filteredContentList = processedData.filter { (_, scheduledTime) ->
+                scheduledTime.toLocalDate() == selectedDate.toLocalDate()
+            }
+
+            filteredContentList.groupBy { (_, scheduledTime) ->
+                scheduledTime.dayOfWeek.toString().take(3) to scheduledTime.dayOfMonth.toString()
+            }.map { (dateInfo, groupedContent) ->
+                val (dayOfWeek, dayOfMonth) = dateInfo
+
+                ScheduleData(
+                    dayOfWeek,
+                    dayOfMonth,
+                    duration = 0,
+                    groupedContent.map {
+                        (contentItem, scheduledTime) ->
+                        ScheduleData.InnerScheduleItem(
+                            contentItem.folderPath ?: "",
+                            contentItem.content.file_name,
+                            lecture_start_time = formatTime(convertIST(contentItem.content.scheduled_time.toString())),
+                            lecture_end_time = convertLastDuration(
+                                formatTime(convertIST(contentItem.content.scheduled_time.toString())),
+                                contentItem.content.video_duration?.toLong() ?: 0
+                            ),
+                            contentItem.content.file_url.toString(),
+                            contentItem.content.file_type.name,
+                            contentItem.content.id,
+                            contentItem.content.scheduled_time.toString(),
+                            completedDuration = contentItem.studentTrack?.completed_duration ?: 0,
+                            statusTime = contentItem.content.scheduled_time.toString()
+                                .timeStatus(contentItem.content.video_duration ?: 0)
+                        )
+                    }
+                )
+            }
+        }
+
+        withContext(Dispatchers.Main) {
+            if (!::scheduleAdapter.isInitialized) {
+                scheduleAdapter = ScheduleAdapter(mutableListOf(), requireContext(), this@ScheduleFragment)
+                binding.rvCalenderSchedule.layoutManager =
+                    LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+                binding.rvCalenderSchedule.adapter = scheduleAdapter
+            }
+
+            scheduleAdapter.updateData(scheduleDataList) // Use DiffUtil for efficient updates
+
+            binding.clEmptySchedule.visibility = if (scheduleDataList.isEmpty()) View.VISIBLE else View.GONE
+            binding.rvCalenderSchedule.visibility = if (scheduleDataList.isNotEmpty()) View.VISIBLE else View.GONE
+            binding.loader.visibility = View.GONE
+        }
+    }
 
 
     private fun findAllCourseFolderContentByScheduleTimeQuery(){
