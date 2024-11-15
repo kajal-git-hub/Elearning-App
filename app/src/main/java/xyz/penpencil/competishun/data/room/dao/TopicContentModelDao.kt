@@ -30,4 +30,8 @@ interface TopicContentModelDao {
 
     @Query("SELECT COUNT(*) FROM topic_content WHERE file_type = 'VIDEO'")
     fun getVideoCount(): Flow<Int>
+
+    //TODO: Check if user already have more then 1000 content then delete in segment
+    @Query("DELETE FROM topic_content")
+    suspend fun clearTable()
 }

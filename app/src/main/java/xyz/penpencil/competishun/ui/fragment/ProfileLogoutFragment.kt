@@ -6,17 +6,24 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import dagger.hilt.android.AndroidEntryPoint
 import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.databinding.FragmentProfileLogoutBinding
 import xyz.penpencil.competishun.ui.main.MainActivity
+import xyz.penpencil.competishun.ui.viewmodel.offline.TopicContentViewModel
 import xyz.penpencil.competishun.utils.SharedPreferencesManager
 
+@AndroidEntryPoint
 class ProfileLogoutFragment : BottomSheetDialogFragment() {
 
     private lateinit var binding : FragmentProfileLogoutBinding
     private lateinit var sharedPreferencesManager: SharedPreferencesManager
+
+    private val topicContentViewModel: TopicContentViewModel by viewModels()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,11 +46,9 @@ class ProfileLogoutFragment : BottomSheetDialogFragment() {
         sharedPreferencesManager = SharedPreferencesManager(requireContext())
 
         binding.mbLogoutButton.setOnClickListener {
-
             sharedPreferencesManager.clearUserData()
-
+            topicContentViewModel.clearTable()
             deleteLocalFiles()
-
             val intent = Intent(requireContext(), MainActivity::class.java)
             intent.putExtra("navigateToLogin", true)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -51,7 +56,7 @@ class ProfileLogoutFragment : BottomSheetDialogFragment() {
             requireActivity().finish()
         }
         binding.mbCancel.setOnClickListener {
-            findNavController().navigate(R.id.ProfileFragment)
+            dismiss()
         }
     }
     private fun deleteLocalFiles() {

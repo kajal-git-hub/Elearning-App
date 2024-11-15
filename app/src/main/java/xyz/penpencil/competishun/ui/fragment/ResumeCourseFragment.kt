@@ -100,10 +100,6 @@ class ResumeCourseFragment : DrawerVisibility() {
         binding.clResumeCourseIcon2.setOnClickListener {
             findNavController().navigate(R.id.action_resumeCourseFragment_to_ScheduleFragment,bundle)
         }
-       // dataBind(folderIds,courseName!!,folderCounts!!)
-
-//        binding.clScore.setOnClickListener { findNavController().navigate(R.id.scoreDashboardFragment) }
-
     }
 
 
@@ -166,7 +162,7 @@ class ResumeCourseFragment : DrawerVisibility() {
                     val name = folderNames // Ensure folderNames is correctly assigned before using
 
                     if (folderProgressFolder != null) {
-                        if (!subfolderDurationFolders.isNullOrEmpty()) {
+                        if (subfolderDurationFolders?.isNotEmpty() == true) {
                             // Process subfolder durations
                             Log.e("resumefolderDurationszs", folderProgressContent.toString())
 
@@ -183,15 +179,10 @@ class ResumeCourseFragment : DrawerVisibility() {
                                 putBoolean("isExternal",name.contains("DPP", ignoreCase = true))
                             }
                             findNavController().navigate(R.id.SubjectContentFragment, bundle)
-                        } else if (!folderProgressContent.isNullOrEmpty()) {
-                            // Process folder contents
-                            Log.e("folderContentresume", folderProgressContent.toString())
-
+                        } else if (folderProgressContent?.isNotEmpty() == true) {
                             val gson = Gson()
                             val folderContentsJson = gson.toJson(folderProgressContent)
-
                             val bundle = Bundle().apply {
-
                                 putString("folderContents", folderContentsJson)
                                 putString("folder_Id", folderId)
                                 putString("folderName", folderNames)
