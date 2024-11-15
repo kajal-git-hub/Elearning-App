@@ -265,6 +265,7 @@ class ScheduleFragment : DrawerVisibility(), ToolbarCustomizationListener {
             binding.clEmptySchedule.visibility = if (scheduleDataList.isEmpty()) View.VISIBLE else View.GONE
             binding.rvCalenderSchedule.visibility = if (scheduleDataList.isNotEmpty()) View.VISIBLE else View.GONE
             binding.loader.visibility = View.GONE
+            calendarSetUp.scrollToSpecificDate(binding.rvCalenderDates, selectedDate)
         }
     }
 
