@@ -46,7 +46,8 @@ class OnBoardingFragment : Fragment() {
 
     private var loginType : String? = null
     val stateCity: List<State> by lazy { loadStatesAndCities()?: emptyList() }
-
+    private var selectedState: String? = null
+    private var selectedCity: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -143,22 +144,66 @@ class OnBoardingFragment : Fragment() {
         val stateAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, stateCity.map { it.name })
         binding.etEnterStateText.setAdapter(stateAdapter)
 
-        binding.etEnterStateText.setOnItemClickListener { parent, view, position, id ->
+        binding.etEnterStateText.setOnItemClickListener { parent, _, position, _ ->
             val selectedItem = parent.getItemAtPosition(position) as String
             val selectedIndex = stateCity.indexOfFirst { it.name == selectedItem }
 
             if (selectedIndex != -1) {
+                selectedState = selectedItem // Save the selected state
                 val data = stateCity[selectedIndex].cities
                 val cityAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, data)
                 binding.etEnterCityText.setAdapter(cityAdapter)
-                binding.etEnterCityText.text = null
+                binding.etEnterCityText.text = null // Clear the city text input
+                selectedCity = null // Clear the previously selected city when a new state is chosen
+            } else {
+                binding.etEnterStateText.text = null // Clear invalid input
+                selectedState = null
+                Toast.makeText(requireContext(), "Please select a valid state", Toast.LENGTH_SHORT).show()
             }
         }
 
-        binding.etEnterCityText.setOnItemClickListener { parent, view, position, id ->
+        binding.etEnterCityText.setOnItemClickListener { parent, _, position, _ ->
             val selectedItem = parent.getItemAtPosition(position) as String
-            Log.e("Selected City", "Selected City: $selectedItem")
+            val currentState = selectedState?.let { state ->
+                stateCity.find { it.name == state }
+            }
+
+            if (currentState?.cities?.contains(selectedItem) == true) {
+                selectedCity = selectedItem // Save the selected city
+                Log.e("Selected City", "Selected City: $selectedCity")
+            } else {
+                binding.etEnterCityText.text = null // Clear invalid input
+                selectedCity = null
+                Toast.makeText(requireContext(), "Please select a valid city", Toast.LENGTH_SHORT).show()
+            }
         }
+
+        binding.etEnterStateText.setOnFocusChangeListener { _, hasFocus ->
+            if (!hasFocus) {
+                val stateName = binding.etEnterStateText.text.toString()
+                if (stateCity.none { it.name == stateName }) {
+                    binding.etEnterStateText.text = null
+                    selectedState = null
+                    Toast.makeText(requireContext(), "Please select a valid state", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+
+        binding.etEnterCityText.setOnFocusChangeListener { _, hasFocus ->
+            if (!hasFocus) {
+                val cityName = binding.etEnterCityText.text.toString()
+                val validCities = selectedState?.let { state ->
+                    stateCity.find { it.name == state }?.cities
+                }
+
+                if (validCities == null || !validCities.contains(cityName)) {
+                    binding.etEnterCityText.text = null
+                    selectedCity = null
+                    Toast.makeText(requireContext(), "Please select a valid city", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+
 
         binding.etEnterCityText.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
@@ -169,16 +214,6 @@ class OnBoardingFragment : Fragment() {
         }
     }
 
-/*    fun hideSoftKeyBoard(context: Context, view: View?) {
-        try {
-            val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm?.hideSoftInputFromWindow(view?.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
-        } catch (e: Exception) {
-            // TODO: handle exception
-            e.printStackTrace()
-        }
-
-    }*/
 
     private fun setupUIWithSavedData() {
         with(sharedPreferencesManager) {
