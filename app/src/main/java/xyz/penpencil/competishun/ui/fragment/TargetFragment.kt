@@ -57,7 +57,7 @@ class TargetFragment : Fragment() {
         restoreSelectedItem()
 
         binding.TargetBack.setOnClickListener {
-            findNavController().navigate(R.id.PrepForFragment)
+            findNavController().popBackStack()
         }
         val loginType = arguments?.getString("loginType")
         binding.TargetNext.setOnClickListener {
@@ -120,7 +120,7 @@ class TargetFragment : Fragment() {
     }
 
     private fun handleBackPressed() {
-        findNavController().navigate(R.id.PrepForFragment)
+        findNavController().popBackStack()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

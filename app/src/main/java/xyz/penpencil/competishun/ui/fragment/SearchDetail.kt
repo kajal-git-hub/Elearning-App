@@ -59,7 +59,7 @@ class SearchDetail : DrawerVisibility() {
             findNavController().navigate(R.id.exploreFragment, bundle)
         }
         binding.appbar.setNavigationOnClickListener {
-            findNavController().navigate(R.id.homeFragment)
+            findNavController().popBackStack()
         }
         var searchQuery = arguments?.getString("searchQuery")
         binding.rvRecommendedCourses.layoutManager = LinearLayoutManager(context)
