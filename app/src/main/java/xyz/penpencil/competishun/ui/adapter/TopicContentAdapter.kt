@@ -214,6 +214,7 @@ class TopicContentAdapter(
             )
             if (isDateTodayOrPast(topicContent.lockTime, topicContent.isExternal)) {
                 if (topicContent.fileType == "VIDEO") {
+                    binding.tvCourseDescription.visibility = View.VISIBLE
                     binding.shapeableImage.setImageResource(icon)
                     binding.shapeableImage.setBackgroundResource(background)
                     binding.shapeableImage.visibility = View.VISIBLE
@@ -239,6 +240,7 @@ class TopicContentAdapter(
                     binding.videoicon.setImageResource(R.drawable.frame_1707481707)
                     binding.ivPersonIdentifier.setBackgroundResource(R.drawable.clock_black)
                 } else if (topicContent.fileType == "PDF") {
+                    binding.tvCourseDescription.visibility = View.VISIBLE
                     binding.etHomeWorkPdf.visibility = View.GONE
                     binding.etHomeWorkText.visibility = View.GONE
                     binding.shapeableImage.visibility = View.INVISIBLE
@@ -246,6 +248,7 @@ class TopicContentAdapter(
                     binding.videoicon.setImageResource(R.drawable.pdf_bg)
                 }
                 else if (topicContent.fileType == "IMAGE") {
+                    binding.tvCourseDescription.visibility = View.VISIBLE
                     binding.tvLecture.text = "Image"
                     binding.etHomeWorkPdf.visibility = View.GONE
                     binding.etHomeWorkText.visibility = View.GONE
@@ -257,11 +260,12 @@ class TopicContentAdapter(
 
             }
              else if (topicContent.fileType == "URL") {
-                binding.clReadAndPlay.visibility = View.GONE
+            //    binding.clReadAndPlay.visibility = View.GONE
                 binding.ivMoreInfoLec.visibility = View.GONE
                 binding.etHomeWorkText.visibility = View.GONE
             } else
             {
+                binding.tvCourseDescription.visibility = View.VISIBLE
                 binding.etHomeWorkText.visibility = View.VISIBLE
                 if (topicContent.fileType == "VIDEO") {
                     binding.shapeableImage.setImageResource(icon)
@@ -269,6 +273,7 @@ class TopicContentAdapter(
                     binding.shapeableImage.visibility = View.VISIBLE
                     binding.clEmtpyVeiw.visibility = View.INVISIBLE
                 } else {
+                    binding.tvCourseDescription.visibility = View.VISIBLE
                     binding.shapeableImage.visibility = View.GONE
                     binding.clEmtpyVeiw.visibility = View.VISIBLE
                 }
@@ -284,11 +289,67 @@ class TopicContentAdapter(
                     "http"
                 )
             ) {
+                Log.e("lectueyt", topicContent.lecture)
                 binding.etHomeWorkText.visibility = View.GONE
                 binding.ivMoreInfoLec.visibility = View.GONE
-                binding.tvLecture.text = "Link"
+                binding.tvLecture.text = "Title"
+                binding.tvTopicName.text = topicContent.topicDescription
+                binding.tvCourseDescription.visibility = View.GONE
+                binding.tvTopicName.post {
+                    val maxLines = 2
+                    if (binding.tvTopicName.lineCount > maxLines) {
+                        val originalText = topicContent.topicDescription
+                        val end = minOf(
+                            binding.tvTopicName.layout.getLineEnd(maxLines - 1),
+                            originalText.length
+                        )
+                        val truncatedText = originalText.substring(0, end).trim()
+
+                        if (truncatedText.length < originalText.length) {
+                            val spannableString = SpannableString("$truncatedText... Read more")
+
+                            val clickableSpan = object : ClickableSpan() {
+                                override fun onClick(widget: View) {
+                                    // Handle the "Read More" click event
+                                    binding.tvTopicName.text = originalText
+                                }
+                            }
+
+                            spannableString.setSpan(
+                                clickableSpan,
+                                spannableString.length - "Read more".length,
+                                spannableString.length,
+                                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                            )
+
+                            // Set the color for "Read More"
+                            spannableString.setSpan(
+                                ForegroundColorSpan(
+                                    ContextCompat.getColor(
+                                        binding.root.context,
+                                        R.color.blue_3E3EF7
+                                    )
+                                ),
+                                spannableString.length - "Read more".length,
+                                spannableString.length,
+                                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                            )
+
+                            binding.tvTopicName.text = spannableString
+                            binding.tvTopicName.maxLines = maxLines
+                            binding.tvTopicName.ellipsize = TextUtils.TruncateAt.END
+                        } else {
+                            binding.tvTopicName.text = originalText
+                        }
+                    } else {
+                        binding.tvTopicName.text = topicContent.topicDescription
+                    }
+                }
+            } else {
+                binding.tvTopicName.text = topicContent.topicName
+                binding.tvCourseDescription.text = topicContent.topicDescription
+                  binding.tvCourseDescription.visibility = View.VISIBLE
             }
-            binding.tvTopicName.text = topicContent.topicName
 
             // Handle the topic description with truncation and "Read More"
             binding.tvCourseDescription.post {

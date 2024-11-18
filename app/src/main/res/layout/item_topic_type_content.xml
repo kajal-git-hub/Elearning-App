@@ -191,7 +191,7 @@
             android:layout_height="@dimen/_45dp"
             android:layout_marginEnd="@dimen/_12dp"
             android:layout_marginBottom="10dp"
-            android:padding="@dimen/_10dp"
+            android:padding="@dimen/_4dp"
             android:src="@drawable/frame_1707481707"
             android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"

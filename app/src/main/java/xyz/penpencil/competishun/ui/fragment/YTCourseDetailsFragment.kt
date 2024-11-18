@@ -97,7 +97,7 @@ class YTCourseDetailsFragment : Fragment() {
                         folder.video_count?.toIntOrNull() ?: 0
                     } ?: 0
                 }
-                if (folderlist[0].id != null) {
+                if (folderlist.isNotEmpty() && folderlist[0].id != null) {
                     var id = folderlist[0].id ?: ""
                     var name = folderlist[0].id ?: ""
                     val data = folderlist[0].name
@@ -216,6 +216,13 @@ class YTCourseDetailsFragment : Fragment() {
                     val size = folderProgressContent?.filter { it.content?.file_type?.name  == "URL" }?.mapNotNull { it.content?.file_url }?.size?:"0"
 
                     binding.tvNoOfVideos.text = "${size} Vidoes"
+                    if (folderProgressContent.isNullOrEmpty() && subfolderDurationFolders.isNullOrEmpty()){
+                        binding.clEmptySubject.visibility = View.VISIBLE
+                        binding.llyt.visibility = View.GONE
+                    }else {
+                        binding.clEmptySubject.visibility = View.GONE
+                        binding.llyt.visibility = View.VISIBLE
+                    }
                     // Clear previous adapter to prevent issues
 //                    binding.rvSubjectContent.adapter = null
 //                    binding.rvTopicContent.adapter = null

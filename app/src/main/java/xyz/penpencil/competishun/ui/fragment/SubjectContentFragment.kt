@@ -57,6 +57,7 @@ class SubjectContentFragment : DrawerVisibility() {
     var newFolderNamer = ""
     private var isFirstTimeLoading = true
     private lateinit var sharedViewModel: SharedVM
+    lateinit var topicContents: List<TopicContentModel>
     private var isExternal: Boolean = false
     var folderName = ""
 
@@ -220,8 +221,8 @@ class SubjectContentFragment : DrawerVisibility() {
                     }else {
                         -1
                     }
-
-                    if(subfolder==0 && folderProgressCont==0){
+                  Log.e("topicontents",topicContents.size.toString())
+                    if(subfolder==0 && folderProgressCont==0 && topicContents.size == 0){
                         binding.clEmptySubject.visibility = View.VISIBLE
                         binding.rvSubjectContent.visibility = View.GONE
                         binding.rvsubjectTopicContent.visibility = View.GONE
@@ -657,7 +658,7 @@ class SubjectContentFragment : DrawerVisibility() {
     }
 
     fun newContent(folderContents: List<FindCourseFolderProgressQuery.FolderContent>,folderId:String) {
-        val topicContents = folderContents?.map { content ->
+         topicContents = folderContents?.map { content ->
             val date = content.content?.scheduled_time.toString()
             var time = ""
             var studyMaterial = arguments?.getString("studyMaterial")
