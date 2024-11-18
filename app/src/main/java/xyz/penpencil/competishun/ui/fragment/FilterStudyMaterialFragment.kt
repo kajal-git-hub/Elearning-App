@@ -23,20 +23,27 @@ class FilterStudyMaterialFragment : BottomSheetDialogFragment(){
     private var selectedExamOption: String? = null
     private var listener: FilterSelectionListener? = null
     private var selectedSubjectOption: String? = null
-
+    private var autoSelectedSubject: String? = null
+    private var autoSelectedExam: String? = null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
         binding = FragmentFilterStudyMaterialBinding.inflate(inflater, container, false)
+
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        arguments?.let {
+            autoSelectedSubject = it.getString("AUTO_SELECTED_SUBJECT")
+            autoSelectedExam = it.getString("AUTO_SELECTED_EXAM")
+        }
         binding.rvSelectExam.layoutManager = LinearLayoutManager(requireContext())
         binding.rvSelectSubject.layoutManager = LinearLayoutManager(requireContext())
+
         setupToggleRecyclerView()
         setupSubjectRecyclerView()
         Log.e("slelcted",selectedExamOption.toString() + selectedSubjectOption)
@@ -53,8 +60,24 @@ class FilterStudyMaterialFragment : BottomSheetDialogFragment(){
         }
 
         binding.mbCancel.setOnClickListener {
+            selectedSubjectOption = null
+            selectedExamOption = null
+            autoSelectedSubject = null
+            autoSelectedExam = null
+            listener?.onFiltersSelected("", "")
+            binding.rvSelectSubject.adapter?.notifyDataSetChanged()
+            binding.rvSelectExam.adapter?.notifyDataSetChanged()
+            setupToggleRecyclerView()
+            setupSubjectRecyclerView()
+            (binding.rvSelectSubject.adapter as? SubjectFilterAdapter)?.clearSelection()
+            (binding.rvSelectExam.adapter as? ExamFilterAdapter)?.clearSelection()
+
+            Log.e("candeokfcs $autoSelectedSubject",selectedSubjectOption.toString())
+//            sharedPreferencesManager.putString("clearFilter","-1")
             dismiss()
+
         }
+
 
         binding.closeFilter.setOnClickListener {
             dismiss()
@@ -80,7 +103,7 @@ class FilterStudyMaterialFragment : BottomSheetDialogFragment(){
     }
 
     private fun setupToggleRecyclerView() {
-        val adapter = ExamFilterAdapter(filterOptions) { selectedOption ->
+        val adapter = ExamFilterAdapter(filterOptions,autoSelectedExam?:"") { selectedOption ->
             // Handle item click (IIT_JEE or NEET)
             selectedExamOption = selectedOption
             if (selectedSubjectOption.isNullOrEmpty())
@@ -93,12 +116,14 @@ class FilterStudyMaterialFragment : BottomSheetDialogFragment(){
     }
 
     private fun setupSubjectRecyclerView() {
-        val adapter = SubjectFilterAdapter(filterClass) { selectedOption ->
+        Log.e("autselecedcam",autoSelectedSubject.toString())
+        val adapter = SubjectFilterAdapter(filterClass,autoSelectedSubject?:"") { selectedOption ->
             // Handle item click (11th or 12th)
             selectedSubjectOption = selectedOption
             if (selectedExamOption.isNullOrEmpty())
             binding.mbLogoutButton.text = "Apply Filter (1)"
             else  binding.mbLogoutButton.text = "Apply Filter (2)"
+            selectedSubjectOption = selectedOption
             Log.d("SelectedSubj", "Selected: $selectedOption $selectedSubjectOption")
             // Perform your actions based on the selected option
         }

@@ -1,15 +1,18 @@
 package xyz.penpencil.competishun.ui.main
 
+import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.widget.ImageView
+import android.widget.TextView
 import android.window.OnBackInvokedDispatcher
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.android.material.textview.MaterialTextView
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerFullScreenListener
@@ -21,12 +24,15 @@ class YoutubeActivity : AppCompatActivity() {
     private var youTubePlayerInstance: YouTubePlayer? = null
 
     private lateinit var backButton : ImageView
+    private lateinit var description : MaterialTextView
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_youtube)
 
         backButton  = findViewById(R.id.iv_videoBackPressed)
+        description  = findViewById(R.id.descid)
 
         backButton.setOnClickListener {
             if (isInFullscreen) {
@@ -45,10 +51,13 @@ class YoutubeActivity : AppCompatActivity() {
         val fullscreenButton: ImageView = findViewById(R.id.fullscreenButton)
 
         val videoUrl = intent.getStringExtra("url")
-        val videoId = extractYouTubeId(videoUrl.toString())
-        val youtubePlayerView: YouTubePlayerView = findViewById(R.id.youtubePlayerView)
 
-        lifecycle.addObserver(youtubePlayerView)
+        val videoName = intent.getStringExtra("urlDescription")
+        val videoId = extractYouTubeId(videoUrl.toString())
+        Log.e("vdideosfurl",videoUrl.toString() + videoId)
+        val youtubePlayerView: YouTubePlayerView = findViewById(R.id.youtubePlayerView)
+        description.text = videoName
+            lifecycle.addObserver(youtubePlayerView)
 
         youtubePlayerView.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
             override fun onReady(youTubePlayer: YouTubePlayer) {
@@ -132,7 +141,7 @@ class YoutubeActivity : AppCompatActivity() {
     }
 
     private fun extractYouTubeId(url: String): String? {
-        val pattern = "(?:youtu\\.be/|youtube\\.com/(?:watch\\?v=|embed/|v/|.+\\?v=))([\\w-]{11})"
+        val pattern = "(?:youtu\\.be/|youtube\\.com/(?:watch\\?v=|embed/|v/|shorts/|live/|.+\\?v=))([\\w-]{11})"
         val regex = Regex(pattern)
         val matchResult = regex.find(url)
         return matchResult?.groups?.get(1)?.value

@@ -19,14 +19,15 @@ import dagger.hilt.android.AndroidEntryPoint
 import xyz.penpencil.competishun.databinding.FragmentBottomsheetCourseTopicTypeBinding
 import xyz.penpencil.competishun.ui.main.HomeActivity
 import xyz.penpencil.competishun.utils.OnTopicTypeSelectedListener
+import xyz.penpencil.competishun.utils.SharedPreferencesManager
 
 @AndroidEntryPoint
 class BottomsheetCourseSubjectsFragment : BottomSheetDialogFragment() {
-
     private lateinit var binding: FragmentBottomsheetCourseTopicTypeBinding
     private lateinit var topicTypeAdapter: TopicTypeAdapter
     private val coursesViewModel: CoursesViewModel by viewModels()
     var selectedTopicString: String = ""
+    private lateinit var sharedPreferencesManager: SharedPreferencesManager
     private var listener: OnTopicTypeSelectedListener? = null
     val gson = Gson()
     override fun onCreateView(
@@ -35,6 +36,7 @@ class BottomsheetCourseSubjectsFragment : BottomSheetDialogFragment() {
     ): View {
         binding = FragmentBottomsheetCourseTopicTypeBinding.inflate(inflater, container, false)
         return binding.root
+
     }
 
 
@@ -42,11 +44,12 @@ class BottomsheetCourseSubjectsFragment : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         (activity as? HomeActivity)?.showBottomNavigationView(false)
         (activity as? HomeActivity)?.showFloatingButton(false)
-
+        sharedPreferencesManager = SharedPreferencesManager(requireContext())
         val subFolders = arguments?.getString("subFolders")?:""
         Log.e("subsdfd",subFolders)
         val folderCount = arguments?.getString("folder_Count")?:"0"
         selectedTopicString = arguments?.getString("FOLDER_NAME")?:""
+        selectedTopicString =  sharedPreferencesManager.getString("TOPIC_ID_YT_TYPE","Physics")?:""
         val converter = object : TypeToken<List<GetCourseByIdQuery.GetCourseById>>() {}.type
         val subFoldersList: List<GetCourseByIdQuery.GetCourseById> = gson.fromJson(subFolders, converter)
 
@@ -77,12 +80,17 @@ class BottomsheetCourseSubjectsFragment : BottomSheetDialogFragment() {
 
     fun setOnTopicTypeSelectedListener(listener: OnTopicTypeSelectedListener) {
         this.listener = listener
+        Log.e("getderds",listener.toString())
     }
 
 
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
-        listener = null
+
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
     }
 
 }

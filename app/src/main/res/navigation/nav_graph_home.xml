@@ -489,6 +489,18 @@
             android:id="@+id/action_StudyMaterialDetailsFragment_to_TopicTYPEContentFragment"
             app:destination="@id/TopicTYPEContentFragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/YTDetailsFragment"
+        android:name="xyz.penpencil.competishun.ui.fragment.YTCourseDetailsFragment"
+        tools:layout="@layout/fragment_y_t_course_details">
+        <action
+            android:id="@+id/action_home_to_yt"
+            app:destination="@+id/homeFragment"/>
+        <action
+            android:id="@+id/action_yt_DetailsFragment_to_TopicTYPEContentFragment"
+            app:destination="@id/TopicTYPEContentFragment" />
+    </fragment>
     <fragment
         android:id="@+id/YTCourseFragment"
         android:name="xyz.penpencil.competishun.ui.fragment.YTCourseFragment"

@@ -60,14 +60,26 @@
 
 
         <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/nunito"
+            android:text=""
+            android:textColor="@color/black_2B2829"
+            android:textSize="@dimen/_18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/descid"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/nunito"
             android:text="Description"
             android:textColor="@color/black_2B2829"
             android:textSize="@dimen/_18sp"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/desc" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

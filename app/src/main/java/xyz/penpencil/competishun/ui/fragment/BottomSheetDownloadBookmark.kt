@@ -92,7 +92,9 @@ class BottomSheetDownloadBookmark : BottomSheetDialogFragment() {
             when (details.fileType) {
                 "VIDEO" -> downloadVideo(details.url)
                 "PDF" -> downloadPdf(details.url)
+
             }
+            Log.e("filetypesfd",details.fileType.toString())
             dismiss()
         }
     }

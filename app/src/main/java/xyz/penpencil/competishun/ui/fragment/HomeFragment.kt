@@ -204,7 +204,7 @@ class HomeFragment : Fragment() {
         binding.clYLectures.setOnClickListener {
             findNavController().navigate(R.id.YTCourseFragment)
         }
-
+        binding.clYLectures.visibility == View.VISIBLE
         binding.clYLectures.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_YTCoursesFragment)
         }
@@ -223,6 +223,7 @@ class HomeFragment : Fragment() {
         helperFunctions = HelperFunctions()
 
         drawerLayout = (activity as HomeActivity).findViewById(R.id.drwaer_layout)
+        Log.e("newdsnlk" , "kajal")
         bottomNav = requireActivity().findViewById(R.id.bottomNav)
         val toolbar: MaterialToolbar = view.findViewById(R.id.topAppBar)
         contactImage = requireActivity().findViewById(R.id.ig_ContactImage)
