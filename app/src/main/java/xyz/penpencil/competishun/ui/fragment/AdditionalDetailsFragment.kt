@@ -69,7 +69,7 @@ class AdditionalDetailsFragment : DrawerVisibility() {
 
     private fun initListeners() {
         binding.etBTHomeAddress.setOnClickListener {
-            it.findNavController().navigate(R.id.PersonalDetailsFragment)
+            it.findNavController().popBackStack()
         }
 
         binding.clUploadId.setOnClickListener {

@@ -34,7 +34,7 @@ class AboutUsFragment : DrawerVisibility() {
         (activity as? HomeActivity)?.showFloatingButton(false)
 
         binding.etBTHomeAddress.setOnClickListener {
-            findNavController().navigate(R.id.action_AboutUs_to_homePage)
+            findNavController().popBackStack()
         }
         binding.tvAboutUsDesc.text = Html.fromHtml(getString(R.string.about_us_text), Html.FROM_HTML_MODE_LEGACY)
 

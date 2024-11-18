@@ -121,7 +121,7 @@ class PersonalDetailsFragment : Fragment(), BottomSheetTSizeFragment.OnTSizeSele
         updateButtonState()
 
 
-        view?.setFocusableInTouchMode(true)
+        view.setFocusableInTouchMode(true)
         view?.requestFocus()
         view?.setOnKeyListener(object : View.OnKeyListener {
             override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {

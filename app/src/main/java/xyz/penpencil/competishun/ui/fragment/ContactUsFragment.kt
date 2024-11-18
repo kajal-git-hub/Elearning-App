@@ -51,7 +51,7 @@ class ContactUsFragment : DrawerVisibility() {
 
 
         binding.etBTHomeAddress.setOnClickListener {
-            findNavController().navigate(R.id.action_ContactUs_to_homePage)
+            findNavController().popBackStack()
         }
 
         binding.tvCallonNo.setOnClickListener {

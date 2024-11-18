@@ -18,6 +18,7 @@ import androidx.fragment.app.Fragment
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import xyz.penpencil.competishun.ui.main.HomeActivity
 import xyz.penpencil.competishun.ui.viewmodel.CreateCartViewModel
@@ -53,7 +54,7 @@ class PaymentFragment : Fragment() {
     }
 
     private fun handleBackPressed() {
-        findNavController().navigate(R.id.myCartFragment)
+        findNavController().popBackStack()
     }
 
     override fun onCreateView(
@@ -93,7 +94,14 @@ class PaymentFragment : Fragment() {
             animateLayout()
         }, 3000)
 
-        binding.clStartBottomBar.setOnClickListener{ findNavController().navigate(R.id.courseEmptyFragment) }
+        binding.clStartBottomBar.setOnClickListener{
+            sharedPreferencesManager.isMyCourseAvailable = true
+            it.findNavController().apply {
+                popBackStack(R.id.nav_graph_chome, true)
+                navigate(R.id.courseEmptyFragment)
+            }
+
+        }
         getUserDetails()
         binding.btReceipt.setOnClickListener {
             Log.d("click","Click hua")

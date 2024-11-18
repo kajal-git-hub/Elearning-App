@@ -94,7 +94,7 @@ class MyCartFragment : DrawerVisibility(), OnCartItemRemovedListener, MyCartAdap
     }
 
     private fun handleBackPressed() {
-        findNavController().navigate(R.id.ProfileFragment)
+        findNavController().popBackStack()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
