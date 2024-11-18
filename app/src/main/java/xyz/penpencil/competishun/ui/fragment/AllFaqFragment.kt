@@ -59,7 +59,7 @@ class AllFaqFragment : DrawerVisibility() {
     }
 
     private fun handleBackPressed() {
-        findNavController().navigateUp()
+        findNavController().popBackStack()
     }
 
     override fun onDestroyView() {

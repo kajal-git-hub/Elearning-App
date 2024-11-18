@@ -72,7 +72,7 @@ class BookMarkFragment : DrawerVisibility(), BookMarkAdapter.OnVideoClickListene
         emptyStateLayout = binding.clEmptySearchBookmark
 
         binding.TopViewBookMark.setOnClickListener {
-            findNavController().navigateUp()
+            findNavController().popBackStack()
         }
 
         binding.rvBookmark.layoutManager = LinearLayoutManager(requireContext())

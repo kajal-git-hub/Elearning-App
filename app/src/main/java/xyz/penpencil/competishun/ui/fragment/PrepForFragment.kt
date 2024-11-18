@@ -61,7 +61,7 @@ class PrepForFragment : Fragment() {
 
 
         binding.PrepBack.setOnClickListener {
-            findNavController().navigate(R.id.onboardingFragment)
+            findNavController().popBackStack()
         }
         val loginType = arguments?.getString("loginType")
         binding.PrepNext.setOnClickListener {
@@ -161,7 +161,7 @@ class PrepForFragment : Fragment() {
     }
 
     private fun handleBackPressed() {
-        findNavController().navigate(R.id.onboardingFragment)
+        findNavController().popBackStack()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

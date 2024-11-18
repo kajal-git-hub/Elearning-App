@@ -27,8 +27,9 @@ class BottomsheetCourseTopicTypeFragment : BottomSheetDialogFragment() {
     private lateinit var topicTypeAdapter: TopicTypeAdapter
     private val coursesViewModel: CoursesViewModel by viewModels()
     private var listener: OnTopicTypeSelectedListener? = null
-    val gson = Gson()
-    private var selectedFolderName: String= ""
+    private val gson = Gson()
+    private var selectedFolderName: String = ""
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -37,50 +38,56 @@ class BottomsheetCourseTopicTypeFragment : BottomSheetDialogFragment() {
         return binding.root
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (activity as? HomeActivity)?.showBottomNavigationView(false)
-        (activity as? HomeActivity)?.showFloatingButton(false)
 
-        val subFolders = arguments?.getString("subFolders")?:""
-        Log.e("subsdfd",subFolders)
-        val folderCount = arguments?.getString("folder_Count")?:"0"
-        selectedFolderName = arguments?.getString("FOLDER_NAME")?:""
-        val converter = object : TypeToken<List<FindCourseFolderProgressQuery.SubfolderDuration>>() {}.type
-        val subFoldersList: List<FindCourseFolderProgressQuery.SubfolderDuration> = gson.fromJson(subFolders, converter)
-
-        Log.e("subFoldersListzz",subFoldersList.toString())
-        // Create a list of TopicTypeModel using folderNames
-        val topicTypeList = subFoldersList.mapIndexed { index, folder ->
-            TopicTypeModel(id = folder.folder?.id?:"", title = folder.folder?.name?:"", count = folder.folder?.folder_count?:"0")
+        // Hide Bottom Navigation and Floating Button in HomeActivity
+        (activity as? HomeActivity)?.apply {
+            showBottomNavigationView(false)
+            showFloatingButton(false)
         }
+
+        // Retrieve arguments and parse the list of subfolders
+        val subFoldersJson = arguments?.getString("subFolders") ?: ""
+        val folderCount = arguments?.getString("folder_Count") ?: "0"
+        selectedFolderName = arguments?.getString("FOLDER_NAME") ?: ""
+        val selectedId = arguments?.getString("selectedId") ?: ""
+        Log.e("UIYUYUYUY", "onViewCreated: IOIIO == " +selectedId)
+
+        val converter = object : TypeToken<List<FindCourseFolderProgressQuery.SubfolderDuration>>() {}.type
+        val subFoldersList: List<FindCourseFolderProgressQuery.SubfolderDuration> = gson.fromJson(subFoldersJson, converter)
+
+        // Map subfolder data to TopicTypeModel list for the adapter
+        val topicTypeList = subFoldersList.map { folder ->
+            Log.e("UIYUYUYUY", "onViewCreated: " +folder.folder?.id)
+            TopicTypeModel(
+                id = folder.folder?.id ?: "",
+                title = folder.folder?.name ?: "",
+                count = folder.folder?.folder_count ?: "0"
+            )
+        }
+
+        // Display the count in the title
         binding.tvTitleNumber.text = "(${subFoldersList.size})"
 
-
-        Log.e("YUYUYUY", "onViewCreated: $selectedFolderName", )
-        // Initialize the adapter and set it to the RecyclerView
+        // Initialize the adapter and set it to RecyclerView with the selected folder highlighted
         topicTypeAdapter = TopicTypeAdapter(topicTypeList, selectedFolderName) { selectedTopic ->
             listener?.onTopicTypeSelected(selectedTopic)
             dismiss()
-
         }
+
         binding.rvTopicTypes.apply {
             layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
             adapter = topicTypeAdapter
         }
     }
 
-
-
     fun setOnTopicTypeSelectedListener(listener: OnTopicTypeSelectedListener) {
         this.listener = listener
     }
 
-
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
-        listener = null
+        listener = null // Clear the listener reference to prevent leaks
     }
-
 }

@@ -99,7 +99,7 @@ class DisclaimerFragment : DrawerVisibility() {
     }
 
     private fun handleBackPressed() {
-        findNavController().navigate(R.id.homeFragment)
+        findNavController().popBackStack()
     }
 
 }

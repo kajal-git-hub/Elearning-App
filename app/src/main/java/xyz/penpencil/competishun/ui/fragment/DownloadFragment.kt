@@ -63,7 +63,7 @@ class DownloadFragment : DrawerVisibility(), DownloadedItemAdapter.OnVideoClickL
 
         })
         binding.TopViewDownloads.setNavigationOnClickListener {
-            findNavController().navigateUp()
+            findNavController().popBackStack()
         }
 
         (activity as? HomeActivity)?.showBottomNavigationView(false)

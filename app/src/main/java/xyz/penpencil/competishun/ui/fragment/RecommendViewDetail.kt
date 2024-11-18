@@ -66,7 +66,7 @@ class RecommendViewDetail : DrawerVisibility() {
         getMyDetails()
 
         binding.appbar.setNavigationOnClickListener {
-            findNavController().navigateUp()
+            findNavController().popBackStack()
         }
     }
 

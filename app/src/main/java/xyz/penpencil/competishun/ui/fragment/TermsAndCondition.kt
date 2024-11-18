@@ -92,7 +92,7 @@ class TermsAndCondition : DrawerVisibility() {
         (activity as? HomeActivity)?.showFloatingButton(false)
     }
     private fun handleBackPressed() {
-        findNavController().navigate(R.id.homeFragment)
+        findNavController().popBackStack()
     }
 
 }

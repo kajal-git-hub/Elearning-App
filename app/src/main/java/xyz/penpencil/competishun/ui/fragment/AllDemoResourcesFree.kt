@@ -54,7 +54,7 @@ class AllDemoResourcesFree : DrawerVisibility() {
     }
 
     private fun handleBackPressed() {
-        findNavController().navigateUp()
+        findNavController().popBackStack()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

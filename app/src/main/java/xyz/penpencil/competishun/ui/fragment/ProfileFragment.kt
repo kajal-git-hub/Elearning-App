@@ -103,16 +103,10 @@ class ProfileFragment : DrawerVisibility() {
         }
 
         binding.llLogout.setOnClickListener {
-            val bottomSheetDescriptionFragment = ProfileLogoutFragment()
-            bottomSheetDescriptionFragment.show(childFragmentManager, "BottomSheetDescriptionFragment")
-
-//            sharedPreferencesManager.clearUserData()
-//
-//            val intent = Intent(requireContext(), MainActivity::class.java)
-//            intent.putExtra("navigateToLogin", true)
-//            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-//            startActivity(intent)
-//            requireActivity().finish()
+            fragmentManager?.let {
+                val bottomSheetDescriptionFragment = ProfileLogoutFragment()
+                bottomSheetDescriptionFragment.show(it, "BottomSheetDescriptionFragment")
+            }
         }
 //        if(studentClass.isNotEmpty()){
 //            binding.tvClass.visibility = View.VISIBLE

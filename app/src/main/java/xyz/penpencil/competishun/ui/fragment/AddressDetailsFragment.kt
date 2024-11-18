@@ -38,7 +38,8 @@ class AddressDetailsFragment : DrawerVisibility() {
 
     private val userViewModel: UserViewModel by viewModels()
 
-    private val selectedCity = mutableListOf<String>()
+    private var selectedState: String? = null
+    private var selectedCity: String? = null
 
 
     private var fieldsToVisible = emptyArray<String>()
@@ -94,21 +95,82 @@ class AddressDetailsFragment : DrawerVisibility() {
         val stateAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, stateCity.map { it.name })
         binding.etState.setAdapter(stateAdapter)
 
-        binding.etState.setOnItemClickListener { parent, view, position, id ->
+        binding.etState.setOnItemClickListener { parent, _, position, _ ->
             val selectedItem = parent.getItemAtPosition(position) as String
             val selectedIndex = stateCity.indexOfFirst { it.name == selectedItem }
 
             if (selectedIndex != -1) {
+                selectedState = selectedItem // Save the selected state
                 val data = stateCity[selectedIndex].cities
                 val cityAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, data)
                 binding.etCity.setAdapter(cityAdapter)
-                binding.etCity.text = null
+                binding.etCity.text = null // Clear the city text input
+                selectedCity = null // Clear the previously selected city when a new state is chosen
+            } else {
+                binding.etState.text = null // Clear invalid input
+                selectedState = null
+                Toast.makeText(requireContext(), "Please select a valid state", Toast.LENGTH_SHORT).show()
             }
         }
 
-        binding.etCity.setOnItemClickListener { parent, view, position, id ->
+        if (binding.etState.text.isNotEmpty()){
+            val selectedStateName = binding.etState.text.toString().trim()
+            val cityList = stateCity.firstOrNull { it.name == selectedStateName }?.cities ?: emptyList()
+            if (cityList.isNotEmpty()){
+                selectedState = selectedStateName
+            }
+            val cityAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, cityList)
+            binding.etCity.setAdapter(cityAdapter)
+        }
+        binding.etCity.setOnItemClickListener { parent, _, position, _ ->
             val selectedItem = parent.getItemAtPosition(position) as String
-            Log.e("Selected City", "Selected City: $selectedItem")
+            val currentState = selectedState?.let { state ->
+                stateCity.find { it.name == state }
+            }
+
+            if (currentState?.cities?.contains(selectedItem) == true) {
+                selectedCity = selectedItem // Save the selected city
+                Log.e("Selected City", "Selected City: $selectedCity")
+            } else {
+                binding.etCity.text = null // Clear invalid input
+                selectedCity = null
+                Toast.makeText(requireContext(), "Please select a valid city", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        binding.etState.setOnFocusChangeListener { _, hasFocus ->
+            if (!hasFocus) {
+                val stateName = binding.etState.text.toString()
+                if (stateCity.none { it.name == stateName }) {
+                    binding.etState.text = null
+                    selectedState = null
+                    Toast.makeText(requireContext(), "Please select a valid state", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+
+        binding.etCity.setOnFocusChangeListener { _, hasFocus ->
+            if (!hasFocus) {
+                val cityName = binding.etCity.text.toString()
+                val validCities = selectedState?.let { state ->
+                    stateCity.find { it.name == state }?.cities
+                }
+
+                if (validCities == null || !validCities.contains(cityName)) {
+                    binding.etCity.text = null
+                    selectedCity = null
+                    Toast.makeText(requireContext(), "Please select a valid city", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+
+
+        binding.etCity.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                binding.etCity.post {
+                    binding.etCity.showDropDown()
+                }
+            }
         }
     }
 

@@ -23,6 +23,9 @@ class TopicContentModelRepository @Inject constructor(
     suspend fun deleteTopicContent(topicContent: TopicContentModel) {
         dao.delete(topicContent)
     }
+    suspend fun clearTable() {
+        dao.clearTable()
+    }
 
     fun getTopicContentCountByFileType(fileType: String): Flow<Int> {
         return dao.getTopicContentCountByFileType(fileType)

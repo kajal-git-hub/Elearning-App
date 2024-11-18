@@ -81,7 +81,7 @@ class PrivacyPolicyFragment : Fragment() {
     }
 
     private fun handleBackPressed() {
-        findNavController().navigate(R.id.homeFragment)
+        findNavController().popBackStack()
     }
 
 }

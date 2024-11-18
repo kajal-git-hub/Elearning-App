@@ -204,7 +204,6 @@ class HomeFragment : Fragment() {
         binding.clYLectures.setOnClickListener {
             findNavController().navigate(R.id.YTCourseFragment)
         }
-        binding.clYLectures.visibility == View.VISIBLE
         binding.clYLectures.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_YTCoursesFragment)
         }
@@ -827,6 +826,7 @@ class HomeFragment : Fragment() {
         val searchView =
             binding.topAppBar.menu.findItem(R.id.action_search)?.actionView as? SearchView
         searchView?.queryHint = "Search Courses"
+        searchView?.setMaxWidth(Integer.MAX_VALUE)
         searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean = false
 

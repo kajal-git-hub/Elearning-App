@@ -57,7 +57,7 @@ class RefundCancellation : Fragment() {
         }
 
         binding.tvTitle.setOnClickListener {
-            findNavController().navigateUp()
+            findNavController().popBackStack()
         }
 
 //        faqItems = arguments?.getParcelableArrayList("faq_items") ?: emptyList()

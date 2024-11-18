@@ -83,7 +83,7 @@ class ReferenceFragment : Fragment() {
 
         binding.RefBack.setOnClickListener {
             println("ClickedBacktoTarget")
-            findNavController().navigate(R.id.TargetFragment)
+            findNavController().popBackStack()
         }
 
         binding.RefNext.setOnClickListener {

@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import xyz.penpencil.competishun.R
@@ -22,7 +23,7 @@ import java.time.LocalDate
 import java.time.ZoneId
 import java.time.ZonedDateTime
 
-class ScheduleAdapter(private val scheduleItems: List<ScheduleData>, private val context: Context, private val toolbarListener: ToolbarCustomizationListener) : RecyclerView.Adapter<ScheduleAdapter.ScheduleViewHolder>() {
+class ScheduleAdapter(private val scheduleItems: MutableList<ScheduleData>, private val context: Context, private val toolbarListener: ToolbarCustomizationListener) : RecyclerView.Adapter<ScheduleAdapter.ScheduleViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScheduleViewHolder {
         val binding = ItemCurrentSchedulesBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -45,6 +46,18 @@ class ScheduleAdapter(private val scheduleItems: List<ScheduleData>, private val
     }
 
     override fun getItemCount(): Int = scheduleItems.size
+
+    fun updateData(scheduleDataList: List<ScheduleData>) {
+        val diffCallback = ScheduleDiffCallback(this.scheduleItems, scheduleDataList)
+        val diffResult = DiffUtil.calculateDiff(diffCallback)
+
+        // Update the internal data list
+        this.scheduleItems.clear()
+        this.scheduleItems.addAll(scheduleDataList)
+
+        // Notify the adapter of the changes
+        diffResult.dispatchUpdatesTo(this)
+    }
 
     inner class ScheduleViewHolder(private val binding: ItemCurrentSchedulesBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(scheduleItem: ScheduleData) {
@@ -307,4 +320,24 @@ class ScheduleAdapter(private val scheduleItems: List<ScheduleData>, private val
     }
 
 
+}
+
+
+class ScheduleDiffCallback(
+    private val oldList: List<ScheduleData>,
+    private val newList: List<ScheduleData>
+) : DiffUtil.Callback() {
+
+    override fun getOldListSize(): Int = oldList.size
+
+    override fun getNewListSize(): Int = newList.size
+
+    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+        return oldList[oldItemPosition] == newList[newItemPosition] &&
+                oldList[oldItemPosition] == newList[newItemPosition]
+    }
+
+    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+        return oldList[oldItemPosition] == newList[newItemPosition]
+    }
 }
