@@ -1,0 +1,6 @@
+mutation createReport($createReportInput: CreateReportInput!){
+    createReport(createReportInput: $createReportInput) {
+        id
+        report_description
+    }
+}

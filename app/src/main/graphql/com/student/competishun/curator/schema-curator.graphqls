@@ -34,6 +34,12 @@ type Banner {
   web_banner_image_name: String
 }
 
+type BinContentResponse {
+  bin_contents: [CourseFolderContent!]
+
+  total_count: Float!
+}
+
 type Bookmark {
   course_folder_content: CourseFolderContent!
 
@@ -179,6 +185,8 @@ type Course {
 
   price: Int
 
+  reports: [Report!]
+
   status: CourseStatus!
 
   student_course_track: [StudentCourseTrack!]
@@ -196,30 +204,20 @@ type Course {
   with_installment_price: Int
 }
 
-type CourseAnalytics {
-  academicYearPercentageChange: String!
+type CourseAnalyticsUpdated {
+  currentMonthFullYearCourseCount: Float!
 
-  currentMonthOrderCount: Float!
+  currentMonthShortTermCourseCount: Float!
 
-  currentMonthPublishedCourseCount: Float!
+  monthlyFullYearCourseChange: Float!
 
-  currentMonthUnpublishedCourseCount: Float!
+  monthlyShortTermCourseChange: Float!
 
-  currentYearCourseCount: Float!
+  prevMonthFullYearCourseCount: Float!
 
-  monthlyOrderPercentageChange: String!
+  prevMonthShortTermCourseCount: Float!
 
-  monthlyPublishedCoursePercentageChange: String!
-
-  monthlyUnpublishedCoursePercentageChange: String!
-
-  prevMonthCoursePublishedCount: Float!
-
-  prevMonthCourseUnpublishedCount: Float!
-
-  prevMonthOrderCount: Float!
-
-  prevYearCourseCount: Float!
+  totalCourseCount: Float!
 }
 
 type CourseCategory {
@@ -324,6 +322,8 @@ type CourseFolderContent {
   reference_file_path_720p: String
 
   reference_file_path_1080p: String
+
+  reports: [Report!]
 
   scheduled_time: DateTime
 
@@ -610,6 +610,12 @@ input CreateCoursePublishInput {
   with_installment_price: Int
 }
 
+input CreateReportInput {
+  content_id: ID!
+
+  report_description: String!
+}
+
 """
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
@@ -766,6 +772,10 @@ type Mutation {
 
   createPublishCourse(banner_image: [Upload], createCoursePublishInput: CreateCoursePublishInput!, id: String!, orientation_video: [Upload], planner_pdf: [Upload], video_thumbnail: [Upload]): Course!
 
+  createReport(createReportInput: CreateReportInput!): Report!
+
+  deleteContentPermenentlyFromBin(id: String): RestoreResponse!
+
   deleteCourse(id: String!): Boolean!
 
   deleteCourseCategory(id: String!): Boolean!
@@ -786,6 +796,12 @@ type Mutation {
 
   removeCartItem(id: ID!): Boolean!
 
+  removeReport(id: String!, userID: String!): Boolean!
+
+  restoreCourseFolderContent(id: String!): RestoreResponse!
+
+  restoreEverythingFromBin: RestoreResponse!
+
   updateBanner(id: String!, mobile_banner: [Upload], updateBannerInput: UpdateBannerInput, web_banner: [Upload]): Boolean!
 
   updateCartItems(updateCartItemsInput: UpdateCartItemsDto!): Boolean!
@@ -799,6 +815,8 @@ type Mutation {
   updateCourseFolderContent(id: String!, updateFolderContent: UpdateFolderContent!): Boolean!
 
   updateHomework(id: String!, updateHomework: UpdateHomework!): Boolean!
+
+  updateReport(id: String!, updateReportInput: UpdateReportInput!): Report!
 
   updateVideoProgress(updateVideoProgress: UpdateVideoProgress!): StudentCourseTrack!
 }
@@ -820,7 +838,7 @@ enum OtherRequirements {
 }
 
 type Query {
-  courseAnalytics: CourseAnalytics!
+  courseAnalytics: CourseAnalyticsUpdated!
 
   courseListFromIds(courseIds: [String!]!): [Course!]!
 
@@ -829,6 +847,12 @@ type Query {
   findAllCartItems: [CartResponseDto!]!
 
   findAllCourseFolderContentByScheduleTime(course_id: String, endDate: DateTime!, startDate: DateTime!): [ScheduleContentResponseDto!]!
+
+  findAllReportsByContent(contentId: String!): [Report!]!
+
+  findAllReportsByCourse(courseId: String!): [Report!]!
+
+  findAllReportsByUser(userId: String!): [Report!]!
 
   findBookmark(id: String!): Bookmark!
 
@@ -858,7 +882,11 @@ type Query {
 
   getAllFolders: [CourseFolder!]!
 
+  getBinContents(filename: String!, limit: Float!, offset: Float!): BinContentResponse!
+
   getCourseById(id: String!): Course!
+
+  getCourseByName(name: String!): Course!
 
   getCourseCategoryById(id: String!): CourseCategory!
 
@@ -867,6 +895,8 @@ type Query {
   getFolderById(id: String!, sortFilters: SortFilters): CourseFolder!
 
   getFolderLecturesCount(id: String!): CourseFolderLectureCount!
+
+  getSubjects: [Subject]!
 
   getVideoProgress(courseFolderContentId: String!): Float!
 
@@ -879,6 +909,34 @@ type Query {
   myCoursesForAdmin(userId: String!): [CourseProgressResponseDto!]!
 
   relatedCourses(categoryName: String!): [Course!]!
+}
+
+type Report {
+  content: CourseFolderContent!
+
+  content_id: String!
+
+  course: Course!
+
+  course_id: String!
+
+  createdAt: DateTime!
+
+  deletedAt: DateTime!
+
+  id: ID!
+
+  report_description: String
+
+  updatedAt: DateTime!
+
+  user_id: String!
+}
+
+type RestoreResponse {
+  message: String
+
+  success: Boolean!
 }
 
 type ScheduleContentResponseDto {
@@ -953,6 +1011,18 @@ type SubfolderProgress {
   videoCount: Float
 
   videoDuration: Float
+}
+
+type Subject {
+  createdAt: DateTime!
+
+  deletedAt: DateTime!
+
+  id: ID!
+
+  name: String!
+
+  updatedAt: DateTime!
 }
 
 type Thumbnail {
@@ -1095,6 +1165,12 @@ input UpdateHomework {
   description: String
 
   file_name: String
+}
+
+input UpdateReportInput {
+  report_description: String!
+
+  userId: ID!
 }
 
 input UpdateVideoProgress {

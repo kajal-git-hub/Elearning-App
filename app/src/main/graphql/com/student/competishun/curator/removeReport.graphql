@@ -1,0 +1,3 @@
+mutation removeReport($removeReportId: String!, $userId: String!){
+    removeReport(id: $removeReportId, userID: $userId)
+}

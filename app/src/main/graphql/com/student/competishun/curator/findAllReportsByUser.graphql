@@ -1,0 +1,7 @@
+query findAllReportsByUser($userId: String!){
+    findAllReportsByUser(userId: $userId) {
+        content_id
+        report_description
+        id
+    }
+}

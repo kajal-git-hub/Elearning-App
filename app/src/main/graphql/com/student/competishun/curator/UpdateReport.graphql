@@ -1,0 +1,6 @@
+mutation updateReport($updateReportId: String!, $updateReportInput: UpdateReportInput!){
+    updateReport(id: $updateReportId, updateReportInput: $updateReportInput) {
+        id
+        report_description
+    }
+}
