@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -34,6 +35,7 @@ class YTCourseFragment : Fragment(), FilterSelectionListener, StudentCourseItemC
     private val filterOptions = listOf("IIT-JEE", "NEET")
     private val courseViewModel: StudentCoursesViewModel by viewModels()
     private val TAG = "YTCourseFragment"
+    private lateinit var adapter: YTCourseAdapter
     private val getCourseByIDViewModel: GetCourseByIDViewModel by viewModels()
     private lateinit var courseId: String
     private lateinit var sharedPreferencesManager: SharedPreferencesManager
@@ -55,6 +57,9 @@ class YTCourseFragment : Fragment(), FilterSelectionListener, StudentCourseItemC
         sharedPreferencesManager = SharedPreferencesManager(requireContext())
         binding.backIcon.setOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed() }
         binding.tvCourseMaterialCount.text = "0 Courses"
+        adapter = YTCourseAdapter(emptyList(), getCourseByIDViewModel, this@YTCourseFragment)
+        binding.rvYTCourse.adapter = adapter
+        setupSearch()
         fetchCoursesForClass("","")
         setupToggleRecyclerView()
         binding.tvFilterTextYT.setOnClickListener {
@@ -140,7 +145,9 @@ class YTCourseFragment : Fragment(), FilterSelectionListener, StudentCourseItemC
                                     } ?: emptyList()
                                 }
                                 Log.d("NEETFragment", courses.toString())
-                                 binding.rvYTCourse.adapter = YTCourseAdapter(courses,getCourseByIDViewModel, this@YTCourseFragment)
+                                binding.rvYTCourse.adapter = YTCourseAdapter(courses,getCourseByIDViewModel, this@YTCourseFragment)
+                                adapter.updateData(courses)
+
                             }?.onFailure { exception ->
                                 // Handle the failure case
                                 binding.progressBar.visibility = View.GONE
@@ -254,5 +261,17 @@ class YTCourseFragment : Fragment(), FilterSelectionListener, StudentCourseItemC
         sharedPreferencesManager.putString("TOPIC_ID_STUDY", "")
         sharedPreferencesManager.putString("TOPIC_ID_STUDY_TYPE", "")
         findNavController().navigate(R.id.YTDetailsFragment, newBundle)
+    }
+    private fun setupSearch() {
+        binding.searchIconYTCourse.queryHint = "Search"
+        binding.searchIconYTCourse.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean = false
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                adapter.filter.filter(newText)
+                Log.e("youtubvecourse",newText.toString())
+                return true
+            }
+        })
     }
 }

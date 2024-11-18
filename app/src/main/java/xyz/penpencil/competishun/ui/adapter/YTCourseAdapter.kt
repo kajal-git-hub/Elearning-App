@@ -5,6 +5,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Filter
+import android.widget.Filterable
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -15,13 +17,44 @@ import xyz.penpencil.competishun.R
 import xyz.penpencil.competishun.ui.viewmodel.GetCourseByIDViewModel
 import xyz.penpencil.competishun.utils.StudentCourseItemClickListener
 import java.util.ArrayList
+import java.util.Locale
 
-class YTCourseAdapter(private val itemYTMaterial:  List<AllCourseForStudentQuery.Course>,private val getCourseByIDViewModel: GetCourseByIDViewModel,  private val listener: StudentCourseItemClickListener) :
-    RecyclerView.Adapter<YTCourseAdapter.ViewHolder>() {
+class YTCourseAdapter(private var itemYTMaterial:  List<AllCourseForStudentQuery.Course>,private val getCourseByIDViewModel: GetCourseByIDViewModel,  private val listener: StudentCourseItemClickListener) :
+    RecyclerView.Adapter<YTCourseAdapter.ViewHolder>(), Filterable {
+    private var filteredItems: MutableList<AllCourseForStudentQuery.Course> = itemYTMaterial.toMutableList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_yt_course, parent, false)
         return ViewHolder(view)
+    }
+
+    override fun getFilter(): Filter {
+        return object : Filter() {
+            override fun performFiltering(constraint: CharSequence?): FilterResults {
+                val query = constraint?.toString()?.lowercase(Locale.getDefault()) ?: ""
+
+                val filteredList = if (query.isEmpty()) {
+                    itemYTMaterial
+                } else {
+                    itemYTMaterial.filter {
+                        it.name.lowercase(Locale.getDefault()).contains(query)
+                    }
+                    Log.e("youtubveitem",itemYTMaterial.toString())
+                }
+
+                val results = FilterResults()
+                results.values = filteredList
+                return results
+            }
+
+            override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
+                filteredItems.clear()
+                if (results?.values is List<*>) {
+                    filteredItems.addAll(results.values as List<AllCourseForStudentQuery.Course>)
+                }
+                notifyDataSetChanged()
+            }
+        }
     }
 
 
@@ -39,7 +72,12 @@ class YTCourseAdapter(private val itemYTMaterial:  List<AllCourseForStudentQuery
             listener.onCourseItemClicked(courseItem, bundle)
         }
     }
-
+    fun updateData(newItems: List<AllCourseForStudentQuery.Course>) {
+        itemYTMaterial = newItems
+        filteredItems.clear()
+        filteredItems.addAll(newItems)
+        notifyDataSetChanged()
+    }
     override fun getItemCount(): Int {
         return itemYTMaterial.size
     }

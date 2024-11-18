@@ -485,7 +485,7 @@ class MediaPlayerFragment : DrawerVisibility() {
 
 
     private fun showSpeedOrQualityDialog() {
-        val options = arrayOf("Speed", "Quality")
+        val options = arrayOf("Speed", "Quality", "Report")
 
         AlertDialog.Builder(requireContext())
             .setTitle("Choose Option")
@@ -493,9 +493,14 @@ class MediaPlayerFragment : DrawerVisibility() {
                 when (which) {
                     0 -> showSpeedSelectionDialog()
                     1 -> showQualityDialog()
+                    3 -> showReportIssue()
                 }
             }
             .show()
+    }
+
+    private fun showReportIssue() {
+        TODO("Not yet implemented")
     }
 
     private fun showSpeedSelectionDialog() {
