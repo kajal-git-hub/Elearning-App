@@ -501,7 +501,6 @@ class MediaPlayerFragment : DrawerVisibility() {
     }
 
     fun showReportIssue() {
-        // Inflate the custom layout for the dialog
         val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_comment, null)
         val commentEditText = dialogView.findViewById<EditText>(R.id.etComment)
 
@@ -512,7 +511,6 @@ class MediaPlayerFragment : DrawerVisibility() {
                 val comment = commentEditText.text.toString().trim()
                 if (comment.isNotEmpty()) {
                     Toast.makeText(requireContext(), "Comment Added: $comment", Toast.LENGTH_SHORT).show()
-                    // Handle the submitted comment (e.g., save it or pass it to your backend)
                     addComment(comment)
                 } else {
                     Toast.makeText(requireContext(), "Comment cannot be empty!", Toast.LENGTH_SHORT).show()
@@ -520,7 +518,7 @@ class MediaPlayerFragment : DrawerVisibility() {
                 dialog.dismiss()
             }
             .setNegativeButton("Cancel") { dialog, _ ->
-                dialog.dismiss() // Close the dialog
+                dialog.dismiss() 
             }
             .show()
     }
